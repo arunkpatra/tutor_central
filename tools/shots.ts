@@ -30,6 +30,11 @@ export function parseShotsArgs(argv: string[]): ShotsArgs {
   };
 }
 
+/** The app reads both (AppShell: LaunchState, Appearance). The app opens dark unless told otherwise (D23). */
+export function launchArguments(state: string, appearance: string): string[] {
+  return ["--state", state, "--appearance", appearance];
+}
+
 async function shoot(a: ShotsArgs): Promise<void> {
   await mkdir(a.out, { recursive: true });
   await sh(["xcrun", "simctl", "boot", a.device]); // already booted is fine
@@ -45,7 +50,7 @@ async function shoot(a: ShotsArgs): Promise<void> {
   for (const appearance of a.appearances) {
     await must(["xcrun", "simctl", "ui", a.device, "appearance", appearance]);
     await sh(["xcrun", "simctl", "terminate", a.device, BUNDLE]);
-    await must(["xcrun", "simctl", "launch", a.device, BUNDLE, "--state", a.state]);
+    await must(["xcrun", "simctl", "launch", a.device, BUNDLE, ...launchArguments(a.state, appearance)]);
     await Bun.sleep(1500);
     const file = `${a.out}/${a.state}-${appearance}.png`;
     await must(["xcrun", "simctl", "io", a.device, "screenshot", file]);

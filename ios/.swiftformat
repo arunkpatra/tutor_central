@@ -8,3 +8,4 @@
 --importgrouping testable-bottom
 --header strip
 --exclude TutorCentral.xcodeproj,**/.build,**/.swiftpm
+--disable wrapMultilineStatementBraces
