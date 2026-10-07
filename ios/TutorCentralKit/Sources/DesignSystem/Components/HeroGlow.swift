@@ -24,16 +24,18 @@ public struct HeroGlow: View {
     public var body: some View {
         GeometryReader { geometry in
             let colour = (soft ? Tokens.glowHeroSoft : Tokens.glowHero).color
+            // A circle of the horizontal radius, squashed to the vertical one: an ellipse 460 × 380.
             Rectangle()
                 .fill(
-                    EllipticalGradient(
+                    RadialGradient(
                         colors: [colour, colour.opacity(0)],
                         center: .center,
-                        startRadiusFraction: 0,
-                        endRadiusFraction: Self.fade
+                        startRadius: 0,
+                        endRadius: Self.radii.width * Self.fade
                     )
                 )
-                .frame(width: Self.radii.width * 2, height: Self.radii.height * 2)
+                .frame(width: Self.radii.width * 2, height: Self.radii.width * 2)
+                .scaleEffect(x: 1, y: Self.radii.height / Self.radii.width)
                 .position(x: geometry.size.width * Self.centre.x, y: geometry.size.height * Self.centre.y)
         }
         .ignoresSafeArea()

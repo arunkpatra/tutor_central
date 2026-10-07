@@ -87,6 +87,8 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `title2` | title2 | 22 / 28 | 700 | -0.015em | Card titles (the next class), sheet titles |
 | `title3` | title3 | 20 / 25 | 600 | -0.01em | Section titles in a long form |
 | `headline` | headline | 17 / 22 | 700 | 0 | Section headers on Today, row titles that lead a card |
+| `wordmark` | headline | 17 / 22 | 700 | -0.01em | "Tutor Central" beside the logo on sign-in |
+| `lead` | body | 18 / 26 | 400 | 0 | The lead paragraph under the sign-in headline |
 | `body` | body | 17 / 22 | 400 | 0 | Body copy, form values |
 | `bodyStrong` | body | 17 / 22 | 600 | 0 | Numbers and phone digits in a field, a picker's value |
 | `rowTitle` | callout | 16 / 20 | 600 | 0 | The first line of a list row |
@@ -137,6 +139,7 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `contentBottom` | 120 | Scroll content's bottom inset so the last row clears the tab bar |
 | `heroInset` | 24 | Screen edge to content on the sign-in landing |
 | `heroTop` | 80 | Top of screen to the logo on the landing and to the eyebrow on onboarding |
+| `heroLead` | 72 | The logo row to the headline on the landing |
 | `rowPaddingDense` | 12 | Vertical padding of a list row of people or classes (the Kit board); horizontal stays 16 |
 | `hairline` | 1 | Every border and divider |
 | `iconTab` | 22 | A tab bar symbol |
@@ -177,6 +180,8 @@ recessed. One glow, under the primary button.
 | `shadowFloat` | 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06) | 0 10px 30px rgba(40,30,20,.14), inset 0 1px 0 rgba(255,255,255,.6) |
 | `shadowDialog` | 0 24px 64px rgba(0,0,0,.55) | 0 24px 64px rgba(40,30,20,.2) |
 | `haloFocus` | 0 0 0 3px rgba(255,171,56,.18) | 0 0 0 3px rgba(224,138,0,.16) |
+| `shadowLogo` | 0 10px 26px rgba(255,171,56,.3), inset 0 1px 0 rgba(255,255,255,.4) | 0 10px 26px rgba(255,171,56,.3), inset 0 1px 0 rgba(255,255,255,.4) |
+| `shadowButtonLanding` | inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35) | 0 1px 2px rgba(40,30,20,.08) |
 | `blurChrome` | blur 22, saturate 1.3 | blur 22, saturate 1.3 |
 
 Disabled: opacity 0.45 and no shadow. Stale (a value being refreshed): opacity 0.55 with a spinner beside it.

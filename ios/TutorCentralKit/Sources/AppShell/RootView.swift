@@ -1,6 +1,7 @@
 import Data
 import DesignSystem
 import Domain
+import Onboarding
 import SwiftUI
 
 /// The app's root: the session gate picks sign-in, onboarding or the tabs. A launch state (`bun shots`) starts it
@@ -32,6 +33,7 @@ public struct RootView: View {
 
     public var body: some View {
         content
+            .overlay(alignment: .bottom) { ToastHost(toasts: toasts) }
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
@@ -59,7 +61,12 @@ public struct RootView: View {
         case .loading:
             LoadingRoot(error: session.lastError) { Task { await session.refresh() } }
         case .signedOut:
-            PlaceholderRoot(line: "Sign in arrives with its board.")
+            SignInView(
+                auth: deps.auth,
+                legal: Legal.links,
+                onSignedIn: { await session.signedIn($0) },
+                onMessage: { toasts.show($0) }
+            )
         case .needsOnboarding:
             PlaceholderRoot(line: "Onboarding arrives with its board.")
         case .ready:

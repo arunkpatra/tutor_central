@@ -190,3 +190,57 @@ public extension ButtonStyle where Self == DestructiveButtonStyle {
         .init(size: size, solid: solid)
     }
 }
+
+/// The landing's Google and email buttons (A-SignIn, P2-SignIn-Light): 52 high, surface1, lineStrong border,
+/// shadowButtonLanding, label 17 600, the icon 10 from it.
+public struct LandingButtonStyle: ButtonStyle {
+    let loading: Bool
+    @Environment(\.isEnabled) private var isEnabled
+
+    public init(loading: Bool = false) {
+        self.loading = loading
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: Tokens.tileGap) {
+            configuration.label
+        }
+        .labelStyle(LandingLabelStyle())
+        .typeStyle(Tokens.bodyStrong)
+        .foregroundStyle(Tokens.text.color)
+        .opacity(loading ? 0 : 1)
+        .overlay {
+            if loading {
+                ProgressView().tint(Tokens.text.color).accessibilityLabel("Working")
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: ButtonSize.sheet.rawValue, maxHeight: ButtonSize.sheet.rawValue)
+        .contentShape(.rect)
+        .background(
+            (configuration.isPressed ? Tokens.well : Tokens.surface1).color,
+            in: .rect(cornerRadius: Tokens.radiusControl, style: .continuous)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: Tokens.radiusControl, style: .continuous)
+                .strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline)
+        )
+        .shadowed(isEnabled ? [Tokens.shadowButtonLanding] : [], radius: Tokens.radiusControl)
+        .opacity(isEnabled ? 1 : Tokens.opacityDisabled)
+        .pressEffect(configuration.isPressed)
+    }
+}
+
+private struct LandingLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: Tokens.tileGap) {
+            configuration.icon.font(.system(size: Tokens.iconButton))
+            configuration.title
+        }
+    }
+}
+
+public extension ButtonStyle where Self == LandingButtonStyle {
+    static func landing(loading: Bool = false) -> Self {
+        .init(loading: loading)
+    }
+}

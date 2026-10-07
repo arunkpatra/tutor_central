@@ -32,6 +32,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.journium.tutorcentral
         INFOPLIST_FILE: App/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App/TutorCentral.entitlements
         GENERATE_INFOPLIST_FILE: NO
   TutorCentralSmokeTests:
     type: bundle.unit-test
@@ -61,6 +62,7 @@ schemes:
         - package: TutorCentralKit/DomainTests
         - package: TutorCentralKit/DataTests
         - package: TutorCentralKit/AppShellTests
+        - package: TutorCentralKit/OnboardingTests
   TutorCentral Kit:
     build:
       targets:
