@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import type { Hono } from "hono";
+import type { Vars } from "./auth.js";
 import { makeApp } from "./make-app.js";
 import { env } from "./env.js";
 
@@ -12,5 +14,7 @@ const verify = async (token: string) => {
   return error || !data.user ? null : { id: data.user.id };
 };
 
-/** Vercel's Hono preset and `bun --hot` both serve this default export. */
-export default makeApp({ verify, commit: process.env.TC_COMMIT });
+/** Vercel's Hono preset and `bun --hot` both serve this default export. The preset takes as its entry the first of
+ *  app, index, server, src/app, src/index, src/server that imports "hono": this file (test/entry.test.ts). */
+const app: Hono<Vars> = makeApp({ verify, commit: process.env.TC_COMMIT });
+export default app;
