@@ -53,6 +53,7 @@ its built screen can be compared. Phase 2's states:
 | `signin-email` | Email sheet, request a code |
 | `signin-code` | Code entry |
 | `signin-code-wrong` | Code entry with the error |
+| `signin-password` | Password entry (the sheet after "Use my password instead") |
 | `onboarding` | Onboarding, fields prefilled |
 | `today-empty` | Tabs, Today with every section empty |
 | `later-fees` | The Fees tab's placeholder (and `later-students`, `later-attendance`, `later-more`) |
@@ -69,6 +70,7 @@ Later phases add theirs in their plan files.
 | Sign in, light | row 5 | `mockups/P2-SignIn-Light.dc.html` |
 | Email, request a code | row 5 | `mockups/P2-Email-Request.dc.html` |
 | Email, enter the code, with the wrong-code state | row 5 | `mockups/P2-Email-Code.dc.html` |
+| Email, sign in with a password, with the wrong-password state | row 5 | `mockups/P2-Email-Password.dc.html` |
 | Onboarding, dark and light | row 5 | `mockups/P2-Onboarding-*.dc.html` |
 | Today empty, dark and light | row 5 | `mockups/P2-Today-Empty-*.dc.html` |
 | Settings minimal | row 5 | `mockups/P2-Settings.dc.html` |

@@ -3,12 +3,10 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-07, session 2. **Phase 1 built.** The repo has the iOS project (the app launches dark
-to a placeholder), the Supabase schema with RLS and its tests, the Hono API on Vercel, `bun check` with its
-cache, CI on every pull request, and the screenshot tools. Decisions D21 (deploys by hand through `deploy.yml`),
-D22 (CI on `xcode-27`, iPhone 17 everywhere) and D23 (dark by default) were taken. The API is in production through `deploy.yml`
-(`https://api-ten-orpin-51.vercel.app`, `bom1`). **Next:** Phase 2's plan in a fresh Fable 5.1 session from `resume/002-phase-2-plan.md`; its build follows from
-resume 003, which that session writes. Step 0.4 on the design side when the owner wants it.
+**Last updated:** 2026-10-07, session 3. **Phase 2 planned.** `plan/phase-02-plan.md` (17 tasks, 9 pull requests,
+tests first, owner steps in Tasks 9 and 16) was approved by the owner; decisions D24 (TestFlight lane) and D25
+(tokens as Swift) were taken. **Next:** the build in a fresh Opus 5.5 session from `resume/003-phase-2-build.md`.
+Step 0.4 on the design side when the owner wants it.
 
 ## Where we are
 
@@ -16,7 +14,7 @@ resume 003, which that session writes. Step 0.4 on the design side when the owne
 |---|---|---|
 | 0 Design | In progress: 0.1, 0.2 and 0.3 approved; 0.4 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md`. API in production through `deploy.yml` |
-| 2 Shell and sign-in | Plan next: `resume/002-phase-2-plan.md` | Boards approved (step 0.3). Owner steps: App Store Connect, Google OAuth, Supabase providers, the API key |
+| 2 Shell and sign-in | Planned: `phase-02-plan.md`; build from `resume/003-phase-2-build.md` | Boards approved (step 0.3). Owner steps inside Tasks 9 (App Store Connect, Supabase providers, Google web client, email template, legal URLs) and 16 (API key, secrets, first install) |
 | 3 to 7 | Not started | Scoped in their files |
 
 ## In flight
@@ -35,7 +33,15 @@ Nothing open. No branch but `main` and `pr-shots`.
 - Vercel Hobby blocks deployments whose commit author it does not know. This repo's git email is
   `arunkpatra@gmail.com`; keep it so (a direct commit to `main` by another address cannot be deployed).
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one.
-- Deferred from the Phase 1 review (minor; take them when their files are next touched):
+- Phase 2, settled by its plan (`phase-02-plan.md`, "Decisions this plan settles"):
+  - The password-entry state behind "Use my password instead" had no board; `P2-Email-Password` was drawn in
+    session 3 (canvas row 5, `docs/design/mockups/`) and approved by the owner. Task 10 step 7 builds it.
+  - The two legal URLs (terms, privacy) are the owner's; asked once at Task 9.
+  - Supabase's built-in mailer sends only a few emails an hour: fine for the owner, not for other testers. Custom
+    SMTP is an owner decision before anyone else is invited to TestFlight.
+  - The Today board has no AI tools row; Phase 6's board draws it.
+- Deferred from the Phase 1 review (minor; the Phase 2 plan takes most of them in Tasks 3 and 4; the brew pins
+  stay, Homebrew cannot pin a formula, and the Phase 6 image size is not this phase):
   - Supabase's default privileges still grant anon on future tables and functions. RLS protects; add an
     `alter default privileges … revoke … from anon` migration or an anon-grant check in the catalogue test.
   - `tools/check/steps.ts` is not among the steps' inputs, so a changed step command keeps its old stamp locally.
