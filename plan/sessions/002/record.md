@@ -33,7 +33,10 @@ Outcome: Phase 1 built and merged in PRs #1 to #8; decisions D21 to D23; the API
 
 11. The owner approved the two wording fixes (spec and rule 6: "every centre table"; the package name) and
     logged the Supabase CLI in; migration 0001 was pushed to the hosted project and checked from outside. The
-    hosted project turned out to be in Tokyo (ap-northeast-1), not Mumbai: put to the owner.
+    hosted project turned out to be in Tokyo (ap-northeast-1), not Mumbai. The owner chose to recreate it in
+    Mumbai while it was empty: new project `esowihbxawvoexflekxa` (ap-south-1), migration pushed and checked,
+    Vercel's two variables updated with the CLI, production redeployed through `deploy.yml` (68ae39b, smoke
+    green). The Tokyo project is unused; the owner deletes it.
 
 ## Why things are as they are
 

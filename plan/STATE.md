@@ -24,10 +24,11 @@ Nothing open. No branch but `main` and `pr-shots`.
 
 ## Open items
 
-- Hosted Supabase (`ctxtacacrbkrmctluahk`) has migration 0001 (pushed 2026-10-07 with the CLI logged in as the
-  owner; checked: signed-out callers are refused on every table and function). Its region is **ap-northeast-1
-  (Tokyo)**, not Mumbai as asked, while the API runs in `bom1`: a question for the owner. Moving migrations into
-  CI is a later decision.
+- Hosted Supabase is `esowihbxawvoexflekxa` in ap-south-1 (Mumbai), beside the API in `bom1`, with migration 0001
+  (pushed 2026-10-07; checked: signed-out callers are refused on every table and function). Vercel's
+  `SUPABASE_URL` and `SUPABASE_ANON_KEY` point at it (Production and Preview). The first project, created in
+  Tokyo by mistake (`ctxtacacrbkrmctluahk`, renamed `tutor-central-tokyo`), is unused: the owner deletes it.
+  Moving migrations into CI is a later decision.
 - Vercel: production domain is `api-ten-orpin-51.vercel.app` (repo variable `API_ORIGIN`); a nicer domain is
   the owner's call.
 - Vercel Hobby blocks deployments whose commit author it does not know. This repo's git email is

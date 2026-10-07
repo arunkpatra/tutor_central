@@ -61,3 +61,11 @@
 > how do a login supabase CLI.give me steps
 
 > supabase login done, push the migration
+
+(Asked whether to keep the Tokyo project; the owner chose "Recreate in Mumbai".)
+
+> New project created in supabase
+> Project URL: https://esowihbxawvoexflekxa.supabase.co
+> Publishable key: (the publishable key; not repeated here)
+
+> update env vars in vercel yourself
