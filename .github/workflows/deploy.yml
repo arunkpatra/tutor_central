@@ -1,6 +1,6 @@
 name: deploy
 
-# The one way the API reaches production (D21), started by hand, as in the owner's other apps: nothing deploys on its
+# The one way the database and the API reach production (D21, D26), started by hand, as in the owner's other apps: nothing deploys on its
 # own (git deploys are off in api/vercel.json). The commit, by default the head of main, is built on the runner with
 # Vercel's CLI, uploaded prebuilt, and smoke-tested at the production domain: /health must report that very commit and
 # the AI routes must refuse a request without a token. The run's summary prints the one-command rollback.
@@ -31,8 +31,53 @@ env:
   SITE: ${{ vars.API_ORIGIN }}
 
 jobs:
+  # Migrations reach the hosted database only here, before the API (D26). The dry run is the run's record of what was
+  # pending; after the push nothing may be pending. A migration is additive while an installed build still uses what
+  # it would remove, so the database can lead the app.
+  migrate:
+    name: the database to production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: Production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      PROJECT_REF: esowihbxawvoexflekxa
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: The commit
+        env:
+          ASKED: ${{ inputs.commit }}
+        run: |
+          sha="${ASKED:-$(git rev-parse origin/main)}"
+          if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then echo "::error::\"$sha\" is not a whole commit SHA."; exit 1; fi
+          if ! git merge-base --is-ancestor "$sha" origin/main 2>/dev/null; then echo "::error::$sha is not a commit of main."; exit 1; fi
+          git checkout -q "$sha"
+
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.120.0
+
+      - name: Link
+        working-directory: supabase
+        run: supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+
+      - name: Push
+        working-directory: supabase
+        run: |
+          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > pending.txt 2>&1
+          { echo "### Production: the database"; echo "Pending before the push:"; echo '```'; cat pending.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          supabase db push --password "$SUPABASE_DB_PASSWORD" --yes
+          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > after.txt 2>&1
+          { echo "After the push:"; echo '```'; cat after.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          if ! grep -q '"upToDate":true' after.txt; then echo "::error::Migrations are still pending after the push."; exit 1; fi
+
   deploy:
     name: the API to production
+    needs: migrate
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: Production
