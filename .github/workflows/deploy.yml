@@ -65,13 +65,15 @@ jobs:
         working-directory: supabase
         run: supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
 
+      # --agent yes: the CLI answers in one JSON line whatever the terminal ("upToDate"); without it, a runner gets
+      # prose and a Mac running an agent gets JSON.
       - name: Push
         working-directory: supabase
         run: |
-          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > pending.txt 2>&1
+          supabase db push --dry-run --agent yes --password "$SUPABASE_DB_PASSWORD" > pending.txt 2>&1
           { echo "### Production: the database"; echo "Pending before the push:"; echo '```'; cat pending.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           supabase db push --password "$SUPABASE_DB_PASSWORD" --yes
-          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > after.txt 2>&1
+          supabase db push --dry-run --agent yes --password "$SUPABASE_DB_PASSWORD" > after.txt 2>&1
           { echo "After the push:"; echo '```'; cat after.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           if ! grep -q '"upToDate":true' after.txt; then echo "::error::Migrations are still pending after the push."; exit 1; fi
 

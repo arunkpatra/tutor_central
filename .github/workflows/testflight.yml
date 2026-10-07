@@ -44,11 +44,12 @@ jobs:
         with:
           version: 2.120.0
 
+      # --agent yes: one JSON line ("upToDate") whatever the terminal.
       - name: No migration pending
         working-directory: supabase
         run: |
           supabase link --project-ref esowihbxawvoexflekxa --password "$SUPABASE_DB_PASSWORD"
-          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > pending.txt 2>&1
+          supabase db push --dry-run --agent yes --password "$SUPABASE_DB_PASSWORD" > pending.txt 2>&1
           cat pending.txt
           if ! grep -q '"upToDate":true' pending.txt; then
             echo "::error::The hosted database has migrations pending. Run the deploy workflow first (D26)."
