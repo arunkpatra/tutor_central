@@ -17,6 +17,10 @@ const BRANCH = "refs/heads/pr-shots";
 
 /** The pictures under <folder>/ in a new commit on pr-shots; other folders are kept. Returns the commit. */
 export async function commitShots(o: ShotsOptions): Promise<string> {
+  if (o.folder.includes("/")) throw new Error(`folder must be one name, not a path: ${o.folder}`);
+  const names = o.files.map((f) => basename(f));
+  const dup = names.find((n, i) => names.indexOf(n) !== i);
+  if (dup) throw new Error(`duplicate picture name: ${dup}`);
   const git = (args: string[], extra: { env?: Record<string, string>; stdin?: string } = {}) =>
     must(["git", ...args], { cwd: o.repo, ...extra });
   const mktree = (entries: string[]) => git(["mktree", "-z"], { stdin: entries.map((e) => `${e}\0`).join("") });

@@ -15,7 +15,8 @@ if (unknown.length > 0) {
   process.exit(2);
 }
 
-const salt = await toolchainSalt();
+// The step definitions are part of the salt, so editing a step's command runs it again.
+const salt = `${await toolchainSalt()}|${await hashInputs(["tools/check/*.ts", "tools/check.ts"], ".", "")}`;
 const summary: string[] = [];
 const seconds = (since: number) => `${((Date.now() - since) / 1000).toFixed(1)}s`;
 const t0 = Date.now();
