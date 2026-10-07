@@ -33,3 +33,6 @@ supabase/.temp/
 
 # Scratch screenshots (the kept ones live on the branch pr-shots)
 .shots/
+
+# bun check step cache
+.check-cache/
