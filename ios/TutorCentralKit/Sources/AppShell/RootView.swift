@@ -72,8 +72,15 @@ public struct RootView: View {
                 onSignedIn: { await session.signedIn($0) },
                 onMessage: { toasts.show($0) }
             )
-        case .needsOnboarding:
-            PlaceholderRoot(line: "Onboarding arrives with its board.")
+        case let .needsOnboarding(user):
+            OnboardingView(
+                user: user,
+                auth: deps.auth,
+                centres: deps.centres,
+                boardState: launch == .onboarding,
+                onCreated: { session.centreCreated($0) },
+                onMessage: { toasts.show($0) }
+            )
         case .ready:
             PlaceholderRoot(line: "The tabs arrive with their boards.")
         }

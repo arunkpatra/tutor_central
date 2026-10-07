@@ -54,14 +54,26 @@ public struct TypeToken: Hashable, Sendable {
         return .system(size: scaled, weight: weight).monospacedDigit()
     }
 
-    /// Extra space between lines so the line height matches the design at the default size.
+    /// Extra space between lines so the line height matches the design at the default size: the design's line less
+    /// the font's own (SF Pro at 34 pt is already about 41 high), never negative.
     public var lineSpacing: CGFloat {
-        line - size
+        max(0, line - UIFont.systemFont(ofSize: size, weight: weight.uiKit).lineHeight)
     }
 
     /// Tracking in points at the design size.
     public var kerning: CGFloat {
         trackingEm * size
+    }
+}
+
+extension Font.Weight {
+    var uiKit: UIFont.Weight {
+        switch self {
+        case .regular: .regular
+        case .semibold: .semibold
+        case .bold: .bold
+        default: .heavy
+        }
     }
 }
 

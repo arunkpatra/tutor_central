@@ -89,6 +89,7 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `headline` | headline | 17 / 22 | 700 | 0 | Section headers on Today, row titles that lead a card |
 | `wordmark` | headline | 17 / 22 | 700 | -0.01em | "Tutor Central" beside the logo on sign-in |
 | `lead` | body | 18 / 26 | 400 | 0 | The lead paragraph under the sign-in headline |
+| `intro` | callout | 16 / 22 | 400 | 0 | The line under a one-task screen's title (onboarding) |
 | `body` | body | 17 / 22 | 400 | 0 | Body copy, form values |
 | `bodyStrong` | body | 17 / 22 | 600 | 0 | Numbers and phone digits in a field, a picker's value |
 | `rowTitle` | callout | 16 / 20 | 600 | 0 | The first line of a list row |
