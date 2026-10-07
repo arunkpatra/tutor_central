@@ -16,5 +16,5 @@ test("in CI the db step runs only on the runner that asks for it", () => {
 });
 
 test("steps run in the documented order", () => {
-  expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "db"]);
+  expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "db"]);
 });
