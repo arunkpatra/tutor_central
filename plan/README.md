@@ -26,6 +26,7 @@ Always:
 | 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Not started |
 | 6 | AI tools through the API | `phase-06-ai-tools.md` | Not started |
 | 7 | Settings, account, notifications, offline hardening, release candidate | `phase-07-settings-and-hardening.md` | Not started |
+| 8 | The product website, tutorcentral.in: home, `/privacy`, `/terms`, support; live before the first App Store submission | `phase-08-website.md` | Not started |
 
 A phase starts with its plan file (`phase-NN-plan.md`: tasks, order, tests first, PR boundaries), written and
 shown before any work. A phase ends with "As built" in its scope file: what exists, what deviated and why.

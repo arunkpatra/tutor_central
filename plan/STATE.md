@@ -16,6 +16,7 @@ Step 0.4 on the design side when the owner wants it.
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md`. API in production through `deploy.yml` |
 | 2 Shell and sign-in | Planned: `phase-02-plan.md`; build from `resume/003-phase-2-build.md` | Boards approved (step 0.3). Owner steps inside Tasks 9 (App Store Connect, Supabase providers, Google web client, email template, legal URLs) and 16 (API key, secrets, first install) |
 | 3 to 7 | Not started | Scoped in their files |
+| 8 Website | Not started | `phase-08-website.md`: tutorcentral.in (the owner bought it); `/privacy` and `/terms` must be live before the first App Store submission; the app already links them |
 
 ## In flight
 
