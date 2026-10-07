@@ -1,14 +1,16 @@
 import { expect, test } from "bun:test";
 import { makeApp } from "../src/app.js";
 
-const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null) });
+const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), commit: "abc1234" });
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
 const post = (path: string, body: string) => app.request(path, { method: "POST", headers: auth, body });
 
-test("health answers with status and version", async () => {
+test("health answers with status and the commit it was deployed from", async () => {
   const r = await app.request("/health");
   expect(r.status).toBe(200);
-  expect(await r.json()).toEqual({ ok: true, version: "local" });
+  expect(await r.json()).toEqual({ ok: true, commit: "abc1234" });
+  const unknown = makeApp({ verify: async () => null });
+  expect(await (await unknown.request("/health")).json()).toEqual({ ok: true, commit: "local" });
 });
 
 test("generate validates, then answers 501 with its contract until Phase 6", async () => {

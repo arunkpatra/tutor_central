@@ -13,4 +13,4 @@ const verify = async (token: string) => {
 };
 
 /** Vercel's Hono preset and `bun --hot` both serve this default export. */
-export default makeApp({ verify });
+export default makeApp({ verify, commit: process.env.TC_COMMIT });
