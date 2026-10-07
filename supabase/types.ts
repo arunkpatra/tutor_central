@@ -294,7 +294,7 @@ isOneToOne: false
           }
           Functions: {
             "create_centre":
-{ Args: { "p_name": string,"p_whatsapp"?: string }; Returns: string
+{ Args: { "p_display_name"?: string,"p_name": string,"p_whatsapp"?: string }; Returns: string
                            },
 "delete_centre":
 { Args: { "p_centre": string }; Returns: undefined

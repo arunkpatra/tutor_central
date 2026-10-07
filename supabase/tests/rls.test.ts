@@ -167,3 +167,45 @@ test("only the owner can delete the centre, and it cascades", async () => {
     expect({ table, rows: (await a.from(table).select("*")).data }).toEqual({ table, rows: [] });
   }
 });
+
+test("create_centre writes the tutor's name on their profile", async () => {
+  const c = await userClient(l, `rls-c-${stamp}@example.com`);
+  const { data: centreC, error } = await c.rpc("create_centre", {
+    p_name: "Centre C",
+    p_whatsapp: null,
+    p_display_name: "Meera Nair",
+  });
+  expect(error).toBeNull();
+  const { data: profile } = await c.from("profiles").select("display_name").single();
+  expect(profile?.display_name).toBe("Meera Nair");
+  const { data: centre } = await c
+    .from("centres")
+    .select("name, whatsapp_number")
+    .eq("id", centreC as string)
+    .single();
+  expect(centre).toEqual({ name: "Centre C", whatsapp_number: null });
+});
+
+test("create_centre refuses a malformed WhatsApp number in words the app can match", async () => {
+  const d = await userClient(l, `rls-d-${stamp}@example.com`);
+  const { error } = await d.rpc("create_centre", { p_name: "Centre D", p_whatsapp: "98765 43210" });
+  expect(error?.code).toBe("23514"); // check_violation: the app validates first (PhoneNumber); this is the floor
+});
+
+test("anonymous gets no grant on a table or function made after migration 0001", async () => {
+  const sql = new SQL(l.db);
+  await sql`create table public.zz_probe (id int)`;
+  await sql`create function public.zz_probe_fn() returns int language sql as 'select 1'`;
+  try {
+    const grants = await sql`select grantee, privilege_type from information_schema.role_table_grants
+      where table_name = 'zz_probe' and grantee = 'anon'`;
+    expect([...grants]).toEqual([]);
+    const fn = await sql`select grantee from information_schema.role_routine_grants
+      where routine_name = 'zz_probe_fn' and grantee in ('anon', 'PUBLIC')`;
+    expect([...fn]).toEqual([]);
+  } finally {
+    await sql`drop function public.zz_probe_fn()`;
+    await sql`drop table public.zz_probe`;
+    await sql.close();
+  }
+});
