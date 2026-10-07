@@ -6,4 +6,4 @@ phase and slice, what to read first, what is already true, what to do and what t
 
 | # | File | For |
 |---|---|---|
-| (none yet) | | |
+| 001 | `001-phase-1-foundation.md` | Phase 1, foundation, executed natively on Opus 5.5 from `plan/phase-01-plan.md` |

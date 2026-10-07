@@ -6,22 +6,22 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-07, session 1. **Scoped, specified, Phase 0 started.** The reference app is
 inventoried (`docs/reference/`), the design is approved (`docs/spec.md`, D1 to D19), the phases are scoped
 (`plan/`). Phase 0: step 0.1 done, direction A Ember chosen (D20); step 0.2, the design system (tokens, components,
-guidelines, four Kit boards), is approved; step 0.3, the Phase 2 boards, is drawn and awaiting approval
-(`docs/design/README.md`). Phase 1's implementation plan is written (`phase-01-plan.md`) and awaits the owner's
-review and choice of execution method. **Next:** approvals, then Phase 1 execution (a fresh session, Opus 5.5 per
-D17) beside step 0.4.
+guidelines, four Kit boards) and step 0.3 (the Phase 2 boards, `information-architecture.md`) are approved.
+Phase 1's implementation plan is written (`phase-01-plan.md`); the owner chose native execution in a fresh
+Opus 5.5 session (D17): resume prompt `resume/001-phase-1-foundation.md`. **Next:** Phase 1 from that prompt;
+step 0.4 (Students and classes boards) on the design side when the owner wants it.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 and 0.2 approved; 0.3 drawn, awaiting approval | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
-| 1 Foundation | Planned (`phase-01-plan.md`, 9 tasks, 4 PRs) | Starts when the owner picks the execution method. Needs Docker for the local database; the owner creates the Supabase and Vercel projects at Tasks 4 and 6 |
+| 0 Design | In progress: 0.1, 0.2 and 0.3 approved; 0.4 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
+| 1 Foundation | Planned (`phase-01-plan.md`, 9 tasks, 4 PRs); resume `resume/001` | Native execution on Opus 5.5. Needs Docker for the local database; the owner creates the Supabase and Vercel projects at Tasks 4 and 6 |
 | 2 to 7 | Not started | Scoped in their files |
 
 ## In flight
 
-Phase 0, step 0.3 (approval). Phase 1 plan review. Repo holds documents only.
+Nothing open. Session 1 ended with everything approved and planned. Repo holds documents only.
 
 ## Open items
 

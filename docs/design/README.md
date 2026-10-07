@@ -19,7 +19,8 @@ chosen and its boards approved, **no screen is built**.
 |---|---|
 | 0.1 Directions | Done 2026-10-07: A Ember chosen (D20). The B and C boards stay on the canvas as a record |
 | 0.2 Design system | Approved by the owner 2026-10-07: four Kit boards on the canvas, `design-tokens.md`, `components.md`, `guidelines.md` |
-| 0.3 Phase 2 boards | Drawn 2026-10-07: nine boards in row 5 of the canvas plus sign-in dark from row 1; `information-architecture.md`. Awaiting approval |
+| 0.3 Phase 2 boards | Approved by the owner 2026-10-07: nine boards in row 5 of the canvas plus sign-in dark from row 1; `information-architecture.md` |
+| 0.4 Phase 3 boards | Not started |
 | 0.4 to 0.8 Boards by phase | Not started |
 
 ## The three directions (step 0.1, decided: A)

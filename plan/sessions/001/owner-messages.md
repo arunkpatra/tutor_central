@@ -31,3 +31,13 @@ parallel with design.
 > iOS Simulator attached to Claude. Check when needed. Its booted
 
 **On the design sections:** "Approved, write it up".
+
+**Second message:**
+
+> Go ahead with Phase 0 plan and the visual directions.
+
+**On the directions:** "A · Ember"; name: "Tutor Central (working name)".
+
+**On the Kit (step 0.2):** "Approved".
+
+**On the Phase 2 boards (step 0.3):** "Approved". **On Phase 1 execution:** "Native, fresh Opus session".
