@@ -10,13 +10,13 @@ export type Step = {
   skipIf?: () => Promise<string | null>;
 };
 
-/** Versions of every tool a step depends on. A tool missing on this machine reads as empty (sh answers 127). */
+/** Versions of every tool a step depends on, and the simulator. A tool missing on this machine reads as empty (sh answers 127). */
 export async function toolchainSalt(): Promise<string> {
   const version = async (cmd: string[]) => (await sh(cmd)).stdout.replace(/\s+/g, " ").trim();
   const xcode = await version(["xcodebuild", "-version"]);
   const swiftformat = await version(["swiftformat", "--version"]);
   const swiftlint = await version(["swiftlint", "version"]);
-  return `${xcode}|${swiftformat}|${swiftlint}|bun ${Bun.version}`;
+  return `${xcode}|${swiftformat}|${swiftlint}|bun ${Bun.version}|${simulatorDestination(process.env)}`;
 }
 
 /** Why the db step should not run here, or null. CI runs it only on the job that sets TC_DB_IN_CI. */
@@ -25,9 +25,9 @@ export function dbSkipReason(env: Record<string, string | undefined>, supabaseRu
   return supabaseRunning ? null : "local supabase is not running (cd supabase && supabase start)";
 }
 
-/** The simulator the iOS step builds and tests on. CI's Xcode 27 image has no iPhone 17 Pro, so it names another. */
+/** The simulator the iOS step builds and tests on. The iPhone 17 is on both this Mac and CI's Xcode 27 image. */
 export function simulatorDestination(env: Record<string, string | undefined>): string {
-  return `platform=iOS Simulator,name=${env.TC_SIMULATOR || "iPhone 17 Pro"}`;
+  return `platform=iOS Simulator,name=${env.TC_SIMULATOR || "iPhone 17"}`;
 }
 
 const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${simulatorDestination(process.env)}'`;

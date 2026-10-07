@@ -27,8 +27,6 @@ jobs:
     runs-on: xcode-27
     timeout-minutes: 40
     env:
-      # The image's simulators are iOS 27 and have no iPhone 17 Pro.
-      TC_SIMULATOR: iPhone 17
       FRESH: ${{ github.ref == 'refs/heads/main' && '--fresh' || '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -19,7 +19,7 @@ test("steps run in the documented order", () => {
   expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "db"]);
 });
 
-test("the simulator is the iPhone 17 Pro unless TC_SIMULATOR names another", () => {
-  expect(simulatorDestination({})).toBe("platform=iOS Simulator,name=iPhone 17 Pro");
-  expect(simulatorDestination({ TC_SIMULATOR: "iPhone 17" })).toBe("platform=iOS Simulator,name=iPhone 17");
+test("the simulator is the iPhone 17 unless TC_SIMULATOR names another", () => {
+  expect(simulatorDestination({})).toBe("platform=iOS Simulator,name=iPhone 17");
+  expect(simulatorDestination({ TC_SIMULATOR: "iPhone 17 Pro" })).toBe("platform=iOS Simulator,name=iPhone 17 Pro");
 });

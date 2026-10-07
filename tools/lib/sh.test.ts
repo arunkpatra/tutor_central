@@ -22,3 +22,8 @@ test("sh reports a missing program as exit 127 instead of throwing", async () =>
 test("must throws with the command and stderr on failure", async () => {
   await expect(must(["sh", "-c", "echo boom >&2; exit 1"])).rejects.toThrow(/boom/);
 });
+
+test("sh feeds stdin when given", async () => {
+  const r = await sh(["cat"], { stdin: "fed\0through" });
+  expect(r.stdout).toBe("fed\0through");
+});
