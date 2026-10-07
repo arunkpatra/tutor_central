@@ -1,0 +1,4 @@
+// Copy to Local.xcconfig (ignored). Local values come from `supabase status -o env`.
+// The $() keeps xcconfig from reading // as a comment.
+SUPABASE_URL = http:/$()/127.0.0.1:54321
+SUPABASE_ANON_KEY = <ANON_KEY from supabase status -o env>

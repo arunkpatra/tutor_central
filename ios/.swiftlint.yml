@@ -1,0 +1,10 @@
+included: [App, SmokeTests, TutorCentralKit/Sources, TutorCentralKit/Tests, TutorCentralKit/Package.swift]
+excluded: [TutorCentral.xcodeproj, TutorCentralKit/.build]
+line_length: { warning: 120, error: 140, ignores_comments: true }
+identifier_name: { min_length: 2, excluded: [id, c, f, i, p, x, y] }
+type_body_length: { warning: 250, error: 400 }
+file_length: { warning: 400, error: 600 }
+# SwiftFormat owns import order (sortImports, @testable last) and trailing commas; these settings agree with it.
+trailing_comma: { mandatory_comma: true }
+opt_in_rules: [empty_count, explicit_init, closure_spacing, unneeded_parentheses_in_closure_argument]
+disabled_rules: [todo]
