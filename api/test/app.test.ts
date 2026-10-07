@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { makeApp } from "../src/app.js";
+import { makeApp } from "../src/make-app.js";
 
 const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), commit: "abc1234" });
 const auth = { authorization: "Bearer good", "content-type": "application/json" };

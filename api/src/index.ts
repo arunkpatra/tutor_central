@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { makeApp } from "./app.js";
+import { makeApp } from "./make-app.js";
 import { env } from "./env.js";
 
 /** Verifies a Supabase access token by asking Supabase for its user. One call per request; a JWKS cache is a later
