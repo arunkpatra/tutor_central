@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- iOS 26.0 minimum, iPhone only, portrait only (D1). Bundle id `app.journium.tutorcentral` (D19). The app's name is Tutor Central (D20).
+- iOS 26.0 minimum, iPhone only, portrait only (D1). Bundle id `in.tutorcentral.app` (D27, superseding D19's). The app's name is Tutor Central (D20).
 - Swift language mode 6, `SWIFT_STRICT_CONCURRENCY = complete`, SwiftUI only, Observation; UIKit only behind a wrapper with the reason in the file (D8). Features never import each other; a feature reaches another feature's screen through a closure or protocol that `AppShell` provides (spec section 4).
 - Style only through `DesignSystem` tokens: no raw colour, size, radius, shadow or duration in a view (D10). A value a board needs that no token names becomes a token first, in `design-tokens.md` and in Swift in the same commit.
 - Both appearances designed and built (D13); the app opens dark (D23). Every screen is photographed in both by `bun shots <state>` and the pictures are in the pull request before merge (D7). No board, no screen: a state without a board is designed and approved first (`CLAUDE.md` rule 1).
@@ -2513,8 +2513,8 @@ Run: `bun check --only=ios` → PASS. Commit: `git add ios && git commit -m "App
 
 Give these one at a time; check the result of each (`gh`/dashboard where possible, else the owner's word) before the next.
 
-1. **App Store Connect app record.** developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → "+" → App IDs → App; description "Tutor Central"; Bundle ID explicit `app.journium.tutorcentral`; Capabilities: tick **Sign in with Apple** (leave "Enable as a primary App ID"); Register. Then App Store Connect → My Apps → "+" → New App: iOS, name "Tutor Central", primary language English (India) if offered else English (U.K.), bundle id the one just made, SKU `tutorcentral`. Check: the app appears in My Apps. Ask for the **Team ID** (Membership details); it becomes the repository variable `APPLE_TEAM_ID` in Task 16, written down now in `STATE.md`'s open items by the build session.
-2. **Supabase, Apple provider.** supabase.com/dashboard → project `esowihbxawvoexflekxa` → Authentication → Providers → Apple: enable; **Client IDs** `app.journium.tutorcentral` (the bundle id; the native id-token flow needs nothing else, no Services ID and no secret key); Save. Check: the provider shows enabled.
+1. **App Store Connect app record.** developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → "+" → App IDs → App; description "Tutor Central"; Bundle ID explicit `in.tutorcentral.app` (D27); Capabilities: tick **Sign in with Apple** (leave "Enable as a primary App ID"); Register. Then App Store Connect → My Apps → "+" → New App: iOS, name "Tutor Central", primary language English (India) if offered else English (U.K.), bundle id the one just made, SKU `tutorcentral`. Check: the app appears in My Apps. Ask for the **Team ID** (Membership details); it becomes the repository variable `APPLE_TEAM_ID` in Task 16, written down now in `STATE.md`'s open items by the build session.
+2. **Supabase, Apple provider.** supabase.com/dashboard → project `esowihbxawvoexflekxa` → Authentication → Providers → Apple: enable; **Client IDs** `in.tutorcentral.app` (the bundle id; the native id-token flow needs nothing else, no Services ID and no secret key); Save. Check: the provider shows enabled.
 3. **Google Cloud, web OAuth client.** console.cloud.google.com → a project (any; "Tutor Central" if new) → APIs & Services → OAuth consent screen: External, app name Tutor Central, support and developer emails the owner's, no scopes beyond the defaults, publish (or add the owner as a test user while in Testing). Then Credentials → Create credentials → OAuth client ID → **Web application**, name "Tutor Central (Supabase)", **Authorised redirect URI** `https://esowihbxawvoexflekxa.supabase.co/auth/v1/callback`; Create. Copy the client id and secret.
 4. **Supabase, Google provider.** Authentication → Providers → Google: enable, paste the client id and secret, Save. Then Authentication → URL Configuration → **Redirect URLs** → add `tutorcentral://auth-callback`. Check: both saved.
 5. **Supabase, email code.** Authentication → Providers → Email: enabled, "Confirm email" on, **OTP expiry 600**, OTP length 6. Authentication → Emails (templates) → **Magic Link**: subject "Your Tutor Central code", body replaced with plain text that carries `{{ .Token }}` ("Your six-digit code is {{ .Token }}. It works for 10 minutes. If you did not ask for it, ignore this email."). The same for the **Confirm signup** template, since a first sign-in with a new address uses it. Check: a test send from the dashboard, or the first real code in step 6 of Task 10.
@@ -2539,7 +2539,7 @@ Give these one at a time; check the result of each (`gh`/dashboard where possibl
 ```xml
   <key>CFBundleURLTypes</key>
   <array><dict>
-    <key>CFBundleURLName</key><string>app.journium.tutorcentral</string>
+    <key>CFBundleURLName</key><string>in.tutorcentral.app</string>
     <key>CFBundleURLSchemes</key><array><string>tutorcentral</string></array>
   </dict></array>
 ```
