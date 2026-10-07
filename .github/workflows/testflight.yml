@@ -1,17 +1,160 @@
 name: testflight
 
-# Phase 2 wires signing and upload (App Store Connect API key, cloud signing). Until then this lane only says so.
+# The one way a build reaches TestFlight (D24), started by hand: the head of main (or a given commit of main) is
+# archived on the Xcode 27 image with cloud signing (the App Store Connect API key stands in for a developer's
+# certificate) and uploaded by xcodebuild itself. The build number is this run's number; the version is project.yml's.
+# Nothing signs from a local machine. No build ships ahead of its database (D26): the run stops while the hosted
+# project has migrations pending. Every action is pinned to a commit (D14).
+
+run-name: testflight ${{ inputs.commit || 'the head of main' }}
 
 on:
   workflow_dispatch:
+    inputs:
+      commit:
+        description: The commit of main to build (full SHA). Empty, the head of main.
+        required: false
+        default: ""
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
+env:
+  BUN_VERSION: 1.3.11
+
 jobs:
-  upload:
+  database:
+    name: the database is up to date
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: Production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
     steps:
-      - run: |
-          echo "::error::TestFlight upload arrives in Phase 2 (signing and the App Store Connect API key). Nothing to do yet."
-          exit 1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.commit || 'main' }}
+
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.120.0
+
+      - name: No migration pending
+        working-directory: supabase
+        run: |
+          supabase link --project-ref esowihbxawvoexflekxa --password "$SUPABASE_DB_PASSWORD"
+          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > pending.txt 2>&1
+          cat pending.txt
+          if ! grep -q '"upToDate":true' pending.txt; then
+            echo "::error::The hosted database has migrations pending. Run the deploy workflow first (D26)."
+            exit 1
+          fi
+
+  upload:
+    name: archive and upload
+    needs: database
+    runs-on: xcode-27
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - id: commit
+        env:
+          ASKED: ${{ inputs.commit }}
+        run: |
+          sha="${ASKED:-$(git rev-parse origin/main)}"
+          if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then echo "::error::\"$sha\" is not a whole commit SHA."; exit 1; fi
+          if ! git merge-base --is-ancestor "$sha" origin/main 2>/dev/null; then echo "::error::$sha is not a commit of main."; exit 1; fi
+          git checkout -q "$sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Xcode 27.0
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app && xcodebuild -version
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Tools
+        run: brew install xcodegen
+
+      - run: bun install --frozen-lockfile
+
+      # Production's Supabase (the anon key is public by design, D11). "https:/$()/" keeps xcconfig from reading "//"
+      # as a comment, as Local.xcconfig.example does.
+      - name: Local xcconfig (production values)
+        env:
+          URL: ${{ vars.SUPABASE_URL }}
+          KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: |
+          rep='/$()/'
+          printf 'SUPABASE_URL = %s\nSUPABASE_ANON_KEY = %s\n' "${URL/\/\//$rep}" "$KEY" > ios/Config/Local.xcconfig
+          cat ios/Config/Local.xcconfig
+
+      - run: bun gen
+
+      - name: App Store Connect API key
+        env:
+          P8: ${{ secrets.APP_STORE_CONNECT_KEY_P8 }}
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        run: |
+          mkdir -p ~/private_keys
+          printf '%s' "$P8" > ~/private_keys/AuthKey_$KEY_ID.p8
+          chmod 600 ~/private_keys/AuthKey_$KEY_ID.p8
+
+      - name: Archive (cloud signing)
+        working-directory: ios
+        env:
+          TEAM: ${{ vars.APPLE_TEAM_ID }}
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          xcodebuild archive \
+            -project TutorCentral.xcodeproj -scheme TutorCentral -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath build/TutorCentral.xcarchive \
+            DEVELOPMENT_TEAM="$TEAM" CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_$KEY_ID.p8" \
+            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" \
+            > archive.log 2>&1 || true
+          grep -E 'error:|\*\* ARCHIVE' archive.log || tail -40 archive.log
+          grep -q 'ARCHIVE SUCCEEDED' archive.log
+
+      - name: Upload to TestFlight
+        working-directory: ios
+        env:
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/TutorCentral.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build/export \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_$KEY_ID.p8" \
+            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" \
+            > export.log 2>&1 || true
+          grep -E 'error:|Upload|EXPORT' export.log || tail -40 export.log
+          grep -q 'EXPORT SUCCEEDED' export.log
+
+      - name: Summary
+        env:
+          COMMIT: ${{ steps.commit.outputs.sha }}
+        run: |
+          version=$(sed -n 's/^ *MARKETING_VERSION: "\(.*\)"/\1/p' ios/project.yml)
+          {
+            echo "### TestFlight"
+            echo "| | |"; echo "|---|---|"
+            echo "| Commit | \`$COMMIT\` |"
+            echo "| Build | $version ($GITHUB_RUN_NUMBER) |"
+            echo "| Where | App Store Connect → TestFlight → Internal Testing, processing a few minutes |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove the key
+        if: always()
+        run: rm -rf ~/private_keys
