@@ -10,8 +10,12 @@ AI teaching tools. India first. Supabase behind it, a thin Hono API on Vercel fo
    built. Plumbing with nothing on screen may proceed (D6).
 2. **Screenshots in every pull request that changes what is seen** (D7): each changed screen and state, both
    appearances where the board has both, taken in the simulator by `tools/shots.ts`, kept on the orphan
-   branch `pr-shots` by `tools/pr-shots.ts`, embedded in the description, checked to show on GitHub before
-   merge. None is merged without.
+   branch `pr-shots` by `tools/pr-shots.ts`, embedded in the description as the table it prints. None is
+   merged without. That table's links (`github.com/<repo>/blob/<pr-shots sha>/<folder>/<file>.png?raw=true`)
+   render on this private repo's PR pages: the owner saw them on PR #10 (2026-10-07), so a PR page is not
+   opened again to check. If a picture is ever in doubt, fetch it with the token, not a browser (the built-in
+   browser is not signed in to GitHub): `curl -H "Authorization: token $(gh auth token)"
+   https://raw.githubusercontent.com/arunkpatra/tutor_central/<sha>/<folder>/<file>.png` answers 200 image/png.
 3. Style only through design tokens (D10). No raw colour, size, radius, shadow or duration in a view.
 4. Swift 6 strict concurrency, SwiftUI only, Observation (D8). Features never import each other.
 5. No AI key, no service-role key, no secret in the app or the repo (D11). The API verifies the user's JWT.

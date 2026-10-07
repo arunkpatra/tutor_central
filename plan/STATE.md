@@ -50,8 +50,9 @@ Nothing open. No branch but `main` and `pr-shots`.
   - `deploy.yml` passes `--token` on the command line; the CLI reads `VERCEL_TOKEN` from the environment.
   - Phase 6 constraint: six 8 MB base64 images exceed Vercel's 4.5 MB request body. Downscale on the device or
     upload to Storage.
-  - `pr-shots`: see a picture render on a PR page on the first screen PR; refuse duplicate basenames and
-    folders containing "/".
+  - `pr-shots`: pictures render on a PR page — settled, the owner saw them on PR #10 (2026-10-07); how to check
+    one without a browser is in `CLAUDE.md` rule 2. The refusals (duplicate basenames, folders with "/") are in
+    PR #11.
   - A fresh clone without `ios/Config/Local.xcconfig` fails inside XcodeGen; give a one-line hint.
   - `supabase/types.ts` drift is not checked in the `db` step.
 - App icon: a Phase 0 board (name settled as Tutor Central, D20).
