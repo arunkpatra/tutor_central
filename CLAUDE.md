@@ -15,7 +15,9 @@ AI teaching tools. India first. Supabase behind it, a thin Hono API on Vercel fo
 3. Style only through design tokens (D10). No raw colour, size, radius, shadow or duration in a view.
 4. Swift 6 strict concurrency, SwiftUI only, Observation (D8). Features never import each other.
 5. No AI key, no service-role key, no secret in the app or the repo (D11). The API verifies the user's JWT.
-6. Row-level security on every table. A new table without a policy and a test does not merge.
+6. Row-level security on every table. Every centre table also carries `id`, `centre_id`, `created_at`,
+   `updated_at`; the tenancy tables (`centres`, `centre_members`, `profiles`) are keyed by the centre and user
+   themselves. A new table without a policy and a test does not merge.
 7. Bun only on the TypeScript side (D16). Never npm, npx, yarn or pnpm.
 8. Dependencies pinned exactly (D14). A new dependency needs a decision.
 9. `bun check` before every commit. Code reaches `main` only through a pull request with a green check.

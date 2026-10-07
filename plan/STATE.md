@@ -38,9 +38,6 @@ Nothing open. No branch but `main` and `pr-shots`.
   - The four brew tools are unpinned in CI. The salt makes drift loud, not silent.
   - `check.yml`'s `cancel-in-progress` also cancels `main`'s `--fresh` runs; limit it to pull requests.
   - `deploy.yml` passes `--token` on the command line; the CLI reads `VERCEL_TOKEN` from the environment.
-  - Rule 6's "every table has id, centre_id…" really means every centre table (`centre_members` and `profiles`
-    are tenancy tables). Also `docs/spec.md` section 4 says `ios/TutorCentral`; the package is
-    `ios/TutorCentralKit`. Both are wording for the owner to approve.
   - Phase 6 constraint: six 8 MB base64 images exceed Vercel's 4.5 MB request body. Downscale on the device or
     upload to Storage.
   - `pr-shots`: see a picture render on a PR page on the first screen PR; refuse duplicate basenames and
