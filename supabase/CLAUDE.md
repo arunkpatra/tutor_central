@@ -16,11 +16,11 @@
   :54324. Keys from `supabase status -o env`. The seed's tutor signs in as `meera@example.com` /
   `tutor-local-1`.
 - Types: `supabase gen types typescript --local > types.ts` after every migration; commit it.
-- Hosted: project `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), beside the API in `bom1`. Migrations go up after
-  the PR is merged: with the CLI logged in (`supabase login`, the owner's account) and the folder linked
-  (`supabase link --project-ref esowihbxawvoexflekxa`, no password needed), `supabase db push --dry-run`, then
-  `supabase db push`. Moving this
-  into CI is a later decision.
+- Hosted: project `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), beside the API in `bom1`. Migrations reach it only
+  through `deploy.yml`'s `migrate` job, before the API (D26); never `supabase db push` by hand. A migration is
+  additive while any installed build uses what it would remove (expand now, contract later): the database leads
+  the app, and the TestFlight lane refuses a build while migrations are pending. Until the job exists (Phase 2,
+  Task 10b) a merged migration waits; 0001 was the only hand push.
 
 Commands: `bun check --only=db` (resets the local database, runs the tests, re-seeds);
 `cd supabase && bun test tests`.

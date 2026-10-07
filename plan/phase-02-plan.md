@@ -125,13 +125,14 @@ tools/pr-shots.ts, pr-shots.test.ts                    # refuse duplicate basena
 | 3 | 3 | `phase-2/foundation-minors` | Deferred minors: check inputs, pr-shots refusals, workflows, xcconfig hint, unsigned simulator builds | none |
 | 4 | 4 | `phase-2/create-centre-name` | Migration 0002: `create_centre` takes the tutor's name; anon default privileges; types drift check | none |
 | 5 | 5 to 10 | `phase-2/sign-in` | Sign in with Apple, Google, an email code and a password; the session gate | `signin`, `signin-email`, `signin-code`, `signin-code-wrong`, `signin-password`, both appearances |
+| 5b | 10b | `phase-2/migrate-lane` | Migrations through `deploy.yml` (D26); 0002 to the hosted project | none; the run's summary |
 | 6 | 11, 12 | `phase-2/onboarding` | Onboarding creates the centre | `onboarding`, both |
 | 7 | 13, 14 | `phase-2/tabs-today` | Five tabs, Today empty, the later placeholders, deep links, toasts | `today-empty`, `later-students`, `later-fees`, `later-attendance`, `later-more`, both |
 | 8 | 15 | `phase-2/settings` | Settings: profile, version, sign out | `settings`, both |
 | 9 | 16 | `phase-2/testflight` | The TestFlight lane (D24) | none; the run's summary and the build on the owner's phone |
 | main | 17 | | As built, state, record, resume (documents only, D12) | |
 
-Owner steps sit inside the task that needs them, each one checked before the next: Task 9 (App Store Connect record and App ID with Sign in with Apple; Supabase Apple provider; Google web client and Supabase Google provider; redirect URL; email OTP template and expiry; the two legal URLs), Task 16 (App Store Connect API key, the three secrets and three variables, the first install).
+Owner steps sit inside the task that needs them, each one checked before the next: Task 9 (App Store Connect record and App ID with Sign in with Apple; Supabase Apple provider; Google web client and Supabase Google provider; redirect URL; email OTP template and expiry; the two legal URLs; for D26 a Supabase access token and the database password as secrets in a `production` environment), Task 16 (App Store Connect API key, the three secrets and three variables, the first install).
 
 ---
 
@@ -1587,13 +1588,7 @@ git commit -m "Migration 0002: create_centre takes the tutor's name; anon gets n
 git push -u origin phase-2/create-centre-name && gh pr create --title "Migration 0002: create_centre with the tutor's name; anon default privileges" --body "..."
 ```
 
-After merge, from `main`:
-
-```bash
-cd supabase && supabase db push --dry-run && supabase db push
-```
-
-Expected: `20261008000002_create_centre_name.sql` applied to `esowihbxawvoexflekxa`. Check from outside with the anon key that `create_centre` is refused (as session 2 did for 0001). Record the push in `STATE.md` at Task 17.
+After merge: nothing by hand (D26, superseding this step). 0002 goes up through `deploy.yml`'s `migrate` job, built in Task 10b.
 
 ### Task 5: Domain: the user, the centre, the profile, an email address, a failure (PR 5)
 
@@ -2966,6 +2961,18 @@ The board (`docs/design/mockups/P2-Email-Password.dc.html`, canvas row 5) is the
 - [ ] **Step 8: The pull request for sign-in**
 
 `bun check`; `bun pr-shots phase-2-sign-in .shots/signin/*.png .shots/signin-email/*.png .shots/signin-code/*.png .shots/signin-code-wrong/*.png .shots/signin-password/*.png`; `gh pr create --title "Sign in with Apple, Google, an email code and a password; the session gate" --body-file -` with: what was built (Tasks 5 to 10), the pictures table, what was run by hand (Apple and Google against the hosted project on the simulator, the email code against the local stack, a wrong code, an expired code if one was waited for), the owner steps done, and the words every failure shows. Merge when green and the pictures render.
+
+### Task 10b: Migrations through `deploy.yml` (PR 5b, D26)
+
+Added in session 4 at the owner's request; the owner chose the design (D26).
+
+**Files:**
+- Modify: `.github/workflows/deploy.yml` (a `migrate` job before the API deploy), `supabase/CLAUDE.md` (hosted: no hand pushes; additive rule)
+- Later, in Task 16: `.github/workflows/testflight.yml` fails when `supabase db push --dry-run` against the hosted project lists anything pending
+
+- [ ] **Step 1: Owner steps (one at a time, each checked):** a Supabase personal access token (Account → Access tokens), named for the lane; a GitHub environment `production` holding `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` (the project's database password; reset it in the dashboard if unknown). `deploy.yml`'s jobs run in that environment.
+- [ ] **Step 2: The job.** `migrate`: checkout; `supabase/setup-cli` pinned to a SHA with the CLI version pinned exactly; `supabase link --project-ref esowihbxawvoexflekxa` (password from the environment); `supabase db push --dry-run` into `$GITHUB_STEP_SUMMARY`; `supabase db push`; then the dry-run again must list nothing pending. The API job `needs: migrate`. Test the parts that have logic (any summary formatting) with `bun test`; the workflow itself is proven by its first run.
+- [ ] **Step 3: First run.** After merge, `gh workflow run deploy`: the summary shows `20261008000002_create_centre_name.sql` pending then applied; the API smoke passes; from outside, the anon key is refused on `create_centre` (as session 2 checked 0001). Record in `STATE.md`.
 
 ### Task 11: Domain: the phone number; the onboarding store (PR 6)
 
