@@ -10,6 +10,8 @@ public struct RootView: View {
     @AppStorage(Appearance.storageKey) private var storedAppearance: String?
     @State private var session: SessionStore
     @State private var toasts = ToastCenter()
+    @State private var tabs: TabsState
+    @Environment(\.scenePhase) private var scenePhase
     private let deps: Dependencies
     private let launch: LaunchState?
 
@@ -25,6 +27,7 @@ public struct RootView: View {
         self.deps = deps
         self.launch = launch
         _session = State(initialValue: SessionStore(deps: deps, initial: initial))
+        _tabs = State(initialValue: TabsState(selected: launch.flatMap(Self.tab(for:)) ?? .today))
     }
 
     /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
@@ -37,7 +40,24 @@ public struct RootView: View {
 
     public var body: some View {
         content
-            .overlay(alignment: .bottom) { ToastHost(toasts: toasts) }
+            .overlay(alignment: .bottom) {
+                // The tabs draw their own host above the tab bar.
+                if !session.isReady {
+                    ToastHost(toasts: toasts)
+                }
+            }
+            .onOpenURL { url in
+                guard let link = DeepLink(url: url), session.isReady else { return }
+                if !tabs.open(link) {
+                    toasts.show("That opens in a later build.")
+                }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                // The foreground refresh hook: the centre and profile read again when the app comes back.
+                if phase == .active, launch == nil {
+                    Task { await session.refresh() }
+                }
+            }
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
@@ -82,7 +102,23 @@ public struct RootView: View {
                 onMessage: { toasts.show($0) }
             )
         case .ready:
-            PlaceholderRoot(line: "The tabs arrive with their boards.")
+            TabsView(
+                state: tabs,
+                build: deps.bundleVersion,
+                toasts: toasts,
+                today: { LaterView(place: .tab(.today), build: deps.bundleVersion) },
+                settings: { EmptyView() }
+            )
+        }
+    }
+
+    static func tab(for state: LaunchState) -> AppTab? {
+        switch state {
+        case .laterStudents: .students
+        case .laterFees: .fees
+        case .laterAttendance: .attendance
+        case .laterMore: .more
+        default: nil
         }
     }
 
@@ -141,18 +177,5 @@ struct LoadingRoot: View {
         .padding(.top, Tokens.pageTop)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Tokens.ground.color)
-    }
-}
-
-/// A root whose board is built in a later task of this phase; replaced as each lands.
-struct PlaceholderRoot: View {
-    let line: String
-
-    var body: some View {
-        Text(line)
-            .typeStyle(Tokens.subhead)
-            .foregroundStyle(Tokens.text2.color)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Tokens.ground.color)
     }
 }

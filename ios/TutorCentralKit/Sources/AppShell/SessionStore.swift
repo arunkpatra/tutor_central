@@ -14,6 +14,16 @@ import Observation
     }
 
     public private(set) var state: State
+
+    /// Signed in with a centre: the tabs show.
+    public var isReady: Bool {
+        if case .ready = state {
+            true
+        } else {
+            false
+        }
+    }
+
     /// Set when the workspace could not be read; the root shows a footnote line and Retry (`refresh()`). Never
     /// onboarding: a tutor with a centre must not be asked to make a second one because the network blinked.
     public private(set) var lastError: String?

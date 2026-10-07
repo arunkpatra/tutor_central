@@ -90,6 +90,7 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `wordmark` | headline | 17 / 22 | 700 | -0.01em | "Tutor Central" beside the logo on sign-in |
 | `lead` | body | 18 / 26 | 400 | 0 | The lead paragraph under the sign-in headline |
 | `intro` | callout | 16 / 22 | 400 | 0 | The line under a one-task screen's title (onboarding) |
+| `emptyTitle` | title3 | 20 / 25 | 700 | 0 | The title of a card that fills a screen while its feature is on the way (P2-Later) |
 | `body` | body | 17 / 22 | 400 | 0 | Body copy, form values |
 | `bodyStrong` | body | 17 / 22 | 600 | 0 | Numbers and phone digits in a field, a picker's value |
 | `rowTitle` | callout | 16 / 20 | 600 | 0 | The first line of a list row |
@@ -142,6 +143,7 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `heroTop` | 80 | Top of screen to the logo on the landing and to the eyebrow on onboarding |
 | `heroLead` | 72 | The logo row to the headline on the landing |
 | `groupGap` | 24 | Between the groups of a one-task screen: code entry, onboarding |
+| `emptyPadding` | 40 | Top and bottom inside a card that fills a screen while its feature is on the way |
 | `rowPaddingDense` | 12 | Vertical padding of a list row of people or classes (the Kit board); horizontal stays 16 |
 | `hairline` | 1 | Every border and divider |
 | `iconTab` | 22 | A tab bar symbol |
