@@ -68,7 +68,10 @@ jobs:
           bun x "$VERCEL_CLI" build --prod --token="$VERCEL_TOKEN"
 
       # The deployment production served before this one is written down: promoting it back is the rollback.
+      # Vercel holds a deployment whose commit author it does not know at UNKNOWN for ever (only arunkpatra@gmail.com
+      # deploys); the limit turns that into a failure in minutes.
       - name: Deploy
+        timeout-minutes: 5
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           COMMIT: ${{ steps.commit.outputs.sha }}
