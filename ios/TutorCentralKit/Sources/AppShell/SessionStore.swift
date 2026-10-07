@@ -29,6 +29,9 @@ import Observation
     public private(set) var lastError: String?
     private let deps: Dependencies
     private var following: Task<Void, Never>?
+    /// Names the app's own sign-ins carried (Apple gives one once, in the credential); Supabase's announcement of the
+    /// same sign-in has none, and either lookup may finish last.
+    private var knownNames: [UUID: String] = [:]
 
     public init(deps: Dependencies, initial: State = .loading) {
         self.deps = deps
@@ -53,6 +56,9 @@ import Observation
 
     /// Called by the sign-in stores after a success.
     public func signedIn(_ user: AuthUser) async {
+        if let name = user.fullName {
+            knownNames[user.id] = name
+        }
         await resolve(user)
     }
 
@@ -98,12 +104,17 @@ import Observation
         do {
             let workspace = try await deps.centres.workspace(for: user)
             lastError = nil
-            state = workspace.map(State.ready) ?? .needsOnboarding(user)
+            state = workspace.map(State.ready) ?? .needsOnboarding(withKnownName(user))
         } catch {
             lastError = "Couldn't load your centre. Check your connection and try again."
             if case .ready = state {} else {
                 state = .loading
             }
         }
+    }
+
+    private func withKnownName(_ user: AuthUser) -> AuthUser {
+        guard user.fullName == nil, let name = knownNames[user.id] else { return user }
+        return AuthUser(id: user.id, email: user.email, fullName: name)
     }
 }

@@ -95,6 +95,10 @@ jobs:
           URL: ${{ vars.SUPABASE_URL }}
           KEY: ${{ vars.SUPABASE_ANON_KEY }}
         run: |
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "::error::The repository variables SUPABASE_URL and SUPABASE_ANON_KEY must be set; a build without them cannot sign in."
+            exit 1
+          fi
           rep='/$()/'
           printf 'SUPABASE_URL = %s\nSUPABASE_ANON_KEY = %s\n' "${URL/\/\//$rep}" "$KEY" > ios/Config/Local.xcconfig
           cat ios/Config/Local.xcconfig

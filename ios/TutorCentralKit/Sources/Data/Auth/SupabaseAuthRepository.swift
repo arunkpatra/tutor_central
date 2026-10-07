@@ -11,8 +11,10 @@ public final class SupabaseAuthRepository: AuthRepository {
         auth = client.auth
     }
 
+    /// The keychain's session, read without a refresh: a tutor offline with an expired token is still signed in. A
+    /// refresh that truly fails (a revoked session) arrives as a sign-out through `changes()`.
     public func currentUser() async -> AuthUser? {
-        await (try? auth.session)?.user.authUser
+        auth.currentSession?.user.authUser
     }
 
     public func changes() -> AsyncStream<AuthUser?> {
@@ -36,8 +38,10 @@ public final class SupabaseAuthRepository: AuthRepository {
         let user = try await wrap {
             try await auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce)).user
         }
-        // Apple gives the name only on the first authorisation, in the credential, never in the token.
+        // Apple gives the name only on the first authorisation, in the credential, never in the token: keep it on the
+        // user, so a later read (another device, a reinstall before onboarding) still has it.
         guard let fullName, user.authUser.fullName == nil else { return user.authUser }
+        _ = try? await auth.update(user: UserAttributes(data: ["full_name": .string(fullName)]))
         return AuthUser(id: user.id, email: user.email, fullName: fullName)
     }
 

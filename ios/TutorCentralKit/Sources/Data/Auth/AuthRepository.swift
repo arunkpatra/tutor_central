@@ -3,7 +3,8 @@ import Domain
 /// Signing in and out, whatever the method. The Supabase implementation talks to Auth; the fake runs tests,
 /// previews and `bun shots`.
 public protocol AuthRepository: Sendable {
-    /// The user from the keychain session at launch, or nil. Never throws: a broken session reads as signed out.
+    /// The user from the keychain session at launch, or nil, read without the network: an expired token is still the
+    /// signed-in user (offline is not signed out). Never throws.
     func currentUser() async -> AuthUser?
     /// Every change after the current state: a user on sign-in, nil on sign-out.
     func changes() -> AsyncStream<AuthUser?>

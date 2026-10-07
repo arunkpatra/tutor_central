@@ -42,7 +42,8 @@ import Testing
         await store.commitCentre()
         await store.commitName()
         await store.commitPhone()
-        #expect(centres.centreUpdates.isEmpty && centres.profileUpdates.isEmpty && store.saveState == .idle)
+        #expect(centres.nameUpdates.isEmpty && centres.whatsAppUpdates.isEmpty && centres.profileUpdates.isEmpty)
+        #expect(store.saveState == .idle)
     }
 
     @Test func anEmptyNameOrCentreIsNotSaved() async {
@@ -50,7 +51,7 @@ import Testing
         let store = make(centres)
         store.centreName = " "
         await store.commitCentre()
-        #expect(centres.centreUpdates.isEmpty && store.message == "A centre needs a name.")
+        #expect(centres.nameUpdates.isEmpty && store.message == "A centre needs a name.")
         #expect(store.centreName == "Bright Minds Tuition")
         store.displayName = ""
         await store.commitName()
@@ -63,10 +64,10 @@ import Testing
         let store = make(centres)
         store.digits = "12"
         await store.commitPhone()
-        #expect(store.phoneError == "Needs 10 digits after +91." && centres.centreUpdates.isEmpty)
+        #expect(store.phoneError == "Needs 10 digits after +91." && centres.whatsAppUpdates.isEmpty)
         store.digits = ""
         await store.commitPhone()
-        #expect(centres.centreUpdates.last?.whatsappNumber == nil && store.saveState == .saved)
+        #expect(centres.whatsAppUpdates == [nil] && store.saveState == .saved)
     }
 
     @Test func aFailedSaveKeepsTheTypedValueAndSaysSo() async {
@@ -84,5 +85,16 @@ import Testing
         let store = make(auth: auth)
         await store.signOut()
         #expect(auth.signedOut == 1)
+    }
+
+    /// Review, Important 5: each field writes only its own column, so two quick edits cannot undo each other.
+    @Test func eachCommitWritesOnlyItsOwnColumn() async {
+        let centres = FakeCentreRepository()
+        let store = make(centres)
+        store.centreName = "Bright Minds"
+        store.digits = "9876543210"
+        await store.commitPhone()
+        await store.commitCentre()
+        #expect(centres.whatsAppUpdates == ["+919876543210"] && centres.nameUpdates == ["Bright Minds"])
     }
 }

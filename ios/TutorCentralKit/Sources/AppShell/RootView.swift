@@ -12,8 +12,7 @@ public struct RootView: View {
     @AppStorage(Appearance.storageKey) private var storedAppearance: String?
     @State private var session: SessionStore
     @State private var toasts = ToastCenter()
-    @State private var tabs: TabsState
-    @State private var today: TodayStore?
+    @State private var shell: ShellState
     @Environment(\.scenePhase) private var scenePhase
     private let deps: Dependencies
     private let launch: LaunchState?
@@ -23,8 +22,7 @@ public struct RootView: View {
         let deps: Dependencies = if let launch, launch != .placeholder {
             Fixtures.dependencies(for: launch)
         } else {
-            // A build without Supabase values still opens, at sign-in.
-            Self.live ?? Fixtures.dependencies(for: .signin)
+            Self.liveOrFakesInDebug()
         }
         let initial = launch.map(Fixtures.initialState(for:)) ?? .loading
         self.deps = deps
@@ -34,12 +32,28 @@ public struct RootView: View {
         if launch == .settings {
             tabs.push(.settings)
         }
-        _tabs = State(initialValue: tabs)
+        let shell = ShellState(tabs: tabs)
+        shell.sessionChanged(initial)
+        _shell = State(initialValue: shell)
     }
 
     /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
     /// a client per RootView would sign in on one and read on another that never saw the session.
     private static let live: Dependencies? = try? Dependencies.live()
+
+    /// A debug build without Supabase values (previews, a fresh clone) opens on the fakes. A release build without
+    /// them is a broken build: it stops at launch with the reason, never pretending to sign in (the TestFlight lane
+    /// refuses to build without the values).
+    private static func liveOrFakesInDebug() -> Dependencies {
+        if let live {
+            return live
+        }
+        #if DEBUG
+            return Fixtures.dependencies(for: .signin)
+        #else
+            fatalError("This build has no Supabase settings (SUPABASE_URL, SUPABASE_ANON_KEY in Info.plist).")
+        #endif
+    }
 
     private var appearance: Appearance {
         Appearance.resolve(arguments: ProcessInfo.processInfo.arguments, stored: storedAppearance)
@@ -55,7 +69,7 @@ public struct RootView: View {
             }
             .onOpenURL { url in
                 guard let link = DeepLink(url: url), session.isReady else { return }
-                if !tabs.open(link) {
+                if !shell.tabs.open(link) {
                     toasts.show("That opens in a later build.")
                 }
             }
@@ -65,6 +79,7 @@ public struct RootView: View {
                     Task { await session.refresh() }
                 }
             }
+            .onChange(of: session.state) { _, state in shell.sessionChanged(state) }
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
@@ -108,9 +123,11 @@ public struct RootView: View {
                 onCreated: { session.centreCreated($0) },
                 onMessage: { toasts.show($0) }
             )
+            // A newer answer about the same sign-in (Apple's name arriving) makes a fresh form.
+            .id(user)
         case .ready:
             TabsView(
-                state: tabs,
+                state: shell.tabs,
                 build: deps.bundleVersion,
                 toasts: toasts,
                 today: { todayView },
@@ -152,7 +169,7 @@ public struct RootView: View {
                 boardState: launch == .settings,
                 onWorkspaceChanged: { changed in
                     session.workspaceChanged(changed)
-                    today?.workspaceChanged(changed)
+                    shell.today?.workspaceChanged(changed)
                 },
                 onMessage: { toasts.show($0) }
             )
@@ -162,24 +179,24 @@ public struct RootView: View {
     /// One Today store for the life of the workspace, so its counts survive a tab switch.
     @ViewBuilder private var todayView: some View {
         if case let .ready(workspace) = session.state {
-            let store = today ?? TodayStore(workspace: workspace, counts: deps.counts, now: deps.now)
+            let store = shell.today ?? TodayStore(workspace: workspace, counts: deps.counts, now: deps.now)
             TodayView(
                 store: store,
                 actions: TodayActions(
-                    openSettings: { tabs.push(.settings) },
-                    openTab: { tabs.select($0) },
+                    openSettings: { shell.tabs.push(.settings) },
+                    openTab: { shell.tabs.select($0) },
                     openLater: { target in
                         switch target {
-                        case .schedule: tabs.push(.later(.schedule))
-                        case .tasks: tabs.push(.later(.tasks))
-                        case .students: tabs.select(.students)
+                        case .schedule: shell.tabs.push(.later(.schedule))
+                        case .tasks: shell.tabs.push(.later(.tasks))
+                        case .students: shell.tabs.select(.students)
                         }
                     }
                 )
             )
             .onAppear {
-                if today == nil {
-                    today = store
+                if shell.today == nil {
+                    shell.today = store
                 }
             }
         }

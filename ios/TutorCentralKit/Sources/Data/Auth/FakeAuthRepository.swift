@@ -71,7 +71,10 @@ import Synchronization
         fullName: String?
     ) async throws(SignInFailure) -> AuthUser {
         try takeFailure()
-        return signedIn(AuthUser(id: Self.meera.id, email: Self.meera.email, fullName: fullName))
+        // As Supabase does: the change it announces carries no name (Apple's is in the credential); the call's
+        // answer does.
+        emit(AuthUser(id: Self.meera.id, email: Self.meera.email))
+        return AuthUser(id: Self.meera.id, email: Self.meera.email, fullName: fullName)
     }
 
     public func signInWithGoogle() async throws(SignInFailure) -> AuthUser {

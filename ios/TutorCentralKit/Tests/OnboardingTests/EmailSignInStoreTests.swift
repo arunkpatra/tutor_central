@@ -107,7 +107,8 @@ import Testing
         auth.nextFailure = .wrongCode
         store.code = "000000"
         _ = await store.verify()
-        #expect(store.codeError == "That code isn't right. Check the email or ask for a new one.")
+        // Review, Important 4: after a resend, a wrong code is most likely the first email's.
+        #expect(store.codeError == "That code isn't right. Use the code in the newest email.")
     }
 
     @Test func resendOnlyAfterTheCooldownAndItRestartsIt() async {
