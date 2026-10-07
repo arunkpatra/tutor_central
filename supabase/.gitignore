@@ -6,3 +6,6 @@
 .env.keys
 .env.local
 .env.*.local
+
+# The db check step's copy of the generated types
+.types.generated.ts

@@ -64,8 +64,8 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          bun x "$VERCEL_CLI" pull --yes --environment=production --token="$VERCEL_TOKEN"
-          bun x "$VERCEL_CLI" build --prod --token="$VERCEL_TOKEN"
+          bun x "$VERCEL_CLI" pull --yes --environment=production
+          bun x "$VERCEL_CLI" build --prod
 
       # The deployment production served before this one is written down: promoting it back is the rollback.
       # Vercel holds a deployment whose commit author it does not know at UNKNOWN for ever (only arunkpatra@gmail.com
@@ -77,9 +77,9 @@ jobs:
           COMMIT: ${{ steps.commit.outputs.sha }}
         run: |
           domain="${SITE#https://}"
-          previous=$(bun x "$VERCEL_CLI" inspect "$domain" --token="$VERCEL_TOKEN" 2>&1 | awk '$1 == "url" { print $2; exit }' || true)
+          previous=$(bun x "$VERCEL_CLI" inspect "$domain" 2>&1 | awk '$1 == "url" { print $2; exit }' || true)
           # Off a terminal the CLI answers in JSON; the deployment's URL is in it.
-          out=$(bun x "$VERCEL_CLI" deploy --prebuilt --prod --env TC_COMMIT="$COMMIT" --token="$VERCEL_TOKEN")
+          out=$(bun x "$VERCEL_CLI" deploy --prebuilt --prod --env TC_COMMIT="$COMMIT")
           url=$(jq -r '.deployment.url // empty' <<< "$out" 2>/dev/null || true)
           url="${url:-$out}"
           {

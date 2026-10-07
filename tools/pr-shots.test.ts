@@ -68,3 +68,18 @@ test("the link table names the state and appearance of each picture", () => {
     ].join("\n"),
   );
 });
+
+test("refuses two pictures with the same name and a folder that is a path", async () => {
+  const repo = await scratchRepo();
+  const a = join(repo, "x-dark.png");
+  const sub = join(repo, "sub");
+  await must(["mkdir", "-p", sub], { cwd: repo });
+  writeFileSync(a, "1");
+  writeFileSync(join(sub, "x-dark.png"), "2");
+  await expect(
+    commitShots({ repo, folder: "demo", files: [a, join(sub, "x-dark.png")], push: false, author }),
+  ).rejects.toThrow("duplicate picture name: x-dark.png");
+  await expect(commitShots({ repo, folder: "a/b", files: [a], push: false, author })).rejects.toThrow(
+    "folder must be one name, not a path: a/b",
+  );
+});
