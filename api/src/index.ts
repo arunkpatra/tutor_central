@@ -4,10 +4,15 @@ import type { Vars } from "./auth.js";
 import { makeApp } from "./make-app.js";
 import { env } from "./env.js";
 
+/** Read at start: a deployment without them fails to boot, so /health and the deploy's smoke fail, instead of every
+ *  tutor being told to sign in again. */
+const supabaseUrl = env("SUPABASE_URL");
+const supabaseAnonKey = env("SUPABASE_ANON_KEY");
+
 /** Verifies a Supabase access token by asking Supabase for its user. One call per request; a JWKS cache is a later
  *  optimisation. */
 const verify = async (token: string) => {
-  const client = createClient(env("SUPABASE_URL"), env("SUPABASE_ANON_KEY"), {
+  const client = createClient(supabaseUrl, supabaseAnonKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { data, error } = await client.auth.getUser(token);

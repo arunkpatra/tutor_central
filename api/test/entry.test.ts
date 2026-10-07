@@ -21,3 +21,14 @@ test("src/index.ts exports the server as its default", async () => {
   const entry = await import("../src/index.js");
   expect(typeof entry.default.fetch).toBe("function");
 });
+
+test("the server refuses to start without its Supabase settings, so /health and the deploy's smoke fail", async () => {
+  for (const missing of ["SUPABASE_URL", "SUPABASE_ANON_KEY"]) {
+    const env: Record<string, string> = { PATH: process.env.PATH ?? "", SUPABASE_URL: "http://127.0.0.1:54321", SUPABASE_ANON_KEY: "k" };
+    delete env[missing];
+    const proc = Bun.spawn(["bun", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
+    const stderr = await new Response(proc.stderr).text();
+    expect({ missing, code: await proc.exited }).not.toEqual({ missing, code: 0 });
+    expect(stderr).toContain(`${missing} is not set`);
+  }
+});
