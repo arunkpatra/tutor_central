@@ -12,6 +12,7 @@ public extension Tokens {
     static let headline = TypeToken("headline", .headline, size: 17, line: 22, weight: 700)
     static let wordmark = TypeToken("wordmark", .headline, size: 17, line: 22, weight: 700, tracking: -0.01)
     static let lead = TypeToken("lead", .body, size: 18, line: 26, weight: 400)
+    static let intro = TypeToken("intro", .callout, size: 16, line: 22, weight: 400)
     static let body = TypeToken("body", .body, size: 17, line: 22, weight: 400)
     static let bodyStrong = TypeToken("bodyStrong", .body, size: 17, line: 22, weight: 600)
     static let rowTitle = TypeToken("rowTitle", .callout, size: 16, line: 20, weight: 600)
@@ -48,7 +49,7 @@ public extension Tokens {
     static let avatarLarge = TypeToken("avatarLarge", .title3, size: 20, line: 25, weight: 700)
 
     static let types: [TypeToken] = [
-        display, displayHero, displayCompact, title1, title2, title3, headline, wordmark, lead, body, bodyStrong,
+        display, displayHero, displayCompact, title1, title2, title3, headline, wordmark, lead, intro, body, bodyStrong,
         rowTitle, subhead,
         footnote, caption, captionStrong, eyebrow, tabLabel, numberTile, numberHero, numberRow, time, button,
         buttonSecondary, buttonStrong, segment, segmentActive, chipLabel, chipCompactLabel, chipNeutralLabel, day,

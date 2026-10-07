@@ -196,6 +196,8 @@ public struct PhoneWell: View {
     let showsFocus: Bool
     let onCommit: () -> Void
     @FocusState private var focused: Bool
+    /// What the field shows: always the grouped digits, so letters from a hardware keyboard never appear.
+    @State private var shown = ""
 
     public init(
         label: String,
@@ -219,10 +221,7 @@ public struct PhoneWell: View {
         Well(label: label, optional: optional, helper: helper, error: error, focused: focused || showsFocus) {
             HStack(spacing: Tokens.inline) {
                 Text("+91").typeStyle(Tokens.bodyStrong).foregroundStyle(Tokens.text2.color)
-                TextField(
-                    text: Binding(get: { Self.grouped(digits) }, set: { digits = Self.digits(in: $0) }),
-                    prompt: Text("98765 43210").foregroundStyle(Tokens.text3.color)
-                ) {
+                TextField(text: $shown, prompt: Text("98765 43210").foregroundStyle(Tokens.text3.color)) {
                     Text(label)
                 }
                 .typeStyle(Tokens.bodyStrong)
@@ -231,6 +230,21 @@ public struct PhoneWell: View {
                 .keyboardType(.phonePad)
                 .textContentType(.telephoneNumber)
                 .focused($focused)
+                .onAppear { shown = Self.grouped(digits) }
+                .onChange(of: shown) { _, typed in
+                    let next = Self.typed(typed)
+                    if next.shown != typed {
+                        shown = next.shown
+                    }
+                    if next.digits != digits {
+                        digits = next.digits
+                    }
+                }
+                .onChange(of: digits) { _, now in
+                    if Self.typed(shown).digits != now {
+                        shown = Self.grouped(now)
+                    }
+                }
                 .onChange(of: focused) { _, now in
                     if !now {
                         onCommit()
@@ -245,9 +259,11 @@ public struct PhoneWell: View {
         digits.count > 5 ? "\(digits.prefix(5)) \(digits.dropFirst(5))" : digits
     }
 
-    /// What was typed or pasted, as digits; a pasted "+91" or leading 0 is left for the domain to read.
-    static func digits(in typed: String) -> String {
-        String(typed.filter(\.isNumber).prefix(12))
+    /// What was typed or pasted, as the field shows it and as digits; a pasted "+91" or leading 0 is left for the
+    /// domain to read.
+    static func typed(_ text: String) -> (shown: String, digits: String) {
+        let digits = String(text.filter(\.isNumber).prefix(12))
+        return (grouped(digits), digits)
     }
 }
 
