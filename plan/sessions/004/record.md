@@ -92,7 +92,8 @@ failure where the spec says revert (the plan settled it; the owner may want to r
 against Google's branding rules (the owner's call before App Store review); legal pages not live (Phase 8);
 Today's sections empty for a seeded centre (Phase 4).
 
-CI for #22 and #23 could not start: GitHub refused the jobs for a failed payment or spending limit (owner).
+CI for #22 and #23 could not start at first: GitHub refused the jobs for a failed payment or spending limit. The
+owner fixed billing and merged both; `main`'s check is green at `88d9e02`; TestFlight run 4 uploaded build 0.1.0 (4).
 
 ## Deferred minors (from the review, for the polish slice or the phase that touches them)
 

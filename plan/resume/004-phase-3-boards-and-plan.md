@@ -40,9 +40,8 @@ https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; row 5 holds the Phase 2 board
    Review Focus, a self-review. Show it to the owner; on approval, write `plan/resume/005-phase-3-build.md` for an
    Opus 5.5 session and index it.
 
-**Carry forward from Phase 2** (in `STATE.md` and the session 4 record): if PRs #22 and #23 (the review fixes) are
-still open, say so first; they are the owner's to unblock (GitHub billing) and an Opus session's to merge, not
-yours. The owner wants a UI polish pass on the built screens later (first item seen: Today's content scrolls under
+**Carry forward from Phase 2** (in `STATE.md` and the session 4 record): the final review's fixes are merged
+(PRs #22, #23; build 0.1.0 (4) on TestFlight). The owner wants a UI polish pass on the built screens later (first item seen: Today's content scrolls under
 the status bar), and the review's minors are listed in the session 4 record. Do not start either unless the owner
 asks; polish is its own slice with its own boards where anything changes.
 

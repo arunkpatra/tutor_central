@@ -3,8 +3,8 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-07, session 4. **Phase 2 done.** PRs #9 to #21 merged; build 0.1.0 (3) from
-`testflight.yml` is on the owner's iPhone, signed in with Apple, on Today. Decisions D26 to D30 taken. The owner
+**Last updated:** 2026-10-07, session 4. **Phase 2 done.** PRs #9 to #23 merged (the last two the final
+review's fixes); build 0.1.0 (4) is on TestFlight; (3) is on the owner's iPhone, signed in with Apple, on Today. Decisions D26 to D30 taken. The owner
 wants a UI polish pass later. **Next:** the owner chooses: UI polish, Phase 0 step 0.4 (Phase 3 boards), or the
 website (Phase 8).
 
@@ -20,10 +20,8 @@ website (Phase 8).
 
 ## In flight
 
-- PR #22 (review fixes 1–6) and PR #23 (no raw sizes in feature views): ready, `bun check` green locally. GitHub
-  refused to start their CI ("recent account payments have failed or your spending limit needs to be increased").
-  Once the owner fixes billing: re-run the checks, merge on green, then a new TestFlight build
-  (`gh workflow run testflight`) so the owner's phone has the fixes.
+Nothing open. No branch but `main` and `pr-shots`. The review fixes (PRs #22, #23) are merged (the owner fixed
+GitHub billing and merged them); `main`'s check is green at `88d9e02`; build 0.1.0 (4) from it is on TestFlight.
 
 ## Production
 
