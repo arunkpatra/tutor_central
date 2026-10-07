@@ -31,6 +31,10 @@ Outcome: Phase 1 built and merged in PRs #1 to #8; decisions D21 to D23; the API
     owner's instruction); the deploy step limited to 5 minutes. After PR #8 the deploy went through in 92 s,
     and production answers with its commit from `bom1`.
 
+11. The owner approved the two wording fixes (spec and rule 6: "every centre table"; the package name) and
+    logged the Supabase CLI in; migration 0001 was pushed to the hosted project and checked from outside. The
+    hosted project turned out to be in Tokyo (ap-northeast-1), not Mumbai: put to the owner.
+
 ## Why things are as they are
 
 - **Composite foreign keys between centre tables:** foreign keys bypass RLS. Without them, a user who learns

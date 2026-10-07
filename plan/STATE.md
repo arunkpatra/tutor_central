@@ -24,10 +24,12 @@ Nothing open. No branch but `main` and `pr-shots`.
 
 ## Open items
 
-- Hosted Supabase (`ctxtacacrbkrmctluahk`, Mumbai) has no schema yet: `supabase db push`, owner-run (his database
-  password), before Phase 2 signs anyone in. Moving migrations into CI is a later decision.
-- Vercel: a stray project `api` (errored) in "Arun's projects" is the owner's to delete. Production domain is
-  `api-ten-orpin-51.vercel.app` (repo variable `API_ORIGIN`); a nicer domain is the owner's call.
+- Hosted Supabase (`ctxtacacrbkrmctluahk`) has migration 0001 (pushed 2026-10-07 with the CLI logged in as the
+  owner; checked: signed-out callers are refused on every table and function). Its region is **ap-northeast-1
+  (Tokyo)**, not Mumbai as asked, while the API runs in `bom1`: a question for the owner. Moving migrations into
+  CI is a later decision.
+- Vercel: production domain is `api-ten-orpin-51.vercel.app` (repo variable `API_ORIGIN`); a nicer domain is
+  the owner's call.
 - Vercel Hobby blocks deployments whose commit author it does not know. This repo's git email is
   `arunkpatra@gmail.com`; keep it so (a direct commit to `main` by another address cannot be deployed).
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one.

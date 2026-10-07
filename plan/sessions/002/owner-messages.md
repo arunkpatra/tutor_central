@@ -55,3 +55,9 @@
 > you can set `git config` in this repo
 
 > deployment to prod is stuck
+
+> approve both wording fixes. do the supabase work yourself. there is no stray `api` project any more. vercel is good.
+
+> how do a login supabase CLI.give me steps
+
+> supabase login done, push the migration
