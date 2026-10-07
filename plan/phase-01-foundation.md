@@ -1,6 +1,6 @@
 # Phase 1: Foundation
 
-**Status:** Done (2026-10-07, session 2), except the first deploy through the workflow, which waits for the owner's `VERCEL_TOKEN`. **Depends on:** nothing; runs beside Phase 0 (D6). Builds no user-facing screen.
+**Status:** Done (2026-10-07, session 2). **Depends on:** nothing; runs beside Phase 0 (D6). Builds no user-facing screen.
 
 ## Goal
 
@@ -62,7 +62,7 @@ Any screen, any token, any component (Phase 2, after the Phase 0 direction). Sig
 
 ## As built
 
-Built in session 2 (Claude Opus 5.5, D17) from `phase-01-plan.md`, tests first, in seven pull requests:
+Built in session 2 (Claude Opus 5.5, D17) from `phase-01-plan.md`, tests first, in eight pull requests:
 
 | PR | What |
 |---|---|
@@ -73,14 +73,14 @@ Built in session 2 (Claude Opus 5.5, D17) from `phase-01-plan.md`, tests first, 
 | [#5](https://github.com/arunkpatra/tutor_central/pull/5) | The API runs on Vercel (Node ESM imports, the preset's entry, `bom1`); `deploy.yml` and `tools/smoke.ts` (D21) |
 | [#6](https://github.com/arunkpatra/tutor_central/pull/6) | `check.yml` on `xcode-27` and Ubuntu with caches, actions pinned by SHA, `testflight.yml` stub; `bun shots`, `bun pr-shots` (D22) |
 | [#7](https://github.com/arunkpatra/tutor_central/pull/7) | Dark appearance by default (D23); `AppShellTests` |
+| [#8](https://github.com/arunkpatra/tutor_central/pull/8) | From the review: the API reads its Supabase settings at start, so a misconfigured deploy fails its smoke; the deploy step's time limit |
 
 **Acceptance.**
 - `bun check` is green locally from a clean install; a second run skips every step in 0.1 s.
 - The app launches on the iPhone 17 simulator to the placeholder.
 - `supabase db reset` applies the migration and the seed; 13 RLS tests pass.
 - CI is green on every PR. Cold: iOS job 2 min 49 s, api-db job 2 min 51 s. With no change: 33 s and 2 min 7 s, every step "unchanged, not run" (the api-db time is mostly starting Supabase).
-- `GET /health` answered on a preview deployment built exactly as the workflow builds: `{"ok":true,"commit":…}` in `bom1`.
-- Production through the workflow is pending the owner's `VERCEL_TOKEN`.
+- `GET /health` answers in production (`https://api-ten-orpin-51.vercel.app`, `bom1`) with the deployed commit, through `deploy.yml` (0414a73, 92 s, smoke green). `/ai/generate` without a token answers 401 in words.
 
 **Deviations from the plan, and why.**
 - Package at `ios/TutorCentralKit` (spec section 4 says `ios/TutorCentral`): a package named TutorCentral collides with the app target and scheme of that name.
@@ -105,14 +105,15 @@ Built in session 2 (Claude Opus 5.5, D17) from `phase-01-plan.md`, tests first, 
   - the isolated bun linker breaks its type check (PR 4)
   - Node ESM needs `.js` on relative imports
   - the Hono preset picks the first of `app`/`index`/`server`/`src/*` that imports `"hono"`
-  - Hobby blocks deployments whose commit author it does not know (`arun@astronuts.io`); `main`'s squash commits (`arunkpatra@gmail.com`) are fine
+  - Hobby blocks deployments whose commit author it does not know: the first workflow run sat on a documents commit authored `arun@astronuts.io`. This repo's git email is now `arunkpatra@gmail.com` (the owner's instruction), and the deploy step has a 5-minute limit
 - CI (D22):
   - iOS on the `xcode-27` image (`macos-26` stops at Xcode 26.6)
   - simulator iPhone 17 everywhere (the owner's switch; CI's image has no 17 Pro), `TC_SIMULATOR` overrides it
   - every action pinned to a SHA (security review)
 - The app opens dark by default (D23, the owner's preference); `bun shots` passes `--appearance`.
 
+**Review.** A fresh reviewer read the whole range. It found no Critical issues and one Important one (fixed in #8, test first), and agreed with every ruling. Eleven minors are deferred and listed in `plan/STATE.md` (Open items).
+
 **What remains.**
-- The first production deploy through `deploy.yml`, once `VERCEL_TOKEN` is in the Production environment.
 - The hosted Supabase project has no schema yet: `supabase db push`, owner-run, when Phase 2 needs it.
 - The stray Vercel project `api` (errored) in "Arun's projects" is the owner's to delete.

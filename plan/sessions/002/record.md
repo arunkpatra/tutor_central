@@ -1,8 +1,8 @@
 # Session 2 (2026-10-07): Phase 1 foundation built
 
 Model: Claude Opus 5.5 (D17), executing `plan/phase-01-plan.md` inline (superpowers:executing-plans), tests first.
-Outcome: Phase 1 built and merged in PRs #1 to #7; decisions D21 to D23. Pending: the owner's `VERCEL_TOKEN`
-and the first deploy through the workflow.
+Outcome: Phase 1 built and merged in PRs #1 to #8; decisions D21 to D23; the API in production through
+`deploy.yml` (0414a73, `bom1`, smoke green).
 
 ## What was done, in order
 
@@ -23,6 +23,13 @@ and the first deploy through the workflow.
 7. The owner asked for dark by default: `AppShell.Appearance` with `preferredColorScheme`, light and "match iPhone"
    kept (D23). PR #7.
 8. Rules files (`ios/`, `api/`, `supabase/` `CLAUDE.md`), commands, README, "As built", state, this record.
+9. A fresh reviewer (Fable 5.1) read PRs #1 to #7. It found no Critical issues and one Important one: a
+   deployment missing its Supabase settings would tell every tutor "sign in again" and still pass the smoke.
+   That was fixed test-first in PR #8. Eleven minors are deferred to `STATE.md`.
+10. The owner added `VERCEL_TOKEN`. The first workflow deploy sat at UNKNOWN: `main`'s head was a documents
+    commit authored `arun@astronuts.io`. Cancelled; the repo's git email set to `arunkpatra@gmail.com` (the
+    owner's instruction); the deploy step limited to 5 minutes. After PR #8 the deploy went through in 92 s,
+    and production answers with its commit from `bom1`.
 
 ## Why things are as they are
 
@@ -62,5 +69,5 @@ as `arunkpatra-journium`; `api/` linked to `tutor-central-api`.
 
 ## Next
 
-The owner adds `VERCEL_TOKEN` (Production environment secret); `gh workflow run deploy`; read the smoke. Then
-Phase 2 starts with its plan file. The hosted database needs `supabase db push` before anyone signs in.
+Phase 2 starts with its plan file. The hosted database needs `supabase db push` (owner-run) before anyone signs
+in. The deferred minors in `STATE.md` are taken as their files are next touched.

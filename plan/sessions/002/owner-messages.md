@@ -45,3 +45,13 @@
 > by default set theme to dark if possible and if iOS allows that. choose standard approach - blessed path; we favor the dark mode by default
 
 > I have to add vercel token,give me steps
+
+> Where are the steps for VERCEL_TOKEN that i need to follow?
+
+> VERCEL_TOKEN added, run the deploy. For project ID and team ID you can add them as vars as needed yourself using GH CLI
+
+> the deployment appears blocked. i think git commit must be by arunkpatra@gmail.com
+
+> you can set `git config` in this repo
+
+> deployment to prod is stuck
