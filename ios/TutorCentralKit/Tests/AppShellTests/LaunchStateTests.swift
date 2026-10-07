@@ -1,3 +1,4 @@
+import Data
 import Testing
 @testable import AppShell
 
@@ -13,5 +14,15 @@ struct LaunchStateTests {
         for state in LaunchState.allCases {
             #expect(state.rawValue.allSatisfy { $0.isLowercase || $0.isNumber || $0 == "-" }, "\(state.rawValue)")
         }
+    }
+
+    @MainActor @Test func everyBoardStateHasAFixture() {
+        for state in LaunchState.allCases where state != .placeholder {
+            _ = Fixtures.dependencies(for: state)
+            _ = Fixtures.initialState(for: state)
+        }
+        #expect(Fixtures.initialState(for: .signin) == .signedOut)
+        #expect(Fixtures.initialState(for: .onboarding) == .needsOnboarding(FakeAuthRepository.meera))
+        #expect(Fixtures.initialState(for: .todayEmpty) == .ready(Fixtures.meeraWorkspace))
     }
 }

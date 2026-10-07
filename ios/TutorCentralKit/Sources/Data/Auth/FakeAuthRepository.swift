@@ -5,7 +5,7 @@ import Synchronization
 /// The in-memory auth for tests, previews and `bun shots`: scripted failures, a record of every call, a stream that
 /// tests and the session gate can observe.
 @MainActor public final class FakeAuthRepository: AuthRepository {
-    public static let meera = AuthUser(
+    public nonisolated static let meera = AuthUser(
         id: UUID(uuid: (
             0x11,
             0x11,
