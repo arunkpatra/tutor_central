@@ -39,7 +39,7 @@ Nothing open. No branch but `main` and `pr-shots`.
   - The password-entry state behind "Use my password instead" had no board; `P2-Email-Password` was drawn in
     session 3 (canvas row 5, `docs/design/mockups/`) and approved by the owner. Task 10 step 7 builds it.
   - The two legal URLs (terms, privacy) are the owner's; asked once at Task 9.
-  - Email goes through custom SMTP with Resend from tutorcentral.in (D30): set up in Phase 2's owner steps.
+  - Email goes through custom SMTP with Resend from `Tutor Central <hello@tutorcentral.in>` (D30): domain verified (DKIM, SPF via `send`, DMARC at GoDaddy), Supabase SMTP on, 30 emails an hour, the code templates set, OTP 6 digits for 600 s. A hosted code arrived at the owner's address with six digits (2026-10-07).
   - The Today board has no AI tools row; Phase 6's board draws it.
 - Deferred from the Phase 1 review (minor; the Phase 2 plan takes most of them in Tasks 3 and 4; the brew pins
   stay, Homebrew cannot pin a formula, and the Phase 6 image size is not this phase):
@@ -56,6 +56,7 @@ Nothing open. No branch but `main` and `pr-shots`.
     PR #11.
   - A fresh clone without `ios/Config/Local.xcconfig` fails inside XcodeGen; give a one-line hint.
   - `supabase/types.ts` drift is not checked in the `db` step.
+- Hosted auth: Apple provider (client id `in.tutorcentral.app`), Google provider (web client in Google Cloud), redirect URL `tutorcentral://auth-callback`, email code; all checked from outside (2026-10-07).
 - Apple: App ID `in.tutorcentral.app` (Sign in with Apple) and the App Store Connect record "Tutor Central" exist (owner, 2026-10-07). Team ID `Y7SW6436RD`: the repository variable `APPLE_TEAM_ID` for the TestFlight lane (D24).
 - App icon: settled, D29 (P2-AppIcon C3, in the app with PR #19).
 - Accounts the owner creates when a phase needs them, one step at a time: App Store Connect app record and API key
