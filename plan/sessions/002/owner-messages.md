@@ -69,3 +69,5 @@
 > Publishable key: (the publishable key; not repeated here)
 
 > update env vars in vercel yourself
+
+> tokyo project deleted. start phase 2 plan. Create a resume prompt - i will start new session

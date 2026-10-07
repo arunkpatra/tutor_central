@@ -7,8 +7,8 @@ short and true. History belongs in git and in the phase files, not here.
 to a placeholder), the Supabase schema with RLS and its tests, the Hono API on Vercel, `bun check` with its
 cache, CI on every pull request, and the screenshot tools. Decisions D21 (deploys by hand through `deploy.yml`),
 D22 (CI on `xcode-27`, iPhone 17 everywhere) and D23 (dark by default) were taken. The API is in production through `deploy.yml`
-(`https://api-ten-orpin-51.vercel.app`, `bom1`). **Next:** Phase 2 (shell and sign-in) from its plan, which Phase
-0's approved Phase 2 boards make possible; step 0.4 on the design side when the owner wants it.
+(`https://api-ten-orpin-51.vercel.app`, `bom1`). **Next:** Phase 2's plan in a fresh Fable 5.1 session from `resume/002-phase-2-plan.md`; its build follows from
+resume 003, which that session writes. Step 0.4 on the design side when the owner wants it.
 
 ## Where we are
 
@@ -16,7 +16,8 @@ D22 (CI on `xcode-27`, iPhone 17 everywhere) and D23 (dark by default) were take
 |---|---|---|
 | 0 Design | In progress: 0.1, 0.2 and 0.3 approved; 0.4 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md`. API in production through `deploy.yml` |
-| 2 to 7 | Not started | Scoped in their files. Phase 2 starts with its plan file |
+| 2 Shell and sign-in | Plan next: `resume/002-phase-2-plan.md` | Boards approved (step 0.3). Owner steps: App Store Connect, Google OAuth, Supabase providers, the API key |
+| 3 to 7 | Not started | Scoped in their files |
 
 ## In flight
 
@@ -27,7 +28,7 @@ Nothing open. No branch but `main` and `pr-shots`.
 - Hosted Supabase is `esowihbxawvoexflekxa` in ap-south-1 (Mumbai), beside the API in `bom1`, with migration 0001
   (pushed 2026-10-07; checked: signed-out callers are refused on every table and function). Vercel's
   `SUPABASE_URL` and `SUPABASE_ANON_KEY` point at it (Production and Preview). The first project, created in
-  Tokyo by mistake (`ctxtacacrbkrmctluahk`, renamed `tutor-central-tokyo`), is unused: the owner deletes it.
+  Tokyo by mistake, was deleted by the owner.
   Moving migrations into CI is a later decision.
 - Vercel: production domain is `api-ten-orpin-51.vercel.app` (repo variable `API_ORIGIN`); a nicer domain is
   the owner's call.

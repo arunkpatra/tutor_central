@@ -36,7 +36,8 @@ Outcome: Phase 1 built and merged in PRs #1 to #8; decisions D21 to D23; the API
     hosted project turned out to be in Tokyo (ap-northeast-1), not Mumbai. The owner chose to recreate it in
     Mumbai while it was empty: new project `esowihbxawvoexflekxa` (ap-south-1), migration pushed and checked,
     Vercel's two variables updated with the CLI, production redeployed through `deploy.yml` (68ae39b, smoke
-    green). The Tokyo project is unused; the owner deletes it.
+    green). The owner deleted the Tokyo project.
+12. Resume prompt `resume/002-phase-2-plan.md`: Phase 2's plan in a fresh Fable 5.1 session (D17).
 
 ## Why things are as they are
 
@@ -76,5 +77,5 @@ as `arunkpatra-journium`; `api/` linked to `tutor-central-api`.
 
 ## Next
 
-Phase 2 starts with its plan file. The hosted database needs `supabase db push` (owner-run) before anyone signs
-in. The deferred minors in `STATE.md` are taken as their files are next touched.
+Phase 2's plan in a fresh Fable 5.1 session from `resume/002-phase-2-plan.md`. The deferred minors in `STATE.md`
+are folded into that plan where it touches their files.
