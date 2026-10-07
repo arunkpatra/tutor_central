@@ -19,6 +19,12 @@ export async function toolchainSalt(): Promise<string> {
   return `${xcode}|${swiftformat}|${swiftlint}|bun ${Bun.version}`;
 }
 
+/** Why the db step should not run here, or null. CI runs it only on the job that sets TC_DB_IN_CI. */
+export function dbSkipReason(env: Record<string, string | undefined>, supabaseRunning: boolean): string | null {
+  if (env.CI && !env.TC_DB_IN_CI) return "not on this runner (the api-db job runs it)";
+  return supabaseRunning ? null : "local supabase is not running (cd supabase && supabase start)";
+}
+
 const SIM = "platform=iOS Simulator,name=iPhone 17 Pro";
 const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${SIM}'`;
 const IOS_INPUTS = [
@@ -55,6 +61,18 @@ export const STEPS: Step[] = [
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
       await run("bun test tools");
+    },
+  },
+  {
+    name: "db",
+    inputs: ["supabase/migrations/**", "supabase/seed.sql", "supabase/tests/**", "supabase/package.json", "supabase/tsconfig.json"],
+    skipIf: async () => dbSkipReason(process.env, (await sh(["supabase", "status"], { cwd: "supabase" })).code === 0),
+    run: async () => {
+      // A clean schema for the tests, then the seed back for the app.
+      await run("bun run --cwd .. tsc -p supabase/tsconfig.json", "supabase");
+      await run("supabase db reset --no-seed > /dev/null", "supabase");
+      await run("bun test tests", "supabase");
+      await run("supabase db reset > /dev/null", "supabase");
     },
   },
 ];
