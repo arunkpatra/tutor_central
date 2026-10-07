@@ -9,7 +9,7 @@ chosen and its boards approved, **no screen is built**.
 |---|---|---|
 | The design canvas (live, zoomable) | https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D (private to the owner until shared) | Looking at the boards as designed; approving them |
 | Direction boards, sources | `directions/*.dc.html`, index `directions/canvas.json` | Exact values: every colour, size, radius and shadow is an inline style or a variable on the board's root |
-| Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Drafted in step 0.2, awaiting approval with the Kit |
+| Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Approved 2026-10-07 (step 0.2) |
 | Information architecture | `information-architecture.md` | Written in step 0.3 |
 | Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances |
 
@@ -18,8 +18,9 @@ chosen and its boards approved, **no screen is built**.
 | Step | Status |
 |---|---|
 | 0.1 Directions | Done 2026-10-07: A Ember chosen (D20). The B and C boards stay on the canvas as a record |
-| 0.2 Design system | Drawn 2026-10-07: four Kit boards on the canvas, `design-tokens.md`, `components.md`, `guidelines.md`. Awaiting approval |
-| 0.3 to 0.8 Boards by phase | Not started |
+| 0.2 Design system | Approved by the owner 2026-10-07: four Kit boards on the canvas, `design-tokens.md`, `components.md`, `guidelines.md` |
+| 0.3 Phase 2 boards | In progress |
+| 0.4 to 0.8 Boards by phase | Not started |
 
 ## The three directions (step 0.1, decided: A)
 

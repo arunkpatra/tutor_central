@@ -18,13 +18,13 @@ approved, except step 2, which starts with step 1's choice.
   (dark), and a strip of core controls (primary and secondary button, stat tile, list row, segmented, switch,
   tab bar). Each direction has a name, a one-paragraph rationale, and a token sketch (surfaces, lines, text,
   accent, ok, note, type, radius). The owner chooses one, or a blend, and the brand name.
-- [~] **0.2 Design system.** (drawn 2026-10-07, awaiting approval) The chosen direction worked out: tokens for both appearances (contrast checked:
+- [x] **0.2 Design system.** (approved 2026-10-07) The chosen direction worked out: tokens for both appearances (contrast checked:
   text 7:1 or better on its surface, secondary 4.5:1), the type scale on SF Pro with Dynamic Type sizes,
   spacing, radius, elevation (three depths), motion, haptics. A components board with every control in every
   state (default, pressed, disabled, focused, loading, error), the empty-state pattern, the status marks, the
   avatar, money and phone and date formats, the sheet and dialog, the toast. Written up as
   `design-tokens.md`, `components.md`, `guidelines.md`.
-- [ ] **0.3 Phase 2 boards.** Sign-in (landing, email code request, code entry, error), onboarding, the shell
+- [~] **0.3 Phase 2 boards.** (in progress) Sign-in (landing, email code request, code entry, error), onboarding, the shell
   (tab bar, both appearances), Today with every section empty, Settings minimal, the Kit.
   `information-architecture.md` written.
 - [ ] **0.4 Phase 3 boards.** Students (empty, few, many, searching, filtered), "+" menu, new student (empty,

@@ -6,20 +6,20 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-07, session 1. **Scoped, specified, Phase 0 started.** The reference app is
 inventoried (`docs/reference/`), the design is approved (`docs/spec.md`, D1 to D19), the phases are scoped
 (`plan/`). Phase 0: step 0.1 done, direction A Ember chosen (D20); step 0.2, the design system (tokens, components,
-guidelines, four Kit boards), is drawn and awaiting approval (`docs/design/README.md`). **Next:** the owner
-approves or corrects the Kit; then step 0.3 (Phase 2 boards) and Phase 1's plan beside it (D6).
+guidelines, four Kit boards), is approved (`docs/design/README.md`). **Next:** step 0.3 (Phase 2 boards) and
+Phase 1's plan beside it (D6).
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 done (A Ember, D20); 0.2 drawn, awaiting approval | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
+| 0 Design | In progress: 0.1 and 0.2 approved; 0.3 (Phase 2 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
 | 1 Foundation | Not started | May start beside Phase 0 (D6). Tools to install: xcodegen, swiftformat, swiftlint, xcbeautify, supabase CLI |
 | 2 to 7 | Not started | Scoped in their files |
 
 ## In flight
 
-Phase 0, step 0.2: the owner's approval of the Kit and the three design documents. Repo holds documents only.
+Phase 0, step 0.3. Repo holds documents only.
 
 ## Open items
 
