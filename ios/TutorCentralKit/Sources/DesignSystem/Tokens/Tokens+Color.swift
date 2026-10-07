@@ -26,10 +26,14 @@ public extension Tokens {
     static let neutral = ColorToken("neutral", dark: "#B9AFA5", light: "#625A52")
     static let glowHero = ColorToken("glowHero", dark: "rgba(255,171,56,.18)", light: "rgba(255,171,56,.18)")
     static let glowHeroSoft = ColorToken("glowHeroSoft", dark: "rgba(255,171,56,.14)", light: "rgba(255,171,56,.14)")
+    static let buttonFill = ColorToken("buttonFill", dark: "#272220", light: "#FFFFFF")
+    static let okInk = ColorToken("okInk", dark: "#0B2A1D", light: "#0B2A1D")
+    static let overdueInk = ColorToken("overdueInk", dark: "#2B0906", light: "#2B0906")
+    static let onStatus = ColorToken("onStatus", dark: "#FFFFFF", light: "#FFFFFF")
 
     static let colors: [ColorToken] = [
         ground, surface1, surface2, well, chrome, dim, line, lineStrong, lineGlass, text, text2, text3, textOnAccent,
         accent, accentPressed, accentText, accentTint, ok, okTint, due, dueTint, overdue, overdueTint, neutral,
-        glowHero, glowHeroSoft,
+        glowHero, glowHeroSoft, buttonFill, okInk, overdueInk, onStatus,
     ]
 }

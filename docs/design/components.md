@@ -42,9 +42,13 @@ status (`due` for money owed). Three in a row with `tileGap`.
 
 Rows inside a list card are divided by `line`; the last has no divider.
 
+In code the inset top highlight of a raised surface is a 1 pt stroke along the inside of the top edge, fading
+out down the corners; SwiftUI has no inset shadow (D25). An inset with a blur (a well, a pressed button) is an
+inner shadow inside the shape.
+
 ## Rows
 
-Row padding `rowPadding`; height at least 56; the whole row presses; chevron `chevron.right` 20 in `text3`
+Row padding `rowPadding` (`rowPaddingDense` 12 × 16 in lists of people and classes); height at least 56; the whole row presses; chevron `chevron.right` 20 in `text3`
 when the row opens something.
 
 | Row | Leading | Middle | Trailing |
@@ -52,8 +56,8 @@ when the row opens something.
 | Student | Avatar 40 | Name `rowTitle`; class and phone `footnote` `text2` | Fee `numberRow`; status `caption` in its colour |
 | Class | Icon tile 40 (`surface2`, symbol) | Name; meeting summary | Member count; chevron |
 | Schedule | Time `time` in `text2`, width 46 | Name; subtitle (`ok` when attendance is taken) | Check in `ok` or chevron |
-| Fee | Name; phone | | Amount; status chip; on a due row a second line of two buttons (Remind, Mark paid) |
-| Attendance | Name | | Two toggles, Present (`ok` fill when on) and Absent (`overdue` fill when on), 44 high |
+| Fee | Name; phone | | Amount; compact status chip (24 high, 12 700); on a due row a second line of two buttons 44 high, radius 14 (Remind, Mark paid) |
+| Attendance | Name | | Two toggles 96 × 40, radius 13, Present (`ok` fill, `okInk` when on) and Absent (`overdue` fill, `overdueInk` when on); off is a `lineStrong` outline in `text2` |
 | Task | Circle checkbox 24 (`lineStrong` ring; `ok` fill with a tick when done) | Title (struck through when done) | Due day `footnote` `text3` |
 | Setting | Symbol 20 `text2` | Label `body` | Value `body` `text2` and chevron, or a switch |
 | Form field | | Label `footnote` `text2` above; value `body` in a well | |

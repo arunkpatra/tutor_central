@@ -61,3 +61,11 @@ schemes:
         - package: TutorCentralKit/DomainTests
         - package: TutorCentralKit/DataTests
         - package: TutorCentralKit/AppShellTests
+  TutorCentral Kit:
+    build:
+      targets:
+        TutorCentral: all
+    run:
+      config: Debug
+      commandLineArguments:
+        "--state kit": true
