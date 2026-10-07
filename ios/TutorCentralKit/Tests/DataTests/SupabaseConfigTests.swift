@@ -1,7 +1,7 @@
 import Testing
 @testable import Data
 
-@Suite struct SupabaseConfigTests {
+struct SupabaseConfigTests {
     @Test func readsFromAnInfoDictionary() throws {
         let config = try SupabaseConfig(info: ["SUPABASE_URL": "https://x.supabase.co", "SUPABASE_ANON_KEY": "anon"])
         #expect(config.url.absoluteString == "https://x.supabase.co")

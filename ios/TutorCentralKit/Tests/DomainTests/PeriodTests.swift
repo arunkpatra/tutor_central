@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import Domain
 
-@Suite struct PeriodTests {
+struct PeriodTests {
     private let kolkata = TimeZone(identifier: "Asia/Kolkata")!
 
     @Test func startsOnTheFirstOfTheMonth() {

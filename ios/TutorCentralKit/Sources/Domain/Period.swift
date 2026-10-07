@@ -18,9 +18,14 @@ public struct Period: Hashable, Sendable, Comparable {
         self.init(year: parts[0], month: parts[1])
     }
 
-    public var isoDay: String { String(format: "%04d-%02d-01", year, month) }
+    public var isoDay: String {
+        String(format: "%04d-%02d-01", year, month)
+    }
 
-    public var next: Period { month == 12 ? Period(year: year + 1, month: 1) : Period(year: year, month: month + 1) }
+    public var next: Period {
+        month == 12 ? Period(year: year + 1, month: 1) : Period(year: year, month: month + 1)
+    }
+
     public var previous: Period {
         month == 1 ? Period(year: year - 1, month: 12) : Period(year: year, month: month - 1)
     }
@@ -36,9 +41,14 @@ public struct Period: Hashable, Sendable, Comparable {
     }
 
     /// "October 2026".
-    public var title: String { formatted("MMMM yyyy") }
+    public var title: String {
+        formatted("MMMM yyyy")
+    }
+
     /// "Oct 2026".
-    public var shortTitle: String { formatted("MMM yyyy") }
+    public var shortTitle: String {
+        formatted("MMM yyyy")
+    }
 
     public static func < (lhs: Period, rhs: Period) -> Bool {
         (lhs.year, lhs.month) < (rhs.year, rhs.month)

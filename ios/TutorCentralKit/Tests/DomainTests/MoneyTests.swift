@@ -1,7 +1,7 @@
 import Testing
 @testable import Domain
 
-@Suite struct MoneyTests {
+struct MoneyTests {
     @Test func formatsRupeesWithIndianGrouping() {
         #expect(Money(rupees: 1200).formatted == "₹1,200")
         #expect(Money(rupees: 14700).formatted == "₹14,700")
