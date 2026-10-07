@@ -28,8 +28,9 @@ Nothing open. No branch but `main` and `pr-shots`.
   (pushed 2026-10-07; checked: signed-out callers are refused on every table and function). Vercel's
   `SUPABASE_URL` and `SUPABASE_ANON_KEY` point at it (Production and Preview). The first project, created in
   Tokyo by mistake, was deleted by the owner.
-  Migrations go up only through `deploy.yml` (D26, decided in session 4; built in Phase 2 Task 10b). Migration
-  0002 is merged or in review and waits for that lane; it is not on the hosted project.
+  Migrations go up only through `deploy.yml`'s migrate job (D26; PRs #17, #20). Migration 0002 went up through it
+  on 2026-10-07 (run 37641429753; a signed-out caller is refused on `create_centre`); the next run (owner, after #20)
+  found the database up to date and deployed the API at `bf6c3d2`. Secrets in the `Production` environment.
 - Vercel: production domain is `api-ten-orpin-51.vercel.app` (repo variable `API_ORIGIN`); a nicer domain is
   the owner's call.
 - Vercel Hobby blocks deployments whose commit author it does not know. This repo's git email is
