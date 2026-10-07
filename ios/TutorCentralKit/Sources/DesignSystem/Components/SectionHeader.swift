@@ -28,13 +28,18 @@ public struct SectionHeader: View {
 public struct Eyebrow: View {
     let text: String
     let accent: Bool
+    let strong: Bool
 
-    public init(_ text: String, accent: Bool = false) {
+    /// `accent` is the next action's eyebrow (accentText); `strong` its 700 weight where the board draws it.
+    public init(_ text: String, accent: Bool = false, strong: Bool = false) {
         self.text = text
         self.accent = accent
+        self.strong = strong
     }
 
     public var body: some View {
-        Text(text).typeStyle(Tokens.eyebrow).foregroundStyle((accent ? Tokens.accentText : Tokens.text3).color)
+        Text(text)
+            .typeStyle(strong ? Tokens.eyebrowAccent : Tokens.eyebrow)
+            .foregroundStyle((accent ? Tokens.accentText : Tokens.text3).color)
     }
 }

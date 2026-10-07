@@ -27,6 +27,7 @@ public extension Tokens {
     static let hairline: CGFloat = 1
     static let iconTab: CGFloat = 22
     static let iconButton: CGFloat = 20
+    static let iconSmall: CGFloat = 18
     static let iconInline: CGFloat = 16
 
     static let spacings: [(String, CGFloat)] = [
@@ -38,6 +39,6 @@ public extension Tokens {
         ("contentBottom", contentBottom), ("heroInset", heroInset), ("heroTop", heroTop), ("heroLead", heroLead),
         ("groupGap", groupGap), ("emptyPadding", emptyPadding),
         ("rowPaddingDense", rowPaddingDense), ("hairline", hairline), ("iconTab", iconTab), ("iconButton", iconButton),
-        ("iconInline", iconInline),
+        ("iconSmall", iconSmall), ("iconInline", iconInline),
     ]
 }

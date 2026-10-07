@@ -99,6 +99,9 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `caption` | caption | 12 / 16 | 400 | 0 | Legal lines, timestamps |
 | `captionStrong` | caption | 12 / 16 | 600 | 0 | A status under a row's amount (Paid 3 Oct) |
 | `eyebrow` | caption | 12 / 16 | 600 | +0.08em, uppercase | The date over the greeting, "Next class", section eyebrows |
+| `eyebrowAccent` | caption | 12 / 16 | 700 | +0.08em, uppercase | The eyebrow of the next action, in `accentText` ("Start here") |
+| `rowHeading` | callout | 16 / 20 | 700 | 0 | The title of an empty row inside a card (Today's "No classes yet") |
+| `rowLine` | subheadline | 14 / 18 | 400 | 0 | The line under it |
 | `tabLabel` | caption2 | 10 / 12 | 600 (700 active) | +0.01em | Tab bar labels |
 | `numberTile` | title | 26 / 30 | 700 | -0.02em | The value in a stat tile |
 | `numberHero` | largeTitle | 40 / 44 | 700 | -0.02em | Outstanding and collected on Fees, the total on a report |
@@ -148,6 +151,7 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `hairline` | 1 | Every border and divider |
 | `iconTab` | 22 | A tab bar symbol |
 | `iconButton` | 20 | A symbol in a button, a setting row, an icon tile |
+| `iconSmall` | 18 | A symbol in a 46 button on a card (Today's "Add a student") |
 | `iconInline` | 16 | A symbol inline with text: chevrons, a field's error mark, the offline bar |
 
 ## Radius

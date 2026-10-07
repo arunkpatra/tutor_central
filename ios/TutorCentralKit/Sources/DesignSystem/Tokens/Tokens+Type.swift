@@ -30,6 +30,11 @@ public extension Tokens {
         tracking: 0.08,
         uppercase: true
     )
+    static let eyebrowAccent = TypeToken(
+        "eyebrowAccent", .caption, size: 12, line: 16, weight: 700, tracking: 0.08, uppercase: true
+    )
+    static let rowHeading = TypeToken("rowHeading", .callout, size: 16, line: 20, weight: 700)
+    static let rowLine = TypeToken("rowLine", .subheadline, size: 14, line: 18, weight: 400)
     static let tabLabel = TypeToken("tabLabel", .caption2, size: 10, line: 12, weight: 600, tracking: 0.01)
     static let numberTile = TypeToken("numberTile", .title, size: 26, line: 30, weight: 700, tracking: -0.02)
     static let numberHero = TypeToken("numberHero", .largeTitle, size: 40, line: 44, weight: 700, tracking: -0.02)
@@ -53,7 +58,8 @@ public extension Tokens {
         display, displayHero, displayCompact, title1, title2, title3, headline, wordmark, lead, intro, emptyTitle, body,
         bodyStrong,
         rowTitle, subhead,
-        footnote, caption, captionStrong, eyebrow, tabLabel, numberTile, numberHero, numberRow, time, button,
+        footnote, caption, captionStrong, eyebrow, eyebrowAccent, rowHeading, rowLine, tabLabel, numberTile, numberHero,
+        numberRow, time, button,
         buttonSecondary, buttonStrong, segment, segmentActive, chipLabel, chipCompactLabel, chipNeutralLabel, day,
         dayToday, avatar, avatarSmall, avatarLarge,
     ]

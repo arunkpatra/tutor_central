@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import Onboarding
 import SwiftUI
+import Today
 
 /// The app's root: the session gate picks sign-in, onboarding or the tabs. A launch state (`bun shots`) starts it
 /// with the fakes and the boards' data; the Kit states show the Kit (debug builds only).
@@ -11,6 +12,7 @@ public struct RootView: View {
     @State private var session: SessionStore
     @State private var toasts = ToastCenter()
     @State private var tabs: TabsState
+    @State private var today: TodayStore?
     @Environment(\.scenePhase) private var scenePhase
     private let deps: Dependencies
     private let launch: LaunchState?
@@ -106,7 +108,7 @@ public struct RootView: View {
                 state: tabs,
                 build: deps.bundleVersion,
                 toasts: toasts,
-                today: { LaterView(place: .tab(.today), build: deps.bundleVersion) },
+                today: { todayView },
                 settings: { EmptyView() }
             )
         }
@@ -129,6 +131,32 @@ public struct RootView: View {
         case .signinCodeWrong: .codeWrong
         case .signinPassword: .password
         default: nil
+        }
+    }
+
+    /// One Today store for the life of the workspace, so its counts survive a tab switch.
+    @ViewBuilder private var todayView: some View {
+        if case let .ready(workspace) = session.state {
+            let store = today ?? TodayStore(workspace: workspace, counts: deps.counts, now: deps.now)
+            TodayView(
+                store: store,
+                actions: TodayActions(
+                    openSettings: { tabs.push(.settings) },
+                    openTab: { tabs.select($0) },
+                    openLater: { target in
+                        switch target {
+                        case .schedule: tabs.push(.later(.schedule))
+                        case .tasks: tabs.push(.later(.tasks))
+                        case .students: tabs.select(.students)
+                        }
+                    }
+                )
+            )
+            .onAppear {
+                if today == nil {
+                    today = store
+                }
+            }
         }
     }
 
