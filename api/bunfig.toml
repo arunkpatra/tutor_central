@@ -1,2 +1,4 @@
 [install]
 exact = true
+# Flat node_modules: Vercel's TypeScript host does not follow the isolated linker's symlinks.
+linker = "hoisted"
