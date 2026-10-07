@@ -6,7 +6,13 @@ import Testing
 
 @MainActor struct SessionStoreTests {
     func deps(auth: FakeAuthRepository, centres: FakeCentreRepository = FakeCentreRepository()) -> Dependencies {
-        Dependencies(auth: auth, centres: centres, now: { Fixtures.now }, bundleVersion: "0.1 (1)")
+        Dependencies(
+            auth: auth,
+            centres: centres,
+            counts: FakeCountsRepository(),
+            now: { Fixtures.now },
+            bundleVersion: "0.1 (1)"
+        )
     }
 
     @Test func startsLoadingThenSignedOutWhenTheKeychainIsEmpty() async {

@@ -135,10 +135,21 @@ private struct ButtonFace<Label: View>: View {
     let size: ButtonSize
     let loading: Bool
     let ink: ColorToken
+    @Environment(\.buttonIconSize) private var iconSize
 
     var body: some View {
+        // Side padding 16 when the label has room; none when two buttons share a card's width (the Today board).
+        ViewThatFits(in: .horizontal) {
+            face.padding(.horizontal, Tokens.rowPaddingHorizontal)
+            face
+        }
+        .frame(maxWidth: .infinity, minHeight: size.rawValue, maxHeight: size.rawValue)
+        .contentShape(.rect)
+    }
+
+    private var face: some View {
         label
-            .labelStyle(ButtonLabelStyle())
+            .labelStyle(ButtonLabelStyle(iconSize: iconSize))
             .opacity(loading ? 0 : 1)
             .overlay {
                 if loading {
@@ -147,17 +158,21 @@ private struct ButtonFace<Label: View>: View {
             }
             .foregroundStyle(ink.color)
             .lineLimit(1)
-            .frame(maxWidth: .infinity, minHeight: size.rawValue, maxHeight: size.rawValue)
-            .padding(.horizontal, Tokens.rowPaddingHorizontal)
-            .contentShape(.rect)
     }
 }
 
-/// An icon leads the label at 20 pt with the `inline` gap.
+public extension EnvironmentValues {
+    /// The size of a button's leading icon: 20 (components.md), 18 on a card's pair of buttons (the Today board).
+    @Entry var buttonIconSize: CGFloat = Tokens.iconButton
+}
+
+/// An icon leads the label with the `inline` gap.
 struct ButtonLabelStyle: LabelStyle {
+    let iconSize: CGFloat
+
     func makeBody(configuration: Configuration) -> some View {
         HStack(spacing: Tokens.inline) {
-            configuration.icon.font(.system(size: Tokens.iconButton))
+            configuration.icon.font(.system(size: iconSize))
             configuration.title
         }
     }

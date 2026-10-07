@@ -7,6 +7,7 @@ import SwiftUI
 public struct Dependencies: Sendable {
     public let auth: any AuthRepository
     public let centres: any CentreRepository
+    public let counts: any CountsRepository
     public let now: @Sendable () -> Date
     /// "0.1 (12)": the marketing version and the build.
     public let bundleVersion: String
@@ -14,11 +15,13 @@ public struct Dependencies: Sendable {
     public init(
         auth: any AuthRepository,
         centres: any CentreRepository,
+        counts: any CountsRepository,
         now: @escaping @Sendable () -> Date,
         bundleVersion: String
     ) {
         self.auth = auth
         self.centres = centres
+        self.counts = counts
         self.now = now
         self.bundleVersion = bundleVersion
     }
@@ -31,6 +34,7 @@ public struct Dependencies: Sendable {
         return Dependencies(
             auth: SupabaseAuthRepository(client: client),
             centres: SupabaseCentreRepository(client: client),
+            counts: SupabaseCountsRepository(client: client),
             now: { Date() },
             bundleVersion: version
         )

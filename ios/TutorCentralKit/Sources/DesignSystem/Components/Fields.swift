@@ -53,7 +53,7 @@ public struct Well<Content: View>: View {
                         .strokeBorder(borderColor.color, lineWidth: Tokens.hairline)
                 )
                 .shadowed(
-                    focused ? [Tokens.shadowWell, Tokens.haloFocus] : [Tokens.shadowWell],
+                    focused && error == nil ? [Tokens.shadowWell, Tokens.haloFocus] : [Tokens.shadowWell],
                     radius: Tokens.radiusControl
                 )
             if let error {

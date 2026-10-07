@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import Onboarding
 import SwiftUI
+import Today
 
 /// The app's root: the session gate picks sign-in, onboarding or the tabs. A launch state (`bun shots`) starts it
 /// with the fakes and the boards' data; the Kit states show the Kit (debug builds only).
@@ -10,6 +11,9 @@ public struct RootView: View {
     @AppStorage(Appearance.storageKey) private var storedAppearance: String?
     @State private var session: SessionStore
     @State private var toasts = ToastCenter()
+    @State private var tabs: TabsState
+    @State private var today: TodayStore?
+    @Environment(\.scenePhase) private var scenePhase
     private let deps: Dependencies
     private let launch: LaunchState?
 
@@ -25,6 +29,7 @@ public struct RootView: View {
         self.deps = deps
         self.launch = launch
         _session = State(initialValue: SessionStore(deps: deps, initial: initial))
+        _tabs = State(initialValue: TabsState(selected: launch.flatMap(Self.tab(for:)) ?? .today))
     }
 
     /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
@@ -37,7 +42,24 @@ public struct RootView: View {
 
     public var body: some View {
         content
-            .overlay(alignment: .bottom) { ToastHost(toasts: toasts) }
+            .overlay(alignment: .bottom) {
+                // The tabs draw their own host above the tab bar.
+                if !session.isReady {
+                    ToastHost(toasts: toasts)
+                }
+            }
+            .onOpenURL { url in
+                guard let link = DeepLink(url: url), session.isReady else { return }
+                if !tabs.open(link) {
+                    toasts.show("That opens in a later build.")
+                }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                // The foreground refresh hook: the centre and profile read again when the app comes back.
+                if phase == .active, launch == nil {
+                    Task { await session.refresh() }
+                }
+            }
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
@@ -82,7 +104,23 @@ public struct RootView: View {
                 onMessage: { toasts.show($0) }
             )
         case .ready:
-            PlaceholderRoot(line: "The tabs arrive with their boards.")
+            TabsView(
+                state: tabs,
+                build: deps.bundleVersion,
+                toasts: toasts,
+                today: { todayView },
+                settings: { EmptyView() }
+            )
+        }
+    }
+
+    static func tab(for state: LaunchState) -> AppTab? {
+        switch state {
+        case .laterStudents: .students
+        case .laterFees: .fees
+        case .laterAttendance: .attendance
+        case .laterMore: .more
+        default: nil
         }
     }
 
@@ -93,6 +131,32 @@ public struct RootView: View {
         case .signinCodeWrong: .codeWrong
         case .signinPassword: .password
         default: nil
+        }
+    }
+
+    /// One Today store for the life of the workspace, so its counts survive a tab switch.
+    @ViewBuilder private var todayView: some View {
+        if case let .ready(workspace) = session.state {
+            let store = today ?? TodayStore(workspace: workspace, counts: deps.counts, now: deps.now)
+            TodayView(
+                store: store,
+                actions: TodayActions(
+                    openSettings: { tabs.push(.settings) },
+                    openTab: { tabs.select($0) },
+                    openLater: { target in
+                        switch target {
+                        case .schedule: tabs.push(.later(.schedule))
+                        case .tasks: tabs.push(.later(.tasks))
+                        case .students: tabs.select(.students)
+                        }
+                    }
+                )
+            )
+            .onAppear {
+                if today == nil {
+                    today = store
+                }
+            }
         }
     }
 
@@ -141,18 +205,5 @@ struct LoadingRoot: View {
         .padding(.top, Tokens.pageTop)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Tokens.ground.color)
-    }
-}
-
-/// A root whose board is built in a later task of this phase; replaced as each lands.
-struct PlaceholderRoot: View {
-    let line: String
-
-    var body: some View {
-        Text(line)
-            .typeStyle(Tokens.subhead)
-            .foregroundStyle(Tokens.text2.color)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Tokens.ground.color)
     }
 }

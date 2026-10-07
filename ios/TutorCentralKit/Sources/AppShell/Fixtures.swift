@@ -6,44 +6,10 @@ import Foundation
 /// the same every time and matches its board.
 public enum Fixtures {
     /// Wednesday 7 October 2026, 18:30 in India: "Good evening, Meera".
-    public static let now: Date = {
-        let components = DateComponents(
-            timeZone: TimeZone(identifier: "Asia/Kolkata"),
-            year: 2026,
-            month: 10,
-            day: 7,
-            hour: 18,
-            minute: 30
-        )
-        return Calendar(identifier: .gregorian).date(from: components) ?? .distantPast
-    }()
+    /// Wednesday 7 October 2026, 18:30 in India: "Good evening, Meera".
+    public static let now = FakeCountsRepository.fixedNow
 
-    public static let meeraWorkspace = Workspace(
-        user: FakeAuthRepository.meera,
-        centre: Centre(
-            id: UUID(uuid: (
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22,
-                0x22
-            )),
-            name: "Bright Minds Tuition",
-            whatsappNumber: "+919611299988"
-        ),
-        profile: Profile(displayName: "Meera Nair")
-    )
+    public static let meeraWorkspace = FakeCentreRepository.meeraWorkspace
 
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
         let auth = FakeAuthRepository()
@@ -55,7 +21,13 @@ public enum Fixtures {
             centres.workspace = meeraWorkspace
         case .loading, .signedOut: break
         }
-        return Dependencies(auth: auth, centres: centres, now: { now }, bundleVersion: "0.1 (12)")
+        return Dependencies(
+            auth: auth,
+            centres: centres,
+            counts: FakeCountsRepository(),
+            now: { now },
+            bundleVersion: "0.1 (12)"
+        )
     }
 
     public static func initialState(for state: LaunchState) -> SessionStore.State {

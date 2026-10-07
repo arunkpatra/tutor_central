@@ -14,6 +14,9 @@ public struct StatTile: View {
     let label: String
     let tone: StatTone
     let action: () -> Void
+    static var smallestValue: CGFloat {
+        0.5
+    }
 
     public init(value: String, label: String, tone: StatTone = .plain, action: @escaping () -> Void) {
         self.value = value
@@ -33,7 +36,12 @@ public struct StatTile: View {
     public var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: Tokens.fieldGap) {
-                Text(value).typeStyle(Tokens.numberTile).foregroundStyle(valueColor.color)
+                // One line, always: a long amount (₹1,20,000) shrinks to fit the tile rather than wrap.
+                Text(value)
+                    .typeStyle(Tokens.numberTile)
+                    .foregroundStyle(valueColor.color)
+                    .lineLimit(1)
+                    .minimumScaleFactor(Self.smallestValue)
                 Text(label).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

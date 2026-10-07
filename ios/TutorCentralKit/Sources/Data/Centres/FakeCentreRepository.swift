@@ -4,6 +4,34 @@ import Foundation
 /// The in-memory centre for tests, previews and `bun shots`: one workspace, a scripted error, a record of every
 /// write.
 @MainActor public final class FakeCentreRepository: CentreRepository {
+    /// The boards' tutor: Meera Nair of Bright Minds Tuition.
+    public nonisolated static let meeraWorkspace = Workspace(
+        user: FakeAuthRepository.meera,
+        centre: Centre(
+            id: UUID(uuid: (
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22,
+                0x22
+            )),
+            name: "Bright Minds Tuition",
+            whatsappNumber: "+919611299988"
+        ),
+        profile: Profile(displayName: "Meera Nair")
+    )
+
     public var workspace: Workspace?
     public var nextError: (any Error)?
     public private(set) var created: [CentreDraft] = []

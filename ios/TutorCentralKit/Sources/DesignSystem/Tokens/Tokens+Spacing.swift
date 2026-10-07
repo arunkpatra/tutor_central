@@ -22,10 +22,12 @@ public extension Tokens {
     static let heroTop: CGFloat = 80
     static let heroLead: CGFloat = 72
     static let groupGap: CGFloat = 24
+    static let emptyPadding: CGFloat = 40
     static let rowPaddingDense: CGFloat = 12
     static let hairline: CGFloat = 1
     static let iconTab: CGFloat = 22
     static let iconButton: CGFloat = 20
+    static let iconSmall: CGFloat = 18
     static let iconInline: CGFloat = 16
 
     static let spacings: [(String, CGFloat)] = [
@@ -34,11 +36,9 @@ public extension Tokens {
         ("cardPaddingCompact", cardPaddingCompact), ("rowPaddingVertical", rowPaddingVertical),
         ("rowPaddingHorizontal", rowPaddingHorizontal), ("pageSide", pageSide), ("pageTop", pageTop),
         ("tabBarInsetSide", tabBarInsetSide), ("tabBarInsetBottom", tabBarInsetBottom),
-        ("contentBottom", contentBottom), ("heroInset", heroInset), ("heroTop", heroTop), ("heroLead", heroLead), (
-            "groupGap",
-            groupGap
-        ),
+        ("contentBottom", contentBottom), ("heroInset", heroInset), ("heroTop", heroTop), ("heroLead", heroLead),
+        ("groupGap", groupGap), ("emptyPadding", emptyPadding),
         ("rowPaddingDense", rowPaddingDense), ("hairline", hairline), ("iconTab", iconTab), ("iconButton", iconButton),
-        ("iconInline", iconInline),
+        ("iconSmall", iconSmall), ("iconInline", iconInline),
     ]
 }
