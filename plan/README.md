@@ -20,7 +20,7 @@ Always:
 |---|---|---|---|
 | 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | In progress: steps 0.1 to 0.3 approved, 0.4 next (how: `phase-00-plan.md`) |
 | 1 | Foundation: monorepo, project, modules, Supabase, API skeleton, CI, `check` | `phase-01-foundation.md` | Done (session 2, PRs #1 to #8); the API in production |
-| 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Plan written (session 3): `phase-02-plan.md`; build from `resume/003-phase-2-build.md` |
+| 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Done (session 4, PRs #9 to #21); build 0.1.0 (3) on the owner's phone |
 | 3 | Students and classes | `phase-03-students-and-classes.md` | Not started |
 | 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Not started |
 | 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Not started |

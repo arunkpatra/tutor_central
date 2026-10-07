@@ -9,9 +9,10 @@
 - References between centre tables are composite, `(centre_id, x_id)` to `(centre_id, id)`, so a row can never
   point into another centre (foreign keys bypass RLS). Optional ones use `on delete set null (x_id)`.
 - Multi-row operations are functions, `security invoker` so RLS applies, `set search_path = ''`; `is_member` is
-  the only `security definer`. Migration 0001 revokes anonymous's grants on its tables and functions; Supabase's
-  default privileges still grant anon on new ones, so a new table's migration revokes them too (RLS protects
-  either way).
+  the only `security definer`. Since migration 0002, new tables, sequences and functions grant nothing to `anon`,
+  and new functions grant no `PUBLIC` execute (in any schema, for functions the `postgres` role creates, extensions'
+  included): every new function grants `authenticated` itself, and an extension's functions need explicit grants.
+  The catalogue test probes this.
 - Local: `supabase start` (Docker), `supabase db reset` (migrations and `seed.sql`), Studio at :54323, mail at
   :54324. Keys from `supabase status -o env`. The seed's tutor signs in as `meera@example.com` /
   `tutor-local-1`.

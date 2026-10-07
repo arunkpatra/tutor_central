@@ -3,65 +3,61 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-07, session 3. **Phase 2 planned.** `plan/phase-02-plan.md` (17 tasks, 9 pull requests,
-tests first, owner steps in Tasks 9 and 16) was approved by the owner; decisions D24 (TestFlight lane) and D25
-(tokens as Swift) were taken. **Next:** the build in a fresh Opus 5.5 session from `resume/003-phase-2-build.md`.
-Step 0.4 on the design side when the owner wants it.
+**Last updated:** 2026-10-07, session 4. **Phase 2 done.** PRs #9 to #21 merged; build 0.1.0 (3) from
+`testflight.yml` is on the owner's iPhone, signed in with Apple, on Today. Decisions D26 to D30 taken. The owner
+wants a UI polish pass later. **Next:** the owner chooses: UI polish, Phase 0 step 0.4 (Phase 3 boards), or the
+website (Phase 8).
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1, 0.2 and 0.3 approved; 0.4 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
-| 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md`. API in production through `deploy.yml` |
-| 2 Shell and sign-in | Planned: `phase-02-plan.md`; build from `resume/003-phase-2-build.md` | Boards approved (step 0.3). Owner steps inside Tasks 9 (App Store Connect, Supabase providers, Google web client, email template, legal URLs) and 16 (API key, secrets, first install) |
+| 0 Design | In progress: 0.1, 0.2 and 0.3 approved, plus the app icon (D29); 0.4 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md` |
+| 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
+| 2 Shell and sign-in | Done, PRs #9 to #21 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 to 7 | Not started | Scoped in their files |
-| 8 Website | Not started | `phase-08-website.md`: tutorcentral.in (the owner bought it); `/privacy` and `/terms` must be live before the first App Store submission; the app already links them |
+| 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them) |
 
 ## In flight
 
-Nothing open. No branch but `main` and `pr-shots`.
+- PR #22 (review fixes 1–6) and PR #23 (no raw sizes in feature views): ready, `bun check` green locally. GitHub
+  refused to start their CI ("recent account payments have failed or your spending limit needs to be increased").
+  Once the owner fixes billing: re-run the checks, merge on green, then a new TestFlight build
+  (`gh workflow run testflight`) so the owner's phone has the fixes.
+
+## Production
+
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 and 0002. Migrations go up
+  only through `deploy.yml`'s migrate job, before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and
+  `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
+- **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
+  and secret), email code, password; redirect URL `tutorcentral://auth-callback`. Email through Resend SMTP from
+  `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
+  emails an hour, the code templates, OTP 6 digits for 600 s.
+- **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`api-ten-orpin-51.vercel.app`), commit `bf6c3d2`.
+  Vercel Hobby refuses deploys whose commit author it does not know; this repo's git email stays
+  `arunkpatra@gmail.com`.
+- **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
+  `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
+  distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
+  run number.
 
 ## Open items
 
-- Hosted Supabase is `esowihbxawvoexflekxa` in ap-south-1 (Mumbai), beside the API in `bom1`, with migration 0001
-  (pushed 2026-10-07; checked: signed-out callers are refused on every table and function). Vercel's
-  `SUPABASE_URL` and `SUPABASE_ANON_KEY` point at it (Production and Preview). The first project, created in
-  Tokyo by mistake, was deleted by the owner.
-  Migrations go up only through `deploy.yml`'s migrate job (D26; PRs #17, #20). Migration 0002 went up through it
-  on 2026-10-07 (run 37641429753; a signed-out caller is refused on `create_centre`); the next run (owner, after #20)
-  found the database up to date and deployed the API at `bf6c3d2`. Secrets in the `Production` environment.
-- Vercel: production domain is `api-ten-orpin-51.vercel.app` (repo variable `API_ORIGIN`); a nicer domain is
-  the owner's call.
-- Vercel Hobby blocks deployments whose commit author it does not know. This repo's git email is
-  `arunkpatra@gmail.com`; keep it so (a direct commit to `main` by another address cannot be deployed).
-- CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one.
-- Phase 2, settled by its plan (`phase-02-plan.md`, "Decisions this plan settles"):
-  - The password-entry state behind "Use my password instead" had no board; `P2-Email-Password` was drawn in
-    session 3 (canvas row 5, `docs/design/mockups/`) and approved by the owner. Task 10 step 7 builds it.
-  - The two legal URLs (terms, privacy) are the owner's; asked once at Task 9.
-  - Email goes through custom SMTP with Resend from `Tutor Central <hello@tutorcentral.in>` (D30): domain verified (DKIM, SPF via `send`, DMARC at GoDaddy), Supabase SMTP on, 30 emails an hour, the code templates set, OTP 6 digits for 600 s. A hosted code arrived at the owner's address with six digits (2026-10-07).
-  - The Today board has no AI tools row; Phase 6's board draws it.
-- Deferred from the Phase 1 review (minor; the Phase 2 plan takes most of them in Tasks 3 and 4; the brew pins
-  stay, Homebrew cannot pin a formula, and the Phase 6 image size is not this phase):
-  - Supabase's default privileges still grant anon on future tables and functions. RLS protects; add an
-    `alter default privileges … revoke … from anon` migration or an anon-grant check in the catalogue test.
-  - `tools/check/steps.ts` is not among the steps' inputs, so a changed step command keeps its old stamp locally.
-  - The four brew tools are unpinned in CI. The salt makes drift loud, not silent.
-  - `check.yml`'s `cancel-in-progress` also cancels `main`'s `--fresh` runs; limit it to pull requests.
-  - `deploy.yml` passes `--token` on the command line; the CLI reads `VERCEL_TOKEN` from the environment.
-  - Phase 6 constraint: six 8 MB base64 images exceed Vercel's 4.5 MB request body. Downscale on the device or
-    upload to Storage.
-  - `pr-shots`: pictures render on a PR page — settled, the owner saw them on PR #10 (2026-10-07); how to check
-    one without a browser is in `CLAUDE.md` rule 2. The refusals (duplicate basenames, folders with "/") are in
-    PR #11.
-  - A fresh clone without `ios/Config/Local.xcconfig` fails inside XcodeGen; give a one-line hint.
-  - `supabase/types.ts` drift is not checked in the `db` step.
-- Hosted auth: Apple provider (client id `in.tutorcentral.app`), Google provider (web client in Google Cloud), redirect URL `tutorcentral://auth-callback`, email code; all checked from outside (2026-10-07).
-- Apple: App ID `in.tutorcentral.app` (Sign in with Apple) and the App Store Connect record "Tutor Central" exist (owner, 2026-10-07). Team ID `Y7SW6436RD`: the repository variable `APPLE_TEAM_ID` for the TestFlight lane (D24).
-- App icon: settled, D29 (P2-AppIcon C3, in the app with PR #19).
-- Accounts the owner creates when a phase needs them, one step at a time: App Store Connect app record and API key
-  (Phase 2), Google OAuth client (Phase 2), Anthropic API key (Phase 6).
+- **Review minors** (Phase 2's final review): the list is in `plan/sessions/004/record.md`, "Deferred minors". Take
+  them with the UI polish slice or the phase that touches each.
+- **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
+  owner's call before App Store review.
+
+- **UI polish** (owner, after the first install): a pass over the built screens; seen so far: Today's content
+  scrolls under the status bar.
+- CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
+  label moves to Ubuntu 26 from 19 October 2026.
+- The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
+- Phase 6 constraint: six 8 MB base64 images exceed Vercel's 4.5 MB request body. Downscale on the device or upload
+  to Storage.
+- Vercel's production domain is the generated one; a nicer domain is the owner's call (tutorcentral.in exists).
+- Accounts still to create when their phase needs them: Anthropic API key (Phase 6).
 - Crash reporting: no decision yet (D18 leaves it open).
 
 ## Paths outside this repo

@@ -73,7 +73,8 @@ change per pull request, described by what it does and how it was checked.
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
 | `cd supabase && supabase start` | The local database stack (Docker) |
 | `cd api && bun run dev` | The API locally |
-| `gh workflow run deploy` | Deploy `main`'s head to production (the API), with its smoke (D21) |
+| `gh workflow run deploy` | Deploy `main`'s head to production: pending migrations first (D26), then the API with its smoke (D21) |
+| `gh workflow run testflight` | Archive `main`'s head with cloud signing and upload it to TestFlight (D24); stops while migrations are pending |
 
 CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`: iOS on the `xcode-27`
 image, api and db on Ubuntu (D22).
