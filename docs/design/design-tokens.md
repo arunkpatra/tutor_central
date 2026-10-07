@@ -69,6 +69,10 @@ colour and a tint for a chip behind it. Never red for anything that is not overd
 | `homeIndicator` | `text` at 50% | `text` at 50% | Boards only; the device draws the real one |
 | `glowHero` | rgba(255,171,56,.18) | rgba(255,171,56,.18) | The radial glow behind sign-in and the email sheet: 460 × 380 at 90% −8%, fading to nothing at 70% |
 | `glowHeroSoft` | rgba(255,171,56,.14) | rgba(255,171,56,.14) | The same glow, softer, behind onboarding |
+| `buttonFill` | #272220 | #FFFFFF | Secondary and icon buttons, the active segment: `surface2` in dark, `surface1` in light |
+| `okInk` | #0B2A1D | #0B2A1D | Text on an `ok` fill (Present when on) |
+| `overdueInk` | #2B0906 | #2B0906 | Text on an `overdue` fill (Absent when on, the Delete that confirms) |
+| `onStatus` | #FFFFFF | #FFFFFF | The tick on a checked checkbox |
 
 ## Type
 
@@ -77,16 +81,19 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 
 | Token | Text style | Size / line | Weight | Tracking | Use |
 |---|---|---|---|---|---|
-| `display` | largeTitle | 34 / 41 | 700 | -0.02em | The greeting on Today; the headline of sign-in at 44 / 48, 800, -0.03em (`displayHero`) |
+| `display` | largeTitle | 34 / 41 | 700 | -0.02em | Large titles on tab roots and onboarding; the headline of sign-in at 44 / 48, 800, -0.03em (`displayHero`) |
+| `displayCompact` | largeTitle | 32 / 36 | 700 | -0.02em | The greeting on Today; the two values of a money pair in a hero card |
 | `title1` | title | 28 / 34 | 700 | -0.02em | Screen titles when not large |
 | `title2` | title2 | 22 / 28 | 700 | -0.015em | Card titles (the next class), sheet titles |
 | `title3` | title3 | 20 / 25 | 600 | -0.01em | Section titles in a long form |
 | `headline` | headline | 17 / 22 | 700 | 0 | Section headers on Today, row titles that lead a card |
 | `body` | body | 17 / 22 | 400 | 0 | Body copy, form values |
+| `bodyStrong` | body | 17 / 22 | 600 | 0 | Numbers and phone digits in a field, a picker's value |
 | `rowTitle` | callout | 16 / 20 | 600 | 0 | The first line of a list row |
 | `subhead` | subheadline | 15 / 20 | 400 | 0 | Second lines, button labels of secondary actions (600) |
 | `footnote` | footnote | 13 / 18 | 400 | 0 | Captions under rows, tile labels, helper text |
 | `caption` | caption | 12 / 16 | 400 | 0 | Legal lines, timestamps |
+| `captionStrong` | caption | 12 / 16 | 600 | 0 | A status under a row's amount (Paid 3 Oct) |
 | `eyebrow` | caption | 12 / 16 | 600 | +0.08em, uppercase | The date over the greeting, "Next class", section eyebrows |
 | `tabLabel` | caption2 | 10 / 12 | 600 (700 active) | +0.01em | Tab bar labels |
 | `numberTile` | title | 26 / 30 | 700 | -0.02em | The value in a stat tile |
@@ -94,7 +101,17 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `numberRow` | callout | 16 / 20 | 700 | 0 | Money in a list row |
 | `time` | subheadline | 14 / 18 | 600 | 0 | Times in a row's leading column |
 | `button` | callout | 16 / 20 | 700 | 0 | Primary button label; 15 / 20, 600 for secondary and quiet |
-| `avatar` | subheadline | 14 / 18 | 700 | 0 | Initials in a 40 pt avatar; 13 in 36 |
+| `buttonStrong` | subheadline | 15 / 20 | 700 | 0 | A primary 44 high in a row; a quiet action that commits (Save, Undo); the Delete that confirms |
+| `segment` | subheadline | 14 / 18 | 600 | 0 | A segment, an attendance toggle when off |
+| `segmentActive` | subheadline | 14 / 18 | 700 | 0 | The active segment, an attendance toggle when on |
+| `chipLabel` | footnote | 13 / 18 | 700 | 0 | A status chip |
+| `chipCompactLabel` | caption | 12 / 16 | 700 | 0 | The status chip inside a fee row (24 high) |
+| `chipNeutralLabel` | footnote | 13 / 18 | 600 | 0 | A neutral chip |
+| `day` | subheadline | 15 / 20 | 600 | 0 | A day number in a calendar |
+| `dayToday` | subheadline | 15 / 20 | 700 | 0 | Today's number, on the accent disc |
+| `avatar` | subheadline | 14 / 18 | 700 | 0 | Initials in a 40 pt avatar |
+| `avatarSmall` | footnote | 13 / 18 | 700 | 0 | Initials in a 36 pt avatar |
+| `avatarLarge` | title3 | 20 / 25 | 700 | 0 | Initials in a 56 pt avatar |
 
 Rules: numbers and their unit are one run (`₹1,200`, `8 of 9`); a unit that follows a number is `footnote` in
 `text2`. Sentence case everywhere. No exclamation marks. No emoji.
@@ -120,6 +137,11 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `contentBottom` | 120 | Scroll content's bottom inset so the last row clears the tab bar |
 | `heroInset` | 24 | Screen edge to content on the sign-in landing |
 | `heroTop` | 80 | Top of screen to the logo on the landing and to the eyebrow on onboarding |
+| `rowPaddingDense` | 12 | Vertical padding of a list row of people or classes (the Kit board); horizontal stays 16 |
+| `hairline` | 1 | Every border and divider |
+| `iconTab` | 22 | A tab bar symbol |
+| `iconButton` | 20 | A symbol in a button, a setting row, an icon tile |
+| `iconInline` | 16 | A symbol inline with text: chevrons, a field's error mark, the offline bar |
 
 ## Radius
 

@@ -58,7 +58,11 @@ its built screen can be compared. Phase 2's states:
 | `today-empty` | Tabs, Today with every section empty |
 | `later-fees` | The Fees tab's placeholder (and `later-students`, `later-attendance`, `later-more`) |
 | `settings` | Settings minimal |
-| `kit` | The Kit (debug builds) |
+| `kit` | The Kit (debug builds), at buttons |
+| `kit-fields` | The Kit at fields, chips, progress and calendar |
+| `kit-surfaces` | The Kit at navigation and rows |
+| `kit-patterns` | The Kit at the hero card, empty, loading, stale, error, toast, offline |
+| `kit-dialog` | The Kit at the dialog |
 
 Later phases add theirs in their plan files.
 
