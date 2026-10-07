@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { CheckPaperInput, GenerateInput, ScanRegisterInput } from "../src/schemas";
+import { CheckPaperInput, GenerateInput, ScanRegisterInput } from "../src/schemas.js";
 
 test("GenerateInput accepts each kind and rejects an unknown one", () => {
   expect(GenerateInput.safeParse({ kind: "paper", subject: "Maths", classLevel: "Class 10", topic: "Trigonometry", marks: 40, questions: 10 }).success).toBe(true);

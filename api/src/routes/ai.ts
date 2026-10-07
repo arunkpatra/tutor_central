@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { ZodType } from "zod";
-import type { Vars } from "../auth";
-import { CheckPaperInput, GenerateInput, ScanRegisterInput } from "../schemas";
+import type { Vars } from "../auth.js";
+import { CheckPaperInput, GenerateInput, ScanRegisterInput } from "../schemas.js";
 
 const ROUTES: [path: string, schema: ZodType][] = [
   ["/generate", GenerateInput],

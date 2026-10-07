@@ -20,7 +20,7 @@ node_modules/
 bun.lockb.tmp
 
 # Vercel
-api/.vercel/
+.vercel/
 
 # Supabase local
 supabase/.branches/
