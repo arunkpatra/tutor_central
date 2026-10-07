@@ -23,6 +23,8 @@ public extension Tokens {
     static let heroLead: CGFloat = 72
     static let groupGap: CGFloat = 24
     static let emptyPadding: CGFloat = 40
+    static let measureLead: CGFloat = 320
+    static let measureLine: CGFloat = 280
     static let rowPaddingDense: CGFloat = 12
     static let hairline: CGFloat = 1
     static let iconTab: CGFloat = 22
@@ -37,7 +39,8 @@ public extension Tokens {
         ("rowPaddingHorizontal", rowPaddingHorizontal), ("pageSide", pageSide), ("pageTop", pageTop),
         ("tabBarInsetSide", tabBarInsetSide), ("tabBarInsetBottom", tabBarInsetBottom),
         ("contentBottom", contentBottom), ("heroInset", heroInset), ("heroTop", heroTop), ("heroLead", heroLead),
-        ("groupGap", groupGap), ("emptyPadding", emptyPadding),
+        ("groupGap", groupGap), ("emptyPadding", emptyPadding), ("measureLead", measureLead),
+        ("measureLine", measureLine),
         ("rowPaddingDense", rowPaddingDense), ("hairline", hairline), ("iconTab", iconTab), ("iconButton", iconButton),
         ("iconSmall", iconSmall), ("iconInline", iconInline),
     ]

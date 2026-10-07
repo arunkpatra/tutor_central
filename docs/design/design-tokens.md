@@ -147,6 +147,8 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `heroLead` | 72 | The logo row to the headline on the landing |
 | `groupGap` | 24 | Between the groups of a one-task screen: code entry, onboarding |
 | `emptyPadding` | 40 | Top and bottom inside a card that fills a screen while its feature is on the way |
+| `measureLead` | 320 | The widest a lead paragraph runs (sign-in's promise) |
+| `measureLine` | 280 | The widest a centred line runs (an empty state, a card for a place on its way) |
 | `rowPaddingDense` | 12 | Vertical padding of a list row of people or classes (the Kit board); horizontal stays 16 |
 | `hairline` | 1 | Every border and divider |
 | `iconTab` | 22 | A tab bar symbol |
