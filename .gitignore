@@ -7,7 +7,7 @@ ios/*.xcworkspace
 ios/**/xcuserdata/
 ios/**/*.xcuserstate
 ios/DerivedData/
-ios/.build/
+ios/**/.build/
 ios/**/.swiftpm/
 *.hmap
 *.ipa
@@ -36,3 +36,6 @@ supabase/.temp/
 
 # bun check step cache
 .check-cache/
+
+# Local build config (copy of ios/Config/Local.xcconfig.example)
+ios/Config/Local.xcconfig

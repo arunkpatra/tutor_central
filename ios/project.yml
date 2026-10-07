@@ -1,0 +1,61 @@
+name: TutorCentral
+options:
+  bundleIdPrefix: app.journium
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+configFiles:
+  Debug: Config/Local.xcconfig
+  Release: Config/Local.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+packages:
+  TutorCentralKit:
+    path: TutorCentralKit
+targets:
+  TutorCentral:
+    type: application
+    platform: iOS
+    sources: [App]
+    dependencies:
+      - package: TutorCentralKit
+        product: AppShell
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.journium.tutorcentral
+        INFOPLIST_FILE: App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+  TutorCentralSmokeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [SmokeTests]
+    dependencies:
+      - target: TutorCentral
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.journium.tutorcentral.smoketests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/TutorCentral.app/TutorCentral
+        BUNDLE_LOADER: $(TEST_HOST)
+schemes:
+  TutorCentral:
+    build:
+      targets:
+        TutorCentral: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - TutorCentralSmokeTests
+        - package: TutorCentralKit/DomainTests
+        - package: TutorCentralKit/DataTests
