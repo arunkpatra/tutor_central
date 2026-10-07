@@ -57,6 +57,7 @@ schemes:
       gatherCoverageData: false
       targets:
         - TutorCentralSmokeTests
+        - package: TutorCentralKit/DesignSystemTests
         - package: TutorCentralKit/DomainTests
         - package: TutorCentralKit/DataTests
         - package: TutorCentralKit/AppShellTests

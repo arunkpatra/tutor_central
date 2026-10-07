@@ -67,6 +67,8 @@ colour and a tint for a chip behind it. Never red for anything that is not overd
 |---|---|---|---|
 | `appleButton` | #FFFFFF on #111111 text | #000000 on #FFFFFF text | Sign in with Apple, per Apple's guidelines; the only button not in the accent |
 | `homeIndicator` | `text` at 50% | `text` at 50% | Boards only; the device draws the real one |
+| `glowHero` | rgba(255,171,56,.18) | rgba(255,171,56,.18) | The radial glow behind sign-in and the email sheet: 460 × 380 at 90% −8%, fading to nothing at 70% |
+| `glowHeroSoft` | rgba(255,171,56,.14) | rgba(255,171,56,.14) | The same glow, softer, behind onboarding |
 
 ## Type
 
@@ -116,6 +118,8 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `pageTop` | 62 | Top of screen to the first content line (under the status bar) |
 | `tabBarInset` | 16 × 34 | Tab bar sides × bottom |
 | `contentBottom` | 120 | Scroll content's bottom inset so the last row clears the tab bar |
+| `heroInset` | 24 | Screen edge to content on the sign-in landing |
+| `heroTop` | 80 | Top of screen to the logo on the landing and to the eyebrow on onboarding |
 
 ## Radius
 

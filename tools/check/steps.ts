@@ -37,6 +37,8 @@ const IOS_INPUTS = [
   "ios/App/Info.plist",
   "ios/Config/*.xcconfig",
   "ios/TutorCentralKit/Package.resolved",
+  // The token test reads the document (D25).
+  "docs/design/design-tokens.md",
 ];
 
 export const STEPS: Step[] = [
