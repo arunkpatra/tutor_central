@@ -43,14 +43,14 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 ## Where things are
 | Part | Path | Local rules |
 |---|---|---|
-| iOS app and package | `ios/` | `ios/CLAUDE.md` (from Phase 1) |
-| API (Hono on Vercel) | `api/` | `api/CLAUDE.md` (from Phase 1) |
-| Database (Supabase) | `supabase/` | `supabase/CLAUDE.md` (from Phase 1) |
+| iOS app and package | `ios/` | `ios/CLAUDE.md` |
+| API (Hono on Vercel) | `api/` | `api/CLAUDE.md` |
+| Database (Supabase) | `supabase/` | `supabase/CLAUDE.md` |
 | Design: boards, tokens, components, guidelines | `docs/design/` | `docs/design/README.md` |
 | Reference app and the functional contract | `docs/reference/` | |
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
-| Scripts: check, shots, generation | `tools/` | (from Phase 1) |
+| Scripts: check, shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
 
 ## Engineering standard
 Production software, not a prototype. Test first where there is logic (Domain, Data, API, RLS). Small units
@@ -59,5 +59,15 @@ words the tutor understands. No dead code, no commented-out code, no TODO withou
 change per pull request, described by what it does and how it was checked.
 
 ## Commands
-Until Phase 1 lands there are none. Phase 1 adds `bun check`, `bun gen` (XcodeGen and types), `bun shots`,
-and documents them here and in each part's `CLAUDE.md`.
+| Command | Use |
+|---|---|
+| `bun check` | Every check in order, stopping at the first failure: format, lint, ios (build and tests on the iPhone 17 simulator), tools, api, db. A step whose inputs have not changed since it was last green is not run, and the summary says so; `db` is skipped with a line when local Supabase is down. `--fresh` ignores the cache; `--only=a,b` runs some |
+| `bun gen` | Regenerate `ios/TutorCentral.xcodeproj` from `ios/project.yml` |
+| `bun shots <state> [--appearance dark\|light\|both]` | Screenshots of the app in the simulator at a launch state, both appearances by default, into `.shots/<state>/` |
+| `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
+| `cd supabase && supabase start` | The local database stack (Docker) |
+| `cd api && bun run dev` | The API locally |
+| `gh workflow run deploy` | Deploy `main`'s head to production (the API), with its smoke (D21) |
+
+CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`: iOS on the `xcode-27`
+image, api and db on Ubuntu (D22).
