@@ -31,18 +31,6 @@ public struct SignInView: View {
     private let legal: Legal
     private let onSignedIn: (AuthUser) async -> Void
     private let onMessage: (String) -> Void
-    static var logoSize: CGFloat {
-        56
-    }
-
-    static var logoMark: CGFloat {
-        30
-    }
-
-    static var leadWidth: CGFloat {
-        320
-    }
-
     public init(
         auth: any AuthRepository,
         legal: Legal,
@@ -106,13 +94,7 @@ public struct SignInView: View {
 
     private var logo: some View {
         HStack(spacing: Tokens.cardPaddingCompact) {
-            Image(systemName: "book")
-                .font(.system(size: Self.logoMark, weight: .medium))
-                .foregroundStyle(Tokens.textOnAccent.color)
-                .frame(width: Self.logoSize, height: Self.logoSize)
-                .background(Tokens.accent.color, in: .rect(cornerRadius: Tokens.radiusTile, style: .continuous))
-                .shadowed(Tokens.shadowLogo, radius: Tokens.radiusTile)
-                .accessibilityHidden(true)
+            AppLogo()
             Text("Tutor Central").typeStyle(Tokens.wordmark).foregroundStyle(Tokens.text.color)
         }
     }
@@ -126,7 +108,7 @@ public struct SignInView: View {
             Text("Students, fees and attendance for your tuition centre, handled in a tap.")
                 .typeStyle(Tokens.lead)
                 .foregroundStyle(Tokens.text2.color)
-                .frame(maxWidth: Self.leadWidth, alignment: .leading)
+                .frame(maxWidth: Tokens.measureLead, alignment: .leading)
         }
     }
 

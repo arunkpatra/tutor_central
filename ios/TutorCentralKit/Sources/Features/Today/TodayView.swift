@@ -141,32 +141,3 @@ public struct TodayView: View {
         }
     }
 }
-
-/// An empty section's one row, as the Today board draws it: the symbol 28 in text3, then the title and its line.
-struct EmptyRow: View {
-    let symbol: String
-    let title: String
-    let line: String
-    static var symbolSize: CGFloat {
-        28
-    }
-
-    var body: some View {
-        HStack(spacing: Tokens.cardPaddingCompact) {
-            Image(systemName: symbol)
-                .font(.system(size: Self.symbolSize, weight: .light))
-                .foregroundStyle(Tokens.text3.color)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                Text(title).typeStyle(Tokens.rowHeading).foregroundStyle(Tokens.text.color)
-                Text(line)
-                    .typeStyle(Tokens.rowLine)
-                    .foregroundStyle(Tokens.text2.color)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(Tokens.rowPaddingHorizontal)
-        .accessibilityElement(children: .combine)
-    }
-}

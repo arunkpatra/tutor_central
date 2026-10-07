@@ -29,10 +29,6 @@ public struct EmptyState: View {
         28
     }
 
-    static var lineWidth: CGFloat {
-        280
-    }
-
     public init(
         symbol: String,
         title: String,
@@ -55,7 +51,7 @@ public struct EmptyState: View {
             Text(line)
                 .typeStyle(Tokens.subhead)
                 .foregroundStyle(Tokens.text2.color)
-                .frame(maxWidth: Self.lineWidth)
+                .frame(maxWidth: Tokens.measureLine)
             if let action {
                 Group {
                     if action.emphasis == .primary {

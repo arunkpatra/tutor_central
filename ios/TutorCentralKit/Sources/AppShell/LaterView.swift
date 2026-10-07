@@ -7,18 +7,6 @@ import SwiftUI
 struct LaterView: View {
     let place: LaterPlace
     let build: String
-    static var tile: CGFloat {
-        56
-    }
-
-    static var symbol: CGFloat {
-        28
-    }
-
-    static var lineWidth: CGFloat {
-        280
-    }
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
@@ -30,15 +18,7 @@ struct LaterView: View {
                 }
                 Card {
                     VStack(spacing: Tokens.inline) {
-                        Image(systemName: place.symbol)
-                            .font(.system(size: Self.symbol))
-                            .foregroundStyle(Tokens.accentText.color)
-                            .frame(width: Self.tile, height: Self.tile)
-                            .background(
-                                Tokens.accentTint.color,
-                                in: .rect(cornerRadius: Tokens.radiusTile, style: .continuous)
-                            )
-                            .accessibilityHidden(true)
+                        FeatureTile(symbol: place.symbol)
                         Text(place.heading)
                             .typeStyle(Tokens.emptyTitle)
                             .foregroundStyle(Tokens.text.color)
@@ -46,7 +26,7 @@ struct LaterView: View {
                         Text(place.line)
                             .typeStyle(Tokens.subhead)
                             .foregroundStyle(Tokens.text2.color)
-                            .frame(maxWidth: Self.lineWidth)
+                            .frame(maxWidth: Tokens.measureLine)
                         Chip(.neutral("Build \(build)")).padding(.top, Tokens.tileGap)
                     }
                     .multilineTextAlignment(.center)
