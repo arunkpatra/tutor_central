@@ -33,6 +33,7 @@ let package = Package(
             .testTarget(name: "DomainTests", dependencies: ["Domain"]),
             .testTarget(name: "DataTests", dependencies: ["Data"]),
             .testTarget(name: "AppShellTests", dependencies: ["AppShell"]),
+            .testTarget(name: "OnboardingTests", dependencies: ["Onboarding"]),
         ],
     swiftLanguageModes: [.v6]
 )

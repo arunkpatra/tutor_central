@@ -37,8 +37,9 @@ export function localConfigHint(exists: boolean): string | null {
     : "ios/Config/Local.xcconfig is missing: cp ios/Config/Local.xcconfig.example ios/Config/Local.xcconfig and fill it from `cd supabase && supabase status -o env`";
 }
 
-/** The simulator build never signs: the Sign in with Apple entitlement must not make it look for a team. */
-const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${simulatorDestination(process.env)}' CODE_SIGNING_ALLOWED=NO`;
+/** The simulator build is signed ad hoc ("Sign to Run Locally"), never with a team: the Sign in with Apple
+ *  entitlement must not make it look for one, and an unsigned build has no keychain, so no session survives. */
+const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${simulatorDestination(process.env)}' CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER=`;
 const IOS_INPUTS = [
   "ios/**/*.swift",
   "ios/project.yml",

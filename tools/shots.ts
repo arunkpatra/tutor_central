@@ -8,7 +8,7 @@ import { must, sh } from "./lib/sh";
 export type ShotsArgs = { state: string; appearances: string[]; out: string; device: string };
 
 const USAGE = "usage: bun shots <state> [--appearance dark|light|both] [--out dir] [--device 'iPhone 17']";
-const BUNDLE = "app.journium.tutorcentral";
+const BUNDLE = "in.tutorcentral.app"; // D27
 
 export function parseShotsArgs(argv: string[]): ShotsArgs {
   const [state, ...rest] = argv;
