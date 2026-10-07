@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { makeRequireUser, type Vars, type Verify } from "./auth";
-import { aiRoutes } from "./routes/ai";
+import { makeRequireUser, type Vars, type Verify } from "./auth.js";
+import { aiRoutes } from "./routes/ai.js";
 
 /** The API, built from its dependencies so tests run with a fake verifier. */
 export function makeApp(deps: { verify: Verify }) {

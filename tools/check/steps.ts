@@ -65,7 +65,7 @@ export const STEPS: Step[] = [
   },
   {
     name: "api",
-    inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "bun.lock"],
+    inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock"],
     run: () => run("bun run check", "api"),
   },
   {
