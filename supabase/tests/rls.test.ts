@@ -1,0 +1,169 @@
+import { SQL } from "bun";
+import { beforeAll, expect, test } from "bun:test";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { anonClient, type Local, local, userClient } from "./client";
+
+let l: Local;
+let a: SupabaseClient;
+let b: SupabaseClient;
+let centreA: string;
+const stamp = Date.now();
+
+/** Every table the app owns; each must keep one centre's rows from every other user. */
+const CENTRE_TABLES = [
+  "classes",
+  "students",
+  "attendance_sessions",
+  "attendance_marks",
+  "fee_invoices",
+  "calendar_events",
+  "tasks",
+  "ai_generations",
+  "message_log",
+] as const;
+
+beforeAll(async () => {
+  l = await local();
+  a = await userClient(l, `rls-a-${stamp}@example.com`);
+  b = await userClient(l, `rls-b-${stamp}@example.com`);
+  const { data, error } = await a.rpc("create_centre", { p_name: "Centre A", p_whatsapp: "+919999999999" });
+  if (error) throw error;
+  centreA = data as string;
+});
+
+test("every public table has row-level security and at least one policy", async () => {
+  const db = new SQL(l.db);
+  const rows = await db`
+    select t.tablename, t.rowsecurity, count(p.policyname)::int as policies
+    from pg_tables t left join pg_policies p on p.schemaname = t.schemaname and p.tablename = t.tablename
+    where t.schemaname = 'public' group by t.tablename, t.rowsecurity order by t.tablename`;
+  await db.close();
+  const tables = rows.map((r: { tablename: string }) => r.tablename);
+  expect(tables).toEqual([...CENTRE_TABLES, "centre_members", "centres", "profiles"].sort());
+  for (const r of rows) expect({ table: r.tablename, rls: r.rowsecurity, policy: r.policies > 0 }).toEqual({ table: r.tablename, rls: true, policy: true });
+});
+
+test("a new member sees nothing until they create a centre", async () => {
+  const { data, error } = await b.from("centres").select("id");
+  expect(error).toBeNull();
+  expect(data).toEqual([]);
+});
+
+test("the creator can read their centre, their owner membership and their profile", async () => {
+  const { data } = await a.from("centres").select("id, name, whatsapp_number").eq("id", centreA);
+  expect(data).toEqual([{ id: centreA, name: "Centre A", whatsapp_number: "+919999999999" }]);
+  const m = await a.from("centre_members").select("role").eq("centre_id", centreA);
+  expect(m.data).toEqual([{ role: "owner" }]);
+  const p = await a.from("profiles").select("user_id");
+  expect(p.data?.length).toBe(1);
+  expect((await b.from("profiles").select("user_id")).data).toEqual([]);
+});
+
+test("anonymous cannot create a centre", async () => {
+  const r = await anonClient(l).rpc("create_centre", { p_name: "Nobody" });
+  expect(r.error).not.toBeNull();
+});
+
+test("rows of one centre are invisible to another user and to anonymous, in every table", async () => {
+  const student = await a.from("students").insert({ centre_id: centreA, name: "Only A", parent_phone: "+919000000001" }).select("id").single();
+  expect(student.error).toBeNull();
+  const session = await a.from("attendance_sessions").insert({ centre_id: centreA, date: "2026-10-05" }).select("id").single();
+  expect(session.error).toBeNull();
+  const inserts: Record<(typeof CENTRE_TABLES)[number], Record<string, unknown> | null> = {
+    classes: { name: "Class A" },
+    students: null,
+    attendance_sessions: null,
+    attendance_marks: { session_id: session.data!.id, student_id: student.data!.id, status: "present" },
+    fee_invoices: { student_id: student.data!.id, period: "2026-09-01", amount: 1000 },
+    calendar_events: { title: "Parents meeting", date: "2026-10-10" },
+    tasks: { title: "Buy chalk" },
+    ai_generations: { kind: "homework", input: { topic: "Fractions" } },
+    message_log: { student_id: student.data!.id, kind: "reminder" },
+  };
+  for (const [table, row] of Object.entries(inserts)) {
+    if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
+  }
+  for (const table of CENTRE_TABLES) {
+    expect({ table, rows: (await a.from(table).select("id")).data?.length }).toEqual({ table, rows: 1 });
+    expect({ table, rows: (await b.from(table).select("id")).data }).toEqual({ table, rows: [] });
+    expect({ table, rows: (await anonClient(l).from(table).select("id")).data ?? [] }).toEqual({ table, rows: [] });
+  }
+});
+
+test("another user cannot insert into, update or delete from a centre they do not belong to", async () => {
+  expect((await b.from("students").insert({ centre_id: centreA, name: "Intruder" })).error).not.toBeNull();
+  const upd = await b.from("students").update({ name: "Renamed" }).eq("centre_id", centreA).select("id");
+  expect(upd.data).toEqual([]);
+  const del = await b.from("students").delete().eq("centre_id", centreA).select("id");
+  expect(del.data).toEqual([]);
+  expect((await b.from("centres").update({ name: "Taken" }).eq("id", centreA).select("id")).data).toEqual([]);
+  expect((await a.from("students").select("name").eq("name", "Only A")).data?.length).toBe(1);
+});
+
+test("a user cannot add themselves to someone else's centre", async () => {
+  const { data: who } = await b.auth.getUser();
+  const r = await b.from("centre_members").insert({ centre_id: centreA, user_id: who.user!.id, role: "owner" });
+  expect(r.error).not.toBeNull();
+});
+
+test("a row cannot point at another centre's student, class or session", async () => {
+  const { data: centreB, error } = await b.rpc("create_centre", { p_name: "Centre B" });
+  expect(error).toBeNull();
+  const theirs = await b.from("students").insert({ centre_id: centreB, name: "B's student" }).select("id").single();
+  const theirClass = await b.from("classes").insert({ centre_id: centreB, name: "B's class" }).select("id").single();
+  const theirSession = await b.from("attendance_sessions").insert({ centre_id: centreB, date: "2026-10-05" }).select("id").single();
+  const mine = await a.from("students").select("id").eq("name", "Only A").single();
+  const mySession = await a.from("attendance_sessions").select("id").eq("centre_id", centreA).single();
+  expect((await a.from("fee_invoices").insert({ centre_id: centreA, student_id: theirs.data!.id, period: "2026-08-01", amount: 1 })).error).not.toBeNull();
+  expect((await a.from("students").insert({ centre_id: centreA, name: "Mixed", class_id: theirClass.data!.id })).error).not.toBeNull();
+  expect((await a.from("attendance_marks").insert({ centre_id: centreA, session_id: theirSession.data!.id, student_id: mine.data!.id, status: "absent" })).error).not.toBeNull();
+  expect((await a.from("attendance_marks").insert({ centre_id: centreA, session_id: mySession.data!.id, student_id: theirs.data!.id, status: "absent" })).error).not.toBeNull();
+  expect((await a.from("message_log").insert({ centre_id: centreA, student_id: theirs.data!.id, kind: "reminder" })).error).not.toBeNull();
+});
+
+test("one attendance session per class and day, and one for all students per day", async () => {
+  const again = await a.from("attendance_sessions").insert({ centre_id: centreA, date: "2026-10-05" });
+  expect(again.error).not.toBeNull();
+});
+
+test("generate_fees inserts only the missing invoices, never for archived students, and is idempotent", async () => {
+  const ins = await a.from("students").insert([
+    { centre_id: centreA, name: "Two", monthly_fee: 500 },
+    { centre_id: centreA, name: "Gone", monthly_fee: 500, archived_at: new Date().toISOString() },
+  ]);
+  expect(ins.error).toBeNull();
+  const first = await a.rpc("generate_fees", { p_centre: centreA, p_period: "2026-10-01" });
+  expect(first.error).toBeNull();
+  expect(first.data).toBe(2); // "Only A" (no fee anywhere: 0) and "Two"; never "Gone"
+  const amounts = await a.from("fee_invoices").select("amount, students(name)").eq("period", "2026-10-01").order("amount");
+  expect(amounts.data?.map((r) => r.amount)).toEqual([0, 500]);
+  const second = await a.rpc("generate_fees", { p_centre: centreA, p_period: "2026-10-01" });
+  expect(second.data).toBe(0);
+  const bad = await a.rpc("generate_fees", { p_centre: centreA, p_period: "2026-10-15" });
+  expect(bad.error?.message).toContain("first of a month");
+  const notMember = await b.rpc("generate_fees", { p_centre: centreA, p_period: "2026-11-01" });
+  expect(notMember.error).not.toBeNull();
+});
+
+test("a paid invoice needs paid_at", async () => {
+  const inv = await a.from("fee_invoices").select("id").eq("centre_id", centreA).eq("period", "2026-10-01").limit(1).single();
+  const r = await a.from("fee_invoices").update({ status: "paid" }).eq("id", inv.data!.id);
+  expect(r.error).not.toBeNull();
+  const ok = await a.from("fee_invoices").update({ status: "paid", paid_at: new Date().toISOString(), paid_method: "upi" }).eq("id", inv.data!.id);
+  expect(ok.error).toBeNull();
+});
+
+test("updated_at moves on update", async () => {
+  const before = await a.from("tasks").select("id, updated_at").eq("centre_id", centreA).single();
+  await Bun.sleep(20);
+  const after = await a.from("tasks").update({ done_at: new Date().toISOString() }).eq("id", before.data!.id).select("updated_at").single();
+  expect(new Date(after.data!.updated_at).getTime()).toBeGreaterThan(new Date(before.data!.updated_at).getTime());
+});
+
+test("only the owner can delete the centre, and it cascades", async () => {
+  expect((await b.rpc("delete_centre", { p_centre: centreA })).error).not.toBeNull();
+  expect((await a.rpc("delete_centre", { p_centre: centreA })).error).toBeNull();
+  for (const table of [...CENTRE_TABLES, "centres", "centre_members"]) {
+    expect({ table, rows: (await a.from(table).select("*")).data }).toEqual({ table, rows: [] });
+  }
+});
