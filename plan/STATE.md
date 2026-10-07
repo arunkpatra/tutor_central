@@ -39,8 +39,7 @@ Nothing open. No branch but `main` and `pr-shots`.
   - The password-entry state behind "Use my password instead" had no board; `P2-Email-Password` was drawn in
     session 3 (canvas row 5, `docs/design/mockups/`) and approved by the owner. Task 10 step 7 builds it.
   - The two legal URLs (terms, privacy) are the owner's; asked once at Task 9.
-  - Supabase's built-in mailer sends only a few emails an hour: fine for the owner, not for other testers. Custom
-    SMTP is an owner decision before anyone else is invited to TestFlight.
+  - Email goes through custom SMTP with Resend from tutorcentral.in (D30): set up in Phase 2's owner steps.
   - The Today board has no AI tools row; Phase 6's board draws it.
 - Deferred from the Phase 1 review (minor; the Phase 2 plan takes most of them in Tasks 3 and 4; the brew pins
   stay, Homebrew cannot pin a formula, and the Phase 6 image size is not this phase):
