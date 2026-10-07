@@ -19,13 +19,17 @@ public struct RootView: View {
             Fixtures.dependencies(for: launch)
         } else {
             // A build without Supabase values still opens, at sign-in.
-            (try? Dependencies.live()) ?? Fixtures.dependencies(for: .signin)
+            Self.live ?? Fixtures.dependencies(for: .signin)
         }
         let initial = launch.map(Fixtures.initialState(for:)) ?? .loading
         self.deps = deps
         self.launch = launch
         _session = State(initialValue: SessionStore(deps: deps, initial: initial))
     }
+
+    /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
+    /// a client per RootView would sign in on one and read on another that never saw the session.
+    private static let live: Dependencies? = try? Dependencies.live()
 
     private var appearance: Appearance {
         Appearance.resolve(arguments: ProcessInfo.processInfo.arguments, stored: storedAppearance)
@@ -64,6 +68,7 @@ public struct RootView: View {
             SignInView(
                 auth: deps.auth,
                 legal: Legal.links,
+                fixture: launch.flatMap(Self.signInFixture),
                 onSignedIn: { await session.signedIn($0) },
                 onMessage: { toasts.show($0) }
             )
@@ -71,6 +76,16 @@ public struct RootView: View {
             PlaceholderRoot(line: "Onboarding arrives with its board.")
         case .ready:
             PlaceholderRoot(line: "The tabs arrive with their boards.")
+        }
+    }
+
+    static func signInFixture(_ state: LaunchState) -> SignInFixture? {
+        switch state {
+        case .signinEmail: .email
+        case .signinCode: .code
+        case .signinCodeWrong: .codeWrong
+        case .signinPassword: .password
+        default: nil
         }
     }
 

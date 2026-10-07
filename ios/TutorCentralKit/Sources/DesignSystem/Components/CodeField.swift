@@ -8,17 +8,25 @@ public struct CodeField: View {
     let length: Int
     let isWrong: Bool
     let showsFocus: Bool
+    let autofocus: Bool
     @FocusState private var focused: Bool
     static var wellHeight: CGFloat {
         56
     }
 
     /// `showsFocus` draws the active well even before the keyboard is up (the board, and the screenshots).
-    public init(code: Binding<String>, length: Int = 6, isWrong: Bool = false, showsFocus: Bool = false) {
+    public init(
+        code: Binding<String>,
+        length: Int = 6,
+        isWrong: Bool = false,
+        showsFocus: Bool = false,
+        autofocus: Bool = true
+    ) {
         _code = code
         self.length = length
         self.isWrong = isWrong
         self.showsFocus = showsFocus
+        self.autofocus = autofocus
     }
 
     public var body: some View {
@@ -37,7 +45,11 @@ public struct CodeField: View {
             .contentShape(.rect)
             .onTapGesture { focused = true }
         }
-        .onAppear { focused = true }
+        .task {
+            if autofocus {
+                focused = await Self.settled()
+            }
+        }
     }
 
     private func digitWell(at index: Int) -> some View {

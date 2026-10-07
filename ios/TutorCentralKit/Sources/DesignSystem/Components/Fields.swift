@@ -109,9 +109,12 @@ public struct TextWell: View {
     let content: UITextContentType?
     let capitalisation: TextInputAutocapitalization
     let showsFocus: Bool
+    let autofocus: Bool
     let onCommit: () -> Void
     @FocusState private var focused: Bool
 
+    /// `showsFocus` draws the focus ring without the keyboard (boards, screenshots); `autofocus` raises the keyboard
+    /// once the field has arrived.
     public init(
         label: String,
         text: Binding<String>,
@@ -126,6 +129,7 @@ public struct TextWell: View {
         content: UITextContentType? = nil,
         capitalisation: TextInputAutocapitalization = .words,
         showsFocus: Bool = false,
+        autofocus: Bool = false,
         onCommit: @escaping () -> Void = {}
     ) {
         self.label = label
@@ -141,6 +145,7 @@ public struct TextWell: View {
         self.content = content
         self.capitalisation = capitalisation
         self.showsFocus = showsFocus
+        self.autofocus = autofocus
         self.onCommit = onCommit
     }
 
@@ -162,6 +167,11 @@ public struct TextWell: View {
                 .autocorrectionDisabled(content != nil)
                 .focused($focused)
                 .onSubmit(onCommit)
+                .task {
+                    if autofocus {
+                        focused = await Self.settled()
+                    }
+                }
                 .onChange(of: focused) { _, now in
                     if !now {
                         onCommit()
@@ -247,6 +257,7 @@ public struct SecureWell: View {
     @Binding var text: String
     let error: String?
     let showsFocus: Bool
+    let autofocus: Bool
     let onCommit: () -> Void
     @FocusState private var focused: Bool
 
@@ -255,12 +266,14 @@ public struct SecureWell: View {
         text: Binding<String>,
         error: String? = nil,
         showsFocus: Bool = false,
+        autofocus: Bool = false,
         onCommit: @escaping () -> Void = {}
     ) {
         self.label = label
         _text = text
         self.error = error
         self.showsFocus = showsFocus
+        self.autofocus = autofocus
         self.onCommit = onCommit
     }
 
@@ -273,6 +286,11 @@ public struct SecureWell: View {
                 .textContentType(.password)
                 .focused($focused)
                 .onSubmit(onCommit)
+                .task {
+                    if autofocus {
+                        focused = await Self.settled()
+                    }
+                }
         }
     }
 }
@@ -353,5 +371,13 @@ public struct PickerRow<Option: Hashable>: View {
         .frame(height: Well<EmptyView>.height)
         .padding(.horizontal, Tokens.cardPaddingCompact)
         .surface(radius: Tokens.radiusControl)
+    }
+}
+
+extension View {
+    /// Focus asked for while a sheet or a push is still arriving is dropped; wait for it (`panel`), then focus.
+    static func settled() async -> Bool {
+        try? await Task.sleep(for: .seconds(Tokens.panel))
+        return !Task.isCancelled
     }
 }

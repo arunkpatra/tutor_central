@@ -18,8 +18,16 @@ public struct SignInView: View {
         }
     }
 
+    private enum Route: Hashable {
+        case code
+    }
+
     @State private var store: SignInStore
+    @State private var email: EmailSignInStore
+    @State private var showsEmail: Bool
+    @State private var path: [Route]
     @Environment(\.colorScheme) private var scheme
+    private let boardState: Bool
     private let legal: Legal
     private let onSignedIn: (AuthUser) async -> Void
     private let onMessage: (String) -> Void
@@ -38,16 +46,44 @@ public struct SignInView: View {
     public init(
         auth: any AuthRepository,
         legal: Legal,
+        fixture: SignInFixture? = nil,
         onSignedIn: @escaping (AuthUser) async -> Void,
         onMessage: @escaping (String) -> Void
     ) {
         _store = State(initialValue: SignInStore(auth: auth))
+        _email = State(initialValue: fixture
+            .map { EmailSignInStore.fixture($0, auth: auth) } ?? EmailSignInStore(auth: auth))
+        _showsEmail = State(initialValue: fixture == .email || fixture == .password)
+        _path = State(initialValue: fixture == .code || fixture == .codeWrong ? [.code] : [])
+        boardState = fixture != nil
         self.legal = legal
         self.onSignedIn = onSignedIn
         self.onMessage = onMessage
     }
 
     public var body: some View {
+        NavigationStack(path: $path) {
+            landing
+                .toolbar(.hidden, for: .navigationBar)
+                .navigationDestination(for: Route.self) { _ in
+                    CodeEntryView(store: email, boardState: boardState, onSignedIn: onSignedIn) {
+                        path.removeAll()
+                        email.useCode()
+                    }
+                }
+        }
+        .sheet(isPresented: $showsEmail) {
+            EmailSignInSheet(store: email, boardState: boardState, onSignedIn: onSignedIn) { showsEmail = false }
+        }
+        .onChange(of: email.step) { _, step in
+            if step == .code {
+                showsEmail = false
+                path = [.code]
+            }
+        }
+    }
+
+    private var landing: some View {
         VStack(alignment: .leading, spacing: 0) {
             logo
             promise.padding(.top, Tokens.heroLead)
@@ -119,7 +155,9 @@ public struct SignInView: View {
                 Label { Text("Continue with Google") } icon: { GoogleMark() }
             }
             .buttonStyle(.landing(loading: store.busy == .google))
-            Button {} label: {
+            Button {
+                showsEmail = true
+            } label: {
                 Label("Continue with email", systemImage: "envelope")
             }
             .buttonStyle(.landing())

@@ -140,6 +140,7 @@ Base 4, with half steps where a control needs them. Steps in use: 2, 4, 6, 8, 10
 | `heroInset` | 24 | Screen edge to content on the sign-in landing |
 | `heroTop` | 80 | Top of screen to the logo on the landing and to the eyebrow on onboarding |
 | `heroLead` | 72 | The logo row to the headline on the landing |
+| `groupGap` | 24 | Between the groups of a one-task screen: code entry, onboarding |
 | `rowPaddingDense` | 12 | Vertical padding of a list row of people or classes (the Kit board); horizontal stays 16 |
 | `hairline` | 1 | Every border and divider |
 | `iconTab` | 22 | A tab bar symbol |
