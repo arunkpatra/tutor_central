@@ -1,0 +1,17 @@
+name: testflight
+
+# Phase 2 wires signing and upload (App Store Connect API key, cloud signing). Until then this lane only says so.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::TestFlight upload arrives in Phase 2 (signing and the App Store Connect API key). Nothing to do yet."
+          exit 1

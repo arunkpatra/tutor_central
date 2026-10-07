@@ -25,8 +25,12 @@ export function dbSkipReason(env: Record<string, string | undefined>, supabaseRu
   return supabaseRunning ? null : "local supabase is not running (cd supabase && supabase start)";
 }
 
-const SIM = "platform=iOS Simulator,name=iPhone 17 Pro";
-const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${SIM}'`;
+/** The simulator the iOS step builds and tests on. CI's Xcode 27 image has no iPhone 17 Pro, so it names another. */
+export function simulatorDestination(env: Record<string, string | undefined>): string {
+  return `platform=iOS Simulator,name=${env.TC_SIMULATOR || "iPhone 17 Pro"}`;
+}
+
+const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${simulatorDestination(process.env)}'`;
 const IOS_INPUTS = [
   "ios/**/*.swift",
   "ios/project.yml",
