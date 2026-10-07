@@ -121,6 +121,10 @@ Cancel left (quiet), title centre, Save right (quiet, 700; disabled until valid)
 
 ## Sheets
 
+In the app a partial-height sheet is iOS 26's floating system sheet, inset with every corner rounded (D28); what
+follows is its content.
+
+
 `surface1`, top radius `radiusSheet`, grabber 36 × 5 `lineStrong`. Detents: medium and large for forms;
 large only for long forms. The footer carries the primary button at 52 with 16 side padding and the safe
 area below. A form sheet asks before discarding typed changes.
