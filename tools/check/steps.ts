@@ -64,6 +64,11 @@ export const STEPS: Step[] = [
     },
   },
   {
+    name: "api",
+    inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "bun.lock"],
+    run: () => run("bun run check", "api"),
+  },
+  {
     name: "db",
     inputs: ["supabase/migrations/**", "supabase/seed.sql", "supabase/tests/**", "supabase/package.json", "supabase/tsconfig.json"],
     skipIf: async () => dbSkipReason(process.env, (await sh(["supabase", "status"], { cwd: "supabase" })).code === 0),
