@@ -31,6 +31,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.tutorcentral.app
+        # iPhone only (D1). XcodeGen gives an application target "1,2", which beats the project-level setting.
+        TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/TutorCentral.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
