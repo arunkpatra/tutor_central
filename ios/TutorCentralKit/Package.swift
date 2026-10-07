@@ -29,6 +29,7 @@ let package = Package(
                 name: "AppShell",
                 dependencies: ["Domain", "Data", "DesignSystem"] + features.map { Target.Dependency(stringLiteral: $0) }
             ),
+            .testTarget(name: "DesignSystemTests", dependencies: ["DesignSystem"]),
             .testTarget(name: "DomainTests", dependencies: ["Domain"]),
             .testTarget(name: "DataTests", dependencies: ["Data"]),
             .testTarget(name: "AppShellTests", dependencies: ["AppShell"]),
