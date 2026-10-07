@@ -55,3 +55,4 @@ Numbered, dated, never reopened without a new number that supersedes the old.
 | D17 | 2026-10-07 | Planning, scoping and design are done with Claude Fable 5.1; implementation moves to Claude Opus 5.5 once scope, approach and design are stable. The process in `SESSIONS.md` does not depend on which model runs. |
 | D18 | 2026-10-07 | No ads, no tracking SDK, no App Tracking Transparency prompt, no third-party analytics. Crash reporting is a later decision. |
 | D19 | 2026-10-07 | Working name Tutor Central; bundle id `app.journium.tutorcentral`. The final brand name and icon come in Phase 0 and do not block any phase. |
+| D20 | 2026-10-07 | Direction A, Ember, is the design: warm charcoal ground, marigold accent, SF Pro only, raised cards with one glow under the primary action. The app's name stays Tutor Central. Boards from step 0.2 on are drawn in Ember. |

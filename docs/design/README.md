@@ -9,18 +9,19 @@ chosen and its boards approved, **no screen is built**.
 |---|---|---|
 | The design canvas (live, zoomable) | https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D (private to the owner until shared) | Looking at the boards as designed; approving them |
 | Direction boards, sources | `directions/*.dc.html`, index `directions/canvas.json` | Exact values: every colour, size, radius and shadow is an inline style or a variable on the board's root |
-| Tokens, components, guidelines, IA | `design-tokens.md`, `components.md`, `guidelines.md`, `information-architecture.md` | Written in step 0.2 once a direction is chosen |
-| Approved boards and previews | `mockups/`, `previews/` | From step 0.3 on |
+| Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Drafted in step 0.2, awaiting approval with the Kit |
+| Information architecture | `information-architecture.md` | Written in step 0.3 |
+| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances |
 
 ## Status
 
 | Step | Status |
 |---|---|
-| 0.1 Directions | Drawn 2026-10-07: three directions, each with Today (dark and light), sign-in (dark) and a controls strip (both appearances). Awaiting the owner's choice |
-| 0.2 Design system | Not started |
+| 0.1 Directions | Done 2026-10-07: A Ember chosen (D20). The B and C boards stay on the canvas as a record |
+| 0.2 Design system | Drawn 2026-10-07: four Kit boards on the canvas, `design-tokens.md`, `components.md`, `guidelines.md`. Awaiting approval |
 | 0.3 to 0.8 Boards by phase | Not started |
 
-## The three directions (step 0.1)
+## The three directions (step 0.1, decided: A)
 
 | | A · Ember | B · Indigo | C · Ink |
 |---|---|---|---|

@@ -14,11 +14,11 @@ Approved boards are mirrored into `docs/design/` (sources in `mockups/`, preview
 Each step ends with the owner's approval of its boards. A step is not started before the previous one is
 approved, except step 2, which starts with step 1's choice.
 
-- [ ] **0.1 Directions.** Three visual directions, each as a board set: Today (dark and light), sign-in
+- [x] **0.1 Directions.** (2026-10-07: A Ember, D20) Three visual directions, each as a board set: Today (dark and light), sign-in
   (dark), and a strip of core controls (primary and secondary button, stat tile, list row, segmented, switch,
   tab bar). Each direction has a name, a one-paragraph rationale, and a token sketch (surfaces, lines, text,
   accent, ok, note, type, radius). The owner chooses one, or a blend, and the brand name.
-- [ ] **0.2 Design system.** The chosen direction worked out: tokens for both appearances (contrast checked:
+- [~] **0.2 Design system.** (drawn 2026-10-07, awaiting approval) The chosen direction worked out: tokens for both appearances (contrast checked:
   text 7:1 or better on its surface, secondary 4.5:1), the type scale on SF Pro with Dynamic Type sizes,
   spacing, radius, elevation (three depths), motion, haptics. A components board with every control in every
   state (default, pressed, disabled, focused, loading, error), the empty-state pattern, the status marks, the
