@@ -73,4 +73,23 @@ import Testing
         await store.refresh()
         #expect(store.state == .needsOnboarding(FakeAuthRepository.meera) && store.lastError == nil)
     }
+
+    /// Review, Important 3: Supabase announces an Apple sign-in with a user that has no name (Apple gives the name in
+    /// the credential, once); the app's own sign-in carries it. Onboarding must get the name either way.
+    @Test func appleGivesItsNameOnceAndOnboardingStillGetsIt() async throws {
+        let auth = FakeAuthRepository()
+        let centres = FakeCentreRepository()
+        let store = SessionStore(deps: deps(auth: auth, centres: centres))
+        await store.start()
+        // The announced (nameless) sign-in's lookup is slow; the app's own (named) one finishes first.
+        centres.firstLookupDelay = .milliseconds(100)
+        let named = try await auth.signInWithApple(idToken: "t", nonce: "n", fullName: "Meera Nair")
+        for _ in 0 ..< 10 {
+            await Task.yield()
+        }
+        await store.signedIn(named)
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(named.fullName == "Meera Nair")
+        #expect(store.state == .needsOnboarding(named))
+    }
 }

@@ -43,6 +43,8 @@ import Observation
     private let cooldown: Int
     private let now: () -> Date
     private var sentAt: Date?
+    /// After a resend the first email's code no longer works; a wrong code then most likely came from it.
+    private var resent = false
 
     public init(auth: any AuthRepository, cooldown: Int = 60, now: @escaping () -> Date = Date.init) {
         self.auth = auth
@@ -73,7 +75,7 @@ import Observation
         await run { [auth] in
             user = try await auth.verifyCode(email: sentTo, code: code)
         } onSuccess: {} onFailure: { failure in
-            codeError = Self.codeWords(expired(failure))
+            codeError = Self.codeWords(expired(failure), afterResend: resent)
             self.code = ""
         }
         return user
@@ -85,6 +87,7 @@ import Observation
             try await auth.requestCode(email: sentTo)
         } onSuccess: {
             sent(to: sentTo)
+            resent = true
         } onFailure: {
             codeError = Self.requestWords($0)
         }
@@ -179,8 +182,9 @@ import Observation
         }
     }
 
-    static func codeWords(_ failure: SignInFailure) -> String {
+    static func codeWords(_ failure: SignInFailure, afterResend: Bool = false) -> String {
         switch failure {
+        case .wrongCode where afterResend: "That code isn't right. Use the code in the newest email."
         case .wrongCode: "That code isn't right. Check the email or ask for a new one."
         case .codeExpired: "That code has expired. Ask for a new one."
         case .tooManyRequests: "Too many tries. Wait a minute and try again."

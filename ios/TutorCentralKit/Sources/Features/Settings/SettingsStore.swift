@@ -65,7 +65,10 @@ import Observation
             message = "A centre needs a name."
             return
         }
-        await saveCentre(name: name, whatsapp: workspace.centre.whatsappNumber)
+        let id = workspace.centre.id
+        await save { [centres] in try await centres.updateCentreName(id: id, name: name) } apply: {
+            $0.centre.name = name
+        }
     }
 
     public func commitPhone() async {
@@ -78,21 +81,14 @@ import Observation
             e164 = number.e164
         }
         guard e164 != workspace.centre.whatsappNumber else { return }
-        await saveCentre(name: workspace.centre.name, whatsapp: e164)
+        let id = workspace.centre.id
+        await save { [centres] in try await centres.updateWhatsAppNumber(id: id, number: e164) } apply: {
+            $0.centre.whatsappNumber = e164
+        }
     }
 
     public func signOut() async {
         await auth.signOut()
-    }
-
-    private func saveCentre(name: String, whatsapp: String?) async {
-        let id = workspace.centre.id
-        await save { [centres] in
-            try await centres.updateCentre(id: id, name: name, whatsappNumber: whatsapp)
-        } apply: {
-            $0.centre.name = name
-            $0.centre.whatsappNumber = whatsapp
-        }
     }
 
     private func save(_ write: () async throws -> Void, apply: (inout Workspace) -> Void) async {

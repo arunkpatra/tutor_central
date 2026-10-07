@@ -34,8 +34,11 @@ import Foundation
 
     public var workspace: Workspace?
     public var nextError: (any Error)?
+    /// The first workspace lookup answers after this long: lets a test overlap two lookups, as a real network can.
+    public var firstLookupDelay: Duration?
     public private(set) var created: [CentreDraft] = []
-    public private(set) var centreUpdates: [(name: String, whatsappNumber: String?)] = []
+    public private(set) var nameUpdates: [String] = []
+    public private(set) var whatsAppUpdates: [String?] = []
     public private(set) var profileUpdates: [String] = []
 
     public init(workspace: Workspace? = nil) {
@@ -43,6 +46,10 @@ import Foundation
     }
 
     public func workspace(for _: AuthUser) async throws -> Workspace? {
+        if let delay = firstLookupDelay {
+            firstLookupDelay = nil
+            try? await Task.sleep(for: delay)
+        }
         try takeError()
         return workspace
     }
@@ -59,11 +66,16 @@ import Foundation
         return made
     }
 
-    public func updateCentre(id _: UUID, name: String, whatsappNumber: String?) async throws {
+    public func updateCentreName(id _: UUID, name: String) async throws {
         try takeError()
-        centreUpdates.append((name, whatsappNumber))
+        nameUpdates.append(name)
         workspace?.centre.name = name
-        workspace?.centre.whatsappNumber = whatsappNumber
+    }
+
+    public func updateWhatsAppNumber(id _: UUID, number: String?) async throws {
+        try takeError()
+        whatsAppUpdates.append(number)
+        workspace?.centre.whatsappNumber = number
     }
 
     public func updateProfile(displayName: String) async throws {

@@ -44,12 +44,15 @@ public final class SupabaseCentreRepository: CentreRepository {
         )
     }
 
-    public func updateCentre(id: UUID, name: String, whatsappNumber: String?) async throws {
-        let values: [String: AnyJSON] = [
-            "name": .string(name),
-            "whatsapp_number": whatsappNumber.map(AnyJSON.string) ?? .null,
-        ]
-        try await client.from("centres").update(values).eq("id", value: id).execute()
+    public func updateCentreName(id: UUID, name: String) async throws {
+        try await client.from("centres").update(["name": AnyJSON.string(name)]).eq("id", value: id).execute()
+    }
+
+    public func updateWhatsAppNumber(id: UUID, number: String?) async throws {
+        try await client.from("centres")
+            .update(["whatsapp_number": number.map(AnyJSON.string) ?? .null])
+            .eq("id", value: id)
+            .execute()
     }
 
     public func updateProfile(displayName: String) async throws {
