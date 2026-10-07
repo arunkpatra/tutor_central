@@ -1,6 +1,6 @@
 name: TutorCentral
 options:
-  bundleIdPrefix: app.journium
+  bundleIdPrefix: in.tutorcentral
   deploymentTarget:
     iOS: "26.0"
   createIntermediateGroups: true
@@ -30,7 +30,7 @@ targets:
         product: AppShell
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.journium.tutorcentral
+        PRODUCT_BUNDLE_IDENTIFIER: in.tutorcentral.app
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/TutorCentral.entitlements
         GENERATE_INFOPLIST_FILE: NO
@@ -42,7 +42,7 @@ targets:
       - target: TutorCentral
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.journium.tutorcentral.smoketests
+        PRODUCT_BUNDLE_IDENTIFIER: in.tutorcentral.app.smoketests
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/TutorCentral.app/TutorCentral
         BUNDLE_LOADER: $(TEST_HOST)
