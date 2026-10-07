@@ -183,6 +183,13 @@
       "w": 393,
       "h": 852,
       "title": "Phase 2 · Email: sign in with a password (and the wrong-password state)"
+    },
+    "P2-AppIcon.dc.html": {
+      "x": 4730,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · App icon, Ember glow with Lucide's book"
     }
   },
   "createdOnFiles": {
@@ -231,7 +238,7 @@
       "y": 5900,
       "text": "Step 0.3 · Phase 2 boards — sign-in flow, onboarding, Today empty, Settings minimal, password (sign-in dark is board A in row 1)",
       "kind": "title1",
-      "maxW": 4650,
+      "maxW": 5123,
       "w": 240
     }
   },
@@ -261,7 +268,8 @@
     "P2-Today-Empty-Light.dc.html",
     "P2-Settings.dc.html",
     "P2-Later.dc.html",
-    "P2-Email-Password.dc.html"
+    "P2-Email-Password.dc.html",
+    "P2-AppIcon.dc.html"
   ],
   "pages": [],
   "title": "Tutor Central Design"

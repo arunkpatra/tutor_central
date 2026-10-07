@@ -57,7 +57,7 @@ Nothing open. No branch but `main` and `pr-shots`.
     PR #11.
   - A fresh clone without `ios/Config/Local.xcconfig` fails inside XcodeGen; give a one-line hint.
   - `supabase/types.ts` drift is not checked in the `db` step.
-- App icon: a Phase 0 board (name settled as Tutor Central, D20).
+- App icon: settled, D29 (P2-AppIcon C3, in the app with PR #19).
 - Accounts the owner creates when a phase needs them, one step at a time: App Store Connect app record and API key
   (Phase 2), Google OAuth client (Phase 2), Anthropic API key (Phase 6).
 - Crash reporting: no decision yet (D18 leaves it open).

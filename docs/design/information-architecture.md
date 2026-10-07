@@ -80,5 +80,6 @@ Later phases add theirs in their plan files.
 | Settings minimal | row 5 | `mockups/P2-Settings.dc.html` |
 | A tab that comes later | row 5 | `mockups/P2-Later.dc.html` |
 | The Kit | row 4 | `mockups/Kit-*.dc.html` |
+| The app icon (C3 approved: Ember glow, Lucide's open book in marigold; source `mockups/AppIcon.svg`) | row 5 | `mockups/P2-AppIcon.dc.html` |
 
 Sign in with Apple and Google show the system's own sheets; they are not drawn.
