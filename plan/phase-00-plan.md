@@ -24,7 +24,7 @@ approved, except step 2, which starts with step 1's choice.
   state (default, pressed, disabled, focused, loading, error), the empty-state pattern, the status marks, the
   avatar, money and phone and date formats, the sheet and dialog, the toast. Written up as
   `design-tokens.md`, `components.md`, `guidelines.md`.
-- [~] **0.3 Phase 2 boards.** (in progress) Sign-in (landing, email code request, code entry, error), onboarding, the shell
+- [~] **0.3 Phase 2 boards.** (drawn 2026-10-07, awaiting approval) Sign-in (landing, email code request, code entry, error), onboarding, the shell
   (tab bar, both appearances), Today with every section empty, Settings minimal, the Kit.
   `information-architecture.md` written.
 - [ ] **0.4 Phase 3 boards.** Students (empty, few, many, searching, filtered), "+" menu, new student (empty,

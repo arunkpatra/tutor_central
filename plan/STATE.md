@@ -6,20 +6,22 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-07, session 1. **Scoped, specified, Phase 0 started.** The reference app is
 inventoried (`docs/reference/`), the design is approved (`docs/spec.md`, D1 to D19), the phases are scoped
 (`plan/`). Phase 0: step 0.1 done, direction A Ember chosen (D20); step 0.2, the design system (tokens, components,
-guidelines, four Kit boards), is approved (`docs/design/README.md`). **Next:** step 0.3 (Phase 2 boards) and
-Phase 1's plan beside it (D6).
+guidelines, four Kit boards), is approved; step 0.3, the Phase 2 boards, is drawn and awaiting approval
+(`docs/design/README.md`). Phase 1's implementation plan is written (`phase-01-plan.md`) and awaits the owner's
+review and choice of execution method. **Next:** approvals, then Phase 1 execution (a fresh session, Opus 5.5 per
+D17) beside step 0.4.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 and 0.2 approved; 0.3 (Phase 2 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
-| 1 Foundation | Not started | May start beside Phase 0 (D6). Tools to install: xcodegen, swiftformat, swiftlint, xcbeautify, supabase CLI |
+| 0 Design | In progress: 0.1 and 0.2 approved; 0.3 drawn, awaiting approval | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/directions/`; plan `phase-00-plan.md` |
+| 1 Foundation | Planned (`phase-01-plan.md`, 9 tasks, 4 PRs) | Starts when the owner picks the execution method. Needs Docker for the local database; the owner creates the Supabase and Vercel projects at Tasks 4 and 6 |
 | 2 to 7 | Not started | Scoped in their files |
 
 ## In flight
 
-Phase 0, step 0.3. Repo holds documents only.
+Phase 0, step 0.3 (approval). Phase 1 plan review. Repo holds documents only.
 
 ## Open items
 

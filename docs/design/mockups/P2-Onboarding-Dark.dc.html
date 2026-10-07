@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 2, onboarding, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --halo:0 0 0 3px rgba(255,171,56,.18); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: radial-gradient(460px 380px at 90% -8%, rgba(255,171,56,.14), transparent 70%), var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; padding: 80px 20px 50px; gap: 24px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div style="font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accText)">Welcome</div>
+    <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance">Tell us about your centre</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 22px; color: var(--t2); text-wrap: pretty">Three things, and you're in. Everything can be changed later in Settings.</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="ob-name" style="font-size: 13px; color: var(--t2)">Your name</label>
+      <input id="ob-name" autocomplete="name" value="Meera Nair" style="height: 46px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell)">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="ob-centre" style="font-size: 13px; color: var(--t2)">Centre name</label>
+      <input id="ob-centre" autocomplete="organization" value="Bright Minds Tuition" style="height: 46px; box-sizing: border-box; border: 1px solid var(--acc); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell), var(--halo)">
+      <div style="font-size: 13px; line-height: 18px; color: var(--t3)">Parents see this name on receipts and reminders.</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="ob-phone" style="font-size: 13px; color: var(--t2)">Your WhatsApp number <span style="color: var(--t3)">(optional)</span></label>
+      <div style="display: flex; align-items: center; gap: 8px; height: 46px; box-sizing: border-box; padding: 0 14px; border-radius: 15px; background: var(--well); border: 1px solid var(--line); box-shadow: var(--shadowWell)">
+        <span style="color: var(--t2); font-size: 17px; font-weight: 600">+91</span>
+        <input id="ob-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" style="flex: 1; min-width: 0; border: 0; background: transparent; color: var(--t); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+      </div>
+      <div style="font-size: 13px; line-height: 18px; color: var(--t3)">So a parent can reply to you. You can add your UPI id for fees later.</div>
+    </div>
+  </div>
+
+  <div style="flex: 1"></div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <button style="height: 52px; border: 0; border-radius: 15px; background: var(--acc); color: var(--accInk); font: inherit; font-size: 16px; font-weight: 700; box-shadow: var(--glow); padding: 0 16px">Open my centre</button>
+    <p style="margin: 0; text-align: center; font-size: 12px; line-height: 16px; color: var(--t3)">Signed in as meera.nair@gmail.com · <a href="#switch" style="color: var(--t2); text-decoration: none; font-weight: 600">Not you?</a></p>
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

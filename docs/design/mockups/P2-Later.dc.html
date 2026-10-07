@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 2, a tab whose screens come in a later phase, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accTint:rgba(255,171,56,.14); --glass:rgba(28,25,23,.74); --glassLine:rgba(255,255,255,.08); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div style="padding: 62px 20px 0; display: flex; flex-direction: column; gap: 18px">
+    <h1 style="margin: 0; font-size: 34px; line-height: 41px; font-weight: 700; letter-spacing: -0.02em">Fees</h1>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 40px 24px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); text-align: center">
+      <div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 16px; background: var(--accTint); color: var(--accText); display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 9h12M9 4c3.5 0 5 2 5 5s-1.5 5-5 5H6l8 6"></path></svg></div>
+      <div style="font-size: 20px; line-height: 25px; font-weight: 700; margin-top: 6px">Fees are on the way</div>
+      <div style="font-size: 15px; line-height: 20px; color: var(--t2); max-width: 280px; text-wrap: pretty">This build has sign-in, your profile and the Today screen. Fees, reminders and receipts arrive in a later build on TestFlight.</div>
+      <div style="margin-top: 10px; display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 14px; background: var(--s2); color: var(--t2); font-size: 13px; font-weight: 600">Build 0.1 (12)</div>
+    </div>
+    <div style="font-size: 13px; line-height: 18px; color: var(--t3); text-align: center; padding: 0 12px">The same board stands in for Students, Attendance, More and the AI tools row until their phases ship. Each shows its own title and icon.</div>
+  </div>
+
+  <nav aria-label="Tabs" style="position: absolute; left: 16px; right: 16px; bottom: 34px; height: 66px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 5px; box-sizing: border-box; border-radius: 33px; background: var(--glass); border: 1px solid var(--glassLine); backdrop-filter: blur(22px) saturate(1.3); -webkit-backdrop-filter: blur(22px) saturate(1.3); box-shadow: var(--shadowFloat)">
+    <a href="#today" style="text-decoration: none; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--t2); font-size: 10px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      Today
+    </a>
+    <a href="#students" style="text-decoration: none; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--t2); font-size: 10px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><circle cx="17" cy="9" r="2.8"></circle><path d="M16 15.5a5 5 0 0 1 5.5 4.5"></path></svg>
+      Students
+    </a>
+    <a href="#fees" aria-current="page" style="text-decoration: none; height: 56px; border-radius: 28px; background: var(--accTint); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--accText); font-size: 10px; font-weight: 700">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 9h12M9 4c3.5 0 5 2 5 5s-1.5 5-5 5H6l8 6"></path></svg>
+      Fees
+    </a>
+    <a href="#attendance" style="text-decoration: none; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--t2); font-size: 10px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+      Attendance
+    </a>
+    <a href="#more" style="text-decoration: none; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--t2); font-size: 10px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"></circle><circle cx="12" cy="12" r="1.9"></circle><circle cx="18.5" cy="12" r="1.9"></circle></svg>
+      More
+    </a>
+  </nav>
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

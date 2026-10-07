@@ -1,126 +1,231 @@
 {
   "v": 3,
-  "createdOnFiles": {
-    "v": 1,
-    "at": "2026-10-07T14:20:00Z"
+  "attachments": {},
+  "boards": {
+    "A-Controls.dc.html": {
+      "h": 852,
+      "title": "A Ember · Controls",
+      "w": 393,
+      "x": 1419,
+      "y": 0
+    },
+    "A-SignIn.dc.html": {
+      "h": 852,
+      "title": "A Ember · Sign in · dark",
+      "w": 393,
+      "x": 946,
+      "y": 0
+    },
+    "A-Today-Light.dc.html": {
+      "h": 852,
+      "title": "A Ember · Today · light",
+      "w": 393,
+      "x": 473,
+      "y": 0
+    },
+    "B-Controls.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Controls",
+      "w": 393,
+      "x": 1419,
+      "y": 1400
+    },
+    "B-SignIn.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Sign in · dark",
+      "w": 393,
+      "x": 946,
+      "y": 1400
+    },
+    "B-Today-Dark.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Today · dark",
+      "w": 393,
+      "x": 0,
+      "y": 1400
+    },
+    "B-Today-Light.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Today · light",
+      "w": 393,
+      "x": 473,
+      "y": 1400
+    },
+    "C-Controls.dc.html": {
+      "h": 852,
+      "title": "C Ink · Controls",
+      "w": 393,
+      "x": 1419,
+      "y": 2800
+    },
+    "C-SignIn.dc.html": {
+      "h": 852,
+      "title": "C Ink · Sign in · dark",
+      "w": 393,
+      "x": 946,
+      "y": 2800
+    },
+    "C-Today-Dark.dc.html": {
+      "h": 852,
+      "title": "C Ink · Today · dark",
+      "w": 393,
+      "x": 0,
+      "y": 2800
+    },
+    "C-Today-Light.dc.html": {
+      "h": 852,
+      "title": "C Ink · Today · light",
+      "w": 393,
+      "x": 473,
+      "y": 2800
+    },
+    "Kit-Controls-Dark.dc.html": {
+      "h": 1240,
+      "title": "Ember kit · controls · dark",
+      "w": 393,
+      "x": 0,
+      "y": 4200
+    },
+    "Kit-Controls-Light.dc.html": {
+      "h": 1240,
+      "title": "Ember kit · controls · light",
+      "w": 393,
+      "x": 473,
+      "y": 4200
+    },
+    "Kit-Surfaces-Dark.dc.html": {
+      "h": 1560,
+      "title": "Ember kit · surfaces and patterns · dark",
+      "w": 393,
+      "x": 946,
+      "y": 4200
+    },
+    "Kit-Surfaces-Light.dc.html": {
+      "h": 1560,
+      "title": "Ember kit · surfaces and patterns · light",
+      "w": 393,
+      "x": 1419,
+      "y": 4200
+    },
+    "Main.dc.html": {
+      "h": 852,
+      "title": "A Ember · Today · dark",
+      "w": 393,
+      "x": 0,
+      "y": 0
+    },
+    "P2-SignIn-Light.dc.html": {
+      "x": 0,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Sign in · light"
+    },
+    "P2-Email-Request.dc.html": {
+      "x": 473,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Email: request a code"
+    },
+    "P2-Email-Code.dc.html": {
+      "x": 946,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Email: enter the code (and the wrong-code state)"
+    },
+    "P2-Onboarding-Dark.dc.html": {
+      "x": 1419,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Onboarding · dark"
+    },
+    "P2-Onboarding-Light.dc.html": {
+      "x": 1892,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Onboarding · light"
+    },
+    "P2-Today-Empty-Dark.dc.html": {
+      "x": 2365,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Today, empty · dark"
+    },
+    "P2-Today-Empty-Light.dc.html": {
+      "x": 2838,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Today, empty · light"
+    },
+    "P2-Settings.dc.html": {
+      "x": 3311,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · Settings, minimal"
+    },
+    "P2-Later.dc.html": {
+      "x": 3784,
+      "y": 6200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 2 · A tab that comes later"
+    }
   },
-  "title": "Tutor Central Design",
+  "createdOnFiles": {
+    "at": "2026-10-07T14:20:00Z",
+    "v": 1
+  },
+  "designSystems": [],
   "launch": {
     "view": "canvas"
   },
-  "pages": [],
-  "boards": {
-    "Main.dc.html": {
+  "notes": {
+    "dirA": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Direction A · Ember — warm charcoal, marigold, native SF Pro",
+      "w": 240,
       "x": 0,
-      "y": 0,
-      "w": 393,
-      "h": 852,
-      "title": "A Ember · Today · dark"
+      "y": -300
     },
-    "A-Today-Light.dc.html": {
-      "x": 473,
-      "y": 0,
-      "w": 393,
-      "h": 852,
-      "title": "A Ember · Today · light"
-    },
-    "A-SignIn.dc.html": {
-      "x": 946,
-      "y": 0,
-      "w": 393,
-      "h": 852,
-      "title": "A Ember · Sign in · dark"
-    },
-    "A-Controls.dc.html": {
-      "x": 1419,
-      "y": 0,
-      "w": 393,
-      "h": 852,
-      "title": "A Ember · Controls"
-    },
-    "B-Today-Dark.dc.html": {
+    "dirB": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Direction B · Indigo — deep night blue, lime, geometric Sora, glass",
+      "w": 240,
       "x": 0,
-      "y": 1400,
-      "w": 393,
-      "h": 852,
-      "title": "B Indigo · Today · dark"
+      "y": 1100
     },
-    "B-Today-Light.dc.html": {
-      "x": 473,
-      "y": 1400,
-      "w": 393,
-      "h": 852,
-      "title": "B Indigo · Today · light"
-    },
-    "B-SignIn.dc.html": {
-      "x": 946,
-      "y": 1400,
-      "w": 393,
-      "h": 852,
-      "title": "B Indigo · Sign in · dark"
-    },
-    "B-Controls.dc.html": {
-      "x": 1419,
-      "y": 1400,
-      "w": 393,
-      "h": 852,
-      "title": "B Indigo · Controls"
-    },
-    "C-Today-Dark.dc.html": {
+    "dirC": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Direction C · Ink — neutral graphite, cobalt, editorial serif",
+      "w": 240,
       "x": 0,
-      "y": 2800,
-      "w": 393,
-      "h": 852,
-      "title": "C Ink · Today · dark"
+      "y": 2500
     },
-    "C-Today-Light.dc.html": {
-      "x": 473,
-      "y": 2800,
-      "w": 393,
-      "h": 852,
-      "title": "C Ink · Today · light"
-    },
-    "C-SignIn.dc.html": {
-      "x": 946,
-      "y": 2800,
-      "w": 393,
-      "h": 852,
-      "title": "C Ink · Sign in · dark"
-    },
-    "C-Controls.dc.html": {
-      "x": 1419,
-      "y": 2800,
-      "w": 393,
-      "h": 852,
-      "title": "C Ink · Controls"
-    },
-    "Kit-Controls-Dark.dc.html": {
+    "kit": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Step 0.2 · Ember design system — the Kit (D20)",
+      "w": 240,
       "x": 0,
-      "y": 4200,
-      "w": 393,
-      "h": 1240,
-      "title": "Ember kit · controls · dark"
+      "y": 3900
     },
-    "Kit-Controls-Light.dc.html": {
-      "x": 473,
-      "y": 4200,
-      "w": 393,
-      "h": 1240,
-      "title": "Ember kit · controls · light"
-    },
-    "Kit-Surfaces-Dark.dc.html": {
-      "x": 946,
-      "y": 4200,
-      "w": 393,
-      "h": 1560,
-      "title": "Ember kit · surfaces and patterns · dark"
-    },
-    "Kit-Surfaces-Light.dc.html": {
-      "x": 1419,
-      "y": 4200,
-      "w": 393,
-      "h": 1560,
-      "title": "Ember kit · surfaces and patterns · light"
+    "p2": {
+      "x": 0,
+      "y": 5900,
+      "text": "Step 0.3 · Phase 2 boards — sign-in flow, onboarding, Today empty, Settings minimal (sign-in dark is board A in row 1)",
+      "kind": "title1",
+      "maxW": 4200,
+      "w": 240
     }
   },
   "order": [
@@ -139,37 +244,17 @@
     "Kit-Controls-Dark.dc.html",
     "Kit-Controls-Light.dc.html",
     "Kit-Surfaces-Dark.dc.html",
-    "Kit-Surfaces-Light.dc.html"
+    "Kit-Surfaces-Light.dc.html",
+    "P2-SignIn-Light.dc.html",
+    "P2-Email-Request.dc.html",
+    "P2-Email-Code.dc.html",
+    "P2-Onboarding-Dark.dc.html",
+    "P2-Onboarding-Light.dc.html",
+    "P2-Today-Empty-Dark.dc.html",
+    "P2-Today-Empty-Light.dc.html",
+    "P2-Settings.dc.html",
+    "P2-Later.dc.html"
   ],
-  "notes": {
-    "dirA": {
-      "x": 0,
-      "y": -300,
-      "text": "Direction A · Ember — warm charcoal, marigold, native SF Pro",
-      "kind": "title1",
-      "maxW": 1812
-    },
-    "dirB": {
-      "x": 0,
-      "y": 1100,
-      "text": "Direction B · Indigo — deep night blue, lime, geometric Sora, glass",
-      "kind": "title1",
-      "maxW": 1812
-    },
-    "dirC": {
-      "x": 0,
-      "y": 2500,
-      "text": "Direction C · Ink — neutral graphite, cobalt, editorial serif",
-      "kind": "title1",
-      "maxW": 1812
-    },
-    "kit": {
-      "x": 0,
-      "y": 3900,
-      "text": "Step 0.2 · Ember design system — the Kit (D20)",
-      "kind": "title1",
-      "maxW": 1812
-    }
-  },
-  "designSystems": []
+  "pages": [],
+  "title": "Tutor Central Design"
 }
