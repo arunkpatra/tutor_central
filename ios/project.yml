@@ -33,6 +33,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: in.tutorcentral.app
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/TutorCentral.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
   TutorCentralSmokeTests:
     type: bundle.unit-test
