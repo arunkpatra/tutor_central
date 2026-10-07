@@ -61,4 +61,6 @@ public extension Tokens {
     /// Disabled: opacity 0.45 and no shadow. Stale: 0.55 with a spinner beside it.
     static let opacityDisabled = 0.45
     static let opacityStale = 0.55
+    /// A row for a feature in a later build (P2-Settings).
+    static let opacityLater = 0.6
 }

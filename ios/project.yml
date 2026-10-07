@@ -64,6 +64,7 @@ schemes:
         - package: TutorCentralKit/AppShellTests
         - package: TutorCentralKit/OnboardingTests
         - package: TutorCentralKit/TodayTests
+        - package: TutorCentralKit/SettingsTests
   TutorCentral Kit:
     build:
       targets:

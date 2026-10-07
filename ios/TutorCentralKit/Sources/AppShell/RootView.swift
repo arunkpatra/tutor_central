@@ -2,6 +2,7 @@ import Data
 import DesignSystem
 import Domain
 import Onboarding
+import Settings
 import SwiftUI
 import Today
 
@@ -29,7 +30,11 @@ public struct RootView: View {
         self.deps = deps
         self.launch = launch
         _session = State(initialValue: SessionStore(deps: deps, initial: initial))
-        _tabs = State(initialValue: TabsState(selected: launch.flatMap(Self.tab(for:)) ?? .today))
+        let tabs = TabsState(selected: launch.flatMap(Self.tab(for:)) ?? .today)
+        if launch == .settings {
+            tabs.push(.settings)
+        }
+        _tabs = State(initialValue: tabs)
     }
 
     /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
@@ -109,7 +114,7 @@ public struct RootView: View {
                 build: deps.bundleVersion,
                 toasts: toasts,
                 today: { todayView },
-                settings: { EmptyView() }
+                settings: { settingsView }
             )
         }
     }
@@ -131,6 +136,26 @@ public struct RootView: View {
         case .signinCodeWrong: .codeWrong
         case .signinPassword: .password
         default: nil
+        }
+    }
+
+    @ViewBuilder private var settingsView: some View {
+        if case let .ready(workspace) = session.state {
+            let store = SettingsStore(
+                workspace: workspace,
+                auth: deps.auth,
+                centres: deps.centres,
+                version: deps.bundleVersion
+            )
+            SettingsView(
+                store: store,
+                boardState: launch == .settings,
+                onWorkspaceChanged: { changed in
+                    session.workspaceChanged(changed)
+                    today?.workspaceChanged(changed)
+                },
+                onMessage: { toasts.show($0) }
+            )
         }
     }
 

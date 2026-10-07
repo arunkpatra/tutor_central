@@ -193,6 +193,7 @@ recessed. One glow, under the primary button.
 | `blurChrome` | blur 22, saturate 1.3 | blur 22, saturate 1.3 |
 
 Disabled: opacity 0.45 and no shadow. Stale (a value being refreshed): opacity 0.55 with a spinner beside it.
+Later (a row for a feature in a later build, P2-Settings): opacity 0.6, not tappable.
 
 ## Motion
 
