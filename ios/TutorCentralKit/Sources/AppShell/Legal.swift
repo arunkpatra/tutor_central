@@ -1,9 +1,9 @@
 import Foundation
 import Onboarding
 
-/// The sign-in line's two links. The owner has not published the pages yet (session 4): both go to the site the
-/// bundle id names until he gives their addresses; real pages are needed before App Store review (STATE.md).
+/// The sign-in line's two links: pages on the product website, tutorcentral.in (its own phase builds the site).
 enum Legal {
-    static let site = URL(string: "https://journium.app") ?? URL(fileURLWithPath: "/")
-    static let links = SignInView.Legal(terms: site, privacy: site)
+    static let terms = URL(string: "https://tutorcentral.in/terms") ?? URL(fileURLWithPath: "/")
+    static let privacy = URL(string: "https://tutorcentral.in/privacy") ?? URL(fileURLWithPath: "/")
+    static let links = SignInView.Legal(terms: terms, privacy: privacy)
 }
