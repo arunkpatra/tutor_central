@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { dbSkipReason, STEPS } from "./steps";
+import { dbSkipReason, simulatorDestination, STEPS } from "./steps";
 
 test("the db step runs locally when supabase is up", () => {
   expect(dbSkipReason({}, true)).toBeNull();
@@ -17,4 +17,9 @@ test("in CI the db step runs only on the runner that asks for it", () => {
 
 test("steps run in the documented order", () => {
   expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "db"]);
+});
+
+test("the simulator is the iPhone 17 unless TC_SIMULATOR names another", () => {
+  expect(simulatorDestination({})).toBe("platform=iOS Simulator,name=iPhone 17");
+  expect(simulatorDestination({ TC_SIMULATOR: "iPhone 17 Pro" })).toBe("platform=iOS Simulator,name=iPhone 17 Pro");
 });

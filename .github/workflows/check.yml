@@ -1,0 +1,101 @@
+name: check
+
+# The same `bun check` as on the owner's machine, split over two runners: the iOS steps on macOS with Xcode 27, the API
+# and database steps on Ubuntu with a local Supabase. `.check-cache` comes back from the last run, so a step whose
+# inputs did not change is not run again; on main every step runs (--fresh) to keep main honest.
+# Every action is pinned to a commit (D14); the tag it was is in the comment.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  BUN_VERSION: 1.3.11
+
+jobs:
+  ios:
+    name: format, lint, ios, tools
+    # Xcode 27 is on its own image (public preview); macos-26 stops at Xcode 26 (D22).
+    runs-on: xcode-27
+    timeout-minutes: 40
+    env:
+      FRESH: ${{ github.ref == 'refs/heads/main' && '--fresh' || '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Xcode 27.0
+        run: sudo xcode-select -s /Applications/Xcode_27.0.app && xcodebuild -version
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      # The Brewfile's iOS tools; the Supabase CLI is not needed on this runner.
+      - name: Tools
+        run: brew install xcodegen swiftformat swiftlint xcbeautify
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData
+            ~/Library/Caches/org.swift.swiftpm
+            ~/.bun/install/cache
+            .check-cache
+          key: ios-${{ hashFiles('ios/TutorCentralKit/Package.resolved', 'ios/project.yml', 'Brewfile') }}-${{ github.sha }}
+          restore-keys: |
+            ios-${{ hashFiles('ios/TutorCentralKit/Package.resolved', 'ios/project.yml', 'Brewfile') }}-
+            ios-
+
+      - run: bun install --frozen-lockfile
+
+      - name: Local xcconfig (CI values; nothing is called)
+        run: printf 'SUPABASE_URL = http:/$()/127.0.0.1:54321\nSUPABASE_ANON_KEY = ci\n' > ios/Config/Local.xcconfig
+
+      - name: bun check
+        run: bun check --only=format,lint,ios,tools $FRESH
+
+  api-db:
+    name: api, db
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TC_DB_IN_CI: "1"
+      FRESH: ${{ github.ref == 'refs/heads/main' && '--fresh' || '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.120.0
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.bun/install/cache
+            .check-cache
+          key: api-db-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+          restore-keys: |
+            api-db-${{ hashFiles('bun.lock') }}-
+            api-db-
+
+      - run: bun install --frozen-lockfile
+
+      # Only what the tests touch: Postgres, Auth, PostgREST and the gateway.
+      - name: Local Supabase
+        working-directory: supabase
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: bun check
+        run: bun check --only=api,db $FRESH

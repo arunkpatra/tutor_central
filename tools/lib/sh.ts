@@ -1,5 +1,5 @@
 export type ShResult = { code: number; stdout: string; stderr: string };
-export type ShOptions = { cwd?: string; env?: Record<string, string>; inherit?: boolean };
+export type ShOptions = { cwd?: string; env?: Record<string, string>; inherit?: boolean; stdin?: string };
 
 /** Run a command and wait for it. A program that cannot be found answers 127, like a shell, instead of throwing. */
 export async function sh(cmd: string[], opts: ShOptions = {}): Promise<ShResult> {
@@ -8,6 +8,7 @@ export async function sh(cmd: string[], opts: ShOptions = {}): Promise<ShResult>
     proc = Bun.spawn(cmd, {
       cwd: opts.cwd,
       env: { ...process.env, ...opts.env },
+      stdin: opts.stdin === undefined ? "ignore" : new Blob([opts.stdin]),
       stdout: opts.inherit ? "inherit" : "pipe",
       stderr: opts.inherit ? "inherit" : "pipe",
     });
