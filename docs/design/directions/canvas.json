@@ -1,0 +1,32 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-07T14:20:00Z" },
+  "title": "Tutor Central Design",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html":            { "x": 0,    "y": 0,    "w": 393, "h": 852, "title": "A Ember · Today · dark" },
+    "A-Today-Light.dc.html":   { "x": 473,  "y": 0,    "w": 393, "h": 852, "title": "A Ember · Today · light" },
+    "A-SignIn.dc.html":        { "x": 946,  "y": 0,    "w": 393, "h": 852, "title": "A Ember · Sign in · dark" },
+    "A-Controls.dc.html":      { "x": 1419, "y": 0,    "w": 393, "h": 852, "title": "A Ember · Controls" },
+    "B-Today-Dark.dc.html":    { "x": 0,    "y": 1400, "w": 393, "h": 852, "title": "B Indigo · Today · dark" },
+    "B-Today-Light.dc.html":   { "x": 473,  "y": 1400, "w": 393, "h": 852, "title": "B Indigo · Today · light" },
+    "B-SignIn.dc.html":        { "x": 946,  "y": 1400, "w": 393, "h": 852, "title": "B Indigo · Sign in · dark" },
+    "B-Controls.dc.html":      { "x": 1419, "y": 1400, "w": 393, "h": 852, "title": "B Indigo · Controls" },
+    "C-Today-Dark.dc.html":    { "x": 0,    "y": 2800, "w": 393, "h": 852, "title": "C Ink · Today · dark" },
+    "C-Today-Light.dc.html":   { "x": 473,  "y": 2800, "w": 393, "h": 852, "title": "C Ink · Today · light" },
+    "C-SignIn.dc.html":        { "x": 946,  "y": 2800, "w": 393, "h": 852, "title": "C Ink · Sign in · dark" },
+    "C-Controls.dc.html":      { "x": 1419, "y": 2800, "w": 393, "h": 852, "title": "C Ink · Controls" }
+  },
+  "order": [
+    "Main.dc.html", "A-Today-Light.dc.html", "A-SignIn.dc.html", "A-Controls.dc.html",
+    "B-Today-Dark.dc.html", "B-Today-Light.dc.html", "B-SignIn.dc.html", "B-Controls.dc.html",
+    "C-Today-Dark.dc.html", "C-Today-Light.dc.html", "C-SignIn.dc.html", "C-Controls.dc.html"
+  ],
+  "notes": {
+    "dirA": { "x": 0, "y": -300, "text": "Direction A · Ember — warm charcoal, marigold, native SF Pro", "kind": "title1", "maxW": 1812 },
+    "dirB": { "x": 0, "y": 1100, "text": "Direction B · Indigo — deep night blue, lime, geometric Sora, glass", "kind": "title1", "maxW": 1812 },
+    "dirC": { "x": 0, "y": 2500, "text": "Direction C · Ink — neutral graphite, cobalt, editorial serif", "kind": "title1", "maxW": 1812 }
+  },
+  "designSystems": []
+}

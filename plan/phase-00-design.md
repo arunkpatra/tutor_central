@@ -1,6 +1,6 @@
 # Phase 0: Design
 
-**Status:** Not started. **Depends on:** nothing. **Runs beside:** Phase 1 (D6).
+**Status:** In progress (step 0.1 drawn 2026-10-07). **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
 
 ## Goal
 

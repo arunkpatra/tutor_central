@@ -18,7 +18,7 @@ Always:
 
 | # | Phase | File | Status |
 |---|---|---|---|
-| 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | Not started |
+| 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | In progress: directions drawn (how: `phase-00-plan.md`) |
 | 1 | Foundation: monorepo, project, modules, Supabase, API skeleton, CI, `check` | `phase-01-foundation.md` | Not started |
 | 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Not started |
 | 3 | Students and classes | `phase-03-students-and-classes.md` | Not started |

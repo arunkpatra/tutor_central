@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Direction B Indigo, controls in both appearances</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#C9F56A}a:hover{color:#DBFF8A}
+</style>
+</helmet>
+<div style="--display:'Sora', -apple-system, system-ui, sans-serif; --mono:ui-monospace, 'SF Mono', Menlo, monospace; width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div style="--bg:#0A0D1A; --s1:rgba(19,23,48,.66); --s2:#1B2140; --line:rgba(255,255,255,.08); --line2:#343C63; --t:#EEF0FB; --t2:#A9AFCB; --t3:#7A81A4; --accFill:#C9F56A; --accText:#C9F56A; --accInk:#101A05; --accTint:rgba(201,245,106,.16); --ok:#5EE1B0; --due:#FFB454; --over:#FF7A7A; --well:rgba(5,7,20,.6); --glassLine:rgba(255,255,255,.1); --glow:0 10px 28px rgba(201,245,106,.26); flex: 1; box-sizing: border-box; padding: 20px; background: radial-gradient(420px 300px at 0% 0%, rgba(108,140,255,.22), transparent 68%), var(--bg); color: var(--t); display: flex; flex-direction: column; gap: 14px">
+    <div style="font-family: var(--display); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--t3)">Dark</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <button style="height: 46px; border: 0; border-radius: 16px; background: var(--accFill); color: var(--accInk); font: inherit; font-family: var(--display); font-size: 14px; font-weight: 700; box-shadow: var(--glow), inset 0 1px 0 rgba(255,255,255,.5); padding: 0 12px">Mark paid</button>
+      <button style="height: 46px; border: 1px solid var(--glassLine); border-radius: 16px; background: var(--s1); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: var(--t); font: inherit; font-family: var(--display); font-size: 14px; font-weight: 600; padding: 0 12px">Remind</button>
+      <button style="height: 46px; border: 0; border-radius: 16px; background: transparent; color: var(--accText); font: inherit; font-family: var(--display); font-size: 14px; font-weight: 600; padding: 0 12px">Later</button>
+    </div>
+    <div role="tablist" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding: 3px; background: var(--well); border: 1px solid var(--glassLine); border-radius: 16px">
+      <button role="tab" style="height: 38px; border: 0; border-radius: 13px; background: transparent; color: var(--t2); font: inherit; font-family: var(--display); font-size: 13px; font-weight: 600">All</button>
+      <button role="tab" aria-selected="true" style="height: 38px; border: 0; border-radius: 13px; background: var(--accTint); color: var(--accText); font: inherit; font-family: var(--display); font-size: 13px; font-weight: 700">Due</button>
+      <button role="tab" style="height: 38px; border: 0; border-radius: 13px; background: transparent; color: var(--t2); font: inherit; font-family: var(--display); font-size: 13px; font-weight: 600">Paid</button>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: rgba(94,225,176,.14); color: var(--ok); font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Paid</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: rgba(255,180,84,.14); color: var(--due); font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Due</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: rgba(255,122,122,.14); color: var(--over); font-size: 13px; font-weight: 700">Overdue · Sept</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: var(--s2); color: var(--t2); font-size: 13px; font-weight: 600">Class 10</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--s1); border: 1px solid var(--glassLine); border-radius: 20px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)">
+      <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 14px; background: var(--accTint); color: var(--accText); font-family: var(--display); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">AK</div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <div style="font-size: 16px; line-height: 20px; font-weight: 600">Akshita Rao</div>
+        <div style="font-size: 13px; line-height: 16px; color: var(--t2)">Class 10 Maths · +91 97991 13211</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+        <div style="font-family: var(--mono); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums">₹1,200</div>
+        <div style="font-size: 12px; color: var(--ok); font-weight: 600">Paid 3 Oct</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <label style="display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox" checked aria-label="Send receipts" style="appearance: none; -webkit-appearance: none; width: 51px; height: 31px; margin: 0; border-radius: 16px; background: var(--accFill); box-shadow: inset 0 1px 3px rgba(0,0,0,.2)">Send receipts</label>
+      <label style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--t2)"><input type="checkbox" aria-label="Haptics" style="appearance: none; -webkit-appearance: none; width: 51px; height: 31px; margin: 0; border-radius: 16px; background: var(--line2); box-shadow: inset 0 1px 3px rgba(0,0,0,.35)">Haptics</label>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="b-fee-dark" style="font-size: 13px; color: var(--t2)">Monthly fee</label>
+      <div style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border-radius: 16px; background: var(--well); border: 1px solid var(--accFill); box-shadow: 0 0 0 3px rgba(201,245,106,.18)">
+        <span style="color: var(--t2); font-size: 17px">₹</span>
+        <input id="b-fee-dark" value="1,200" style="flex: 1; border: 0; background: transparent; color: var(--t); font: inherit; font-family: var(--mono); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+        <span style="font-size: 13px; color: var(--t3)">per month</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="--bg:#F3F4FA; --s1:rgba(255,255,255,.8); --s2:#E9EBF6; --line:rgba(20,24,60,.08); --line2:#C7CCE2; --t:#13172E; --t2:#555B7E; --t3:#7D83A3; --accFill:#C9F56A; --accText:#3E6A00; --accInk:#101A05; --accTint:rgba(140,190,30,.2); --ok:#0E8F63; --due:#B2640A; --over:#D03A3A; --well:rgba(20,24,60,.06); --glassLine:rgba(255,255,255,.95); --glow:0 10px 28px rgba(150,200,40,.38); --cardShadow:0 1px 2px rgba(20,24,60,.05), 0 10px 28px rgba(20,24,60,.08); flex: 1; box-sizing: border-box; padding: 20px; background: radial-gradient(420px 300px at 0% 0%, rgba(108,140,255,.2), transparent 68%), radial-gradient(300px 260px at 100% 100%, rgba(201,245,106,.3), transparent 70%), var(--bg); color: var(--t); display: flex; flex-direction: column; gap: 14px">
+    <div style="font-family: var(--display); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--t3)">Light</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <button style="height: 46px; border: 0; border-radius: 16px; background: var(--accFill); color: var(--accInk); font: inherit; font-family: var(--display); font-size: 14px; font-weight: 700; box-shadow: var(--glow), inset 0 1px 0 rgba(255,255,255,.6); padding: 0 12px">Mark paid</button>
+      <button style="height: 46px; border: 1px solid var(--glassLine); border-radius: 16px; background: var(--s1); color: var(--t); font: inherit; font-family: var(--display); font-size: 14px; font-weight: 600; box-shadow: var(--cardShadow); padding: 0 12px">Remind</button>
+      <button style="height: 46px; border: 0; border-radius: 16px; background: transparent; color: var(--accText); font: inherit; font-family: var(--display); font-size: 14px; font-weight: 600; padding: 0 12px">Later</button>
+    </div>
+    <div role="tablist" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding: 3px; background: var(--well); border-radius: 16px">
+      <button role="tab" style="height: 38px; border: 0; border-radius: 13px; background: transparent; color: var(--t2); font: inherit; font-family: var(--display); font-size: 13px; font-weight: 600">All</button>
+      <button role="tab" aria-selected="true" style="height: 38px; border: 0; border-radius: 13px; background: var(--accFill); color: var(--accInk); font: inherit; font-family: var(--display); font-size: 13px; font-weight: 700">Due</button>
+      <button role="tab" style="height: 38px; border: 0; border-radius: 13px; background: transparent; color: var(--t2); font: inherit; font-family: var(--display); font-size: 13px; font-weight: 600">Paid</button>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: rgba(14,143,99,.12); color: var(--ok); font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Paid</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: rgba(178,100,10,.12); color: var(--due); font-size: 13px; font-weight: 700"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Due</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: rgba(208,58,58,.12); color: var(--over); font-size: 13px; font-weight: 700">Overdue · Sept</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: var(--s2); color: var(--t2); font-size: 13px; font-weight: 600">Class 10</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--s1); border: 1px solid var(--glassLine); border-radius: 20px; box-shadow: var(--cardShadow)">
+      <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 14px; background: var(--accTint); color: var(--accText); font-family: var(--display); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">AK</div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <div style="font-size: 16px; line-height: 20px; font-weight: 600">Akshita Rao</div>
+        <div style="font-size: 13px; line-height: 16px; color: var(--t2)">Class 10 Maths · +91 97991 13211</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+        <div style="font-family: var(--mono); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums">₹1,200</div>
+        <div style="font-size: 12px; color: var(--ok); font-weight: 600">Paid 3 Oct</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <label style="display: flex; align-items: center; gap: 10px; font-size: 15px"><input type="checkbox" checked aria-label="Send receipts" style="appearance: none; -webkit-appearance: none; width: 51px; height: 31px; margin: 0; border-radius: 16px; background: var(--accFill); box-shadow: inset 0 1px 3px rgba(0,0,0,.12)">Send receipts</label>
+      <label style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--t2)"><input type="checkbox" aria-label="Haptics" style="appearance: none; -webkit-appearance: none; width: 51px; height: 31px; margin: 0; border-radius: 16px; background: var(--line2); box-shadow: inset 0 1px 3px rgba(0,0,0,.12)">Haptics</label>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="b-fee-light" style="font-size: 13px; color: var(--t2)">Monthly fee</label>
+      <div style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid var(--accText); box-shadow: 0 0 0 3px rgba(140,190,30,.2)">
+        <span style="color: var(--t2); font-size: 17px">₹</span>
+        <input id="b-fee-light" value="1,200" style="flex: 1; border: 0; background: transparent; color: var(--t); font: inherit; font-family: var(--mono); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+        <span style="font-size: 13px; color: var(--t3)">per month</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
