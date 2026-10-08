@@ -6,14 +6,17 @@ public struct StudentsActions {
     let openScanRegister: () -> Void
     let openStudentFees: (UUID) -> Void
     let openMarkAttendance: (UUID) -> Void
+    let openStudentAttendance: (UUID) -> Void
 
     public init(
         openScanRegister: @escaping () -> Void,
         openStudentFees: @escaping (UUID) -> Void,
-        openMarkAttendance: @escaping (UUID) -> Void
+        openMarkAttendance: @escaping (UUID) -> Void,
+        openStudentAttendance: @escaping (UUID) -> Void
     ) {
         self.openScanRegister = openScanRegister
         self.openStudentFees = openStudentFees
         self.openMarkAttendance = openMarkAttendance
+        self.openStudentAttendance = openStudentAttendance
     }
 }

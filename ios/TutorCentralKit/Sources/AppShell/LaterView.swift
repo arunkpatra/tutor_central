@@ -56,7 +56,6 @@ enum LaterPlace: Hashable, Sendable {
     case schedule
     case scanRegister
     case studentFees
-    case history
 
     var isTab: Bool {
         if case .tab = self {
@@ -77,7 +76,6 @@ enum LaterPlace: Hashable, Sendable {
         case .schedule: "Schedule"
         case .scanRegister: "Scan register"
         case .studentFees: "Fees"
-        case .history: "History"
         }
     }
 
@@ -86,7 +84,7 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.today): "sun.max"
         case .tab(.students): "person.2"
         case .tab(.fees): "indianrupeesign"
-        case .tab(.attendance), .tasks, .history: "checkmark.circle"
+        case .tab(.attendance), .tasks: "checkmark.circle"
         case .scanRegister: "doc.viewfinder"
         case .studentFees: "indianrupeesign"
         case .tab(.more): "ellipsis"
@@ -112,7 +110,6 @@ enum LaterPlace: Hashable, Sendable {
         case .schedule, .tab(.today): "The schedule arrives"
         case .scanRegister: "Photographing your paper register and reading it arrives"
         case .studentFees: "The fee ledger, reminders and receipts arrive"
-        case .history: "Attendance history arrives"
         }
         return "\(opening) \(rest) in a later build on TestFlight."
     }

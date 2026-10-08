@@ -54,4 +54,5 @@ enum Route: Hashable {
     case classes
     case classroom(UUID)
     case history
+    case historyStudent(UUID)
 }

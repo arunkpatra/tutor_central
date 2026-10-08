@@ -141,7 +141,9 @@ public struct RootView: View {
                 classes: { classesView },
                 classDetail: { classDetailView($0) },
                 settings: { settingsView },
-                attendance: { attendanceView }
+                attendance: { attendanceView },
+                history: { historyView },
+                studentMonth: { studentMonthView($0) }
             )
         }
     }
@@ -210,29 +212,6 @@ public struct RootView: View {
         return made
     }
 
-    private var studentsActions: StudentsActions {
-        StudentsActions(
-            openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
-            openStudentFees: { _ in shell.tabs.push(.later(.studentFees)) },
-            openMarkAttendance: { id in
-                guard case let .ready(workspace) = session.state else { return }
-                openAttendance(classID: id, date: nil, in: workspace)
-            }
-        )
-    }
-
-    private var studentsNavigation: StudentsNavigation {
-        StudentsNavigation(
-            openStudent: { shell.tabs.push(.student($0)) },
-            openClasses: { shell.tabs.push(.classes) },
-            openClass: { shell.tabs.push(.classroom($0)) },
-            showUnassigned: {
-                shell.tabs.paths[.students] = []
-                shell.register?.filter = .unassigned
-            }
-        )
-    }
-
     @ViewBuilder private var studentsView: some View {
         if case let .ready(workspace) = session.state {
             let store = register(for: workspace)
@@ -277,7 +256,7 @@ public struct RootView: View {
         if case let .ready(workspace) = session.state {
             let register = register(for: workspace)
             StudentDetailView(
-                store: StudentDetailStore(id: id, register: register),
+                store: StudentDetailStore(id: id, register: register, attendance: deps.attendance),
                 register: register,
                 actions: studentsActions,
                 navigation: studentsNavigation,

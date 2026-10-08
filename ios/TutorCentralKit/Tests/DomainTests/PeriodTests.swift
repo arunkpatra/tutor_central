@@ -43,4 +43,8 @@ struct PeriodTests {
         #expect(Period(year: 2026, month: 11).previousDayISO == "2026-10-31")
         #expect(Period(year: 2026, month: 3).previousDayISO == "2026-02-28")
     }
+
+    @Test func theMonthsName() {
+        #expect(Period(year: 2026, month: 11).monthName == "November")
+    }
 }

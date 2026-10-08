@@ -17,7 +17,11 @@ import Testing
     }
 
     @Test func theLinesOfTheBoard() async {
-        let detail = await StudentDetailStore(id: FakeStudentsRepository.akshita, register: register())
+        let detail = await StudentDetailStore(
+            id: FakeStudentsRepository.akshita,
+            register: register(),
+            attendance: FakeAttendanceRepository()
+        )
         #expect(detail.student?.name == "Akshita Rao" && detail.classroom?.name == "Class 10 Maths")
         #expect(detail.feeLine == "₹1,200 a month, the class fee" && detail.monthTitle == "October 2026")
         #expect(detail.monthLine == "Paid by UPI on 4 Oct" && detail.monthAmount == "₹1,200" && detail.monthMark?
@@ -30,20 +34,26 @@ import Testing
     @Test func ownFeeDueAndNoInvoiceReadRight() async throws {
         let register = await register()
         let riya = try #require(register.students.first { $0.name == "Riya Sharma" })
-        #expect(StudentDetailStore(id: riya.id, register: register).feeLine == "₹1,500 a month")
+        #expect(StudentDetailStore(id: riya.id, register: register, attendance: FakeAttendanceRepository())
+            .feeLine == "₹1,500 a month")
         let dev = try #require(register.students.first { $0.name == "Dev Kumar" })
-        let devDetail = StudentDetailStore(id: dev.id, register: register)
+        let devDetail = StudentDetailStore(id: dev.id, register: register, attendance: FakeAttendanceRepository())
         #expect(devDetail.monthLine == "Due" && devDetail.monthMark?.text == "Due")
         var draft = StudentDraft(dev)
         draft.fee = nil
         draft.classID = nil
         _ = await register.updateStudent(dev.id, with: draft)
-        #expect(StudentDetailStore(id: dev.id, register: register).feeLine == "No fee set yet")
+        #expect(StudentDetailStore(id: dev.id, register: register, attendance: FakeAttendanceRepository())
+            .feeLine == "No fee set yet")
     }
 
     @Test func archiveRestoreAndDeleteGoThroughTheRegister() async {
         let register = await register()
-        let detail = StudentDetailStore(id: FakeStudentsRepository.akshita, register: register)
+        let detail = StudentDetailStore(
+            id: FakeStudentsRepository.akshita,
+            register: register,
+            attendance: FakeAttendanceRepository()
+        )
         await detail.archive()
         #expect(detail.student?.isArchived == true && detail.archivedChip == "Archived 7 Oct" && detail
             .archivedLine != nil)
@@ -54,7 +64,21 @@ import Testing
     }
 
     @Test func aLinkToAMissingStudentSaysSo() async {
-        let detail = await StudentDetailStore(id: UUID(), register: register())
+        let detail = await StudentDetailStore(id: UUID(), register: register(), attendance: FakeAttendanceRepository())
         #expect(detail.student == nil && StudentDetailStore.missingMessage == "That student is no longer here.")
+    }
+
+    func make(attendance: FakeAttendanceRepository) async -> StudentDetailStore {
+        await StudentDetailStore(id: FakeStudentsRepository.akshita, register: register(), attendance: attendance)
+    }
+
+    @Test func theAttendanceSectionReadsTheMonth() async throws {
+        let store = await make(attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithToday))
+        await store.loadAttendance()
+        let card = try #require(store.attendanceCard)
+        #expect(card.title == "October 2026" && card.percent == "100%" && card.line == "3 of 3 classes · no absences")
+        let none = await make(attendance: FakeAttendanceRepository())
+        await none.loadAttendance()
+        #expect(none.attendanceCard == nil, "nothing marked: the empty row says so")
     }
 }

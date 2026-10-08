@@ -122,4 +122,16 @@ struct LaunchStateTests {
         let empty = Fixtures.dependencies(for: .attendanceEmpty)
         #expect(try await empty.students.students(centre: centre, period: october).isEmpty)
     }
+
+    @MainActor @Test func theHistoryStatesPushOnTheAttendanceTab() {
+        for state in [LaunchState.history, .historyByStudent, .historyEmpty] {
+            #expect(RootView.tab(for: state) == .attendance && RootView.initialRoutes(for: state) == [.history])
+        }
+        #expect(RootView.initialRoutes(for: .historyStudent) == [
+            .history,
+            .historyStudent(FakeAttendanceRepository.hemanth),
+        ])
+        #expect(RootView.historyBoardState(.historyByStudent) == .byStudent && RootView
+            .historyBoardState(.history) == nil)
+    }
 }

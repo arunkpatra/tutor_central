@@ -1,3 +1,4 @@
+import Data
 import DesignSystem
 import Domain
 import Foundation
@@ -5,12 +6,48 @@ import Observation
 
 @MainActor @Observable public final class StudentDetailStore {
     public static let missingMessage = "That student is no longer here."
+    /// This month's attendance on the detail (P4-StudentDetail-Attendance): the month, the bar, the line, the percent.
+    public struct AttendanceSummary: Hashable, Sendable {
+        public let title: String
+        public let fraction: Double
+        public let line: String
+        public let percent: String
+    }
+
     public let id: UUID
     private let register: RegisterStore
+    private let attendance: any AttendanceRepository
+    private var sessions: [AttendanceSession] = []
 
-    public init(id: UUID, register: RegisterStore) {
+    public init(id: UUID, register: RegisterStore, attendance: any AttendanceRepository) {
         self.id = id
         self.register = register
+        self.attendance = attendance
+    }
+
+    /// Nil while nothing is marked this month: the empty row says so, never 0%.
+    public var attendanceCard: AttendanceSummary? {
+        let count = AttendanceStats.forStudent(id, in: sessions)
+        guard count.total > 0 else { return nil }
+        let absent = count.total - count.present
+        let absences = switch absent {
+        case 0: "no absences"
+        case 1: "1 absence"
+        default: "\(absent) absences"
+        }
+        return AttendanceSummary(
+            title: register.period.title,
+            fraction: count.fraction,
+            line: "\(count.present) of \(count.total) classes · \(absences)",
+            percent: "\(count.percent ?? 0)%"
+        )
+    }
+
+    /// This month's sessions; a failed read leaves the section as it was.
+    public func loadAttendance() async {
+        if let read = try? await attendance.sessions(centre: register.workspace.centre.id, month: register.period) {
+            sessions = read
+        }
     }
 
     public var student: Student? {
