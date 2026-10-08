@@ -6,7 +6,8 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-08, session 6. **Phase 3 done:** PRs #24 to #31 merged; migration 0003 in production. The
 final review found a Critical in build 5 (adding or editing a student failed and Retry duplicated it); PR #33 fixed it
 and six Important findings, and build 0.1.0 (6) replaces build 5. D31: CI skips a commit of documents only (#32).
-**Next:** the owner installs build 6 (not 5) and tries the register with real students and a class; then Phase 0
+**Next:** the owner installs build 6 (not 5) and tries the register with real students and a class; issue #34 (the
+simulator runbook) from `resume/006-simulator-runbook.md`; then Phase 0
 step 0.5 (the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
 
 ## Where we are
