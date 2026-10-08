@@ -190,6 +190,57 @@ test("deleting a student cascades to invoices and marks and detaches message_log
   expect((await a.from("attendance_sessions").select("id").eq("id", session.data!.id)).data?.length).toBe(1);
 });
 
+test("save_attendance makes the session and replaces its marks", async () => {
+  const s1 = await a.from("students").insert({ centre_id: centreA, name: "Mark One" }).select("id").single();
+  const s2 = await a.from("students").insert({ centre_id: centreA, name: "Mark Two" }).select("id").single();
+  const cls = await a.from("classes").insert({ centre_id: centreA, name: "Marked class" }).select("id").single();
+  const first = await a.rpc("save_attendance", {
+    p_centre: centreA, p_class: cls.data!.id, p_date: "2026-10-07",
+    p_marks: { [s1.data!.id]: "present", [s2.data!.id]: "absent" },
+  });
+  expect(first.error).toBeNull();
+  const marks = await a.from("attendance_marks").select("student_id, status").eq("session_id", first.data as string).order("status");
+  // An enum orders as declared: present, then absent.
+  expect(marks.data).toEqual([{ student_id: s1.data!.id, status: "present" }, { student_id: s2.data!.id, status: "absent" }]);
+  // Saving again replaces: Two is now present and One is no longer in the class.
+  const second = await a.rpc("save_attendance", { p_centre: centreA, p_class: cls.data!.id, p_date: "2026-10-07", p_marks: { [s2.data!.id]: "present" } });
+  expect(second.data).toBe(first.data);
+  const after = await a.from("attendance_marks").select("student_id, status").eq("session_id", first.data as string);
+  expect(after.data).toEqual([{ student_id: s2.data!.id, status: "present" }]);
+  const session = await a.from("attendance_sessions").select("saved_at, created_at").eq("id", first.data as string).single();
+  expect(new Date(session.data!.saved_at).getTime()).toBeGreaterThan(new Date(session.data!.created_at).getTime());
+});
+
+test("save_attendance keeps all-students and a class apart on one day", async () => {
+  const s = await a.from("students").select("id").eq("name", "Mark One").single();
+  const everyone = await a.rpc("save_attendance", { p_centre: centreA, p_class: null, p_date: "2026-10-07", p_marks: { [s.data!.id]: "absent" } });
+  expect(everyone.error).toBeNull();
+  const sessions = await a.from("attendance_sessions").select("class_id").eq("centre_id", centreA).eq("date", "2026-10-07");
+  expect(sessions.data?.length).toBe(2);
+  const again = await a.rpc("save_attendance", { p_centre: centreA, p_class: null, p_date: "2026-10-07", p_marks: {} });
+  expect(again.data).toBe(everyone.data);
+  expect((await a.from("attendance_marks").select("id").eq("session_id", everyone.data as string)).data).toEqual([]);
+});
+
+test("save_attendance refuses a non-member, another centre's student and a bad mark", async () => {
+  const s = await a.from("students").select("id").eq("name", "Mark One").single();
+  expect((await b.rpc("save_attendance", { p_centre: centreA, p_class: null, p_date: "2026-10-08", p_marks: { [s.data!.id]: "present" } })).error).not.toBeNull();
+  const theirs = await b.from("students").select("id").eq("name", "B's student").single();
+  expect((await a.rpc("save_attendance", { p_centre: centreA, p_class: null, p_date: "2026-10-08", p_marks: { [theirs.data!.id]: "present" } })).error).not.toBeNull();
+  expect((await a.rpc("save_attendance", { p_centre: centreA, p_class: null, p_date: "2026-10-08", p_marks: { [s.data!.id]: "late" } })).error).not.toBeNull();
+  // A refused save leaves no session.
+  expect((await a.from("attendance_sessions").select("id").eq("centre_id", centreA).eq("date", "2026-10-08")).data).toEqual([]);
+});
+
+test("an absence can be logged and read back by student and day", async () => {
+  const s = await a.from("students").select("id").eq("name", "Mark One").single();
+  const log = await a.from("message_log").insert({ centre_id: centreA, student_id: s.data!.id, kind: "absence" }).select("id, opened_at, channel").single();
+  expect(log.error).toBeNull();
+  expect(log.data!.channel).toBe("whatsapp_link");
+  const read = await a.from("message_log").select("student_id, kind, opened_at").eq("centre_id", centreA).eq("kind", "absence").gte("opened_at", "2026-01-01");
+  expect(read.data?.length).toBe(1);
+});
+
 test("only the owner can delete the centre, and it cascades", async () => {
   expect((await b.rpc("delete_centre", { p_centre: centreA })).error).not.toBeNull();
   expect((await a.rpc("delete_centre", { p_centre: centreA })).error).toBeNull();
