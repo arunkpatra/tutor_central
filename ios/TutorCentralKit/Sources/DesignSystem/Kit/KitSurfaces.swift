@@ -4,8 +4,8 @@
     /// The Kit-Surfaces board: navigation, rows, the hero money pair, empty, loading, stale and error, toast, offline
     /// bar, dialog.
     struct KitSurfaces: View {
-        @State private var hemanth: Bool? = true
-        @State private var lakshmi: Bool? = false
+        @State private var hemanth = true
+        @State private var lakshmi = false
         @State private var reminders = true
 
         var body: some View {
@@ -76,8 +76,8 @@
                             onMarkPaid: {}
                         )
                         .rowDivider()
-                        AttendanceRow(name: "Hemanth", present: $hemanth).rowDivider()
-                        AttendanceRow(name: "Lakshmi", present: $lakshmi).rowDivider()
+                        AttendanceRow(name: "Hemanth", present: hemanth) { hemanth.toggle() }.rowDivider()
+                        AttendanceRow(name: "Lakshmi", present: lakshmi) { lakshmi.toggle() }.rowDivider()
                         SettingRow(symbol: "bell", label: "Unpaid fee reminders") {
                             Switch(isOn: $reminders, label: "Unpaid fee reminders")
                         }
