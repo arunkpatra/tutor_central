@@ -30,7 +30,7 @@ approved, except step 2, which starts with step 1's choice.
 - [x] **0.4 Phase 3 boards.** (approved 2026-10-08, 22 boards in row 6) Students (empty, few, many, searching, filtered), "+" menu, new student (empty,
   filled, invalid), edit student, student detail, archive and delete confirmations, classes (empty, list),
   new and edit class, class detail.
-- [ ] **0.5 Phase 4 boards.** Attendance mark (fresh, exceptions, saved, past date), absence alert, history
+- [x] **0.5 Phase 4 boards.** (approved 2026-10-08, 27 boards in row 7, the Kit's attendance row redrawn) Attendance mark (fresh, exceptions, saved, past date), absence alert, history
   by date and by student, schedule month and day, new and edit event, tasks on Today and under More, Today
   live (morning with a class soon, evening with nothing left, a day with no class).
 - [ ] **0.6 Phase 5 boards.** Fees (before generation, all, due, paid, overdue), generate month, mark paid,

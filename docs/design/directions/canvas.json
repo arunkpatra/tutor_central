@@ -114,236 +114,425 @@
       "x": 0,
       "y": 0
     },
-    "P2-SignIn-Light.dc.html": {
-      "x": 0,
-      "y": 6200,
-      "w": 393,
+    "P2-AppIcon.dc.html": {
       "h": 852,
-      "title": "Phase 2 · Sign in · light"
-    },
-    "P2-Email-Request.dc.html": {
-      "x": 473,
-      "y": 6200,
+      "title": "Phase 2 · App icon, Ember glow with Lucide's book",
       "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Email: request a code"
+      "x": 4730,
+      "y": 6200
     },
     "P2-Email-Code.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Email: enter the code (and the wrong-code state)",
+      "w": 393,
       "x": 946,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Email: enter the code (and the wrong-code state)"
-    },
-    "P2-Onboarding-Dark.dc.html": {
-      "x": 1419,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Onboarding · dark"
-    },
-    "P2-Onboarding-Light.dc.html": {
-      "x": 1892,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Onboarding · light"
-    },
-    "P2-Today-Empty-Dark.dc.html": {
-      "x": 2365,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Today, empty · dark"
-    },
-    "P2-Today-Empty-Light.dc.html": {
-      "x": 2838,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Today, empty · light"
-    },
-    "P2-Settings.dc.html": {
-      "x": 3311,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Settings, minimal"
-    },
-    "P2-Later.dc.html": {
-      "x": 3784,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · A tab that comes later"
+      "y": 6200
     },
     "P2-Email-Password.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Email: sign in with a password (and the wrong-password state)",
+      "w": 393,
       "x": 4257,
-      "y": 6200,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 2 · Email: sign in with a password (and the wrong-password state)"
+      "y": 6200
     },
-    "P2-AppIcon.dc.html": {
-      "x": 4730,
-      "y": 6200,
-      "w": 393,
+    "P2-Email-Request.dc.html": {
       "h": 852,
-      "title": "Phase 2 · App icon, Ember glow with Lucide's book"
-    },
-    "P3-Students-Empty.dc.html": {
-      "x": 0,
-      "y": 7600,
+      "title": "Phase 2 · Email: request a code",
       "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Students, empty"
-    },
-    "P3-Students-Few.dc.html": {
       "x": 473,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Students, the first three, no classes yet"
+      "y": 6200
     },
-    "P3-Students-Many.dc.html": {
-      "x": 946,
-      "y": 7600,
-      "w": 393,
+    "P2-Later.dc.html": {
       "h": 852,
-      "title": "Phase 3 · Students, the whole register · dark"
-    },
-    "P3-Students-Many-Light.dc.html": {
-      "x": 1419,
-      "y": 7600,
+      "title": "Phase 2 · A tab that comes later",
       "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Students, the whole register · light"
-    },
-    "P3-Students-Searching.dc.html": {
-      "x": 1892,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Students, searching"
-    },
-    "P3-Students-Filtered.dc.html": {
-      "x": 2365,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Students, filtered to one class"
-    },
-    "P3-Students-AddMenu.dc.html": {
-      "x": 2838,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Students, the add menu"
-    },
-    "P3-NewStudent-Empty.dc.html": {
-      "x": 3311,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · New student, empty"
-    },
-    "P3-NewStudent-Filled.dc.html": {
       "x": 3784,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · New student, filled"
+      "y": 6200
     },
-    "P3-NewStudent-Invalid.dc.html": {
-      "x": 4257,
-      "y": 7600,
-      "w": 393,
+    "P2-Onboarding-Dark.dc.html": {
       "h": 852,
-      "title": "Phase 3 · New student, a number that is not complete"
+      "title": "Phase 2 · Onboarding · dark",
+      "w": 393,
+      "x": 1419,
+      "y": 6200
     },
-    "P3-EditStudent.dc.html": {
-      "x": 4730,
-      "y": 7600,
-      "w": 393,
+    "P2-Onboarding-Light.dc.html": {
       "h": 852,
-      "title": "Phase 3 · Edit student"
+      "title": "Phase 2 · Onboarding · light",
+      "w": 393,
+      "x": 1892,
+      "y": 6200
     },
-    "P3-StudentDetail.dc.html": {
-      "x": 5203,
-      "y": 7600,
-      "w": 393,
+    "P2-Settings.dc.html": {
       "h": 852,
-      "title": "Phase 3 · Student detail · dark"
+      "title": "Phase 2 · Settings, minimal",
+      "w": 393,
+      "x": 3311,
+      "y": 6200
     },
-    "P3-StudentDetail-Light.dc.html": {
-      "x": 5676,
-      "y": 7600,
-      "w": 393,
+    "P2-SignIn-Light.dc.html": {
       "h": 852,
-      "title": "Phase 3 · Student detail · light"
+      "title": "Phase 2 · Sign in · light",
+      "w": 393,
+      "x": 0,
+      "y": 6200
     },
-    "P3-StudentDetail-Archived.dc.html": {
-      "x": 6149,
-      "y": 7600,
-      "w": 393,
+    "P2-Today-Empty-Dark.dc.html": {
       "h": 852,
-      "title": "Phase 3 · Student detail, archived, with Restore"
+      "title": "Phase 2 · Today, empty · dark",
+      "w": 393,
+      "x": 2365,
+      "y": 6200
+    },
+    "P2-Today-Empty-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Today, empty · light",
+      "w": 393,
+      "x": 2838,
+      "y": 6200
     },
     "P3-Archive-Confirm.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Archive a student, the confirmation",
+      "w": 393,
       "x": 6622,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Archive a student, the confirmation"
-    },
-    "P3-Delete-Confirm.dc.html": {
-      "x": 7095,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Delete a student, the typed confirmation"
-    },
-    "P3-Classes-Empty.dc.html": {
-      "x": 7568,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Classes, empty"
-    },
-    "P3-Classes-List.dc.html": {
-      "x": 8041,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Classes"
-    },
-    "P3-NewClass.dc.html": {
-      "x": 8514,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · New class"
-    },
-    "P3-EditClass.dc.html": {
-      "x": 8987,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Edit class, with Archive class"
-    },
-    "P3-ClassDetail.dc.html": {
-      "x": 9460,
-      "y": 7600,
-      "w": 393,
-      "h": 852,
-      "title": "Phase 3 · Class detail"
+      "y": 7600
     },
     "P3-ClassDetail-AddMembers.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Class detail, add students",
+      "w": 393,
       "x": 9933,
-      "y": 7600,
+      "y": 7600
+    },
+    "P3-ClassDetail.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Class detail",
+      "w": 393,
+      "x": 9460,
+      "y": 7600
+    },
+    "P3-Classes-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Classes, empty",
+      "w": 393,
+      "x": 7568,
+      "y": 7600
+    },
+    "P3-Classes-List.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Classes",
+      "w": 393,
+      "x": 8041,
+      "y": 7600
+    },
+    "P3-Delete-Confirm.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Delete a student, the typed confirmation",
+      "w": 393,
+      "x": 7095,
+      "y": 7600
+    },
+    "P3-EditClass.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Edit class, with Archive class",
+      "w": 393,
+      "x": 8987,
+      "y": 7600
+    },
+    "P3-EditStudent.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Edit student",
+      "w": 393,
+      "x": 4730,
+      "y": 7600
+    },
+    "P3-NewClass.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New class",
+      "w": 393,
+      "x": 8514,
+      "y": 7600
+    },
+    "P3-NewStudent-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New student, empty",
+      "w": 393,
+      "x": 3311,
+      "y": 7600
+    },
+    "P3-NewStudent-Filled.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New student, filled",
+      "w": 393,
+      "x": 3784,
+      "y": 7600
+    },
+    "P3-NewStudent-Invalid.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New student, a number that is not complete",
+      "w": 393,
+      "x": 4257,
+      "y": 7600
+    },
+    "P3-StudentDetail-Archived.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Student detail, archived, with Restore",
+      "w": 393,
+      "x": 6149,
+      "y": 7600
+    },
+    "P3-StudentDetail-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Student detail · light",
+      "w": 393,
+      "x": 5676,
+      "y": 7600
+    },
+    "P3-StudentDetail.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Student detail · dark",
+      "w": 393,
+      "x": 5203,
+      "y": 7600
+    },
+    "P3-Students-AddMenu.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the add menu",
+      "w": 393,
+      "x": 2838,
+      "y": 7600
+    },
+    "P3-Students-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, empty",
+      "w": 393,
+      "x": 0,
+      "y": 7600
+    },
+    "P3-Students-Few.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the first three, no classes yet",
+      "w": 393,
+      "x": 473,
+      "y": 7600
+    },
+    "P3-Students-Filtered.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, filtered to one class",
+      "w": 393,
+      "x": 2365,
+      "y": 7600
+    },
+    "P3-Students-Many-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the whole register · light",
+      "w": 393,
+      "x": 1419,
+      "y": 7600
+    },
+    "P3-Students-Many.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the whole register · dark",
+      "w": 393,
+      "x": 946,
+      "y": 7600
+    },
+    "P3-Students-Searching.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, searching",
+      "w": 393,
+      "x": 1892,
+      "y": 7600
+    },
+    "P4-Today-Soon.dc.html": {
+      "x": 0,
+      "y": 9000,
       "w": 393,
       "h": 852,
-      "title": "Phase 3 · Class detail, add students"
+      "title": "Phase 4 · Today live: a class starts soon · dark"
+    },
+    "P4-Today-Soon-Light.dc.html": {
+      "x": 473,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Today live: a class starts soon · light"
+    },
+    "P4-Today-Evening.dc.html": {
+      "x": 946,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Today live: the evening, nothing left"
+    },
+    "P4-Today-NoClass.dc.html": {
+      "x": 1419,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Today live: a day with no class"
+    },
+    "P4-Today-AddingTask.dc.html": {
+      "x": 1892,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Today: adding a task inline (scrolled to Tasks; the status bar on glass, U1)"
+    },
+    "P4-Attendance-Mark-Fresh.dc.html": {
+      "x": 2365,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, mark: a fresh class, everyone present · dark"
+    },
+    "P4-Attendance-Mark-Fresh-Light.dc.html": {
+      "x": 2838,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, mark: a fresh class, everyone present · light"
+    },
+    "P4-Attendance-ClassMenu.dc.html": {
+      "x": 3311,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, choosing the class"
+    },
+    "P4-Attendance-Mark-Exceptions.dc.html": {
+      "x": 3784,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, mark: one absent"
+    },
+    "P4-Attendance-Mark-Saved.dc.html": {
+      "x": 4257,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, saved: the absent student and the alert"
+    },
+    "P4-Absence-Alert.dc.html": {
+      "x": 4730,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · The absence alert: the WhatsApp message before it opens"
+    },
+    "P4-Attendance-Mark-PastDate.dc.html": {
+      "x": 5203,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, a past date: the saved class reopened"
+    },
+    "P4-Attendance-Empty.dc.html": {
+      "x": 5676,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance, no students yet"
+    },
+    "P4-History-ByDate.dc.html": {
+      "x": 6149,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance history by date"
+    },
+    "P4-History-ByStudent.dc.html": {
+      "x": 6622,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance history by student"
+    },
+    "P4-History-Student.dc.html": {
+      "x": 7095,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · One student's attendance for the month"
+    },
+    "P4-History-Empty.dc.html": {
+      "x": 7568,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Attendance history, nothing marked yet"
+    },
+    "P4-StudentDetail-Attendance.dc.html": {
+      "x": 8041,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Student detail: the attendance section, live"
+    },
+    "P4-More.dc.html": {
+      "x": 8514,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · More: Schedule, Tasks, Classes, Settings live; the rest named · dark"
+    },
+    "P4-More-Light.dc.html": {
+      "x": 8987,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · More: Schedule, Tasks, Classes, Settings live; the rest named · light"
+    },
+    "P4-Schedule-Month.dc.html": {
+      "x": 9460,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Schedule: the month, today's classes and events"
+    },
+    "P4-Schedule-Day.dc.html": {
+      "x": 9933,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Schedule: a chosen day with an event and no class"
+    },
+    "P4-Event-New.dc.html": {
+      "x": 10406,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · New event"
+    },
+    "P4-Event-Edit.dc.html": {
+      "x": 10879,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Edit event, with Delete event"
+    },
+    "P4-Event-Delete-Confirm.dc.html": {
+      "x": 11352,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Delete an event, the confirmation"
+    },
+    "P4-Tasks.dc.html": {
+      "x": 11825,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Tasks: everything, to do and done"
+    },
+    "P4-Tasks-Empty.dc.html": {
+      "x": 12298,
+      "y": 9000,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 4 · Tasks, nothing yet"
     }
   },
   "createdOnFiles": {
@@ -388,20 +577,28 @@
       "y": 3900
     },
     "p2": {
-      "x": 0,
-      "y": 5900,
-      "text": "Step 0.3 · Phase 2 boards — sign-in flow, onboarding, Today empty, Settings minimal, password (sign-in dark is board A in row 1)",
       "kind": "title1",
       "maxW": 5123,
-      "w": 240
+      "text": "Step 0.3 · Phase 2 boards — sign-in flow, onboarding, Today empty, Settings minimal, password (sign-in dark is board A in row 1)",
+      "w": 240,
+      "x": 0,
+      "y": 5900
     },
     "p3": {
-      "x": 0,
-      "y": 7300,
-      "text": "Step 0.4 · Phase 3 boards — students (list states, add menu, form, detail, confirmations) and classes",
       "kind": "title1",
-      "maxW": 10326,
-      "w": 240
+      "maxW": 8000,
+      "text": "Step 0.4 · Phase 3 boards — students (list states, add menu, form, detail, confirmations) and classes",
+      "w": 240,
+      "x": 0,
+      "y": 7300
+    },
+    "p4": {
+      "kind": "title1",
+      "maxW": 12500,
+      "text": "Step 0.5 · Phase 4 boards — Today live, attendance (mark, saved, past date, the alert), history, More, schedule and events, tasks",
+      "w": 240,
+      "x": 0,
+      "y": 8700
     }
   },
   "order": [
@@ -453,7 +650,34 @@
     "P3-NewClass.dc.html",
     "P3-EditClass.dc.html",
     "P3-ClassDetail.dc.html",
-    "P3-ClassDetail-AddMembers.dc.html"
+    "P3-ClassDetail-AddMembers.dc.html",
+    "P4-Today-Soon.dc.html",
+    "P4-Today-Soon-Light.dc.html",
+    "P4-Today-Evening.dc.html",
+    "P4-Today-NoClass.dc.html",
+    "P4-Today-AddingTask.dc.html",
+    "P4-Attendance-Mark-Fresh.dc.html",
+    "P4-Attendance-Mark-Fresh-Light.dc.html",
+    "P4-Attendance-ClassMenu.dc.html",
+    "P4-Attendance-Mark-Exceptions.dc.html",
+    "P4-Attendance-Mark-Saved.dc.html",
+    "P4-Absence-Alert.dc.html",
+    "P4-Attendance-Mark-PastDate.dc.html",
+    "P4-Attendance-Empty.dc.html",
+    "P4-History-ByDate.dc.html",
+    "P4-History-ByStudent.dc.html",
+    "P4-History-Student.dc.html",
+    "P4-History-Empty.dc.html",
+    "P4-StudentDetail-Attendance.dc.html",
+    "P4-More.dc.html",
+    "P4-More-Light.dc.html",
+    "P4-Schedule-Month.dc.html",
+    "P4-Schedule-Day.dc.html",
+    "P4-Event-New.dc.html",
+    "P4-Event-Edit.dc.html",
+    "P4-Event-Delete-Confirm.dc.html",
+    "P4-Tasks.dc.html",
+    "P4-Tasks-Empty.dc.html"
   ],
   "pages": [],
   "title": "Tutor Central Design"

@@ -58,12 +58,17 @@ when the row opens something.
 | Class | Icon tile 40 (`surface2`, symbol) | Name; meeting summary | Member count; chevron |
 | Schedule | Time `time` in `text2`, width 46 | Name; subtitle (`ok` when attendance is taken) | Check in `ok` or chevron |
 | Fee | Name; phone | | Amount; compact status chip (24 high, 12 700); on a due row a second line of two buttons 44 high, radius 14 (Remind, Mark paid) |
-| Attendance | Name | | Two toggles 96 × 40, radius 13, Present (`ok` fill, `okInk` when on) and Absent (`overdue` fill, `overdueInk` when on); off is a `lineStrong` outline in `text2` |
-| Task | Circle checkbox 24 (`lineStrong` ring; `ok` fill with a tick when done) | Title (struck through when done) | Due day `footnote` `text3` |
+| Attendance | Name `rowTitle` | | One state pill 96 × 40, radius 13: Present (`ok` fill, `okInk`, `segmentActive`) or Absent (`overdue` fill, `overdueInk`). The whole row is the toggle; selection haptic. (Phase 4 replaced the two toggles of step 0.2: half the names wrapped beside them) |
+| Task | Circle checkbox 24 (`lineStrong` ring; `ok` fill with a tick when done) | Title `subhead` (struck through in `text2` when done) | Due day, or the done day, `footnote` `text3` |
 | Setting | Symbol 20 `text2` | Label `body` | Value `body` `text2` and chevron, or a switch |
 | Form field | | Label `footnote` `text2` above; value `body` in a well | |
 | Member (class detail) | Avatar 40 | Name; parent phone | "Class fee" `footnote` `text2`, or the student's own fee in `footnoteStrong` `text`; chevron |
 | Meeting (class detail) | Day `time` `text2`, width 46 | Date `rowTitle` ("Today, 7 October") | Time range `footnote` `text2`. Today's row sits on `surface2` with its day in `accentText` 700 |
+| History (attendance) | Day over date, `time` `text2` / `caption` `text3`, width 46 | Class `rowTitle`; "5 of 6 present" `footnote` `text2` (or "Parent told on Mon 5 Oct" in `ok`) | "1 absent" `footnote` 600 `overdue`; chevron |
+| Student percentage (history by student) | Avatar 40 | Name; a progress bar under it | Percentage `numberRow`; "9 of 12" `caption` `text2`; chevron |
+| Absent student (saved attendance) | Avatar 40 | Name; parent and number `footnote` `text2` | Tell parent: a secondary button 36 high, radius 13, `whatsapp` glyph; or "Told Mon 5 Oct" in `ok` with a tick |
+| Event (schedule) | Start over end, `time` `text2` / `caption` `text3` | Title; note or time range `footnote` `text2` | Chevron (opens Edit event) |
+| Setting, later | As Setting at opacity 0.6 | | The phase name `caption` 600 `text3` instead of a chevron; not tappable (P4-More) |
 | Checklist (add students) | Avatar 40 | Name; class line | Checkbox 24; the whole row toggles it. The card sits on `surface2` when it is inside a sheet |
 
 A student row's second line is the class ("No class yet" when none); the parent's phone takes its place only
@@ -72,6 +77,9 @@ month's invoice ("Paid 4 Oct" in `ok`, "Due" in `due`) and is absent when the mo
 
 A section whose feature arrives in a later build (the student detail's attendance until Phase 4) shows the
 empty-row pattern at the Later opacity 0.6, with words that say what will appear and when.
+
+**Counts beside a section title** (the attendance mark): "6 present · 0 absent" in `footnote` 600, present in `ok`,
+absent in `overdue` when more than none, else `text2`.
 
 ## Section header
 
@@ -201,16 +209,50 @@ First load with nothing cached: skeleton rows in `surface2` breathing (`breathe`
 shape. A refresh with a cached value: the value stays at opacity 0.55 with a 16 pt spinner beside the section
 title; never a blank screen. An error replaces the spinner with a `footnote` line and Retry.
 
+## Footer button on a root
+
+A primary button 50 that must never need a scroll (Save attendance) sits in a footer above the tab bar: 12 of
+ground above it, `pageSide` beside, `tabBarInset` plus the bar below; the list scrolls under the footer's ground.
+After a save it becomes a Saved mark (`okTint` fill, `ok` text with a tick, same size, not a button); a new change
+turns it back into the primary ("Save changes"). Disabled when nothing changed.
+
+## Status bar on a scrolled root (U1)
+
+A tab root with a hidden navigation bar (Today, Students, Attendance, More) draws the system's glass edge under the
+status bar once its content scrolls: `chrome` with `blurChrome`, a `lineGlass` hairline below, the safe-area height.
+At rest nothing shows (P4-Today-AddingTask draws the scrolled state).
+
 ## Calendar month
 
 Weekday initials `caption` `text3`; day numbers `subhead` 600; today in an `accent` disc with
 `textOnAccent`; selected (not today) in a `surface2` disc; a day with classes or events carries a 4 pt dot
-under the number in `accentText`; other months' days hidden. Month title `headline` with chevron buttons.
+under the number in `accentText`; other months' days hidden. Month title `headline` with two chevron buttons (`chevron.left`, `chevron.right`, 18 in
+`accentText`, 32 round targets), inside the calendar card on Schedule and above a list on History; the card's
+padding is 12 14 10.
 
 ## Progress bar (attendance, usage)
 
 4 high, `lineStrong` track, `ok` fill (or `accent` when it is not a status), radius 2, with the value as
 text beside it.
+
+## Percentage hero (a student's month)
+
+A hero card: eyebrow with the month, the percentage in `numberHero` with "present" in `subhead` `text2` beside it,
+the progress bar, then "2 of 3 classes · 1 absence" in `footnote` `text2`.
+
+## Message sheet (the absence alert)
+
+A floating sheet (D28) with Cancel and no Save: the student's avatar 56 beside "Hemanth was absent today" in
+`title3` and the parent's name and number in `subhead` `text2`; a "Message" label over the text in a well (padding
+14, `body`); a `footnote` `text3` line saying what happens; the primary Open WhatsApp 52 with the `whatsapp` glyph in
+the footer.
+
+## Inline add (tasks)
+
+A well 46 with `plus` in `text3` and "Add a task" as placeholder, at the top of the Tasks screen and, on Today, as
+the first row of the Tasks card when Add is tapped. Focused it takes the focus ring; under it a row of chips (the
+due date as a filter chip with `calendar`, "No date" neutral) and a quiet Add (700) on the right; the section's
+action reads Cancel while adding.
 
 ## Money, phone, date and time
 
@@ -220,4 +262,6 @@ text beside it.
 - Date: `Wed 7 Oct` in rows, `Wednesday 7 October` on Today, `7 Oct 2026` with the year when the month is
   not the current one.
 - Time: 24-hour, `17:00`; a range `17:00–18:00` with an en dash.
-- Relative: `in 25 min`, `in 2 h`, `starts now`, `ended 40 min ago`.
+- Relative: `in 25 min`, `in 2 h`, `starts now`, `ended 40 min ago`; a next class on another day says the
+  day (`tomorrow`, `on Monday`).
+- A day column in a row: `Wed` over `7 Oct` (history), `Sat 10` alone when the row is an event (coming up).

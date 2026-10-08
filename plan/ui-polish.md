@@ -23,9 +23,10 @@ screen, several as a polish slice, or not at all.
 
 | # | Seen | Screen | What is seen | Source |
 |---|---|---|---|---|
-| U1 | 2026-10-08 | Today | The content scrolls under the status bar | The owner, after installing a build (session 6) |
-| U2 | 2026-10-08 | Today | The "Start here: Add your first students" card still shows with 10 students in the register; it is Phase 2's fixed content (`phase-02-plan.md`, Today); Phase 4 makes Today live and may settle it | Session 7's hand run (`plan/sessions/007/record.md`) |
+| U1 | 2026-10-08 | Today | The content scrolls under the status bar | The owner, after installing a build (session 6). Taken into Phase 4 by the owner (2026-10-08): `phase-04-plan.md` Task 11 draws the system's glass edge under the status bar on every tab root; board P4-Today-AddingTask |
+| U2 | 2026-10-08 | Today | The "Start here: Add your first students" card still shows with 10 students in the register; it is Phase 2's fixed content (`phase-02-plan.md`, Today); Phase 4 makes Today live and may settle it | Session 7's hand run (`plan/sessions/007/record.md`). Closed by `phase-04-plan.md` Task 11 (Today live) |
 | U3 | 2026-10-08 | Today | The Today section says "No classes yet" while the tile beside it says "1 Classes today"; also Phase 2's fixed content; Phase 4 may settle it | Session 7's hand run |
+| U4 | 2026-10-08 | Today | On the phone the "Classes today" tile is taller than the other two: its label wraps to two lines and the tiles do not share a height; the boards draw all three at one height | The owner, build 6 (session 8). Taken into Phase 4 by the owner: `phase-04-plan.md` Task 11 |
 
 ## Done
 
