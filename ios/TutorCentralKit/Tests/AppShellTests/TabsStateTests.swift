@@ -12,4 +12,12 @@ import Testing
         tabs.select(.students)
         #expect(tabs.paths[.students] == [])
     }
+
+    @Test func aStudentLinkOpensTheDetailOnTheStudentsTab() {
+        let tabs = TabsState(selected: .today)
+        let id = UUID()
+        #expect(tabs.open(.student(id)))
+        #expect(tabs.selected == .students && tabs.paths[.students] == [.student(id)])
+        #expect(!tabs.open(.fees(month: nil)))
+    }
 }

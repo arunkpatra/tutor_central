@@ -78,6 +78,11 @@ public struct DialogView: View {
 
     private var confirmed: Bool {
         guard let confirmName else { return true }
-        return typed.trimmingCharacters(in: .whitespaces).caseInsensitiveCompare(confirmName) == .orderedSame
+        return Self.confirms(typed: typed, name: confirmName)
+    }
+
+    /// The typed name matches ignoring case and the spaces around it ("akshita " confirms "Akshita").
+    public static func confirms(typed: String, name: String) -> Bool {
+        typed.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare(name) == .orderedSame
     }
 }
