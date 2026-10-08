@@ -41,6 +41,7 @@ let package = Package(
             .testTarget(name: "FeesTests", dependencies: ["Fees", "Students"]),
             .testTarget(name: "StudentsTests", dependencies: ["Students"]),
             .testTarget(name: "SettingsTests", dependencies: ["Settings"]),
+            .testTarget(name: "AIToolsTests", dependencies: ["AITools", "Students"]),
         ],
     swiftLanguageModes: [.v6]
 )
