@@ -272,6 +272,8 @@ public struct MultilineWell: View {
                 .padding(.vertical, Tokens.rowPaddingDense)
                 .padding(.bottom, Tokens.sectionGap)
                 .frame(minHeight: minHeight, alignment: .top)
+                .contentShape(Rectangle())
+                .onTapGesture { focused = true }
                 .overlay(alignment: .bottomTrailing) {
                     if counter {
                         Text("\(text.count) of \(limit.formatted())")

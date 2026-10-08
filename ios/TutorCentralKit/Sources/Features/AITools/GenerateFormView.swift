@@ -260,6 +260,7 @@ public struct GenerateFormView: View {
 
     private func create() {
         guard !creating else { return }
+        Keyboard.dismiss()
         if store.create(request) == .needsConsent {
             consent = true
         }
