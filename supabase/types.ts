@@ -307,6 +307,9 @@ isOneToOne: false
                            },
 "is_member":
 { Args: { "c": string }; Returns: boolean
+                           },
+"save_attendance":
+{ Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
                            }
           }
           Enums: {
