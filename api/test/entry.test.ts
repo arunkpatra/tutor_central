@@ -18,17 +18,27 @@ test("the entry Vercel's Hono preset picks is src/index.ts", () => {
 test("src/index.ts exports the server as its default", async () => {
   process.env.SUPABASE_URL ??= "http://127.0.0.1:54321";
   process.env.SUPABASE_ANON_KEY ??= "test";
+  process.env.ANTHROPIC_API_KEY ??= "test";
   const entry = await import("../src/index.js");
   expect(typeof entry.default.fetch).toBe("function");
 });
 
-test("the server refuses to start without its Supabase settings, so /health and the deploy's smoke fail", async () => {
-  for (const missing of ["SUPABASE_URL", "SUPABASE_ANON_KEY"]) {
-    const env: Record<string, string> = { PATH: process.env.PATH ?? "", SUPABASE_URL: "http://127.0.0.1:54321", SUPABASE_ANON_KEY: "k" };
+const SETTINGS = { SUPABASE_URL: "http://127.0.0.1:54321", SUPABASE_ANON_KEY: "k", ANTHROPIC_API_KEY: "a" };
+
+test("the server refuses to start without its settings, so /health and the deploy's smoke fail", async () => {
+  for (const missing of ["SUPABASE_URL", "SUPABASE_ANON_KEY", "ANTHROPIC_API_KEY"]) {
+    const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS };
     delete env[missing];
-    const proc = Bun.spawn(["bun", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
+    const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
     const stderr = await new Response(proc.stderr).text();
     expect({ missing, code: await proc.exited }).not.toEqual({ missing, code: 0 });
     expect(stderr).toContain(`${missing} is not set`);
   }
+});
+
+test("with AI_FAKE=1 the server starts without the Anthropic key (local runs that cost nothing)", async () => {
+  const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS, AI_FAKE: "1" };
+  delete env.ANTHROPIC_API_KEY;
+  const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
+  expect(await proc.exited).toBe(0);
 });

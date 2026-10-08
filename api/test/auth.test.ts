@@ -1,7 +1,11 @@
 import { expect, test } from "bun:test";
+import { fakeClaude } from "../src/claude-fake.js";
+import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 
-const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null) });
+const deps = { claude: fakeClaude({ refuse: true }), db: fakeDb() };
+
+const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), ...deps });
 const post = (headers: Record<string, string>) =>
   app.request("/ai/generate", { method: "POST", body: "{}", headers: { "content-type": "application/json", ...headers } });
 
@@ -23,7 +27,7 @@ test("an expired, unknown or deleted user's token → 401, never 500", async () 
 });
 
 test("a verifier that throws → 401, not 500", async () => {
-  const failing = makeApp({ verify: async () => { throw new Error("network"); } });
+  const failing = makeApp({ verify: async () => { throw new Error("network"); }, ...deps });
   const r = await failing.request("/ai/generate", { method: "POST", body: "{}", headers: { authorization: "Bearer x" } });
   expect(r.status).toBe(401);
 });
