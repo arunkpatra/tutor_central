@@ -1,0 +1,273 @@
+import Data
+import DesignSystem
+import Domain
+import Foundation
+import Observation
+
+/// The Fees tab (P5-Fees-*): one month of fees with its totals, the filter, the payee card and the overdue banner; the
+/// sheets over it. One per centre (`ShellState.fees`), so a tab switch keeps the month and the filter. Money is the
+/// tutor's: every write waits for the server (design-tokens.md, Numbers in code).
+@MainActor @Observable public final class FeesStore {
+    /// The sheets over the Fees tab (P5-Generate, -MarkPaid, -Remind, -Receipt, -Waive).
+    public enum Sheet: Hashable, Sendable, Identifiable {
+        case generate
+        case markPaid(UUID)
+        case remind(UUID)
+        case receipt(UUID)
+        case waive(UUID)
+
+        public var id: String {
+            switch self {
+            case .generate: "generate"
+            case let .markPaid(id): "markPaid-\(id)"
+            case let .remind(id): "remind-\(id)"
+            case let .receipt(id): "receipt-\(id)"
+            case let .waive(id): "waive-\(id)"
+            }
+        }
+    }
+
+    /// A fee row as the tab draws it (components.md, Fee row).
+    public struct Row: Hashable, Sendable, Identifiable {
+        public let invoice: FeeInvoice
+        public let name: String
+        public let line: String
+        public let lineTone: StatusTone?
+        public let lineSymbol: String?
+        public let state: FeeState
+        public let showsButtons: Bool
+        public var id: UUID {
+            invoice.id
+        }
+    }
+
+    /// The undo toast after Mark paid: its words and the one fee it reverses.
+    public struct UndoToast: Hashable, Sendable {
+        public let text: String
+        public let invoiceID: UUID
+    }
+
+    /// The payee card: "Parents are told to pay <id>" until confirmed, or "No UPI id yet" with Add.
+    public enum Payee: Hashable, Sendable {
+        case confirm(upiID: String)
+        case add
+    }
+
+    public internal(set) var month: Period
+    public var filter: FeeFilter = .all
+    public internal(set) var invoices: [FeeInvoice] = []
+    public internal(set) var dueBefore: [FeeInvoice] = []
+    public internal(set) var logs: [FeeLog] = []
+    public internal(set) var loading = false
+    /// True once a month's read has landed.
+    public internal(set) var loaded = false
+    public internal(set) var error: String?
+    public var message: String?
+    public internal(set) var canRetry = false
+    public internal(set) var lastSavedAt: Date?
+    public var sheet: Sheet?
+    /// Set after a successful Mark paid; the view shows the toast with Undo and clears it.
+    public var undo: UndoToast?
+    /// A write in flight: the sheet's primary shows its spinner.
+    public internal(set) var writing = false
+    public internal(set) var confirming = false
+    public internal(set) var workspace: Workspace
+    /// Told when the centre's payment settings change here (That's right), so the shell's workspace follows.
+    public var onWorkspaceChanged: (Workspace) -> Void = { _ in }
+    /// Told after any fee write, so the register's month chips and the student detail agree.
+    public var onFeesChanged: () -> Void = {}
+
+    let register: any Register
+    let fees: any FeesRepository
+    let messages: any MessageLogRepository
+    let centres: any CentreRepository
+    let now: @Sendable () -> Date
+    let calendar: Calendar
+    var lastFailed: (@MainActor () async -> Void)?
+    /// True once a month was asked for (the tab's first open, a link, an action from the student detail).
+    private var opened = false
+    /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
+    private var loadGeneration = 0
+    /// The month `invoices` hold, so a failed move never shows another month's fees under its title.
+    private var invoicesMonth: Period?
+
+    public init(
+        workspace: Workspace, register: any Register, fees: any FeesRepository, messages: any MessageLogRepository,
+        centres: any CentreRepository, now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india
+    ) {
+        self.workspace = workspace
+        self.register = register
+        self.fees = fees
+        self.messages = messages
+        self.centres = centres
+        self.now = now
+        self.calendar = calendar
+        month = Period.containing(now(), in: calendar.timeZone)
+    }
+
+    public var today: Day {
+        Day(now(), calendar: calendar)
+    }
+
+    public var monthTitle: String {
+        month.title
+    }
+
+    public var totals: FeeTotals {
+        FeeTotals(invoices: invoices)
+    }
+
+    public var rows: [Row] {
+        FeeLedger.rows(invoices, filter: filter, current: today.period) { register.student($0)?.name ?? "" }
+            .map(row)
+    }
+
+    public var ledgerTitle: String {
+        FeeLedger.title(count: rows.count, filter: filter)
+    }
+
+    /// The earlier months' due fees, on the current month only (P5-Fees-All's banner).
+    public var overdue: OverdueSummary? {
+        month == today.period ? FeeLedger.overdueBefore(dueBefore, current: today.period) : nil
+    }
+
+    public var payee: Payee? {
+        let payments = workspace.centre.payments
+        guard let upiID = payments.upiID else { return .add }
+        return payments.needsConfirmation ? .confirm(upiID: upiID) : nil
+    }
+
+    /// Read, and nothing in it: the empty card with Generate (P5-Fees-Empty). A failed read is not empty.
+    public var isEmptyMonth: Bool {
+        loaded && invoices.isEmpty && error == nil && !loading
+    }
+
+    /// What Generate will make for the shown month, counted here by `generate_fees`' rule.
+    public var generatePreview: GeneratePreview {
+        GeneratePreview.make(
+            students: register.activeStudents, classes: register.activeClasses, invoices: invoices, month: month
+        )
+    }
+
+    /// The first open: the current month, once; a month asked for meanwhile (a link) stands.
+    public func load() async {
+        guard !opened else { return }
+        await register.loadIfNeeded()
+        guard !opened else { return }
+        await open(month: today.period)
+    }
+
+    public func open(month: Period) async {
+        opened = true
+        self.month = month
+        loadGeneration += 1
+        let generation = loadGeneration
+        loading = true
+        defer {
+            if generation == loadGeneration {
+                loading = false
+            }
+        }
+        let centre = workspace.centre.id
+        do {
+            async let monthRead = fees.invoices(centre: centre, month: month)
+            async let earlier = fees.dueBefore(centre: centre, month: today.period)
+            async let logRead = messages.feeLogs(centre: centre, month: month)
+            let read = try await monthRead
+            let before = try await earlier
+            let readLogs = try await logRead
+            guard generation == loadGeneration else { return }
+            invoices = read
+            invoicesMonth = month
+            dueBefore = before
+            logs = readLogs
+            error = nil
+            loaded = true
+        } catch {
+            guard generation == loadGeneration else { return }
+            if invoicesMonth != month {
+                invoices = []
+                logs = []
+            }
+            self.error = "Couldn't load fees. Check your connection and try again."
+            canRetry = true
+            lastFailed = { [weak self] in await self?.open(month: month) }
+        }
+    }
+
+    public func previous() async {
+        await open(month: month.previous)
+    }
+
+    public func next() async {
+        await open(month: month.next)
+    }
+
+    /// The same month again: after a write from elsewhere (the student detail's actions) or a pull.
+    public func reload() async {
+        await open(month: month)
+    }
+
+    /// The banner: the latest month with a fee still due, from any month.
+    public func openOverdue() async {
+        guard let latest = FeeLedger.overdueBefore(dueBefore, current: today.period)?.latest else { return }
+        await open(month: latest)
+    }
+
+    public func workspaceChanged(_ workspace: Workspace) {
+        self.workspace = workspace
+    }
+
+    public func retryLast() async {
+        guard let retry = lastFailed else { return }
+        lastFailed = nil
+        canRetry = false
+        message = nil
+        await retry()
+    }
+
+    func invoice(_ id: UUID) -> FeeInvoice? {
+        invoices.first { $0.id == id }
+    }
+
+    func replace(_ invoice: FeeInvoice) {
+        guard let index = invoices.firstIndex(where: { $0.id == invoice.id }) else { return }
+        invoices[index] = invoice
+    }
+
+    func firstName(of invoice: FeeInvoice) -> String {
+        register.student(invoice.studentID)?.firstName ?? "The"
+    }
+
+    private func row(_ invoice: FeeInvoice) -> Row {
+        let state = invoice.state(current: today.period)
+        let student = register.student(invoice.studentID)
+        let name = student?.name ?? ""
+        guard !state.isSettled else {
+            return Row(
+                invoice: invoice, name: name, line: invoice.settledLine(calendar: calendar) ?? "",
+                lineTone: nil, lineSymbol: nil, state: state, showsButtons: false
+            )
+        }
+        if let reminded = logs.first(where: {
+            $0.kind == .reminder && $0.studentID == invoice.studentID && $0.month == invoice.period
+        }) {
+            let day = Day(reminded.openedAt, calendar: calendar)
+            return Row(
+                invoice: invoice, name: name,
+                line: day == today ? "Reminded today" : "Reminded \(day.shortWeekdayText)",
+                lineTone: .ok, lineSymbol: "checkmark", state: state, showsButtons: true
+            )
+        }
+        return Row(
+            invoice: invoice, name: name, line: Self.parentLine(student) ?? "No parent details yet",
+            lineTone: nil, lineSymbol: nil, state: state, showsButtons: true
+        )
+    }
+
+    /// "Ramesh Kumar · +91 98848 43831": the parent's name and number, either alone, or nil with neither.
+    static func parentLine(_ student: Student?) -> String? {
+        let parts = [student?.parentName, student?.parentPhone?.display].compactMap(\.self)
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+}
