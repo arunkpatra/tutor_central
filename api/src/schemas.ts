@@ -2,30 +2,55 @@ import { z } from "zod";
 
 const Common = { subject: z.string().min(1).max(80), classLevel: z.string().min(1).max(40) };
 const Topic = z.string().min(1).max(200);
+export const Level = z.enum(["easy", "medium", "hard"]);
 
-/** POST /ai/generate: one body per kind of material. */
+/** POST /ai/generate: one body per kind of material. The note carries the names the register knows; the API never
+ *  sees an id but the centre's. */
 export const GenerateInput = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("paper"),
     ...Common,
     topic: Topic,
+    level: Level.default("medium"),
     marks: z.number().int().min(5).max(100).default(20),
     questions: z.number().int().min(1).max(50).default(10),
   }),
-  z.object({ kind: z.literal("homework"), ...Common, topic: Topic, questions: z.number().int().min(1).max(30).default(5) }),
-  z.object({ kind: z.literal("worksheet"), ...Common, topic: Topic, questions: z.number().int().min(1).max(40).default(10) }),
+  z.object({
+    kind: z.literal("homework"),
+    ...Common,
+    topic: Topic,
+    level: Level.default("medium"),
+    questions: z.number().int().min(1).max(30).default(5),
+  }),
+  z.object({
+    kind: z.literal("worksheet"),
+    ...Common,
+    topic: Topic,
+    level: Level.default("medium"),
+    questions: z.number().int().min(1).max(40).default(10),
+    withAnswers: z.boolean().default(true),
+  }),
   z.object({
     kind: z.literal("progress_note"),
     ...Common,
     studentName: z.string().min(1).max(80),
+    parentName: z.string().max(80).optional(),
     observations: z.string().min(1).max(2000),
+    attendanceLine: z.string().max(120).optional(),
     tone: z.enum(["warm", "plain"]).default("warm"),
+    tutorName: z.string().max(80),
+    centreName: z.string().max(120),
   }),
 ]);
 export type GenerateInput = z.infer<typeof GenerateInput>;
+export type PaperInput = Extract<GenerateInput, { kind: "paper" }>;
+export type HomeworkInput = Extract<GenerateInput, { kind: "homework" }>;
+export type WorksheetInput = Extract<GenerateInput, { kind: "worksheet" }>;
+export type NoteInput = Extract<GenerateInput, { kind: "progress_note" }>;
 
+/** One photo: the device reduces it to 2000 px as a JPEG, so a real page is well under this. */
 const Image = z.object({
-  imageBase64: z.string().min(1).max(8_000_000),
+  imageBase64: z.string().min(1).max(4_000_000),
   mediaType: z.enum(["image/jpeg", "image/png", "image/webp"]),
 });
 
@@ -33,9 +58,22 @@ const Image = z.object({
 export const ScanRegisterInput = Image;
 export type ScanRegisterInput = z.infer<typeof ScanRegisterInput>;
 
-/** POST /ai/check-paper: up to six page photos and the marking scheme. */
-export const CheckPaperInput = z.object({ pages: z.array(Image).min(1).max(6), markingScheme: z.string().min(1).max(4000) });
+/** The marking scheme: typed by the tutor, or the answer key of a paper the centre created. */
+export const Scheme = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("typed"), text: z.string().min(1).max(4000) }),
+  z.object({ kind: z.literal("paper"), generationId: z.guid() }),
+]);
+
+/** POST /ai/check-paper: up to six page photos, together under Vercel's body limit, and the scheme. */
+export const CheckPaperInput = z
+  .object({ pages: z.array(Image).min(1).max(6), scheme: Scheme, studentName: z.string().min(1).max(80) })
+  .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= 4_200_000, {
+    message: "pages: too many characters in one request",
+  });
 export type CheckPaperInput = z.infer<typeof CheckPaperInput>;
+
+/** Every AI body names the centre; start_ai_generation refuses one the tutor is not a member of. */
+export const CentreInput = z.object({ centreId: z.guid() });
 
 // The outputs Claude is held to (structured outputs, src/claude.ts); the app decodes the same shapes.
 export const PaperOutput = z.object({
