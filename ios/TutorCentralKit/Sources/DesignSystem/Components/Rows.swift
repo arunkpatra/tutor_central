@@ -88,33 +88,59 @@ struct ListRow<Content: View>: View {
     }
 }
 
-/// The two lines in the middle of a row: title rowTitle, subtitle footnote text2.
+/// The two lines in the middle of a row: title rowTitle, subtitle footnote text2. `titleMatch` colours the letters a
+/// search matched in accentText.
 struct RowTitles: View {
     let title: String
+    var titleMatch: Range<String.Index>?
     let subtitle: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-            Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+            Text(attributedTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
             if let subtitle {
                 Text(subtitle).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    private var attributedTitle: AttributedString {
+        var text = AttributedString(title)
+        if let titleMatch,
+           let lower = AttributedString.Index(titleMatch.lowerBound, within: text),
+           let upper = AttributedString.Index(titleMatch.upperBound, within: text) {
+            text[lower ..< upper].foregroundColor = Tokens.accentText.color
+        }
+        return text
+    }
 }
 
-/// Student: avatar 40; name, class and phone; the fee in numberRow and its status in captionStrong in its colour;
-/// chevron.
+/// Student: avatar 40; name, then the class (or the parent's phone); the fee in numberRow and under it this month's
+/// status in captionStrong in its colour (text2 when the status has no tone: Waived); chevron. No fee, nothing on the
+/// right but the chevron; no status, the fee alone.
 public struct StudentRow: View {
+    let initials: String
     let name: String
+    let nameMatch: Range<String.Index>?
     let detail: String
-    let fee: String
-    let status: (StatusTone, String)
+    let fee: String?
+    let status: (tone: StatusTone?, text: String)?
     let action: (() -> Void)?
 
-    public init(name: String, detail: String, fee: String, status: (StatusTone, String), action: (() -> Void)? = nil) {
+    /// `nameMatch` colours the letters a search matched in accentText. `status` is nil when the month has no invoice.
+    public init(
+        initials: String,
+        name: String,
+        nameMatch: Range<String.Index>? = nil,
+        detail: String,
+        fee: String?,
+        status: (tone: StatusTone?, text: String)? = nil,
+        action: (() -> Void)? = nil
+    ) {
+        self.initials = initials
         self.name = name
+        self.nameMatch = nameMatch
         self.detail = detail
         self.fee = fee
         self.status = status
@@ -123,13 +149,21 @@ public struct StudentRow: View {
 
     public var body: some View {
         ListRow(action: action) {
-            Avatar(name: name)
-            RowTitles(title: name, subtitle: detail)
-            VStack(alignment: .trailing, spacing: Tokens.rowGapInner) {
-                Text(fee).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
-                Text(status.1).typeStyle(Tokens.captionStrong).foregroundStyle(status.0.color.color)
+            Avatar(initials: initials)
+            RowTitles(title: name, titleMatch: nameMatch, subtitle: detail)
+            if let fee {
+                VStack(alignment: .trailing, spacing: Tokens.rowGapInner) {
+                    Text(fee).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
+                    if let status {
+                        Text(status.text)
+                            .typeStyle(Tokens.captionStrong)
+                            .foregroundStyle((status.tone?.color ?? Tokens.text2).color)
+                    }
+                }
             }
-            Chevron()
+            if action != nil {
+                Chevron()
+            }
         }
     }
 }
