@@ -8,7 +8,7 @@ import SwiftUI
 /// the other three tabs are on the way.
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
-    Attendance: View, History: View, StudentMonth: View, Schedule: View
+    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -23,16 +23,22 @@ struct TabsView<
     let history: () -> History
     let studentMonth: (UUID) -> StudentMonth
     let schedule: (UUID?) -> Schedule
+    let tasks: () -> Tasks
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
             Tab("Today", systemImage: "sun.max", value: AppTab.today) { stack(.today) { today() } }
             Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
-            Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { later(.fees) } }
+            Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { LaterView(
+                place: .feesTab,
+                build: build
+            ) } }
             Tab("Attendance", systemImage: "checkmark.circle", value: AppTab.attendance) {
                 stack(.attendance) { attendance() }
             }
-            Tab("More", systemImage: "ellipsis", value: AppTab.more) { stack(.more) { later(.more) } }
+            Tab("More", systemImage: "ellipsis", value: AppTab.more) {
+                stack(.more) { MoreView { state.push($0) } }
+            }
         }
         .tint(Tokens.accentText.color)
     }
@@ -50,15 +56,13 @@ struct TabsView<
                     case .history: history()
                     case let .historyStudent(id): studentMonth(id)
                     case .schedule: schedule(nil)
-                    case let .event(id): schedule(id)
+                    // A newer link in the same place is a new screen, not the last one's state.
+                    case let .event(id): schedule(id).id(id)
+                    case .tasks: tasks()
                     }
                 }
         }
         // Inside the tab, so a toast sits above the tab bar.
         .overlay(alignment: .bottom) { ToastHost(toasts: toasts) }
-    }
-
-    private func later(_ tab: AppTab) -> some View {
-        LaterView(place: .tab(tab), build: build)
     }
 }

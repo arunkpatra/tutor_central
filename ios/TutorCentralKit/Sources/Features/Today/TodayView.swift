@@ -2,56 +2,84 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// Today with nothing in it yet, to P2-Today-Empty-Dark and -Light: the date and greeting, three counts, the first
-/// step, and the two empty sections. The greeting is the title; the tab's navigation bar is hidden.
+/// What a launch state sets up on Today: the add field open with a due date, scrolled to Tasks (P4-Today-AddingTask).
+public enum TodayBoardState: Sendable {
+    case addingTask
+}
+
+/// Today live, to P4-Today-Soon (dark and light), -Evening, -NoClass and -AddingTask; P2-Today-Empty for a centre with
+/// nothing yet: the date and greeting, three counts, the next class, today's classes and events, coming up, tasks. The
+/// greeting is the title; the tab's navigation bar is hidden and the status bar sits on glass once scrolled (U1).
 public struct TodayView: View {
     let store: TodayStore
     let actions: TodayActions
+    let ticks: Bool
+    let boardState: TodayBoardState?
+    @State private var topInset: CGFloat = 0
 
-    public init(store: TodayStore, actions: TodayActions) {
+    /// `ticks` runs the minute clock (live); the fixtures hold their moment.
+    public init(store: TodayStore, actions: TodayActions, ticks: Bool = true, boardState: TodayBoardState? = nil) {
         self.store = store
         self.actions = actions
+        self.ticks = ticks
+        self.boardState = boardState
     }
 
     public var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                header
-                tiles
-                if let error = store.error {
-                    refreshError(error)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+                    header
+                    tiles
+                    if let error = store.error {
+                        refreshError(error)
+                    }
+                    if store.showsStartHere {
+                        StartHereCard(openStudents: { actions.openTab(.students) })
+                    }
+                    if let hero = store.hero {
+                        HeroCard(hero: hero) { actions.openMarkAttendance(hero.classID) }
+                    }
+                    TodaySection(store: store, actions: actions)
+                    if !store.comingUp.isEmpty {
+                        ComingUpSection(rows: store.comingUp, open: actions.openEvent).id(Self.comingUpID)
+                    }
+                    TodayTasksSection(store: store.tasks, showsFocus: boardState == .addingTask)
                 }
-                startHere
-                section("Today", action: ("Schedule", { actions.openSchedule() })) {
-                    EmptyRow(
-                        symbol: "calendar",
-                        title: "No classes yet",
-                        line: "Classes you create show here on the days they meet, with one tap to mark attendance."
-                    )
-                }
-                section("Tasks", action: ("Add", { actions.openLater(.tasks) })) {
-                    EmptyRow(
-                        symbol: "checkmark.circle",
-                        title: "Nothing on your list",
-                        line: "Add a task when there's something to remember."
-                    )
+                .padding(.horizontal, Tokens.pageSide)
+                .padding(.top, max(0, Tokens.pageTop - topInset))
+                .padding(.bottom, Tokens.contentBottom)
+            }
+            .statusBarGlass()
+            .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
+            .scrollDismissesKeyboard(.interactively)
+            .background(Tokens.ground.color)
+            .toolbar(.hidden, for: .navigationBar)
+            .refreshable {
+                await store.load()
+                Haptic.play(.impactLight)
+            }
+            .task {
+                await store.load()
+                if boardState == .addingTask {
+                    setUpAddingTask()
+                    try? await Task.sleep(for: .seconds(Tokens.panel))
+                    proxy.scrollTo(Self.comingUpID, anchor: .top)
                 }
             }
-            .padding(.horizontal, Tokens.pageSide)
-            .padding(.top, max(0, Tokens.pageTop - topInset))
-            .padding(.bottom, Tokens.contentBottom)
+            .task(id: ticks) {
+                // The minute clock: the countdown and the next class follow it while Today is on screen.
+                while ticks, !Task.isCancelled {
+                    try? await Task.sleep(for: .seconds(Self.tickSeconds))
+                    store.tick(Date())
+                }
+            }
+            .onChange(of: store.tasks.lastSavedAt) { Haptic.play(.success) }
         }
-        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
-        .background(Tokens.ground.color)
-        .toolbar(.hidden, for: .navigationBar)
-        .refreshable {
-            await store.load()
-            Haptic.play(.impactLight)
-        }
-        .task { await store.load() }
     }
 
-    @State private var topInset: CGFloat = 0
+    private static let comingUpID = "coming-up"
+    private static let tickSeconds: Double = 60
 
     private var header: some View {
         HStack(alignment: .bottom) {
@@ -67,6 +95,7 @@ public struct TodayView: View {
         }
     }
 
+    /// The three tiles share a height: "Classes today" wrapping makes all three taller, never one (U4).
     private var tiles: some View {
         HStack(spacing: Tokens.tileGap) {
             StatTile(value: "\(store.counts.students)", label: "Students", tone: tone(store.counts.students)) {
@@ -85,6 +114,7 @@ public struct TodayView: View {
                 actions.openSchedule()
             }
         }
+        .fixedSize(horizontal: false, vertical: true)
         .opacity(store.loading ? Tokens.opacityStale : 1)
     }
 
@@ -104,40 +134,10 @@ public struct TodayView: View {
         .padding(.horizontal, Tokens.rowGapInner)
     }
 
-    private var startHere: some View {
-        Card(.hero) {
-            VStack(alignment: .leading, spacing: Tokens.cardPaddingCompact) {
-                Eyebrow("Start here", accent: true, strong: true)
-                VStack(alignment: .leading, spacing: Tokens.rowGapInner * 2) {
-                    Text("Add your first students").typeStyle(Tokens.title2).foregroundStyle(Tokens.text.color)
-                    Text("Type them in one by one, or photograph your paper register and we'll read it.")
-                        .typeStyle(Tokens.subhead)
-                        .foregroundStyle(Tokens.text2.color)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                HStack(spacing: Tokens.tileGap) {
-                    Button { actions.openLater(.students) } label: {
-                        Label("Add a student", systemImage: "plus").typeStyle(Tokens.buttonStrong)
-                    }
-                    .buttonStyle(.primary())
-                    Button { actions.openLater(.students) } label: {
-                        Label("Scan register", systemImage: "viewfinder")
-                    }
-                    .buttonStyle(.secondary())
-                }
-                .environment(\.buttonIconSize, Tokens.iconSmall)
-            }
-        }
-    }
-
-    private func section(
-        _ title: String,
-        action: (label: String, run: () -> Void),
-        @ViewBuilder content: () -> some View
-    ) -> some View {
-        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader(title, action: action)
-            Card { content() }
-        }
+    /// P4-Today-AddingTask: Print worksheets for Class 8, due Friday 9 October.
+    private func setUpAddingTask() {
+        store.tasks.adding = true
+        store.tasks.newTitle = "Print worksheets for Class 8"
+        store.tasks.newDue = Day(year: 2026, month: 10, day: 9)
     }
 }

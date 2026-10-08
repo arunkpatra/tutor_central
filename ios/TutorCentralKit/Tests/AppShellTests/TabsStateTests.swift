@@ -40,6 +40,7 @@ import Testing
         let tabs = TabsState(selected: .today)
         let id = UUID()
         #expect(tabs.open(.event(id)))
-        #expect(tabs.selected == .more && tabs.paths[.more] == [.schedule, .event(id)])
+        // The event's route is the schedule with its Edit sheet: one screen, not a schedule under a schedule.
+        #expect(tabs.selected == .more && tabs.paths[.more] == [.event(id)])
     }
 }

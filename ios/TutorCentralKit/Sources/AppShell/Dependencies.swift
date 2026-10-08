@@ -17,6 +17,8 @@ public struct Dependencies: Sendable {
     /// The register is kept on disk for the next launch (`RegisterCache`); the fixtures never write a file.
     public let cachesRegister: Bool
     public let now: @Sendable () -> Date
+    /// The fixtures hold their moment: Today's minute clock does not run (`bun shots`).
+    public let fixedClock: Bool
     /// "0.1 (12)": the marketing version and the build.
     public let bundleVersion: String
 
@@ -32,6 +34,7 @@ public struct Dependencies: Sendable {
         tasks: any TasksRepository,
         cachesRegister: Bool,
         now: @escaping @Sendable () -> Date,
+        fixedClock: Bool = false,
         bundleVersion: String
     ) {
         self.auth = auth
@@ -45,6 +48,7 @@ public struct Dependencies: Sendable {
         self.tasks = tasks
         self.cachesRegister = cachesRegister
         self.now = now
+        self.fixedClock = fixedClock
         self.bundleVersion = bundleVersion
     }
 

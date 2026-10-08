@@ -17,6 +17,8 @@ import Today
     @ObservationIgnored var register: RegisterStore?
     /// One mark screen per centre, so a tab switch keeps the date, the class and the unsaved toggles.
     @ObservationIgnored var attendance: AttendanceStore?
+    /// One tasks store per centre, shared by Today's Tasks card and the Tasks screen.
+    @ObservationIgnored var tasks: TasksStore?
     private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
@@ -39,6 +41,7 @@ import Today
         today = nil
         register = nil
         attendance = nil
+        tasks = nil
         centre = nil
     }
 }

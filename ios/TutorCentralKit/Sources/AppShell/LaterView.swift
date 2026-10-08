@@ -51,60 +51,40 @@ struct LaterView: View {
 
 /// Every place that is "on the way" in this build, with the board's words.
 enum LaterPlace: Hashable, Sendable {
-    case tab(AppTab)
-    case tasks
+    /// The Fees tab's root, until Phase 5.
+    case feesTab
     case scanRegister
     case studentFees
 
     var isTab: Bool {
-        if case .tab = self {
-            true
-        } else {
-            false
-        }
+        self == .feesTab
     }
 
     var title: String {
         switch self {
-        case .tab(.today): "Today"
-        case .tab(.students): "Students"
-        case .tab(.fees): "Fees"
-        case .tab(.attendance): "Attendance"
-        case .tab(.more): "More"
-        case .tasks: "Tasks"
+        case .feesTab, .studentFees: "Fees"
         case .scanRegister: "Scan register"
-        case .studentFees: "Fees"
         }
     }
 
     var symbol: String {
         switch self {
-        case .tab(.today): "sun.max"
-        case .tab(.students): "person.2"
-        case .tab(.fees): "indianrupeesign"
-        case .tab(.attendance), .tasks: "checkmark.circle"
+        case .feesTab, .studentFees: "indianrupeesign"
         case .scanRegister: "doc.viewfinder"
-        case .studentFees: "indianrupeesign"
-        case .tab(.more): "ellipsis"
         }
     }
 
     var heading: String {
         switch self {
-        case .tab(.students), .tab(.fees), .tasks, .studentFees: "\(title) are on the way"
-        default: "\(title) is on the way"
+        case .feesTab, .studentFees: "\(title) are on the way"
+        case .scanRegister: "\(title) is on the way"
         }
     }
 
     var line: String {
         let opening = "This build has sign-in, your profile, Today and the register."
         let rest = switch self {
-        case .tab(.students): "Students, classes and the register scan arrive"
-        case .tab(.fees): "Fees, reminders and receipts arrive"
-        case .tab(.attendance): "Marking attendance and its history arrive"
-        case .tab(.more): "Schedule, classes, reports and the AI tools arrive"
-        case .tasks: "Tasks arrive"
-        case .tab(.today): "The schedule arrives"
+        case .feesTab: "Fees, reminders and receipts arrive"
         case .scanRegister: "Photographing your paper register and reading it arrives"
         case .studentFees: "The fee ledger, reminders and receipts arrive"
         }

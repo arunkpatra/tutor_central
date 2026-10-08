@@ -1,5 +1,6 @@
 import Data
 import Domain
+import Foundation
 import Testing
 @testable import AppShell
 
@@ -143,5 +144,26 @@ struct LaunchStateTests {
         #expect(RootView.scheduleBoardState(.scheduleDay) == .saturday)
         #expect(RootView.scheduleBoardState(.eventDeleteConfirm) == .deleteConfirm)
         #expect(RootView.scheduleBoardState(.schedule) == nil)
+    }
+
+    @MainActor @Test func theTasksStatesPushOnTheMoreTab() async throws {
+        for state in [LaunchState.tasks, .tasksEmpty] {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.tasks])
+        }
+        let centre = Fixtures.meeraWorkspace.centre.id
+        #expect(try await Fixtures.dependencies(for: .tasksEmpty).tasks.tasks(centre: centre).isEmpty)
+        #expect(try await Fixtures.dependencies(for: .tasks).tasks.tasks(centre: centre).count == 4)
+    }
+
+    @MainActor @Test func theMoreAndTodayStatesStartReady() {
+        for state in [LaunchState.more, .today, .todayEvening, .todayNoClass, .todayAddingTask, .tasks, .tasksEmpty] {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+        }
+        #expect(RootView.tab(for: .more) == .more && RootView.initialRoutes(for: .tasks) == [.tasks])
+        #expect(RootView.tab(for: .tasks) == .more && RootView.tab(for: .today) == nil, "Today is the default tab")
+        #expect(Fixtures.clock(for: .todayNoClass) == DayHeading.india.date(from: DateComponents(
+            year: 2026, month: 10, day: 10, hour: 9, minute: 30
+        )))
     }
 }
