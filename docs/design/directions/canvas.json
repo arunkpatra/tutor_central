@@ -533,6 +533,195 @@
       "w": 393,
       "h": 852,
       "title": "Phase 4 · Tasks, nothing yet"
+    },
+    "P5-Fees-Empty.dc.html": {
+      "x": 0,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees before generation: a fresh centre, no UPI id yet"
+    },
+    "P5-Fees-All.dc.html": {
+      "x": 473,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees: the month, every fee · dark"
+    },
+    "P5-Fees-All-Light.dc.html": {
+      "x": 946,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees: the month, every fee · light"
+    },
+    "P5-Fees-Due.dc.html": {
+      "x": 1419,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees: due, with Remind and Mark paid"
+    },
+    "P5-Fees-Paid.dc.html": {
+      "x": 1892,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees: paid"
+    },
+    "P5-Fees-Overdue.dc.html": {
+      "x": 2365,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees: a past month with a fee still due (overdue)"
+    },
+    "P5-Fees-Payee.dc.html": {
+      "x": 2838,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Fees: the payee confirmation, until confirmed once"
+    },
+    "P5-Generate.dc.html": {
+      "x": 3311,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Generate the month's fees: what will be created"
+    },
+    "P5-Generate-Nothing.dc.html": {
+      "x": 3784,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Generate again: nothing to create"
+    },
+    "P5-MarkPaid.dc.html": {
+      "x": 4257,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Mark paid: method, date, waive instead"
+    },
+    "P5-Fees-MarkedPaid.dc.html": {
+      "x": 4730,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · After Mark paid: the row moves, the toast with Undo"
+    },
+    "P5-Receipt.dc.html": {
+      "x": 5203,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · The receipt: the WhatsApp message before it opens"
+    },
+    "P5-Remind.dc.html": {
+      "x": 5676,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Remind: the WhatsApp message before it opens"
+    },
+    "P5-Waive.dc.html": {
+      "x": 6149,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Waive a fee, with a reason"
+    },
+    "P5-Payments-Empty.dc.html": {
+      "x": 6622,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Parent payments: nothing set yet"
+    },
+    "P5-Payments-Filled.dc.html": {
+      "x": 7095,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Parent payments: the UPI id set and saved"
+    },
+    "P5-Payments-QR.dc.html": {
+      "x": 7568,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Parent payments: a QR added, the id read from it"
+    },
+    "P5-StudentDetail-Fees.dc.html": {
+      "x": 8041,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Student detail: the fees section live"
+    },
+    "P5-StudentFees.dc.html": {
+      "x": 8514,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · A student's fees: every month with a fee"
+    },
+    "P5-Reports-Fees.dc.html": {
+      "x": 8987,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Reports: the month's fees · dark"
+    },
+    "P5-Reports-Fees-Light.dc.html": {
+      "x": 9460,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Reports: the month's fees · light"
+    },
+    "P5-Reports-Attendance.dc.html": {
+      "x": 9933,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Reports: the month's attendance"
+    },
+    "P5-Reports-Export.dc.html": {
+      "x": 10406,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Share a report as CSV"
+    },
+    "P5-Reports-Empty.dc.html": {
+      "x": 10879,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Reports: a month with nothing yet"
+    },
+    "P5-More.dc.html": {
+      "x": 11352,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · More: Reports live · dark"
+    },
+    "P5-More-Light.dc.html": {
+      "x": 11825,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · More: Reports live · light"
+    },
+    "P5-Settings.dc.html": {
+      "x": 12298,
+      "y": 10400,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 5 · Settings: Parent payments live"
     }
   },
   "createdOnFiles": {
@@ -599,6 +788,14 @@
       "w": 240,
       "x": 0,
       "y": 8700
+    },
+    "p5": {
+      "kind": "title1",
+      "maxW": 13000,
+      "w": 240,
+      "x": 0,
+      "y": 10100,
+      "text": "Step 0.6 · Phase 5 boards — fees (the month, due, paid, overdue, the payee), generate, mark paid, receipt, remind, waive, parent payments and the QR, a student's fees, reports and CSV, More and Settings live"
     }
   },
   "order": [
@@ -677,7 +874,34 @@
     "P4-Event-Edit.dc.html",
     "P4-Event-Delete-Confirm.dc.html",
     "P4-Tasks.dc.html",
-    "P4-Tasks-Empty.dc.html"
+    "P4-Tasks-Empty.dc.html",
+    "P5-Fees-Empty.dc.html",
+    "P5-Fees-All.dc.html",
+    "P5-Fees-All-Light.dc.html",
+    "P5-Fees-Due.dc.html",
+    "P5-Fees-Paid.dc.html",
+    "P5-Fees-Overdue.dc.html",
+    "P5-Fees-Payee.dc.html",
+    "P5-Generate.dc.html",
+    "P5-Generate-Nothing.dc.html",
+    "P5-MarkPaid.dc.html",
+    "P5-Fees-MarkedPaid.dc.html",
+    "P5-Receipt.dc.html",
+    "P5-Remind.dc.html",
+    "P5-Waive.dc.html",
+    "P5-Payments-Empty.dc.html",
+    "P5-Payments-Filled.dc.html",
+    "P5-Payments-QR.dc.html",
+    "P5-StudentDetail-Fees.dc.html",
+    "P5-StudentFees.dc.html",
+    "P5-Reports-Fees.dc.html",
+    "P5-Reports-Fees-Light.dc.html",
+    "P5-Reports-Attendance.dc.html",
+    "P5-Reports-Export.dc.html",
+    "P5-Reports-Empty.dc.html",
+    "P5-More.dc.html",
+    "P5-More-Light.dc.html",
+    "P5-Settings.dc.html"
   ],
   "pages": [],
   "title": "Tutor Central Design"

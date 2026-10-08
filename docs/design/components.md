@@ -272,3 +272,89 @@ graphical date picker in a popover; a tap turns it on with the next weekday; No 
 - Relative: `in 25 min`, `in 2 h`, `starts now`, `ended 40 min ago`; a next class on another day says the
   day (`tomorrow`, `on Monday`).
 - A day column in a row: `Wed` over `7 Oct` (history), `Sat 10` alone when the row is an event (coming up).
+
+## Phase 5 parts (step 0.6, approved 2026-10-08)
+
+**Money pair hero (Fees, Reports, a student's fees):** the Kit's hero card: Outstanding in `due` over its line ("4
+parents"), Collected in `ok` over its line ("6 of 10 paid"), `displayCompact` numbers, a `line` rule between.
+
+**Fee row** (the Kit's, settled): name `rowTitle`; a second line `footnote` `text2` that reads the parent's name and
+number on a due row ("Ramesh Kumar · +91 98848 43831"), "Reminded Tue 6 Oct" in `ok` with a tick once a reminder was
+opened, "Paid by UPI on 4 Oct" on a paid row, "Waived · <reason>" on a waived row; on the right the amount `numberRow`
+over a compact chip (Paid `ok`, Due `due`, Overdue `overdue`, Waived neutral); a due or overdue row carries a second
+line of two 44 pt buttons, radius 14: Remind (secondary, `bell`) and Mark paid (primary, `checkmark`). In All, due rows
+come first, then paid, then waived, each group by name. The same row lists a student's months on their fees screen
+(the month as the title) and this month on the student detail.
+
+**Overdue banner (Fees, the current month):** the Banner pattern in `overdue` with `exclamationmark.circle` and a
+chevron: "₹1,000 overdue from September · 1 parent"; tapping moves the month to the latest month with an overdue fee.
+Hidden when nothing earlier is due.
+
+**Payee card (Fees):** a compact card: "Parents are told to pay <upi id>" `rowTitle`, "Reminders carry this UPI id.
+Not right? Change it." `footnote` `text2`, then two 44 pt buttons: Change (secondary, opens Parent payments) and That's
+right (primary, `checkmark`; sets the confirmation). With no UPI id at all the card is the empty-row pattern "No UPI id
+yet" with a quiet Add. Shown until confirmed once; shown again when the id changes.
+
+**Ledger section header (Fees):** "10 fees" / "4 due" / "6 paid" with the quiet action Generate on the right.
+
+**Generate sheet (floating, D28, content height):** Cancel and the title "Generate fees"; an eyebrow with the month,
+`title2` "10 fees will be created", a `subhead` `text2` line; an on-sheet card of rows (a class with its student count
+and its total, "No class", then the total row in 700); a `footnote`; the primary "Create 10 fees" 52 in the footer.
+When nothing is missing: "Everyone has a fee for October", the one total row, the primary disabled and reading
+"Nothing to create".
+
+**Mark paid sheet (floating, content height):** Cancel and "Mark paid"; the student line (avatar 40, name, "₹1,000 for
+October"); "Paid by" over a three-segment control UPI | Cash | Other; "Paid on" over a tile picker ("Day · Today, 7
+Oct") that opens the system date picker in a popover, today and earlier; a `footnote` about the receipt; above the
+footer a quiet "Waive this fee instead"; the primary "Mark ₹1,000 paid" with `checkmark`.
+
+**Waive sheet (floating, content height):** Cancel and "Waive this fee"; the student line; "Reason" over a multiline
+well (200 characters, the counter); a `footnote` ("A waived fee counts as settled, not collected. You can still mark it
+paid later."); the primary "Waive ₹800", disabled until a reason is typed.
+
+**Message sheets (the reminder and the receipt):** the Phase 4 message sheet. Remind: "Remind the parent"; the avatar
+56 beside "Hemanth's October fee is due" `title3` and "Lakshmi Reddy · +91 93802 60871"; "Message" over the text in a
+well; the footnote "Opens WhatsApp with the message ready to send. We note the date on the fee. The text is copied too,
+in case WhatsApp can't open."; Open WhatsApp. Receipt: "Send a receipt"; "Dev's fee is paid"; "Receipt" over the text;
+"Opens WhatsApp with the receipt ready to send. We note it on the fee."
+
+The parent-facing texts (plain, polite, the child, the month, the amount, the UPI id or link at the end; the tutor's
+name and the centre as the signature):
+
+| Message | Text |
+|---|---|
+| Reminder | "Hello Lakshmi, Hemanth's fee of ₹1,200 for October is due. You can pay by UPI to meera@okhdfcbank. Thank you." With a payment link as well: "… to meera@okhdfcbank or through this link: <link>." With no UPI id and no link the second sentence is left out. |
+| Receipt | "Hello Ramesh, received ₹1,000 by UPI on 7 Oct for Dev's October fee. Thank you." ("by cash", or "on 7 Oct" alone for other.) |
+| Signature | A blank line, then the tutor's name and the centre's name on their own lines (as the absence alert). |
+
+**Toast after Mark paid:** "Dev's fee marked paid by UPI." with Undo (the Kit's toast); the row has already moved and
+the hero rolled.
+
+**Parent payments (pushed; from Settings and from Fees' Payments):** the nav row with Back; "UPI" with the Saved mark
+on the right once saved; a card (padding 16): the UPI id field (`yourname@bank` placeholder, 600) with the helper
+"Reminders tell parents to pay this id." ("Read from the QR. Edit it if it is not right." after a scan), the QR row when
+one is kept (a 56 pt thumbnail, "QR from your UPI app", "Kept on this iPhone to show a parent.", a quiet Remove in
+`overdue`), then two secondary buttons Scan a QR (`camera`) and From Photos (`photo.on.rectangle`); "Payment link" with
+its optional field and the helper "Added to reminders when set, for parents who pay by a link."; "Receipts" with one
+switch row "Offer a receipt after Mark paid" and its line. Saves as you go, as Settings does.
+
+**Student detail, Fees:** this month's fee row with its buttons when due; See all opens the student's fees (pushed,
+"Hemanth's fees"): the money pair for the months with a fee, then one row per month, newest first, and a footnote
+("Months before Hemanth joined have no fee. A month's fee is made when you generate that month.").
+
+**Reports (pushed from More):** the nav row with Back and the quiet Share on the right; the month header; a
+two-segment control Fees | Attendance. Fees: the money pair ("4 of 10 due" · "6 of 10 paid") and a card of report
+rows (name over the class, the amount, the compact chip). Attendance: the percentage hero for the whole month
+("79% present", the bar, "19 of 24 marks · 5 classes marked") and a card of rows: name over "3 present · 1 absent"
+(present in `ok` 600, absent in `overdue` 600 when more than none), the percentage `numberRow` on the right; a student
+with no class marked reads "No class, nothing marked" with an en dash. A month with nothing: the empty row ("Nothing
+for November yet").
+
+**Share as CSV (floating sheet, content height):** a `subhead` `text2` line, two choice cards on `surface2` (the
+selected one with the `accent` border and `haloFocus` and a tick in `accentText`; the other a 24 pt ring), each with
+the file name and its columns: fees-2026-10.csv (Student, class, amount, status, paid on, paid by, reminded on) and
+attendance-2026-10.csv (Student, class, present, absent, percentage); the primary "Share fees-2026-10.csv" with
+`square.and.arrow.up` opens the system share sheet (not drawn).
+
+**More and Settings:** Reports is a live row on More (Organise); Settings' later card becomes "Payments and later
+builds" with Parent payments live (value "UPI", chevron) over the Phase 7 row.

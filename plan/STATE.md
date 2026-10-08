@@ -3,7 +3,7 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 9 (Phase 4 built, on Opus 5.5). **Session 9:** Phase 4 done: PRs #36 to #42 as
+**Last updated:** 2026-10-08, session 10 (the Phase 5 boards, on Fable). **Session 10:** Phase 0 step 0.6 done: 27 Phase 5 boards in row 8 of the canvas, approved by the owner, mirrored into `docs/design/`; the Phase 5 plan in progress. Before that, session 9 (Phase 4 built, on Opus 5.5). **Session 9:** Phase 4 done: PRs #36 to #42 as
 the plan's seven, the final review's fixes #44 (one Critical, four Important); migrations 0004 `save_attendance` and
 0005 `message_log.about_date` in production; the D32 hand run of every Phase 4 write path (issue #43, four bugs found
 and fixed); build 0.1.0 (7) on TestFlight, tested on the owner's iPhone: all good. U1 to U4 done. The schedule's
@@ -14,7 +14,7 @@ Phase 5 boards) and the Phase 5 plan on Fable, from `resume/009-phase-5-boards-a
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 to 0.5 approved, plus the app icon (D29); 0.6 (Phase 5 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 the Phase 4 boards |
+| 0 Design | In progress: 0.1 to 0.6 approved, plus the app icon (D29); 0.7 (Phase 6 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 the Phase 4 boards, row 8 the Phase 5 boards |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |

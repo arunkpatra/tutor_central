@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 2, Settings minimal, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --ok:#56D9A6; --over:#FF6F61; --overTint:rgba(255,111,97,.14); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div style="padding: 62px 20px 0; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center">
+      <button aria-label="Back" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line2); background: var(--btn2); color: var(--t); display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: var(--shadowButton)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+      <div style="text-align: center; font-size: 17px; font-weight: 700">Settings</div>
+      <div></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px">
+        <div style="font-size: 17px; line-height: 22px; font-weight: 700">Teaching profile</div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ok); font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Saved</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised)">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="st-name" style="font-size: 13px; color: var(--t2)">Your name</label>
+          <input id="st-name" value="Meera Nair" style="height: 46px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell)">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="st-centre" style="font-size: 13px; color: var(--t2)">Centre name</label>
+          <input id="st-centre" value="Bright Minds Tuition" style="height: 46px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell)">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="st-phone" style="font-size: 13px; color: var(--t2)">Your WhatsApp number</label>
+          <div style="display: flex; align-items: center; gap: 8px; height: 46px; box-sizing: border-box; padding: 0 14px; border-radius: 15px; background: var(--well); border: 1px solid var(--line); box-shadow: var(--shadowWell)">
+            <span style="color: var(--t2); font-size: 17px; font-weight: 600">+91</span>
+            <input id="st-phone" type="tel" value="96112 99988" style="flex: 1; min-width: 0; border: 0; background: transparent; color: var(--t); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 17px; line-height: 22px; font-weight: 700; padding: 0 2px">Payments and later builds</div>
+      <div style="display: flex; flex-direction: column; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); overflow: hidden"><a href="P5-Payments-Filled.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 9h12M9 4c3.5 0 5 2 5 5s-1.5 5-5 5H6l8 6"></path></svg><div style="flex: 1; font-size: 17px">Parent payments</div><span style="font-size: 17px; color: var(--t2)">UPI</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></a><div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; opacity: .6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg><div style="flex: 1; font-size: 17px">Reminders and haptics</div><span style="font-size: 12px; color: var(--t3); font-weight: 600">Phase 7</span></div></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 17px; line-height: 22px; font-weight: 700; padding: 0 2px">Account</div>
+      <div style="display: flex; flex-direction: column; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line)"><div style="font-size: 17px">Signed in as</div><div style="font-size: 15px; color: var(--t2)">meera.nair@gmail.com</div></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line)"><div style="font-size: 17px">Version</div><div style="font-size: 15px; color: var(--t2); font-variant-numeric: tabular-nums">0.1 (12)</div></div>
+        <button style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 0; background: transparent; color: var(--over); font: inherit; font-size: 17px; font-weight: 600; text-align: left; width: 100%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M15 8l4 4-4 4M19 12H9"></path></svg>Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

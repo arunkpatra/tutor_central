@@ -22,10 +22,10 @@ The session gate lives in `AppShell` and is the only thing that decides which of
 | Tab | Root | Pushed screens | Sheets |
 |---|---|---|---|
 | Today | Today | Schedule, Attendance mark (via Mark attendance), class (via a row), student (via a fee row) | A task is added inline, not on a sheet |
-| Students | Students list | Student detail, Class detail, Classes list | New student, Edit student, New class, Edit class, Scan register, archive and delete confirmations |
-| Fees | Fees (month) | Student detail | Generate month, Mark paid, Waive, UPI settings |
+| Students | Students list | Student detail, a student's fees, Class detail, Classes list | New student, Edit student, New class, Edit class, Scan register, archive and delete confirmations |
+| Fees | Fees (month) | Parent payments (via Payments), Student detail (via a row) | Generate month, Mark paid, Waive, Remind, Receipt |
 | Attendance | Attendance (Mark) | History (by date, by student, one student's month); a saved class reopens on the Mark root by date and class | Absence alert |
-| More | More | Schedule, Tasks, Classes, Settings now; Reports, AI Assistant, Check a paper, Scan register, Account, Help named with their phase until it ships | New event, Edit event (with Delete event), Generation forms |
+| More | More | Schedule, Tasks, Classes, Settings, Reports now; AI Assistant, Check a paper, Scan register, Account, Help named with their phase until it ships; Settings pushes Parent payments | New event, Edit event (with Delete event), Share as CSV, Generation forms |
 
 Each tab keeps its own navigation stack. Tapping the active tab pops to its root. A student detail reached
 from Today or Fees is pushed on that tab's stack, not a jump to the Students tab.
@@ -121,6 +121,36 @@ state):
 | `event-delete-confirm` | The delete confirmation over the schedule |
 | `tasks` | Tasks under More: to do and done |
 | `tasks-empty` | Tasks with nothing on the list |
+
+Phase 5's states (`plan/phase-05-plan.md` builds them; light twins from `--appearance light`; the clock is Wednesday 7
+October 2026 at 18:30; the fees are the seed's October, six paid on 4 October by UPI, plus what each state names):
+
+| State | Shows |
+|---|---|
+| `fees-empty` | Fees, a fresh centre: October with no fees generated and no UPI id (the Add card, the empty card with Generate October's fees) |
+| `fees` | Fees, October, All: the hero, the overdue banner (Nikhil's September fee still due), due rows then paid, Dev reminded on 6 Oct |
+| `fees-due` | Fees, Due: the four due rows with Remind and Mark paid |
+| `fees-paid` | Fees, Paid: the six paid rows |
+| `fees-overdue` | Fees, September 2026: Nikhil's fee overdue and reminded, nine paid on 3 Sep |
+| `fees-payee` | Fees, All, with the payee card (the UPI id not yet confirmed) |
+| `fees-generate` | The Generate sheet over `fees-empty`: 10 fees, by class, ₹11,300 |
+| `fees-generate-nothing` | The Generate sheet over `fees`: everyone has a fee, Nothing to create |
+| `fees-mark-paid` | The Mark paid sheet for Dev Kumar over `fees-due` |
+| `fees-marked-paid` | Fees, All, after Dev was marked paid: the hero rolled, his row paid today, the toast with Undo |
+| `fees-receipt` | The receipt sheet for Dev over `fees-marked-paid` |
+| `fees-remind` | The reminder sheet for Hemanth over `fees-due` |
+| `fees-waive` | The Waive sheet for Sahil, the reason typed, over `fees-due` |
+| `payments-empty` | Parent payments, nothing set, the UPI id field focused |
+| `payments` | Parent payments, the UPI id set and saved |
+| `payments-qr` | Parent payments, a QR kept and the id read from it |
+| `student-fees-due` | Student detail, Hemanth Reddy: the fees section live with Remind and Mark paid (P5-StudentDetail-Fees; `student` keeps Akshita, paid) |
+| `student-fees` | Hemanth's fees: October due and reminded, September and August paid, July waived |
+| `reports` | Reports, October, Fees |
+| `reports-attendance` | Reports, October, Attendance |
+| `reports-export` | The Share as CSV sheet over `reports`, Fees chosen |
+| `reports-empty` | Reports, November 2026, nothing yet |
+| `more` | The More root with Reports live (P5-More supersedes P4-More) |
+| `settings` | Settings with the Parent payments row live (P5-Settings supersedes P2-Settings' later card) |
 
 ## Phase 2 boards (step 0.3)
 
@@ -259,3 +289,53 @@ the canvas is not redrawn, the owner, 2026-10-08):
 - **"Told"** is matched by the day of the absence (`message_log.about_date`, migration 0005), and its words name the day
   the parent was told: a parent told on Thursday about Wednesday reads "Parent told on Thu 8 Oct" on Wednesday's row.
 
+## Phase 5 boards (step 0.6, approved 2026-10-08)
+
+Row 8 of the canvas; sources `mockups/P5-*.dc.html`. Dark for every state; light for Fees and Reports. Content is the
+seed's October 2026 on Wednesday 7 October at 18:30 (six fees paid on 4 October by UPI, ₹4,000 due from four parents,
+₹7,300 collected), plus Nikhil's September fee still due and Hemanth's earlier months for the states that need a past.
+
+| Board | Source |
+|---|---|
+| Fees: before generation, the month (dark and light), due, paid, a past month with an overdue fee, the payee confirmation | `P5-Fees-Empty`, `P5-Fees-All`, `-All-Light`, `P5-Fees-Due`, `P5-Fees-Paid`, `P5-Fees-Overdue`, `P5-Fees-Payee` |
+| Generate: what will be created; nothing to create | `P5-Generate`, `P5-Generate-Nothing` |
+| Mark paid; after mark paid with the undo toast; the receipt; the reminder; waive | `P5-MarkPaid`, `P5-Fees-MarkedPaid`, `P5-Receipt`, `P5-Remind`, `P5-Waive` |
+| Parent payments: empty, filled, a QR added | `P5-Payments-Empty`, `P5-Payments-Filled`, `P5-Payments-QR` |
+| Student detail with the fees section live; a student's fees | `P5-StudentDetail-Fees`, `P5-StudentFees` |
+| Reports: fees (dark and light), attendance, share as CSV, a month with nothing | `P5-Reports-Fees`, `-Fees-Light`, `P5-Reports-Attendance`, `P5-Reports-Export`, `P5-Reports-Empty` |
+| More with Reports live (dark and light); Settings with Parent payments live | `P5-More`, `P5-More-Light`, `P5-Settings` |
+
+What the boards settle (the parts are in `components.md`, "Phase 5 parts"):
+
+- **Fees** is the tab's root: the large title with a quiet Payments action (opens Parent payments), the month header
+  with chevrons (the current month first; any month can be opened), the money pair, the payee card until the UPI id is
+  confirmed once, the overdue banner when an earlier month still has a due fee, All | Due | Paid, and the ledger card
+  with Generate as its section action. The whole fee row is not a link; Remind and Mark paid are its buttons; the name
+  opens the student detail.
+- **Overdue** is a fee of a month before the current one that is still due. Its own month's view marks it Overdue; the
+  current month's view shows the banner and moves to that month on tap. The Due filter shows the shown month's fees
+  only. Outstanding on the hero is the shown month's.
+- **Generate** opens from the empty card's primary button and from the ledger's Generate action: a sheet that counts
+  what `generate_fees` will make (active students without a fee for the month, by class, from the class fee or the
+  student's own) and says so before it runs; the second time it says everyone has one and the button is disabled. The
+  count is made on the device from the register and the month's fees.
+- **Mark paid** is a sheet with the method (UPI, Cash, Other), the day (today, or any earlier day through the system
+  date picker in a popover) and "Waive this fee instead". The write goes to the server at once; the row moves, the
+  hero rolls and a toast offers Undo for 8 s, which writes the reverse. When receipts are on, the receipt sheet opens
+  after the toast appears; Cancel skips it.
+- **Remind and Receipt** are the Phase 4 message sheet with the texts in `components.md`. Open WhatsApp logs a
+  `message_log` row (`reminder` or `receipt`, pointing at the invoice) before the link opens; the fee row then reads
+  "Reminded Tue 6 Oct". The reminder text is copied to the clipboard as well, for a phone without WhatsApp.
+- **Waive** asks for a reason (200 characters) and sets the fee waived; a waived fee counts as settled, not collected,
+  and can still be marked paid later from the student's fees.
+- **Parent payments** is one pushed screen, from Settings' row and from Fees' Payments: the UPI id (saved as you go,
+  with the Saved mark; editing it clears the confirmation), Scan a QR (the camera) and From Photos (the photo picker),
+  both decoded on the device (`upi://pay?pa=…`) to fill the id and keep the QR image on this iPhone (shown as a
+  thumbnail with Remove; not synced), the optional payment link, the receipts switch (`send_receipts`).
+- **The student detail's Fees section** reads this month's fee with Remind and Mark paid when due; See all pushes the
+  student's fees: the money pair over the months with a fee and one row per month. Today's Due tile opens Fees at Due.
+- **Reports** is pushed from More: the month header, Fees | Attendance, the hero and per-student rows; Share opens the
+  CSV sheet that names the file and its columns, then the system share sheet. The fees CSV: student, class, amount,
+  status, paid on, paid by, reminded on. The attendance CSV: student, class, present, absent, percentage.
+- **More** gains Reports as a live row; **Settings** gains Parent payments in place of its "Phase 5" later row.
+- `tutorcentral://fees?month=YYYY-MM` opens the Fees tab at that month.

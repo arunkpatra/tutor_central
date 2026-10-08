@@ -33,7 +33,7 @@ approved, except step 2, which starts with step 1's choice.
 - [x] **0.5 Phase 4 boards.** (approved 2026-10-08, 27 boards in row 7, the Kit's attendance row redrawn) Attendance mark (fresh, exceptions, saved, past date), absence alert, history
   by date and by student, schedule month and day, new and edit event, tasks on Today and under More, Today
   live (morning with a class soon, evening with nothing left, a day with no class).
-- [ ] **0.6 Phase 5 boards.** Fees (before generation, all, due, paid, overdue), generate month, mark paid,
+- [x] **0.6 Phase 5 boards.** (approved 2026-10-08, 27 boards in row 8) Fees (before generation, all, due, paid, overdue), generate month, mark paid,
   remind and receipt (the message text), waive, UPI settings (empty, filled, QR added), payee confirmation,
   student detail fees, reports month, export.
 - [ ] **0.7 Phase 6 boards.** AI Assistant home, each tool's form, generating, result, history; scan register
