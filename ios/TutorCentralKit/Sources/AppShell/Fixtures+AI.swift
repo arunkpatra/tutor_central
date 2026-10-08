@@ -1,3 +1,4 @@
+import AITools
 import Data
 import Domain
 import Foundation
@@ -10,8 +11,8 @@ extension Fixtures {
         let ai = FakeAIRepository(now: { clock(for: state) })
         switch state {
         case .aiGenerating, .aiResultRegenerating: ai.delay = .seconds(3600)
-        case .aiGenerateFailed, .scanFailed: ai.script = .failure(.offline)
-        case .scanReading: ai.delay = .seconds(3600)
+        case .aiGenerateFailed, .scanFailed, .checkFailed: ai.script = .failure(.offline)
+        case .scanReading, .checkChecking: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
         default: break
         }
@@ -30,6 +31,42 @@ extension Fixtures {
                 archivedAt: nil, thisMonth: nil
             )
         }
+    }
+
+    /// A check state's visit as far as its board goes: Hemanth chosen, two drawn pages, the scheme read, the check run.
+    @MainActor static func prepareCheck(_ store: CheckStore, for state: LaunchState) {
+        guard RootView.checkStates.contains(state) else { return }
+        store.studentID = FakeStudentsRepository.seed.first { $0.name == "Hemanth Reddy" }?.id
+        guard state != .checkIntro else { return }
+        store.addPages([answerPage(lines: 8), answerPage(lines: 6)])
+        if state == .checkSchemeTyped {
+            store.typedScheme = "Q1 (1) b\nQ2 (1) D = 16 − 24 = −8\nQ3 (1) k = 6\nQ4 (1) real and equal\n"
+                + "Q5 (2) x = 3, 4; 1 for factorising\nQ6 (2) x = √(2/3), both roots\nQ7 (2) k = ±6, 1 for one"
+        }
+        guard ![.checkPages, .checkScheme, .checkSchemeTyped].contains(state) else { return }
+        Task {
+            await store.loadPapers()
+            store.scheme = .paper(generationID: FakeAIHistoryRepository.quadraticID)
+            await store.check()
+        }
+    }
+
+    /// A drawn page of answers (P6-Check-Pages draws two).
+    static func answerPage(lines: Int) -> ImageUpload {
+        let size = CGSize(width: 900, height: 1200)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let page = UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor(red: 0.95, green: 0.93, blue: 0.88, alpha: 1).setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            UIColor(red: 0.23, green: 0.29, blue: 0.48, alpha: 1).setFill()
+            for line in 0 ..< lines {
+                let y = 90 + CGFloat(line) * 120
+                context.fill(CGRect(x: 70, y: y, width: 60, height: 22))
+                context.fill(CGRect(x: 170, y: y, width: 420 + CGFloat(line % 4) * 70, height: 22))
+            }
+        }
+        return ImageUpload(data: page.jpegData(compressionQuality: 0.7) ?? Data(), mediaType: "image/jpeg")
     }
 
     /// The photo a scan state reads: a drawn register page (the simulator has no camera).

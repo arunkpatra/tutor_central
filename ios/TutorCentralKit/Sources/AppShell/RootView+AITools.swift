@@ -53,6 +53,48 @@ extension RootView {
         )
     }
 
+    /// One store per visit of Check a paper: its steps are pushed routes carrying the visit's id.
+    func checkStore(_ id: UUID, in workspace: Workspace) -> CheckStore {
+        if let visit = shell.check, visit.id == id {
+            return visit.store
+        }
+        let made = CheckStore(
+            workspace: workspace, register: register(for: workspace), ai: deps.ai, history: deps.aiHistory,
+            students: deps.students, centres: deps.centres, now: deps.now
+        )
+        made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
+        made.onStudentChanged = { [shell] in
+            Task { await shell.register?.refresh() }
+        }
+        if let launch {
+            Fixtures.prepareCheck(made, for: launch)
+        }
+        shell.check = CheckVisit(id: id, store: made)
+        return made
+    }
+
+    @ViewBuilder
+    func checkView(_ route: Route, in workspace: Workspace) -> some View {
+        switch route {
+        case let .checkPages(id):
+            CheckPagesView(store: checkStore(id, in: workspace)) { shell.tabs.push(.checkScheme(id)) }
+        case let .checkScheme(id):
+            CheckSchemeView(
+                store: checkStore(id, in: workspace), typed: launch == .checkSchemeTyped,
+                showsFocus: launch == .checkSchemeTyped
+            ) { shell.tabs.push(.checkResult(id)) }
+        case let .checkResult(id):
+            CheckResultView(store: checkStore(id, in: workspace), boardState: launch.flatMap(Self.checkBoardState)) {
+                shell.tabs.remove(.checkResult(id))
+                shell.tabs.remove(.checkScheme(id))
+            }
+        case let .checkPaper(id):
+            CheckIntroView(store: checkStore(id, in: workspace)) { shell.tabs.push(.checkPages(id)) }
+        default:
+            EmptyView()
+        }
+    }
+
     var aiToolsActions: AIToolsActions {
         AIToolsActions(
             openStudent: { id in
@@ -85,6 +127,8 @@ extension RootView {
                     HistoryView(store: store, actions: aiToolsActions)
                 case .scanRegister:
                     scanView(in: workspace)
+                case .checkPaper, .checkPages, .checkScheme, .checkResult:
+                    checkView(route, in: workspace)
                 default:
                     AssistantView(store: store, actions: aiToolsActions)
                 }

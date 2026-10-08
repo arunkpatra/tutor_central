@@ -74,4 +74,9 @@ enum Route: Hashable {
     case aiHistory
     /// Scan register, from More, the Students "+" menu and the empty register.
     case scanRegister
+    /// Check a paper, one visit's steps sharing its store (the id): the intro, the pages, the scheme, the marks.
+    case checkPaper(UUID)
+    case checkPages(UUID)
+    case checkScheme(UUID)
+    case checkResult(UUID)
 }

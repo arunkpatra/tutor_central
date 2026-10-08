@@ -24,7 +24,11 @@ struct MoreView: View {
                 }
                 group("Create") {
                     SettingRow(symbol: "sparkles", label: "AI Assistant", action: { open(.aiAssistant) }).rowDivider()
-                    LaterRow(symbol: "doc.text.magnifyingglass", label: "Check a paper", phase: "Phase 6").rowDivider()
+                    SettingRow(
+                        symbol: "doc.text.magnifyingglass", label: "Check a paper",
+                        action: { open(.checkPaper(UUID())) }
+                    )
+                    .rowDivider()
                     SettingRow(symbol: "doc.viewfinder", label: "Scan register", action: { open(.scanRegister) })
                 }
                 group("App") {

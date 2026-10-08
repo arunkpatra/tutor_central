@@ -30,7 +30,7 @@ extension RootView {
             .more
         case .todayAI: .today
         case .scanSaved: .students
-        default: aiStates.contains(state) || scanStates.contains(state) ? .more : nil
+        default: aiStates.contains(state) || scanStates.contains(state) || checkStates.contains(state) ? .more : nil
         }
     }
 
@@ -46,6 +46,35 @@ extension RootView {
         .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
         .scanReviewLeave, .scanNothing, .scanFailed,
     ]
+
+    /// Check a paper's states, on the More tab's stack; one visit id for all of them.
+    static let checkStates: Set<LaunchState> = [
+        .checkIntro, .checkPages, .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker,
+        .checkResultEdited, .checkSaved, .checkFailed,
+    ]
+    static let checkVisit = UUID(uuidString: "eeeeeeee-0000-0000-0000-000000000001") ?? UUID()
+
+    static func checkRoutes(for state: LaunchState) -> [Route] {
+        let id = checkVisit
+        return switch state {
+        case .checkIntro: [.checkPaper(id)]
+        case .checkPages: [.checkPaper(id), .checkPages(id)]
+        case .checkScheme, .checkSchemeTyped: [.checkPaper(id), .checkPages(id), .checkScheme(id)]
+        case .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited, .checkSaved, .checkFailed:
+            [.checkPaper(id), .checkPages(id), .checkScheme(id), .checkResult(id)]
+        default: []
+        }
+    }
+
+    static func checkBoardState(_ state: LaunchState) -> CheckBoardState? {
+        switch state {
+        case .checkSchemeTyped: .typed
+        case .checkMarkPicker: .markPicker
+        case .checkResultEdited: .edited
+        case .checkSaved: .saved
+        default: nil
+        }
+    }
 
     static func scanBoardState(_ state: LaunchState) -> ScanBoardState? {
         switch state {
@@ -74,7 +103,7 @@ extension RootView {
         case .aiResultPaper, .aiResultRegenerating: [.aiAssistant, .aiResult(FakeAIHistoryRepository.quadraticID)]
         case .aiResultNote, .aiNoteSend: [.aiAssistant, .aiResult(note)]
         case .aiHistory, .aiHistoryEmpty: [.aiAssistant, .aiHistory]
-        default: scanStates.contains(state) ? [.scanRegister] : []
+        default: scanStates.contains(state) ? [.scanRegister] : checkRoutes(for: state)
         }
     }
 

@@ -231,4 +231,16 @@ struct LaunchStateTests {
         #expect(RootView.tab(for: .todayAI) == .today && RootView.todayBoardState(.todayAI) == .aiRow)
         #expect(Fixtures.aiForms(for: .aiPaper)[.paper]?.isValid == true)
     }
+
+    @MainActor @Test func theScanAndCheckStatesStartOnTheirStacks() {
+        for state in RootView.scanStates {
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.scanRegister])
+            #expect(Fixtures.workspace(for: state).centre.aiConsentAt != nil || state == .scanConsent)
+        }
+        #expect(RootView.tab(for: .scanSaved) == .students)
+        let visit = RootView.checkVisit
+        #expect(RootView.initialRoutes(for: .checkIntro) == [.checkPaper(visit)])
+        #expect(RootView.initialRoutes(for: .checkSaved).last == .checkResult(visit))
+        #expect(RootView.checkBoardState(.checkMarkPicker) == .markPicker && RootView.tab(for: .checkFailed) == .more)
+    }
 }
