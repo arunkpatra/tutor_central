@@ -18,22 +18,25 @@ public struct FeeRowLine: Hashable, Sendable {
     }
 }
 
-/// Remind (secondary, bell) and Mark paid (primary, checkmark), 44 high, radius 14, side by side (the Kit's fee row).
+/// Remind (secondary, bell) and Mark paid (primary, checkmark), 44 high, radius 14, side by side (the Kit's fee row);
+/// without `remind`, Mark paid alone across the row (a waived month on a student's fees, the owner's call).
 public struct FeeButtons: View {
-    let remind: () -> Void
+    let remind: (() -> Void)?
     let markPaid: () -> Void
 
-    public init(remind: @escaping () -> Void, markPaid: @escaping () -> Void) {
+    public init(remind: (() -> Void)?, markPaid: @escaping () -> Void) {
         self.remind = remind
         self.markPaid = markPaid
     }
 
     public var body: some View {
         HStack(spacing: Tokens.tileGap) {
-            Button(action: remind) {
-                Label("Remind", systemImage: "bell")
+            if let remind {
+                Button(action: remind) {
+                    Label("Remind", systemImage: "bell")
+                }
+                .buttonStyle(.secondary(.row))
             }
-            .buttonStyle(.secondary(.row))
             Button(action: markPaid) {
                 Label("Mark paid", systemImage: "checkmark")
             }

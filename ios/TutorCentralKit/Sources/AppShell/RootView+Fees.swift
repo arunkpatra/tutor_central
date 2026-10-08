@@ -42,6 +42,42 @@ extension RootView {
         shell.tabs.select(.fees)
     }
 
+    /// Remind or Mark paid from the Students tab (the detail, a student's fees): the Fees tab at that month with the
+    /// sheet open, as Mark attendance opens on the Attendance tab.
+    func openFeeAction(_ action: FeeAction) {
+        guard case let .ready(workspace) = session.state else { return }
+        let store = feesStore(for: workspace)
+        let (studentID, month) = switch action {
+        case let .remind(studentID, month), let .markPaid(studentID, month): (studentID, month)
+        }
+        shell.tabs.paths[.fees] = []
+        shell.tabs.selected = .fees
+        Task {
+            await store.open(month: month)
+            guard let invoice = store.invoices.first(where: { $0.studentID == studentID }) else {
+                toasts.show("No fee for \(month.monthName) yet. Generate it first.")
+                return
+            }
+            store.sheet = switch action {
+            case .remind: .remind(invoice.id)
+            case .markPaid: .markPaid(invoice.id)
+            }
+        }
+    }
+
+    /// A student's fees, pushed from the detail's See all.
+    @ViewBuilder func studentFeesView(_ id: UUID) -> some View {
+        if case let .ready(workspace) = session.state {
+            StudentFeesView(
+                store: StudentFeesStore(
+                    studentID: id, workspace: workspace, register: register(for: workspace), fees: deps.fees,
+                    messages: deps.messages, now: deps.now
+                ),
+                act: { openFeeAction($0) }
+            )
+        }
+    }
+
     /// "2026-09" → September 2026; nil for anything else.
     nonisolated static func linkMonth(_ text: String?) -> Period? {
         guard let text else { return nil }

@@ -57,7 +57,7 @@ public enum Fixtures {
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
              .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
-             .feesWaive: .ready(workspace(for: state))
+             .feesWaive, .studentFeesDue, .studentFees: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -96,7 +96,9 @@ public enum Fixtures {
     /// screen, at their own clock.
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
-        case .history, .historyByStudent, .historyStudent, .student, .schedule, .scheduleDay, .eventNew, .eventEdit,
+        case .history, .historyByStudent, .historyStudent, .student, .studentFeesDue, .studentFees, .schedule,
+             .scheduleDay,
+             .eventNew, .eventEdit,
              .eventDeleteConfirm, .todayEvening: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         default: FakeAttendanceRepository.seed

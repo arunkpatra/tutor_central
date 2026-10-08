@@ -60,36 +60,51 @@ struct ParentCard: View {
     }
 }
 
-/// This month's fee: the month, how it stands, the amount and its chip; See all leads to the ledger (later).
+/// This month's fee: the month, how it stands, the amount and its chip, and Remind and Mark paid while it is due; See
+/// all opens the student's fees.
 struct MonthFeeCard: View {
     let store: StudentDetailStore
     let seeAll: () -> Void
+    let act: (FeeAction) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
             SectionHeader("Fees", action: ("See all", seeAll))
-            HStack(spacing: Tokens.rowPaddingDense) {
-                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                    Text(store.monthTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                    Text(store.monthLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                if let amount = store.monthAmount {
-                    Text(amount).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
-                }
-                if let mark = store.monthMark {
-                    if let tone = mark.tone {
-                        Chip(.status(tone, mark.text, symbol: tone == .ok ? "checkmark" : "clock"), compact: true)
-                    } else {
-                        Chip(.neutral(mark.text), compact: true)
-                    }
+            VStack(spacing: Tokens.tileGap) {
+                row
+                if store.showsFeeButtons {
+                    FeeButtons(
+                        remind: { store.feeAction(.remind).map(act) },
+                        markPaid: { store.feeAction(.markPaid).map(act) }
+                    )
                 }
             }
             .padding(.vertical, Tokens.rowPaddingDense)
             .padding(.horizontal, Tokens.rowPaddingHorizontal)
-            .accessibilityElement(children: .combine)
             .surface(radius: Tokens.radiusCard)
         }
+    }
+
+    /// This month's fee: the month over its line, the amount and the compact chip (P5-StudentDetail-Fees).
+    private var row: some View {
+        HStack(spacing: Tokens.rowPaddingDense) {
+            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                Text(store.monthTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                Text(store.monthLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if let amount = store.monthAmount {
+                Text(amount).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
+            }
+            if let mark = store.monthMark {
+                if let tone = mark.tone {
+                    Chip(.status(tone, mark.text, symbol: tone == .ok ? "checkmark" : "clock"), compact: true)
+                } else {
+                    Chip(.neutral(mark.text), compact: true)
+                }
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -127,6 +142,6 @@ struct AttendanceCard: View {
                 }
             }
         }
-        .task { await store.loadAttendance() }
+        .task { await store.load() }
     }
 }

@@ -52,7 +52,9 @@ struct MarkPaidSheet: View {
             }
             Spacer(minLength: 0)
             VStack(spacing: Tokens.rowPaddingDense) {
-                Button("Waive this fee instead", action: waive).buttonStyle(.quiet)
+                if subject.invoice.status != .waived {
+                    Button("Waive this fee instead", action: waive).buttonStyle(.quiet)
+                }
                 Button { markPaid(method, chosenDay) } label: {
                     Label("Mark \(subject.invoice.amount.formatted) paid", systemImage: "checkmark")
                 }

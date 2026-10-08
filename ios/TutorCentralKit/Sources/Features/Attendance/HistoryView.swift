@@ -129,24 +129,3 @@ public struct HistoryView: View {
         }
     }
 }
-
-/// A pushed screen's top row, as Phase 3's: the round back button and the title centred in headline.
-struct BackRow: View {
-    let title: String
-    let back: () -> Void
-
-    var body: some View {
-        ZStack {
-            Text(title)
-                .typeStyle(Tokens.headline)
-                .foregroundStyle(Tokens.text.color)
-                .lineLimit(1)
-                .padding(.horizontal, IconButton.size + Tokens.inline)
-                .accessibilityAddTraits(.isHeader)
-            HStack {
-                IconButton(symbol: "chevron.left", label: "Back", action: back)
-                Spacer()
-            }
-        }
-    }
-}

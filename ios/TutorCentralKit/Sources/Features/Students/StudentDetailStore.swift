@@ -4,6 +4,12 @@ import Domain
 import Foundation
 import Observation
 
+/// Which of the fee row's buttons was tapped (the detail hands it to the Fees tab as a `FeeAction`).
+public enum FeeActionKind: Sendable {
+    case remind
+    case markPaid
+}
+
 @MainActor @Observable public final class StudentDetailStore {
     public static let missingMessage = "That student is no longer here."
     /// This month's attendance on the detail (P4-StudentDetail-Attendance): the month, the bar, the line, the percent.
@@ -17,12 +23,17 @@ import Observation
     public let id: UUID
     private let register: RegisterStore
     private let attendance: any AttendanceRepository
+    private let messages: any MessageLogRepository
     private var sessions: [AttendanceSession] = []
+    private var feeLogs: [FeeLog] = []
 
-    public init(id: UUID, register: RegisterStore, attendance: any AttendanceRepository) {
+    public init(
+        id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository
+    ) {
         self.id = id
         self.register = register
         self.attendance = attendance
+        self.messages = messages
     }
 
     /// Nil while nothing is marked this month: the empty row says so, never 0%.
@@ -43,10 +54,39 @@ import Observation
         )
     }
 
-    /// This month's sessions; a failed read leaves the section as it was.
-    public func loadAttendance() async {
-        if let read = try? await attendance.sessions(centre: register.workspace.centre.id, month: register.period) {
+    /// This month's sessions and the student's fee messages; a failed read leaves its section as it was.
+    public func load() async {
+        let centre = register.workspace.centre.id
+        async let sessionsRead = try? attendance.sessions(centre: centre, month: register.period)
+        async let logsRead = try? messages.feeLogs(centre: centre, student: id)
+        if let read = await sessionsRead {
             sessions = read
+        }
+        if let read = await logsRead {
+            feeLogs = read
+        }
+    }
+
+    /// "Reminded Tue 6 Oct" once a reminder about this month's fee was opened (the latest).
+    public var remindedLine: String? {
+        guard student?.thisMonth?.status == .due,
+              let log = feeLogs.first(where: { $0.kind == .reminder && $0.month == register.period })
+        else { return nil }
+        let day = Day(log.openedAt, calendar: DayHeading.india)
+        return day == register.today ? "Reminded today" : "Reminded \(day.shortWeekdayText)"
+    }
+
+    /// Remind and Mark paid under this month's fee while it is due (P5-StudentDetail-Fees).
+    public var showsFeeButtons: Bool {
+        student?.thisMonth?.status == .due
+    }
+
+    /// What the Fees tab is asked to do for this month; nil without a fee this month.
+    public func feeAction(_ kind: FeeActionKind) -> FeeAction? {
+        guard student?.thisMonth != nil else { return nil }
+        return switch kind {
+        case .remind: .remind(studentID: id, month: register.period)
+        case .markPaid: .markPaid(studentID: id, month: register.period)
         }
     }
 
@@ -84,7 +124,7 @@ import Observation
             let method = fee.paidMethod.map { " by \($0.label)" } ?? ""
             let day = fee.paidOn.map { " on \($0.shortText)" } ?? ""
             return "Paid\(method)\(day)"
-        case .due: return "Due"
+        case .due: return remindedLine.map { "Due · \($0)" } ?? "Due"
         case .waived: return "Waived"
         }
     }

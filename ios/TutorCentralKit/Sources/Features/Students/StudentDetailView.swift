@@ -56,7 +56,11 @@ public struct StudentDetailView: View {
                         Banner(symbol: "archivebox", text: line)
                     }
                     ParentCard(student: student, call: store.callURL, whatsApp: store.whatsAppURL, addContact: edit)
-                    MonthFeeCard(store: store) { actions.openStudentFees(student.id) }
+                    MonthFeeCard(
+                        store: store,
+                        seeAll: { actions.openStudentFees(student.id) },
+                        act: actions.openFeeAction
+                    )
                     attendance
                     notes(student)
                     buttons(student)

@@ -6,12 +6,13 @@ extension RootView {
     var studentsActions: StudentsActions {
         StudentsActions(
             openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
-            openStudentFees: { _ in shell.tabs.push(.later(.studentFees)) },
+            openStudentFees: { shell.tabs.push(.studentFees($0)) },
             openMarkAttendance: { id in
                 guard case let .ready(workspace) = session.state else { return }
                 openAttendance(classID: id, date: nil, in: workspace)
             },
-            openStudentAttendance: { shell.tabs.push(.historyStudent($0)) }
+            openStudentAttendance: { shell.tabs.push(.historyStudent($0)) },
+            openFeeAction: { openFeeAction($0) }
         )
     }
 
