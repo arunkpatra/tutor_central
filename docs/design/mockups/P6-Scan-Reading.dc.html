@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 6 · Scan register: reading the photo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+input::placeholder,textarea::placeholder{color:#958B80;opacity:1}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.55}}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --ok:#56D9A6; --okTint:rgba(86,217,166,.14); --okInk:#0B2A1D; --due:#FFB84D; --dueTint:rgba(255,184,77,.14); --over:#FF6F61; --overTint:rgba(255,111,97,.14); --overInk:#2B0906; --glass:rgba(28,25,23,.74); --glassLine:rgba(255,255,255,.08); --dim:rgba(8,6,5,.6); --halo:0 0 0 3px rgba(255,171,56,.18); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); --shadowDialog:0 24px 64px rgba(0,0,0,.55); --shadowSegment:inset 0 1px 0 rgba(255,255,255,.1), 0 1px 3px rgba(0,0,0,.55); --onStatus:#FFFFFF; width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+<div style="padding: 62px 20px 0; display: flex; flex-direction: column; gap: 18px">
+<div style="display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; height: 44px"><a href="#" aria-label="Back" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line2); background: var(--btn2); color: var(--t); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadowButton)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></a><div style="text-align: center; font-size: 17px; font-weight: 700">Scan register</div><div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); "><div style="display: flex; align-items: center; gap: 14px"><div aria-hidden="true" style="width: 120px; height: 90px; border-radius: 8px; background: #EFE8DA; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); padding: 8px 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; flex: none; transform: rotate(-1.2deg)"><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 34px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 41px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 48px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 37px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 44px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 51px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div><div style="display: flex; gap: 6px; align-items: center"><div style="width: 8px; height: 3px; background: #6b6257; border-radius: 1px"></div><div style="width: 40px; height: 3px; background: #4a433c; border-radius: 1px"></div><div style="width: 26px; height: 3px; background: #6b6257; border-radius: 1px; margin-left: auto"></div></div></div><div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px"><div style="font-size: 16px; line-height: 20px; font-weight: 700">Reading the register</div><div style="font-size: 13px; line-height: 18px; color: var(--t2)">Usually under a minute.</div></div></div><div aria-hidden="true" style="display: flex; flex-direction: column; gap: 8px; animation: breathe 1.6s ease-in-out infinite"><div style="width: 65%; height: 12px; border-radius: 6px; background: var(--s2)"></div><div style="width: 85%; height: 12px; border-radius: 6px; background: var(--s2)"></div><div style="width: 50%; height: 12px; border-radius: 6px; background: var(--s2)"></div></div></div>
+<div style="text-align: center"><a href="#" style="text-decoration: none; font-size: 15px; font-weight: 600; color: var(--accText); ">Cancel</a></div>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

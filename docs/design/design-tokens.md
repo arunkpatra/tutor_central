@@ -241,4 +241,11 @@ the month of fees opens on the current month; an event's note is at most 500 cha
 "Coming up" is the next seven days' events and the schedule's the next fourteen (confirmed by the owner, 2026-10-08);
 a done task stays on the Tasks screen until cleared; a waive reason is at most 200 characters; a fee of a month before
 the current one that is still due is overdue; the payee confirmation on Fees shows until the UPI id is confirmed once
-and again whenever the id changes.
+and again whenever the id changes.Phase 6 (the AI tools): a tutor's observations for a progress note are at most 2000 characters and a typed marking
+scheme 4000; an answer sheet is at most 6 pages; a photo is reduced on the iPhone to 2000 px on its long edge as a JPEG
+at quality 0.7 before it is sent, so six pages stay under the API's 4.5 MB request body; a call to the AI service waits
+up to 120 s before it is a failure; each centre may make 40 generations, 20 register scans and 20 paper checks a day
+(the limit is in Postgres and the failure names it); a checked paper's note on a student is appended to `students.notes`
+(2000 characters: when it would not fit, the save says so and offers Share instead); Undo after "Add N students" deletes
+those rows and nothing else, Undo after "Saved to the student's notes" puts back the notes exactly as they were; the
+consent is asked once per centre (`centres.ai_consent_at`) before the first photo, for the register and the paper alike.

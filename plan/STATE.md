@@ -7,14 +7,14 @@ short and true. History belongs in git and in the phase files, not here.
 #51 as the plan's six, #52 the hand run's and the final review's fixes (four Important: Undo after paying a waived fee,
 Settings' stale workspace, the camera's permission and the scanner's way out); the D32 hand run on issue #50 (two bugs
 found and fixed); D34 (a waived month offers Mark paid alone, the owner's call); no migration; build 0.1.0 (8) on
-TestFlight, tested by the owner on the iPhone (the QR camera included): all good. **Next:** Phase 0 step 0.7 (the Phase 6 boards) and the Phase 6
-plan on Fable, from `resume/011-phase-6-boards-and-plan.md`.
+TestFlight, tested by the owner on the iPhone (the QR camera included): all good. **Session 12 (in progress, Fable):** Phase 0 step 0.7 done, the 44 Phase 6 boards approved and mirrored. **Next:** the Phase 6 plan
+(`phase-06-plan.md`), then `resume/012-phase-6-build.md` for the Opus 5.5 build.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 to 0.6 approved, plus the app icon (D29); 0.7 (Phase 6 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 the Phase 4 boards, row 8 the Phase 5 boards |
+| 0 Design | In progress: 0.1 to 0.7 approved, plus the app icon (D29); 0.8 (Phase 7 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 the Phase 4 boards, row 8 the Phase 5 boards, row 9 the Phase 6 boards |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |

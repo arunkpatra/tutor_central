@@ -364,3 +364,106 @@ attendance-2026-10.csv (Student, class, present, absent, percentage); the primar
 
 **More and Settings:** Reports is a live row on More (Organise); Settings' later card becomes "Payments and later
 builds" with Parent payments live (value "UPI", chevron) over the Phase 7 row.
+
+## Phase 6 parts (step 0.7, approved 2026-10-08)
+
+**Tool row (AI Assistant):** the Class row's shape: an icon tile 40 (`doc.text` paper, `list.bullet` homework,
+`pencil.line` worksheet, `text.bubble` note), the title `rowTitle`, one `footnote` `text2` line, a chevron.
+
+**History row:** the same row for a result: the icon tile of its kind, the topic (or the student's name) as the title,
+"Question paper · Class 10 Maths · Tue 6 Oct" as the line. On the home, three under "Recent" with See all; in History,
+grouped under an eyebrow per month.
+
+**Create row (Today):** a compact card: the `sparkles` tile, "Create with AI", "A paper, homework, a worksheet or a
+progress note", a chevron; the last section of Today.
+
+**Form screen (pushed):** the nav row with Back; one form card (padding 16, gap 14) of tile pickers (Class, Student,
+Questions, Marks: label left, value in `accentText` with `chevron.up.chevron.down`; numbers open a wheel in a popover,
+the class and the student a sheet), wells (Subject, Topic), a labelled segmented control (Level, Tone), a multiline well
+with its counter (observations 2000), a switch row (Answer key at the end); a `footnote` under the card; the primary 50
+with `sparkles` in the footer band (12 of ground above, 50 below), disabled until the form is valid.
+
+**Student picker (a floating sheet, D28, large):** Cancel and "Student"; the search well; an on-sheet card of student
+rows (avatar 40, name, class line) with the chosen one ticked in `accentText` and a 24 pt ring on the others; one choice
+closes the sheet.
+
+**Creating card:** a hero card (padding 16, radius 18): `rowHeading` "Writing 10 questions on Quadratic equations"
+with a quiet Cancel on the right, three to four skeleton bars breathing, the `footnote` "Usually under a minute. You
+can wait here or come back from History." Shown with the form at the disabled opacity and the footer button loading.
+Scan and check use the same card with a thumbnail of the photo on the left: "Reading the register · Usually under a
+minute.", "Checking 2 pages · Against Quadratic equations · 20 marks. Usually a minute or two."
+
+**Error row:** a list card with one row: `exclamationmark.circle` 24 in `overdue`, a `rowHeading` ("Couldn't create the
+paper."), a `rowLine` in `text2` ("Check your connection and try again. Nothing was used up."), a quiet Retry 700 on the
+right. The limit failure reads "You've made today's 40. Try again tomorrow." without Retry.
+
+**Result hero:** a hero card: the eyebrow ("Class 10 Maths · Mathematics"; "Hemanth Reddy · Quadratic equations"), the
+title `title2`, a `footnote` `text2` line ("10 questions · 20 marks · Medium · created today, 18:32").
+
+**Paper card:** a list card of section rows (`surface2`, the title 15 700 and "1 mark each" `footnote` `text2`) and
+question rows (the number in a 24 pt column `text2` 600, the text `subhead`, the marks `footnote` `text3` on the right).
+The answer key is the last section. Homework and worksheets use the same card without marks.
+
+**Result footer:** the footer band holding the AI line (`footnote` `text3`), a centred quiet action (Create again;
+Write again on a note), then two secondary 46 buttons: Copy (`doc.on.doc`) and Share as PDF (`square.and.arrow.up`). On
+a note the row is Copy and Write again over the primary Send on WhatsApp (`whatsapp` glyph). Creating again: the content
+at 0.55, a 16 pt spinner with "Creating again" by the section title, the buttons disabled, the quiet replaced by "A new
+paper is on its way. This one stays until it arrives."
+
+**Note well:** the Phase 3 multiline well, min 220 high, holding the note for editing; the helper "Edit anything before
+it goes. Tap Write again for a fresh draft."
+
+**Intro hero:** a hero card (padding 24) with the feature tile 56 (`doc.viewfinder`; `doc.text.magnifyingglass`), the
+title `emptyTitle` centred, the line `subhead` `text2` centred (max 300).
+
+**Notices card:** a list card of rows with a 18 pt symbol in `text2` (`lock`, `checkmark`) and `rowLine` text.
+
+**Consent sheet (floating, content height):** Cancel and "Before the first photo"; the text in `subhead` `text2`; the
+`footnote` "Asked once for Bright Minds Tuition, and recorded with the date."; the primary "I agree, continue" 52.
+
+**Review row (the list to check):** a 24 pt checkbox (`ok` fill with the tick when ticked, a `lineStrong` ring when
+not), the name `rowTitle`, the line "+91 98765 43210 · ₹1,200" `footnote` `text2`; a chevron opens Fix this row. A row
+that matches a student already in the register carries the compact chip "Already here" (`due`, `exclamationmark.circle`)
+beside the name, the line "Matches Dev Kumar in Class 8 Science", and starts unticked. A row with no number read has
+"No number read" in `due` 600 in its line. The section title counts rows ("8 found") with the quiet action Add a row.
+
+**Fix this row (floating, large):** the Phase 3 student form (Name, Class, Monthly fee with its helper, Parent's name,
+Parent's WhatsApp number with a helper when nothing was read) with Save, and the destructive quiet "Remove this row" at
+the bottom. Edits stay on the device until Add.
+
+**Page tile (Check a paper):** a compact card (padding 10) holding the page's thumbnail, "Page 1" `footnote` `text2`,
+and a 28 pt round remove mark (`xmark`) at its top right; two to a row. The Add a page tile is a dashed `lineStrong`
+border, radius 16, `camera` 22 and "Add a page" in `accentText`. From Photos is the section's quiet action.
+
+**Mark tile:** a 36 pt tile 64 wide, `surface2`, `line` border, radius 10, "2 / 4" in `accentText` 700 tabular; a tap
+opens a popover (the menu's glass, 200 wide) with an eyebrow "Marks for question 4" and a row of chips 0 to the
+question's marks, the current one on (`accentTint`). A changed mark adds "· Changed from 1" in `ok` 600 to the row's line
+and rolls the hero total and bar.
+
+**Mark row:** "4. Nature of the roots" `rowTitle`, the AI's note `footnote` `text2`, the mark tile on the right. The
+hero: the eyebrow, the total in `numberHero` with "of 20" `subhead` `text2`, a 4 pt progress bar in `accentText`, "10
+questions · 2 pages · checked today".
+
+**Saved footer and toast (a check):** after Save the footer button becomes the Saved mark ("Saved to Hemanth's notes",
+`okTint`, `ok`, the tick) and a toast "Saved to Hemanth's notes: 15 of 20 on Quadratic equations." offers Undo.
+
+**Toasts:** "Kavya Nair removed." with Undo (the row comes back exactly, on the device); "7 students added from the
+register." with Undo (deletes those rows); "Allow the camera for Tutor Central in Settings." with Open Settings.
+
+**Dialog:** "Leave without adding?" · "The names read from the photo will be lost. Nothing has been saved." · Keep
+checking (secondary), Leave (primary: reversible by scanning again, not destructive).
+
+**System surfaces, not drawn by the app:** the camera alert ("“Tutor Central” Would Like to Access the Camera", the usage
+text "To photograph your paper register and answer sheets so they can be read, and the QR of your UPI app."), the
+document camera (VisionKit's `VNDocumentCameraViewController`, full screen, its own Cancel and Save; one page for the
+register, up to six for a paper), the photo picker (`PhotosPicker`, one image for the register, several for a paper).
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The AI line | "AI can make mistakes. Check everything before you share it." (the home); "… Check every question and answer before you share it." (a result); "… Read the note as the parent will." (a note); "… Check every name and number before you add them." (the register); "… Every mark is a suggestion until you save it." (a paper) |
+| The consent | "A photo of a register or an answer sheet carries children's names and details. It is sent to our AI service (Claude, by Anthropic) only to be read, and is not stored there or on our servers. Make sure the parents are fine with their details being kept in Tutor Central." |
+| The notices | "The photo goes to our AI service to be read and is not kept, there or here." · "Nothing is saved until you have checked every row and tapped Add." |
+| Send the note | The note as edited, a blank line, then the tutor's name and the centre's name (the absence alert's signature); the footnote "Opens WhatsApp with the note ready to send. We note the date on Hemanth's page. The text is copied too, in case WhatsApp can't open." |
+| The note on a student | "7 Oct · Quadratic equations · 15 of 20 · " then the AI's summary line as edited, appended to the student's notes on its own line |

@@ -36,7 +36,7 @@ approved, except step 2, which starts with step 1's choice.
 - [x] **0.6 Phase 5 boards.** (approved 2026-10-08, 27 boards in row 8) Fees (before generation, all, due, paid, overdue), generate month, mark paid,
   remind and receipt (the message text), waive, UPI settings (empty, filled, QR added), payee confirmation,
   student detail fees, reports month, export.
-- [ ] **0.7 Phase 6 boards.** AI Assistant home, each tool's form, generating, result, history; scan register
+- [x] **0.7 Phase 6 boards.** (approved 2026-10-08, 44 boards in row 9) AI Assistant home, each tool's form, generating, result, history; scan register
   intro, consent, review table, saved; check paper intro, capture, result, edited marks.
 - [ ] **0.8 Phase 7 boards.** Settings full, account, delete account, notification permission, offline
   states (list from cache, write refused, queued), about, help, launch screen and app icon.

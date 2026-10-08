@@ -25,7 +25,7 @@ The session gate lives in `AppShell` and is the only thing that decides which of
 | Students | Students list | Student detail, a student's fees, Class detail, Classes list | New student, Edit student, New class, Edit class, Scan register, archive and delete confirmations |
 | Fees | Fees (month) | Parent payments (via Payments), Student detail (via a row) | Generate month, Mark paid, Waive, Remind, Receipt |
 | Attendance | Attendance (Mark) | History (by date, by student, one student's month); a saved class reopens on the Mark root by date and class | Absence alert |
-| More | More | Schedule, Tasks, Classes, Settings, Reports now; AI Assistant, Check a paper, Scan register, Account, Help named with their phase until it ships; Settings pushes Parent payments | New event, Edit event (with Delete event), Share as CSV, Generation forms |
+| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account and Help named with their phase until it ships; Settings pushes Parent payments | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
 
 Each tab keeps its own navigation stack. Tapping the active tab pops to its root. A student detail reached
 from Today or Fees is pushed on that tab's stack, not a jump to the Students tab.
@@ -232,7 +232,7 @@ What the boards settle:
   the day's classes, each marked with a tick and "5 of 6 present" in `ok` once attendance is saved, and the day's
   events; "Coming up" lists the events of the next seven days; "Tasks" lists open tasks and tasks done within a day,
   with Add opening the inline field in the card (a due-date chip: the next weekday, or No date; Add commits; Cancel
-  in the header closes it). The AI tools row waits for Phase 6's board, as Phase 2 ruled. Scrolled, a tab root's
+  in the header closes it). The AI tools row is Phase 6's "Create with AI" row at the end of Today (P6-Today-AITools). Scrolled, a tab root's
   status bar sits on the system's glass edge (`chrome`, `blurChrome`, `lineGlass`), never on bare content (U1); the
   header at rest is unchanged.
 - **Attendance mark** is the tab's root: the date (Today, or any past day through the system date picker) and the
@@ -340,3 +340,112 @@ What the boards settle (the parts are in `components.md`, "Phase 5 parts"):
   status, paid on, paid by, reminded on. The attendance CSV: student, class, present, absent, percentage.
 - **More** gains Reports as a live row; **Settings** gains Parent payments in place of its "Phase 5" later row.
 - `tutorcentral://fees?month=YYYY-MM` opens the Fees tab at that month.
+
+Phase 6's states (`plan/phase-06-plan.md` builds them; light twins from `--appearance light`; the clock is Wednesday 7
+October 2026 at 18:32; the fixtures hold six results in History and, for the scan states, the eight rows the board
+draws). The three system surfaces (the camera permission alert, the document camera, the photo picker) are the system's:
+they have boards but no launch state, and are proven on the owner's iPhone.
+
+| State | Shows |
+|---|---|
+| `ai-assistant` | AI Assistant: the four tools and three recent results (P6-Assistant; light twin) |
+| `ai-assistant-empty` | AI Assistant with nothing created yet |
+| `ai-paper` | The question paper form, Class 10 Maths, topic focused (P6-Form-Paper) |
+| `ai-homework` | The homework form, Class 8 Science |
+| `ai-worksheet` | The worksheet form with the answer-key switch |
+| `ai-note` | The progress note form, Hemanth Reddy chosen, observations typed |
+| `ai-note-student` | The student picker sheet over the note form |
+| `ai-generating` | The paper form held at 0.45, the creating card, the button loading |
+| `ai-generate-failed` | The paper form with the error row and Retry |
+| `ai-result-paper` | The paper result: hero, sections, questions, the footer (light twin) |
+| `ai-result-regenerating` | The result at 0.55 while a new paper is on its way |
+| `ai-result-note` | The progress note result, editable, Send on WhatsApp |
+| `ai-note-send` | The Send the note sheet over the note result |
+| `ai-history` | History: October and September |
+| `ai-history-empty` | History with nothing created yet |
+| `scan-intro` | Scan register: the intro with the notices |
+| `scan-consent` | The consent sheet over the intro |
+| `scan-camera-refused` | The intro with the refused-camera toast and Open Settings |
+| `scan-reading` | Reading the photo (the fixture's drawn page) |
+| `scan-review` | The list to check: 8 found, Dev Kumar already here and unticked, Kavya Nair without a number |
+| `scan-review-edit` | Fix this row (Kavya Nair) over the list |
+| `scan-review-removed` | 7 found after Kavya Nair was removed, the toast with Undo |
+| `scan-review-leave` | The Leave without adding? confirmation |
+| `scan-nothing` | No names found |
+| `scan-failed` | The call failed: the error row with Retry, Take another photo |
+| `scan-saved` | The Students list with the seven added and the toast with Undo |
+| `check-intro` | Check a paper: the intro, Hemanth Reddy chosen |
+| `check-pages` | Two pages and the Add a page tile |
+| `check-scheme` | The marking scheme from a created paper, Quadratic equations chosen |
+| `check-scheme-typed` | The marking scheme typed |
+| `check-checking` | Checking 2 pages |
+| `check-result` | The suggested marks, 14 of 20 |
+| `check-mark-picker` | The popover of marks for question 4 |
+| `check-result-edited` | Question 6 changed to 2 of 2, the total 15 |
+| `check-saved` | Saved to Hemanth's notes, the Saved footer and the toast with Undo |
+| `check-failed` | The check failed: the error row with Retry, Back to the pages |
+| `today-ai` | Today scrolled to the end: Coming up, Tasks and the Create with AI row (P6-Today-AITools) |
+| `more` | The More root with the three AI rows live (P6-More supersedes P5-More; light twin) |
+
+## Phase 6 boards (step 0.7, approved 2026-10-08)
+
+Row 9 of the canvas; sources `mockups/P6-*.dc.html`. Dark for every state; light for the AI Assistant home, the paper
+result and More. Content is the seed's (Class 10 Maths, Class 8 Science, Hemanth Reddy and Lakshmi Reddy) on
+Wednesday 7 October 2026; the paper, the note, the eight names read from the register and the marks are illustrative
+(the owner's rule: the screens follow the data).
+
+| Board | Source |
+|---|---|
+| AI Assistant: the home (dark and light), nothing created yet | `P6-Assistant`, `-Light`, `-Empty` |
+| The four forms; the student picker; creating; the failure | `P6-Form-Paper`, `-Homework`, `-Worksheet`, `-ProgressNote`, `P6-ProgressNote-StudentPicker`, `P6-Generating`, `P6-Generate-Failed` |
+| Results: the paper (dark and light), creating again, the note, Send the note | `P6-Result-Paper`, `-Light`, `P6-Result-Regenerating`, `P6-Result-ProgressNote`, `P6-ProgressNote-Send` |
+| History, empty | `P6-History`, `P6-History-Empty` |
+| Scan register: intro, consent, the camera ask, refused, the camera, Photos, reading, the list, fixing a row, a row removed, leaving, nothing found, failed, added | `P6-Scan-Intro`, `-Consent`, `-CameraAsk`, `-CameraRefused`, `-Camera`, `-Photos`, `-Reading`, `-Review`, `-Review-Edit`, `-Review-RowRemoved`, `-Review-Leave`, `-Nothing`, `-Failed`, `-Saved` |
+| Check a paper: intro, pages, the scheme (from a paper, typed), checking, the marks, changing one, edited, saved, failed | `P6-Check-Intro`, `-Pages`, `-Scheme`, `-Scheme-Typed`, `-Checking`, `-Result`, `-MarkPicker`, `-Result-Edited`, `-Saved`, `-Failed` |
+| More with the three rows live (dark and light); Today's Create row | `P6-More`, `P6-More-Light`, `P6-Today-AITools` |
+
+What the boards settle (the parts are in `components.md`, "Phase 6 parts"):
+
+- **AI Assistant** is pushed from More's row and from the "Create with AI" row at the end of Today (on the Today tab's
+  stack). Its nav row carries History; the home lists the four tools and the three most recent results (See all opens
+  History), under the "AI can make mistakes" line.
+- **The forms** are pushed one-task screens, the primary in a footer that never needs a scroll. Paper: class (a tile
+  picker over the centre's active classes), subject (prefilled from the class, editable), topic (required), level (Easy,
+  Medium, Hard), questions, marks. Homework: class, subject, topic, level, questions. Worksheet: the paper's fields but
+  marks, plus "Answer key at the end". Progress note: the student (a floating sheet with search, one choice), a banner
+  with the month's attendance and fee state (sent with the note), observations (2000), tone (Warm, Plain). Create is
+  disabled until the topic (or the observations) is typed.
+- **Creating** holds the form at the disabled opacity under a card that names what is being written, with Cancel and
+  "you can wait here or come back from History": the call runs in the centre's AI store, not the screen, so leaving
+  does not lose it. The result is pushed when it arrives. A failure replaces the card with the error row (Retry) and
+  the footer is live again; the limit failure says how many are left tomorrow.
+- **A result** is pushed with the hero (class and subject, the title, the counts and when it was created), the
+  formatted text in a card (sections, numbered questions with marks on the right, the answer key last), and a footer:
+  the AI line, "Create again" (quiet), Copy and Share as PDF. Create again keeps the old result at 0.55 with a spinner
+  by the section title until the new one lands; the buttons are disabled meanwhile. Every result is in History.
+- **A progress note's result** shows the student and parent, the note in an editable well, and a footer with Copy,
+  Write again and Send on WhatsApp, which opens the Phase 4 message sheet (the note plus the signature) and logs a
+  `progress` row in `message_log` with the student when Open WhatsApp is tapped. The text is copied too.
+- **History** lists every generation (paper, homework, worksheet, note) by month, newest first; a row reopens its
+  result. Scans and checked papers are recorded in `ai_generations` but not listed: what they produced is on the
+  register and the student's page.
+- **Scan register** is pushed from More's row, the Students "+" menu and the empty register's button. The intro names
+  what happens (the photo goes to the AI service to be read and is not kept; nothing is saved before Add). The first
+  photo asks the consent sheet once per centre (`ai_consent_at`), then the camera: the system's alert the first time
+  (`AVCaptureDevice.requestAccess`), a refused camera says where to allow it with Open Settings, the camera is the
+  system's document camera (VisionKit, one page, Cancel is the way out), Photos is the other way in. Reading shows the
+  photo and a skeleton with Cancel. The list to check: "Add to" (a class or No class), N found, one row per name read
+  with a checkbox (ticked unless it matches a student already in the register, then "Already here" and the match), the
+  number and fee read ("No number read" in `due` when none), a chevron to Fix this row (the student form with "Remove
+  this row"); a removed row offers Undo; Back asks "Leave without adding?"; Add N students creates the ticked rows in
+  one write and pops to the Students list with a toast and Undo (which deletes those rows). Nothing found and a
+  failure (Retry sends the same photo again) have their screens.
+- **Check a paper** is pushed from More's row: the intro with the student (a tile picker) and the notice, then the
+  pages (tiles with Remove, Add a page through the document camera, From Photos; up to six, reduced on the iPhone),
+  the marking scheme (a paper created here, its answer key and marks; or typed, 4000), checking, then the marks: the
+  hero with the total and a bar, one row per question with the AI's note and a mark tile that opens a popover of
+  chips 0 to the question's marks; a changed mark says "Changed from N" and the total rolls; Share is in the nav row;
+  Save to the student's notes appends one line ("7 Oct · Quadratic equations · 15 of 20 · the notes") and offers
+  Undo. Nothing is written before Save.
+- **More** gains the three rows live; **Today** gains the Create row at its end. The camera usage text covers the
+  register, answer sheets and the UPI QR.
