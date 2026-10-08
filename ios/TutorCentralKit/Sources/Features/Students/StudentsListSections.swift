@@ -83,7 +83,7 @@ struct RegisterList: View {
                         line: "Try another part of the name or the number."
                     )
                 }
-            } else {
+            } else if !store.visible.isEmpty {
                 Card { rows }.opacity(store.refreshing ? Tokens.opacityStale : 1)
             }
             if searching {

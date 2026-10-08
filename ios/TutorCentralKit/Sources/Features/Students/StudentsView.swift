@@ -80,7 +80,9 @@ public struct StudentsView: View {
                         ClassFooter(classroom: classroom) { navigation.openClass(id) }
                     }
                 }
-                if !store.loading, !searching, store.activeClasses.isEmpty {
+                // Only once something has been read: a failed first read says so above, it is not "no classes".
+                if !store.loading, !searching, store.activeClasses.isEmpty,
+                   store.showsEmptyRegister || !store.students.isEmpty {
                     NoClassesSection(createClass: createClass)
                 }
             }
@@ -122,7 +124,7 @@ public struct StudentsView: View {
     }
 
     private var isEmpty: Bool {
-        store.students.isEmpty && !store.loading
+        store.showsEmptyRegister
     }
 
     @ViewBuilder private var titleRow: some View {

@@ -54,6 +54,7 @@ public struct StudentFormSheet: View {
             }
         }
         .animation(.timingCurve(Tokens.easeOut, duration: Tokens.panel), value: confirmingDiscard)
+        .modifier(SheetToasts())
         .interactiveDismissDisabled(store.isChanged)
         .presentationDetents([.large])
         .presentationDragIndicator(.hidden)
@@ -144,6 +145,8 @@ public struct StudentFormSheet: View {
                                 )
                                 .datePickerStyle(.graphical)
                                 .tint(Tokens.accent.color)
+                                // The day is the centre's (India's), whatever zone the phone is in.
+                                .environment(\.timeZone, DayHeading.india.timeZone)
                                 .padding(Tokens.cardPaddingCompact)
                                 .presentationCompactAdaptation(.popover)
                             }
@@ -238,5 +241,18 @@ public extension StudentFormSheet {
             form.commitPhone()
         }
         return form
+    }
+}
+
+/// A toast over an open sheet: the app's toasts draw under sheets, so a failed save is said where the tutor is.
+struct SheetToasts: ViewModifier {
+    @Environment(ToastCenter.self) private var toasts: ToastCenter?
+
+    func body(content: Content) -> some View {
+        content.overlay(alignment: .bottom) {
+            if let toasts {
+                ToastHost(toasts: toasts)
+            }
+        }
     }
 }

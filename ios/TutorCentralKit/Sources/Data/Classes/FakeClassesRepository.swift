@@ -18,6 +18,8 @@ import Foundation
 
     public var classes: [Classroom]
     public var nextError: (any Error)?
+    /// Every call waits this long first: lets a store's writes overlap, as a real network can.
+    public var delay: Duration?
     public private(set) var created: [ClassroomDraft] = []
     public private(set) var updated: [UUID] = []
     public private(set) var archived: [UUID] = []
@@ -28,12 +30,12 @@ import Foundation
 
     /// By name as the database orders text (`order("name")`), so "Class 10" comes before "Class 8".
     public func classes(centre _: UUID) async throws -> [Classroom] {
-        try takeError()
+        try await takeError()
         return classes.sorted { $0.name < $1.name }
     }
 
     public func create(_ draft: ClassroomDraft, centre _: UUID) async throws -> Classroom {
-        try takeError()
+        try await takeError()
         created.append(draft)
         let made = Self.apply(draft, to: Classroom(
             id: UUID(), name: "", subject: nil, monthlyFee: nil, meetingDays: [], startTime: nil, endTime: nil,
@@ -44,7 +46,7 @@ import Foundation
     }
 
     public func update(id: UUID, with draft: ClassroomDraft) async throws -> Classroom {
-        try takeError()
+        try await takeError()
         guard let index = classes.firstIndex(where: { $0.id == id }) else { throw URLError(.fileDoesNotExist) }
         updated.append(id)
         classes[index] = Self.apply(draft, to: classes[index])
@@ -53,7 +55,7 @@ import Foundation
 
     /// Marks the class only; the store detaches its members, as `archive_class` does in the database.
     public func archive(id: UUID) async throws {
-        try takeError()
+        try await takeError()
         guard let index = classes.firstIndex(where: { $0.id == id }) else { throw URLError(.fileDoesNotExist) }
         archived.append(id)
         classes[index].archivedAt = FakeCountsRepository.fixedNow
@@ -70,7 +72,10 @@ import Foundation
         return changed
     }
 
-    private func takeError() throws {
+    private func takeError() async throws {
+        if let delay {
+            try? await Task.sleep(for: delay)
+        }
         guard let error = nextError else { return }
         nextError = nil
         throw error

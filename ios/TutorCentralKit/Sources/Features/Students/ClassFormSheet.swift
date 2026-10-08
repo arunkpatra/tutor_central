@@ -66,6 +66,7 @@ public struct ClassFormSheet: View {
             }
         }
         .animation(.timingCurve(Tokens.easeOut, duration: Tokens.panel), value: dialog)
+        .modifier(SheetToasts())
         .interactiveDismissDisabled(store.isChanged)
         .presentationDetents([height > 0 ? .height(height) : .medium])
         .presentationDragIndicator(.hidden)
@@ -242,6 +243,8 @@ struct TimeControl: View {
                         .labelsHidden()
                         // 24-hour, as every time in the app is written (components.md).
                         .environment(\.locale, Locale(identifier: "en_GB"))
+                        // The time is the centre's (India's), whatever zone the phone is in.
+                        .environment(\.timeZone, DayHeading.india.timeZone)
                     Button("Clear") {
                         picking = false
                         set(nil)

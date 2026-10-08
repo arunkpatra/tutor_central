@@ -43,9 +43,10 @@ public struct StudentDetailView: View {
 
     public var body: some View {
         ScrollView {
-            if let student = store.student {
-                VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                    navigationRow(student)
+            VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+                // Outside the student: a screen whose student has gone still has its way back.
+                navigationRow(store.student)
+                if let student = store.student {
                     header(student)
                     if let line = store.archivedLine {
                         Banner(symbol: "archivebox", text: line)
@@ -56,10 +57,10 @@ public struct StudentDetailView: View {
                     notes(student)
                     buttons(student)
                 }
-                .padding(.horizontal, Tokens.pageSide)
-                .padding(.top, max(0, Tokens.pageTop - topInset))
-                .padding(.bottom, Tokens.contentBottom)
             }
+            .padding(.horizontal, Tokens.pageSide)
+            .padding(.top, max(0, Tokens.pageTop - topInset))
+            .padding(.bottom, Tokens.contentBottom)
         }
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
@@ -95,11 +96,18 @@ public struct StudentDetailView: View {
             }
             setUpBoardState()
         }
+        // A student who goes while the screen is open (deleted elsewhere, a refresh): the route leaves, with a word.
+        // A deletion made here dismisses on its own.
+        .onChange(of: store.student == nil) { _, missing in
+            if missing, !deleting {
+                onMissing()
+            }
+        }
     }
 
-    private func navigationRow(_ student: Student) -> some View {
+    private func navigationRow(_ student: Student?) -> some View {
         ZStack {
-            Text(student.name)
+            Text(student?.name ?? "")
                 .typeStyle(Tokens.headline)
                 .foregroundStyle(Tokens.text.color)
                 .lineLimit(1)
@@ -107,7 +115,9 @@ public struct StudentDetailView: View {
             HStack {
                 IconButton(symbol: "chevron.left", label: "Back") { dismiss() }
                 Spacer()
-                Button("Edit", action: edit).buttonStyle(.quiet)
+                if student != nil {
+                    Button("Edit", action: edit).buttonStyle(.quiet)
+                }
             }
         }
     }
@@ -215,10 +225,11 @@ public struct StudentDetailView: View {
         deleting = true
         Task {
             let deleted = await store.delete()
-            deleting = false
             confirming = nil
             if deleted {
                 dismiss()
+            } else {
+                deleting = false
             }
         }
     }

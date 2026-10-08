@@ -20,7 +20,8 @@ struct StudentRow: Decodable {
     let gender: String?
     let notes: String?
     let archivedAt: Date?
-    let feeInvoices: [Invoice]
+    /// Absent on an insert's or update's answer, which selects the student's columns only.
+    let feeInvoices: [Invoice]?
 
     func student(calendar: Calendar) -> Student {
         Student(
@@ -34,7 +35,7 @@ struct StudentRow: Decodable {
             gender: gender.flatMap(Gender.init(rawValue:)),
             notes: notes,
             archivedAt: archivedAt,
-            thisMonth: feeInvoices.first.flatMap { invoice in
+            thisMonth: feeInvoices?.first.flatMap { invoice in
                 MonthFee.Status(rawValue: invoice.status).map {
                     MonthFee(
                         amount: Money(rupees: invoice.amount),
