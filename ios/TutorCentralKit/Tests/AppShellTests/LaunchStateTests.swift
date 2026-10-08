@@ -206,4 +206,13 @@ struct LaunchStateTests {
         #expect(Fixtures.dependencies(for: .paymentsQR).qrImages.image(for: centre) != nil)
         #expect(Fixtures.dependencies(for: .payments).qrImages.image(for: centre) == nil)
     }
+
+    @MainActor @Test func theReportsStatesOpenFromMore() {
+        for state in [LaunchState.reports, .reportsAttendance, .reportsExport, .reportsEmpty] {
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.reports])
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+        }
+        #expect(RootView.reportsBoardState(.reportsExport) == .export)
+        #expect(RootView.reportsBoardState(.reportsEmpty) == .november && RootView.reportsBoardState(.reports) == nil)
+    }
 }

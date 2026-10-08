@@ -23,7 +23,7 @@ extension RootView {
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
-        case .paymentsEmpty, .payments, .paymentsQR: .more
+        case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .more
         case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks,
              .tasksEmpty:
             .more
@@ -53,6 +53,7 @@ extension RootView {
         case .studentFeesDue: [.student(FakeAttendanceRepository.hemanth)]
         case .studentFees: [.student(FakeAttendanceRepository.hemanth), .studentFees(FakeAttendanceRepository.hemanth)]
         case .paymentsEmpty, .payments, .paymentsQR: [.settings, .payments]
+        case .reports, .reportsAttendance, .reportsExport, .reportsEmpty: [.reports]
         default: []
         }
     }
@@ -142,6 +143,15 @@ extension RootView {
         case .paymentsEmpty: .empty
         case .payments: .saved
         case .paymentsQR: .fromQR
+        default: nil
+        }
+    }
+
+    static func reportsBoardState(_ state: LaunchState) -> ReportsBoardState? {
+        switch state {
+        case .reportsAttendance: .attendance
+        case .reportsExport: .export
+        case .reportsEmpty: .november
         default: nil
         }
     }
