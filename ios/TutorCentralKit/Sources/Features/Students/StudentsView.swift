@@ -9,6 +9,9 @@ public enum StudentsBoardState: Sendable {
     case searching
     case filteredToScience
     case addMenu
+    case newStudentEmpty
+    case newStudentFilled
+    case newStudentInvalid
 }
 
 /// Pushes on the Students tab. AppShell owns the stack; the feature asks for a screen.
@@ -37,6 +40,7 @@ public struct StudentsView: View {
     let boardState: StudentsBoardState?
     @State private var searching = false
     @State private var showsMenu = false
+    @State private var newStudent: StudentFormStore?
     @State private var topInset: CGFloat = 0
     /// The inline title row while searching (P3-Students-Searching): a navigation bar's height.
     static var inlineTitleHeight: CGFloat {
@@ -87,9 +91,18 @@ public struct StudentsView: View {
             await store.refresh()
             Haptic.play(.impactLight)
         }
+        .sheet(item: $newStudent) { form in
+            StudentFormSheet(
+                store: form,
+                showsFocus: boardState == .newStudentEmpty,
+                autofocus: boardState == nil,
+                onSave: { await store.addStudent($0) != nil },
+                onClose: { newStudent = nil }
+            )
+        }
         .task {
-            setUpBoardState()
             await store.load()
+            setUpBoardState()
         }
     }
 
@@ -131,8 +144,9 @@ public struct StudentsView: View {
         action()
     }
 
-    /// The new-student sheet arrives with its board (P3-NewStudent-*).
-    private func addStudent() {}
+    private func addStudent() {
+        newStudent = StudentFormStore(mode: .new, classes: store.activeClasses, today: store.today)
+    }
 
     /// The new-class sheet arrives with its board (P3-NewClass).
     private func createClass() {}
@@ -147,6 +161,14 @@ public struct StudentsView: View {
             store.sort = .fee
         case .addMenu:
             showsMenu = true
+        case .newStudentEmpty:
+            addStudent()
+        case .newStudentFilled, .newStudentInvalid:
+            newStudent = StudentFormSheet.fixture(
+                invalid: boardState == .newStudentInvalid,
+                classes: store.activeClasses,
+                today: store.today
+            )
         case nil:
             break
         }

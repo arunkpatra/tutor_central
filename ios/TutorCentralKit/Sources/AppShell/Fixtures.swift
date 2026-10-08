@@ -37,7 +37,8 @@ public enum Fixtures {
         case .onboarding: .needsOnboarding(FakeAuthRepository.meera)
         case .todayEmpty, .laterStudents, .laterFees, .laterAttendance, .laterMore, .settings, .studentsEmpty,
              .studentsFew,
-             .students, .studentsSearching, .studentsFiltered, .studentsAddMenu: .ready(meeraWorkspace)
+             .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
+             .studentNewInvalid: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }

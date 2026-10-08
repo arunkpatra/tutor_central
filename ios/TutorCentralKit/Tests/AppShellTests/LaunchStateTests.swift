@@ -50,4 +50,14 @@ struct LaunchStateTests {
         let none = Fixtures.dependencies(for: .studentsEmpty)
         #expect(try await none.students.students(centre: centre, period: october).isEmpty)
     }
+
+    @MainActor @Test func theNewStudentStatesStartReadyOnTheStudentsTab() async throws {
+        for state in [LaunchState.studentNew, .studentNewFilled, .studentNewInvalid] {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .students && RootView.studentsBoardState(state) != nil)
+            let classes = try await Fixtures.dependencies(for: state).classes
+                .classes(centre: Fixtures.meeraWorkspace.centre.id)
+            #expect(classes.count == 2)
+        }
+    }
 }

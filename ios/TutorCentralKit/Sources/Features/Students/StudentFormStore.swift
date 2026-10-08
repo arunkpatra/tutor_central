@@ -2,7 +2,7 @@ import Domain
 import Foundation
 import Observation
 
-@MainActor @Observable public final class StudentFormStore {
+@MainActor @Observable public final class StudentFormStore: Identifiable {
     public enum Mode: Sendable {
         case new
         case edit(Student)
@@ -10,7 +10,7 @@ import Observation
 
     public let mode: Mode
     public let classes: [Classroom]
-    private let today: Day
+    public let today: Day
     private let original: StudentDraft?
 
     public var name = ""
