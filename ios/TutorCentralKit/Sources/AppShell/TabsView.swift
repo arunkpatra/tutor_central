@@ -29,11 +29,16 @@ struct TabsView<
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
             Tab("Today", systemImage: "sun.max", value: AppTab.today) { stack(.today) { today() } }
             Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
-            Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { later(.fees) } }
+            Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { LaterView(
+                place: .feesTab,
+                build: build
+            ) } }
             Tab("Attendance", systemImage: "checkmark.circle", value: AppTab.attendance) {
                 stack(.attendance) { attendance() }
             }
-            Tab("More", systemImage: "ellipsis", value: AppTab.more) { stack(.more) { later(.more) } }
+            Tab("More", systemImage: "ellipsis", value: AppTab.more) {
+                stack(.more) { MoreView { state.push($0) } }
+            }
         }
         .tint(Tokens.accentText.color)
     }
@@ -58,9 +63,5 @@ struct TabsView<
         }
         // Inside the tab, so a toast sits above the tab bar.
         .overlay(alignment: .bottom) { ToastHost(toasts: toasts) }
-    }
-
-    private func later(_ tab: AppTab) -> some View {
-        LaterView(place: .tab(tab), build: build)
     }
 }

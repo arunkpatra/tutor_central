@@ -51,6 +51,28 @@ public struct SettingRow<Trailing: View>: View {
     }
 }
 
+/// Setting, later (P4-More, P2-Settings): a setting row whose feature arrives with a later phase, at the Later opacity,
+/// the phase named in captionStrong text3 instead of a chevron; not tappable.
+public struct LaterRow: View {
+    let symbol: String
+    let label: String
+    let phase: String
+
+    public init(symbol: String, label: String, phase: String) {
+        self.symbol = symbol
+        self.label = label
+        self.phase = phase
+    }
+
+    public var body: some View {
+        SettingRow(symbol: symbol, label: label) {
+            Text(phase).typeStyle(Tokens.captionStrong).foregroundStyle(Tokens.text3.color)
+        }
+        .opacity(Tokens.opacityLater)
+        .accessibilityHint("Arrives in \(phase)")
+    }
+}
+
 /// A row is at least 56 high (components.md, Rows).
 enum RowMetrics {
     static let minHeight: CGFloat = 56

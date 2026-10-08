@@ -21,7 +21,8 @@ extension RootView {
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
-        case .laterMore, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks, .tasksEmpty:
+        case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks,
+             .tasksEmpty:
             .more
         default: nil
         }
