@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import Onboarding
 import Settings
+import Students
 import SwiftUI
 import Today
 
@@ -131,6 +132,7 @@ public struct RootView: View {
                 build: deps.bundleVersion,
                 toasts: toasts,
                 today: { todayView },
+                students: { studentsView },
                 settings: { settingsView }
             )
         }
@@ -138,7 +140,8 @@ public struct RootView: View {
 
     static func tab(for state: LaunchState) -> AppTab? {
         switch state {
-        case .laterStudents: .students
+        case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
+             .studentsAddMenu: .students
         case .laterFees: .fees
         case .laterAttendance: .attendance
         case .laterMore: .more
@@ -199,6 +202,60 @@ public struct RootView: View {
                     shell.today = store
                 }
             }
+        }
+    }
+
+    /// One register for the life of the workspace, so the list, the search and the scroll survive a tab switch.
+    @ViewBuilder private var studentsView: some View {
+        if case let .ready(workspace) = session.state {
+            let store = shell.register ?? RegisterStore(
+                workspace: workspace,
+                students: deps.students,
+                classes: deps.classes,
+                cache: deps.cachesRegister ? .forCentre(workspace.centre.id) : nil,
+                now: deps.now
+            )
+            StudentsView(
+                store: store,
+                actions: StudentsActions(
+                    openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
+                    openStudentFees: { _ in shell.tabs.push(.later(.studentFees)) },
+                    openMarkAttendance: { _ in shell.tabs.push(.later(.markAttendance)) }
+                ),
+                navigation: StudentsNavigation(
+                    openStudent: { shell.tabs.push(.student($0)) },
+                    openClasses: { shell.tabs.push(.classes) },
+                    openClass: { shell.tabs.push(.classroom($0)) }
+                ),
+                boardState: launch.flatMap(Self.studentsBoardState)
+            )
+            .onAppear {
+                if shell.register == nil {
+                    shell.register = store
+                }
+            }
+            .onChange(of: store.message) { _, message in
+                guard let message else { return }
+                toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
+                store.message = nil
+            }
+        }
+    }
+
+    /// The toast's Retry for the register's last failed write.
+    private static func retry(_ store: RegisterStore) -> (label: String, run: @MainActor () -> Void) {
+        let run: @MainActor () -> Void = {
+            Task { await store.retryLast() }
+        }
+        return ("Retry", run)
+    }
+
+    static func studentsBoardState(_ state: LaunchState) -> StudentsBoardState? {
+        switch state {
+        case .studentsSearching: .searching
+        case .studentsFiltered: .filteredToScience
+        case .studentsAddMenu: .addMenu
+        default: nil
         }
     }
 

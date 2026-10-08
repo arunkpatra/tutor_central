@@ -1,4 +1,5 @@
 import Domain
+import Foundation
 import Observation
 import SwiftUI
 
@@ -39,4 +40,7 @@ import SwiftUI
 enum Route: Hashable {
     case later(LaterPlace)
     case settings
+    case student(UUID)
+    case classes
+    case classroom(UUID)
 }

@@ -1,6 +1,7 @@
 import Data
 import Domain
 import Foundation
+import Students
 import Testing
 import Today
 @testable import AppShell
@@ -42,5 +43,19 @@ import Today
         shell.today = today(Fixtures.meeraWorkspace)
         shell.sessionChanged(.ready(Fixtures.meeraWorkspace))
         #expect(shell.tabs.selected == .fees && shell.today != nil)
+    }
+
+    @Test func signingOutForgetsTheRegister() {
+        let shell = ShellState()
+        shell.sessionChanged(.ready(Fixtures.meeraWorkspace))
+        shell.register = RegisterStore(
+            workspace: Fixtures.meeraWorkspace,
+            students: FakeStudentsRepository(),
+            classes: FakeClassesRepository(),
+            cache: nil,
+            now: { Fixtures.now }
+        )
+        shell.sessionChanged(.signedOut)
+        #expect(shell.register == nil)
     }
 }

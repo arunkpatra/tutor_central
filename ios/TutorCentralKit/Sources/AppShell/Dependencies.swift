@@ -8,6 +8,10 @@ public struct Dependencies: Sendable {
     public let auth: any AuthRepository
     public let centres: any CentreRepository
     public let counts: any CountsRepository
+    public let students: any StudentsRepository
+    public let classes: any ClassesRepository
+    /// The register is kept on disk for the next launch (`RegisterCache`); the fixtures never write a file.
+    public let cachesRegister: Bool
     public let now: @Sendable () -> Date
     /// "0.1 (12)": the marketing version and the build.
     public let bundleVersion: String
@@ -16,12 +20,18 @@ public struct Dependencies: Sendable {
         auth: any AuthRepository,
         centres: any CentreRepository,
         counts: any CountsRepository,
+        students: any StudentsRepository,
+        classes: any ClassesRepository,
+        cachesRegister: Bool,
         now: @escaping @Sendable () -> Date,
         bundleVersion: String
     ) {
         self.auth = auth
         self.centres = centres
         self.counts = counts
+        self.students = students
+        self.classes = classes
+        self.cachesRegister = cachesRegister
         self.now = now
         self.bundleVersion = bundleVersion
     }
@@ -35,6 +45,9 @@ public struct Dependencies: Sendable {
             auth: SupabaseAuthRepository(client: client),
             centres: SupabaseCentreRepository(client: client),
             counts: SupabaseCountsRepository(client: client),
+            students: SupabaseStudentsRepository(client: client),
+            classes: SupabaseClassesRepository(client: client),
+            cachesRegister: true,
             now: { Date() },
             bundleVersion: version
         )

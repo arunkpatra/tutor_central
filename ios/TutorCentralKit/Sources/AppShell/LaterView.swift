@@ -54,6 +54,9 @@ enum LaterPlace: Hashable, Sendable {
     case tab(AppTab)
     case tasks
     case schedule
+    case scanRegister
+    case studentFees
+    case markAttendance
 
     var isTab: Bool {
         if case .tab = self {
@@ -72,6 +75,9 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.more): "More"
         case .tasks: "Tasks"
         case .schedule: "Schedule"
+        case .scanRegister: "Scan register"
+        case .studentFees: "Fees"
+        case .markAttendance: "Attendance"
         }
     }
 
@@ -80,7 +86,9 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.today): "sun.max"
         case .tab(.students): "person.2"
         case .tab(.fees): "indianrupeesign"
-        case .tab(.attendance), .tasks: "checkmark.circle"
+        case .tab(.attendance), .tasks, .markAttendance: "checkmark.circle"
+        case .scanRegister: "doc.viewfinder"
+        case .studentFees: "indianrupeesign"
         case .tab(.more): "ellipsis"
         case .schedule: "calendar"
         }
@@ -88,13 +96,13 @@ enum LaterPlace: Hashable, Sendable {
 
     var heading: String {
         switch self {
-        case .tab(.students), .tab(.fees), .tasks: "\(title) are on the way"
+        case .tab(.students), .tab(.fees), .tasks, .studentFees: "\(title) are on the way"
         default: "\(title) is on the way"
         }
     }
 
     var line: String {
-        let opening = "This build has sign-in, your profile and the Today screen."
+        let opening = "This build has sign-in, your profile, Today and the register."
         let rest = switch self {
         case .tab(.students): "Students, classes and the register scan arrive"
         case .tab(.fees): "Fees, reminders and receipts arrive"
@@ -102,6 +110,9 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.more): "Schedule, classes, reports and the AI tools arrive"
         case .tasks: "Tasks arrive"
         case .schedule, .tab(.today): "The schedule arrives"
+        case .scanRegister: "Photographing your paper register and reading it arrives"
+        case .studentFees: "The fee ledger, reminders and receipts arrive"
+        case .markAttendance: "Marking attendance and its history arrive"
         }
         return "\(opening) \(rest) in a later build on TestFlight."
     }

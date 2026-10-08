@@ -3,18 +3,20 @@ import Domain
 import SwiftUI
 
 /// The five tabs on iOS 26's own tab bar (components.md, "Tab bar": the system's floating glass bar with the board's
-/// symbols), each with its own navigation stack. Today's root is passed in; the other four are on the way.
-struct TabsView<Today: View, Settings: View>: View {
+/// symbols), each with its own navigation stack. Today's and Students' roots are passed in; the other three are on the
+/// way.
+struct TabsView<Today: View, Students: View, Settings: View>: View {
     @Bindable var state: TabsState
     let build: String
     let toasts: ToastCenter
     let today: () -> Today
+    let students: () -> Students
     let settings: () -> Settings
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
             Tab("Today", systemImage: "sun.max", value: AppTab.today) { stack(.today) { today() } }
-            Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { later(.students) } }
+            Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
             Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { later(.fees) } }
             Tab("Attendance", systemImage: "checkmark.circle", value: AppTab.attendance) {
                 stack(.attendance) { later(.attendance) }
@@ -31,6 +33,8 @@ struct TabsView<Today: View, Settings: View>: View {
                     switch route {
                     case let .later(place): LaterView(place: place, build: build)
                     case .settings: settings()
+                    // Their screens arrive with their boards' pull requests (P3-StudentDetail, P3-Classes-*).
+                    case .student, .classes, .classroom: later(.students)
                     }
                 }
         }

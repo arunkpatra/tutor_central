@@ -6,7 +6,6 @@ import Foundation
 /// the same every time and matches its board.
 public enum Fixtures {
     /// Wednesday 7 October 2026, 18:30 in India: "Good evening, Meera".
-    /// Wednesday 7 October 2026, 18:30 in India: "Good evening, Meera".
     public static let now = FakeCountsRepository.fixedNow
 
     public static let meeraWorkspace = FakeCentreRepository.meeraWorkspace
@@ -25,6 +24,9 @@ public enum Fixtures {
             auth: auth,
             centres: centres,
             counts: FakeCountsRepository(),
+            students: FakeStudentsRepository(students: register(for: state).students),
+            classes: FakeClassesRepository(classes: register(for: state).classes),
+            cachesRegister: false,
             now: { now },
             bundleVersion: "0.1 (12)"
         )
@@ -33,9 +35,20 @@ public enum Fixtures {
     public static func initialState(for state: LaunchState) -> SessionStore.State {
         switch state {
         case .onboarding: .needsOnboarding(FakeAuthRepository.meera)
-        case .todayEmpty, .laterStudents, .laterFees, .laterAttendance, .laterMore, .settings: .ready(meeraWorkspace)
+        case .todayEmpty, .laterStudents, .laterFees, .laterAttendance, .laterMore, .settings, .studentsEmpty,
+             .studentsFew,
+             .students, .studentsSearching, .studentsFiltered, .studentsAddMenu: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
+        }
+    }
+
+    /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
+    static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
+        switch state {
+        case .studentsEmpty: ([], [])
+        case .studentsFew: (FakeStudentsRepository.few, [])
+        default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
     }
 }
