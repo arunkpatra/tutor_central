@@ -160,6 +160,36 @@ test("updated_at moves on update", async () => {
   expect(new Date(after.data!.updated_at).getTime()).toBeGreaterThan(new Date(before.data!.updated_at).getTime());
 });
 
+test("archive_class detaches members and is refused to a non-member", async () => {
+  const cls = await a.from("classes").insert({ centre_id: centreA, name: "To archive", monthly_fee: 900 }).select("id").single();
+  expect(cls.error).toBeNull();
+  const kept = await a.from("students").insert({ centre_id: centreA, name: "Keeps own fee", class_id: cls.data!.id, monthly_fee: 700 }).select("id").single();
+  const plain = await a.from("students").insert({ centre_id: centreA, name: "On class fee", class_id: cls.data!.id }).select("id").single();
+  expect((await b.rpc("archive_class", { p_class: cls.data!.id })).error).not.toBeNull();
+  expect((await a.rpc("archive_class", { p_class: cls.data!.id })).error).toBeNull();
+  const after = await a.from("classes").select("archived_at").eq("id", cls.data!.id).single();
+  expect(after.data!.archived_at).not.toBeNull();
+  const members = await a.from("students").select("name, class_id, monthly_fee, archived_at").in("id", [kept.data!.id, plain.data!.id]).order("name");
+  expect(members.data).toEqual([
+    { name: "Keeps own fee", class_id: null, monthly_fee: 700, archived_at: null },
+    { name: "On class fee", class_id: null, monthly_fee: null, archived_at: null },
+  ]);
+  expect((await a.rpc("archive_class", { p_class: cls.data!.id })).error).toBeNull(); // idempotent
+});
+
+test("deleting a student cascades to invoices and marks and detaches message_log", async () => {
+  const s = await a.from("students").insert({ centre_id: centreA, name: "Leaving", monthly_fee: 500 }).select("id").single();
+  const session = await a.from("attendance_sessions").insert({ centre_id: centreA, date: "2026-10-06" }).select("id").single();
+  expect((await a.from("fee_invoices").insert({ centre_id: centreA, student_id: s.data!.id, period: "2026-07-01", amount: 500 })).error).toBeNull();
+  expect((await a.from("attendance_marks").insert({ centre_id: centreA, session_id: session.data!.id, student_id: s.data!.id, status: "present" })).error).toBeNull();
+  const log = await a.from("message_log").insert({ centre_id: centreA, student_id: s.data!.id, kind: "reminder" }).select("id").single();
+  expect((await a.from("students").delete().eq("id", s.data!.id)).error).toBeNull();
+  expect((await a.from("fee_invoices").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
+  expect((await a.from("attendance_marks").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
+  expect((await a.from("message_log").select("student_id").eq("id", log.data!.id)).data).toEqual([{ student_id: null }]);
+  expect((await a.from("attendance_sessions").select("id").eq("id", session.data!.id)).data?.length).toBe(1);
+});
+
 test("only the owner can delete the centre, and it cascades", async () => {
   expect((await b.rpc("delete_centre", { p_centre: centreA })).error).not.toBeNull();
   expect((await a.rpc("delete_centre", { p_centre: centreA })).error).toBeNull();
