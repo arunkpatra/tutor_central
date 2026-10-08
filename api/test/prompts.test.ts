@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { request as check, schemeText } from "../src/prompts/check-paper.js";
-import { request as paper } from "../src/prompts/paper.js";
+import { request as paper, sectionPlan } from "../src/prompts/paper.js";
 import { request as note } from "../src/prompts/progress-note.js";
 import { normalisePhone, request as scan } from "../src/prompts/scan-register.js";
 import { GenerateInput } from "../src/schemas.js";
@@ -60,4 +60,20 @@ test("a check sends every page in order with the scheme text; a paper's output b
   expect(schemeText(JSON.parse(stored), "paper")).toBe("Quadratic equations\nQ1 (1 mark) Which… → b");
   expect(schemeText({ title: "H", instructions: null, questions: [{ number: 1, text: "q", answer: "a" }] }, "homework")).toBe("H\nQ1 q → a");
   expect(schemeText({ note: "x" }, "progress_note")).toBeNull();
+});
+
+test("a paper's sections are planned by the API so the marks always add up", () => {
+  for (const [questions, marks] of [[10, 20], [10, 40], [5, 5], [1, 20], [50, 100], [7, 23], [12, 50], [3, 100]] as const) {
+    const plan = sectionPlan(questions, marks);
+    expect({ questions, marks, q: plan.reduce((n, s) => n + s.count, 0), m: plan.reduce((n, s) => n + s.count * s.marksEach, 0) }).toEqual({ questions, marks, q: questions, m: marks });
+    expect(plan.every((s) => s.count > 0 && s.marksEach > 0)).toBe(true);
+  }
+  expect(sectionPlan(10, 20)).toEqual([
+    { title: "Section A", count: 4, marksEach: 1 },
+    { title: "Section B", count: 4, marksEach: 2 },
+    { title: "Section C", count: 2, marksEach: 4 },
+  ]);
+  const input = GenerateInput.parse({ kind: "paper", subject: "Mathematics", classLevel: "Class 10 Maths", topic: "Quadratic equations" });
+  if (input.kind !== "paper") throw new Error("kind");
+  expect(paper(input).text).toContain("Section C: 2 questions of 4 marks each");
 });
