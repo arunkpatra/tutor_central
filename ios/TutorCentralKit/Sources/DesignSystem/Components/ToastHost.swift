@@ -1,13 +1,17 @@
-import DesignSystem
 import SwiftUI
 
 /// Draws the current toast at the bottom, above the tab bar when there is one; it slides in and out in `panel`.
-struct ToastHost: View {
+public struct ToastHost: View {
     let toasts: ToastCenter
-    var bottom: CGFloat = Tokens.pageSide
+    let bottom: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    var body: some View {
+    public init(toasts: ToastCenter, bottom: CGFloat = Tokens.pageSide) {
+        self.toasts = toasts
+        self.bottom = bottom
+    }
+
+    public var body: some View {
         ZStack {
             if let toast = toasts.current {
                 ToastView(

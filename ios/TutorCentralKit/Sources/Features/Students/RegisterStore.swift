@@ -4,8 +4,8 @@ import Foundation
 import Observation
 
 @MainActor @Observable public final class RegisterStore {
-    public private(set) var students: [Student] = []
-    public private(set) var classes: [Classroom] = []
+    public internal(set) var students: [Student] = []
+    public internal(set) var classes: [Classroom] = []
     public private(set) var loading = false
     public private(set) var refreshing = false
     public private(set) var error: String?
@@ -17,11 +17,11 @@ import Observation
     public var filter: StudentFilter = .all
     public var sort: StudentSort = .name
 
-    private let workspace: Workspace
+    let workspace: Workspace
     private let studentsRepository: any StudentsRepository
-    private let classesRepository: any ClassesRepository
+    let classesRepository: any ClassesRepository
     private let cache: RegisterCache?
-    private let now: @Sendable () -> Date
+    let now: @Sendable () -> Date
     private let calendar: Calendar
     private var loaded = false
     private var lastFailed: (@MainActor () async -> Void)?
@@ -44,6 +44,12 @@ import Observation
 
     public var today: Day {
         Day(now(), calendar: calendar)
+    }
+
+    /// The empty register's first screen: only once a read has said so, never while loading or after a failed first
+    /// read (a new phone with no signal is not a centre with no students).
+    public var showsEmptyRegister: Bool {
+        students.isEmpty && loaded && !loading && error == nil
     }
 
     public var isSearching: Bool {
@@ -165,7 +171,7 @@ import Observation
         try? cache?.save(RegisterSnapshot(students: students, classes: classes, period: period))
     }
 
-    private func replace(_ id: UUID, with student: Student) {
+    func replace(_ id: UUID, with student: Student) {
         if let index = students.firstIndex(where: { $0.id == id }) {
             students[index] = student
         } else {
@@ -173,14 +179,14 @@ import Observation
         }
     }
 
-    private func succeeded() {
+    func succeeded() {
         lastFailed = nil
         canRetry = false
         lastSavedAt = now()
         persist()
     }
 
-    private func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
+    func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
         message = text
         lastFailed = retry
         canRetry = true
@@ -294,99 +300,17 @@ public extension RegisterStore {
     }
 
     func assign(_ ids: [UUID], to classID: UUID?) async {
-        let before = students
-        for id in ids {
-            if var moved = student(id) {
-                moved.classID = classID
-                replace(id, with: moved)
-            }
-        }
+        // Each moved student's class before the move: a failure undoes these rows only, never another write.
+        let previous = Dictionary(uniqueKeysWithValues: ids.compactMap { id in student(id).map { (id, $0.classID) } })
+        let names = ids.count == 1 ? student(ids[0])?.firstName : nil
+        setClass(of: ids) { _ in classID }
         do {
             try await studentsRepository.assign(studentIDs: ids, toClass: classID, centre: workspace.centre.id)
             succeeded()
         } catch {
-            students = before
-            let what = ids.count == 1 ? (before.first { $0.id == ids[0] }?.firstName ?? "the student") : "the students"
-            let text = "Couldn't move \(what). Check your connection and try again."
-            failed(text) { [weak self] in await self?.assign(
-                ids,
-                to: classID
-            ) }
-        }
-    }
-
-    @discardableResult func addClass(_ draft: ClassroomDraft) async -> Classroom? {
-        let placeholder = Classroom(
-            id: UUID(), name: draft.trimmedName, subject: draft.trimmedSubject, monthlyFee: draft.fee,
-            meetingDays: draft.meetingDays,
-            startTime: draft.startTime, endTime: draft.endTime, archivedAt: nil
-        )
-        classes.append(placeholder)
-        do {
-            let made = try await classesRepository.create(draft, centre: workspace.centre.id)
-            classes.removeAll { $0.id == placeholder.id }
-            classes.append(made)
-            classes.sort { $0.name < $1.name }
-            succeeded()
-            return made
-        } catch {
-            classes.removeAll { $0.id == placeholder.id }
-            let text = "Couldn't save \(draft.trimmedName). Check your connection and try again."
-            failed(text) { [weak self] in
-                await self?.addClass(draft)
-            }
-            return nil
-        }
-    }
-
-    func updateClass(_ id: UUID, with draft: ClassroomDraft) async -> Bool {
-        guard let index = classes.firstIndex(where: { $0.id == id }) else { return false }
-        let before = classes[index]
-        var optimistic = before
-        optimistic.name = draft.trimmedName
-        optimistic.subject = draft.trimmedSubject
-        optimistic.monthlyFee = draft.fee
-        optimistic.meetingDays = draft.meetingDays
-        optimistic.startTime = draft.startTime
-        optimistic.endTime = draft.endTime
-        classes[index] = optimistic
-        do {
-            classes[index] = try await classesRepository.update(id: id, with: draft)
-            succeeded()
-            return true
-        } catch {
-            classes[index] = before
-            let text = "Couldn't save \(before.name). Check your connection and try again."
-            failed(text) { [weak self] in
-                _ = await self?.updateClass(
-                    id,
-                    with: draft
-                )
-            }
-            return false
-        }
-    }
-
-    func archiveClass(_ id: UUID) async {
-        guard let index = classes.firstIndex(where: { $0.id == id }) else { return }
-        let beforeClasses = classes
-        let beforeStudents = students
-        classes[index].archivedAt = now()
-        for member in students where member.classID == id {
-            var moved = member
-            moved.classID = nil
-            replace(member.id, with: moved)
-        }
-        do {
-            try await classesRepository.archive(id: id)
-            succeeded()
-        } catch {
-            classes = beforeClasses
-            students = beforeStudents
-            let text = "Couldn't archive \(beforeClasses[index].name). Check your connection and try again."
-            failed(text) { [weak self] in
-                await self?.archiveClass(id)
-            }
+            setClass(of: ids) { previous[$0] ?? nil }
+            let text = "Couldn't move \(names ?? "the students"). Check your connection and try again."
+            failed(text) { [weak self] in await self?.assign(ids, to: classID) }
         }
     }
 

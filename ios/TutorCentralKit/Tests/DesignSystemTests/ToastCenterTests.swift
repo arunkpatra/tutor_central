@@ -1,6 +1,5 @@
-import DesignSystem
 import Testing
-@testable import AppShell
+@testable import DesignSystem
 
 @MainActor struct ToastCenterTests {
     @Test func oneAtATimeTheNewerWins() {

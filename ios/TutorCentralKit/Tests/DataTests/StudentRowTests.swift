@@ -42,6 +42,17 @@ struct StudentRowTests {
         #expect(rows[0].student(calendar: DayHeading.india).thisMonth?.paidOn == Day(year: 2026, month: 10, day: 4))
     }
 
+    /// Review, Critical: an insert or update answers the student's columns without `fee_invoices`; it must decode.
+    @Test func aRowWithoutItsInvoicesDecodes() throws {
+        let json = Data("""
+        {"id":"aaaaaaaa-0000-0000-0000-000000000011","name":"Zara Khan","class_id":null,"monthly_fee":null,
+         "parent_name":null,"parent_phone":null,"date_of_birth":null,"gender":null,"notes":null,"archived_at":null}
+        """.utf8)
+        let row = try SupabaseStudentsRepository.decoder.decode(StudentRow.self, from: json)
+        #expect(row.student(calendar: DayHeading.india).name == "Zara Khan" && row.student(calendar: DayHeading.india)
+            .thisMonth == nil)
+    }
+
     @Test func aPaymentLateInTheEveningIsStillThatDayInIndia() throws {
         // 20:30 UTC on 4 October is 02:00 on 5 October in India.
         let json = Self.json.replacingOccurrences(of: "2026-10-04T13:00:00+00:00", with: "2026-10-04T20:30:00+00:00")

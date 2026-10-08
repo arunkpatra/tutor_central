@@ -75,6 +75,7 @@ public struct AddMembersSheet: View {
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.rowPaddingHorizontal)
+        .modifier(SheetToasts())
         .presentationDetents([.fraction(Self.boardFraction), .large])
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)

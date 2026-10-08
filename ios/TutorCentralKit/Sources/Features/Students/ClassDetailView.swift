@@ -60,7 +60,10 @@ public struct ClassDetailView: View {
                 onSave: { await register.updateClass(id, with: $0) },
                 onArchive: {
                     await register.archiveClass(id)
-                    dismiss()
+                    // Only when it took: a failed archive is rolled back and says so, and the class is still here.
+                    if register.classroom(id)?.isArchived == true {
+                        dismiss()
+                    }
                 },
                 onClose: { editing = nil }
             )

@@ -1,9 +1,8 @@
-import DesignSystem
 import Foundation
 import Observation
 
 /// One toast at a time, the newer wins; it leaves after `toastStay` (`toastStayUndo` when it carries an action).
-/// `ToastHost` draws it above the tab bar.
+/// `ToastHost` draws it above the tab bar, and over a sheet that is open (a failed save says so where the tutor is).
 @MainActor @Observable public final class ToastCenter {
     public struct Toast: Equatable {
         public let message: String
