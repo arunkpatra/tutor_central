@@ -69,8 +69,8 @@ included: all good.
 - Phase 6's answer to Vercel's 4.5 MB body: photos are reduced on the device to 2000 px JPEG (the plan's decisions table);
   no Storage.
 - Vercel's production domain is the generated one; a nicer domain is the owner's call (tutorcentral.in exists).
-- Accounts still to create when their phase needs them: the Anthropic API key (Phase 6, Task 20 steps 1 and 2: into Vercel's
-  `ANTHROPIC_API_KEY` and `api/.env.local`, after PR 2 and before the deploy).
+- The Anthropic API key is in place (the owner, 2026-10-09): Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and
+  `api/.env.local` (ignored). Phase 6's Task 20 steps 1 and 2 are done; the deploy after PR 2 needs nothing more.
 - Crash reporting: no decision yet (D18 leaves it open).
 
 ## Paths outside this repo

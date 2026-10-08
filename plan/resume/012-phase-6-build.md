@@ -74,8 +74,9 @@ commit, D25); an anatomy number lives as a named constant on its component. The 
 alert, the document camera, the photo picker) are the system's and have no launch state. The Kit boards do not
 change in this phase.
 
-**Owner steps, in order:** (1) the Anthropic key into Vercel, (2) the same key into `api/.env.local`, both after PR
-2 merges and before the deploy; (3) nothing until the TestFlight build; (4) the three checks on the phone. The
+**Owner steps, in order:** (1) and (2), the Anthropic key into Vercel's `ANTHROPIC_API_KEY` and into `api/.env.local`,
+are already done (the owner, 2026-10-09): skip Task 20's steps 1 and 2 and run its step 2 check (`bun run dev`, one real
+call) when the API is built; (3) nothing until the TestFlight build; (4) the three checks on the phone. The
 owner's Mac has Xcode 27, the iPhone 17 simulator, bun, Docker Desktop (start the local stack with `cd supabase &&
 supabase start` so `bun check`'s db step runs), the Supabase CLI logged in and linked, Vercel's CLI and `gh` logged
 in, Google Chrome.

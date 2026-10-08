@@ -6,3 +6,5 @@
 
 3. Asked whether `plan/phase-06-plan.md` captured what he wanted for Phase 6, the owner chose: "Approve the plan
    (Recommended)".
+
+4. "ANTHROPIC_API_KEY has been added in vercel and also in api/.env.local"
