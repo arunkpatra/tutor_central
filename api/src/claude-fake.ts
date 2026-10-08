@@ -138,3 +138,21 @@ const check: CheckOutput = {
 
 /** The boards' results (P6-Result-Paper, P6-Result-ProgressNote, P6-Scan-Review, P6-Check-Result), one per kind. */
 export const SAMPLE = { paper, homework, worksheet, progress_note: note, scan_register: scan, check_paper: check };
+
+/** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
+export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
+  if (request.images?.length) return request.text.includes("register") ? "scan_register" : "check_paper";
+  if (request.text.includes("progress note")) return "progress_note";
+  if (request.text.includes("homework")) return "homework";
+  if (request.text.includes("worksheet")) return "worksheet";
+  return "paper";
+}
+
+/** What `bun run dev` with AI_FAKE=1 answers: the boards' sample for the kind, after a short wait so the creating
+ *  states show; a register photo under 1 KB (tools/samples/blank.png) reads as no rows, for the "No names found"
+ *  hand run. */
+export function localScript(request: ClaudeRequest<unknown>): FakeScript {
+  const kind = kindOf(request);
+  const blank = kind === "scan_register" && (request.images?.[0]?.base64.length ?? 0) < 1400;
+  return { answer: blank ? { rows: [] } : SAMPLE[kind], delayMs: 1500 };
+}

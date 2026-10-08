@@ -2,7 +2,8 @@ import type { MiddlewareHandler } from "hono";
 
 /** Who a Supabase access token belongs to, or null when it is expired, malformed or for a deleted user. */
 export type Verify = (token: string) => Promise<{ id: string } | null>;
-export type Vars = { Variables: { userId: string } };
+/** The user and their own token: every database call the routes make carries it, so row-level security applies. */
+export type Vars = { Variables: { userId: string; token: string } };
 
 /** 401 in words for anything but a live user. Never 500: a failed verifier is a sign-in problem to the caller. */
 export function makeRequireUser(verify: Verify): MiddlewareHandler<Vars> {
@@ -12,6 +13,7 @@ export function makeRequireUser(verify: Verify): MiddlewareHandler<Vars> {
     const user = await verify(token).catch(() => null);
     if (!user) return c.json({ error: "sign in again" }, 401);
     c.set("userId", user.id);
+    c.set("token", token);
     await next();
   };
 }
