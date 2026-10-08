@@ -1,27 +1,5 @@
-import AVFoundation
 import SwiftUI
 import VisionKit
-
-/// What tapping Scan a QR does: scan, ask for the camera the first time, say where to allow a refused camera, or say
-/// there is none (the simulator).
-public enum CameraAccess: Equatable, Sendable {
-    case scan
-    case ask
-    case denied
-    case noCamera
-
-    public static let deniedMessage = "Allow the camera for Tutor Central in Settings."
-    public static let noCameraMessage = "No camera on this device."
-
-    public static func decide(supported: Bool, status: AVAuthorizationStatus) -> CameraAccess {
-        guard supported else { return .noCamera }
-        switch status {
-        case .authorized: return .scan
-        case .notDetermined: return .ask
-        default: return .denied
-        }
-    }
-}
 
 /// The camera for a UPI QR (Scan a QR on Parent payments): VisionKit's `DataScannerViewController` behind a
 /// `UIViewControllerRepresentable`, because SwiftUI has no barcode camera (D8). The first QR it sees is handed back;
