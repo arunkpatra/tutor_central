@@ -8,7 +8,7 @@ import SwiftUI
 /// the other three tabs are on the way.
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
-    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View
+    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -25,6 +25,7 @@ struct TabsView<
     let schedule: (UUID?) -> Schedule
     let tasks: () -> Tasks
     let fees: () -> Fees
+    let studentFees: (UUID) -> StudentFees
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -41,24 +42,40 @@ struct TabsView<
         .tint(Tokens.accentText.color)
     }
 
+    /// A pushed screen, by the tab it belongs to.
+    @ViewBuilder private func destination(_ route: Route) -> some View {
+        switch route {
+        case .student, .classes, .classroom, .studentFees: studentsDestination(route)
+        case .history, .historyStudent: attendanceDestination(route)
+        case let .later(place): LaterView(place: place, build: build)
+        case .settings: settings()
+        case .schedule: schedule(nil)
+        // A newer link in the same place is a new screen, not the last one's state.
+        case let .event(id): schedule(id).id(id)
+        case .tasks: tasks()
+        }
+    }
+
+    @ViewBuilder private func studentsDestination(_ route: Route) -> some View {
+        switch route {
+        case let .student(id): studentDetail(id)
+        case let .classroom(id): classDetail(id)
+        case let .studentFees(id): studentFees(id)
+        default: classes()
+        }
+    }
+
+    @ViewBuilder private func attendanceDestination(_ route: Route) -> some View {
+        if case let .historyStudent(id) = route {
+            studentMonth(id)
+        } else {
+            history()
+        }
+    }
+
     private func stack(_ tab: AppTab, @ViewBuilder root: () -> some View) -> some View {
         NavigationStack(path: Binding(get: { state.paths[tab] ?? [] }, set: { state.paths[tab] = $0 })) {
-            root()
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case let .later(place): LaterView(place: place, build: build)
-                    case .settings: settings()
-                    case let .student(id): studentDetail(id)
-                    case .classes: classes()
-                    case let .classroom(id): classDetail(id)
-                    case .history: history()
-                    case let .historyStudent(id): studentMonth(id)
-                    case .schedule: schedule(nil)
-                    // A newer link in the same place is a new screen, not the last one's state.
-                    case let .event(id): schedule(id).id(id)
-                    case .tasks: tasks()
-                    }
-                }
+            root().navigationDestination(for: Route.self, destination: destination)
         }
         // Inside the tab, so a toast sits above the tab bar.
         .overlay(alignment: .bottom) { ToastHost(toasts: toasts) }

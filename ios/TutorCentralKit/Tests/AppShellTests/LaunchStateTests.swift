@@ -186,4 +186,12 @@ struct LaunchStateTests {
         #expect(Fixtures.workspace(for: .feesEmpty).centre.payments.upiID == nil)
         #expect(!Fixtures.workspace(for: .fees).centre.payments.needsConfirmation)
     }
+
+    @MainActor @Test func theStudentFeesStatesOpenHemanth() {
+        let hemanth = FakeAttendanceRepository.hemanth
+        #expect(RootView.tab(for: .studentFeesDue) == .students && RootView.tab(for: .studentFees) == .students)
+        #expect(RootView.initialRoutes(for: .studentFeesDue) == [.student(hemanth)])
+        #expect(RootView.initialRoutes(for: .studentFees) == [.student(hemanth), .studentFees(hemanth)])
+        #expect(Fixtures.initialState(for: .studentFees) == .ready(Fixtures.meeraWorkspace))
+    }
 }

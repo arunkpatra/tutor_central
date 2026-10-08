@@ -17,7 +17,7 @@ extension RootView {
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .student, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
-             .classArchiveConfirm, .classDetail, .classAddMembers: .students
+             .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
         case .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate, .feesGenerateNothing,
              .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive: .fees
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
@@ -42,6 +42,15 @@ extension RootView {
         case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
         case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm: [.schedule]
         case .tasks, .tasksEmpty: [.tasks]
+        default: studentFeesRoutes(for: state)
+        }
+    }
+
+    /// Hemanth's detail (P5-StudentDetail-Fees), and his fees over it (P5-StudentFees).
+    private static func studentFeesRoutes(for state: LaunchState) -> [Route] {
+        switch state {
+        case .studentFeesDue: [.student(FakeAttendanceRepository.hemanth)]
+        case .studentFees: [.student(FakeAttendanceRepository.hemanth), .studentFees(FakeAttendanceRepository.hemanth)]
         default: []
         }
     }
