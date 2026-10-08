@@ -252,6 +252,53 @@ test("an absence log carries the day the child was absent", async () => {
   expect(read.data?.length).toBe(1);
 });
 
+test("mark paid, undo and waive are plain updates the checks allow", async () => {
+  const inv = await a.from("fee_invoices").select("id").eq("centre_id", centreA).eq("period", "2026-10-01").order("amount").limit(1).single();
+  const paid = await a.from("fee_invoices").update({ status: "paid", paid_at: "2026-10-07T07:30:00+00:00", paid_method: "cash", waived_reason: null })
+    .eq("id", inv.data!.id).select("status, paid_at, paid_method, waived_reason").single();
+  expect(paid.error).toBeNull();
+  expect(paid.data).toEqual({ status: "paid", paid_at: "2026-10-07T07:30:00+00:00", paid_method: "cash", waived_reason: null });
+  // Undo: back to due, nothing paid.
+  const undone = await a.from("fee_invoices").update({ status: "due", paid_at: null, paid_method: null }).eq("id", inv.data!.id).select("status, paid_at, paid_method").single();
+  expect(undone.data).toEqual({ status: "due", paid_at: null, paid_method: null });
+  // Waive keeps paid_at null; a waived fee marked paid later clears the reason.
+  const waived = await a.from("fee_invoices").update({ status: "waived", waived_reason: "Joined mid-month" }).eq("id", inv.data!.id).select("status, paid_at, waived_reason").single();
+  expect(waived.data).toEqual({ status: "waived", paid_at: null, waived_reason: "Joined mid-month" });
+  expect((await a.from("fee_invoices").update({ status: "due", paid_at: "2026-10-07T07:30:00+00:00" }).eq("id", inv.data!.id)).error).not.toBeNull(); // due with paid_at is refused
+  const back = await a.from("fee_invoices").update({ status: "due", waived_reason: null }).eq("id", inv.data!.id).select("status, waived_reason").single();
+  expect(back.data).toEqual({ status: "due", waived_reason: null });
+  expect((await b.from("fee_invoices").update({ status: "paid", paid_at: "2026-10-07T07:30:00+00:00" }).eq("id", inv.data!.id).select("id")).data).toEqual([]);
+});
+
+test("a reminder and a receipt are logged about a month and read back by it", async () => {
+  const s = await a.from("students").select("id").eq("name", "Only A").single();
+  const reminder = await a.from("message_log").insert({ centre_id: centreA, student_id: s.data!.id, kind: "reminder", about_date: "2026-10-01" }).select("kind, about_date, channel").single();
+  expect(reminder.data).toEqual({ kind: "reminder", about_date: "2026-10-01", channel: "whatsapp_link" });
+  expect((await a.from("message_log").insert({ centre_id: centreA, student_id: s.data!.id, kind: "receipt", about_date: "2026-10-01" })).error).toBeNull();
+  const october = await a.from("message_log").select("kind").eq("centre_id", centreA).in("kind", ["reminder", "receipt"]).eq("about_date", "2026-10-01").order("kind");
+  expect(october.data).toEqual([{ kind: "reminder" }, { kind: "receipt" }]); // enum order: reminder, receipt
+  const september = await a.from("message_log").select("kind").eq("centre_id", centreA).in("kind", ["reminder", "receipt"]).eq("about_date", "2026-09-01");
+  expect(september.data).toEqual([]);
+});
+
+test("the centre's payment settings are the owner's to change", async () => {
+  const set = await a.from("centres").update({ upi_id: "meera@okhdfcbank", payment_link: "https://pay.example/meera", send_receipts: false, upi_confirmed_at: null })
+    .eq("id", centreA).select("upi_id, payment_link, send_receipts, upi_confirmed_at").single();
+  expect(set.data).toEqual({ upi_id: "meera@okhdfcbank", payment_link: "https://pay.example/meera", send_receipts: false, upi_confirmed_at: null });
+  expect((await a.from("centres").update({ upi_id: "not an id" }).eq("id", centreA)).error).not.toBeNull();
+  const confirmed = await a.from("centres").update({ upi_confirmed_at: "2026-10-07T07:35:00+00:00" }).eq("id", centreA).select("upi_confirmed_at").single();
+  expect(confirmed.data!.upi_confirmed_at).toBe("2026-10-07T07:35:00+00:00");
+  expect((await b.from("centres").update({ upi_id: "thief@bank" }).eq("id", centreA).select("id")).data).toEqual([]);
+});
+
+test("generate_fees for a second month skips nothing and counts what it made", async () => {
+  const active = await a.from("students").select("id").eq("centre_id", centreA).is("archived_at", null);
+  const made = await a.rpc("generate_fees", { p_centre: centreA, p_period: "2026-11-01" });
+  expect(made.error).toBeNull();
+  expect(made.data).toBe(active.data!.length);
+  expect((await a.rpc("generate_fees", { p_centre: centreA, p_period: "2026-11-01" })).data).toBe(0);
+});
+
 test("only the owner can delete the centre, and it cascades", async () => {
   expect((await b.rpc("delete_centre", { p_centre: centreA })).error).not.toBeNull();
   expect((await a.rpc("delete_centre", { p_centre: centreA })).error).toBeNull();
