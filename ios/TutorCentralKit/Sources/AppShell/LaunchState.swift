@@ -103,6 +103,17 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case aiHistory = "ai-history"
     case aiHistoryEmpty = "ai-history-empty"
     case todayAI = "today-ai"
+    case scanIntro = "scan-intro"
+    case scanConsent = "scan-consent"
+    case scanCameraRefused = "scan-camera-refused"
+    case scanReading = "scan-reading"
+    case scanReview = "scan-review"
+    case scanReviewEdit = "scan-review-edit"
+    case scanReviewRemoved = "scan-review-removed"
+    case scanReviewLeave = "scan-review-leave"
+    case scanNothing = "scan-nothing"
+    case scanFailed = "scan-failed"
+    case scanSaved = "scan-saved"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }

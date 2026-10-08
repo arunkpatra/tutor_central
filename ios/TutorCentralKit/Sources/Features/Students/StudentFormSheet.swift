@@ -3,7 +3,8 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// New student and Edit student, to P3-NewStudent-Empty, -Filled, -Invalid and P3-EditStudent: the eight fields in
+/// New student, Edit student and Fix this row, to P3-NewStudent-Empty, -Filled, -Invalid, P3-EditStudent and
+/// P6-Scan-Review-Edit (five fields and Remove this row): the eight fields in
 /// the boards' order, Save until valid (and, editing, changed), Cancel asking before typing is thrown away.
 public struct StudentFormSheet: View {
     @Bindable var store: StudentFormStore
@@ -11,6 +12,7 @@ public struct StudentFormSheet: View {
     let autofocus: Bool
     let onSave: (StudentDraft) async -> Bool
     let onClose: () -> Void
+    let onRemove: (() -> Void)?
     @State private var saving = false
     @State private var confirmingDiscard = false
     @State private var pickingBirthDate = false
@@ -22,13 +24,15 @@ public struct StudentFormSheet: View {
         showsFocus: Bool = false,
         autofocus: Bool = true,
         onSave: @escaping (StudentDraft) async -> Bool,
-        onClose: @escaping () -> Void
+        onClose: @escaping () -> Void,
+        onRemove: (() -> Void)? = nil
     ) {
         self.store = store
         self.showsFocus = showsFocus
         self.autofocus = autofocus
         self.onSave = onSave
         self.onClose = onClose
+        self.onRemove = onRemove
     }
 
     public var body: some View {
@@ -62,6 +66,14 @@ public struct StudentFormSheet: View {
         .presentationBackground(Tokens.surface1.color)
     }
 
+    private var isFix: Bool {
+        if case .fix = store.mode {
+            true
+        } else {
+            false
+        }
+    }
+
     private var isNew: Bool {
         if case .new = store.mode {
             true
@@ -78,7 +90,7 @@ public struct StudentFormSheet: View {
                 placeholder: "The student's full name",
                 error: store.nameError,
                 content: .name,
-                showsFocus: showsFocus,
+                showsFocus: showsFocus && !isFix,
                 autofocus: autofocus && isNew
             )
             Menu {
@@ -105,25 +117,34 @@ public struct StudentFormSheet: View {
             TextWell(
                 label: "Parent's name",
                 text: $store.parentName,
-                placeholder: "Who you call about this student",
+                placeholder: isFix ? "Parent's name" : "Who you call about this student",
                 error: store.parentNameError,
                 content: .name
             )
             PhoneWell(
                 label: "Parent's WhatsApp number",
                 digits: $store.digits,
+                helper: store.phoneHelper,
                 error: store.phoneError,
+                showsFocus: showsFocus && isFix,
                 onCommit: store.commitPhone
             )
-            birthDate
-            gender
-            NotesWell(
-                label: "Notes",
-                text: $store.notes,
-                placeholder: "School, board, pickup, anything to remember",
-                limit: StudentDraft.notesLimit,
-                error: store.notesError
-            )
+            if isFix {
+                // A scanned row (P6-Scan-Review-Edit): the fields a register carries, and the way to drop the row.
+                if let onRemove {
+                    Button("Remove this row", action: onRemove).buttonStyle(.destructive(.form))
+                }
+            } else {
+                birthDate
+                gender
+                NotesWell(
+                    label: "Notes",
+                    text: $store.notes,
+                    placeholder: "School, board, pickup, anything to remember",
+                    limit: StudentDraft.notesLimit,
+                    error: store.notesError
+                )
+            }
         }
     }
 

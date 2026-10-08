@@ -9,9 +9,13 @@ public struct ScanRow: Hashable, Sendable, Identifiable {
     public var parentName: String
     public var included: Bool
     public var flag: ScanRowFlag?
+    /// A class chosen for this row in Fix this row; nil follows the list's "Add to".
+    public var classID: UUID?
 
     public init(
-        id: UUID, name: String, phone: PhoneNumber?, fee: Money?, parentName: String, included: Bool, flag: ScanRowFlag?
+        id: UUID, name: String, phone: PhoneNumber?, fee: Money?, parentName: String, included: Bool,
+        flag: ScanRowFlag?,
+        classID: UUID? = nil
     ) {
         self.id = id
         self.name = name
@@ -20,6 +24,7 @@ public struct ScanRow: Hashable, Sendable, Identifiable {
         self.parentName = parentName
         self.included = included
         self.flag = flag
+        self.classID = classID
     }
 
     /// "+91 98765 43210 · ₹1,200", "No number read · ₹1,200", "+91 98765 43210 · class fee".
@@ -31,7 +36,7 @@ public struct ScanRow: Hashable, Sendable, Identifiable {
     public func draft(classID: UUID?) -> StudentDraft {
         var draft = StudentDraft()
         draft.name = name
-        draft.classID = classID
+        draft.classID = self.classID ?? classID
         draft.fee = fee
         draft.parentName = parentName
         draft.parentDigits = phone?.nationalDigits ?? ""

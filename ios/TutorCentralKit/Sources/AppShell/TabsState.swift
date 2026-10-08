@@ -51,7 +51,6 @@ import SwiftUI
 
 /// The screens a tab's stack can push in this build.
 enum Route: Hashable {
-    case later(LaterPlace)
     case settings
     case student(UUID)
     case classes
@@ -73,4 +72,6 @@ enum Route: Hashable {
     case aiForm(GenerationKind)
     case aiResult(UUID)
     case aiHistory
+    /// Scan register, from More, the Students "+" menu and the empty register.
+    case scanRegister
 }

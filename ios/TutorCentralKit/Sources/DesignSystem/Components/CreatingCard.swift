@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Creating card (P6-Generating, P6-Scan-Reading, P6-Check-Checking): a card (padding 16, radiusCard) with the title
-/// (rowHeading) and a quiet Cancel, four skeleton bars breathing, and a footnote line in text3; with a photo, its
-/// thumbnail on the left. Without the bars it is the card of a read that found nothing or failed (P6-Scan-Nothing,
+/// Creating card (P6-Generating; P6-Scan-Reading, P6-Check-Checking): a card (padding 16, radiusCard). Without a
+/// photo: the title (rowHeading) with a quiet Cancel, four skeleton bars breathing, a footnote in text3. With one: the
+/// photo (120 × 90, radius 8) beside the title and its line (footnote text2), three bars under them, and Cancel is the
+/// screen's, under the card. Without the bars it is the card of a read that found nothing or failed (P6-Scan-Nothing,
 /// -Failed), the photo still beside it.
 public struct CreatingCard: View {
     let title: String
@@ -12,17 +13,29 @@ public struct CreatingCard: View {
     let cancel: (() -> Void)?
     @State private var dimmed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The bars' widths as fractions of the card: the board's 70, 90, 55 and 80 per cent.
+    /// The bars' widths as fractions of the card: the board's 70, 90, 55 and 80 per cent; 65, 85 and 50 beside a photo.
     static var bars: [CGFloat] {
         [0.7, 0.9, 0.55, 0.8]
+    }
+
+    static var photoBars: [CGFloat] {
+        [0.65, 0.85, 0.5]
     }
 
     static var barHeight: CGFloat {
         12
     }
 
-    static var thumbnailWidth: CGFloat {
-        64
+    static var thumbnailSize: CGSize {
+        CGSize(width: 120, height: 90)
+    }
+
+    static var thumbnailRadius: CGFloat {
+        8
+    }
+
+    static var titleGap: CGFloat {
+        4
     }
 
     public init(title: String, line: String, thumbnail: UIImage? = nil, working: Bool = true, cancel: (() -> Void)?) {
@@ -34,16 +47,26 @@ public struct CreatingCard: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: Tokens.rowPaddingDense) {
+        VStack(alignment: .leading, spacing: Tokens.tileGap) {
             if let thumbnail {
-                Image(uiImage: thumbnail)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: Self.thumbnailWidth, height: Self.thumbnailWidth * 4 / 3)
-                    .clipShape(.rect(cornerRadius: Tokens.radiusSegment, style: .continuous))
-                    .accessibilityHidden(true)
-            }
-            VStack(alignment: .leading, spacing: Tokens.tileGap) {
+                HStack(spacing: Tokens.cardPaddingCompact) {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: Self.thumbnailSize.width, height: Self.thumbnailSize.height)
+                        .clipShape(.rect(cornerRadius: Self.thumbnailRadius, style: .continuous))
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: Self.titleGap) {
+                        Text(title).typeStyle(Tokens.rowHeading).foregroundStyle(Tokens.text.color)
+                        Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityElement(children: .combine)
+                }
+                if working {
+                    bars(Self.photoBars)
+                }
+            } else {
                 HStack(alignment: .firstTextBaseline, spacing: Tokens.rowPaddingDense) {
                     Text(title)
                         .typeStyle(Tokens.rowHeading)
@@ -54,7 +77,7 @@ public struct CreatingCard: View {
                     }
                 }
                 if working {
-                    bars
+                    bars(Self.bars)
                 }
                 Text(line)
                     .typeStyle(Tokens.footnote)
@@ -67,15 +90,15 @@ public struct CreatingCard: View {
         .surface(radius: Tokens.radiusCard)
     }
 
-    private var bars: some View {
+    private func bars(_ widths: [CGFloat]) -> some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: Tokens.inline) {
-                ForEach(Self.bars.indices, id: \.self) { index in
-                    Capsule().frame(width: geometry.size.width * Self.bars[index], height: Self.barHeight)
+                ForEach(widths.indices, id: \.self) { index in
+                    Capsule().frame(width: geometry.size.width * widths[index], height: Self.barHeight)
                 }
             }
         }
-        .frame(height: CGFloat(Self.bars.count) * Self.barHeight + CGFloat(Self.bars.count - 1) * Tokens.inline)
+        .frame(height: CGFloat(widths.count) * Self.barHeight + CGFloat(widths.count - 1) * Tokens.inline)
         .foregroundStyle(Tokens.surface2.color)
         .opacity(dimmed && !reduceMotion ? Tokens.opacityStale : 1)
         .onAppear {
@@ -92,8 +115,9 @@ public struct CreatingCard: View {
             line: "Usually under a minute. You can wait here or come back from History."
         ) {}
         CreatingCard(
-            title: "Reading the register", line: "Usually under a minute.", thumbnail: UIImage(systemName: "doc")
-        ) {}
+            title: "Reading the register", line: "Usually under a minute.", thumbnail: UIImage(systemName: "doc"),
+            cancel: nil
+        )
         CreatingCard(
             title: "No names found",
             line: "Nothing on this photo read as a name.",

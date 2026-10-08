@@ -40,6 +40,8 @@ import Observation
     private let centres: any CentreRepository
     private let now: @Sendable () -> Date
     @ObservationIgnored var task: Task<Void, Never>?
+    /// "Add to" takes the first active class once; after that it is the tutor's (No class included).
+    @ObservationIgnored private var classDefaulted = false
 
     public init(
         workspace: Workspace, register: RegisterStore, ai: any AIRepository, students: any StudentsRepository,
@@ -51,7 +53,6 @@ import Observation
         self.students = students
         self.centres = centres
         self.now = now
-        classID = register.activeClasses.first?.id
     }
 
     public var needsConsent: Bool {
@@ -102,7 +103,9 @@ import Observation
         photo = upload
         stage = .reading
         rows = []
-        if classID == nil || register.classroom(classID) == nil {
+        await register.loadIfNeeded()
+        if !classDefaulted {
+            classDefaulted = true
             classID = register.activeClasses.first?.id
         }
         do {
@@ -125,6 +128,14 @@ import Observation
             } else {
                 stage = .failed(error.message)
             }
+        }
+    }
+
+    /// Reading in a task the store owns, so Cancel can abandon it.
+    public func begin(_ upload: ImageUpload) {
+        task?.cancel()
+        task = Task { [weak self] in
+            await self?.read(upload)
         }
     }
 

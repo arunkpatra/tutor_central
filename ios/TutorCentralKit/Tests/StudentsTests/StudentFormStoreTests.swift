@@ -98,4 +98,21 @@ import Testing
         form.notes = String(repeating: "n", count: 2001)
         #expect(form.notesError == "Keep the notes under 2,000 characters." && !form.canSave)
     }
+
+    @Test func fixingAScannedRowStartsFromItAndSaysWhatWasRead() throws {
+        let today = try #require(Day(year: 2026, month: 10, day: 7))
+        var kavya = StudentDraft()
+        kavya.name = "Kavya Nair"
+        kavya.fee = Money(rupees: 1200)
+        kavya.classID = FakeClassesRepository.maths.id
+        let store = StudentFormStore(mode: .fix(kavya), classes: FakeClassesRepository.seed, today: today)
+        #expect(store.title == "Fix this row" && store.name == "Kavya Nair" && store.feeText == "1,200")
+        #expect(store.feeHelper == "Read from the page. The class fee is ₹1,200 too.")
+        #expect(store.phoneHelper == "Nothing was read for the number. Type it, or leave it empty and add it later.")
+        #expect(store.canSave, "the row as read can be kept as it is")
+        store.digits = "98765 00000"
+        #expect(store.phoneHelper == nil && store.draft.parentDigits == "98765 00000")
+        let blank = StudentFormStore(mode: .fix(StudentDraft()), classes: FakeClassesRepository.seed, today: today)
+        #expect(!blank.canSave, "a row needs a name")
+    }
 }

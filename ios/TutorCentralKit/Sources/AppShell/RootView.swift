@@ -137,7 +137,6 @@ public struct RootView: View {
         case .ready:
             TabsView(
                 state: shell.tabs,
-                build: deps.bundleVersion,
                 toasts: toasts,
                 today: { todayView },
                 students: { studentsView },
@@ -191,6 +190,12 @@ public struct RootView: View {
                 Haptic.play(.error)
                 toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
+            }
+            .onAppear {
+                // P6-Scan-Saved: the list after Add, with its toast.
+                if launch == .scanSaved {
+                    toasts.show(ScanReview.addedToast(count: 7), action: ("Undo", {}), stay: .seconds(3600))
+                }
             }
         }
     }

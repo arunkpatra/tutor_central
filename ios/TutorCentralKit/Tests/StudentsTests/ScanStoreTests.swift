@@ -111,4 +111,22 @@ import Testing
         _ = await store.add()
         #expect(try #require(students.createdMany.first).allSatisfy { $0.classID == nil })
     }
+
+    @Test func aRegisterNotReadYetIsReadBeforeTheRowsAreFlagged() async {
+        let students = FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspaceConsented, students: students,
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil, now: { Self.now }
+        )
+        let store = ScanStore(
+            workspace: FakeCentreRepository.meeraWorkspaceConsented, register: register, ai: FakeAIRepository(),
+            students: students, centres: FakeCentreRepository(), now: { Self.now }
+        )
+        await store.read(Self.photo)
+        #expect(store.rows[2].flag == .alreadyHere(name: "Dev Kumar", className: "Class 8 Science"))
+        #expect(store.classID == FakeClassesRepository.maths.id)
+        store.classID = nil
+        await store.retry()
+        #expect(store.classID == nil, "the tutor's No class stands")
+    }
 }

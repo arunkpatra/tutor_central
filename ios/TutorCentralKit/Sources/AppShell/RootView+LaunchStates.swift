@@ -29,7 +29,8 @@ extension RootView {
              .tasksEmpty:
             .more
         case .todayAI: .today
-        default: aiStates.contains(state) ? .more : nil
+        case .scanSaved: .students
+        default: aiStates.contains(state) || scanStates.contains(state) ? .more : nil
         }
     }
 
@@ -39,6 +40,27 @@ extension RootView {
         .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
         .aiHistoryEmpty,
     ]
+
+    /// Scan register's states, on the More tab's stack (Saved is the Students list).
+    static let scanStates: Set<LaunchState> = [
+        .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
+        .scanReviewLeave, .scanNothing, .scanFailed,
+    ]
+
+    static func scanBoardState(_ state: LaunchState) -> ScanBoardState? {
+        switch state {
+        case .scanConsent: .consent
+        case .scanCameraRefused: .cameraRefused
+        case .scanReading: .reading
+        case .scanReview: .review
+        case .scanReviewEdit: .edit
+        case .scanReviewRemoved: .rowRemoved
+        case .scanReviewLeave: .leave
+        case .scanNothing: .nothing
+        case .scanFailed: .failed
+        default: nil
+        }
+    }
 
     /// The AI Assistant's stack for each of its states.
     static func aiRoutes(for state: LaunchState) -> [Route] {
@@ -52,7 +74,7 @@ extension RootView {
         case .aiResultPaper, .aiResultRegenerating: [.aiAssistant, .aiResult(FakeAIHistoryRepository.quadraticID)]
         case .aiResultNote, .aiNoteSend: [.aiAssistant, .aiResult(note)]
         case .aiHistory, .aiHistoryEmpty: [.aiAssistant, .aiHistory]
-        default: []
+        default: scanStates.contains(state) ? [.scanRegister] : []
         }
     }
 
