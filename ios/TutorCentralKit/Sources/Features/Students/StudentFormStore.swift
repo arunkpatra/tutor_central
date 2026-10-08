@@ -6,6 +6,8 @@ import Observation
     public enum Mode: Sendable {
         case new
         case edit(Student)
+        /// A row read from a paper register (P6-Scan-Review-Edit): kept on the device until Add.
+        case fix(StudentDraft)
     }
 
     public let mode: Mode
@@ -36,8 +38,12 @@ import Observation
         self.classes = classes.filter { !$0.isArchived }.sorted { $0.name < $1.name }
         self.today = today
         birthDate = Day(year: today.year - 12, month: today.month, day: min(today.day, 28))!
-        if case let .edit(student) = mode {
-            let draft = StudentDraft(student)
+        let start: StudentDraft? = switch mode {
+        case .new: nil
+        case let .edit(student): StudentDraft(student)
+        case let .fix(draft): draft
+        }
+        if let draft = start {
             original = draft
             name = draft.name
             parentName = draft.parentName
@@ -54,11 +60,17 @@ import Observation
     }
 
     public var title: String {
-        if case .edit = mode {
-            "Edit student"
-        } else {
-            "New student"
+        switch mode {
+        case .new: "New student"
+        case .edit: "Edit student"
+        case .fix: "Fix this row"
         }
+    }
+
+    /// Fixing a row whose number was not read, until one is typed.
+    public var phoneHelper: String? {
+        guard case .fix = mode, digits.trimmingCharacters(in: .whitespaces).isEmpty else { return nil }
+        return "Nothing was read for the number. Type it, or leave it empty and add it later."
     }
 
     public var classroom: Classroom? {
@@ -86,7 +98,10 @@ import Observation
     }
 
     public var feeHelper: String {
-        switch (classFee, feeText.isEmpty) {
+        if case let .fix(read) = mode, let fee = read.fee, typedFee == fee, let classFee {
+            return "Read from the page. The class fee is \(classFee.formatted) too."
+        }
+        return switch (classFee, feeText.isEmpty) {
         case (nil, true): "Pick a class to use its fee, or type one here."
         case let (fee?, true): "Using the class fee, \(fee.formatted). Type an amount to set one for this student."
         case let (fee?, false): "The class fee is \(fee.formatted). This student pays this amount instead."
@@ -135,7 +150,17 @@ import Observation
     }
 
     public var canSave: Bool {
-        problems.isEmpty && feeError == nil && phoneError == nil && isChanged && (feeText.isEmpty || typedFee != nil)
+        problems.isEmpty && feeError == nil && phoneError == nil && (isChanged || isFix)
+            && (feeText.isEmpty || typedFee != nil)
+    }
+
+    /// A scanned row can be kept as it was read.
+    private var isFix: Bool {
+        if case .fix = mode {
+            true
+        } else {
+            false
+        }
     }
 
     public func select(classID: UUID?) {

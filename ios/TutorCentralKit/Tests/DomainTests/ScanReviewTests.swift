@@ -63,4 +63,12 @@ struct ScanReviewTests {
         #expect(ScanReview.addedToast(count: 7) == "7 students added from the register.")
         #expect(ScanReview.addedToast(count: 1) == "1 student added from the register.")
     }
+
+    @Test func aRowsOwnClassWinsOverTheListsAddTo() {
+        var row = Self.row("Kavya Nair", phone: nil, fee: nil)
+        #expect(row.draft(classID: Self.science).classID == Self.science)
+        let maths = UUID()
+        row.classID = maths
+        #expect(row.draft(classID: Self.science).classID == maths, "fixed in Fix this row")
+    }
 }

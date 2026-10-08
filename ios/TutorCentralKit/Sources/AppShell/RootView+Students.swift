@@ -5,7 +5,7 @@ import SwiftUI
 extension RootView {
     var studentsActions: StudentsActions {
         StudentsActions(
-            openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
+            openScanRegister: { shell.tabs.push(.scanRegister) },
             openStudentFees: { shell.tabs.push(.studentFees($0)) },
             openMarkAttendance: { id in
                 guard case let .ready(workspace) = session.state else { return }

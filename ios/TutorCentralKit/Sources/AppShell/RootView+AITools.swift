@@ -2,6 +2,7 @@ import AITools
 import DesignSystem
 import Domain
 import Foundation
+import Students
 import SwiftUI
 
 /// The AI tools' wiring: one store per centre (a call outlives its screen), the routes on the tab that asked, the
@@ -28,6 +29,28 @@ extension RootView {
         }
         shell.ai = made
         return made
+    }
+
+    /// Scan register with its own store for this visit (the list lives only until Add or Back); Add pops to the
+    /// Students list and offers Undo there (P6-Scan-Saved).
+    func scanView(in workspace: Workspace) -> some View {
+        let store = ScanStore(
+            workspace: workspace, register: register(for: workspace), ai: deps.ai, students: deps.students,
+            centres: deps.centres, now: deps.now
+        )
+        store.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
+        store.onAdded = { [shell, toasts] count in
+            shell.tabs.remove(.scanRegister)
+            shell.tabs.paths[.students] = []
+            shell.tabs.selected = .students
+            let ids = store.lastAdded
+            toasts.show(ScanReview.addedToast(count: count), action: ("Undo", {
+                Task { _ = await store.undoAdd(ids: ids) }
+            }))
+        }
+        return ScanRegisterView(
+            store: store, boardState: launch.flatMap(Self.scanBoardState), sample: launch.map(Fixtures.scanSample)
+        )
     }
 
     var aiToolsActions: AIToolsActions {
@@ -60,6 +83,8 @@ extension RootView {
                     )
                 case .aiHistory:
                     HistoryView(store: store, actions: aiToolsActions)
+                case .scanRegister:
+                    scanView(in: workspace)
                 default:
                     AssistantView(store: store, actions: aiToolsActions)
                 }

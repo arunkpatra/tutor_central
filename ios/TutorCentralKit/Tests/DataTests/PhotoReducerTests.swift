@@ -1,10 +1,9 @@
-import Data
 import Domain
 import Foundation
 import ImageIO
 import Testing
 import UIKit
-@testable import AITools
+@testable import Data
 
 struct PhotoReducerTests {
     static func image(width: Int, height: Int) -> Data {

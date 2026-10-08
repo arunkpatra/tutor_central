@@ -12,7 +12,6 @@ struct TabsView<
     Payments: View, Reports: View, Tools: View
 >: View {
     @Bindable var state: TabsState
-    let build: String
     let toasts: ToastCenter
     let today: () -> Today
     let students: () -> Students
@@ -52,12 +51,12 @@ struct TabsView<
         switch route {
         case .student, .classes, .classroom, .studentFees: studentsDestination(route)
         case .history, .historyStudent: attendanceDestination(route)
-        case .later, .settings, .payments, .reports: moreDestination(route)
+        case .settings, .payments, .reports: moreDestination(route)
         case .schedule: schedule(nil)
         // A newer link in the same place is a new screen, not the last one's state.
         case let .event(id): schedule(id).id(id)
         case .tasks: tasks()
-        case .aiAssistant, .aiForm, .aiResult, .aiHistory: tools(route)
+        case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister: tools(route)
         }
     }
 
@@ -72,7 +71,6 @@ struct TabsView<
 
     @ViewBuilder private func moreDestination(_ route: Route) -> some View {
         switch route {
-        case let .later(place): LaterView(place: place, build: build)
         case .payments: payments()
         case .reports: reports()
         default: settings()

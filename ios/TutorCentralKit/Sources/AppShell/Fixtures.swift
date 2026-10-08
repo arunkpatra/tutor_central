@@ -65,7 +65,8 @@ public enum Fixtures {
              .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
              .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
              .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
-             .aiHistoryEmpty: .ready(workspace(for: state))
+             .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit,
+             .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -77,6 +78,8 @@ public enum Fixtures {
         switch state {
         case .feesEmpty, .feesGenerate, .paymentsEmpty: FakeCentreRepository.meeraWorkspaceWithoutUPI
         case .feesPayee: FakeCentreRepository.meeraWorkspaceUnconfirmed
+        case .scanIntro, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
+             .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved: FakeCentreRepository.meeraWorkspaceConsented
         default: meeraWorkspace
         }
     }
@@ -95,6 +98,7 @@ public enum Fixtures {
         case .studentsEmpty, .classesEmpty, .attendanceEmpty, .todayEmpty: ([], [])
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
+        case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
     }
