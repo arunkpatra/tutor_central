@@ -35,4 +35,11 @@ import Testing
         #expect(await store.undoPaid(hemanth))
         #expect(store.sheet == nil, "the receipt of a fee no longer paid stayed open, empty")
     }
+
+    @Test func todaysDueTileOpensThisMonthAtDue() async {
+        let store = await make()
+        await store.open(month: Period(year: 2026, month: 9))
+        await store.showDue()
+        #expect(store.month == Period(year: 2026, month: 10) && store.filter == .due, "a link had left September open")
+    }
 }

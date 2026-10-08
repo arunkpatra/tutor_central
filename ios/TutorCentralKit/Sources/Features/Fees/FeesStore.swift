@@ -215,6 +215,13 @@ import Observation
         await open(month: month)
     }
 
+    /// Today's Due tile: this month's fees at Due, whichever month was open (a link may have left another).
+    public func showDue() async {
+        filter = .due
+        guard month != today.period || !loaded else { return }
+        await open(month: today.period)
+    }
+
     /// The banner: the latest month with a fee still due, from any month.
     public func openOverdue() async {
         guard let latest = FeeLedger.overdueBefore(dueBefore, current: today.period)?.latest else { return }

@@ -38,8 +38,10 @@ extension RootView {
 
     /// Today's Due tile: the tab at Due.
     func openFeesDue(in workspace: Workspace) {
-        feesStore(for: workspace).filter = .due
-        shell.tabs.select(.fees)
+        let store = feesStore(for: workspace)
+        shell.tabs.paths[.fees] = []
+        shell.tabs.selected = .fees
+        Task { await store.showDue() }
     }
 
     /// Remind or Mark paid from the Students tab (the detail, a student's fees): the Fees tab at that month with the
