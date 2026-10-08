@@ -28,4 +28,11 @@ public extension Workspace {
         merged.centre.payments = edited.centre.payments
         return merged
     }
+
+    /// The AI consent alone from `edited` (the consent sheet, from any of its three screens).
+    func takingAIConsent(from edited: Workspace) -> Workspace {
+        var merged = self
+        merged.centre.aiConsentAt = edited.centre.aiConsentAt
+        return merged
+    }
 }

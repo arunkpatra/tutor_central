@@ -7,12 +7,18 @@ public struct Centre: Hashable, Sendable, Identifiable {
     /// E.164 (+919611299988) or nil.
     public var whatsappNumber: String?
     public var payments: PaymentSettings
+    /// When the centre agreed to the notice before a child's data first went to the AI service (`ai_consent_at`).
+    public var aiConsentAt: Date?
 
-    public init(id: UUID, name: String, whatsappNumber: String?, payments: PaymentSettings = PaymentSettings()) {
+    public init(
+        id: UUID, name: String, whatsappNumber: String?, payments: PaymentSettings = PaymentSettings(),
+        aiConsentAt: Date? = nil
+    ) {
         self.id = id
         self.name = name
         self.whatsappNumber = whatsappNumber
         self.payments = payments
+        self.aiConsentAt = aiConsentAt
     }
 }
 
