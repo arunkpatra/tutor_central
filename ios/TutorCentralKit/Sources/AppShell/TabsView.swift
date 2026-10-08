@@ -8,7 +8,8 @@ import SwiftUI
 /// the other three tabs are on the way.
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
-    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View
+    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
+    Payments: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -26,6 +27,7 @@ struct TabsView<
     let tasks: () -> Tasks
     let fees: () -> Fees
     let studentFees: (UUID) -> StudentFees
+    let payments: () -> Payments
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -47,8 +49,7 @@ struct TabsView<
         switch route {
         case .student, .classes, .classroom, .studentFees: studentsDestination(route)
         case .history, .historyStudent: attendanceDestination(route)
-        case let .later(place): LaterView(place: place, build: build)
-        case .settings: settings()
+        case .later, .settings, .payments: moreDestination(route)
         case .schedule: schedule(nil)
         // A newer link in the same place is a new screen, not the last one's state.
         case let .event(id): schedule(id).id(id)
@@ -62,6 +63,14 @@ struct TabsView<
         case let .classroom(id): classDetail(id)
         case let .studentFees(id): studentFees(id)
         default: classes()
+        }
+    }
+
+    @ViewBuilder private func moreDestination(_ route: Route) -> some View {
+        switch route {
+        case let .later(place): LaterView(place: place, build: build)
+        case .payments: payments()
+        default: settings()
         }
     }
 

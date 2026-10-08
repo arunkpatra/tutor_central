@@ -19,6 +19,7 @@
     <key>CFBundleURLName</key><string>in.tutorcentral.app</string>
     <key>CFBundleURLSchemes</key><array><string>tutorcentral</string></array>
   </dict></array>
+  <key>NSCameraUsageDescription</key><string>To read the QR of your UPI app and fill in your UPI id.</string>
   <key>SUPABASE_URL</key><string>$(SUPABASE_URL)</string>
   <key>SUPABASE_ANON_KEY</key><string>$(SUPABASE_ANON_KEY)</string>
 </dict>

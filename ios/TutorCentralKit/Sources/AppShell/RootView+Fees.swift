@@ -78,6 +78,23 @@ extension RootView {
         }
     }
 
+    /// Parent payments, pushed from Settings or from Fees' Payments. A saved id reaches the session, Today and Fees
+    /// (whose payee card asks again for a changed id).
+    @ViewBuilder var paymentsView: some View {
+        if case let .ready(workspace) = session.state {
+            PaymentsView(
+                store: PaymentsStore(workspace: workspace, centres: deps.centres, qrImages: deps.qrImages),
+                boardState: launch.flatMap(Self.paymentsBoardState),
+                onWorkspaceChanged: { changed in
+                    session.workspaceChanged(changed)
+                    shell.today?.workspaceChanged(changed)
+                    shell.fees?.workspaceChanged(changed)
+                },
+                onMessage: { toasts.show($0) }
+            )
+        }
+    }
+
     /// "2026-09" → September 2026; nil for anything else.
     nonisolated static func linkMonth(_ text: String?) -> Period? {
         guard let text else { return nil }
@@ -92,7 +109,7 @@ extension RootView {
             let store = feesStore(for: workspace)
             FeesView(
                 store: store,
-                actions: FeesActions(openPayments: { shell.tabs.push(.later(.payments)) }),
+                actions: FeesActions(openPayments: { shell.tabs.push(.payments) }),
                 boardState: launch.flatMap(Self.feesBoardState)
             )
             .onChange(of: store.undo) { _, undo in
