@@ -61,6 +61,16 @@ when the row opens something.
 | Task | Circle checkbox 24 (`lineStrong` ring; `ok` fill with a tick when done) | Title (struck through when done) | Due day `footnote` `text3` |
 | Setting | Symbol 20 `text2` | Label `body` | Value `body` `text2` and chevron, or a switch |
 | Form field | | Label `footnote` `text2` above; value `body` in a well | |
+| Member (class detail) | Avatar 40 | Name; parent phone | "Class fee" `footnote` `text2`, or the student's own fee in `numberRow`; chevron |
+| Meeting (class detail) | Day `time` `text2`, width 46 | Date `rowTitle` ("Today, 7 October") | Time range `footnote` `text2`. Today's row sits on `surface2` with its day in `accentText` 700 |
+| Checklist (add students) | Avatar 40 | Name; class line | Checkbox 24; the whole row toggles it. The card sits on `surface2` when it is inside a sheet |
+
+A student row's second line is the class ("No class yet" when none); the parent's phone takes its place only
+while no class exists yet, or when a search matched the number. The fee status under the amount reads this
+month's invoice ("Paid 4 Oct" in `ok`, "Due" in `due`) and is absent when the month has no invoice yet.
+
+A section whose feature arrives in a later build (the student detail's attendance until Phase 4) shows the
+empty-row pattern at the Later opacity 0.6, with words that say what will appear and when.
 
 ## Section header
 
@@ -94,16 +104,51 @@ Multiline (notes): min 96 high, counter `caption` `text3` bottom right.
 **Picker row**: label left `body`, value right in `accentText` with `chevron.up.chevron.down`; opens a menu
 or a sheet.
 
+On a sheet (`surface1`) a picker row is a tile: `surface2` fill, `line` border, no shadow, 46 high (the class
+picker, the date of birth, the start and end time). The date-of-birth row carries its switch on the right; once
+on, the date sits beside the switch in `accentText` with `chevron.up.chevron.down` and opens the system date
+picker. A fee field left empty on a student means "the class fee": the placeholder shows that fee and the helper
+line under the field says which one applies.
+
+**Search field**: the system search field, drawn as a well 44 high: `magnifyingglass` 18 in `text3`, placeholder
+`text3` ("Search by name or phone"). Focused it takes the field's focus ring, a clear mark and a quiet Cancel to
+its right; the large title collapses. Results replace the list under a count line ("3 of 10 match"); the letters
+that matched are in `accentText`.
+
 ## Chips and status marks
 
 Height 28, radius `radiusChip`, padding 0 10, label 13 700. Status chips: tint fill and status text with a
 leading symbol (`checkmark` paid, `clock` due, `exclamationmark.circle` overdue). Neutral chips: `surface2`
 fill, `text2` 600, no symbol. A status never relies on colour alone: the word is always there.
 
+**Filter chip** (selectable): off it is a neutral chip; on, `accentTint` fill and `accentText` 700, padding 0 12.
+A row of filter chips (All, each class, No class, Archived) runs past `pageSide` to the screen edge and scrolls
+sideways. The same chip is a toggle inside a form (gender: Girl, Boy, Other; "Every day" beside the meeting days).
+
+**Banner**: one line of state under a header (a student's "Archived: off the list and today's counts…"):
+`surface2`, radius 12, padding 8 14, `footnote` `text2` with a symbol 14, the offline bar's pattern.
+
 ## Avatar
 
 Initials on `accentTint` in `accentText`, `avatar` type. 40 in rows, 36 in dense lists, 56 on a detail
 header. Up to two letters from the first two words of the name.
+
+**Icon tile** (a class): `surface2` fill, `book.closed` in `text2`; 40 with radius 12 in rows, 56 with
+`radiusTile` on the class detail header.
+
+## Day picker
+
+Seven round toggles 40 (M T W T F S S) spread across the content width. Off: `surface2` fill, `lineStrong`
+border, `text2` 600. On: `accent` fill, `textOnAccent` 700. "Every day" is a filter chip beside the label and
+turns all seven on. The summary the Domain makes ("Tue, Thu, Sat · 18:00–19:30") reads back as a `footnote`
+under the time rows. Selection haptic.
+
+## Menu
+
+The "+" button's menu is the system pull-down menu from the icon button; the board draws it as `chrome` glass
+with `lineGlass` border, `shadowFloat`, radius `radiusTile`, 260 wide; rows 46 with the label `body` on the left
+and its symbol 20 on the right: Add a student (`person.badge.plus`), Scan paper register (`doc.viewfinder`),
+Create a class (`book.closed`). On iOS the system draws it.
 
 ## Tab bar
 
@@ -134,6 +179,8 @@ area below. A form sheet asks before discarding typed changes.
 `surface1`, `lineStrong` border, `radiusSheet`, `shadowDialog`, padding 22. Title `title2`, body `subhead`
 `text2`, two buttons 46 side by side: secondary Cancel, then the action (primary, or destructive for delete).
 A destructive dialog that removes history asks the user to type the name. Warning haptic on appearance.
+A reversible action (archive) is confirmed with a primary button; a deletion with the solid destructive one, which
+stays disabled until the typed name matches. The copy names the student rather than a pronoun.
 
 ## Toast
 

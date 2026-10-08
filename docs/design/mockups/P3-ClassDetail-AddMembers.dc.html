@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 3, class detail, adding students, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --ok:#56D9A6; --okInk:#0B2A1D; --dim:rgba(8,6,5,.6); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div aria-hidden="true" style="padding: 62px 20px 0; display: flex; flex-direction: column; gap: 18px">
+
+    <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; height: 44px">
+      <a href="P3-Classes-List.dc.html" aria-label="Back" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line2); background: var(--btn2); color: var(--t); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadowButton)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></a>
+      <div style="text-align: center; font-size: 17px; font-weight: 700">Class 10 Maths</div>
+      <a href="P3-EditClass.dc.html" style="text-decoration: none; color: var(--accText); font-size: 15px; font-weight: 600; text-align: right">Edit</a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 14px">
+      <div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 16px; background: var(--s2); color: var(--t2); display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"></path><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"></path></svg></div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+        <h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em">Class 10 Maths</h1>
+        <div style="font-size: 13px; line-height: 18px; color: var(--t2); font-variant-numeric: tabular-nums">Mathematics · Mon, Wed, Fri · 17:00–18:00 · ₹1,200 a month</div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px">
+        <div style="font-size: 17px; line-height: 22px; font-weight: 700">This week</div>
+        <a href="#attendance" style="text-decoration: none; font-size: 15px; font-weight: 600; color: var(--accText)">Mark attendance</a>
+      </div>
+      <div style="display: flex; flex-direction: column; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div style="width: 46px; font-size: 14px; line-height: 18px; font-weight: 600; color: var(--t2)">Mon</div>
+          <div style="flex: 1; font-size: 16px; line-height: 20px; font-weight: 600">5 October</div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">17:00–18:00</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--s2)">
+          <div style="width: 46px; font-size: 14px; line-height: 18px; font-weight: 700; color: var(--accText)">Wed</div>
+          <div style="flex: 1; font-size: 16px; line-height: 20px; font-weight: 600">Today, 7 October</div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">17:00–18:00</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+          <div style="width: 46px; font-size: 14px; line-height: 18px; font-weight: 600; color: var(--t2)">Fri</div>
+          <div style="flex: 1; font-size: 16px; line-height: 20px; font-weight: 600">9 October</div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">17:00–18:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px">
+        <div style="font-size: 17px; line-height: 22px; font-weight: 700">6 students</div>
+        <a href="P3-ClassDetail-AddMembers.dc.html" style="text-decoration: none; font-size: 15px; font-weight: 600; color: var(--accText)">Add</a>
+      </div>
+      <div style="display: flex; flex-direction: column; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); overflow: hidden">
+        <a href="P3-StudentDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">AR</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Akshita Rao</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">+91 97991 13211</div></div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">Class fee</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="P3-StudentDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">AI</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Ananya Iyer</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">+91 79030 92566</div></div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">Class fee</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="P3-StudentDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">BB</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Bir Bikram Singh</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">+91 78994 87677</div></div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">Class fee</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="P3-StudentDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">HR</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Hemanth Reddy</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">+91 93802 60871</div></div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">Class fee</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="P3-StudentDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">LM</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Lakshmi Menon</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">+91 99728 73953</div></div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t2); font-variant-numeric: tabular-nums">Class fee</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="P3-StudentDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">RS</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Riya Sharma</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">+91 98111 22233</div></div>
+          <div style="font-size: 13px; line-height: 16px; color: var(--t); font-weight: 600; font-variant-numeric: tabular-nums">₹1,500</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: var(--dim)"></div>
+
+  <div role="dialog" aria-labelledby="am-title" style="position: absolute; left: 0; right: 0; top: 352px; bottom: 0; display: flex; flex-direction: column; gap: 18px; padding: 8px 20px 50px; box-sizing: border-box; background: var(--s1); border: 1px solid var(--line); border-bottom: 0; border-radius: 22px 22px 0 0; box-shadow: var(--shadowFloat); overflow: hidden">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div aria-hidden="true" style="width: 36px; height: 5px; border-radius: 3px; background: var(--line2); margin: 0 auto"></div>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center">
+        <a href="P3-ClassDetail.dc.html" style="text-decoration: none; color: var(--accText); font-size: 15px; font-weight: 600; text-align: left">Cancel</a>
+        <div id="am-title" style="font-size: 17px; font-weight: 700">Add to Class 10 Maths</div>
+        <div></div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; flex-direction: column; background: var(--s2); border: 1px solid var(--line); border-radius: 18px; overflow: hidden">
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">DK</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Dev Kumar</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Class 8 Science</div></div>
+          <input type="checkbox" aria-label="Dev Kumar" style="appearance: none; -webkit-appearance: none; width: 24px; height: 24px; margin: 0; border-radius: 12px; border: 1.5px solid var(--line2); background: transparent">
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">MS</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Meher Shah</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Class 8 Science</div></div>
+          <input type="checkbox" aria-label="Meher Shah" style="appearance: none; -webkit-appearance: none; width: 24px; height: 24px; margin: 0; border-radius: 12px; border: 1.5px solid var(--line2); background: transparent">
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">ND</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Nikhil Das</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Class 8 Science</div></div>
+          <input type="checkbox" aria-label="Nikhil Das" style="appearance: none; -webkit-appearance: none; width: 24px; height: 24px; margin: 0; border-radius: 12px; border: 1.5px solid var(--line2); background: transparent">
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: var(--accTint); color: var(--accText); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">SV</div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Sahil Verma</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">No class yet</div></div>
+          <span style="position: relative; width: 24px; height: 24px; display: inline-block"><input type="checkbox" checked aria-label="Sahil Verma" style="appearance: none; -webkit-appearance: none; width: 24px; height: 24px; margin: 0; border-radius: 12px; border: 0; background: var(--ok)"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--okInk)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 5px; top: 5px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+        </label>
+      </div>
+      <div style="font-size: 13px; line-height: 18px; color: var(--t3); padding: 0 2px">A student moved from another class keeps a fee of their own; otherwise this class's fee applies from next month.</div>
+    </div>
+    <div style="flex: 1"></div>
+    <a href="P3-ClassDetail.dc.html" style="text-decoration: none; height: 52px; border: 0; border-radius: 15px; background: var(--acc); color: var(--accInk); font-size: 16px; font-weight: 700; box-shadow: var(--glow); display: flex; align-items: center; justify-content: center">Add 1 student</a>
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

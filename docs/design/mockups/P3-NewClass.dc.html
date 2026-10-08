@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 3, new class, filled in, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+input::placeholder{color:#958B80;opacity:1}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --over:#FF6F61; --overTint:rgba(255,111,97,.14); --dim:rgba(8,6,5,.6); --halo:0 0 0 3px rgba(255,171,56,.18); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div aria-hidden="true" style="padding: 62px 20px 0; display: flex; flex-direction: column; gap: 18px">
+
+    <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; height: 44px">
+      <a href="P3-Students-Many.dc.html" aria-label="Back" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line2); background: var(--btn2); color: var(--t); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadowButton)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></a>
+      <div style="text-align: center; font-size: 17px; font-weight: 700">Classes</div>
+      <a href="P3-NewClass.dc.html" aria-label="Create a class" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line2); background: var(--btn2); color: var(--t); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadowButton)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></a>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 17px; line-height: 22px; font-weight: 700; padding: 0 2px">2 classes</div>
+      <div style="display: flex; flex-direction: column; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); overflow: hidden">
+        <a href="P3-ClassDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line)">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: var(--s2); color: var(--t2); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"></path><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"></path></svg></div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Class 10 Maths</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Mon, Wed, Fri · 17:00–18:00</div></div>
+          <div style="font-size: 13px; color: var(--t2); font-variant-numeric: tabular-nums">6</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="P3-ClassDetail.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+          <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: var(--s2); color: var(--t2); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"></path><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"></path></svg></div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Class 8 Science</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Tue, Thu · 16:30–17:30</div></div>
+          <div style="font-size: 13px; color: var(--t2); font-variant-numeric: tabular-nums">3</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 17px; line-height: 22px; font-weight: 700; padding: 0 2px">Not in a class</div>
+      <a href="P3-Students-Filtered.dc.html" style="text-decoration: none; color: var(--t); display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised)">
+        <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: var(--s2); color: var(--t2); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3.5"></circle><path d="M3.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M17.5 7.5a2 2 0 1 1 2.5 2c-.8.3-1 .8-1 1.5M19 14.5v.5"></path></svg></div>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">1 student</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Sahil Verma</div></div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <div style="font-size: 13px; line-height: 18px; color: var(--t3); padding: 0 2px">A student without a class is counted and billed on their own fee; attendance is taken by class.</div>
+    </div>
+
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: var(--dim)"></div>
+
+  <div role="dialog" aria-labelledby="nc-title" style="position: absolute; left: 0; right: 0; top: 236px; bottom: 0; display: flex; flex-direction: column; gap: 18px; padding: 8px 20px 0; box-sizing: border-box; background: var(--s1); border: 1px solid var(--line); border-bottom: 0; border-radius: 22px 22px 0 0; box-shadow: var(--shadowFloat); overflow: hidden">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div aria-hidden="true" style="width: 36px; height: 5px; border-radius: 3px; background: var(--line2); margin: 0 auto"></div>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center">
+        <button style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 15px; font-weight: 600; padding: 0; text-align: left">Cancel</button>
+        <div id="nc-title" style="font-size: 17px; font-weight: 700">New class</div>
+        <button style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 15px; font-weight: 700; padding: 0; text-align: right">Save</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="nc-name" style="font-size: 13px; line-height: 18px; color: var(--t2)">Name</label>
+        <input id="nc-name" autocomplete="off" value="Class 12 Physics" style="height: 46px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell)">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="nc-subject" style="font-size: 13px; line-height: 18px; color: var(--t2)">Subject <span style="color: var(--t3)">(optional)</span></label>
+        <input id="nc-subject" autocomplete="off" value="Physics" style="height: 46px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell)">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="nc-fee" style="font-size: 13px; line-height: 18px; color: var(--t2)">Monthly fee</label>
+        <div style="display: flex; align-items: center; gap: 8px; height: 46px; box-sizing: border-box; padding: 0 14px; border-radius: 15px; background: var(--well); border: 1px solid var(--line); box-shadow: var(--shadowWell)">
+          <span style="color: var(--t2); font-size: 17px">₹</span>
+          <input id="nc-fee" inputmode="numeric" value="1,500" style="flex: 1; min-width: 0; border: 0; background: transparent; color: var(--t); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+          <span style="font-size: 13px; color: var(--t3)">per month</span>
+        </div>
+        <div style="font-size: 13px; line-height: 18px; color: var(--t3)">Students you add to this class start at this fee.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div style="font-size: 13px; line-height: 18px; color: var(--t2)">Meets on</div>
+          <button aria-pressed="false" style="height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: var(--s2); color: var(--t2); font: inherit; font-size: 13px; font-weight: 600">Every day</button>
+        </div>
+        <div role="group" aria-label="Meeting days" style="display: flex; justify-content: space-between">
+          <button aria-pressed="false" aria-label="Monday" style="width: 40px; height: 40px; box-sizing: border-box; border: 1px solid var(--line2); border-radius: 20px; background: var(--s2); color: var(--t2); font: inherit; font-size: 14px; font-weight: 600">M</button>
+          <button aria-pressed="true" aria-label="Tuesday" style="width: 40px; height: 40px; border: 0; border-radius: 20px; background: var(--acc); color: var(--accInk); font: inherit; font-size: 14px; font-weight: 700">T</button>
+          <button aria-pressed="false" aria-label="Wednesday" style="width: 40px; height: 40px; box-sizing: border-box; border: 1px solid var(--line2); border-radius: 20px; background: var(--s2); color: var(--t2); font: inherit; font-size: 14px; font-weight: 600">W</button>
+          <button aria-pressed="true" aria-label="Thursday" style="width: 40px; height: 40px; border: 0; border-radius: 20px; background: var(--acc); color: var(--accInk); font: inherit; font-size: 14px; font-weight: 700">T</button>
+          <button aria-pressed="false" aria-label="Friday" style="width: 40px; height: 40px; box-sizing: border-box; border: 1px solid var(--line2); border-radius: 20px; background: var(--s2); color: var(--t2); font: inherit; font-size: 14px; font-weight: 600">F</button>
+          <button aria-pressed="true" aria-label="Saturday" style="width: 40px; height: 40px; border: 0; border-radius: 20px; background: var(--acc); color: var(--accInk); font: inherit; font-size: 14px; font-weight: 700">S</button>
+          <button aria-pressed="false" aria-label="Sunday" style="width: 40px; height: 40px; box-sizing: border-box; border: 1px solid var(--line2); border-radius: 20px; background: var(--s2); color: var(--t2); font: inherit; font-size: 14px; font-weight: 600">S</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 13px; line-height: 18px; color: var(--t2)">Time <span style="color: var(--t3)">(optional)</span></div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <div style="display: flex; align-items: center; justify-content: space-between; height: 46px; box-sizing: border-box; padding: 0 14px; background: var(--s2); border: 1px solid var(--line); border-radius: 15px">
+            <span style="font-size: 15px; color: var(--t2)">Starts</span>
+            <button style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; padding: 0">18:00</button>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; height: 46px; box-sizing: border-box; padding: 0 14px; background: var(--s2); border: 1px solid var(--line); border-radius: 15px">
+            <span style="font-size: 15px; color: var(--t2)">Ends</span>
+            <button style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; padding: 0">19:30</button>
+          </div>
+        </div>
+        <div style="font-size: 13px; line-height: 18px; color: var(--t3); font-variant-numeric: tabular-nums">Tue, Thu, Sat · 18:00–19:30</div>
+      </div>
+    </div>
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

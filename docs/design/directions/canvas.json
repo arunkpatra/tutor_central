@@ -190,6 +190,160 @@
       "w": 393,
       "h": 852,
       "title": "Phase 2 · App icon, Ember glow with Lucide's book"
+    },
+    "P3-Students-Empty.dc.html": {
+      "x": 0,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, empty"
+    },
+    "P3-Students-Few.dc.html": {
+      "x": 473,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, the first three, no classes yet"
+    },
+    "P3-Students-Many.dc.html": {
+      "x": 946,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, the whole register · dark"
+    },
+    "P3-Students-Many-Light.dc.html": {
+      "x": 1419,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, the whole register · light"
+    },
+    "P3-Students-Searching.dc.html": {
+      "x": 1892,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, searching"
+    },
+    "P3-Students-Filtered.dc.html": {
+      "x": 2365,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, filtered to one class"
+    },
+    "P3-Students-AddMenu.dc.html": {
+      "x": 2838,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Students, the add menu"
+    },
+    "P3-NewStudent-Empty.dc.html": {
+      "x": 3311,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · New student, empty"
+    },
+    "P3-NewStudent-Filled.dc.html": {
+      "x": 3784,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · New student, filled"
+    },
+    "P3-NewStudent-Invalid.dc.html": {
+      "x": 4257,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · New student, a number that is not complete"
+    },
+    "P3-EditStudent.dc.html": {
+      "x": 4730,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Edit student"
+    },
+    "P3-StudentDetail.dc.html": {
+      "x": 5203,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Student detail · dark"
+    },
+    "P3-StudentDetail-Light.dc.html": {
+      "x": 5676,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Student detail · light"
+    },
+    "P3-StudentDetail-Archived.dc.html": {
+      "x": 6149,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Student detail, archived, with Restore"
+    },
+    "P3-Archive-Confirm.dc.html": {
+      "x": 6622,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Archive a student, the confirmation"
+    },
+    "P3-Delete-Confirm.dc.html": {
+      "x": 7095,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Delete a student, the typed confirmation"
+    },
+    "P3-Classes-Empty.dc.html": {
+      "x": 7568,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Classes, empty"
+    },
+    "P3-Classes-List.dc.html": {
+      "x": 8041,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Classes"
+    },
+    "P3-NewClass.dc.html": {
+      "x": 8514,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · New class"
+    },
+    "P3-EditClass.dc.html": {
+      "x": 8987,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Edit class, with Archive class"
+    },
+    "P3-ClassDetail.dc.html": {
+      "x": 9460,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Class detail"
+    },
+    "P3-ClassDetail-AddMembers.dc.html": {
+      "x": 9933,
+      "y": 7600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 3 · Class detail, add students"
     }
   },
   "createdOnFiles": {
@@ -240,6 +394,14 @@
       "kind": "title1",
       "maxW": 5123,
       "w": 240
+    },
+    "p3": {
+      "x": 0,
+      "y": 7300,
+      "text": "Step 0.4 · Phase 3 boards — students (list states, add menu, form, detail, confirmations) and classes",
+      "kind": "title1",
+      "maxW": 10326,
+      "w": 240
     }
   },
   "order": [
@@ -269,7 +431,29 @@
     "P2-Settings.dc.html",
     "P2-Later.dc.html",
     "P2-Email-Password.dc.html",
-    "P2-AppIcon.dc.html"
+    "P2-AppIcon.dc.html",
+    "P3-Students-Empty.dc.html",
+    "P3-Students-Few.dc.html",
+    "P3-Students-Many.dc.html",
+    "P3-Students-Many-Light.dc.html",
+    "P3-Students-Searching.dc.html",
+    "P3-Students-Filtered.dc.html",
+    "P3-Students-AddMenu.dc.html",
+    "P3-NewStudent-Empty.dc.html",
+    "P3-NewStudent-Filled.dc.html",
+    "P3-NewStudent-Invalid.dc.html",
+    "P3-EditStudent.dc.html",
+    "P3-StudentDetail.dc.html",
+    "P3-StudentDetail-Light.dc.html",
+    "P3-StudentDetail-Archived.dc.html",
+    "P3-Archive-Confirm.dc.html",
+    "P3-Delete-Confirm.dc.html",
+    "P3-Classes-Empty.dc.html",
+    "P3-Classes-List.dc.html",
+    "P3-NewClass.dc.html",
+    "P3-EditClass.dc.html",
+    "P3-ClassDetail.dc.html",
+    "P3-ClassDetail-AddMembers.dc.html"
   ],
   "pages": [],
   "title": "Tutor Central Design"

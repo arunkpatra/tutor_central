@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 3, student detail, dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --ok:#56D9A6; --okTint:rgba(86,217,166,.14); --over:#FF6F61; --overTint:rgba(255,111,97,.14); --overInk:#2B0906; --dim:rgba(8,6,5,.6); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); --shadowDialog:0 24px 64px rgba(0,0,0,.55); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div style="padding: 62px 20px 0; display: flex; flex-direction: column; gap: 18px">
+
+    <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; height: 44px">
+      <a href="P3-Students-Many.dc.html" aria-label="Back" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line2); background: var(--btn2); color: var(--t); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadowButton)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></a>
+      <div style="text-align: center; font-size: 17px; font-weight: 700">Akshita Rao</div>
+      <a href="P3-EditStudent.dc.html" style="text-decoration: none; color: var(--accText); font-size: 15px; font-weight: 600; text-align: right">Edit</a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 14px">
+      <div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 28px; background: var(--accTint); color: var(--accText); font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center">AR</div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+        <h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em">Akshita Rao</h1>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+          <a href="P3-ClassDetail.dc.html" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: var(--s2); color: var(--t2); font-size: 13px; font-weight: 600">Class 10 Maths</a>
+          <div style="font-size: 13px; line-height: 18px; color: var(--t2); font-variant-numeric: tabular-nums">₹1,200 a month, the class fee</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px 16px 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised)">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">Priya Rao</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Parent</div></div>
+        <div style="font-size: 15px; line-height: 20px; color: var(--t2); font-variant-numeric: tabular-nums">+91 97991 13211</div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <button style="height: 46px; border: 1px solid var(--line2); border-radius: 15px; background: var(--btn2); color: var(--t); font: inherit; font-size: 15px; font-weight: 600; box-shadow: var(--shadowButton); display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>Call</button>
+        <button style="height: 46px; border: 0; border-radius: 15px; background: var(--acc); color: var(--accInk); font: inherit; font-size: 15px; font-weight: 700; box-shadow: var(--glow); display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"></path></svg>WhatsApp</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px">
+        <div style="font-size: 17px; line-height: 22px; font-weight: 700">Fees</div>
+        <a href="#fees" style="text-decoration: none; font-size: 15px; font-weight: 600; color: var(--accText)">See all</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised)">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 16px; line-height: 20px; font-weight: 600">October 2026</div><div style="font-size: 13px; line-height: 16px; color: var(--t2)">Paid by UPI on 4 Oct</div></div>
+        <div style="font-size: 16px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums">₹1,200</div>
+        <span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 12px; background: var(--okTint); color: var(--ok); font-size: 12px; font-weight: 700"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Paid</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 17px; line-height: 22px; font-weight: 700; padding: 0 2px">Attendance</div>
+      <div style="display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised); opacity: .6">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+          <div style="font-size: 16px; line-height: 20px; font-weight: 700">Attendance comes in the next build</div>
+          <div style="font-size: 14px; line-height: 18px; color: var(--t2); text-wrap: pretty">This month's presence and each absence will show here.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px">
+        <div style="font-size: 17px; line-height: 22px; font-weight: 700">Notes</div>
+        <a href="P3-EditStudent.dc.html" style="text-decoration: none; font-size: 15px; font-weight: 600; color: var(--accText)">Edit</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--s1); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadowRaised)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"></path><path d="M15 3v4h4M9 12h6M9 16h6"></path></svg>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+          <div style="font-size: 16px; line-height: 20px; font-weight: 700">No notes yet</div>
+          <div style="font-size: 14px; line-height: 18px; color: var(--t2); text-wrap: pretty">School, board, pickup: anything to remember about Akshita.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <a href="P3-Archive-Confirm.dc.html" style="text-decoration: none; height: 46px; border: 1px solid var(--line2); border-radius: 15px; background: var(--btn2); color: var(--t); font-size: 15px; font-weight: 600; box-shadow: var(--shadowButton); display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1.5"></rect><path d="M5 9v10a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V9M10 13h4"></path></svg>Archive</a>
+      <a href="P3-Delete-Confirm.dc.html" style="text-decoration: none; height: 46px; border: 0; border-radius: 15px; background: var(--overTint); color: var(--over); font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"></path></svg>Delete</a>
+    </div>
+
+  </div>
+
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

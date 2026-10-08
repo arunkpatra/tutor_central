@@ -27,7 +27,7 @@ approved, except step 2, which starts with step 1's choice.
 - [x] **0.3 Phase 2 boards.** (approved 2026-10-07) Sign-in (landing, email code request, code entry, error), onboarding, the shell
   (tab bar, both appearances), Today with every section empty, Settings minimal, the Kit.
   `information-architecture.md` written.
-- [ ] **0.4 Phase 3 boards.** Students (empty, few, many, searching, filtered), "+" menu, new student (empty,
+- [x] **0.4 Phase 3 boards.** (approved 2026-10-08, 22 boards in row 6) Students (empty, few, many, searching, filtered), "+" menu, new student (empty,
   filled, invalid), edit student, student detail, archive and delete confirmations, classes (empty, list),
   new and edit class, class detail.
 - [ ] **0.5 Phase 4 boards.** Attendance mark (fresh, exceptions, saved, past date), absence alert, history
