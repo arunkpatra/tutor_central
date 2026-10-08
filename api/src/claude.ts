@@ -1,4 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk";
+// Named, not the default export: Vercel's build resolves the SDK's CommonJS types, where the default import is only
+// the module's namespace (deploy run 37829835784).
+import { Anthropic } from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type { ZodType } from "zod";
 
