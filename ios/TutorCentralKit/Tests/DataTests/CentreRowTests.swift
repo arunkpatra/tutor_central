@@ -24,4 +24,16 @@ struct CentreRowTests {
         let settings = try #require(try decoder.decode([PaymentsRow].self, from: Self.confirmed).first).settings
         #expect(!settings.needsConfirmation && settings.upiConfirmedAt != nil)
     }
+
+    static let consented = Data("""
+    [{"id":"22222222-2222-2222-2222-222222222222","ai_consent_at":"2026-10-08T07:35:00+00:00"}]
+    """.utf8)
+
+    @Test func decodesTheConsentAnswerAndACentreWithout() throws {
+        let decoder = SupabaseCentreRepository.decoder
+        let consent = try #require(try decoder.decode([ConsentRow].self, from: Self.consented).first)
+        #expect(consent.aiConsentAt?.timeIntervalSince1970 == 1_791_444_900)
+        let row = try #require(try decoder.decode([CentreRow].self, from: Self.centres).first)
+        #expect(row.centre.aiConsentAt == nil, "a select without the column decodes: the key is optional")
+    }
 }

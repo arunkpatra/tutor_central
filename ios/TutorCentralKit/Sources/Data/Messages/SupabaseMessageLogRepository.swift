@@ -72,6 +72,17 @@ public final class SupabaseMessageLogRepository: MessageLogRepository {
         return log
     }
 
+    public func logProgress(centre: UUID, studentID: UUID) async throws -> Date {
+        let response = try await client.from("message_log")
+            .insert([
+                "centre_id": AnyJSON.string(centre.uuidString),
+                "student_id": .string(studentID.uuidString),
+                "kind": .string("progress"),
+            ])
+            .select(Self.feeColumns).single().execute()
+        return try Self.decoder.decode(ProgressLogRow.self, from: response.data).openedAt
+    }
+
     private static let feeColumns = "student_id, kind, opened_at, about_date"
     private static let feeKinds = [FeeLog.Kind.reminder, .receipt].map(\.rawValue)
 }
@@ -88,6 +99,13 @@ struct FeeLogRow: Decodable {
         else { return nil }
         return FeeLog(studentID: studentId, kind: kind, openedAt: openedAt, month: month)
     }
+}
+
+/// A progress note's log row.
+struct ProgressLogRow: Decodable {
+    let studentId: UUID?
+    let kind: String
+    let openedAt: Date
 }
 
 /// A `message_log` row. `student_id` is null once its student is deleted (the log stays); such a row tells no one.

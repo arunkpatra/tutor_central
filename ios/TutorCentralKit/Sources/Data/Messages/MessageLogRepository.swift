@@ -53,4 +53,6 @@ public protocol MessageLogRepository: Sendable {
     func feeLogs(centre: UUID, student: UUID) async throws -> [FeeLog]
     /// Logged when the tutor taps Open WhatsApp, before the link opens; `month` is the fee's.
     func logFee(centre: UUID, studentID: UUID, kind: FeeLog.Kind, month: Period) async throws -> FeeLog
+    /// A progress note's Open WhatsApp, logged before the link opens; when it was opened.
+    func logProgress(centre: UUID, studentID: UUID) async throws -> Date
 }

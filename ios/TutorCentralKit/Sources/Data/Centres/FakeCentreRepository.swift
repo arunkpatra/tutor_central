@@ -36,6 +36,18 @@ import Foundation
         profile: Profile(displayName: "Meera Nair")
     )
 
+    /// Agreed to the AI notice on 1 October: the scan and check boards' centre.
+    public nonisolated static let meeraWorkspaceConsented: Workspace = {
+        var workspace = meeraWorkspace
+        workspace.centre.aiConsentAt = DayHeading.india.date(from: DateComponents(
+            year: 2026,
+            month: 10,
+            day: 1,
+            hour: 9
+        ))
+        return workspace
+    }()
+
     /// The id set and never confirmed: Fees asks "Parents are told to pay …" (P5-Fees-Payee).
     public nonisolated static let meeraWorkspaceUnconfirmed = with(payments: PaymentSettings(upiID: "meera@okhdfcbank"))
 
@@ -54,6 +66,7 @@ import Foundation
     public private(set) var linkUpdates: [String?] = []
     public private(set) var receiptUpdates: [Bool] = []
     public private(set) var confirmations: [Date] = []
+    public private(set) var consents: [Date] = []
 
     public init(workspace: Workspace? = nil) {
         self.workspace = workspace
@@ -121,6 +134,12 @@ import Foundation
         try takeError()
         confirmations.append(at)
         workspace?.centre.payments.upiConfirmedAt = at
+    }
+
+    public func recordAIConsent(id _: UUID, at: Date) async throws {
+        try takeError()
+        consents.append(at)
+        workspace?.centre.aiConsentAt = at
     }
 
     private nonisolated static func with(payments: PaymentSettings) -> Workspace {

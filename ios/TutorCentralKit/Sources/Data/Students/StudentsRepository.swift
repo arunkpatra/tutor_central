@@ -13,4 +13,10 @@ public protocol StudentsRepository: Sendable {
     func delete(id: UUID) async throws
     /// One statement: these students move to the class (nil: to no class).
     func assign(studentIDs: [UUID], toClass classID: UUID?, centre: UUID) async throws
+    /// One insert of several rows (a scanned register); the created students in the order sent.
+    func createMany(_ drafts: [StudentDraft], centre: UUID) async throws -> [Student]
+    /// One delete of these ids (Undo after a scanned register's Add); nothing else.
+    func deleteMany(ids: [UUID]) async throws
+    /// The whole notes text (nil clears), answering the student as stored (a checked paper's line, and its Undo).
+    func updateNotes(id: UUID, notes: String?) async throws -> Student
 }

@@ -103,6 +103,15 @@ import Foundation
     public private(set) var archivedCalls: [(UUID, Bool)] = []
     public private(set) var deleted: [UUID] = []
     public private(set) var assigned: [([UUID], UUID?)] = []
+    public private(set) var createdMany: [[StudentDraft]] = []
+    public private(set) var deletedMany: [[UUID]] = []
+    public private(set) var notesUpdates: [NotesUpdate] = []
+
+    /// One notes write: the student and the whole text sent.
+    public struct NotesUpdate: Hashable, Sendable {
+        public let id: UUID
+        public let notes: String?
+    }
 
     public init(students: [Student] = []) {
         self.students = students
@@ -152,6 +161,33 @@ import Foundation
         for index in students.indices where studentIDs.contains(students[index].id) {
             students[index].classID = classID
         }
+    }
+
+    public func createMany(_ drafts: [StudentDraft], centre _: UUID) async throws -> [Student] {
+        try await begin()
+        createdMany.append(drafts)
+        let made = drafts.map { draft in
+            Self.apply(draft, to: Student(
+                id: UUID(), name: "", classID: nil, monthlyFee: nil, parentName: nil, parentPhone: nil,
+                dateOfBirth: nil, gender: nil, notes: nil, archivedAt: nil, thisMonth: nil
+            ))
+        }
+        students.append(contentsOf: made)
+        return made
+    }
+
+    public func deleteMany(ids: [UUID]) async throws {
+        try await begin()
+        deletedMany.append(ids)
+        students.removeAll { ids.contains($0.id) }
+    }
+
+    public func updateNotes(id: UUID, notes: String?) async throws -> Student {
+        try await begin()
+        let index = try index(of: id)
+        notesUpdates.append(NotesUpdate(id: id, notes: notes))
+        students[index].notes = notes
+        return students[index]
     }
 
     private func begin() async throws {

@@ -17,4 +17,6 @@ public protocol CentreRepository: Sendable {
     func updateSendReceipts(id: UUID, on: Bool) async throws
     /// "That's right" on Fees' payee card.
     func confirmUPI(id: UUID, at: Date) async throws
+    /// "I agree, continue" on the consent sheet: before a child's data first goes to the AI service.
+    func recordAIConsent(id: UUID, at: Date) async throws
 }

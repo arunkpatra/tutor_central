@@ -33,6 +33,7 @@ import Foundation
     public var nextError: (any Error)?
     public private(set) var logged: [UUID] = []
     public private(set) var feeLogged: [FeeLog] = []
+    public private(set) var progressLogs: [UUID] = []
     private let now: () -> Date
 
     public init(
@@ -73,6 +74,12 @@ import Foundation
         feeLogged.append(made)
         feeLogs.append(made)
         return made
+    }
+
+    public func logProgress(centre _: UUID, studentID: UUID) async throws -> Date {
+        try takeError()
+        progressLogs.append(studentID)
+        return now()
     }
 
     private func takeError() throws {

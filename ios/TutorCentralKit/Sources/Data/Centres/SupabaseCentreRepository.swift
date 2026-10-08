@@ -13,7 +13,7 @@ public final class SupabaseCentreRepository: CentreRepository {
 
     public func workspace(for user: AuthUser) async throws -> Workspace? {
         let response = try await client.from("centres")
-            .select("id, name, whatsapp_number, upi_id, upi_confirmed_at, payment_link, send_receipts")
+            .select("id, name, whatsapp_number, upi_id, upi_confirmed_at, payment_link, send_receipts, ai_consent_at")
             .order("created_at")
             .limit(1)
             .execute()
@@ -78,6 +78,16 @@ public final class SupabaseCentreRepository: CentreRepository {
             .execute()
     }
 
+    public func recordAIConsent(id: UUID, at: Date) async throws {
+        let response = try await client.from("centres")
+            .update(["ai_consent_at": AnyJSON.string(ISO8601DateFormatter().string(from: at))])
+            .eq("id", value: id)
+            .select("id, ai_consent_at")
+            .single()
+            .execute()
+        _ = try Self.decoder.decode(ConsentRow.self, from: response.data)
+    }
+
     public func updateProfile(displayName: String) async throws {
         let userID = try await client.auth.session.user.id
         try await client.from("profiles")
@@ -96,6 +106,8 @@ struct CentreRow: Decodable {
     let upiConfirmedAt: Date?
     let paymentLink: String?
     let sendReceipts: Bool
+    /// Optional in the decoding too: an older select without the column still reads.
+    let aiConsentAt: Date?
 
     var centre: Centre {
         Centre(
@@ -106,9 +118,16 @@ struct CentreRow: Decodable {
                 paymentLink: paymentLink,
                 sendReceipts: sendReceipts
             )
-            .settings
+            .settings,
+            aiConsentAt: aiConsentAt
         )
     }
+}
+
+/// The consent write's answer.
+struct ConsentRow: Decodable {
+    let id: UUID
+    let aiConsentAt: Date?
 }
 
 /// The payment columns alone, as a settings update answers them.
