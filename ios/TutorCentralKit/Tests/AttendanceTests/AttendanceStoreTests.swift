@@ -166,4 +166,22 @@ import Testing
         await store.load()
         #expect(!store.hasStudents && store.members.isEmpty && store.draft.classID == nil)
     }
+
+    @Test func aSecondLoadKeepsTheUnsavedToggles() async {
+        let store = await make()
+        #expect(store.opened)
+        store.toggle(hemanth)
+        await store.load()
+        #expect(store.draft.marks[hemanth] == .absent, "coming back to the tab keeps what the tutor marked")
+    }
+
+    @Test func theAlertSaysWhenTheChildWasAbsent() async throws {
+        let store = await make()
+        store.toggle(hemanth)
+        _ = await store.save()
+        #expect(try #require(store.alert(for: hemanth)).headline == "Hemanth was absent today")
+        try await store.open(classID: maths, date: #require(Day(year: 2026, month: 10, day: 2)))
+        let earlier = try #require(store.absentRows.first)
+        #expect(try #require(store.alert(for: earlier.student.id)).headline.hasSuffix("was absent on Fri 2 Oct"))
+    }
 }

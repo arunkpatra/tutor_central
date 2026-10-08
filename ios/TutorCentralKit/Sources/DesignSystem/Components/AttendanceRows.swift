@@ -200,28 +200,34 @@ struct RowLines: View {
 #Preview {
     VStack(spacing: Tokens.sectionGap) {
         Card {
-            HistoryRow(
-                day: "Wed",
-                date: "7 Oct",
-                title: "Class 10 Maths",
-                line: "5 of 6 present",
-                trailing: "1 absent"
-            ) {}
-                .rowDivider()
-            HistoryRow(
-                day: "Mon", date: "5 Oct", title: "Class 10 Maths", line: "Parent told on Mon 5 Oct", lineTone: .ok
-            ) {}
-        }
-        Card {
-            StudentPercentRow(name: "Hemanth Reddy", fraction: 1.0 / 3, percent: "33%", count: "1 of 3") {}
-        }
-        Card {
-            AbsentStudentRow(name: "Hemanth Reddy", line: "Lakshmi Reddy · +91 93802 60871") {
-                TellParentButton {}
+            VStack(spacing: 0) {
+                HistoryRow(
+                    day: "Wed",
+                    date: "7 Oct",
+                    title: "Class 10 Maths",
+                    line: "5 of 6 present",
+                    trailing: "1 absent"
+                ) {}
+                    .rowDivider()
+                HistoryRow(
+                    day: "Mon", date: "5 Oct", title: "Class 10 Maths", line: "Parent told on Mon 5 Oct", lineTone: .ok
+                ) {}
             }
-            .rowDivider()
-            AbsentStudentRow(name: "Hemanth Reddy", line: "Lakshmi Reddy · +91 93802 60871") {
-                ToldMark("Told Mon 5 Oct")
+        }
+        Card {
+            VStack(spacing: 0) {
+                StudentPercentRow(name: "Hemanth Reddy", fraction: 1.0 / 3, percent: "33%", count: "1 of 3") {}
+            }
+        }
+        Card {
+            VStack(spacing: 0) {
+                AbsentStudentRow(name: "Hemanth Reddy", line: "Lakshmi Reddy · +91 93802 60871") {
+                    TellParentButton {}
+                }
+                .rowDivider()
+                AbsentStudentRow(name: "Hemanth Reddy", line: "Lakshmi Reddy · +91 93802 60871") {
+                    ToldMark("Told Mon 5 Oct")
+                }
             }
         }
     }

@@ -4,6 +4,13 @@ import SwiftUI
 /// when there is an action a secondary button (primary when it is the only thing to do); two actions sit side by side
 /// at equal widths, 10 apart (P3-Students-Empty). Centred, padding 24 18.
 public struct EmptyState: View {
+    /// `card` sits among other sections; `screen` is the one card of a root with nothing else to show
+    /// (P4-Attendance-Empty): padding 40 24, its button 220 wide.
+    public enum Size: Sendable {
+        case card
+        case screen
+    }
+
     public enum Emphasis: Sendable {
         case secondary
         case primary
@@ -26,20 +33,27 @@ public struct EmptyState: View {
     let title: String
     let line: String
     let actions: [Action]
+    let size: Size
     static var symbolSize: CGFloat {
         28
+    }
+
+    static var screenButtonWidth: CGFloat {
+        220
     }
 
     public init(
         symbol: String,
         title: String,
         line: String,
-        action: Action? = nil
+        action: Action? = nil,
+        size: Size = .card
     ) {
         self.symbol = symbol
         self.title = title
         self.line = line
         actions = action.map { [$0] } ?? []
+        self.size = size
     }
 
     /// Two ways to start, side by side: the first is usually the primary.
@@ -48,6 +62,7 @@ public struct EmptyState: View {
         self.title = title
         self.line = line
         self.actions = [actions.0, actions.1]
+        size = .card
     }
 
     public var body: some View {
@@ -61,7 +76,9 @@ public struct EmptyState: View {
                 .typeStyle(Tokens.subhead)
                 .foregroundStyle(Tokens.text2.color)
                 .frame(maxWidth: Tokens.measureLine)
-            if actions.count == 1 {
+            if actions.count == 1, size == .screen {
+                button(actions[0], fills: true).frame(maxWidth: Self.screenButtonWidth).padding(.top, Tokens.inline)
+            } else if actions.count == 1 {
                 button(actions[0]).fixedSize().padding(.top, Tokens.inline)
             } else if !actions.isEmpty {
                 HStack(spacing: Tokens.tileGap) {
@@ -74,8 +91,8 @@ public struct EmptyState: View {
         }
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity)
-        .padding(.vertical, Tokens.heroInset)
-        .padding(.horizontal, Tokens.cardPadding)
+        .padding(.vertical, size == .screen ? Tokens.emptyPadding : Tokens.heroInset)
+        .padding(.horizontal, size == .screen ? Tokens.heroInset : Tokens.cardPadding)
     }
 
     @ViewBuilder private func button(_ action: Action, fills: Bool = false) -> some View {

@@ -99,4 +99,27 @@ struct LaunchStateTests {
         }
         #expect(RootView.classDetailBoardState(.classAddMembers) == .addMembers)
     }
+
+    @MainActor @Test func theAttendanceStatesOpenTheTab() async throws {
+        let states: [LaunchState] = [
+            .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved, .attendanceAlert,
+            .attendancePast, .attendanceEmpty,
+        ]
+        for state in states {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .attendance)
+        }
+        #expect(RootView.attendanceBoardState(.attendanceClassMenu) == .classMenu)
+        #expect(RootView.attendanceBoardState(.attendanceAlert) == .alert)
+        let centre = Fixtures.meeraWorkspace.centre.id
+        let october = Period(year: 2026, month: 10)
+        // Saved and the alert save for real on the boards' clock, 18:32 (P4-Attendance-Mark-Saved).
+        let saved = Fixtures.dependencies(for: .attendanceSaved)
+        #expect(try await saved.attendance.sessions(centre: centre, month: october).first?.date.day == 6)
+        #expect(DayHeading.india.component(.minute, from: saved.now()) == 32)
+        let fresh = Fixtures.dependencies(for: .attendance)
+        #expect(try await fresh.attendance.sessions(centre: centre, month: october).first?.date.day == 6)
+        let empty = Fixtures.dependencies(for: .attendanceEmpty)
+        #expect(try await empty.students.students(centre: centre, period: october).isEmpty)
+    }
 }

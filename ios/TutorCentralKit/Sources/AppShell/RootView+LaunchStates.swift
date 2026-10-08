@@ -1,3 +1,4 @@
+import Attendance
 import Data
 import DesignSystem
 import Domain
@@ -15,7 +16,8 @@ extension RootView {
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers: .students
         case .laterFees: .fees
-        case .laterAttendance: .attendance
+        case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
+             .attendanceAlert, .attendancePast, .attendanceEmpty: .attendance
         case .laterMore: .more
         default: nil
         }
@@ -73,12 +75,31 @@ extension RootView {
         }
     }
 
+    static func attendanceBoardState(_ state: LaunchState) -> AttendanceBoardState? {
+        switch state {
+        case .attendanceClassMenu: .classMenu
+        case .attendanceExceptions: .oneAbsent
+        case .attendanceSaved: .saved
+        case .attendanceAlert: .alert
+        case .attendancePast: .past
+        default: nil
+        }
+    }
+
     static func classDetailBoardState(_ state: LaunchState) -> ClassDetailBoardState? {
         state == .classAddMembers ? .addMembers : nil
     }
 
     /// The toast's Retry for the register's last failed write.
     static func retry(_ store: RegisterStore) -> (label: String, run: @MainActor () -> Void) {
+        let run: @MainActor () -> Void = {
+            Task { await store.retryLast() }
+        }
+        return ("Retry", run)
+    }
+
+    /// The toast's Retry for the mark screen's failed save.
+    static func retry(_ store: AttendanceStore) -> (label: String, run: @MainActor () -> Void) {
         let run: @MainActor () -> Void = {
             Task { await store.retryLast() }
         }

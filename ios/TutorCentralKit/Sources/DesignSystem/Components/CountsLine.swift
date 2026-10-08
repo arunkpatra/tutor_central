@@ -18,11 +18,11 @@ public struct CountsLine: View {
     public var body: some View {
         let words = Self.text(present: present, absent: absent)
         HStack(spacing: Tokens.fieldGap) {
-            Text(words.present).foregroundStyle(Tokens.ok.color)
-            Text("·").foregroundStyle(Tokens.text3.color)
-            Text(words.absent).foregroundStyle((absent > 0 ? Tokens.overdue : Tokens.text2).color)
+            Text(words.present).typeStyle(Tokens.footnoteStrong).foregroundStyle(Tokens.ok.color)
+            Text("·").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+            Text(words.absent).typeStyle(Tokens.footnoteStrong)
+                .foregroundStyle((absent > 0 ? Tokens.overdue : Tokens.text2).color)
         }
-        .typeStyle(Tokens.footnoteStrong)
         .monospacedDigit()
         .contentTransition(.numericText())
         .accessibilityElement(children: .combine)

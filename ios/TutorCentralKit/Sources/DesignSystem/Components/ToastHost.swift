@@ -31,3 +31,18 @@ public struct ToastHost: View {
         .animation(reduceMotion ? nil : .timingCurve(Tokens.easeOut, duration: Tokens.panel), value: toasts.current)
     }
 }
+
+/// A toast over an open sheet: the app's toasts draw under sheets, so a failed save is said where the tutor is.
+public struct SheetToasts: ViewModifier {
+    public init() {}
+
+    @Environment(ToastCenter.self) private var toasts: ToastCenter?
+
+    public func body(content: Content) -> some View {
+        content.overlay(alignment: .bottom) {
+            if let toasts {
+                ToastHost(toasts: toasts)
+            }
+        }
+    }
+}

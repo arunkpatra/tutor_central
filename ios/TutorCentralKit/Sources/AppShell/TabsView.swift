@@ -7,7 +7,8 @@ import SwiftUI
 /// symbols), each with its own navigation stack. Today's and Students' roots and the Students screens are passed in;
 /// the other three tabs are on the way.
 struct TabsView<
-    Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View
+    Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
+    Attendance: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -18,6 +19,7 @@ struct TabsView<
     let classes: () -> Classes
     let classDetail: (UUID) -> ClassDetail
     let settings: () -> Settings
+    let attendance: () -> Attendance
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -25,7 +27,7 @@ struct TabsView<
             Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
             Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { later(.fees) } }
             Tab("Attendance", systemImage: "checkmark.circle", value: AppTab.attendance) {
-                stack(.attendance) { later(.attendance) }
+                stack(.attendance) { attendance() }
             }
             Tab("More", systemImage: "ellipsis", value: AppTab.more) { stack(.more) { later(.more) } }
         }
@@ -42,6 +44,7 @@ struct TabsView<
                     case let .student(id): studentDetail(id)
                     case .classes: classes()
                     case let .classroom(id): classDetail(id)
+                    case .history: LaterView(place: .history, build: build)
                     }
                 }
         }

@@ -49,6 +49,8 @@ import Observation
     public var message: String?
     public private(set) var canRetry = false
     public private(set) var lastSavedAt: Date?
+    /// True once a class and day have been opened: the empty state waits for it, and `load()` runs only once.
+    public private(set) var opened = false
     private var sessions: [AttendanceSession] = []
     private var told: [AbsenceLog] = []
     private var loadedMonth: Period?
@@ -145,8 +147,10 @@ import Observation
         }
     }
 
-    /// The tab's first open: today, the first active class (All students when there is none).
+    /// The tab's first open: today, the first active class (All students when there is none). Coming back to the tab
+    /// keeps the date, the class and the unsaved toggles.
     public func load() async {
+        guard !opened else { return }
         await register.loadIfNeeded()
         await open(classID: register.activeClasses.first?.id, date: today)
     }
@@ -173,6 +177,7 @@ import Observation
             date: date, classID: classID, members: Self.members(of: classID, in: register), saved: saved
         )
         phase = saved.map { .reopened(savedAt: $0.savedAt) } ?? .fresh
+        opened = true
     }
 
     public func toggle(_ studentID: UUID) {
@@ -228,8 +233,10 @@ import Observation
         ).text
         let line = student.parentPhone
             .map { [student.parentName, $0.display].compactMap(\.self).joined(separator: " · ") }
+        let when = saved.date == today ? "today" : "on \(saved.date.shortWeekdayText)"
         return AbsenceAlert(
             student: student,
+            headline: "\(student.firstName) was absent \(when)",
             parentLine: line ?? "Add the parent's number first",
             text: text,
             url: student.parentPhone.map { AbsenceMessage.whatsAppURL(phone: $0, text: text) }
@@ -269,6 +276,8 @@ import Observation
 /// message, and the WhatsApp link when there is a number.
 public struct AbsenceAlert: Hashable, Sendable, Identifiable {
     public let student: Student
+    /// "Hemanth was absent today", "… on Mon 5 Oct".
+    public let headline: String
     public let parentLine: String
     public let text: String
     public let url: URL?

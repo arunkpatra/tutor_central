@@ -65,10 +65,12 @@ public struct TaskRow: View {
 
 #Preview {
     Card {
-        TaskRow(title: "Call Dev's father about Saturday", done: false, trailing: "Fri 9 Oct") {}.rowDivider()
-        TaskRow(title: "Print the mock test", done: false, trailing: "Mon 5 Oct", trailingTone: .overdue) {}
-            .rowDivider()
-        TaskRow(title: "Order Class 8 workbooks", done: true, trailing: "Tue 6 Oct") {}
+        VStack(spacing: 0) {
+            TaskRow(title: "Call Dev's father about Saturday", done: false, trailing: "Fri 9 Oct") {}.rowDivider()
+            TaskRow(title: "Print the mock test", done: false, trailing: "Mon 5 Oct", trailingTone: .overdue) {}
+                .rowDivider()
+            TaskRow(title: "Order Class 8 workbooks", done: true, trailing: "Tue 6 Oct") {}
+        }
     }
     .padding(Tokens.pageSide)
     .background(Tokens.ground.color)
