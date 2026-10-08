@@ -5,10 +5,26 @@ name: check
 # inputs did not change is not run again; on main every step runs (--fresh) to keep main honest.
 # Every action is pinned to a commit (D14); the tag it was is in the comment.
 
+# A commit that touches only documents (D12: plan/, docs/, README.md, the CLAUDE.md files) runs nothing (D31). The
+# token document is the exception: TokenDocumentTests reads it, so a change to it runs the check.
 on:
   pull_request:
+    paths:
+      - "**"
+      - "!plan/**"
+      - "!docs/**"
+      - "docs/design/design-tokens.md"
+      - "!README.md"
+      - "!**/CLAUDE.md"
   push:
     branches: [main]
+    paths:
+      - "**"
+      - "!plan/**"
+      - "!docs/**"
+      - "docs/design/design-tokens.md"
+      - "!README.md"
+      - "!**/CLAUDE.md"
 
 concurrency:
   group: check-${{ github.ref }}

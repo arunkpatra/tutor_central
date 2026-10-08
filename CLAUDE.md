@@ -76,5 +76,5 @@ change per pull request, described by what it does and how it was checked.
 | `gh workflow run deploy` | Deploy `main`'s head to production: pending migrations first (D26), then the API with its smoke (D21) |
 | `gh workflow run testflight` | Archive `main`'s head with cloud signing and upload it to TestFlight (D24); stops while migrations are pending |
 
-CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`: iOS on the `xcode-27`
-image, api and db on Ubuntu (D22).
+CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`, except a commit of
+documents only (D31): iOS on the `xcode-27` image, api and db on Ubuntu (D22).
