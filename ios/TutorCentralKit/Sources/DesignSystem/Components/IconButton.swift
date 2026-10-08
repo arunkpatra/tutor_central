@@ -27,30 +27,39 @@ public struct IconButton: View {
 
     public var body: some View {
         Button(action: action) {
-            Group {
-                switch face {
-                case let .symbol(name):
-                    Image(systemName: name)
-                        .font(.system(size: Tokens.iconButton))
-                        .foregroundStyle(Tokens.text.color)
-                case let .initials(text):
-                    Text(text).typeStyle(Tokens.avatar).foregroundStyle(Tokens.accentText.color)
-                }
+            switch face {
+            case let .symbol(name):
+                IconButtonLook(symbol: name)
+            case let .initials(text):
+                Text(text)
+                    .typeStyle(Tokens.avatar)
+                    .foregroundStyle(Tokens.accentText.color)
+                    .frame(width: Self.size, height: Self.size)
+                    .background(Tokens.buttonFill.color, in: .circle)
+                    .overlay(Circle().strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline))
             }
-            .frame(width: Self.size, height: Self.size)
-            .background(Tokens.buttonFill.color, in: .circle)
-            .overlay(Circle().strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline))
-            .shadowed(isInitials ? [] : [Tokens.shadowButton], radius: Self.size / 2)
         }
         .pressable()
         .accessibilityLabel(label)
     }
+}
 
-    private var isInitials: Bool {
-        if case .initials = face {
-            true
-        } else {
-            false
-        }
+/// The look of an icon button without the Button, for a menu or popover anchor that needs the same 40 round surface:
+/// buttonFill, lineStrong border, shadowButton, the symbol 20 in text.
+public struct IconButtonLook: View {
+    let symbol: String
+
+    public init(symbol: String) {
+        self.symbol = symbol
+    }
+
+    public var body: some View {
+        Image(systemName: symbol)
+            .font(.system(size: Tokens.iconButton))
+            .foregroundStyle(Tokens.text.color)
+            .frame(width: IconButton.size, height: IconButton.size)
+            .background(Tokens.buttonFill.color, in: .circle)
+            .overlay(Circle().strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline))
+            .shadowed([Tokens.shadowButton], radius: IconButton.size / 2)
     }
 }

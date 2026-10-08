@@ -1,0 +1,154 @@
+import Data
+import DesignSystem
+import Domain
+import SwiftUI
+
+/// What a launch state sets up on the Students root so it can be photographed beside its board: the search typed and
+/// focused, a class filter with the fee sort, the "+" menu open.
+public enum StudentsBoardState: Sendable {
+    case searching
+    case filteredToScience
+    case addMenu
+}
+
+/// Pushes on the Students tab. AppShell owns the stack; the feature asks for a screen.
+public struct StudentsNavigation {
+    let openStudent: (UUID) -> Void
+    let openClasses: () -> Void
+    let openClass: (UUID) -> Void
+
+    public init(
+        openStudent: @escaping (UUID) -> Void,
+        openClasses: @escaping () -> Void,
+        openClass: @escaping (UUID) -> Void
+    ) {
+        self.openStudent = openStudent
+        self.openClasses = openClasses
+        self.openClass = openClass
+    }
+}
+
+/// The Students root, to P3-Students-Empty, -Few, -Many (dark and light), -Searching, -Filtered and -AddMenu: the
+/// title with the "+" menu, the search, the filter chips, the Classes row, the count line with the sort, the list.
+public struct StudentsView: View {
+    @Bindable var store: RegisterStore
+    let actions: StudentsActions
+    let navigation: StudentsNavigation
+    let boardState: StudentsBoardState?
+    @State private var searching = false
+    @State private var showsMenu = false
+    @State private var topInset: CGFloat = 0
+    /// The inline title row while searching (P3-Students-Searching): a navigation bar's height.
+    static var inlineTitleHeight: CGFloat {
+        44
+    }
+
+    public init(
+        store: RegisterStore,
+        actions: StudentsActions,
+        navigation: StudentsNavigation,
+        boardState: StudentsBoardState? = nil
+    ) {
+        self.store = store
+        self.actions = actions
+        self.navigation = navigation
+        self.boardState = boardState
+    }
+
+    public var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+                titleRow
+                if isEmpty {
+                    NoStudentsCard(addStudent: addStudent, scanRegister: actions.openScanRegister)
+                } else {
+                    SearchAndFilters(store: store, searching: $searching, showsFocus: boardState == .searching)
+                    if !searching, !store.activeClasses.isEmpty {
+                        ClassesRow(classes: store.activeClasses, open: navigation.openClasses)
+                    }
+                    RegisterList(store: store, searching: searching, openStudent: navigation.openStudent)
+                    if !searching, case let .classroom(id) = store.filter, let classroom = store.classroom(id) {
+                        ClassFooter(classroom: classroom) { navigation.openClass(id) }
+                    }
+                }
+                if !store.loading, !searching, store.activeClasses.isEmpty {
+                    NoClassesSection(createClass: createClass)
+                }
+            }
+            .padding(.horizontal, Tokens.pageSide)
+            .padding(.top, max(0, Tokens.pageTop - topInset))
+            .padding(.bottom, Tokens.contentBottom)
+        }
+        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
+        .scrollDismissesKeyboard(.interactively)
+        .background(Tokens.ground.color)
+        .toolbar(.hidden, for: .navigationBar)
+        .refreshable {
+            await store.refresh()
+            Haptic.play(.impactLight)
+        }
+        .task {
+            setUpBoardState()
+            await store.load()
+        }
+    }
+
+    private var isEmpty: Bool {
+        store.students.isEmpty && !store.loading
+    }
+
+    @ViewBuilder private var titleRow: some View {
+        if searching {
+            Text("Students")
+                .typeStyle(Tokens.headline)
+                .foregroundStyle(Tokens.text.color)
+                .frame(maxWidth: .infinity, minHeight: Self.inlineTitleHeight)
+                .accessibilityAddTraits(.isHeader)
+        } else {
+            HStack(alignment: .bottom) {
+                Text("Students")
+                    .typeStyle(Tokens.display)
+                    .foregroundStyle(Tokens.text.color)
+                    .accessibilityAddTraits(.isHeader)
+                Spacer(minLength: Tokens.inline)
+                Button { showsMenu = true } label: { IconButtonLook(symbol: "plus") }
+                    .pressable()
+                    .accessibilityLabel("Add")
+                    .popover(isPresented: $showsMenu, arrowEdge: .top) {
+                        AddMenu(
+                            addStudent: { menuChose(addStudent) },
+                            scanRegister: { menuChose(actions.openScanRegister) },
+                            createClass: { menuChose(createClass) }
+                        )
+                        .presentationCompactAdaptation(.popover)
+                    }
+            }
+        }
+    }
+
+    private func menuChose(_ action: @escaping () -> Void) {
+        showsMenu = false
+        action()
+    }
+
+    /// The new-student sheet arrives with its board (P3-NewStudent-*).
+    private func addStudent() {}
+
+    /// The new-class sheet arrives with its board (P3-NewClass).
+    private func createClass() {}
+
+    private func setUpBoardState() {
+        switch boardState {
+        case .searching:
+            store.search = "sh"
+            searching = true
+        case .filteredToScience:
+            store.filter = .classroom(FakeClassesRepository.science.id)
+            store.sort = .fee
+        case .addMenu:
+            showsMenu = true
+        case nil:
+            break
+        }
+    }
+}

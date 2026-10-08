@@ -54,11 +54,11 @@ public extension View {
             .shadowed(selected ? Tokens.haloFocus : Tokens.shadowRaised, radius: radius)
     }
 
-    /// The line between rows inside a list card; the last row has none.
-    func rowDivider(_ shown: Bool = true) -> some View {
+    /// The line between rows inside a list card; the last row has none. `glass` is the edge of glass (a menu's rows).
+    func rowDivider(_ shown: Bool = true, glass: Bool = false) -> some View {
         overlay(alignment: .bottom) {
             if shown {
-                Rectangle().fill(Tokens.line.color).frame(height: Tokens.hairline)
+                Rectangle().fill((glass ? Tokens.lineGlass : Tokens.line).color).frame(height: Tokens.hairline)
             }
         }
     }

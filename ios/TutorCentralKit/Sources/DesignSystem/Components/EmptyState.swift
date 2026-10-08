@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// Inside the card it belongs to: symbol 28 in text3, title headline, one line subhead text2 (at most 280 wide), and
-/// when there is an action a secondary button (primary when it is the only thing to do). Centred, padding 24 18.
+/// when there is an action a secondary button (primary when it is the only thing to do); two actions sit side by side
+/// at equal widths, 10 apart (P3-Students-Empty). Centred, padding 24 18.
 public struct EmptyState: View {
     public enum Emphasis: Sendable {
         case secondary
@@ -24,7 +25,7 @@ public struct EmptyState: View {
     let symbol: String
     let title: String
     let line: String
-    let action: Action?
+    let actions: [Action]
     static var symbolSize: CGFloat {
         28
     }
@@ -38,7 +39,15 @@ public struct EmptyState: View {
         self.symbol = symbol
         self.title = title
         self.line = line
-        self.action = action
+        actions = action.map { [$0] } ?? []
+    }
+
+    /// Two ways to start, side by side: the first is usually the primary.
+    public init(symbol: String, title: String, line: String, actions: (Action, Action)) {
+        self.symbol = symbol
+        self.title = title
+        self.line = line
+        self.actions = [actions.0, actions.1]
     }
 
     public var body: some View {
@@ -52,15 +61,14 @@ public struct EmptyState: View {
                 .typeStyle(Tokens.subhead)
                 .foregroundStyle(Tokens.text2.color)
                 .frame(maxWidth: Tokens.measureLine)
-            if let action {
-                Group {
-                    if action.emphasis == .primary {
-                        Button(action.label, action: action.run).buttonStyle(.primary())
-                    } else {
-                        Button(action.label, action: action.run).buttonStyle(.secondary())
+            if actions.count == 1 {
+                button(actions[0]).fixedSize().padding(.top, Tokens.inline)
+            } else if !actions.isEmpty {
+                HStack(spacing: Tokens.tileGap) {
+                    ForEach(actions.indices, id: \.self) { index in
+                        button(actions[index], fills: true)
                     }
                 }
-                .fixedSize()
                 .padding(.top, Tokens.inline)
             }
         }
@@ -68,5 +76,19 @@ public struct EmptyState: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, Tokens.heroInset)
         .padding(.horizontal, Tokens.cardPadding)
+    }
+
+    @ViewBuilder private func button(_ action: Action, fills: Bool = false) -> some View {
+        if action.emphasis == .primary {
+            Button(action: action.run) {
+                // Side by side the board sets the primary at 15 700, its pair's size (P3-Students-Empty).
+                Text(action.label).typeStyle(fills ? Tokens.buttonStrong : Tokens.button)
+                    .frame(maxWidth: fills ? .infinity : nil)
+            }
+            .buttonStyle(.primary())
+        } else {
+            Button(action: action.run) { Text(action.label).frame(maxWidth: fills ? .infinity : nil) }
+                .buttonStyle(.secondary())
+        }
     }
 }

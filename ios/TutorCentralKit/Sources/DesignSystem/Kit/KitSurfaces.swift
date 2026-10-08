@@ -58,6 +58,7 @@
                 Card {
                     VStack(spacing: 0) {
                         StudentRow(
+                            initials: "AR",
                             name: "Akshita Rao",
                             detail: "Class 10 Maths · +91 97991 13211",
                             fee: "₹1,200",

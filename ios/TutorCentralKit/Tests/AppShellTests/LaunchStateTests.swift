@@ -1,4 +1,5 @@
 import Data
+import Domain
 import Testing
 @testable import AppShell
 
@@ -24,5 +25,29 @@ struct LaunchStateTests {
         #expect(Fixtures.initialState(for: .signin) == .signedOut)
         #expect(Fixtures.initialState(for: .onboarding) == .needsOnboarding(FakeAuthRepository.meera))
         #expect(Fixtures.initialState(for: .todayEmpty) == .ready(Fixtures.meeraWorkspace))
+    }
+
+    @MainActor @Test func theStudentsStatesStartReadyOnTheStudentsTabWithTheirRegister() async throws {
+        let states: [LaunchState] = [
+            .studentsEmpty,
+            .studentsFew,
+            .students,
+            .studentsSearching,
+            .studentsFiltered,
+            .studentsAddMenu,
+        ]
+        for state in states {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .students)
+        }
+        let centre = Fixtures.meeraWorkspace.centre.id
+        let october = Period(year: 2026, month: 10)
+        let deps = Fixtures.dependencies(for: .students)
+        #expect(try await deps.students.students(centre: centre, period: october).count == 10 && !deps.cachesRegister)
+        let few = Fixtures.dependencies(for: .studentsFew)
+        #expect(try await few.students.students(centre: centre, period: october).count == 3)
+        #expect(try await few.classes.classes(centre: centre).isEmpty)
+        let none = Fixtures.dependencies(for: .studentsEmpty)
+        #expect(try await none.students.students(centre: centre, period: october).isEmpty)
     }
 }

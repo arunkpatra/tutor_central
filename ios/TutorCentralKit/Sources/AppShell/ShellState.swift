@@ -1,14 +1,17 @@
 import Domain
 import Foundation
 import Observation
+import Students
 import Today
 
-/// What the tabs remember while one tutor works in one centre: the selected tab, each tab's stack, Today's store.
+/// What the tabs remember while one tutor works in one centre: the selected tab, each tab's stack, Today's store and
+/// the register.
 /// Leaving the tabs (sign-out) or arriving in another centre starts afresh, so the next tutor never sees the last
 /// one's place, greeting or counts.
 @MainActor @Observable final class ShellState {
     var tabs: TabsState
     var today: TodayStore?
+    var register: RegisterStore?
     private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
@@ -29,6 +32,7 @@ import Today
     private func reset() {
         tabs = TabsState()
         today = nil
+        register = nil
         centre = nil
     }
 }

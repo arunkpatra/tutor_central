@@ -10,6 +10,9 @@ import Testing
             auth: auth,
             centres: centres,
             counts: FakeCountsRepository(),
+            students: FakeStudentsRepository(),
+            classes: FakeClassesRepository(),
+            cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"
         )
