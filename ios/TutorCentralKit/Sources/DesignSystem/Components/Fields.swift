@@ -235,20 +235,28 @@ public struct MultilineWell: View {
     @Binding var text: String
     let placeholder: String
     let limit: Int
+    let minHeight: CGFloat
+    let showsFocus: Bool
     @FocusState private var focused: Bool
-    static var minHeight: CGFloat {
+    public static var minHeight: CGFloat {
         96
     }
 
-    public init(label: String, text: Binding<String>, placeholder: String, limit: Int) {
+    /// `minHeight` 220 holds a note for editing (P6-Result-ProgressNote); `showsFocus` draws the ring for a board.
+    public init(
+        label: String, text: Binding<String>, placeholder: String, limit: Int, minHeight: CGFloat = Self.minHeight,
+        showsFocus: Bool = false
+    ) {
         self.label = label
         _text = text
         self.placeholder = placeholder
         self.limit = limit
+        self.minHeight = minHeight
+        self.showsFocus = showsFocus
     }
 
     public var body: some View {
-        Well(label: label, focused: focused, height: nil) {
+        Well(label: label, focused: focused || showsFocus, height: nil) {
             TextField(
                 text: $text,
                 prompt: Text(placeholder).foregroundStyle(Tokens.text3.color),
@@ -256,11 +264,11 @@ public struct MultilineWell: View {
             ) { Text(label) }
                 .typeStyle(Tokens.body)
                 .foregroundStyle(Tokens.text.color)
-                .lineLimit(3 ... 8)
+                .lineLimit(3 ... (minHeight > Self.minHeight ? 20 : 8))
                 .focused($focused)
                 .padding(.vertical, Tokens.rowPaddingDense)
                 .padding(.bottom, Tokens.sectionGap)
-                .frame(minHeight: Self.minHeight, alignment: .top)
+                .frame(minHeight: minHeight, alignment: .top)
                 .overlay(alignment: .bottomTrailing) {
                     Text("\(text.count) of \(limit.formatted())")
                         .typeStyle(Tokens.caption)

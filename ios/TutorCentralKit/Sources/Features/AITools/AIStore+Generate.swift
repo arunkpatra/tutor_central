@@ -84,6 +84,11 @@ public extension AIStore {
         try await messagesRepository.logProgress(centre: workspace.centre.id, studentID: note.studentID)
     }
 
+    private func noteStudent(_ request: GenerateRequest) -> Student? {
+        guard case let .progressNote(form) = request else { return nil }
+        return form.studentID.flatMap(register.student)
+    }
+
     private func start(_ request: GenerateRequest, regenerating: UUID?) -> CreateOutcome {
         guard request.isValid else { return .invalid }
         guard inFlight == nil else {
