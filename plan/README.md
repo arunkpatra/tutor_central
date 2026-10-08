@@ -22,7 +22,7 @@ Always:
 | 1 | Foundation: monorepo, project, modules, Supabase, API skeleton, CI, `check` | `phase-01-foundation.md` | Done (session 2, PRs #1 to #8); the API in production |
 | 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Done (session 4, PRs #9 to #21); build 0.1.0 (3) on the owner's phone |
 | 3 | Students and classes | `phase-03-students-and-classes.md` | Done (session 6, PRs #24 to #31, review fixes #33); migration 0003 in production; build 0.1.0 (6) on TestFlight |
-| 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Not started |
+| 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Planned (session 8, 2026-10-08): boards approved, `phase-04-plan.md` approved; the build is resume 008 on Opus 5.5 |
 | 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Not started |
 | 6 | AI tools through the API | `phase-06-ai-tools.md` | Not started |
 | 7 | Settings, account, notifications, offline hardening, release candidate | `phase-07-settings-and-hardening.md` | Not started |

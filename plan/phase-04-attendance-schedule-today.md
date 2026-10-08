@@ -1,6 +1,6 @@
 # Phase 4: Attendance, schedule, tasks, Today live
 
-**Status:** Not started. **Depends on:** Phase 3; Phase 0's Phase 4 boards approved.
+**Status:** Planned (session 8, 2026-10-08): the 27 boards approved (`docs/design/mockups/P4-*`), `phase-04-plan.md` approved; the build is `resume/008-phase-4-build.md`. **Depends on:** Phase 3 (done); Phase 0's Phase 4 boards (approved 2026-10-08). **Also closes:** `plan/ui-polish.md` U1 to U4 (the owner's call, 2026-10-08).
 
 ## Goal
 

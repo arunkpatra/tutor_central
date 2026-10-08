@@ -3,23 +3,24 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 7 (issue #34: the simulator runbook, D32, PR #35). Session 6: **Phase 3 done:** PRs #24 to #31 merged; migration 0003 in production. The
-final review found a Critical in build 5 (adding or editing a student failed and Retry duplicated it); PR #33 fixed it
-and six Important findings, and build 0.1.0 (6) replaces build 5. D31: CI skips a commit of documents only (#32).
-**Session 7:** `docs/runbooks/simulator.md` drives the app against the local stack (D32), proven by a full hand run
-of the register from a cold simulator (issue #34, closed); `bun check` tests run with `-collect-test-diagnostics never`
-(#35). **Next:** the owner installs build 6 (not 5) and tries the register with real students and a class; then
-Phase 0 step 0.5 (the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
+**Last updated:** 2026-10-08, session 8 (Phase 0 step 0.5 and the Phase 4 plan, on Fable). Session 7: the simulator runbook
+(D32, issue #34, PR #35). Session 6: Phase 3 done (PRs #24 to #31, review fixes #33); build 0.1.0 (6) on TestFlight
+(build 5 has a save bug: do not use it). **Session 8:** the 27 Phase 4 boards are approved (row 7 of the canvas,
+`docs/design/mockups/P4-*`; the Kit's attendance row redrawn as one pill); `plan/phase-04-plan.md` is approved (20
+tasks, 7 PRs, migration 0004 `save_attendance`); the owner took U1 (the status bar on glass) and U4 (tiles share a
+height, seen on build 6) into Phase 4 with U2 and U3. **Next:** the Phase 4 build in a fresh Opus 5.5 session from
+`plan/resume/008-phase-4-build.md`.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 to 0.4 approved, plus the app icon (D29); 0.5 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards |
+| 0 Design | In progress: 0.1 to 0.5 approved, plus the app icon (D29); 0.6 (Phase 5 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 the Phase 4 boards |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
-| 4 to 7 | Not started | Scoped in their files |
+| 4 Attendance, schedule, tasks, Today live | Planned: boards and `phase-04-plan.md` approved 2026-10-08; build next (resume 008, Opus 5.5) | Closes U1 to U4 |
+| 5 to 7 | Not started | Scoped in their files |
 | 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them) |
 
 ## In flight
@@ -47,9 +48,8 @@ remote; delete them when convenient). `main`'s check is green; build 0.1.0 (6) i
 
 ## Open items
 
-- **The owner's first hand run of the register** on build 6. Session 7 drove every register write through the
-  screens against the local stack (`docs/runbooks/simulator.md`, D32; the pictures on issue #34); a hand run by that
-  runbook comes before every build that changes a write path.
+- **Build 6 on the owner's phone:** one thing reported (session 8): the "Classes today" tile is taller than the other
+  two (U4, taken into Phase 4). Nothing else reported yet.
 - **The owner's call:** the register cache (children's names, parents' numbers, notes) stays on disk after sign-out,
   as the Phase 3 plan settled; the final review would remove it on sign-out and write it with complete file
   protection, for a shared phone.
@@ -58,8 +58,8 @@ remote; delete them when convenient). `main`'s check is green; build 0.1.0 (6) i
   shadows and haptics); Phase 3's deferred minors are in `plan/sessions/006/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
-- **UI polish:** `plan/ui-polish.md` (three open, all on Today). Items are taken when the owner chooses, singly or
-  as a slice; a board first where what is seen changes.
+- **UI polish:** `plan/ui-polish.md`: U1 to U4 are taken into Phase 4 (they move to Done with PR 7 of its plan). Items
+  are taken when the owner chooses, singly or as a slice; a board first where what is seen changes.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
