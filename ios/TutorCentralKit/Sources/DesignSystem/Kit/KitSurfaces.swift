@@ -68,12 +68,8 @@
                         ClassRow(name: "Class 10 Maths", summary: "Mon, Wed, Fri · 17:00–18:00 · ₹1,200", members: 9) {}
                             .rowDivider()
                         FeeRow(
-                            name: "Dev Kumar",
-                            phone: "+91 98848 43831",
-                            amount: "₹1,000",
-                            status: (.due, "Due"),
-                            onRemind: {},
-                            onMarkPaid: {}
+                            title: "Dev Kumar", line: FeeRowLine("+91 98848 43831"), amount: "₹1,000",
+                            chip: .status(.due, "Due"), buttons: FeeButtons(remind: {}, markPaid: {})
                         )
                         .rowDivider()
                         AttendanceRow(name: "Hemanth", present: hemanth) { hemanth.toggle() }.rowDivider()
@@ -88,27 +84,11 @@
 
         private var money: some View {
             KitGroup("Hero card · money pair") {
-                Card(.hero) {
-                    HStack(spacing: 0) {
-                        moneyHalf("Outstanding", "₹2,200", "2 parents", tone: .due)
-                            .padding(.trailing, Tokens.rowPaddingHorizontal)
-                        Rectangle().fill(Tokens.line.color).frame(width: Tokens.hairline)
-                        moneyHalf("Collected", "₹14,700", "22 of 24 paid", tone: .ok)
-                            .padding(.leading, Tokens.rowPaddingHorizontal)
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
-                }
+                MoneyPair(
+                    outstanding: "₹2,200", outstandingLine: "2 parents", collected: "₹14,700",
+                    collectedLine: "22 of 24 paid"
+                )
             }
-        }
-
-        private func moneyHalf(_ title: String, _ value: String, _ note: String, tone: StatusTone) -> some View {
-            VStack(alignment: .leading, spacing: Tokens.rowGapInner * 2) {
-                Eyebrow(title)
-                Text(value).typeStyle(Tokens.displayCompact).foregroundStyle(tone.color.color)
-                Text(note).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .accessibilityElement(children: .combine)
         }
 
         private var states: some View {

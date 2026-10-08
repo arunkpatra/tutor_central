@@ -9,6 +9,8 @@ public struct NotesWell: View {
     let limit: Int
     let error: String?
     let optional: Bool
+    let showsFocus: Bool
+    let autofocus: Bool
     @FocusState private var focused: Bool
     static var minHeight: CGFloat {
         96
@@ -19,9 +21,11 @@ public struct NotesWell: View {
         28
     }
 
+    /// `showsFocus` draws the focus ring without the keyboard (boards, screenshots); `autofocus` raises the keyboard
+    /// when the well appears (a sheet whose one job is this text).
     public init(
         label: String, text: Binding<String>, placeholder: String, limit: Int, error: String? = nil,
-        optional: Bool = false
+        optional: Bool = false, showsFocus: Bool = false, autofocus: Bool = false
     ) {
         self.label = label
         _text = text
@@ -29,10 +33,12 @@ public struct NotesWell: View {
         self.limit = limit
         self.error = error
         self.optional = optional
+        self.showsFocus = showsFocus
+        self.autofocus = autofocus
     }
 
     public var body: some View {
-        Well(label: label, optional: optional, error: error, focused: focused, height: nil) {
+        Well(label: label, optional: optional, error: error, focused: focused || showsFocus, height: nil) {
             ZStack(alignment: .topLeading) {
                 if text.isEmpty {
                     Text(placeholder)
@@ -51,6 +57,11 @@ public struct NotesWell: View {
                     .padding(.top, Tokens.rowPaddingDense - Tokens.inline)
                     .padding(.bottom, Self.counterInset)
                     .accessibilityLabel(label)
+                    .task {
+                        if autofocus {
+                            focused = await Self.settled()
+                        }
+                    }
             }
             .frame(minHeight: Self.minHeight, alignment: .topLeading)
             .overlay(alignment: .bottomTrailing) {

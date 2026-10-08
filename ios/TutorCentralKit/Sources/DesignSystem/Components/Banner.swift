@@ -36,6 +36,48 @@ public struct Banner: View {
     }
 }
 
+/// A Banner that opens something (the overdue banner on Fees, P5-Fees-All): the chevron on the right, the whole line
+/// presses; the tone colours the words and the symbol, the chevron is text3.
+public struct BannerLink: View {
+    let symbol: String
+    let text: String
+    let tone: StatusTone?
+    let action: () -> Void
+
+    public init(symbol: String, text: String, tone: StatusTone?, action: @escaping () -> Void) {
+        self.symbol = symbol
+        self.text = text
+        self.tone = tone
+        self.action = action
+    }
+
+    public var body: some View {
+        Button(action: action) {
+            HStack(alignment: .center, spacing: Tokens.inline) {
+                Image(systemName: symbol).font(.system(size: Banner.symbolSize)).accessibilityHidden(true)
+                Text(text).fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Chevron()
+            }
+            .typeStyle(Tokens.footnote)
+            .foregroundStyle((tone?.color ?? Tokens.text2).color)
+            .padding(.vertical, Tokens.inline)
+            .padding(.horizontal, Tokens.cardPaddingCompact)
+            .background(Tokens.surface2.color, in: .rect(cornerRadius: Banner.radius, style: .continuous))
+            .contentShape(.rect)
+        }
+        .pressable()
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+    }
+}
+
+#Preview {
+    BannerLink(symbol: "exclamationmark.circle", text: "₹1,000 overdue from September · 1 parent", tone: .overdue) {}
+        .padding(Tokens.pageSide)
+        .background(Tokens.ground.color)
+}
+
 #Preview {
     Banner(symbol: "archivebox", text: "Archived: off the list and today's counts. Their fees and attendance stay.")
         .padding(Tokens.pageSide)

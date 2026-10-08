@@ -38,6 +38,7 @@ let package = Package(
             // A real register (Students) under the attendance store; the feature itself sees only `Register`.
             .testTarget(name: "AttendanceTests", dependencies: ["Attendance", "Students"]),
             .testTarget(name: "ScheduleTests", dependencies: ["Schedule", "Students"]),
+            .testTarget(name: "FeesTests", dependencies: ["Fees", "Students"]),
             .testTarget(name: "StudentsTests", dependencies: ["Students"]),
             .testTarget(name: "SettingsTests", dependencies: ["Settings"]),
         ],

@@ -105,7 +105,7 @@ public struct TodayView: View {
                 value: store.counts.due.formatted,
                 label: "Due",
                 tone: store.counts.due == .zero ? .zero : .due
-            ) { actions.openTab(.fees) }
+            ) { actions.openFeesDue() }
             StatTile(
                 value: "\(store.counts.classesToday)",
                 label: "Classes today",

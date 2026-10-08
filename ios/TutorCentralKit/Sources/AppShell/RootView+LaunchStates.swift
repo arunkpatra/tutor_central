@@ -2,6 +2,7 @@ import Attendance
 import Data
 import DesignSystem
 import Domain
+import Fees
 import Onboarding
 import Schedule
 import Students
@@ -17,7 +18,8 @@ extension RootView {
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers: .students
-        case .laterFees: .fees
+        case .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate, .feesGenerateNothing,
+             .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive: .fees
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
@@ -109,6 +111,21 @@ extension RootView {
         }
     }
 
+    static func feesBoardState(_ state: LaunchState) -> FeesBoardState? {
+        switch state {
+        case .feesDue: .due
+        case .feesPaid: .paid
+        case .feesOverdue: .september
+        case .feesGenerate, .feesGenerateNothing: .generate
+        case .feesMarkPaid: .markPaid
+        case .feesMarkedPaid: .markedPaid
+        case .feesReceipt: .receipt
+        case .feesRemind: .remind
+        case .feesWaive: .waive
+        default: nil
+        }
+    }
+
     static func todayBoardState(_ state: LaunchState) -> TodayBoardState? {
         state == .todayAddingTask ? .addingTask : nil
     }
@@ -127,6 +144,14 @@ extension RootView {
 
     /// The toast's Retry for the mark screen's failed save.
     static func retry(_ store: AttendanceStore) -> (label: String, run: @MainActor () -> Void) {
+        let run: @MainActor () -> Void = {
+            Task { await store.retryLast() }
+        }
+        return ("Retry", run)
+    }
+
+    /// The toast's Retry for a fee's failed write.
+    static func retry(_ store: FeesStore) -> (label: String, run: @MainActor () -> Void) {
         let run: @MainActor () -> Void = {
             Task { await store.retryLast() }
         }

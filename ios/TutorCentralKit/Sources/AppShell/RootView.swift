@@ -2,6 +2,7 @@ import Attendance
 import Data
 import DesignSystem
 import Domain
+import Fees
 import Onboarding
 import Settings
 import Students
@@ -77,6 +78,9 @@ public struct RootView: View {
                 if case let .attendance(date, classID) = link, case let .ready(workspace) = session.state {
                     openAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
                 }
+                if case let .fees(month) = link, case let .ready(workspace) = session.state {
+                    openFees(month: Self.linkMonth(month), in: workspace)
+                }
             }
             .onChange(of: scenePhase) { _, phase in
                 // The foreground refresh hook: the centre and profile read again when the app comes back.
@@ -145,7 +149,8 @@ public struct RootView: View {
                 history: { historyView },
                 studentMonth: { studentMonthView($0) },
                 schedule: { scheduleView(openEvent: $0) },
-                tasks: { tasksView }
+                tasks: { tasksView },
+                fees: { feesView }
             )
         }
     }
@@ -164,6 +169,7 @@ public struct RootView: View {
                 onWorkspaceChanged: { changed in
                     session.workspaceChanged(changed)
                     shell.today?.workspaceChanged(changed)
+                    shell.fees?.workspaceChanged(changed)
                 },
                 onMessage: { toasts.show($0) }
             )
@@ -186,7 +192,8 @@ public struct RootView: View {
                     openSchedule: { shell.tabs.push(.schedule) },
                     openMarkAttendance: { openAttendance(classID: $0, date: nil, in: workspace) },
                     openClass: { shell.tabs.push(.classroom($0)) },
-                    openEvent: { shell.tabs.push(.event($0)) }
+                    openEvent: { shell.tabs.push(.event($0)) },
+                    openFeesDue: { openFeesDue(in: workspace) }
                 ),
                 ticks: !deps.fixedClock,
                 boardState: launch.flatMap(Self.todayBoardState)

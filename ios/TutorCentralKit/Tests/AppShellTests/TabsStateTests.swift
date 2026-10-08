@@ -18,7 +18,6 @@ import Testing
         let id = UUID()
         #expect(tabs.open(.student(id)))
         #expect(tabs.selected == .students && tabs.paths[.students] == [.student(id)])
-        #expect(!tabs.open(.fees(month: nil)))
     }
 
     @Test func aRouteThatCannotShowIsTakenOffItsStack() {
@@ -42,5 +41,15 @@ import Testing
         #expect(tabs.open(.event(id)))
         // The event's route is the schedule with its Edit sheet: one screen, not a schedule under a schedule.
         #expect(tabs.selected == .more && tabs.paths[.more] == [.event(id)])
+    }
+
+    @Test func aFeesLinkOpensTheTab() {
+        let tabs = TabsState(selected: .today)
+        tabs.push(.settings)
+        #expect(tabs.open(.fees(month: "2026-09")))
+        #expect(tabs.selected == .fees && tabs.paths[.fees] == [])
+        #expect(RootView.linkMonth("2026-09") == Period(year: 2026, month: 9))
+        #expect(RootView.linkMonth("2026-13") == nil && RootView.linkMonth(nil) == nil && RootView
+            .linkMonth("x") == nil)
     }
 }

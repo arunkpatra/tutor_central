@@ -2,20 +2,14 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// A place whose feature arrives in a later build, to P2-Later: its title, then one card that says so, with the
-/// build. Used for the four tabs past Today and for Today's actions that lead to a later screen.
+/// A place whose feature arrives in a later build, to P2-Later: one card that says so, with the build, under its
+/// title in the navigation bar.
 struct LaterView: View {
     let place: LaterPlace
     let build: String
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                if place.isTab {
-                    Text(place.title)
-                        .typeStyle(Tokens.display)
-                        .foregroundStyle(Tokens.text.color)
-                        .accessibilityAddTraits(.isHeader)
-                }
                 Card {
                     VStack(spacing: Tokens.inline) {
                         FeatureTile(symbol: place.symbol)
@@ -36,47 +30,40 @@ struct LaterView: View {
                 }
             }
             .padding(.horizontal, Tokens.pageSide)
-            .padding(.top, place.isTab ? Tokens.pageTop - topInset : Tokens.sectionGap)
+            .padding(.top, Tokens.sectionGap)
             .padding(.bottom, Tokens.contentBottom)
         }
-        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
-        .navigationTitle(place.isTab ? "" : place.title)
+        .navigationTitle(place.title)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar(place.isTab ? .hidden : .automatic, for: .navigationBar)
     }
-
-    @State private var topInset: CGFloat = 0
 }
 
 /// Every place that is "on the way" in this build, with the board's words.
 enum LaterPlace: Hashable, Sendable {
-    /// The Fees tab's root, until Phase 5.
-    case feesTab
     case scanRegister
     case studentFees
-
-    var isTab: Bool {
-        self == .feesTab
-    }
+    /// Parent payments, until its screen lands with Phase 5's payments.
+    case payments
 
     var title: String {
         switch self {
-        case .feesTab, .studentFees: "Fees"
+        case .studentFees: "Fees"
         case .scanRegister: "Scan register"
+        case .payments: "Parent payments"
         }
     }
 
     var symbol: String {
         switch self {
-        case .feesTab, .studentFees: "indianrupeesign"
+        case .studentFees, .payments: "indianrupeesign"
         case .scanRegister: "doc.viewfinder"
         }
     }
 
     var heading: String {
         switch self {
-        case .feesTab, .studentFees: "\(title) are on the way"
+        case .studentFees, .payments: "\(title) are on the way"
         case .scanRegister: "\(title) is on the way"
         }
     }
@@ -84,7 +71,7 @@ enum LaterPlace: Hashable, Sendable {
     var line: String {
         let opening = "This build has sign-in, your profile, Today and the register."
         let rest = switch self {
-        case .feesTab: "Fees, reminders and receipts arrive"
+        case .payments: "Your UPI id, payment link and receipts arrive"
         case .scanRegister: "Photographing your paper register and reading it arrives"
         case .studentFees: "The fee ledger, reminders and receipts arrive"
         }

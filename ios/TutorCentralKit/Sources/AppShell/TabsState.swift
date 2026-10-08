@@ -31,8 +31,8 @@ import SwiftUI
         }
     }
 
-    /// A link opens its tab at the root, then its screen (a student's detail). Returns false when this build has no
-    /// screen for it, so the caller can say so.
+    /// A link opens its tab at the root, then its screen (a student's detail; the fees month is set by the caller).
+    /// Returns false when this build has no screen for it, so the caller can say so.
     func open(_ link: DeepLink) -> Bool {
         selected = link.tab
         paths[link.tab] = []
@@ -44,7 +44,7 @@ import SwiftUI
         case let .student(id):
             paths[link.tab] = [.student(id)]
             return true
-        case .fees: return false
+        case .fees: return true
         }
     }
 }

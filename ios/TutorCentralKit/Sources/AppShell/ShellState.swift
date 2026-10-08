@@ -1,5 +1,6 @@
 import Attendance
 import Domain
+import Fees
 import Foundation
 import Observation
 import Students
@@ -17,6 +18,8 @@ import Today
     @ObservationIgnored var register: RegisterStore?
     /// One mark screen per centre, so a tab switch keeps the date, the class and the unsaved toggles.
     @ObservationIgnored var attendance: AttendanceStore?
+    /// One fees store per centre, so a tab switch keeps the month and the filter.
+    @ObservationIgnored var fees: FeesStore?
     /// One tasks store per centre, shared by Today's Tasks card and the Tasks screen.
     @ObservationIgnored var tasks: TasksStore?
     private var centre: UUID?
@@ -41,6 +44,7 @@ import Today
         today = nil
         register = nil
         attendance = nil
+        fees = nil
         tasks = nil
         centre = nil
     }

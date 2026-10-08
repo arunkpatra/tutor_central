@@ -18,7 +18,6 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case onboarding
     case todayEmpty = "today-empty"
     case laterStudents = "later-students"
-    case laterFees = "later-fees"
     case laterAttendance = "later-attendance"
     case laterMore = "later-more"
     case settings
@@ -66,6 +65,19 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case todayNoClass = "today-no-class"
     case todayAddingTask = "today-adding-task"
     case more
+    case feesEmpty = "fees-empty"
+    case fees
+    case feesDue = "fees-due"
+    case feesPaid = "fees-paid"
+    case feesOverdue = "fees-overdue"
+    case feesPayee = "fees-payee"
+    case feesGenerate = "fees-generate"
+    case feesGenerateNothing = "fees-generate-nothing"
+    case feesMarkPaid = "fees-mark-paid"
+    case feesMarkedPaid = "fees-marked-paid"
+    case feesReceipt = "fees-receipt"
+    case feesRemind = "fees-remind"
+    case feesWaive = "fees-waive"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }
