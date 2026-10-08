@@ -181,7 +181,7 @@ import Foundation
         return changed
     }
 
-    private nonisolated static func id(_ number: Int) -> UUID {
+    public nonisolated static func id(_ number: Int) -> UUID {
         UUID(uuidString: String(format: "aaaaaaaa-0000-0000-0000-%012d", number))!
     }
 

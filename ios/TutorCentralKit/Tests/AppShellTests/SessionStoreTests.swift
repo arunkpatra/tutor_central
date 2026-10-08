@@ -16,6 +16,8 @@ import Testing
             messages: FakeMessageLogRepository(),
             events: FakeEventsRepository(),
             tasks: FakeTasksRepository(),
+            fees: FakeFeesRepository(),
+            qrImages: MemoryQRImageStore(),
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"

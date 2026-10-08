@@ -13,13 +13,33 @@ import Foundation
         ),
     ]
 
+    /// Dev reminded on Tuesday 6 October about October; Nikhil on Wednesday 30 September about September
+    /// (P5-Fees-All, P5-Fees-Overdue).
+    public nonisolated static let feeSeed = [
+        FeeLog(
+            studentID: FakeStudentsRepository.id(4), kind: .reminder,
+            openedAt: DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 6, hour: 10, minute: 15))!,
+            month: Period(year: 2026, month: 10)
+        ),
+        FeeLog(
+            studentID: FakeStudentsRepository.id(8), kind: .reminder,
+            openedAt: DayHeading.india.date(from: DateComponents(year: 2026, month: 9, day: 30, hour: 18))!,
+            month: Period(year: 2026, month: 9)
+        ),
+    ]
+
     public var logs: [AbsenceLog]
+    public var feeLogs: [FeeLog]
     public var nextError: (any Error)?
     public private(set) var logged: [UUID] = []
+    public private(set) var feeLogged: [FeeLog] = []
     private let now: () -> Date
 
-    public init(logs: [AbsenceLog] = [], now: @escaping () -> Date = { FakeCountsRepository.fixedNow }) {
+    public init(
+        logs: [AbsenceLog] = [], feeLogs: [FeeLog] = [], now: @escaping () -> Date = { FakeCountsRepository.fixedNow }
+    ) {
         self.logs = logs
+        self.feeLogs = feeLogs
         self.now = now
     }
 
@@ -34,6 +54,24 @@ import Foundation
         logged.append(studentID)
         let made = AbsenceLog(studentID: studentID, openedAt: now(), aboutDate: about)
         logs.append(made)
+        return made
+    }
+
+    public func feeLogs(centre _: UUID, month: Period) async throws -> [FeeLog] {
+        try takeError()
+        return feeLogs.filter { $0.month == month }.sorted { $0.openedAt > $1.openedAt }
+    }
+
+    public func feeLogs(centre _: UUID, student: UUID) async throws -> [FeeLog] {
+        try takeError()
+        return feeLogs.filter { $0.studentID == student }.sorted { $0.openedAt > $1.openedAt }
+    }
+
+    public func logFee(centre _: UUID, studentID: UUID, kind: FeeLog.Kind, month: Period) async throws -> FeeLog {
+        try takeError()
+        let made = FeeLog(studentID: studentID, kind: kind, openedAt: now(), month: month)
+        feeLogged.append(made)
+        feeLogs.append(made)
         return made
     }
 

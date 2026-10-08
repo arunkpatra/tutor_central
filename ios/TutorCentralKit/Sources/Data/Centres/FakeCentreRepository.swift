@@ -27,10 +27,20 @@ import Foundation
                 0x22
             )),
             name: "Bright Minds Tuition",
-            whatsappNumber: "+919611299988"
+            whatsappNumber: "+919611299988",
+            payments: PaymentSettings(
+                upiID: "meera@okhdfcbank", sendReceipts: true,
+                upiConfirmedAt: DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 1, hour: 9))
+            )
         ),
         profile: Profile(displayName: "Meera Nair")
     )
+
+    /// The id set and never confirmed: Fees asks "Parents are told to pay …" (P5-Fees-Payee).
+    public nonisolated static let meeraWorkspaceUnconfirmed = with(payments: PaymentSettings(upiID: "meera@okhdfcbank"))
+
+    /// No UPI id yet (P5-Fees-Empty, P5-Payments-Empty).
+    public nonisolated static let meeraWorkspaceWithoutUPI = with(payments: PaymentSettings())
 
     public var workspace: Workspace?
     public var nextError: (any Error)?
@@ -40,6 +50,10 @@ import Foundation
     public private(set) var nameUpdates: [String] = []
     public private(set) var whatsAppUpdates: [String?] = []
     public private(set) var profileUpdates: [String] = []
+    public private(set) var upiUpdates: [String?] = []
+    public private(set) var linkUpdates: [String?] = []
+    public private(set) var receiptUpdates: [Bool] = []
+    public private(set) var confirmations: [Date] = []
 
     public init(workspace: Workspace? = nil) {
         self.workspace = workspace
@@ -82,6 +96,37 @@ import Foundation
         try takeError()
         profileUpdates.append(displayName)
         workspace?.profile.displayName = displayName
+    }
+
+    public func updateUPI(id _: UUID, upiID: String?) async throws {
+        try takeError()
+        upiUpdates.append(upiID)
+        workspace?.centre.payments.upiID = upiID
+        workspace?.centre.payments.upiConfirmedAt = nil
+    }
+
+    public func updatePaymentLink(id _: UUID, link: String?) async throws {
+        try takeError()
+        linkUpdates.append(link)
+        workspace?.centre.payments.paymentLink = link
+    }
+
+    public func updateSendReceipts(id _: UUID, on: Bool) async throws {
+        try takeError()
+        receiptUpdates.append(on)
+        workspace?.centre.payments.sendReceipts = on
+    }
+
+    public func confirmUPI(id _: UUID, at: Date) async throws {
+        try takeError()
+        confirmations.append(at)
+        workspace?.centre.payments.upiConfirmedAt = at
+    }
+
+    private nonisolated static func with(payments: PaymentSettings) -> Workspace {
+        var workspace = meeraWorkspace
+        workspace.centre.payments = payments
+        return workspace
     }
 
     private func takeError() throws {

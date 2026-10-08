@@ -17,7 +17,7 @@ public enum Fixtures {
         case .needsOnboarding: auth.user = FakeAuthRepository.meera
         case .ready:
             auth.user = FakeAuthRepository.meera
-            centres.workspace = meeraWorkspace
+            centres.workspace = workspace(for: state)
         case .loading, .signedOut: break
         }
         return Dependencies(
@@ -27,10 +27,15 @@ public enum Fixtures {
             students: FakeStudentsRepository(students: register(for: state).students),
             classes: FakeClassesRepository(classes: register(for: state).classes),
             attendance: FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) }),
-            messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed, now: { clock(for: state) }),
+            messages: FakeMessageLogRepository(
+                logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed,
+                now: { clock(for: state) }
+            ),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
+            fees: FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) }),
+            qrImages: MemoryQRImageStore(),
             cachesRegister: false,
             now: { clock(for: state) },
             fixedClock: true,
@@ -50,9 +55,22 @@ public enum Fixtures {
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
-             .todayAddingTask, .more: .ready(meeraWorkspace)
+             .todayAddingTask, .more: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
+        }
+    }
+
+    /// The centre each state signs in to: the boards' Meera, her UPI id confirmed on 1 October.
+    public static func workspace(for _: LaunchState) -> Workspace {
+        meeraWorkspace
+    }
+
+    /// The fees each state starts with: none before anything exists; the boards' months otherwise.
+    static func fees(for state: LaunchState) -> [FeeInvoice] {
+        switch state {
+        case .todayEmpty, .studentsEmpty, .attendanceEmpty, .classesEmpty: []
+        default: FakeFeesRepository.seed
         }
     }
 
