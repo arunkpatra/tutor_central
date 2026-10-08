@@ -88,19 +88,20 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      # Production's Supabase (the anon key is public by design, D11). "https:/$()/" keeps xcconfig from reading "//"
-      # as a comment, as Local.xcconfig.example does.
+      # Production's Supabase (the anon key is public by design, D11) and our API (API_ORIGIN, as deploy.yml uses it).
+      # "https:/$()/" keeps xcconfig from reading "//" as a comment, as Local.xcconfig.example does.
       - name: Local xcconfig (production values)
         env:
           URL: ${{ vars.SUPABASE_URL }}
           KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          API: ${{ vars.API_ORIGIN }}
         run: |
-          if [ -z "$URL" ] || [ -z "$KEY" ]; then
-            echo "::error::The repository variables SUPABASE_URL and SUPABASE_ANON_KEY must be set; a build without them cannot sign in."
+          if [ -z "$URL" ] || [ -z "$KEY" ] || [ -z "$API" ]; then
+            echo "::error::The repository variables SUPABASE_URL, SUPABASE_ANON_KEY and API_ORIGIN must be set; a build without them cannot sign in or reach the AI tools."
             exit 1
           fi
           rep='/$()/'
-          printf 'SUPABASE_URL = %s\nSUPABASE_ANON_KEY = %s\n' "${URL/\/\//$rep}" "$KEY" > ios/Config/Local.xcconfig
+          printf 'SUPABASE_URL = %s\nSUPABASE_ANON_KEY = %s\nAPI_ORIGIN = %s\n' "${URL/\/\//$rep}" "$KEY" "${API/\/\//$rep}" > ios/Config/Local.xcconfig
           cat ios/Config/Local.xcconfig
 
       - run: bun gen

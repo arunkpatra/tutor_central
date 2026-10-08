@@ -18,6 +18,8 @@ import Testing
             tasks: FakeTasksRepository(),
             fees: FakeFeesRepository(),
             qrImages: MemoryQRImageStore(),
+            ai: FakeAIRepository(),
+            aiHistory: FakeAIHistoryRepository(),
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"

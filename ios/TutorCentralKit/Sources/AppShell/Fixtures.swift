@@ -36,6 +36,8 @@ public enum Fixtures {
                 .seed),
             fees: FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) }),
             qrImages: MemoryQRImageStore(images: state == .paymentsQR ? [meeraWorkspace.centre.id: sampleQR()] : [:]),
+            ai: FakeAIRepository(now: { clock(for: state) }),
+            aiHistory: FakeAIHistoryRepository(generations: FakeAIHistoryRepository.seed),
             cachesRegister: false,
             now: { clock(for: state) },
             fixedClock: true,

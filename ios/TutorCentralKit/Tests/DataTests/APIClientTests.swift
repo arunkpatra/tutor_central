@@ -1,0 +1,189 @@
+import Domain
+import Foundation
+import Synchronization
+import Testing
+@testable import Data
+
+@Suite(.serialized) struct APIClientTests {
+    static let origin = URL(string: "https://api.test") ?? URL(fileURLWithPath: "/")
+    static let centre = UUID(uuidString: "22222222-2222-2222-2222-222222222222") ?? UUID()
+    static let context = GenerateContext(
+        centre: centre, className: "Class 10 Maths", subject: "Mathematics", studentName: nil, parentName: nil,
+        attendanceLine: nil, tutorName: "Meera Nair", centreName: "Bright Minds Tuition"
+    )
+
+    static func client(status: Int, body: String) -> (APIClient, StubProtocol.Recorder) {
+        let recorder = StubProtocol.Recorder(status: status, body: body)
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [StubProtocol.self]
+        StubProtocol.recorder.withLock { $0 = recorder }
+        return (APIClient(origin: origin, token: { "tok" }, session: URLSession(configuration: config)), recorder)
+    }
+
+    static func sent(_ recorder: StubProtocol.Recorder) throws -> [String: Any] {
+        let body = try #require(recorder.bodies.first)
+        return try #require(try JSONSerialization.jsonObject(with: body) as? [String: Any])
+    }
+
+    @Test func generatePostsTheFormWithTheBearerAndDecodesTheResult() async throws {
+        let body = #"{"id":"fbc6ae19-2769-4934-bf10-c830207fd6a3","result":{"title":"Quadratic equations","sections":"#
+            + #"[{"title":"A","marksEach":1,"questions":[{"number":1,"text":"q","marks":1,"answer":"a"}]}]}}"#
+        let (client, recorder) = Self.client(status: 200, body: body)
+        let form = PaperForm(classID: UUID(), subject: "Mathematics", topic: "Quadratic equations")
+        let generation = try await client.generate(.paper(form), context: Self.context)
+        #expect(generation.id == UUID(uuidString: "fbc6ae19-2769-4934-bf10-c830207fd6a3") && generation.kind == .paper)
+        let request = try #require(recorder.requests.first)
+        #expect(request.url?.path == "/ai/generate" && request
+            .value(forHTTPHeaderField: "Authorization") == "Bearer tok")
+        let sent = try Self.sent(recorder)
+        #expect(sent["kind"] as? String == "paper" && sent["classLevel"] as? String == "Class 10 Maths")
+        #expect(sent["centreId"] as? String == Self.centre.uuidString.lowercased())
+        #expect(sent["topic"] as? String == "Quadratic equations" && sent["marks"] as? Int == 20)
+        #expect(sent["classId"] as? String == form.classID?.uuidString.lowercased())
+    }
+
+    struct Answer {
+        let status: Int
+        let body: String
+        let failure: APIFailure
+    }
+
+    @Test func everyAnswerBecomesItsFailure() async {
+        let refusal = "Couldn't make this one. Change the topic and try again."
+        let answers = [
+            Answer(
+                status: 403,
+                body: #"{"error":"Agree to the notice before the first photo.","reason":"consent"}"#,
+                failure: .consent
+            ),
+            Answer(status: 403, body: #"{"error":"sign in again","reason":"member"}"#, failure: .signedOut),
+            Answer(
+                status: 429,
+                body: #"{"error":"You've made today's 40. Try again tomorrow.","limit":40}"#,
+                failure: .limit(40)
+            ),
+            Answer(status: 422, body: #"{"error":"\#(refusal)"}"#, failure: .refused(refusal)),
+            Answer(status: 502, body: #"{"error":"The AI service didn't answer. Try again."}"#, failure: .service),
+            Answer(status: 401, body: #"{"error":"sign in again"}"#, failure: .signedOut),
+            Answer(status: 400, body: #"{"error":"topic: too long"}"#, failure: .server("topic: too long")),
+        ]
+        for answer in answers {
+            let (status, expected) = (answer.status, answer.failure)
+            let (client, _) = Self.client(status: status, body: answer.body)
+            do {
+                _ = try await client.scanRegister(
+                    ImageUpload(data: Data([0xFF, 0xD8, 0xFF]), mediaType: "image/jpeg"), centre: Self.centre
+                )
+                Issue.record("\(status) did not throw")
+            } catch {
+                #expect(error == expected, "\(status)")
+            }
+        }
+    }
+
+    @Test func aBodyOverTheLimitIsRefusedBeforeTheRequest() async {
+        let (client, recorder) = Self.client(status: 200, body: "{}")
+        let page = ImageUpload(data: Data(repeating: 0xFF, count: 1_100_000), mediaType: "image/jpeg")
+        do {
+            _ = try await client.checkPaper(
+                pages: Array(repeating: page, count: 3), scheme: .typed("Q1 (1) b"), studentName: "Hemanth Reddy",
+                centre: Self.centre
+            )
+            Issue.record("did not throw")
+        } catch {
+            #expect(error == .tooLarge && recorder.requests.isEmpty)
+        }
+        #expect(APIFailure.tooLarge.message == "That's too many pages. Up to six, and try sharper, smaller photos.")
+        #expect(APIFailure.offline.message == "Couldn't reach the AI service. Check your connection and try again.")
+    }
+
+    @Test func checkPaperSendsThePagesInOrderAndTheScheme() async throws {
+        let body = #"{"id":"11111111-1111-1111-1111-111111111111","result":{"questions":[{"number":1,"text":"q","#
+            + #""note":"n","marks":3,"of":1}],"summary":"s"}}"#
+        let (client, recorder) = Self.client(status: 200, body: body)
+        let pages = [Data([0xFF, 0xD8, 0xFF, 1]), Data([0xFF, 0xD8, 0xFF, 2])].map {
+            ImageUpload(data: $0, mediaType: "image/jpeg")
+        }
+        let answer = try await client.checkPaper(
+            pages: pages, scheme: .paper(generationID: UUID()), studentName: "Hemanth Reddy", centre: Self.centre
+        )
+        #expect(answer.result.questions[0].marks == 1, "clamped on arrival")
+        let sent = try Self.sent(recorder)
+        let sentPages = try #require(sent["pages"] as? [[String: String]])
+        #expect(sentPages.map { $0["imageBase64"] } == pages.map(\.base64))
+        #expect((sent["scheme"] as? [String: String])?["kind"] == "paper")
+    }
+}
+
+/// Answers every request with one status and body, recording what was sent. URLSession calls it off the main actor,
+/// so the recorder lives behind a lock.
+final class StubProtocol: URLProtocol {
+    static let recorder = Mutex<Recorder?>(nil)
+
+    final class Recorder: @unchecked Sendable {
+        let status: Int
+        let body: String
+        private let lock = NSLock()
+        private var sentRequests: [URLRequest] = []
+        private var sentBodies: [Data] = []
+
+        init(status: Int, body: String) {
+            self.status = status
+            self.body = body
+        }
+
+        var requests: [URLRequest] {
+            lock.withLock { sentRequests }
+        }
+
+        var bodies: [Data] {
+            lock.withLock { sentBodies }
+        }
+
+        func record(_ request: URLRequest, body: Data) {
+            lock.withLock {
+                sentRequests.append(request)
+                sentBodies.append(body)
+            }
+        }
+    }
+
+    override static func canInit(with _: URLRequest) -> Bool {
+        true
+    }
+
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        guard let recorder = Self.recorder.withLock({ $0 }) else { return }
+        recorder.record(request, body: request.httpBody ?? request.httpBodyStream.map(Self.read) ?? Data())
+        let response = HTTPURLResponse(
+            url: request.url ?? URL(fileURLWithPath: "/"), statusCode: recorder.status, httpVersion: nil,
+            headerFields: ["content-type": "application/json"]
+        )
+        if let response {
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        }
+        client?.urlProtocol(self, didLoad: Data(recorder.body.utf8))
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
+
+    private static func read(_ stream: InputStream) -> Data {
+        stream.open()
+        defer { stream.close() }
+        var data = Data()
+        var buffer = [UInt8](repeating: 0, count: 65536)
+        while stream.hasBytesAvailable {
+            let count = stream.read(&buffer, maxLength: buffer.count)
+            if count <= 0 {
+                break
+            }
+            data.append(buffer, count: count)
+        }
+        return data
+    }
+}
