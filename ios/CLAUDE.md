@@ -12,9 +12,9 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   every screen for both (D13).
 - Tests: Swift Testing (`import Testing`, `@Test`, `#expect`; no bare `@Suite`, SwiftFormat removes it) in
   `Tests/DesignSystemTests`, `DomainTests`, `DataTests`, `AppShellTests`, `OnboardingTests`, `TodayTests`,
-  `SettingsTests`, `StudentsTests`; stores are tested against the in-memory fakes. XCTest only in `SmokeTests`
-  (the launch, and iPhone only). No UI test suites (D15). A new test target goes in `Package.swift` and in the
-  scheme in `project.yml`.
+  `SettingsTests`, `StudentsTests`, `AttendanceTests`, `ScheduleTests`; stores are tested against the in-memory
+  fakes. XCTest only in `SmokeTests` (the launch, and iPhone only). No UI test suites (D15). A new test target goes
+  in `Package.swift` and in the scheme in `project.yml`.
 - The package is iOS only: build and test it with `xcodebuild` for the simulator (or `bun check`), not
   `swift test`.
 - Screens are proven by `bun shots <state>` and the pictures in the PR (D7). Every state a board has gets a
@@ -50,6 +50,23 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   (`supabase/templates/email-code.html`); codes land in Mailpit at :54324.
 - `bun check` runs `swiftformat --lint` and `swiftlint --strict`. Fix the code, never relax a rule; where the two
   tools disagree, SwiftFormat owns the concern and the SwiftLint setting says so (`.swiftlint.yml`).
+- A feature reads the register through Domain's `Register` (D33): AppShell passes the shared `RegisterStore` as `any
+  Register` to Attendance, Schedule and Today; only test targets import Students to build a real one.
+- A screen whose store AppShell builds in the view (History, the schedule, a student's month, the student detail)
+  keeps it in `@State` (`_store = State(initialValue:)`); otherwise every rebuild swaps a loaded store for an empty
+  one.
+- A store whose reads can overlap (a month move, a link, a picker) keeps a load generation and drops a stale answer;
+  `AttendanceStore` also lets its first load stand aside for an open asked for meanwhile.
+- A graphical `DatePicker` in a popover takes `.calendarPopover(timeZone:)` (DesignSystem): without a width it
+  collapses to a sliver.
+- `Card { ForEach … }` needs a `VStack(spacing: 0)` inside: modifiers on a bare `ForEach` apply to every row (each
+  row became its own card).
+- A section action built with a ternary of tuples (`cond ? (label, run) : (label, run)`) can stall the type checker:
+  give it a typed computed property. `SettingRow`'s trailing closure is its trailing view; pass `action:` by name.
+- The local seed is relative to the real day (`current_date`), so a hand run's "today" is the real weekday; the
+  fixtures' boards are Wednesday 7 October.
+- A paused Docker container hangs requests; stop the gateway (`docker stop supabase_kong_tutor_central`, then `docker
+  start`) to test offline paths (supabase-swift takes about 20 s to give up).
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

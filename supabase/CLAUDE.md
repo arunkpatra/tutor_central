@@ -22,7 +22,7 @@
   additive while any installed build uses what it would remove (expand now, contract later): the database leads
   the app, and the TestFlight lane refuses a build while migrations are pending. Run it with
   `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to
-  0003 are on the hosted project. Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
+  0005 are on the hosted project. Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
 Commands: `bun check --only=db` (resets the local database, runs the tests, re-seeds);

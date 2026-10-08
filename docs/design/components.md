@@ -184,6 +184,12 @@ follows is its content.
 large only for long forms. The footer carries the primary button at 52 with 16 side padding and the safe
 area below. A form sheet asks before discarding typed changes.
 
+**Event sheets** (P4-Event-New, -Edit) open at the large detent. Delete event at the foot of Edit event closes the
+sheet and the schedule asks over itself, on the event's day (P4-Event-Delete-Confirm).
+
+**A calendar in a popover** (the attendance date, an event's day, a task's due day) is the system's graphical date
+picker at 320 wide (`calendarPopover`); without a width the popover collapses it.
+
 ## Dialog (confirmation)
 
 `surface1`, `lineStrong` border, `radiusSheet`, `shadowDialog`, padding 22. Title `title2`, body `subhead`
@@ -252,7 +258,8 @@ the footer.
 A well 46 with `plus` in `text3` and "Add a task" as placeholder, at the top of the Tasks screen and, on Today, as
 the first row of the Tasks card when Add is tapped. Focused it takes the focus ring; under it a row of chips (the
 due date as a filter chip with `calendar`, "No date" neutral) and a quiet Add (700) on the right; the section's
-action reads Cancel while adding.
+action reads Cancel while adding. The date chip names the chosen day ("Tomorrow", "Fri 9 Oct") and opens the system's
+graphical date picker in a popover; a tap turns it on with the next weekday; No date clears it.
 
 ## Money, phone, date and time
 

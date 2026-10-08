@@ -23,15 +23,23 @@ screen, several as a polish slice, or not at all.
 
 | # | Seen | Screen | What is seen | Source |
 |---|---|---|---|---|
-| U1 | 2026-10-08 | Today | The content scrolls under the status bar | The owner, after installing a build (session 6). Taken into Phase 4 by the owner (2026-10-08): `phase-04-plan.md` Task 11 draws the system's glass edge under the status bar on every tab root; board P4-Today-AddingTask |
-| U2 | 2026-10-08 | Today | The "Start here: Add your first students" card still shows with 10 students in the register; it is Phase 2's fixed content (`phase-02-plan.md`, Today); Phase 4 makes Today live and may settle it | Session 7's hand run (`plan/sessions/007/record.md`). Closed by `phase-04-plan.md` Task 11 (Today live) |
-| U3 | 2026-10-08 | Today | The Today section says "No classes yet" while the tile beside it says "1 Classes today"; also Phase 2's fixed content; Phase 4 may settle it | Session 7's hand run |
-| U4 | 2026-10-08 | Today | On the phone the "Classes today" tile is taller than the other two: its label wraps to two lines and the tiles do not share a height; the boards draw all three at one height | The owner, build 6 (session 8). Taken into Phase 4 by the owner: `phase-04-plan.md` Task 11 |
+| U5 | 2026-10-08 | More | The rows are 56 pt high (SettingRow's minimum); P4-More draws them at 50 | Session 9, comparing with the board (PR #42) |
+| U6 | 2026-10-08 | Today, adding a task | With the keyboard up the add field sits just above it and its chips are hidden until the card is scrolled | Session 9's hand run (issue #43) |
+| U7 | 2026-10-08 | Edit event | With the keyboard up, Delete event rides just above it and the note's well is clipped | Session 9's hand run |
+| U8 | 2026-10-08 | Date pickers in a popover | Picking the day the calendar already shows leaves the popover open (tap outside to close); the system calendar starts the week on Sunday where the app's month starts on Monday | Session 9's hand run |
+| U9 | 2026-10-08 | Sheets with a field | A failure toast draws at the sheet's bottom, behind the keyboard while it is up (Phase 3's sheets too) | Session 9's follow-up hand run |
+| U10 | 2026-10-08 | Attendance mark | A slow or failing read shows nothing for up to 20 s (no spinner by the date), and "Everyone starts present…" stays beside the error line | Session 9's follow-up hand run |
+| U11 | 2026-10-08 | today-adding-task | The launch state cannot scroll Coming up to the top as P4-Today-AddingTask draws (the board's room is the keyboard's) | Session 9, comparing with the board |
+| U12 | 2026-10-08 | Fees tab | The later card still says "This build has sign-in, your profile, Today and the register." | Session 9 |
 
 ## Done
 
 | # | Done | Pull request | What changed |
 |---|---|---|---|
+| U1 | 2026-10-08 | #42 | Today, Students, Attendance and More draw the system's glass under the status bar once their content scrolls (`statusBarGlass()`) |
+| U2 | 2026-10-08 | #42 | Today live: "Start here" shows only for an empty register |
+| U3 | 2026-10-08 | #42 | Today's section lists the day's classes and events, so it agrees with the "Classes today" tile |
+| U4 | 2026-10-08 | #42 | The three tiles share the row's height |
 
 ## Dropped
 
