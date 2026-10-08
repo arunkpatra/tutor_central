@@ -37,6 +37,10 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - Pickers the boards draw as accent values (a date of birth, a class's times) are buttons opening the system's
   picker in a popover; the compact `DatePicker` draws a capsule the boards do not.
 - `bun shots` photographs the last `bun check` build: rebuild before shooting a change.
+- A repository's write path is proven in Swift against the local stack before a build ships (a throwaway test with
+  an in-memory session; the test host has no keychain), not only by curl: Phase 3's insert answer did not decode.
+- A failing test can stall `xcodebuild` ten minutes while it collects simulator diagnostics; a local run with
+  `-collect-test-diagnostics never` reports at once.
 - Boards draw focus without a keyboard: fields take `showsFocus` for board states and `autofocus` for real use.
 - Local config: `Config/Local.xcconfig` (ignored) from `Config/Local.xcconfig.example`; the anon key (the JWT,
   `ANON_KEY`) from `supabase status -o env`. The local stack sends the code email

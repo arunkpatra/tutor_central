@@ -1,7 +1,7 @@
 # Phase 3: Students and classes
 
-**Status:** Done (session 6, 2026-10-08): PRs #24 to #31; migration 0003 in production; build 0.1.0 (5) on
-TestFlight. **Depends on:** Phase 2 (done); Phase 0's Phase 3 boards (approved 2026-10-08, `docs/design/mockups/P3-*`).
+**Status:** Done (session 6, 2026-10-08): PRs #24 to #31, the final review's fixes in #33; migration 0003 in
+production; build 0.1.0 (6) on TestFlight. **Depends on:** Phase 2 (done); Phase 0's Phase 3 boards (approved 2026-10-08, `docs/design/mockups/P3-*`).
 
 ## Goal
 
@@ -64,10 +64,10 @@ the routes (`student`, `classes`, `classroom`), `tutorcentral://student/<id>`, a
 **Acceptance, line by line.**
 - Every screen matches its board; screenshots in PRs #27 to #30, both appearances, for all 21 states.
 - Add, edit, move between classes, archive, restore and delete a student, and a class likewise, with the list
-  following without a reload: `RegisterStoreTests` against the fakes (16 tests). The writes the app sends were run
-  against the local stack with curl as the seed's tutor (insert with nulls, update, archive, assign, delete, and
-  `archive_class` refusing an unknown class). Not done: the same in the simulator against the local stack, because
-  typing into the simulator was unreliable in this session; the owner's install is the first hand run.
+  following without a reload: `RegisterStoreTests` against the fakes. After the final review, every Swift read and
+  write the app makes was run against the local stack as the seed's tutor (a throwaway test). Not done: the screens
+  driven in the simulator against the local stack (typing into the simulator was unreliable in this session); the
+  owner's install of build 6 is the first hand run.
 - The seed's ten students and two classes: the PostgREST read of `seed.sql`'s rows was run against the local stack
   (curl); the fakes carry the same rows with fixed ids.
 - Domain tests cover every rule in item 6 (45 Domain tests).
@@ -95,6 +95,10 @@ the routes (`student`, `classes`, `classroom`), `tutorcentral://student/<id>`, a
 - Three plan tests were wrong and were corrected: the search fixture gave both students the same number; the retry
   test expected the failed attempt to reach the fake; the class order expected the database's text order, which
   the fake and the store now keep. One plan rule was wrong: a typed "+91 98111" did not match; it does now.
+
+**Final review:** one Critical (student saves did not decode their answer; Retry duplicated) and six Important,
+fixed in PR #33 and proven against the local stack in Swift; build 0.1.0 (5) carried the Critical, build 6 replaces
+it. The deferred minors are in `plan/sessions/006/record.md`.
 
 **Remains, for later phases or polish:** the detail's Attendance section, Fees "See all", Mark attendance and Scan
 register open the later board until Phases 4, 5 and 6; a class restore if ever wanted; the owner's UI polish pass.

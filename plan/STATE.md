@@ -3,10 +3,11 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 6. **Phase 3 done:** PRs #24 to #31 merged; migration 0003 in production;
-build 0.1.0 (5) on TestFlight (run 5). The final review of the eight PRs is recorded in `plan/sessions/006/record.md`.
-**Next:** the owner installs build 5 and tries the register with real students and a class; then Phase 0 step 0.5
-(the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
+**Last updated:** 2026-10-08, session 6. **Phase 3 done:** PRs #24 to #31 merged; migration 0003 in production. The
+final review found a Critical in build 5 (adding or editing a student failed and Retry duplicated it); PR #33 fixed it
+and six Important findings, and build 0.1.0 (6) replaces build 5. D31: CI skips a commit of documents only (#32).
+**Next:** the owner installs build 6 (not 5) and tries the register with real students and a class; then Phase 0
+step 0.5 (the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
 
 ## Where we are
 
@@ -22,7 +23,7 @@ build 0.1.0 (5) on TestFlight (run 5). The final review of the eight PRs is reco
 ## In flight
 
 Nothing open. No branch but `main` and `pr-shots` (the merged `phase-2/*` and `phase-3/*` branches remain on the
-remote; delete them when convenient). `main`'s check is green; build 0.1.0 (5) is on TestFlight.
+remote; delete them when convenient). `main`'s check is green; build 0.1.0 (6) is on TestFlight (build 5 has the save bug: do not use it).
 
 ## Production
 
@@ -44,12 +45,17 @@ remote; delete them when convenient). `main`'s check is green; build 0.1.0 (5) i
 
 ## Open items
 
-- **The owner's first hand run of the register** on build 5: Phase 3's flows were tested against the fakes and its
-  writes run with curl against the local stack, but not driven in the simulator against the local stack (typing
-  into the simulator was unreliable in session 6).
+- **The owner's first hand run of the register** on build 6. Every Swift read and write was run against the local
+  stack (a throwaway test, after the review's Critical); the screens were not driven in the simulator against it
+  (typing into the simulator was unreliable in session 6).
+- **The owner's call:** the register cache (children's names, parents' numbers, notes) stays on disk after sign-out,
+  as the Phase 3 plan settled; the final review would remove it on sign-out and write it with complete file
+  protection, for a shared phone.
+- `bun check`'s `xcodebuild` can stall ten minutes on a failing test while it collects simulator diagnostics; adding
+  `-collect-test-diagnostics never` to `tools/check/steps.ts` is a small tools change for the next code session.
 - **Board content to confirm:** P3-Students-Searching draws "3 of 10 match" for "sh"; the rule finds 4 (Lakshmi).
 - **Review minors:** Phase 2's remaining list is in `plan/sessions/004/record.md` (Phase 3 took the digits,
-  shadows and haptics); Phase 3's are in `plan/sessions/006/record.md`.
+  shadows and haptics); Phase 3's deferred minors are in `plan/sessions/006/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
 - **UI polish** (owner, after the first install): a pass over the built screens; seen so far: Today's content

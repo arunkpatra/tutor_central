@@ -3,8 +3,9 @@
 Model: Claude Opus 5.5 (D17), from `resume/005-phase-3-build.md`, executing `plan/phase-03-plan.md` inline with
 `superpowers:executing-plans` (a ledger of rulings kept outside the repo; the rulings are below). Outcome: PRs #24 to
 #31 merged, as the plan's eight; migration 0003 in production (deploy run 37724513096, then 37731454614 with
-nothing pending and the API at `7a5596a`); build 0.1.0 (5) uploaded by `testflight.yml` (run 5). No new decision
-number: no ruling changed a rule.
+nothing pending and the API at `7a5596a`); build 0.1.0 (5) uploaded by `testflight.yml` (run 5). The final review
+found a Critical in build 5 (student saves); PR #33 fixed it and six Important findings; build 0.1.0 (6) replaces it.
+D31 (the owner's ask): CI skips a commit of documents only, PR #32.
 
 ## What was done, in order
 
@@ -78,4 +79,46 @@ number: no ruling changed a rule.
 
 ## Final review
 
-(Recorded below when the reviewer's pass is in.)
+A fresh reviewer (Fable) read the merged range 14a63cd..7a5596a (PRs #24 to #31), read-only. Verdict: one Critical,
+six Important, with fixes. All seven fixed in PR #33, test-first where there is logic:
+
+1. **Critical:** every student add and edit failed on the real backend (the insert's answer has no `fee_invoices`;
+   `StudentRow` required it), and Retry wrote the student twice. The plan's own code; the tests decoded only rows
+   with invoices and the curl checks never ran the Swift decoder. Fixed; a throwaway test then ran every Swift write
+   against the local stack as the seed's tutor (and failed with the old code, passed with the fix). Build 5 carried
+   the bug; the owner was told not to add or edit on it.
+2. Overlapping writes undid each other (whole-list rollback): rollback per row.
+3. A class edit could land on another class after the list re-sorted: looked up by id after the save.
+4. A failed save's toast was hidden under the form sheet: `ToastCenter` and `ToastHost` moved to DesignSystem; the
+   three sheets draw the toast over themselves.
+5. An offline first launch showed "No students yet": the register is empty only after a read said so.
+6. A detail whose student went while open was blank and trapped: the back row stays; the route leaves with the
+   toast.
+7. The pickers showed the phone's time zone: India's.
+
+The reviewer weighed none of the 53 rulings wrong on its own; it named the deferred simulator run as where the
+Critical slipped through. Lesson recorded in `ios/CLAUDE.md`: a repository's write path is proven against the local
+stack in Swift before a build ships, not only by curl.
+
+**Deferred minors** (for the polish slice or the phase that touches the file):
+- `RegisterStore.fetch`: a cancelled first read (a push or tab switch mid-read) shows "Couldn't refresh…" until the
+  next run (Today's store has the same pattern).
+- `persist()` while an add is in flight caches the placeholder's random id; the next launch shows a phantom row
+  until the refresh.
+- A second failure replaces the first's Retry.
+- `ClassFormSheet`: "Not set" on Ends sets 17:00 even when Starts is 17:00 (the end-before-start error at once).
+- `StudentQuery`: "91 98111" (no plus, under eleven digits) does not match.
+- `PhoneNumber` still accepts any `isNumber` (the field filters ASCII since #31; the Domain rule should too).
+- `StudentDetailStore` uses `DayHeading.india` where the register carries an injected calendar.
+- Feature-level anatomy numbers (`inlineTitleHeight` 44, `avatarSize` 56, `AddMenu.width` 260) sit in
+  `Features/Students`; Phase 2 put such constants on DesignSystem components.
+- `addStudent` could send the placeholder's id so a retry after a lost answer conflicts instead of duplicating.
+- **The owner's call:** the register cache (children's names, parents' numbers, dates of birth, notes) stays on disk
+  after sign-out, as the plan settled; the reviewer would remove it on sign-out and write it with complete file
+  protection, for a shared phone.
+
+**Declined to judge** (the reviewer's list; each stands as the plan or Phase 2 left it): a deep link before the
+session is ready is dropped; the hidden navigation bar disables swipe-back (Settings' pattern); search ignores the
+filter chip ("a search looks everywhere"); the popover does not dim; no pull to refresh on the detail and class
+screens (no board draws it); class restore and archived classes unlisted (later); the form waits for the server
+before closing (the plan's `save()`); removal by context menu only.
