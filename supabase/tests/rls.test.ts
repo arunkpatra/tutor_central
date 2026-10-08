@@ -358,6 +358,28 @@ test("the limit counts only calls that did not fail, per kind group, over 24 hou
   }
 });
 
+test("a member cannot delete, backdate or re-kind a call, and failed calls meet a hard cap", async () => {
+  const sql = new SQL(l.db);
+  try {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+    const id = r.data as string;
+    expect((await a.from("ai_generations").delete().eq("id", id)).error).not.toBeNull();
+    expect((await a.from("ai_generations").update({ created_at: "2020-01-01T00:00:00Z" }).eq("id", id)).error).not.toBeNull();
+    expect((await a.from("ai_generations").update({ kind: "scan_register" }).eq("id", id)).error).not.toBeNull();
+    expect((await a.from("ai_generations").update({ status: "failed" }).eq("id", id)).error).toBeNull();
+    // 59 more marked failed: 60 started in the day, none counted by the soft rule, and the hard cap refuses the 61st.
+    await sql`insert into public.ai_generations (centre_id, kind, input, status)
+      select ${centreA}::uuid, 'homework', '{}', 'failed' from generate_series(1, 59)`;
+    const capped = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+    expect(capped.error?.message).toContain("ai_limit_reached");
+    expect(capped.error?.details).toBe("40");
+  } finally {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    await sql.close();
+  }
+});
+
 test("a refused start leaves no row", async () => {
   const before = (await a.from("ai_generations").select("id").eq("centre_id", centreA)).data?.length ?? 0;
   await a.from("centres").update({ ai_consent_at: null }).eq("id", centreA);
