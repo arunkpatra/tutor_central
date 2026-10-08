@@ -293,7 +293,10 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "create_centre":
+            "archive_class":
+{ Args: { "p_class": string }; Returns: undefined
+                           },
+"create_centre":
 { Args: { "p_display_name"?: string,"p_name": string,"p_whatsapp"?: string }; Returns: string
                            },
 "delete_centre":
