@@ -23,4 +23,12 @@ struct UPITests {
         #expect(UPIQR.upiID(in: "upi://pay?pn=Meera") == nil && UPIQR.upiID(in: "upi://pay?pa=not-an-id") == nil)
         #expect(UPIQR.upiID(in: "hello") == nil && UPIQR.notUPIMessage == "That QR is not a UPI QR.")
     }
+
+    @Test func aPayloadWithRawSpacesStillGivesItsPayee() {
+        // Review: some bank and merchant QRs carry the name unencoded; URLComponents refuses the whole string.
+        #expect(UPIQR.upiID(in: "upi://pay?pa=shop.owner@okaxis&pn=JOHN DOE STORE&cu=INR") == "shop.owner@okaxis")
+        #expect(UPIQR.upiID(in: "upi://pay?pn=Meera Nair&pa=meera@okhdfcbank") == "meera@okhdfcbank")
+        #expect(UPIQR.upiID(in: "upi://pay?pn=Meera Nair") == nil && UPIQR
+            .upiID(in: "upi://collect?pa=a@ok bank") == nil)
+    }
 }
