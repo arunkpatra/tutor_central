@@ -8,7 +8,7 @@ import SwiftUI
 /// the other three tabs are on the way.
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
-    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View
+    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -24,15 +24,13 @@ struct TabsView<
     let studentMonth: (UUID) -> StudentMonth
     let schedule: (UUID?) -> Schedule
     let tasks: () -> Tasks
+    let fees: () -> Fees
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
             Tab("Today", systemImage: "sun.max", value: AppTab.today) { stack(.today) { today() } }
             Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
-            Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { LaterView(
-                place: .feesTab,
-                build: build
-            ) } }
+            Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { fees() } }
             Tab("Attendance", systemImage: "checkmark.circle", value: AppTab.attendance) {
                 stack(.attendance) { attendance() }
             }

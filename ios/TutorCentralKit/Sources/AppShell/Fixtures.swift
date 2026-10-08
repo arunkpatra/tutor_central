@@ -46,7 +46,7 @@ public enum Fixtures {
     public static func initialState(for state: LaunchState) -> SessionStore.State {
         switch state {
         case .onboarding: .needsOnboarding(FakeAuthRepository.meera)
-        case .todayEmpty, .laterStudents, .laterFees, .laterAttendance, .laterMore, .settings, .studentsEmpty,
+        case .todayEmpty, .laterStudents, .laterAttendance, .laterMore, .settings, .studentsEmpty,
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
              .studentNewInvalid, .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm,
@@ -55,21 +55,28 @@ public enum Fixtures {
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
-             .todayAddingTask, .more: .ready(workspace(for: state))
+             .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
+             .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
+             .feesWaive: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
     }
 
-    /// The centre each state signs in to: the boards' Meera, her UPI id confirmed on 1 October.
-    public static func workspace(for _: LaunchState) -> Workspace {
-        meeraWorkspace
+    /// The centre each state signs in to: the boards' Meera, her UPI id confirmed on 1 October; a fresh centre has no
+    /// UPI id yet (P5-Fees-Empty); P5-Fees-Payee's id was never confirmed.
+    public static func workspace(for state: LaunchState) -> Workspace {
+        switch state {
+        case .feesEmpty, .feesGenerate: FakeCentreRepository.meeraWorkspaceWithoutUPI
+        case .feesPayee: FakeCentreRepository.meeraWorkspaceUnconfirmed
+        default: meeraWorkspace
+        }
     }
 
     /// The fees each state starts with: none before anything exists; the boards' months otherwise.
     static func fees(for state: LaunchState) -> [FeeInvoice] {
         switch state {
-        case .todayEmpty, .studentsEmpty, .attendanceEmpty, .classesEmpty: []
+        case .todayEmpty, .studentsEmpty, .attendanceEmpty, .classesEmpty, .feesEmpty, .feesGenerate: []
         default: FakeFeesRepository.seed
         }
     }

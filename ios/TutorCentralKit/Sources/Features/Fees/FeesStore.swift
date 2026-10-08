@@ -117,6 +117,13 @@ import Observation
         FeeTotals(invoices: invoices)
     }
 
+    /// The hero's Outstanding line; a past month's still-due fees are overdue (P5-Fees-Overdue: "1 parent, overdue").
+    public var outstandingLine: String {
+        let totals = totals
+        return month < today.period && totals.outstandingCount > 0
+            ? "\(totals.outstandingLine), overdue" : totals.outstandingLine
+    }
+
     public var rows: [Row] {
         FeeLedger.rows(invoices, filter: filter, current: today.period) { register.student($0)?.name ?? "" }
             .map(row)

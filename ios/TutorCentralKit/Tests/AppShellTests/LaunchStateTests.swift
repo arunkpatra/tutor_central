@@ -166,4 +166,24 @@ struct LaunchStateTests {
             year: 2026, month: 10, day: 10, hour: 9, minute: 30
         )))
     }
+
+    @MainActor @Test func theFeesStatesOpenTheTab() async throws {
+        let states: [LaunchState] = [
+            .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate, .feesGenerateNothing,
+            .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive,
+        ]
+        for state in states {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.workspace(for: state)))
+            #expect(RootView.tab(for: state) == .fees)
+        }
+        #expect(RootView.feesBoardState(.feesDue) == .due && RootView.feesBoardState(.feesMarkedPaid) == .markedPaid)
+        #expect(RootView.feesBoardState(.fees) == nil)
+        let centre = Fixtures.meeraWorkspace.centre.id
+        let october = Period(year: 2026, month: 10)
+        #expect(try await Fixtures.dependencies(for: .feesEmpty).fees.invoices(centre: centre, month: october).isEmpty)
+        #expect(try await Fixtures.dependencies(for: .fees).fees.dueBefore(centre: centre, month: october).count == 1)
+        #expect(Fixtures.workspace(for: .feesPayee).centre.payments.needsConfirmation)
+        #expect(Fixtures.workspace(for: .feesEmpty).centre.payments.upiID == nil)
+        #expect(!Fixtures.workspace(for: .fees).centre.payments.needsConfirmation)
+    }
 }

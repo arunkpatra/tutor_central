@@ -265,4 +265,13 @@ import Testing
         await store.retryLast()
         #expect(store.error == nil && store.isEmptyMonth)
     }
+
+    @Test func aPastMonthsOutstandingSaysOverdue() async {
+        let store = await make()
+        #expect(store.outstandingLine == "4 parents")
+        await store.previous()
+        #expect(store.outstandingLine == "1 parent, overdue", "P5-Fees-Overdue")
+        await store.previous()
+        #expect(store.outstandingLine == "Nothing due")
+    }
 }

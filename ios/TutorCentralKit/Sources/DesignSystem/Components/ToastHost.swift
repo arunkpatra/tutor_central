@@ -34,14 +34,23 @@ public struct ToastHost: View {
 
 /// A toast over an open sheet: the app's toasts draw under sheets, so a failed save is said where the tutor is.
 public struct SheetToasts: ViewModifier {
-    public init() {}
+    let aboveFooter: Bool
+
+    /// `aboveFooter` lifts the toast over the sheet's footer button (52 and the sheet's bottom margin), so an Undo
+    /// toast never hides the sheet's one action (the receipt after Mark paid).
+    public init(aboveFooter: Bool = false) {
+        self.aboveFooter = aboveFooter
+    }
 
     @Environment(ToastCenter.self) private var toasts: ToastCenter?
 
     public func body(content: Content) -> some View {
         content.overlay(alignment: .bottom) {
             if let toasts {
-                ToastHost(toasts: toasts)
+                ToastHost(
+                    toasts: toasts,
+                    bottom: aboveFooter ? ButtonSize.sheet.rawValue + Tokens.groupGap + Tokens.tileGap : Tokens.pageSide
+                )
             }
         }
     }
