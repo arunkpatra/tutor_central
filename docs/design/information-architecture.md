@@ -240,15 +240,15 @@ What the boards settle:
   "Done" with the tick, the title struck through and the done day; Clear removes the done ones. Swipe completes a
   row; so does the circle. A task falls off Today one day after it is done but stays here until cleared.
 
-What the build corrected (session 9; the screens follow the data or the rule, the canvas still draws the boards as
-approved; the owner decides whether the boards are redrawn):
+What the build corrected (session 9; the screens follow the data or the rule; the boards' figures are illustrative, so
+the canvas is not redrawn, the owner, 2026-10-08):
 
 - **P4-History-Student**, Earlier: the seed's rule gives Hemanth "September · 7 of 9 present · 2 absences", not 8 of 11
   with 3 absences.
 - **P4-Schedule-Month and -Day**: the dots follow the classes' meeting days (Monday to Friday in the seed); the boards
   dot Tuesday to Saturday.
 - **P4-Schedule-Month**: Coming up on the schedule looks two weeks ahead (it lists Sat 10 and Sat 17 on Wed 7); Today's
-  Coming up stays the next seven days. For the owner to confirm before `design-tokens.md` ("Numbers in code") says so.
+  Coming up stays the next seven days. Confirmed by the owner 2026-10-08; `design-tokens.md` says so.
 - **P4-Event-New and -Edit**: the note "Class 10 parents. Bring the September test papers." counts 50 of 500, not 52.
 - **P4-Today-NoClass**: a task due Friday reads in `overdue` on Saturday (an overdue task always does); the board draws it
   in `text3`.

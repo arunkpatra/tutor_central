@@ -36,3 +36,5 @@ chosen and its boards approved, **no screen is built**.
 
 Order of authority once approved: the owner's decisions in `plan/README.md`, then the boards, then these
 documents. If a document and a board disagree, the board wins and the document is fixed in the same commit.
+A board's numbers, names, counts and dates are illustrative: the board settles the design, not the data. Where the
+data or a rule gives another figure, the screen follows the data and the board is not redrawn (the owner, 2026-10-08).

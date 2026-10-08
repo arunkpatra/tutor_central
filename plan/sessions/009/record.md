@@ -188,8 +188,8 @@ TestFlight. A fresh reviewer (Fable) found 1 Critical and 4 Important; all five 
 
 ## Not done, and why
 
-- The canvas still draws the board slips listed in "As built"; correcting the boards is the owner's call (a Fable
-  session with the canvas).
+- The canvas still draws the board figures listed in "As built". The owner ruled them illustrative (the boards are
+  design, not data), so none is redrawn.
 
 ## Tried and dropped
 
@@ -238,7 +238,11 @@ Deferred minors (ledgered, not fixed; the owner chooses):
 As session 8, with the iOS Simulator tool driving the iPhone 17 (the runbook's waits held; one tap landed on a list
 because the pushed screen had hidden the tab bar: look first, rule 4).
 
+## After the record
+
+The owner confirmed the schedule's 14-day Coming up, ruled the boards' numbers illustrative (design, not data: no
+board is redrawn for a figure; `docs/design/README.md`), and tested build 7 on the iPhone: all good.
+
 ## Next
 
-The owner installs build 7 and answers two calls: the schedule's Coming up at 14 days (Today's stays seven), and
-whether the board slips in "As built" are redrawn on the canvas. Then Phase 0 step 0.6 (the Phase 5 boards) on Fable.
+Phase 0 step 0.6 (the Phase 5 boards) on Fable.

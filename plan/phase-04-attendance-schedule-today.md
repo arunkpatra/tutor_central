@@ -87,7 +87,8 @@ two tasks, `more`, with `student` and `kit-surfaces` rephotographed).
   Hemanth 7 of 9 with 2 absences in September, which the screen shows. The plan's history test also expected
   Hemanth at 67% where the board and the fixture say 33%.
 - **The schedule's Coming up looks 14 days ahead; Today's seven.** P4-Schedule-Month (Wed 7 Oct) lists Sat 10 and Sat
-  17; the Today boards follow the seven-day rule. Both boards are built as drawn. For the owner to confirm.
+  17; the Today boards follow the seven-day rule. Both boards are built as drawn. Confirmed by the owner
+  2026-10-08.
 - **The schedule's dots** follow the meeting days (Monday to Friday in the seed); the boards dot Tuesday to Saturday.
   The event board's note counter reads 52 for a 50-character note; the screen counts 50.
 - **Event sheets** open at the large detent and the delete confirmation shows over the schedule, as P4-Event-* draw

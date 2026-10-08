@@ -6,8 +6,9 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-08, session 9 (Phase 4 built, on Opus 5.5). **Session 9:** Phase 4 done: PRs #36 to #42 as
 the plan's seven, the final review's fixes #44 (one Critical, four Important); migrations 0004 `save_attendance` and
 0005 `message_log.about_date` in production; the D32 hand run of every Phase 4 write path (issue #43, four bugs found and
-fixed); build 0.1.0 (7) on TestFlight. U1 to U4 done. **Next:** the owner installs build 7 and confirms the schedule's
-two-week Coming up; then Phase 0 step 0.6 (the Phase 5 boards) on Fable.
+fixed); build 0.1.0 (7) on TestFlight, tested on the owner's iPhone: all good. U1 to U4 done. The schedule's 14-day Coming up
+confirmed; the boards' figures are illustrative, so none is redrawn. **Next:** Phase 0 step 0.6 (the Phase 5 boards)
+on Fable.
 
 ## Where we are
 
@@ -47,13 +48,8 @@ the remote; delete them when convenient). `main`'s check is green; build 0.1.0 (
 
 ## Open items
 
-- **Build 7 on the owner's phone:** Phase 4's first install. Build 6's tile report (U4) is fixed in it.
-- **The owner's call:** the schedule's Coming up looks two weeks ahead (P4-Schedule-Month draws Sat 17 on Wed 7) while
-  Today's stays seven days; confirm, then `design-tokens.md` says so. Whether the canvas's P4 boards are redrawn for the
-  slips the build corrected (`information-architecture.md`, "What the build corrected").
 - **The owner's call (from Phase 3):** the register cache stays on disk after sign-out, as the Phase 3 plan settled; the
   final review would remove it on sign-out and write it with complete file protection, for a shared phone.
-- **Board content to confirm:** P3-Students-Searching draws "3 of 10 match" for "sh"; the rule finds 4 (Lakshmi).
 - **Review minors:** Phase 2's in `plan/sessions/004/record.md`, Phase 3's in `plan/sessions/006/record.md`, Phase 4's
   eight in `plan/sessions/009/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
