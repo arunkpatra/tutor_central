@@ -9,7 +9,7 @@ import SwiftUI
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
     Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
-    Payments: View, Reports: View
+    Payments: View, Reports: View, Tools: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -29,6 +29,8 @@ struct TabsView<
     let studentFees: (UUID) -> StudentFees
     let payments: () -> Payments
     let reports: () -> Reports
+    /// The AI tools' screens (the Assistant, its forms, results and History).
+    let tools: (Route) -> Tools
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -55,6 +57,7 @@ struct TabsView<
         // A newer link in the same place is a new screen, not the last one's state.
         case let .event(id): schedule(id).id(id)
         case .tasks: tasks()
+        case .aiAssistant, .aiForm, .aiResult, .aiHistory: tools(route)
         }
     }
 

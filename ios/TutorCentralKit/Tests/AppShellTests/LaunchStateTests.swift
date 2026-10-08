@@ -215,4 +215,20 @@ struct LaunchStateTests {
         #expect(RootView.reportsBoardState(.reportsExport) == .export)
         #expect(RootView.reportsBoardState(.reportsEmpty) == .november && RootView.reportsBoardState(.reports) == nil)
     }
+
+    @MainActor @Test func theAIStatesStartOnTheMoreTabAtTheirRoute() {
+        for state in RootView.aiStates {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace), "\(state)")
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state).first == .aiAssistant)
+        }
+        #expect(RootView.initialRoutes(for: .aiPaper) == [.aiAssistant, .aiForm(.paper)])
+        #expect(RootView.initialRoutes(for: .aiResultPaper) == [
+            .aiAssistant,
+            .aiResult(FakeAIHistoryRepository.quadraticID),
+        ])
+        #expect(RootView.initialRoutes(for: .aiHistoryEmpty) == [.aiAssistant, .aiHistory])
+        #expect(RootView.aiBoardState(.aiGenerating) == .generating && RootView.aiBoardState(.aiNoteSend) == .noteSend)
+        #expect(RootView.tab(for: .todayAI) == .today && RootView.todayBoardState(.todayAI) == .aiRow)
+        #expect(Fixtures.aiForms(for: .aiPaper)[.paper]?.isValid == true)
+    }
 }

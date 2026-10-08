@@ -72,6 +72,7 @@ schemes:
         - package: TutorCentralKit/FeesTests
         - package: TutorCentralKit/StudentsTests
         - package: TutorCentralKit/SettingsTests
+        - package: TutorCentralKit/AIToolsTests
   TutorCentral Kit:
     build:
       targets:

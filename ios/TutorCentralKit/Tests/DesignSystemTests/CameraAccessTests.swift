@@ -1,6 +1,6 @@
 import AVFoundation
 import Testing
-@testable import Fees
+@testable import DesignSystem
 
 /// Review, Important 4: Scan a QR asks for the camera the first time, says how to allow it when refused, and says
 /// "No camera" only where there is none.

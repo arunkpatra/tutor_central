@@ -36,8 +36,10 @@ public enum Fixtures {
                 .seed),
             fees: FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) }),
             qrImages: MemoryQRImageStore(images: state == .paymentsQR ? [meeraWorkspace.centre.id: sampleQR()] : [:]),
-            ai: FakeAIRepository(now: { clock(for: state) }),
-            aiHistory: FakeAIHistoryRepository(generations: FakeAIHistoryRepository.seed),
+            ai: ai(for: state),
+            aiHistory: FakeAIHistoryRepository(
+                generations: [.aiAssistantEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
+            ),
             cachesRegister: false,
             now: { clock(for: state) },
             fixedClock: true,
@@ -60,7 +62,10 @@ public enum Fixtures {
              .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
              .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
-             .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .ready(workspace(for: state))
+             .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
+             .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
+             .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
+             .aiHistoryEmpty: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -112,7 +117,8 @@ public enum Fixtures {
     static func clock(for state: LaunchState) -> Date {
         switch state {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
-        case .today, .todayAddingTask: india(day: 7, hour: 16, minute: 35)
+        case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
+        case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         case .todayNoClass: india(day: 10, hour: 9, minute: 30)
         default: now
@@ -122,7 +128,7 @@ public enum Fixtures {
     /// Today's tiles on the boards: ten students, ₹4,000 due (the seed's four unpaid), the classes meeting that day.
     static func counts(for state: LaunchState) -> TodayCounts {
         switch state {
-        case .today, .todayEvening, .todayAddingTask:
+        case .today, .todayEvening, .todayAddingTask, .todayAI:
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoClass: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero

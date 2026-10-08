@@ -5,6 +5,8 @@ import SwiftUI
 /// What a launch state sets up on Today: the add field open with a due date, scrolled to Tasks (P4-Today-AddingTask).
 public enum TodayBoardState: Sendable {
     case addingTask
+    /// Scrolled to the end: Coming up, Tasks and the Create with AI row (P6-Today-AITools).
+    case aiRow
 }
 
 /// Today live, to P4-Today-Soon (dark and light), -Evening, -NoClass and -AddingTask; P2-Today-Empty for a centre with
@@ -45,6 +47,15 @@ public struct TodayView: View {
                         ComingUpSection(rows: store.comingUp, open: actions.openEvent).id(Self.comingUpID)
                     }
                     TodayTasksSection(store: store.tasks, showsFocus: boardState == .addingTask)
+                    VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+                        SectionHeader("Create")
+                        Card {
+                            ToolRow(
+                                symbol: "sparkles", title: "Create with AI",
+                                line: "A paper, homework, a worksheet or a progress note", action: actions.openAI
+                            )
+                        }
+                    }
                 }
                 .padding(.horizontal, Tokens.pageSide)
                 .padding(.top, max(0, Tokens.pageTop - topInset))
@@ -63,6 +74,8 @@ public struct TodayView: View {
                 await store.load()
                 if boardState == .addingTask {
                     setUpAddingTask()
+                }
+                if boardState != nil {
                     try? await Task.sleep(for: .seconds(Tokens.panel))
                     proxy.scrollTo(Self.comingUpID, anchor: .top)
                 }

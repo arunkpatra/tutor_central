@@ -42,7 +42,8 @@ extension RootView {
                     openMarkAttendance: { openAttendance(classID: $0, date: nil, in: workspace) },
                     openClass: { shell.tabs.push(.classroom($0)) },
                     openEvent: { shell.tabs.push(.event($0)) },
-                    openFeesDue: { openFeesDue(in: workspace) }
+                    openFeesDue: { openFeesDue(in: workspace) },
+                    openAI: { shell.tabs.push(.aiAssistant) }
                 ),
                 ticks: !deps.fixedClock,
                 boardState: launch.flatMap(Self.todayBoardState)

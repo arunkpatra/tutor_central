@@ -2,8 +2,9 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// The More tab's root (P4-More, P5-More, dark and light): Organise (Schedule, Tasks, Classes, Reports), Create (the AI
-/// tools, later) and App (Settings; Account and Help later). Its rows are navigation, so the root is AppShell's.
+/// The More tab's root (P4-More, P5-More, P6-More, dark and light): Organise (Schedule, Tasks, Classes, Reports),
+/// Create
+/// (the AI tools) and App (Settings; Account and Help later). Its rows are navigation, so the root is AppShell's.
 struct MoreView: View {
     let open: (Route) -> Void
     @State private var topInset: CGFloat = 0
@@ -22,7 +23,7 @@ struct MoreView: View {
                     SettingRow(symbol: "chart.bar", label: "Reports", action: { open(.reports) })
                 }
                 group("Create") {
-                    LaterRow(symbol: "sparkles", label: "AI Assistant", phase: "Phase 6").rowDivider()
+                    SettingRow(symbol: "sparkles", label: "AI Assistant", action: { open(.aiAssistant) }).rowDivider()
                     LaterRow(symbol: "doc.text.magnifyingglass", label: "Check a paper", phase: "Phase 6").rowDivider()
                     LaterRow(symbol: "doc.viewfinder", label: "Scan register", phase: "Phase 6")
                 }
