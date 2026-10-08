@@ -310,10 +310,13 @@ isOneToOne: false
                            },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
+                           },
+"start_ai_generation":
+{ Args: { "p_centre": string,"p_input": Json,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string }; Returns: string
                            }
           }
           Enums: {
-            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper","ai_status": "ok"|"failed","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","message_channel": "whatsapp_link","message_kind": "reminder"|"receipt"|"absence"|"progress","paid_method": "upi"|"cash"|"other"
+            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper","ai_status": "ok"|"failed"|"pending","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","message_channel": "whatsapp_link","message_kind": "reminder"|"receipt"|"absence"|"progress","paid_method": "upi"|"cash"|"other"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -433,7 +436,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"],"ai_status": ["ok", "failed"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"message_channel": ["whatsapp_link"],"message_kind": ["reminder", "receipt", "absence", "progress"],"paid_method": ["upi", "cash", "other"]
+            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"],"ai_status": ["ok", "failed", "pending"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"message_channel": ["whatsapp_link"],"message_kind": ["reminder", "receipt", "absence", "progress"],"paid_method": ["upi", "cash", "other"]
           }
         }
 } as const

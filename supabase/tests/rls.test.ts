@@ -299,6 +299,103 @@ test("generate_fees for a second month skips nothing and counts what it made", a
   expect((await a.rpc("generate_fees", { p_centre: centreA, p_period: "2026-11-01" })).data).toBe(0);
 });
 
+test("start_ai_generation records a pending call for a member and refuses a non-member", async () => {
+  const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: { topic: "Fractions" }, p_model: "claude-sonnet-5-5" });
+  expect(r.error).toBeNull();
+  const row = await a.from("ai_generations").select("kind, status, input, model, output").eq("id", r.data as string).single();
+  expect(row.data).toEqual({ kind: "paper", status: "pending", input: { topic: "Fractions" }, model: "claude-sonnet-5-5", output: null });
+  const theirs = await b.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+  expect(theirs.error?.message).toContain("ai_not_a_member");
+  // The member finishes the row with a plain update; the other user cannot see it.
+  const done = await a
+    .from("ai_generations")
+    .update({ status: "ok", output: "{}", tokens_in: 10, tokens_out: 20 })
+    .eq("id", r.data as string)
+    .select("status, tokens_in")
+    .single();
+  expect(done.data).toEqual({ status: "ok", tokens_in: 10 });
+  expect((await b.from("ai_generations").select("id").eq("id", r.data as string)).data).toEqual([]);
+});
+
+test("start_ai_generation refuses a scan without consent and allows a paper", async () => {
+  await a.from("centres").update({ ai_consent_at: null }).eq("id", centreA);
+  for (const kind of ["scan_register", "check_paper", "progress_note"]) {
+    const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: kind, p_input: {}, p_model: "m" });
+    expect(r.error?.message).toContain("ai_consent_missing");
+  }
+  expect((await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: {}, p_model: "m" })).error).toBeNull();
+  await a.from("centres").update({ ai_consent_at: new Date().toISOString() }).eq("id", centreA);
+  expect((await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "scan_register", p_input: {}, p_model: "m" })).error).toBeNull();
+});
+
+test("the limit counts only calls that did not fail, per kind group, over 24 hours", async () => {
+  const sql = new SQL(l.db);
+  try {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    // 40 generations in the last day (two of them failed, which do not count), and one older than a day.
+    await sql`insert into public.ai_generations (centre_id, kind, input, status, created_at)
+      select ${centreA}::uuid, 'worksheet', '{}', 'ok', now() - interval '1 hour' from generate_series(1, 38)`;
+    await sql`insert into public.ai_generations (centre_id, kind, input, status)
+      values (${centreA}, 'paper', '{}', 'failed'), (${centreA}, 'paper', '{}', 'failed')`;
+    await sql`insert into public.ai_generations (centre_id, kind, input, status, created_at)
+      values (${centreA}, 'paper', '{}', 'ok', now() - interval '25 hours')`;
+    const thirtyNinth = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "progress_note", p_input: {}, p_model: "m" });
+    expect(thirtyNinth.error).toBeNull();
+    const fortieth = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+    expect(fortieth.error).toBeNull();
+    const fortyFirst = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+    expect(fortyFirst.error?.message).toContain("ai_limit_reached");
+    expect(fortyFirst.error?.details).toBe("40");
+    // Scans have their own count of 20, untouched by the generations.
+    expect((await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "scan_register", p_input: {}, p_model: "m" })).error).toBeNull();
+    await sql`insert into public.ai_generations (centre_id, kind, input, status)
+      select ${centreA}::uuid, 'check_paper', '{}', 'ok' from generate_series(1, 20)`;
+    const check = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "check_paper", p_input: {}, p_model: "m" });
+    expect(check.error?.details).toBe("20");
+  } finally {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    await sql.close();
+  }
+});
+
+test("a member cannot delete, backdate or re-kind a call, and failed calls meet a hard cap", async () => {
+  const sql = new SQL(l.db);
+  try {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+    const id = r.data as string;
+    expect((await a.from("ai_generations").delete().eq("id", id)).error).not.toBeNull();
+    expect((await a.from("ai_generations").update({ created_at: "2020-01-01T00:00:00Z" }).eq("id", id)).error).not.toBeNull();
+    expect((await a.from("ai_generations").update({ kind: "scan_register" }).eq("id", id)).error).not.toBeNull();
+    expect((await a.from("ai_generations").update({ status: "failed" }).eq("id", id)).error).toBeNull();
+    // 59 more marked failed: 60 started in the day, none counted by the soft rule, and the hard cap refuses the 61st.
+    await sql`insert into public.ai_generations (centre_id, kind, input, status)
+      select ${centreA}::uuid, 'homework', '{}', 'failed' from generate_series(1, 59)`;
+    const capped = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
+    expect(capped.error?.message).toContain("ai_limit_reached");
+    expect(capped.error?.details).toBe("40");
+  } finally {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    await sql.close();
+  }
+});
+
+test("a refused start leaves no row", async () => {
+  const before = (await a.from("ai_generations").select("id").eq("centre_id", centreA)).data?.length ?? 0;
+  await a.from("centres").update({ ai_consent_at: null }).eq("id", centreA);
+  await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "check_paper", p_input: {}, p_model: "m" });
+  expect((await a.from("ai_generations").select("id").eq("centre_id", centreA)).data?.length).toBe(before);
+});
+
+test("ai_status has pending and anonymous cannot start a generation", async () => {
+  const sql = new SQL(l.db);
+  const values = await sql`select enumlabel from pg_enum where enumtypid = 'public.ai_status'::regtype order by enumsortorder`;
+  expect([...values].map((v) => v.enumlabel)).toEqual(["ok", "failed", "pending"]);
+  await sql.close();
+  const anon = anonClient(l);
+  expect((await anon.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" })).error).not.toBeNull();
+});
+
 test("only the owner can delete the centre, and it cascades", async () => {
   expect((await b.rpc("delete_centre", { p_centre: centreA })).error).not.toBeNull();
   expect((await a.rpc("delete_centre", { p_centre: centreA })).error).toBeNull();
