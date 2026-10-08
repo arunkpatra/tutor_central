@@ -56,7 +56,8 @@ struct TabsView<
         // A newer link in the same place is a new screen, not the last one's state.
         case let .event(id): schedule(id).id(id)
         case .tasks: tasks()
-        case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister: tools(route)
+        case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
+             .checkResult: tools(route)
         }
     }
 

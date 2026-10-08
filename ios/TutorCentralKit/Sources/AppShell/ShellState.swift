@@ -11,6 +11,12 @@ import Today
 /// the register.
 /// Leaving the tabs (sign-out) or arriving in another centre starts afresh, so the next tutor never sees the last
 /// one's place, greeting or counts.
+/// One visit of Check a paper: its routes' id and its store.
+struct CheckVisit {
+    let id: UUID
+    let store: CheckStore
+}
+
 @MainActor @Observable final class ShellState {
     var tabs: TabsState
     var today: TodayStore?
@@ -25,6 +31,8 @@ import Today
     @ObservationIgnored var tasks: TasksStore?
     /// One AI store per centre: a call outlives its screen, and Recent and History are read once.
     @ObservationIgnored var ai: AIStore?
+    /// The visit of Check a paper in progress, by its routes' id.
+    @ObservationIgnored var check: CheckVisit?
     private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
@@ -51,6 +59,7 @@ import Today
         tasks = nil
         ai?.cancel()
         ai = nil
+        check = nil
         centre = nil
     }
 }

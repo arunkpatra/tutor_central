@@ -66,7 +66,9 @@ public enum Fixtures {
              .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
              .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
              .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit,
-             .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved: .ready(workspace(for: state))
+             .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
+             .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
+             .checkSaved, .checkFailed: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -80,6 +82,7 @@ public enum Fixtures {
         case .feesPayee: FakeCentreRepository.meeraWorkspaceUnconfirmed
         case .scanIntro, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
              .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved: FakeCentreRepository.meeraWorkspaceConsented
+        case _ where RootView.checkStates.contains(state): FakeCentreRepository.meeraWorkspaceConsented
         default: meeraWorkspace
         }
     }
