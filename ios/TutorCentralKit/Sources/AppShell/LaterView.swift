@@ -42,26 +42,21 @@ struct LaterView: View {
 /// Every place that is "on the way" in this build, with the board's words.
 enum LaterPlace: Hashable, Sendable {
     case scanRegister
-    /// Parent payments, until its screen lands with Phase 5's payments.
-    case payments
 
     var title: String {
         switch self {
         case .scanRegister: "Scan register"
-        case .payments: "Parent payments"
         }
     }
 
     var symbol: String {
         switch self {
-        case .payments: "indianrupeesign"
         case .scanRegister: "doc.viewfinder"
         }
     }
 
     var heading: String {
         switch self {
-        case .payments: "\(title) are on the way"
         case .scanRegister: "\(title) is on the way"
         }
     }
@@ -69,7 +64,6 @@ enum LaterPlace: Hashable, Sendable {
     var line: String {
         let opening = "This build has sign-in, your profile, Today and the register."
         let rest = switch self {
-        case .payments: "Your UPI id, payment link and receipts arrive"
         case .scanRegister: "Photographing your paper register and reading it arrives"
         }
         return "\(opening) \(rest) in a later build on TestFlight."

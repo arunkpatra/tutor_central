@@ -64,4 +64,6 @@ enum Route: Hashable {
     case tasks
     /// A student's fees, from the detail's See all.
     case studentFees(UUID)
+    /// Parent payments, from Settings' row and Fees' Payments.
+    case payments
 }

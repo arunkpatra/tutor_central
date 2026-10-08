@@ -2,21 +2,23 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// Settings, minimal, to P2-Settings: the teaching profile saved as you go, what comes later, the account and sign
-/// out. Pushed from Today's account button; the board draws it without the tab bar.
+/// Settings, minimal, to P2-Settings and P5-Settings: the teaching profile saved as you go, Parent payments and what
+/// comes later, the account and sign out. Pushed from Today's account button; the board draws it without the tab bar.
 public struct SettingsView: View {
     @State private var store: SettingsStore
     @State private var confirmingSignOut = false
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
     private let onMessage: (String) -> Void
+    private let openPayments: () -> Void
 
     /// `boardState` shows the board's "Saved" mark.
     public init(
         store: SettingsStore,
         boardState: Bool = false,
         onWorkspaceChanged: @escaping (Workspace) -> Void,
-        onMessage: @escaping (String) -> Void
+        onMessage: @escaping (String) -> Void,
+        openPayments: @escaping () -> Void
     ) {
         store.onWorkspaceChanged = onWorkspaceChanged
         if boardState {
@@ -24,6 +26,7 @@ public struct SettingsView: View {
         }
         _store = State(initialValue: store)
         self.onMessage = onMessage
+        self.openPayments = openPayments
     }
 
     public var body: some View {
@@ -31,7 +34,7 @@ public struct SettingsView: View {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 navigation
                 profile
-                later
+                payments
                 account
             }
             .padding(.horizontal, Tokens.pageSide)
@@ -98,37 +101,26 @@ public struct SettingsView: View {
         }
     }
 
-    @ViewBuilder private var saveMark: some View {
-        switch store.saveState {
-        case .idle: EmptyView()
-        case .saving:
-            Text("Saving…").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
-        case .saved:
-            Label("Saved", systemImage: "checkmark")
-                .labelStyle(InlineLabelStyle())
-                .typeStyle(Tokens.chipNeutralLabel)
-                .foregroundStyle(Tokens.ok.color)
-                .padding(.horizontal, Tokens.rowGapInner)
-        }
+    private var saveMark: some View {
+        SaveMark(saving: store.saveState == .saving, saved: store.saveState == .saved)
     }
 
-    private var later: some View {
+    /// Parent payments live (P5-Settings), over what is still to come.
+    private var payments: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Coming in later builds")
+            SectionHeader("Payments and later builds")
             Card {
                 VStack(spacing: 0) {
-                    SettingRow(symbol: "indianrupeesign", label: "Parent payments and UPI") { phase("Phase 5") }
-                        .rowDivider()
-                    SettingRow(symbol: "bell", label: "Reminders and haptics") { phase("Phase 7") }
+                    SettingRow(
+                        symbol: "indianrupeesign", label: "Parent payments",
+                        trailing: { Text("UPI").typeStyle(Tokens.body).foregroundStyle(Tokens.text2.color) },
+                        action: openPayments
+                    )
+                    .rowDivider()
+                    LaterRow(symbol: "bell", label: "Reminders and haptics", phase: "Phase 7")
                 }
             }
-            .opacity(Tokens.opacityLater)
-            .accessibilityElement(children: .combine)
         }
-    }
-
-    private func phase(_ text: String) -> some View {
-        Text(text).typeStyle(Tokens.captionStrong).foregroundStyle(Tokens.text3.color)
     }
 
     private var account: some View {

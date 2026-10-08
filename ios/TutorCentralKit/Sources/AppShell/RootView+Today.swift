@@ -23,7 +23,8 @@ extension RootView {
                     shell.today?.workspaceChanged(changed)
                     shell.fees?.workspaceChanged(changed)
                 },
-                onMessage: { toasts.show($0) }
+                onMessage: { toasts.show($0) },
+                openPayments: { shell.tabs.push(.payments) }
             )
         }
     }

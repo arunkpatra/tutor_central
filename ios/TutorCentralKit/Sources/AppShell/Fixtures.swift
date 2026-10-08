@@ -35,7 +35,7 @@ public enum Fixtures {
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
             fees: FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) }),
-            qrImages: MemoryQRImageStore(),
+            qrImages: MemoryQRImageStore(images: state == .paymentsQR ? [meeraWorkspace.centre.id: sampleQR()] : [:]),
             cachesRegister: false,
             now: { clock(for: state) },
             fixedClock: true,
@@ -57,7 +57,8 @@ public enum Fixtures {
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
              .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
-             .feesWaive, .studentFeesDue, .studentFees: .ready(workspace(for: state))
+             .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
+             .paymentsQR: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -67,7 +68,7 @@ public enum Fixtures {
     /// UPI id yet (P5-Fees-Empty); P5-Fees-Payee's id was never confirmed.
     public static func workspace(for state: LaunchState) -> Workspace {
         switch state {
-        case .feesEmpty, .feesGenerate: FakeCentreRepository.meeraWorkspaceWithoutUPI
+        case .feesEmpty, .feesGenerate, .paymentsEmpty: FakeCentreRepository.meeraWorkspaceWithoutUPI
         case .feesPayee: FakeCentreRepository.meeraWorkspaceUnconfirmed
         default: meeraWorkspace
         }

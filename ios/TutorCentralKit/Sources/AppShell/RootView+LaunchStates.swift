@@ -23,6 +23,7 @@ extension RootView {
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
+        case .paymentsEmpty, .payments, .paymentsQR: .more
         case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks,
              .tasksEmpty:
             .more
@@ -51,6 +52,7 @@ extension RootView {
         switch state {
         case .studentFeesDue: [.student(FakeAttendanceRepository.hemanth)]
         case .studentFees: [.student(FakeAttendanceRepository.hemanth), .studentFees(FakeAttendanceRepository.hemanth)]
+        case .paymentsEmpty, .payments, .paymentsQR: [.settings, .payments]
         default: []
         }
     }
@@ -131,6 +133,15 @@ extension RootView {
         case .feesReceipt: .receipt
         case .feesRemind: .remind
         case .feesWaive: .waive
+        default: nil
+        }
+    }
+
+    static func paymentsBoardState(_ state: LaunchState) -> PaymentsBoardState? {
+        switch state {
+        case .paymentsEmpty: .empty
+        case .payments: .saved
+        case .paymentsQR: .fromQR
         default: nil
         }
     }

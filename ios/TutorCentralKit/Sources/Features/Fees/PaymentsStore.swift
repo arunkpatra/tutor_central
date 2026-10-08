@@ -25,12 +25,12 @@ import Observation
 
     public private(set) var linkError: String?
     public private(set) var sendReceipts: Bool
-    public private(set) var saveState: SaveState = .idle
+    public internal(set) var saveState: SaveState = .idle
     public var message: String?
     /// The kept QR, read from this iPhone.
     public private(set) var qrImage: Data?
     /// The id came from a QR on this visit: the helper asks the tutor to check it.
-    public private(set) var fromQR = false
+    public internal(set) var fromQR = false
     public var onWorkspaceChanged: (Workspace) -> Void = { _ in }
     private var workspace: Workspace
     private let centres: any CentreRepository

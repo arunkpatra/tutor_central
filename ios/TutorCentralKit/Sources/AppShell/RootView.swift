@@ -151,7 +151,8 @@ public struct RootView: View {
                 schedule: { scheduleView(openEvent: $0) },
                 tasks: { tasksView },
                 fees: { feesView },
-                studentFees: { studentFeesView($0) }
+                studentFees: { studentFeesView($0) },
+                payments: { paymentsView }
             )
         }
     }

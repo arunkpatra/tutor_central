@@ -194,4 +194,16 @@ struct LaunchStateTests {
         #expect(RootView.initialRoutes(for: .studentFees) == [.student(hemanth), .studentFees(hemanth)])
         #expect(Fixtures.initialState(for: .studentFees) == .ready(Fixtures.meeraWorkspace))
     }
+
+    @MainActor @Test func thePaymentsStatesOpenFromSettings() {
+        for state in [LaunchState.paymentsEmpty, .payments, .paymentsQR] {
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.settings, .payments])
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.workspace(for: state)))
+        }
+        #expect(Fixtures.workspace(for: .paymentsEmpty).centre.payments.upiID == nil)
+        #expect(Fixtures.workspace(for: .payments).centre.payments.upiID == "meera@okhdfcbank")
+        let centre = Fixtures.meeraWorkspace.centre.id
+        #expect(Fixtures.dependencies(for: .paymentsQR).qrImages.image(for: centre) != nil)
+        #expect(Fixtures.dependencies(for: .payments).qrImages.image(for: centre) == nil)
+    }
 }
