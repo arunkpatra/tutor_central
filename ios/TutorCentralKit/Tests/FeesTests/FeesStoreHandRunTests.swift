@@ -1,0 +1,38 @@
+import Data
+import Domain
+import Foundation
+import Students
+import Testing
+@testable import Fees
+
+/// What the D32 hand run found on screen, pinned.
+@MainActor struct FeesStoreHandRunTests {
+    let fees = FakeFeesRepository(invoices: FakeFeesRepository.seed)
+    let hemanth = FakeFeesRepository.hemanthOctober
+
+    func make() async -> FeesStore {
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await register.load()
+        let store = FeesStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, fees: fees,
+            messages: FakeMessageLogRepository(logs: [], feeLogs: FakeMessageLogRepository.feeSeed),
+            centres: FakeCentreRepository(workspace: FakeCentreRepository.meeraWorkspace),
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await store.load()
+        return store
+    }
+
+    @Test func undoClosesThatFeesReceipt() async {
+        let store = await make()
+        _ = await store.markPaid(hemanth, method: .cash, on: store.today)
+        #expect(store.sheet == .receipt(hemanth))
+        #expect(await store.undoPaid(hemanth))
+        #expect(store.sheet == nil, "the receipt of a fee no longer paid stayed open, empty")
+    }
+}

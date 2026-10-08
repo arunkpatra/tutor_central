@@ -57,6 +57,9 @@ public extension FeesStore {
         do {
             let due = try await fees.markDue(id: id)
             replace(due)
+            if sheet == .receipt(id) {
+                sheet = nil
+            }
             succeeded()
             onFeesChanged()
             return true
