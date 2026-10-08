@@ -134,6 +134,8 @@ public struct RootView: View {
                 today: { todayView },
                 students: { studentsView },
                 studentDetail: { studentDetailView($0) },
+                classes: { classesView },
+                classDetail: { classDetailView($0) },
                 settings: { settingsView }
             )
         }
@@ -215,7 +217,11 @@ public struct RootView: View {
         StudentsNavigation(
             openStudent: { shell.tabs.push(.student($0)) },
             openClasses: { shell.tabs.push(.classes) },
-            openClass: { shell.tabs.push(.classroom($0)) }
+            openClass: { shell.tabs.push(.classroom($0)) },
+            showUnassigned: {
+                shell.tabs.paths[.students] = []
+                shell.register?.filter = .unassigned
+            }
         )
     }
 
@@ -236,6 +242,28 @@ public struct RootView: View {
         }
     }
 
+    @ViewBuilder private var classesView: some View {
+        if case let .ready(workspace) = session.state {
+            ClassesView(
+                register: register(for: workspace),
+                navigation: studentsNavigation,
+                boardState: launch.flatMap(Self.classesBoardState)
+            )
+        }
+    }
+
+    @ViewBuilder private func classDetailView(_ id: UUID) -> some View {
+        if case let .ready(workspace) = session.state {
+            ClassDetailView(
+                id: id,
+                register: register(for: workspace),
+                actions: studentsActions,
+                navigation: studentsNavigation,
+                boardState: launch.flatMap(Self.classDetailBoardState)
+            )
+        }
+    }
+
     @ViewBuilder private func studentDetailView(_ id: UUID) -> some View {
         if case let .ready(workspace) = session.state {
             let register = register(for: workspace)
@@ -252,27 +280,6 @@ public struct RootView: View {
             )
         }
     }
-
-    /// The toast's Retry for the register's last failed write.
-    private static func retry(_ store: RegisterStore) -> (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = {
-            Task { await store.retryLast() }
-        }
-        return ("Retry", run)
-    }
-
-    #if DEBUG
-        static func kitSection(_ state: LaunchState?) -> KitView.Section? {
-            switch state {
-            case .kit: .controls
-            case .kitFields: .fields
-            case .kitSurfaces: .surfaces
-            case .kitPatterns: .patterns
-            case .kitDialog: .dialog
-            default: nil
-            }
-        }
-    #endif
 }
 
 /// While the session and the centre are read: the shape of the screen breathing, and when the read failed, the line

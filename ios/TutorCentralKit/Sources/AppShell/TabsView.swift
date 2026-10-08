@@ -4,15 +4,19 @@ import Foundation
 import SwiftUI
 
 /// The five tabs on iOS 26's own tab bar (components.md, "Tab bar": the system's floating glass bar with the board's
-/// symbols), each with its own navigation stack. Today's and Students' roots are passed in; the other three are on the
-/// way.
-struct TabsView<Today: View, Students: View, StudentDetail: View, Settings: View>: View {
+/// symbols), each with its own navigation stack. Today's and Students' roots and the Students screens are passed in;
+/// the other three tabs are on the way.
+struct TabsView<
+    Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View
+>: View {
     @Bindable var state: TabsState
     let build: String
     let toasts: ToastCenter
     let today: () -> Today
     let students: () -> Students
     let studentDetail: (UUID) -> StudentDetail
+    let classes: () -> Classes
+    let classDetail: (UUID) -> ClassDetail
     let settings: () -> Settings
 
     var body: some View {
@@ -36,8 +40,8 @@ struct TabsView<Today: View, Students: View, StudentDetail: View, Settings: View
                     case let .later(place): LaterView(place: place, build: build)
                     case .settings: settings()
                     case let .student(id): studentDetail(id)
-                    // Their screens arrive with their boards' pull request (P3-Classes-*, P3-ClassDetail).
-                    case .classes, .classroom: later(.students)
+                    case .classes: classes()
+                    case let .classroom(id): classDetail(id)
                     }
                 }
         }

@@ -61,7 +61,7 @@ when the row opens something.
 | Task | Circle checkbox 24 (`lineStrong` ring; `ok` fill with a tick when done) | Title (struck through when done) | Due day `footnote` `text3` |
 | Setting | Symbol 20 `text2` | Label `body` | Value `body` `text2` and chevron, or a switch |
 | Form field | | Label `footnote` `text2` above; value `body` in a well | |
-| Member (class detail) | Avatar 40 | Name; parent phone | "Class fee" `footnote` `text2`, or the student's own fee in `numberRow`; chevron |
+| Member (class detail) | Avatar 40 | Name; parent phone | "Class fee" `footnote` `text2`, or the student's own fee in `footnoteStrong` `text`; chevron |
 | Meeting (class detail) | Day `time` `text2`, width 46 | Date `rowTitle` ("Today, 7 October") | Time range `footnote` `text2`. Today's row sits on `surface2` with its day in `accentText` 700 |
 | Checklist (add students) | Avatar 40 | Name; class line | Checkbox 24; the whole row toggles it. The card sits on `surface2` when it is inside a sheet |
 

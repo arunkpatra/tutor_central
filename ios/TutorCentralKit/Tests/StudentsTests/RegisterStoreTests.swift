@@ -228,4 +228,13 @@ import Testing
         await store.loadIfNeeded()
         #expect(store.students.count == 10, "a screen pushed over the list does not read again")
     }
+
+    @Test func removingAMemberLeavesThemWithNoClass() async throws {
+        let store = make()
+        await store.load()
+        let dev = try #require(store.students.first { $0.name == "Dev Kumar" })
+        await store.assign([dev.id], to: nil)
+        #expect(store.student(dev.id)?.classID == nil && store.members(of: FakeClassesRepository.science.id).count == 2)
+        #expect(students.assigned.last?.1 == nil && store.student(dev.id)?.monthlyFee == Money(rupees: 1000))
+    }
 }

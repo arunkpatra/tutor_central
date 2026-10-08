@@ -96,6 +96,7 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `rowTitle` | callout | 16 / 20 | 600 | 0 | The first line of a list row |
 | `subhead` | subheadline | 15 / 20 | 400 | 0 | Second lines, button labels of secondary actions (600) |
 | `footnote` | footnote | 13 / 18 | 400 | 0 | Captions under rows, tile labels, helper text |
+| `footnoteStrong` | footnote | 13 / 18 | 600 | 0 | A student's own fee on a member row (P3-ClassDetail) |
 | `caption` | caption | 12 / 16 | 400 | 0 | Legal lines, timestamps |
 | `captionStrong` | caption | 12 / 16 | 600 | 0 | A status under a row's amount (Paid 3 Oct) |
 | `eyebrow` | caption | 12 / 16 | 600 | +0.08em, uppercase | The date over the greeting, "Next class", section eyebrows |

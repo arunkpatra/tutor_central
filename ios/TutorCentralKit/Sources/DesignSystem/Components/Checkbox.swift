@@ -29,9 +29,11 @@ public struct Checkbox: View {
     }
 }
 
-/// The checkbox's circle alone: 24 round, lineStrong ring 1.5; checked, ok fill with a white tick.
+/// The checkbox's circle alone: 24 round, lineStrong ring 1.5; checked, ok fill with a tick in `ink` (white on the
+/// task checkbox; okInk on the add-students checklist, P3-ClassDetail-AddMembers).
 struct CheckMark: View {
     let isOn: Bool
+    var ink: ColorToken = Tokens.onStatus
     static var size: CGFloat {
         24
     }
@@ -50,7 +52,7 @@ struct CheckMark: View {
                 Circle().fill(Tokens.ok.color)
                 Image(systemName: "checkmark")
                     .font(.system(size: Self.tick, weight: .bold))
-                    .foregroundStyle(Tokens.onStatus.color)
+                    .foregroundStyle(ink.color)
             } else {
                 Circle().strokeBorder(Tokens.lineStrong.color, lineWidth: Self.ring)
             }

@@ -168,14 +168,23 @@ public struct StudentRow: View {
     }
 }
 
-/// Class: the icon tile; name and meeting summary; the member count in footnote text2; chevron.
+/// Class: the icon tile; name and meeting summary; the member count in footnote text2 (none for a row that only
+/// leads somewhere, such as "Not in a class"); chevron.
 public struct ClassRow: View {
+    let symbol: String
     let name: String
     let summary: String
-    let members: Int
+    let members: Int?
     let action: (() -> Void)?
 
-    public init(name: String, summary: String, members: Int, action: (() -> Void)? = nil) {
+    public init(
+        symbol: String = "book.closed",
+        name: String,
+        summary: String,
+        members: Int?,
+        action: (() -> Void)? = nil
+    ) {
+        self.symbol = symbol
         self.name = name
         self.summary = summary
         self.members = members
@@ -184,9 +193,11 @@ public struct ClassRow: View {
 
     public var body: some View {
         ListRow(action: action) {
-            IconTile(symbol: "book.closed")
+            IconTile(symbol: symbol)
             RowTitles(title: name, subtitle: summary)
-            Text("\(members)").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+            if let members {
+                Text("\(members)").typeStyle(Tokens.footnote).monospacedDigit().foregroundStyle(Tokens.text2.color)
+            }
             Chevron()
         }
     }
