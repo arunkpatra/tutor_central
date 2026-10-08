@@ -95,6 +95,20 @@ extension RootView {
         }
     }
 
+    /// Reports, pushed from More.
+    @ViewBuilder var reportsView: some View {
+        if case let .ready(workspace) = session.state {
+            ReportsView(
+                store: ReportsStore(
+                    workspace: workspace, register: register(for: workspace), fees: deps.fees,
+                    attendance: deps.attendance, messages: deps.messages, now: deps.now
+                ),
+                boardState: launch.flatMap(Self.reportsBoardState),
+                onMessage: { toasts.show($0) }
+            )
+        }
+    }
+
     /// "2026-09" → September 2026; nil for anything else.
     nonisolated static func linkMonth(_ text: String?) -> Period? {
         guard let text else { return nil }

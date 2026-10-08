@@ -152,7 +152,8 @@ public struct RootView: View {
                 tasks: { tasksView },
                 fees: { feesView },
                 studentFees: { studentFeesView($0) },
-                payments: { paymentsView }
+                payments: { paymentsView },
+                reports: { reportsView }
             )
         }
     }

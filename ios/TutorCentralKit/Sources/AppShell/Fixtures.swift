@@ -58,7 +58,7 @@ public enum Fixtures {
              .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
              .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
-             .paymentsQR: .ready(workspace(for: state))
+             .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -98,9 +98,8 @@ public enum Fixtures {
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
         case .history, .historyByStudent, .historyStudent, .student, .studentFeesDue, .studentFees, .schedule,
-             .scheduleDay,
-             .eventNew, .eventEdit,
-             .eventDeleteConfirm, .todayEvening: FakeAttendanceRepository.seedWithToday
+             .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .todayEvening, .reports, .reportsAttendance,
+             .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         default: FakeAttendanceRepository.seed
         }

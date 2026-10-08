@@ -46,7 +46,15 @@ public struct ChoiceCard: View {
         let shape = RoundedRectangle(cornerRadius: Tokens.radiusCard, style: .continuous)
         Button(action: action) {
             HStack(spacing: Tokens.rowPaddingDense) {
-                RowTitles(title: title, subtitle: line)
+                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                    Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                    Text(line)
+                        .typeStyle(Tokens.footnote)
+                        .foregroundStyle(Tokens.text2.color)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
                 if selected {
                     Image(systemName: "checkmark")
                         .font(.system(size: Tokens.iconSmall, weight: .bold))
