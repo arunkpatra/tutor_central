@@ -8,7 +8,7 @@ import SwiftUI
 /// the other three tabs are on the way.
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
-    Attendance: View, History: View, StudentMonth: View, Schedule: View
+    Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View
 >: View {
     @Bindable var state: TabsState
     let build: String
@@ -23,6 +23,7 @@ struct TabsView<
     let history: () -> History
     let studentMonth: (UUID) -> StudentMonth
     let schedule: (UUID?) -> Schedule
+    let tasks: () -> Tasks
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -51,6 +52,7 @@ struct TabsView<
                     case let .historyStudent(id): studentMonth(id)
                     case .schedule: schedule(nil)
                     case let .event(id): schedule(id)
+                    case .tasks: tasks()
                     }
                 }
         }

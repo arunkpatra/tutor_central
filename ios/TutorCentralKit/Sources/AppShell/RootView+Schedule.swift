@@ -1,7 +1,10 @@
+import DesignSystem
+import Domain
 import Schedule
 import SwiftUI
+import Today
 
-/// The schedule's wiring: pushed from More and from Today, or opened by an event link with its Edit sheet up.
+/// The schedule's and the tasks' wiring: pushed from More and from Today; an event link opens its Edit sheet.
 extension RootView {
     @ViewBuilder func scheduleView(openEvent: UUID?) -> some View {
         if case let .ready(workspace) = session.state {
@@ -15,6 +18,29 @@ extension RootView {
                 openEvent: openEvent,
                 onMissingEvent: { toasts.show("That event is no longer here.") }
             )
+        }
+    }
+
+    /// One tasks store for the life of the workspace, shared by Today and the Tasks screen.
+    func tasksStore(for workspace: Workspace) -> TasksStore {
+        if let tasks = shell.tasks {
+            return tasks
+        }
+        let made = TasksStore(workspace: workspace, tasks: deps.tasks, now: deps.now)
+        shell.tasks = made
+        return made
+    }
+
+    @ViewBuilder var tasksView: some View {
+        if case let .ready(workspace) = session.state {
+            let store = tasksStore(for: workspace)
+            TasksView(store: store)
+                .onChange(of: store.message) { _, message in
+                    guard let message else { return }
+                    Haptic.play(.error)
+                    toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
+                    store.message = nil
+                }
         }
     }
 }

@@ -52,7 +52,6 @@ struct LaterView: View {
 /// Every place that is "on the way" in this build, with the board's words.
 enum LaterPlace: Hashable, Sendable {
     case tab(AppTab)
-    case tasks
     case scanRegister
     case studentFees
 
@@ -71,7 +70,6 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.fees): "Fees"
         case .tab(.attendance): "Attendance"
         case .tab(.more): "More"
-        case .tasks: "Tasks"
         case .scanRegister: "Scan register"
         case .studentFees: "Fees"
         }
@@ -82,7 +80,7 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.today): "sun.max"
         case .tab(.students): "person.2"
         case .tab(.fees): "indianrupeesign"
-        case .tab(.attendance), .tasks: "checkmark.circle"
+        case .tab(.attendance): "checkmark.circle"
         case .scanRegister: "doc.viewfinder"
         case .studentFees: "indianrupeesign"
         case .tab(.more): "ellipsis"
@@ -91,7 +89,7 @@ enum LaterPlace: Hashable, Sendable {
 
     var heading: String {
         switch self {
-        case .tab(.students), .tab(.fees), .tasks, .studentFees: "\(title) are on the way"
+        case .tab(.students), .tab(.fees), .studentFees: "\(title) are on the way"
         default: "\(title) is on the way"
         }
     }
@@ -103,7 +101,6 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.fees): "Fees, reminders and receipts arrive"
         case .tab(.attendance): "Marking attendance and its history arrive"
         case .tab(.more): "Schedule, classes, reports and the AI tools arrive"
-        case .tasks: "Tasks arrive"
         case .tab(.today): "The schedule arrives"
         case .scanRegister: "Photographing your paper register and reading it arrives"
         case .studentFees: "The fee ledger, reminders and receipts arrive"

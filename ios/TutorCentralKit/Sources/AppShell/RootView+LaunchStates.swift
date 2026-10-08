@@ -6,6 +6,7 @@ import Onboarding
 import Schedule
 import Students
 import SwiftUI
+import Today
 
 /// How each launch state sets the root up: its tab, what its stack opens, and the board state a screen is told.
 extension RootView {
@@ -20,7 +21,8 @@ extension RootView {
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
-        case .laterMore, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm: .more
+        case .laterMore, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks, .tasksEmpty:
+            .more
         default: nil
         }
     }
@@ -36,6 +38,7 @@ extension RootView {
         case .history, .historyByStudent, .historyEmpty: [.history]
         case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
         case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm: [.schedule]
+        case .tasks, .tasksEmpty: [.tasks]
         default: []
         }
     }
@@ -119,6 +122,14 @@ extension RootView {
 
     /// The toast's Retry for the mark screen's failed save.
     static func retry(_ store: AttendanceStore) -> (label: String, run: @MainActor () -> Void) {
+        let run: @MainActor () -> Void = {
+            Task { await store.retryLast() }
+        }
+        return ("Retry", run)
+    }
+
+    /// The toast's Retry for a task's failed write.
+    static func retry(_ store: TasksStore) -> (label: String, run: @MainActor () -> Void) {
         let run: @MainActor () -> Void = {
             Task { await store.retryLast() }
         }

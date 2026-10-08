@@ -144,4 +144,14 @@ struct LaunchStateTests {
         #expect(RootView.scheduleBoardState(.eventDeleteConfirm) == .deleteConfirm)
         #expect(RootView.scheduleBoardState(.schedule) == nil)
     }
+
+    @MainActor @Test func theTasksStatesPushOnTheMoreTab() async throws {
+        for state in [LaunchState.tasks, .tasksEmpty] {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.tasks])
+        }
+        let centre = Fixtures.meeraWorkspace.centre.id
+        #expect(try await Fixtures.dependencies(for: .tasksEmpty).tasks.tasks(centre: centre).isEmpty)
+        #expect(try await Fixtures.dependencies(for: .tasks).tasks.tasks(centre: centre).count == 4)
+    }
 }

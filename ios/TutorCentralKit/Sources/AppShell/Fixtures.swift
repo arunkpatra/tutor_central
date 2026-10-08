@@ -29,7 +29,7 @@ public enum Fixtures {
             attendance: FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) }),
             messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed, now: { clock(for: state) }),
             events: FakeEventsRepository(events: FakeEventsRepository.seed),
-            tasks: FakeTasksRepository(tasks: FakeTasksRepository.seed),
+            tasks: FakeTasksRepository(tasks: state == .tasksEmpty ? [] : FakeTasksRepository.seed),
             cachesRegister: false,
             now: { clock(for: state) },
             bundleVersion: "0.1 (12)"
@@ -47,7 +47,7 @@ public enum Fixtures {
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
-             .eventDeleteConfirm: .ready(meeraWorkspace)
+             .eventDeleteConfirm, .tasks, .tasksEmpty: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }

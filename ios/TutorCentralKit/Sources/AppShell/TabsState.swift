@@ -61,4 +61,5 @@ enum Route: Hashable {
     case schedule
     /// The schedule with an event's Edit sheet open (`tutorcentral://event/<id>`).
     case event(UUID)
+    case tasks
 }
