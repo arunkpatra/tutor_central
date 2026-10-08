@@ -35,6 +35,8 @@ let package = Package(
             .testTarget(name: "AppShellTests", dependencies: ["AppShell"]),
             .testTarget(name: "OnboardingTests", dependencies: ["Onboarding"]),
             .testTarget(name: "TodayTests", dependencies: ["Today"]),
+            // A real register (Students) under the attendance store; the feature itself sees only `Register`.
+            .testTarget(name: "AttendanceTests", dependencies: ["Attendance", "Students"]),
             .testTarget(name: "StudentsTests", dependencies: ["Students"]),
             .testTarget(name: "SettingsTests", dependencies: ["Settings"]),
         ],

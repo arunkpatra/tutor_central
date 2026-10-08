@@ -252,56 +252,48 @@ public struct FeeRow: View {
     }
 }
 
-/// Attendance: the name; two toggles 96 × 40, radius 13, 8 apart: Present (ok fill, okInk 700 when on) and Absent
-/// (overdue fill, overdueInk 700 when on); off is a lineStrong outline in text2 600. Selection haptic.
+/// Attendance (Phase 4): the whole row toggles and one pill says the state, Present (ok fill, okInk) or Absent
+/// (overdue fill, overdueInk), 96 × 40, radius 13, segmentActive. Selection haptic. The step 0.2 row's two toggles
+/// left too little room for a name (components.md, Rows).
 public struct AttendanceRow: View {
     let name: String
-    @Binding var present: Bool?
-    static var toggleSize: CGSize {
+    let present: Bool
+    let toggle: () -> Void
+    static var pillSize: CGSize {
         CGSize(width: 96, height: 40)
     }
 
-    public init(name: String, present: Binding<Bool?>) {
+    public init(name: String, present: Bool, toggle: @escaping () -> Void) {
         self.name = name
-        _present = present
+        self.present = present
+        self.toggle = toggle
     }
 
     public var body: some View {
-        HStack(spacing: Tokens.rowPaddingDense) {
-            Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            HStack(spacing: Tokens.inline) {
-                toggle("Present", on: present == true, tone: .ok) { present = true }
-                toggle("Absent", on: present == false, tone: .overdue) { present = false }
-            }
-        }
-        .padding(.vertical, Tokens.rowPaddingDense)
-        .padding(.horizontal, Tokens.rowPaddingHorizontal)
-        .frame(minHeight: RowMetrics.minHeight)
-    }
-
-    private func toggle(_ title: String, on: Bool, tone: StatusTone, set: @escaping () -> Void) -> some View {
         Button {
-            set()
+            toggle()
             Haptic.play(.selection)
         } label: {
-            Text(title)
-                .typeStyle(on ? Tokens.segmentActive : Tokens.segment)
-                .foregroundStyle((on ? tone.ink : Tokens.text2).color)
-                .frame(width: Self.toggleSize.width, height: Self.toggleSize.height)
-                .background(
-                    on ? tone.color.color : Color.clear,
-                    in: .rect(cornerRadius: Tokens.radiusSegmentTrack, style: .continuous)
-                )
-                .overlay {
-                    if !on {
-                        RoundedRectangle(cornerRadius: Tokens.radiusSegmentTrack, style: .continuous)
-                            .strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline)
-                    }
-                }
+            HStack(spacing: Tokens.rowPaddingDense) {
+                Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(present ? "Present" : "Absent")
+                    .typeStyle(Tokens.segmentActive)
+                    .foregroundStyle((present ? Tokens.okInk : Tokens.overdueInk).color)
+                    .frame(width: Self.pillSize.width, height: Self.pillSize.height)
+                    .background(
+                        (present ? Tokens.ok : Tokens.overdue).color,
+                        in: .rect(cornerRadius: Tokens.radiusSegmentTrack, style: .continuous)
+                    )
+            }
+            .padding(.vertical, Tokens.rowPaddingDense)
+            .padding(.horizontal, Tokens.rowPaddingHorizontal)
+            .frame(minHeight: RowMetrics.minHeight)
+            .contentShape(.rect)
         }
         .pressable()
-        .accessibilityLabel("\(name) \(title.lowercased())")
-        .accessibilityAddTraits(on ? .isSelected : [])
+        .accessibilityLabel(name)
+        .accessibilityValue(present ? "Present" : "Absent")
+        .accessibilityAddTraits(.isToggle)
     }
 }

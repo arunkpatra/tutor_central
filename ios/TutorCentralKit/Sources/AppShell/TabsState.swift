@@ -37,11 +37,11 @@ import SwiftUI
         selected = link.tab
         paths[link.tab] = []
         switch link {
-        case .today, .authCallback: return true
+        case .today, .authCallback, .attendance: return true
         case let .student(id):
             paths[link.tab] = [.student(id)]
             return true
-        case .fees, .attendance, .event: return false
+        case .fees, .event: return false
         }
     }
 }
@@ -53,4 +53,5 @@ enum Route: Hashable {
     case student(UUID)
     case classes
     case classroom(UUID)
+    case history
 }

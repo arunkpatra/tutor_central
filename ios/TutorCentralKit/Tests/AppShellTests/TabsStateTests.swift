@@ -28,4 +28,11 @@ import Testing
         tabs.remove(.student(missing))
         #expect(tabs.paths[.students] == [] && tabs.selected == .students)
     }
+
+    @Test func anAttendanceLinkOpensTheTab() {
+        let tabs = TabsState(selected: .today)
+        tabs.push(.settings)
+        #expect(tabs.open(.attendance(date: "2026-10-05", classID: nil)))
+        #expect(tabs.selected == .attendance && tabs.paths[.attendance] == [])
+    }
 }

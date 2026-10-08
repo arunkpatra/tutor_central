@@ -1,3 +1,4 @@
+import Attendance
 import Data
 import DesignSystem
 import Domain
@@ -11,12 +12,12 @@ import Today
 /// with the fakes and the boards' data; the Kit states show the Kit (debug builds only).
 public struct RootView: View {
     @AppStorage(Appearance.storageKey) private var storedAppearance: String?
-    @State private var session: SessionStore
-    @State private var toasts = ToastCenter()
-    @State private var shell: ShellState
+    @State var session: SessionStore
+    @State var toasts = ToastCenter()
+    @State var shell: ShellState
     @Environment(\.scenePhase) private var scenePhase
-    private let deps: Dependencies
-    private let launch: LaunchState?
+    let deps: Dependencies
+    let launch: LaunchState?
 
     @MainActor public init() {
         let launch = LaunchState.fromArguments()
@@ -72,6 +73,9 @@ public struct RootView: View {
                 guard let link = DeepLink(url: url), session.isReady else { return }
                 if !shell.tabs.open(link) {
                     toasts.show("That opens in a later build.")
+                }
+                if case let .attendance(date, classID) = link, case let .ready(workspace) = session.state {
+                    openAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
                 }
             }
             .onChange(of: scenePhase) { _, phase in
@@ -136,7 +140,8 @@ public struct RootView: View {
                 studentDetail: { studentDetailView($0) },
                 classes: { classesView },
                 classDetail: { classDetailView($0) },
-                settings: { settingsView }
+                settings: { settingsView },
+                attendance: { attendanceView }
             )
         }
     }
@@ -188,7 +193,7 @@ public struct RootView: View {
     }
 
     /// One register for the life of the workspace, so the list, the search and the scroll survive a tab switch.
-    private func register(for workspace: Workspace) -> RegisterStore {
+    func register(for workspace: Workspace) -> RegisterStore {
         if let register = shell.register {
             return register
         }
@@ -209,7 +214,10 @@ public struct RootView: View {
         StudentsActions(
             openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
             openStudentFees: { _ in shell.tabs.push(.later(.studentFees)) },
-            openMarkAttendance: { _ in shell.tabs.push(.later(.markAttendance)) }
+            openMarkAttendance: { id in
+                guard case let .ready(workspace) = session.state else { return }
+                openAttendance(classID: id, date: nil, in: workspace)
+            }
         )
     }
 

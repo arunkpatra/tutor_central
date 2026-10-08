@@ -1,3 +1,4 @@
+import Attendance
 import Domain
 import Foundation
 import Observation
@@ -14,6 +15,8 @@ import Today
     /// Made by the first Students screen and shared by every other; nothing observes the slot itself, so filling it
     /// while a view is built changes nothing on screen.
     @ObservationIgnored var register: RegisterStore?
+    /// One mark screen per centre, so a tab switch keeps the date, the class and the unsaved toggles.
+    @ObservationIgnored var attendance: AttendanceStore?
     private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
@@ -35,6 +38,7 @@ import Today
         tabs = TabsState()
         today = nil
         register = nil
+        attendance = nil
         centre = nil
     }
 }

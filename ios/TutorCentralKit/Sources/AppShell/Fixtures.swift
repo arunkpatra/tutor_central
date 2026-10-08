@@ -26,12 +26,12 @@ public enum Fixtures {
             counts: FakeCountsRepository(),
             students: FakeStudentsRepository(students: register(for: state).students),
             classes: FakeClassesRepository(classes: register(for: state).classes),
-            attendance: FakeAttendanceRepository(sessions: attendance(for: state)),
-            messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed),
+            attendance: FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) }),
+            messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed, now: { clock(for: state) }),
             events: FakeEventsRepository(events: FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: FakeTasksRepository.seed),
             cachesRegister: false,
-            now: { now },
+            now: { clock(for: state) },
             bundleVersion: "0.1 (12)"
         )
     }
@@ -44,7 +44,8 @@ public enum Fixtures {
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
              .studentNewInvalid, .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm,
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
-             .classDetail, .classAddMembers: .ready(meeraWorkspace)
+             .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
+             .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -53,16 +54,26 @@ public enum Fixtures {
     /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
     static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
         switch state {
-        case .studentsEmpty, .classesEmpty: ([], [])
+        case .studentsEmpty, .classesEmpty, .attendanceEmpty: ([], [])
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
     }
 
-    /// The saved attendance each state starts with: the seed's four weeks (the states after a save add the 7th's).
+    /// The saved attendance each state starts with: the seed's four weeks. Saved and the alert save the 7th on screen,
+    /// at their own clock.
     static func attendance(for _: LaunchState) -> [AttendanceSession] {
         FakeAttendanceRepository.seed
+    }
+
+    /// Each state's clock: the boards' Wednesday at 18:30, or the minute a board names (P4-Attendance-Mark-Saved and
+    /// P4-Absence-Alert are saved at 18:32).
+    static func clock(for state: LaunchState) -> Date {
+        switch state {
+        case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
+        default: now
+        }
     }
 
     /// P3-StudentDetail-Archived: Akshita archived on the boards' day.
