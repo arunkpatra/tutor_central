@@ -90,4 +90,13 @@ struct LaunchStateTests {
         let empty = Fixtures.dependencies(for: .classesEmpty)
         #expect(try await empty.classes.classes(centre: Fixtures.meeraWorkspace.centre.id).isEmpty)
     }
+
+    @MainActor @Test func theClassDetailStatesOpenClassTenMaths() {
+        for state in [LaunchState.classDetail, .classAddMembers] {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .students)
+            #expect(RootView.initialRoutes(for: state) == [.classroom(FakeClassesRepository.maths.id)])
+        }
+        #expect(RootView.classDetailBoardState(.classAddMembers) == .addMembers)
+    }
 }

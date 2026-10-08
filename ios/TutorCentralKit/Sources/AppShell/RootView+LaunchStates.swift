@@ -13,7 +13,7 @@ extension RootView {
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .student, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
-             .classArchiveConfirm: .students
+             .classArchiveConfirm, .classDetail, .classAddMembers: .students
         case .laterFees: .fees
         case .laterAttendance: .attendance
         case .laterMore: .more
@@ -28,6 +28,7 @@ extension RootView {
         case .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit:
             [.student(FakeStudentsRepository.akshita)]
         case .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: [.classes]
+        case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
         default: []
         }
     }
@@ -71,4 +72,29 @@ extension RootView {
         default: nil
         }
     }
+
+    static func classDetailBoardState(_ state: LaunchState) -> ClassDetailBoardState? {
+        state == .classAddMembers ? .addMembers : nil
+    }
+
+    /// The toast's Retry for the register's last failed write.
+    static func retry(_ store: RegisterStore) -> (label: String, run: @MainActor () -> Void) {
+        let run: @MainActor () -> Void = {
+            Task { await store.retryLast() }
+        }
+        return ("Retry", run)
+    }
+
+    #if DEBUG
+        static func kitSection(_ state: LaunchState?) -> KitView.Section? {
+            switch state {
+            case .kit: .controls
+            case .kitFields: .fields
+            case .kitSurfaces: .surfaces
+            case .kitPatterns: .patterns
+            case .kitDialog: .dialog
+            default: nil
+            }
+        }
+    #endif
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Member (class detail): avatar 40; name and the parent's phone; "Class fee" in footnote text2, or the student's own
-/// fee in numberRow; chevron.
+/// fee in footnoteStrong text (P3-ClassDetail); chevron.
 public struct MemberRow: View {
     let initials: String
     let name: String
@@ -23,7 +23,7 @@ public struct MemberRow: View {
             Avatar(initials: initials)
             RowTitles(title: name, subtitle: phone)
             if let fee {
-                Text(fee).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
+                Text(fee).typeStyle(Tokens.footnoteStrong).monospacedDigit().foregroundStyle(Tokens.text.color)
             } else {
                 Text("Class fee").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
@@ -91,7 +91,7 @@ public struct ChecklistRow: View {
             HStack(spacing: Tokens.rowPaddingDense) {
                 Avatar(initials: initials)
                 RowTitles(title: name, subtitle: detail)
-                CheckMark(isOn: isOn)
+                CheckMark(isOn: isOn, ink: Tokens.okInk)
             }
             .padding(.vertical, Tokens.rowPaddingDense)
             .padding(.horizontal, Tokens.rowPaddingHorizontal)

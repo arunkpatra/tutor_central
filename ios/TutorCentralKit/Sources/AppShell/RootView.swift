@@ -135,6 +135,7 @@ public struct RootView: View {
                 students: { studentsView },
                 studentDetail: { studentDetailView($0) },
                 classes: { classesView },
+                classDetail: { classDetailView($0) },
                 settings: { settingsView }
             )
         }
@@ -251,6 +252,18 @@ public struct RootView: View {
         }
     }
 
+    @ViewBuilder private func classDetailView(_ id: UUID) -> some View {
+        if case let .ready(workspace) = session.state {
+            ClassDetailView(
+                id: id,
+                register: register(for: workspace),
+                actions: studentsActions,
+                navigation: studentsNavigation,
+                boardState: launch.flatMap(Self.classDetailBoardState)
+            )
+        }
+    }
+
     @ViewBuilder private func studentDetailView(_ id: UUID) -> some View {
         if case let .ready(workspace) = session.state {
             let register = register(for: workspace)
@@ -267,27 +280,6 @@ public struct RootView: View {
             )
         }
     }
-
-    /// The toast's Retry for the register's last failed write.
-    private static func retry(_ store: RegisterStore) -> (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = {
-            Task { await store.retryLast() }
-        }
-        return ("Retry", run)
-    }
-
-    #if DEBUG
-        static func kitSection(_ state: LaunchState?) -> KitView.Section? {
-            switch state {
-            case .kit: .controls
-            case .kitFields: .fields
-            case .kitSurfaces: .surfaces
-            case .kitPatterns: .patterns
-            case .kitDialog: .dialog
-            default: nil
-            }
-        }
-    #endif
 }
 
 /// While the session and the centre are read: the shape of the screen breathing, and when the read failed, the line

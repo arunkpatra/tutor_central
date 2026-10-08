@@ -39,7 +39,8 @@ public enum Fixtures {
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
              .studentNewInvalid, .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm,
-             .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: .ready(meeraWorkspace)
+             .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
+             .classDetail, .classAddMembers: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
