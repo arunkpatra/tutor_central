@@ -48,8 +48,15 @@ public struct SettingsView: View {
                 signOutDialog
             }
         }
+        .onChange(of: store.saveState) { _, state in
+            if state == .saved {
+                Haptic.play(.success)
+            }
+        }
         .onChange(of: store.message) { _, message in
             if let message {
+                // Every Settings message is a failure: the error haptic with its toast.
+                Haptic.play(.error)
                 onMessage(message)
                 store.message = nil
             }

@@ -117,6 +117,8 @@ public struct StudentsView: View {
             await store.load()
             setUpBoardState()
         }
+        // Saved: the success haptic, for every write the register makes from any Students screen.
+        .onChange(of: store.lastSavedAt) { Haptic.play(.success) }
     }
 
     private var isEmpty: Bool {

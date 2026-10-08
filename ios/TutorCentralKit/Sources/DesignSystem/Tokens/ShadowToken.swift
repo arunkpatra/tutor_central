@@ -16,11 +16,32 @@ public struct ShadowToken: Hashable, Sendable {
     public let name: String
     public let dark: String
     public let light: String
+    /// The layers, parsed once when the token is made, so drawing a long list never re-reads the CSS.
+    private let parsedDark: Layers
+    private let parsedLight: Layers
+
+    /// A token's drop layers and its inset layer, if any.
+    public struct Layers: Hashable, Sendable {
+        public let drops: [ShadowLayer]
+        public let inset: ShadowLayer?
+    }
 
     init(_ name: String, dark: String, light: String) {
         self.name = name
         self.dark = dark
         self.light = light
+        parsedDark = Self.layers(dark)
+        parsedLight = Self.layers(light)
+    }
+
+    /// The layers for an appearance, as parsed when the token was made.
+    public func layers(dark: Bool) -> Layers {
+        dark ? parsedDark : parsedLight
+    }
+
+    private static func layers(_ css: String) -> Layers {
+        let parsed = parse(css)
+        return Layers(drops: parsed.drops, inset: parsed.inset)
     }
 
     /// "inset 0 1px 0 rgba(...), 0 1px 2px rgba(...)" → the drop layers and the inset layer, if any.
