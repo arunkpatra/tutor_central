@@ -4,3 +4,5 @@
 
 2. Asked whether a waived month on a student's fees should have a Mark paid button (the board drew it bare, the Waive
    sheet promises "You can still mark it paid later"), the owner chose: "Mark paid only (Recommended)".
+
+3. After the TestFlight build and the camera step: "installed the build and tested on iphone. test ok."

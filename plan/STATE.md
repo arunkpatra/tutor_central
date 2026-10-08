@@ -7,7 +7,7 @@ short and true. History belongs in git and in the phase files, not here.
 #51 as the plan's six, #52 the hand run's and the final review's fixes (four Important: Undo after paying a waived fee,
 Settings' stale workspace, the camera's permission and the scanner's way out); the D32 hand run on issue #50 (two bugs
 found and fixed); D34 (a waived month offers Mark paid alone, the owner's call); no migration; build 0.1.0 (8) on
-TestFlight; the owner's camera check: see "In flight". **Next:** Phase 0 step 0.7 (the Phase 6 boards) and the Phase 6
+TestFlight, tested by the owner on the iPhone (the QR camera included): all good. **Next:** Phase 0 step 0.7 (the Phase 6 boards) and the Phase 6
 plan on Fable.
 
 ## Where we are
@@ -25,9 +25,9 @@ plan on Fable.
 
 ## In flight
 
-The owner's camera check on build 0.1.0 (8): Settings → Parent payments → Scan a QR at a real UPI app's QR (the first
-tap asks for the camera). Record the answer in Phase 5's "As built". No branch but `main` and `pr-shots` (the merged
-`phase-*` branches remain on the remote; delete them when convenient). `main`'s check is green.
+Nothing open. No branch but `main` and `pr-shots` (the merged `phase-*` branches remain on the remote; delete them when
+convenient). `main`'s check is green; build 0.1.0 (8) is on TestFlight and the owner tested it, the QR camera
+included: all good.
 
 ## Production
 

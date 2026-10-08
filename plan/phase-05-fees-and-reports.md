@@ -65,7 +65,7 @@ beside its board, the D32 hand run (issue #50).
   the hand run (the wa.me link opened, a `reminder` row about the month, the row reads "Reminded today", the text on
   the pasteboard).
 - A QR from a real UPI app fills the id correctly: the decoder reads a Core Image UPI QR in tests and from Photos in
-  the simulator; the camera on the owner's iPhone: OWNER_ANSWER.
+  the simulator; the camera on the owner's iPhone with build 0.1.0 (8): "installed the build and tested on iphone. test ok."
 - The CSV opens in Numbers with the expected columns: the hand run (Save to Files, copied out, Numbers read 11 rows,
   7 columns, names whole, amounts as numbers; the BOM on disk, pinned by `ReportsStoreTests`).
 - Domain tests cover every rule in item 9: `FeeInvoiceTests`, `FeeLedgerTests`, `GeneratePreviewTests`,

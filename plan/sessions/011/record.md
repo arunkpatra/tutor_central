@@ -3,7 +3,7 @@
 Model: Claude Opus 5.5 (D17), from `resume/010-phase-5-build.md`, executing `plan/phase-05-plan.md` with
 `superpowers:executing-plans` (inline, one ledger, one fresh reviewer at the end). Outcome: Phase 5 built in PRs #45
 to #49, #51 and #52 (the hand run's and the review's fixes); the D32 hand run on issue #50; build 0.1.0 (8) on
-TestFlight; the owner's camera check: pending when this record was written (see `STATE.md`, "In flight").
+TestFlight; the owner's camera check: "installed the build and tested on iphone. test ok." (the owner).
 
 ## What was done, in order
 
