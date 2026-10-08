@@ -219,4 +219,13 @@ import Testing
         await store.setArchived(FakeStudentsRepository.akshita, true)
         #expect(cache.load()?.students.first { $0.id == FakeStudentsRepository.akshita }?.isArchived == true)
     }
+
+    @Test func loadIfNeededReadsOnlyTheFirstTime() async {
+        let store = make()
+        await store.loadIfNeeded()
+        #expect(store.students.count == 10)
+        students.students = []
+        await store.loadIfNeeded()
+        #expect(store.students.count == 10, "a screen pushed over the list does not read again")
+    }
 }

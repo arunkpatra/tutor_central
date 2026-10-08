@@ -105,18 +105,21 @@ public struct QuietButtonStyle: ButtonStyle {
 public struct DestructiveButtonStyle: ButtonStyle {
     let size: ButtonSize
     let solid: Bool
+    let loading: Bool
     @Environment(\.isEnabled) private var isEnabled
 
-    public init(size: ButtonSize = .form, solid: Bool = false) {
+    /// `loading` keeps the width and shows a spinner while the deletion runs.
+    public init(size: ButtonSize = .form, solid: Bool = false, loading: Bool = false) {
         self.size = size
         self.solid = solid
+        self.loading = loading
     }
 
     public func makeBody(configuration: Configuration) -> some View {
         ButtonFace(
             label: configuration.label,
             size: size,
-            loading: false,
+            loading: loading,
             ink: solid ? Tokens.overdueInk : Tokens.overdue
         )
         .typeStyle(solid ? Tokens.buttonStrong : Tokens.buttonSecondary)
@@ -201,8 +204,8 @@ public extension ButtonStyle where Self == QuietButtonStyle {
 }
 
 public extension ButtonStyle where Self == DestructiveButtonStyle {
-    static func destructive(_ size: ButtonSize = .form, solid: Bool = false) -> Self {
-        .init(size: size, solid: solid)
+    static func destructive(_ size: ButtonSize = .form, solid: Bool = false, loading: Bool = false) -> Self {
+        .init(size: size, solid: solid, loading: loading)
     }
 }
 

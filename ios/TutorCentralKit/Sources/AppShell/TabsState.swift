@@ -24,14 +24,24 @@ import SwiftUI
         paths[selected, default: []].append(route)
     }
 
-    /// A link opens its tab at the root; its screen arrives with its phase. Returns false when this build has no
+    /// Takes a screen that cannot show (a link to a student no longer here) off whichever stack holds it.
+    func remove(_ route: Route) {
+        for tab in paths.keys {
+            paths[tab]?.removeAll { $0 == route }
+        }
+    }
+
+    /// A link opens its tab at the root, then its screen (a student's detail). Returns false when this build has no
     /// screen for it, so the caller can say so.
     func open(_ link: DeepLink) -> Bool {
         selected = link.tab
         paths[link.tab] = []
         switch link {
         case .today, .authCallback: return true
-        case .student, .fees, .attendance, .event: return false
+        case let .student(id):
+            paths[link.tab] = [.student(id)]
+            return true
+        case .fees, .attendance, .event: return false
         }
     }
 }

@@ -38,7 +38,8 @@ public enum Fixtures {
         case .todayEmpty, .laterStudents, .laterFees, .laterAttendance, .laterMore, .settings, .studentsEmpty,
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
-             .studentNewInvalid: .ready(meeraWorkspace)
+             .studentNewInvalid, .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm,
+             .studentEdit: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -49,7 +50,16 @@ public enum Fixtures {
         switch state {
         case .studentsEmpty: ([], [])
         case .studentsFew: (FakeStudentsRepository.few, [])
+        case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
+    }
+
+    /// P3-StudentDetail-Archived: Akshita archived on the boards' day.
+    private static func archivingAkshita(_ student: Student) -> Student {
+        guard student.id == FakeStudentsRepository.akshita else { return student }
+        var archived = student
+        archived.archivedAt = now
+        return archived
     }
 }

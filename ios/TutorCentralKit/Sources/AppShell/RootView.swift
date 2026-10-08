@@ -30,8 +30,8 @@ public struct RootView: View {
         self.launch = launch
         _session = State(initialValue: SessionStore(deps: deps, initial: initial))
         let tabs = TabsState(selected: launch.flatMap(Self.tab(for:)) ?? .today)
-        if launch == .settings {
-            tabs.push(.settings)
+        for route in launch.map(Self.initialRoutes(for:)) ?? [] {
+            tabs.push(route)
         }
         let shell = ShellState(tabs: tabs)
         shell.sessionChanged(initial)
@@ -133,29 +133,9 @@ public struct RootView: View {
                 toasts: toasts,
                 today: { todayView },
                 students: { studentsView },
+                studentDetail: { studentDetailView($0) },
                 settings: { settingsView }
             )
-        }
-    }
-
-    static func tab(for state: LaunchState) -> AppTab? {
-        switch state {
-        case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
-             .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid: .students
-        case .laterFees: .fees
-        case .laterAttendance: .attendance
-        case .laterMore: .more
-        default: nil
-        }
-    }
-
-    static func signInFixture(_ state: LaunchState) -> SignInFixture? {
-        switch state {
-        case .signinEmail: .email
-        case .signinCode: .code
-        case .signinCodeWrong: .codeWrong
-        case .signinPassword: .password
-        default: nil
         }
     }
 
@@ -206,39 +186,70 @@ public struct RootView: View {
     }
 
     /// One register for the life of the workspace, so the list, the search and the scroll survive a tab switch.
+    private func register(for workspace: Workspace) -> RegisterStore {
+        if let register = shell.register {
+            return register
+        }
+        let made = RegisterStore(
+            workspace: workspace,
+            students: deps.students,
+            classes: deps.classes,
+            cache: deps.cachesRegister ? .forCentre(workspace.centre.id) : nil,
+            now: deps.now
+        )
+        // Kept at once, in the same pass: the detail pushed by a launch state or a link reads the same register as the
+        // list.
+        shell.register = made
+        return made
+    }
+
+    private var studentsActions: StudentsActions {
+        StudentsActions(
+            openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
+            openStudentFees: { _ in shell.tabs.push(.later(.studentFees)) },
+            openMarkAttendance: { _ in shell.tabs.push(.later(.markAttendance)) }
+        )
+    }
+
+    private var studentsNavigation: StudentsNavigation {
+        StudentsNavigation(
+            openStudent: { shell.tabs.push(.student($0)) },
+            openClasses: { shell.tabs.push(.classes) },
+            openClass: { shell.tabs.push(.classroom($0)) }
+        )
+    }
+
     @ViewBuilder private var studentsView: some View {
         if case let .ready(workspace) = session.state {
-            let store = shell.register ?? RegisterStore(
-                workspace: workspace,
-                students: deps.students,
-                classes: deps.classes,
-                cache: deps.cachesRegister ? .forCentre(workspace.centre.id) : nil,
-                now: deps.now
-            )
+            let store = register(for: workspace)
             StudentsView(
                 store: store,
-                actions: StudentsActions(
-                    openScanRegister: { shell.tabs.push(.later(.scanRegister)) },
-                    openStudentFees: { _ in shell.tabs.push(.later(.studentFees)) },
-                    openMarkAttendance: { _ in shell.tabs.push(.later(.markAttendance)) }
-                ),
-                navigation: StudentsNavigation(
-                    openStudent: { shell.tabs.push(.student($0)) },
-                    openClasses: { shell.tabs.push(.classes) },
-                    openClass: { shell.tabs.push(.classroom($0)) }
-                ),
+                actions: studentsActions,
+                navigation: studentsNavigation,
                 boardState: launch.flatMap(Self.studentsBoardState)
             )
-            .onAppear {
-                if shell.register == nil {
-                    shell.register = store
-                }
-            }
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
                 toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
             }
+        }
+    }
+
+    @ViewBuilder private func studentDetailView(_ id: UUID) -> some View {
+        if case let .ready(workspace) = session.state {
+            let register = register(for: workspace)
+            StudentDetailView(
+                store: StudentDetailStore(id: id, register: register),
+                register: register,
+                actions: studentsActions,
+                navigation: studentsNavigation,
+                boardState: launch.flatMap(Self.studentDetailBoardState),
+                onMissing: {
+                    shell.tabs.remove(.student(id))
+                    toasts.show(StudentDetailStore.missingMessage)
+                }
+            )
         }
     }
 
@@ -248,18 +259,6 @@ public struct RootView: View {
             Task { await store.retryLast() }
         }
         return ("Retry", run)
-    }
-
-    static func studentsBoardState(_ state: LaunchState) -> StudentsBoardState? {
-        switch state {
-        case .studentsSearching: .searching
-        case .studentsFiltered: .filteredToScience
-        case .studentsAddMenu: .addMenu
-        case .studentNew: .newStudentEmpty
-        case .studentNewFilled: .newStudentFilled
-        case .studentNewInvalid: .newStudentInvalid
-        default: nil
-        }
     }
 
     #if DEBUG

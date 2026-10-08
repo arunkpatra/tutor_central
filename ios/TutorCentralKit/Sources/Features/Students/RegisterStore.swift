@@ -133,6 +133,13 @@ import Observation
         await fetch()
     }
 
+    /// For a screen pushed over the list (a detail, a link): read only when nothing has been read or cached yet.
+    public func loadIfNeeded() async {
+        if !loaded {
+            await load()
+        }
+    }
+
     public func refresh() async {
         refreshing = true
         defer { refreshing = false }

@@ -11,7 +11,9 @@ import Today
 @MainActor @Observable final class ShellState {
     var tabs: TabsState
     var today: TodayStore?
-    var register: RegisterStore?
+    /// Made by the first Students screen and shared by every other; nothing observes the slot itself, so filling it
+    /// while a view is built changes nothing on screen.
+    @ObservationIgnored var register: RegisterStore?
     private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {

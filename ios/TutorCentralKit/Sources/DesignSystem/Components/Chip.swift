@@ -33,17 +33,18 @@ public enum StatusTone: Sendable {
 }
 
 /// 28 high, radiusChip, padding 0 10, 13 700; status: tint fill, status text, an optional leading symbol (checkmark
-/// paid, clock due, exclamationmark.circle overdue); neutral: surface2, text2 600. `compact` is the chip inside a fee
+/// paid, clock due, exclamationmark.circle overdue); neutral: surface2, text2 600, an optional symbol (archivebox).
+/// `compact` is the chip inside a fee
 /// row: 24 high, padding 0 8, 12 700 (Kit-Surfaces board). The word is always there; colour never says it alone.
 public struct Chip: View {
     public enum Kind: Sendable {
         case status(StatusTone, String, symbol: String? = nil)
-        case neutral(String)
+        case neutral(String, symbol: String? = nil)
     }
 
     let kind: Kind
     let compact: Bool
-    static var height: CGFloat {
+    public static var height: CGFloat {
         28
     }
 
@@ -62,7 +63,7 @@ public struct Chip: View {
 
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
-            if case let .status(_, _, symbol?) = kind {
+            if let symbol {
                 Image(systemName: symbol).font(.system(size: Self.symbolSize, weight: .bold))
             }
             Text(title)
@@ -76,7 +77,13 @@ public struct Chip: View {
 
     private var title: String {
         switch kind {
-        case let .status(_, text, _), let .neutral(text): text
+        case let .status(_, text, _), let .neutral(text, _): text
+        }
+    }
+
+    private var symbol: String? {
+        switch kind {
+        case let .status(_, _, symbol), let .neutral(_, symbol): symbol
         }
     }
 
