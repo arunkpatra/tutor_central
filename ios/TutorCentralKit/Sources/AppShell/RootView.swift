@@ -236,6 +236,7 @@ public struct RootView: View {
             )
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
+                Haptic.play(.error)
                 toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
             }

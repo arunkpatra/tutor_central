@@ -11,7 +11,7 @@ struct Shadowed: ViewModifier {
     @Environment(\.colorScheme) private var scheme
 
     func body(content: Content) -> some View {
-        let parsed = tokens.map { ShadowToken.parse(scheme == .dark ? $0.dark : $0.light) }
+        let parsed = tokens.map { $0.layers(dark: scheme == .dark) }
         let drops = parsed.flatMap(\.drops)
         let insets = parsed.compactMap(\.inset)
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)

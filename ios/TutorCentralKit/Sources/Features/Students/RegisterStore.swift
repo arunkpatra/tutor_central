@@ -11,6 +11,8 @@ import Observation
     public private(set) var error: String?
     public var message: String?
     public private(set) var canRetry = false
+    /// When the last write succeeded: the view plays the success haptic on it (design-tokens.md, Haptics).
+    public private(set) var lastSavedAt: Date?
     public var search = ""
     public var filter: StudentFilter = .all
     public var sort: StudentSort = .name
@@ -174,6 +176,7 @@ import Observation
     private func succeeded() {
         lastFailed = nil
         canRetry = false
+        lastSavedAt = now()
         persist()
     }
 

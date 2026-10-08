@@ -31,12 +31,18 @@ public struct CodeField: View {
 
     public var body: some View {
         ZStack {
-            TextField("", text: Binding(get: { code }, set: { code = String($0.filter(\.isNumber).prefix(length)) }))
-                .keyboardType(.numberPad)
-                .textContentType(.oneTimeCode)
-                .focused($focused)
-                .opacity(0.02) // present for the keyboard and autofill, not seen
-                .accessibilityLabel("Six-digit code")
+            TextField(
+                "",
+                text: Binding(
+                    get: { code },
+                    set: { code = String($0.filter { $0.isASCII && $0.isNumber }.prefix(length)) }
+                )
+            )
+            .keyboardType(.numberPad)
+            .textContentType(.oneTimeCode)
+            .focused($focused)
+            .opacity(0.02) // present for the keyboard and autofill, not seen
+            .accessibilityLabel("Six-digit code")
             HStack(spacing: Tokens.inline) {
                 ForEach(0 ..< length, id: \.self) { i in
                     digitWell(at: i)

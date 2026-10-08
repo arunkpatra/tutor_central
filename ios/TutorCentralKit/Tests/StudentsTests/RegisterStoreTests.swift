@@ -237,4 +237,15 @@ import Testing
         #expect(store.student(dev.id)?.classID == nil && store.members(of: FakeClassesRepository.science.id).count == 2)
         #expect(students.assigned.last?.1 == nil && store.student(dev.id)?.monthlyFee == Money(rupees: 1000))
     }
+
+    @Test func aSuccessfulWriteMarksTheSaveAFailedOneDoesNot() async {
+        let store = make()
+        await store.load()
+        #expect(store.lastSavedAt == nil)
+        students.nextError = URLError(.notConnectedToInternet)
+        await store.setArchived(FakeStudentsRepository.akshita, true)
+        #expect(store.lastSavedAt == nil)
+        await store.setArchived(FakeStudentsRepository.akshita, true)
+        #expect(store.lastSavedAt == FakeCountsRepository.fixedNow)
+    }
 }
