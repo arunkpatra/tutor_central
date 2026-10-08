@@ -3,12 +3,13 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 11 (the Phase 5 build, on Opus 5.5). **Session 11:** Phase 5 done: PRs #45 to #49 and
+**Last updated:** 2026-10-09, session 12 (the Phase 6 boards and plan, on Fable 5.1). **Session 11:** Phase 5 done: PRs #45 to #49 and
 #51 as the plan's six, #52 the hand run's and the final review's fixes (four Important: Undo after paying a waived fee,
 Settings' stale workspace, the camera's permission and the scanner's way out); the D32 hand run on issue #50 (two bugs
 found and fixed); D34 (a waived month offers Mark paid alone, the owner's call); no migration; build 0.1.0 (8) on
-TestFlight, tested by the owner on the iPhone (the QR camera included): all good. **Session 12 (in progress, Fable):** Phase 0 step 0.7 done, the 44 Phase 6 boards approved and mirrored. **Next:** the Phase 6 plan
-(`phase-06-plan.md`), then `resume/012-phase-6-build.md` for the Opus 5.5 build.
+TestFlight, tested by the owner on the iPhone (the QR camera included): all good. **Session 12:** Phase 0 step 0.7 done (44 boards in row 9, approved), `phase-06-plan.md` approved (20 tasks, 6 PRs, two migrations,
+the SDK dependency D35 and Scan register in Students D36 to be numbered in their PRs), `resume/012-phase-6-build.md` written. No
+code. **Next:** the Phase 6 build on Opus 5.5 from `resume/012-phase-6-build.md`.
 
 ## Where we are
 
@@ -65,10 +66,11 @@ included: all good.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
-- Phase 6 constraint: six 8 MB base64 images exceed Vercel's 4.5 MB request body. Downscale on the device or upload
-  to Storage.
+- Phase 6's answer to Vercel's 4.5 MB body: photos are reduced on the device to 2000 px JPEG (the plan's decisions table);
+  no Storage.
 - Vercel's production domain is the generated one; a nicer domain is the owner's call (tutorcentral.in exists).
-- Accounts still to create when their phase needs them: Anthropic API key (Phase 6).
+- Accounts still to create when their phase needs them: the Anthropic API key (Phase 6, Task 20 steps 1 and 2: into Vercel's
+  `ANTHROPIC_API_KEY` and `api/.env.local`, after PR 2 and before the deploy).
 - Crash reporting: no decision yet (D18 leaves it open).
 
 ## Paths outside this repo

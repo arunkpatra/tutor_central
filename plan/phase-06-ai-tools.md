@@ -1,6 +1,6 @@
 # Phase 6: AI tools
 
-**Status:** Not started. **Depends on:** Phase 3 (students and classes feed the forms); Phase 1's API
+**Status:** Planned (session 12, 2026-10-08): the 44 boards approved (canvas row 9), `phase-06-plan.md` approved; the build runs from `resume/012-phase-6-build.md`. **Depends on:** Phase 3 (students and classes feed the forms); Phase 1's API
 skeleton; Phase 0's Phase 6 boards approved.
 
 ## Goal

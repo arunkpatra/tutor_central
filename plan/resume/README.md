@@ -17,3 +17,4 @@ phase and slice, what to read first, what is already true, what to do and what t
 | 009 | `009-phase-5-boards-and-plan.md` | Phase 5 (fees, UPI settings, reminders, receipts, reports): Phase 0 step 0.6 (the Phase 5 boards) and `plan/phase-05-plan.md` on Fable 5.1, then resume 010 for the build |
 | 010 | `010-phase-5-build.md` | Phase 5, the build: execute `plan/phase-05-plan.md` natively on Opus 5.5, six pull requests, the hand runs by the runbook, the owner's camera check, then the review |
 | 011 | `011-phase-6-boards-and-plan.md` | Phase 6 (AI tools): Phase 0 step 0.7 (the Phase 6 boards) and `plan/phase-06-plan.md` on Fable 5.1, then resume 012 for the build |
+| 012 | `012-phase-6-build.md` | Phase 6, the build: execute `plan/phase-06-plan.md` natively on Opus 5.5, six pull requests, the deploy with the owner's key, the hand runs by the runbook, the owner's phone checks, then the review |
