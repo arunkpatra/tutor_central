@@ -84,6 +84,8 @@ import Observation
     let now: @Sendable () -> Date
     let calendar: Calendar
     var lastFailed: (@MainActor () async -> Void)?
+    /// A waived fee's reason while it is marked paid, so its Undo waives it again rather than leaving it due.
+    var reasonsBeforePaid: [UUID: String] = [:]
     /// True once a month was asked for (the tab's first open, a link, an action from the student detail).
     private var opened = false
     /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
