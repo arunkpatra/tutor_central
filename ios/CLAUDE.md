@@ -20,7 +20,10 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - Screens are proven by `bun shots <state>` and the pictures in the PR (D7). Every state a board has gets a
   `LaunchState` case; the app reads `--state <name>` and `--appearance dark|light|system` at launch.
 - The simulator is the iPhone 17 (D22); `TC_SIMULATOR` names another. Simulator builds sign ad hoc, without a
-  team: an unsigned build has no keychain, so no session survives a relaunch.
+  team. The signed-in session survives a relaunch and a reboot (seen in session 7).
+- Driving the app against the local stack (sign in, tap, type, settled screenshots, deep links, a wedged
+  simulator): `docs/runbooks/simulator.md` (D32). Its rules: 1.5 s after a tap before looking, 1 s after `text`
+  before the next tap, a phone number in two parts, and every write confirmed in the database.
 - If the smoke test fails with "Application failed preflight checks" (the simulator is busy after installs or a
   shutdown), run `xcrun simctl shutdown all && xcrun simctl boot "iPhone 17"` and check again; it is not the code.
 - iPhone only (D1): the app target sets `TARGETED_DEVICE_FAMILY "1"` itself; XcodeGen's default is "1,2".
@@ -39,8 +42,8 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - `bun shots` photographs the last `bun check` build: rebuild before shooting a change.
 - A repository's write path is proven in Swift against the local stack before a build ships (a throwaway test with
   an in-memory session; the test host has no keychain), not only by curl: Phase 3's insert answer did not decode.
-- A failing test can stall `xcodebuild` ten minutes while it collects simulator diagnostics; a local run with
-  `-collect-test-diagnostics never` reports at once.
+- A failing test can stall `xcodebuild` ten minutes while it collects simulator diagnostics; `bun check` passes
+  `-collect-test-diagnostics never` (#35), and a hand-run `xcodebuild test` should too.
 - Boards draw focus without a keyboard: fields take `showsFocus` for board states and `autofocus` for real use.
 - Local config: `Config/Local.xcconfig` (ignored) from `Config/Local.xcconfig.example`; the anon key (the JWT,
   `ANON_KEY`) from `supabase status -o env`. The local stack sends the code email

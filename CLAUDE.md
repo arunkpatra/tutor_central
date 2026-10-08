@@ -40,7 +40,9 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
   decisions, one question at a time.
 - Build in logical parts and show each one. No long silent stretches.
 - Verify your own work before showing it: build it, run it in the simulator, look at the screenshot. Report
-  what you ran and what you did not.
+  what you ran and what you did not. Drive the app against the local stack by `docs/runbooks/simulator.md` (its
+  waits are what make taps and typing land). Before any TestFlight build that changes a write path, do that hand run
+  of every write the change touches and keep the screenshots (D32).
 - For setup the owner must do himself (Supabase, Vercel, App Store Connect, Google, Anthropic), give one step
   at a time and check each result before the next.
 - Decisions in `plan/README.md` are not reopened; a change gets a new number that supersedes the old.
@@ -57,6 +59,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
 | Scripts: check, shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
+| Runbooks: driving the app in the simulator against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32) |
 
 ## Engineering standard
 Production software, not a prototype. Test first where there is logic (Domain, Data, API, RLS). Small units
