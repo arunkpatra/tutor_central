@@ -8,7 +8,7 @@ short and true. History belongs in git and in the phase files, not here.
 Settings' stale workspace, the camera's permission and the scanner's way out); the D32 hand run on issue #50 (two bugs
 found and fixed); D34 (a waived month offers Mark paid alone, the owner's call); no migration; build 0.1.0 (8) on
 TestFlight, tested by the owner on the iPhone (the QR camera included): all good. **Next:** Phase 0 step 0.7 (the Phase 6 boards) and the Phase 6
-plan on Fable.
+plan on Fable, from `resume/011-phase-6-boards-and-plan.md`.
 
 ## Where we are
 
