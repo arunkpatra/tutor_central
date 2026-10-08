@@ -26,6 +26,10 @@ public enum Fixtures {
             counts: FakeCountsRepository(),
             students: FakeStudentsRepository(students: register(for: state).students),
             classes: FakeClassesRepository(classes: register(for: state).classes),
+            attendance: FakeAttendanceRepository(sessions: attendance(for: state)),
+            messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed),
+            events: FakeEventsRepository(events: FakeEventsRepository.seed),
+            tasks: FakeTasksRepository(tasks: FakeTasksRepository.seed),
             cachesRegister: false,
             now: { now },
             bundleVersion: "0.1 (12)"
@@ -54,6 +58,11 @@ public enum Fixtures {
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
+    }
+
+    /// The saved attendance each state starts with: the seed's four weeks (the states after a save add the 7th's).
+    static func attendance(for _: LaunchState) -> [AttendanceSession] {
+        FakeAttendanceRepository.seed
     }
 
     /// P3-StudentDetail-Archived: Akshita archived on the boards' day.

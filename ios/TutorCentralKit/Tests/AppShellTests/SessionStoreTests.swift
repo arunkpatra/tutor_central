@@ -12,6 +12,10 @@ import Testing
             counts: FakeCountsRepository(),
             students: FakeStudentsRepository(),
             classes: FakeClassesRepository(),
+            attendance: FakeAttendanceRepository(),
+            messages: FakeMessageLogRepository(),
+            events: FakeEventsRepository(),
+            tasks: FakeTasksRepository(),
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"

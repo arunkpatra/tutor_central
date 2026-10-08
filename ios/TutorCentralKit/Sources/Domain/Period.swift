@@ -40,6 +40,13 @@ public struct Period: Hashable, Sendable, Comparable, Codable {
         return Period(year: parts.year!, month: parts.month!)
     }
 
+    /// The ISO day before this month starts: the last day of the previous month.
+    public var previousDayISO: String {
+        let utc = TimeZone(identifier: "UTC")!
+        let last = Self.calendar(utc).date(byAdding: .day, value: -1, to: start(in: utc))!
+        return Day(last, calendar: Self.calendar(utc)).iso
+    }
+
     /// "October 2026".
     public var title: String {
         formatted("MMMM yyyy")
