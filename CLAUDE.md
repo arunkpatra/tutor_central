@@ -45,6 +45,9 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
   of every write the change touches and keep the screenshots (D32).
 - For setup the owner must do himself (Supabase, Vercel, App Store Connect, Google, Anthropic), give one step
   at a time and check each result before the next.
+- Something on screen that works but could look or read better goes on `plan/ui-polish.md` (one row, its source),
+  not into the change in hand. Items are taken when the owner chooses; when your work already touches a screen with
+  open items, say so and offer them.
 - Decisions in `plan/README.md` are not reopened; a change gets a new number that supersedes the old.
 - You may commit, push, open and merge pull requests once the check is green and rule 2 is met.
 
@@ -58,6 +61,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | Reference app and the functional contract | `docs/reference/` | |
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
+| UI polish list: small visual and copy fixes, taken when the owner chooses | `plan/ui-polish.md` | Its "How it works" |
 | Scripts: check, shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
 | Runbooks: driving the app in the simulator against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32) |
 

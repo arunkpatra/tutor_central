@@ -58,9 +58,8 @@ remote; delete them when convenient). `main`'s check is green; build 0.1.0 (6) i
   shadows and haptics); Phase 3's deferred minors are in `plan/sessions/006/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
-- **UI polish** (owner, after the first install): a pass over the built screens; seen so far: Today's content
-  scrolls under the status bar; Today still shows Phase 2's fixed "Start here: Add your first students" and "No
-  classes yet" beside a full register and "1 Classes today" (session 7's record). Its own slice with its own boards where anything changes.
+- **UI polish:** `plan/ui-polish.md` (three open, all on Today). Items are taken when the owner chooses, singly or
+  as a slice; a board first where what is seen changes.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).

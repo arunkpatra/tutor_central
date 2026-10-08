@@ -9,6 +9,7 @@ session may depend on what a previous one remembers. Everything a session needs 
 |---|---|---|
 | `CLAUDE.md` (root), `ios/CLAUDE.md`, `api/CLAUDE.md`, `supabase/CLAUDE.md` | Rules that always apply; how to work with the owner | Rarely |
 | `plan/STATE.md` | Where the work stands today: done, in flight, next, open items | Every session |
+| `plan/ui-polish.md` | Small visual and copy fixes seen on screen, open and done; taken when the owner chooses | When something is seen or taken |
 | `plan/README.md` | Phases and their status; every decision, numbered | When a decision is taken or a phase changes status |
 | `plan/phase-NN-*.md` | Scope and acceptance of a phase; "As built" with deviations | While the phase is worked on |
 | `plan/phase-NN-plan.md` | How the phase is built: tasks in order, tests first, PR boundaries | Written at the start of the phase, ticked as it goes |
@@ -55,6 +56,9 @@ session may depend on what a previous one remembers. Everything a session needs 
 - A new decision gets a number in `plan/README.md` in the same pull request that acts on it (or the same
   documents commit).
 - Show the owner each finished part: what was built, what was decided, what needs approval.
+- Polish seen on screen (layout, spacing, copy, stale content) is added to `plan/ui-polish.md`, not fixed on the
+  side. When the slice in hand touches a screen with open items, name them to the owner and offer to take them; a
+  taken item follows that file's "How it works" (a board first where what is seen changes, its own pull request).
 - For setup the owner must do himself (accounts, keys, App Store Connect), give one step at a time and check
   each result before the next.
 
@@ -62,7 +66,8 @@ session may depend on what a previous one remembers. Everything a session needs 
 
 1. Nothing uncommitted that matters; no branch left unexplained; no simulator build left half-installed.
 2. Update the phase file ("As built", deviations, what remains) and the status in `plan/README.md`.
-3. Rewrite `plan/STATE.md`: last updated, where we are, in flight, next, open items.
+3. Rewrite `plan/STATE.md`: last updated, where we are, in flight, next, open items. Add any polish seen to
+   `plan/ui-polish.md`, and move the items the session took to its "Done".
 4. Write the session's record in `plan/sessions/NNN/record.md` (what was done, why things are as they are,
    what was tried and dropped) and `owner-messages.md` (the owner's messages, word for word).
 5. Commit that update to `main` and push it (documents only, D12).
