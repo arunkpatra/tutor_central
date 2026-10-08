@@ -47,7 +47,8 @@ remote; delete them when convenient). `main`'s check is green; build 0.1.0 (6) i
 
 - **The owner's first hand run of the register** on build 6. Every Swift read and write was run against the local
   stack (a throwaway test, after the review's Critical); the screens were not driven in the simulator against it
-  (typing into the simulator was unreliable in session 6).
+  (typing into the simulator was unreliable in session 6). Research and a runbook, linked from `CLAUDE.md`: issue
+  #34; do it before the next build that changes a write path.
 - **The owner's call:** the register cache (children's names, parents' numbers, notes) stays on disk after sign-out,
   as the Phase 3 plan settled; the final review would remove it on sign-out and write it with complete file
   protection, for a shared phone.
