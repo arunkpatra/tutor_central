@@ -38,4 +38,9 @@ struct PeriodTests {
         #expect(Period(year: 2026, month: 9) < Period(year: 2026, month: 10))
         #expect(Period(year: 2025, month: 12) < Period(year: 2026, month: 1))
     }
+
+    @Test func theDayBeforeAMonthStarts() {
+        #expect(Period(year: 2026, month: 11).previousDayISO == "2026-10-31")
+        #expect(Period(year: 2026, month: 3).previousDayISO == "2026-02-28")
+    }
 }
