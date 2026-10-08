@@ -89,4 +89,14 @@ import Testing
         _ = await store.add()
         #expect(store.open.first?.title == "Late" && trail(store, store.open[0]) == "Mon 5 Oct overdue")
     }
+
+    @Test func aTapOnTheDateChipTurnsItOnWithTheSuggestedDay() async {
+        // The picker opens with the suggested day already chosen; picking it again changes nothing, so the tap does.
+        let store = await make()
+        store.pickDueChip()
+        #expect(store.newDue == Day(year: 2026, month: 10, day: 8) && store.dueChips[0].label == "Tomorrow")
+        store.newDue = Day(year: 2026, month: 10, day: 9)
+        store.pickDueChip()
+        #expect(store.newDue == Day(year: 2026, month: 10, day: 9), "a chosen day stays")
+    }
 }

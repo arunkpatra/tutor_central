@@ -56,7 +56,8 @@ struct TabsView<
                     case .history: history()
                     case let .historyStudent(id): studentMonth(id)
                     case .schedule: schedule(nil)
-                    case let .event(id): schedule(id)
+                    // A newer link in the same place is a new screen, not the last one's state.
+                    case let .event(id): schedule(id).id(id)
                     case .tasks: tasks()
                     }
                 }

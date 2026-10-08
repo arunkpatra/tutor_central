@@ -132,6 +132,12 @@ import Observation
         }
     }
 
+    /// The date chip turns on with the suggested day (the picker it opens starts there, and picking the day it shows
+    /// changes nothing); a chosen day stays.
+    public func pickDueChip() {
+        newDue = newDue ?? suggestedDue
+    }
+
     public func cancelAdd() {
         adding = false
         newTitle = ""

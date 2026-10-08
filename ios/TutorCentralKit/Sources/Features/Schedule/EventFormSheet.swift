@@ -90,11 +90,7 @@ public struct EventFormSheet: View {
                 .popover(isPresented: $picksDay) {
                     DatePicker("Day", selection: dayBinding, displayedComponents: .date)
                         .datePickerStyle(.graphical)
-                        .tint(Tokens.accent.color)
-                        // The day is the centre's (India's), whatever zone the phone is in.
-                        .environment(\.timeZone, DayHeading.india.timeZone)
-                        .padding(Tokens.cardPaddingCompact)
-                        .presentationCompactAdaptation(.popover)
+                        .calendarPopover(timeZone: DayHeading.india.timeZone)
                 }
         }
     }

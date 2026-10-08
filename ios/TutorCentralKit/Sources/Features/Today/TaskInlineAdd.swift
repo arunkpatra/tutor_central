@@ -24,7 +24,10 @@ public struct TaskInlineAdd: View {
             showsFocus: showsFocus || store.adding,
             autofocus: autofocus,
             dueChips: [
-                .init(chips[0].label, symbol: "calendar", isOn: store.newDue != nil) { picksDue = true },
+                .init(chips[0].label, symbol: "calendar", isOn: store.newDue != nil) {
+                    store.pickDueChip()
+                    picksDue = true
+                },
                 .init(chips[1].label, isOn: store.newDue == nil) { store.newDue = nil },
             ],
             canAdd: store.canAdd,
@@ -34,11 +37,7 @@ public struct TaskInlineAdd: View {
         .popover(isPresented: $picksDue) {
             DatePicker("Due", selection: dueBinding, displayedComponents: .date)
                 .datePickerStyle(.graphical)
-                .tint(Tokens.accent.color)
-                // The day is the centre's (India's), whatever zone the phone is in.
-                .environment(\.timeZone, DayHeading.india.timeZone)
-                .padding(Tokens.cardPaddingCompact)
-                .presentationCompactAdaptation(.popover)
+                .calendarPopover(timeZone: DayHeading.india.timeZone)
         }
     }
 

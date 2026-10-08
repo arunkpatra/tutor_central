@@ -51,6 +51,9 @@ import Observation
     public private(set) var lastSavedAt: Date?
     /// True once a class and day have been opened: the empty state waits for it, and `load()` runs only once.
     public private(set) var opened = false
+    /// Set as soon as a class and day are asked for (a link, Mark attendance), so the tab's own first load stands
+    /// aside.
+    private var openRequested = false
     private var sessions: [AttendanceSession] = []
     private var told: [AbsenceLog] = []
     private var loadedMonth: Period?
@@ -150,7 +153,7 @@ import Observation
     /// The tab's first open: today, the first active class (All students when there is none). Coming back to the tab
     /// keeps the date, the class and the unsaved toggles.
     public func load() async {
-        guard !opened else { return }
+        guard !opened, !openRequested else { return }
         await register.loadIfNeeded()
         await open(classID: register.activeClasses.first?.id, date: today)
     }
@@ -158,6 +161,7 @@ import Observation
     /// A class and day (the menu, the date picker, Mark attendance on Today, the link): the month's sessions are read
     /// once, the saved session found, the draft made from it.
     public func open(classID: UUID?, date: Day) async {
+        openRequested = true
         await register.loadIfNeeded()
         if loadedMonth != date.period {
             loading = true

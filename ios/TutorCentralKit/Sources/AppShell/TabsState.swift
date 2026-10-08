@@ -39,7 +39,7 @@ import SwiftUI
         switch link {
         case .today, .authCallback, .attendance: return true
         case let .event(id):
-            paths[link.tab] = [.schedule, .event(id)]
+            paths[link.tab] = [.event(id)]
             return true
         case let .student(id):
             paths[link.tab] = [.student(id)]
