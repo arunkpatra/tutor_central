@@ -322,3 +322,5 @@ public extension RegisterStore {
         await retry()
     }
 }
+
+extension RegisterStore: Register {}
