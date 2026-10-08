@@ -224,4 +224,56 @@ import Testing
         await loading
         #expect(store.draft.date == monday, "the newest open wins")
     }
+
+    @Test func aLaterOpenWinsOverASlowerEarlierOne() async throws {
+        // September's read is slow, October's fast: the day chosen second must be the one shown.
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let slowSeptember = MonthDelayAttendance(
+            sessions: FakeAttendanceRepository.seed,
+            slow: Period(year: 2026, month: 9)
+        )
+        let store = AttendanceStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, attendance: slowSeptember,
+            messages: messages, now: { FakeCountsRepository.fixedNow }
+        )
+        let first = try #require(Day(year: 2026, month: 9, day: 28))
+        let second = try #require(Day(year: 2026, month: 10, day: 5))
+        async let earlier: Void = store.open(classID: maths, date: first)
+        try await Task.sleep(for: .milliseconds(10))
+        await store.open(classID: maths, date: second)
+        await earlier
+        #expect(store.draft.date == second && store.saved?.date == second)
+    }
+}
+
+/// Attendance whose read of one month is slow, so two opens finish in the other order.
+@MainActor final class MonthDelayAttendance: AttendanceRepository {
+    let fake: FakeAttendanceRepository
+    let slow: Period
+
+    init(sessions: [AttendanceSession], slow: Period) {
+        fake = FakeAttendanceRepository(sessions: sessions)
+        self.slow = slow
+    }
+
+    func sessions(centre: UUID, month: Period) async throws -> [AttendanceSession] {
+        if month == slow {
+            try await Task.sleep(for: .milliseconds(150))
+        }
+        return try await fake.sessions(centre: centre, month: month)
+    }
+
+    func save(
+        centre: UUID,
+        classID: UUID?,
+        date: Day,
+        marks: [UUID: AttendanceStatus]
+    ) async throws -> AttendanceSession {
+        try await fake.save(centre: centre, classID: classID, date: date, marks: marks)
+    }
 }

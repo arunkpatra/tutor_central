@@ -51,9 +51,9 @@ import Observation
     public private(set) var lastSavedAt: Date?
     /// True once a class and day have been opened: the empty state waits for it, and `load()` runs only once.
     public private(set) var opened = false
-    /// Set as soon as a class and day are asked for (a link, Mark attendance), so the tab's own first load stands
-    /// aside.
-    private var openRequested = false
+    /// Counts the opens asked for (the tab's first, a link, Mark attendance, the menus): only the newest lands, however
+    /// the reads interleave, so a slower earlier read never replaces the day chosen last.
+    private var openGeneration = 0
     private var sessions: [AttendanceSession] = []
     private var told: [AbsenceLog] = []
     private var loadedMonth: Period?
@@ -153,15 +153,18 @@ import Observation
     /// The tab's first open: today, the first active class (All students when there is none). Coming back to the tab
     /// keeps the date, the class and the unsaved toggles.
     public func load() async {
-        guard !opened, !openRequested else { return }
+        guard !opened, openGeneration == 0 else { return }
         await register.loadIfNeeded()
+        // A link or Mark attendance asked for a class and day while the register was read: theirs stands.
+        guard openGeneration == 0 else { return }
         await open(classID: register.activeClasses.first?.id, date: today)
     }
 
     /// A class and day (the menu, the date picker, Mark attendance on Today, the link): the month's sessions are read
     /// once, the saved session found, the draft made from it.
     public func open(classID: UUID?, date: Day) async {
-        openRequested = true
+        openGeneration += 1
+        let generation = openGeneration
         await register.loadIfNeeded()
         if loadedMonth != date.period {
             loading = true
@@ -169,13 +172,17 @@ import Observation
             do {
                 async let read = attendance.sessions(centre: workspace.centre.id, month: date.period)
                 async let logs = messages.absences(centre: workspace.centre.id, month: date.period)
-                (sessions, told) = try await (read, logs)
+                let (month, monthLogs) = try await (read, logs)
+                guard generation == openGeneration else { return }
+                (sessions, told) = (month, monthLogs)
                 loadedMonth = date.period
                 error = nil
             } catch {
+                guard generation == openGeneration else { return }
                 self.error = "Couldn't load attendance. Check your connection and try again."
             }
         }
+        guard generation == openGeneration else { return }
         saved = sessions.first { $0.date == date && $0.classID == classID }
         draft = AttendanceDraft(
             date: date, classID: classID, members: Self.members(of: classID, in: register), saved: saved
