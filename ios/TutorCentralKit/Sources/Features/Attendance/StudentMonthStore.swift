@@ -45,6 +45,8 @@ import Observation
     private var sessions: [AttendanceSession] = []
     private var previous: [AttendanceSession] = []
     private var told: [AbsenceLog] = []
+    /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
+    private var loadGeneration = 0
     private let workspace: Workspace
     private let register: any Register
     private let attendance: any AttendanceRepository
@@ -92,15 +94,15 @@ import Observation
 
     public var absences: [AbsenceLine] {
         AttendanceStats.absences(of: studentID, in: sessions).map { session in
-            let toldOn = told
-                .first { $0.studentID == studentID && Day($0.openedAt, calendar: calendar) == session.date }
+            // Matched by the day of the absence; the words name the day the parent was told.
+            let toldOn = told.first { $0.studentID == studentID && $0.day(in: calendar) == session.date }
             let classroom = register.classroom(session.classID)
             return AbsenceLine(
                 session: session,
                 day: session.date.weekday(in: calendar).short,
                 date: session.date.shortText,
                 title: classroom?.name ?? "All students",
-                line: toldOn.map { _ in "Parent told on \(session.date.shortWeekdayText)" }
+                line: toldOn.map { "Parent told on \(Day($0.openedAt, calendar: calendar).shortWeekdayText)" }
                     ?? classroom?.timeRange ?? "All students",
                 lineTone: toldOn == nil ? nil : .ok
             )
@@ -119,16 +121,25 @@ import Observation
     }
 
     public func load() async {
+        loadGeneration += 1
+        let generation = loadGeneration
         await register.loadIfNeeded()
         loading = true
-        defer { loading = false }
+        defer {
+            if generation == loadGeneration {
+                loading = false
+            }
+        }
         do {
             async let current = attendance.sessions(centre: workspace.centre.id, month: month)
             async let before = attendance.sessions(centre: workspace.centre.id, month: month.previous)
             async let logs = messages.absences(centre: workspace.centre.id, month: month)
-            (sessions, previous, told) = try await (current, before, logs)
+            let read = try await (current, before, logs)
+            guard generation == loadGeneration else { return }
+            (sessions, previous, told) = read
             error = nil
         } catch {
+            guard generation == loadGeneration else { return }
             self.error = "Couldn't load attendance. Check your connection and try again."
         }
     }

@@ -107,9 +107,10 @@ import Observation
         !register.activeStudents.isEmpty
     }
 
-    /// A fresh class is always worth saving; a saved or reopened one once a mark changed; never while saving.
+    /// A fresh class is always worth saving; a saved or reopened one once a mark changed; never while saving, and never
+    /// while the day's sessions are unread: "everyone present" saved blind would erase real absences.
     public var canSave: Bool {
-        guard phase != .saving, !members.isEmpty else { return false }
+        guard phase != .saving, !members.isEmpty, error == nil, loadedMonth == draft.date.period else { return false }
         return draft.isChanged(from: saved, members: members)
     }
 
@@ -140,7 +141,8 @@ import Observation
         guard let saved else { return [] }
         return members.filter { saved.marks[$0.id] == .absent }.map { student in
             let line = [student.parentName, student.parentPhone?.display].compactMap(\.self).joined(separator: " · ")
-            let toldOn = told.first { $0.studentID == student.id && Day($0.openedAt, calendar: calendar) == saved.date }
+            // Matched by the day of the absence; the words name the day the parent was told.
+            let toldOn = told.first { $0.studentID == student.id && $0.day(in: calendar) == saved.date }
                 .map { Day($0.openedAt, calendar: calendar) }
             return AbsentRow(
                 student: student,
@@ -204,8 +206,11 @@ import Observation
         let before = phase
         phase = .saving
         do {
+            // A student saved here before who has since left the class (or the register) keeps that mark: a save
+            // replaces the marks it sends, so it sends theirs too.
+            let marks = (saved?.marks ?? [:]).merging(draft.marks) { _, mark in mark }
             let session = try await attendance.save(
-                centre: workspace.centre.id, classID: draft.classID, date: draft.date, marks: draft.marks
+                centre: workspace.centre.id, classID: draft.classID, date: draft.date, marks: marks
             )
             saved = session
             sessions.removeAll { $0.id == session.id || ($0.date == session.date && $0.classID == session.classID) }
@@ -258,7 +263,10 @@ import Observation
     public func tell(_ studentID: UUID) async -> URL? {
         guard let alert = alert(for: studentID), let url = alert.url else { return nil }
         do {
-            try await told.insert(messages.logAbsence(centre: workspace.centre.id, studentID: studentID), at: 0)
+            guard let day = saved?.date else { return nil }
+            try await told.insert(
+                messages.logAbsence(centre: workspace.centre.id, studentID: studentID, about: day), at: 0
+            )
             lastSavedAt = now()
             return url
         } catch {

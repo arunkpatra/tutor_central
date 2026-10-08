@@ -203,14 +203,14 @@ isOneToOne: false
                   ]
                 },"message_log": {
                   Row: {
-                    "centre_id": string,"channel": Database["public"]['Enums']["message_channel"],"created_at": string,"id": string,"kind": Database["public"]['Enums']["message_kind"],"opened_at": string,"student_id": string | null,"updated_at": string
+                    "about_date": string | null,"centre_id": string,"channel": Database["public"]['Enums']["message_channel"],"created_at": string,"id": string,"kind": Database["public"]['Enums']["message_kind"],"opened_at": string,"student_id": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"channel"?: Database["public"]['Enums']["message_channel"],"created_at"?: string,"id"?: string,"kind": Database["public"]['Enums']["message_kind"],"opened_at"?: string,"student_id"?: string | null,"updated_at"?: string
+                    "about_date"?: string | null,"centre_id": string,"channel"?: Database["public"]['Enums']["message_channel"],"created_at"?: string,"id"?: string,"kind": Database["public"]['Enums']["message_kind"],"opened_at"?: string,"student_id"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "centre_id"?: string,"channel"?: Database["public"]['Enums']["message_channel"],"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["message_kind"],"opened_at"?: string,"student_id"?: string | null,"updated_at"?: string
+                    "about_date"?: string | null,"centre_id"?: string,"channel"?: Database["public"]['Enums']["message_channel"],"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["message_kind"],"opened_at"?: string,"student_id"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     {

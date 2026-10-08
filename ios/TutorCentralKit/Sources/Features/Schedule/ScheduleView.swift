@@ -28,6 +28,7 @@ public struct ScheduleView: View {
     @State private var deleting: CalendarEvent?
     @State private var deletingNow = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(ToastCenter.self) private var toasts: ToastCenter?
 
     public init(
         store: ScheduleStore, actions: ScheduleActions, boardState: ScheduleBoardState? = nil, openEvent: UUID? = nil,
@@ -95,6 +96,13 @@ public struct ScheduleView: View {
             openLinkedEvent()
         }
         .onChange(of: store.lastSavedAt) { Haptic.play(.success) }
+        // A failed write says so where the tutor is, with Retry (the sheets draw the toast over themselves).
+        .onChange(of: store.message) { _, message in
+            guard let message else { return }
+            Haptic.play(.error)
+            toasts?.show(message, action: store.canRetry ? retry : nil)
+            store.message = nil
+        }
     }
 
     private var navigationRow: some View {
@@ -203,6 +211,12 @@ public struct ScheduleView: View {
             .padding(.horizontal, Tokens.pageSide)
         }
         .transition(.opacity)
+    }
+
+    /// The toast's Retry for the last failed write.
+    private var retry: (label: String, run: @MainActor () -> Void) {
+        let run: @MainActor () -> Void = { Task { await store.retryLast() } }
+        return ("Retry", run)
     }
 
     private func add() {
