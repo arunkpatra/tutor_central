@@ -5,7 +5,7 @@ import Observation
 
 @MainActor @Observable public final class StudentDetailStore {
     public static let missingMessage = "That student is no longer here."
-    private let id: UUID
+    public let id: UUID
     private let register: RegisterStore
 
     public init(id: UUID, register: RegisterStore) {

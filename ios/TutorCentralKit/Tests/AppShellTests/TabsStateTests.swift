@@ -20,4 +20,12 @@ import Testing
         #expect(tabs.selected == .students && tabs.paths[.students] == [.student(id)])
         #expect(!tabs.open(.fees(month: nil)))
     }
+
+    @Test func aRouteThatCannotShowIsTakenOffItsStack() {
+        let tabs = TabsState(selected: .today)
+        let missing = UUID()
+        #expect(tabs.open(.student(missing)))
+        tabs.remove(.student(missing))
+        #expect(tabs.paths[.students] == [] && tabs.selected == .students)
+    }
 }

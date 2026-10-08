@@ -2,7 +2,8 @@ import SwiftUI
 
 /// A confirmation: surface1, lineStrong border, radiusSheet, shadowDialog, padding 22, 14 between parts; title title2,
 /// body subhead text2; Cancel (secondary) then the action (primary, or solid destructive). A destructive dialog that
-/// removes history asks for the name typed (`confirmName`), and the action waits for it. Warning haptic on appearance.
+/// removes history asks for the name typed (`confirmName`), and the action waits for it; `loading` shows the action
+/// running. Warning haptic on appearance.
 /// Drawn over `dim` by its presenter.
 public struct DialogView: View {
     let title: String
@@ -11,6 +12,7 @@ public struct DialogView: View {
     let action: String
     let destructive: Bool
     let confirmName: String?
+    let loading: Bool
     let onCancel: () -> Void
     let onAction: () -> Void
     @State private var typed = ""
@@ -25,6 +27,7 @@ public struct DialogView: View {
         action: String,
         destructive: Bool,
         confirmName: String? = nil,
+        loading: Bool = false,
         onCancel: @escaping () -> Void,
         onAction: @escaping () -> Void
     ) {
@@ -34,6 +37,7 @@ public struct DialogView: View {
         self.action = action
         self.destructive = destructive
         self.confirmName = confirmName
+        self.loading = loading
         self.onCancel = onCancel
         self.onAction = onAction
     }
@@ -60,7 +64,9 @@ public struct DialogView: View {
             HStack(spacing: Tokens.tileGap) {
                 Button(cancel, action: onCancel).buttonStyle(.secondary())
                 if destructive {
-                    Button(action, action: onAction).buttonStyle(.destructive(solid: true)).disabled(!confirmed)
+                    Button(action, action: onAction)
+                        .buttonStyle(.destructive(solid: true, loading: loading))
+                        .disabled(!confirmed || loading)
                 } else {
                     Button(action, action: onAction).buttonStyle(.primary())
                 }

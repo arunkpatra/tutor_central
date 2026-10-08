@@ -24,6 +24,13 @@ import SwiftUI
         paths[selected, default: []].append(route)
     }
 
+    /// Takes a screen that cannot show (a link to a student no longer here) off whichever stack holds it.
+    func remove(_ route: Route) {
+        for tab in paths.keys {
+            paths[tab]?.removeAll { $0 == route }
+        }
+    }
+
     /// A link opens its tab at the root, then its screen (a student's detail). Returns false when this build has no
     /// screen for it, so the caller can say so.
     func open(_ link: DeepLink) -> Bool {
