@@ -1,3 +1,4 @@
+import AITools
 import Attendance
 import Data
 import DesignSystem
@@ -27,8 +28,48 @@ extension RootView {
         case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks,
              .tasksEmpty:
             .more
+        case .todayAI: .today
+        default: aiStates.contains(state) ? .more : nil
+        }
+    }
+
+    /// The AI Assistant's states, all on the More tab's stack.
+    static let aiStates: Set<LaunchState> = [
+        .aiAssistant, .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
+        .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
+        .aiHistoryEmpty,
+    ]
+
+    /// The AI Assistant's stack for each of its states.
+    static func aiRoutes(for state: LaunchState) -> [Route] {
+        let note = FakeAIHistoryRepository.id(2)
+        return switch state {
+        case .aiAssistant, .aiAssistantEmpty: [.aiAssistant]
+        case .aiPaper, .aiGenerating, .aiGenerateFailed: [.aiAssistant, .aiForm(.paper)]
+        case .aiHomework: [.aiAssistant, .aiForm(.homework)]
+        case .aiWorksheet: [.aiAssistant, .aiForm(.worksheet)]
+        case .aiNote, .aiNoteStudent: [.aiAssistant, .aiForm(.progressNote)]
+        case .aiResultPaper, .aiResultRegenerating: [.aiAssistant, .aiResult(FakeAIHistoryRepository.quadraticID)]
+        case .aiResultNote, .aiNoteSend: [.aiAssistant, .aiResult(note)]
+        case .aiHistory, .aiHistoryEmpty: [.aiAssistant, .aiHistory]
+        default: []
+        }
+    }
+
+    static func aiBoardState(_ state: LaunchState) -> AIBoardState? {
+        switch state {
+        case .aiNoteStudent: .studentPicker
+        case .aiGenerating: .generating
+        case .aiGenerateFailed: .failed
+        case .aiResultRegenerating: .regenerating
+        case .aiNoteSend: .noteSend
         default: nil
         }
+    }
+
+    /// The forms the boards draw with the focus ring on the field being typed in.
+    static func showsFocus(_ state: LaunchState) -> Bool {
+        [.aiPaper, .aiHomework, .aiWorksheet, .aiNote].contains(state)
     }
 
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.
@@ -54,7 +95,7 @@ extension RootView {
         case .studentFees: [.student(FakeAttendanceRepository.hemanth), .studentFees(FakeAttendanceRepository.hemanth)]
         case .paymentsEmpty, .payments, .paymentsQR: [.settings, .payments]
         case .reports, .reportsAttendance, .reportsExport, .reportsEmpty: [.reports]
-        default: []
+        default: aiRoutes(for: state)
         }
     }
 
@@ -157,7 +198,11 @@ extension RootView {
     }
 
     static func todayBoardState(_ state: LaunchState) -> TodayBoardState? {
-        state == .todayAddingTask ? .addingTask : nil
+        switch state {
+        case .todayAddingTask: .addingTask
+        case .todayAI: .aiRow
+        default: nil
+        }
     }
 
     static func classDetailBoardState(_ state: LaunchState) -> ClassDetailBoardState? {

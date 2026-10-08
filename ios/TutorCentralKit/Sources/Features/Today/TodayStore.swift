@@ -221,6 +221,8 @@ public struct TodayActions {
     let openEvent: (UUID) -> Void
     /// Today's Due tile: the Fees tab at Due.
     let openFeesDue: () -> Void
+    /// The Create with AI row: the AI Assistant on Today's stack.
+    let openAI: () -> Void
 
     public init(
         openSettings: @escaping () -> Void,
@@ -229,7 +231,8 @@ public struct TodayActions {
         openMarkAttendance: @escaping (UUID) -> Void,
         openClass: @escaping (UUID) -> Void,
         openEvent: @escaping (UUID) -> Void,
-        openFeesDue: @escaping () -> Void
+        openFeesDue: @escaping () -> Void,
+        openAI: @escaping () -> Void
     ) {
         self.openSettings = openSettings
         self.openTab = openTab
@@ -238,5 +241,6 @@ public struct TodayActions {
         self.openClass = openClass
         self.openEvent = openEvent
         self.openFeesDue = openFeesDue
+        self.openAI = openAI
     }
 }

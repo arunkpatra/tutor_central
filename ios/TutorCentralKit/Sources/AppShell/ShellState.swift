@@ -1,3 +1,4 @@
+import AITools
 import Attendance
 import Domain
 import Fees
@@ -22,6 +23,8 @@ import Today
     @ObservationIgnored var fees: FeesStore?
     /// One tasks store per centre, shared by Today's Tasks card and the Tasks screen.
     @ObservationIgnored var tasks: TasksStore?
+    /// One AI store per centre: a call outlives its screen, and Recent and History are read once.
+    @ObservationIgnored var ai: AIStore?
     private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
@@ -46,6 +49,8 @@ import Today
         attendance = nil
         fees = nil
         tasks = nil
+        ai?.cancel()
+        ai = nil
         centre = nil
     }
 }

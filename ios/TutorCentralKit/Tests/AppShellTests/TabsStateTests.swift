@@ -52,4 +52,20 @@ import Testing
         #expect(RootView.linkMonth("2026-13") == nil && RootView.linkMonth(nil) == nil && RootView
             .linkMonth("x") == nil)
     }
+
+    @Test func theAIRoutesPushOnTheTabThatAsked() {
+        let tabs = TabsState()
+        tabs.select(.more)
+        tabs.push(.aiAssistant)
+        tabs.push(.aiForm(.paper))
+        #expect(tabs.paths[.more] == [.aiAssistant, .aiForm(.paper)])
+        tabs.select(.today)
+        tabs.push(.aiAssistant)
+        #expect(tabs.paths[.today] == [.aiAssistant] && tabs.paths[.more]?.count == 2, "each tab keeps its own stack")
+        let id = UUID()
+        tabs.push(.aiResult(id))
+        #expect(tabs.paths[.today]?.last == .aiResult(id))
+        tabs.remove(.aiResult(id))
+        #expect(tabs.paths[.today] == [.aiAssistant])
+    }
 }

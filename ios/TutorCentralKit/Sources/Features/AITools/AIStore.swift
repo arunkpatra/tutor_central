@@ -67,6 +67,8 @@ import UIKit
     public var onWorkspaceChanged: ((Workspace) -> Void)?
     /// AppShell pushes the result when its form (or the result it replaces) is on top.
     public var onResult: ((Generation) -> Void)?
+    /// The result the last arrival replaced (Create again), read by `onResult`.
+    public internal(set) var lastReplaced: UUID?
     @ObservationIgnored public var effects = Effects.system
 
     let register: any Register

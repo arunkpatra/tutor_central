@@ -126,6 +126,7 @@ public extension AIStore {
             guard !Task.isCancelled else { return }
             results[generation.id] = generation
             history.insert(generation, at: 0)
+            lastReplaced = inFlight?.regenerating
             inFlight = nil
             task = nil
             onResult?(generation)
