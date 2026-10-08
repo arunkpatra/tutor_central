@@ -10,6 +10,10 @@ public struct Dependencies: Sendable {
     public let counts: any CountsRepository
     public let students: any StudentsRepository
     public let classes: any ClassesRepository
+    public let attendance: any AttendanceRepository
+    public let messages: any MessageLogRepository
+    public let events: any EventsRepository
+    public let tasks: any TasksRepository
     /// The register is kept on disk for the next launch (`RegisterCache`); the fixtures never write a file.
     public let cachesRegister: Bool
     public let now: @Sendable () -> Date
@@ -22,6 +26,10 @@ public struct Dependencies: Sendable {
         counts: any CountsRepository,
         students: any StudentsRepository,
         classes: any ClassesRepository,
+        attendance: any AttendanceRepository,
+        messages: any MessageLogRepository,
+        events: any EventsRepository,
+        tasks: any TasksRepository,
         cachesRegister: Bool,
         now: @escaping @Sendable () -> Date,
         bundleVersion: String
@@ -31,6 +39,10 @@ public struct Dependencies: Sendable {
         self.counts = counts
         self.students = students
         self.classes = classes
+        self.attendance = attendance
+        self.messages = messages
+        self.events = events
+        self.tasks = tasks
         self.cachesRegister = cachesRegister
         self.now = now
         self.bundleVersion = bundleVersion
@@ -47,6 +59,10 @@ public struct Dependencies: Sendable {
             counts: SupabaseCountsRepository(client: client),
             students: SupabaseStudentsRepository(client: client),
             classes: SupabaseClassesRepository(client: client),
+            attendance: SupabaseAttendanceRepository(client: client),
+            messages: SupabaseMessageLogRepository(client: client),
+            events: SupabaseEventsRepository(client: client),
+            tasks: SupabaseTasksRepository(client: client),
             cachesRegister: true,
             now: { Date() },
             bundleVersion: version
