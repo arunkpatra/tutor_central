@@ -24,15 +24,14 @@ public extension ScanStore {
         }
     }
 
-    /// The toast's Undo: those students deleted, nothing else.
-    func undoAdd(ids: [UUID]) async -> Bool {
+    /// The toast's Undo: those students deleted, nothing else; on failure the words to show where the tutor is.
+    func undoAdd(ids: [UUID]) async -> String? {
         do {
             try await students.deleteMany(ids: ids)
             await register.refresh()
-            return true
+            return nil
         } catch {
-            message = "Couldn't undo. Check your connection and try again."
-            return false
+            return "Couldn't undo. Check your connection and try again."
         }
     }
 }

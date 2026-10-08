@@ -97,6 +97,12 @@ import Testing
         #expect(APIFailure.offline.message == "Couldn't reach the AI service. Check your connection and try again.")
     }
 
+    @Test func aTimeoutIsNotOfflineAndDoesNotPromiseNothingWasUsed() {
+        #expect(APIClient.failure(transport: URLError(.timedOut)) == .timedOut)
+        #expect(APIClient.failure(transport: URLError(.notConnectedToInternet)) == .offline)
+        #expect(APIFailure.timedOut.message == "That took too long to come back. Try again in a minute.")
+    }
+
     @Test func checkPaperSendsThePagesInOrderAndTheScheme() async throws {
         let body = #"{"id":"11111111-1111-1111-1111-111111111111","result":{"questions":[{"number":1,"text":"q","#
             + #""note":"n","marks":3,"of":1}],"summary":"s"}}"#

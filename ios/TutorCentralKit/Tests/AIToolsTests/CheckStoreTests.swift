@@ -101,4 +101,37 @@ import Testing
         #expect(unconsented.needsConsent)
         #expect(unconsented.shareText.isEmpty, "nothing to share before a check")
     }
+
+    @Test func aSecondCheckWhileOneRunsIsRefusedAndCancelDropsTheLateAnswer() async throws {
+        let ai = FakeAIRepository()
+        ai.delay = .milliseconds(200)
+        let store = await Self.make(ai: ai)
+        store.addPages([Self.page])
+        store.scheme = .typed("Q1 (1) b")
+        store.begin()
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(store.stage == .checking && ai.checks.count == 1)
+        store.begin()
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(ai.checks.count == 1, "one check at a time")
+        store.cancel()
+        #expect(store.stage == .scheme)
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(store.stage == .scheme && store.result == nil, "a cancelled check's answer is dropped")
+    }
+
+    @Test func aConsentRefusalAsksForConsentAndChecksAgain() async {
+        let ai = FakeAIRepository()
+        ai.script = .failure(.consent)
+        let store = await Self.make(ai: ai)
+        store.addPages([Self.page])
+        store.scheme = .typed("Q1 (1) b")
+        await store.check()
+        #expect(store.askingConsent && store.needsConsent)
+        #expect(store.stage == .failed(APIFailure.consent.message), "not left on the checking card")
+        ai.script = .answer
+        #expect(await store.recordConsent())
+        await store.retry()
+        #expect(!store.askingConsent && store.stage == .result)
+    }
 }

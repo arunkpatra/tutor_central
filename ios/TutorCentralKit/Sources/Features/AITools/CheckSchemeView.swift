@@ -68,7 +68,7 @@ public struct CheckSchemeView: View {
         .safeAreaInset(edge: .bottom) {
             FooterButton {
                 Button {
-                    Task { await store.check() }
+                    store.begin()
                     openResult()
                 } label: {
                     Label(pagesLabel, systemImage: "sparkles")

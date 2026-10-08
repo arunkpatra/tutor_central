@@ -9,6 +9,8 @@ public enum APIFailure: Error, Hashable, Sendable {
     /// The API's words: the AI service declined, or its answer did not fit.
     case refused(String)
     case service
+    /// The app stopped waiting: the call may still finish, so nothing is promised about what was used.
+    case timedOut
     /// The photos together are over what one request may carry.
     case tooLarge
     /// Anything else the API said, in its words.
@@ -22,6 +24,7 @@ public enum APIFailure: Error, Hashable, Sendable {
         case let .limit(limit): "You've made today's \(limit). Try again tomorrow."
         case let .refused(words), let .server(words): words
         case .service: "The AI service didn't answer. Try again."
+        case .timedOut: "That took too long to come back. Try again in a minute."
         case .tooLarge: "That's too many pages. Up to six, and try sharper, smaller photos."
         }
     }

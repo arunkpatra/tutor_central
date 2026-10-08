@@ -45,7 +45,11 @@ extension RootView {
             shell.tabs.selected = .students
             let ids = store.lastAdded
             toasts.show(ScanReview.addedToast(count: count), action: ("Undo", {
-                Task { _ = await store.undoAdd(ids: ids) }
+                Task {
+                    if let failure = await store.undoAdd(ids: ids) {
+                        toasts.show(failure)
+                    }
+                }
             }))
         }
         return ScanRegisterView(

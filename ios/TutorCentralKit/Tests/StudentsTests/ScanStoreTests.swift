@@ -84,8 +84,14 @@ import Testing
         #expect(drafts.first { $0.trimmedName == "Aarav Mehta" }?.fee == Money(rupees: 1200))
         #expect(!drafts.contains { $0.trimmedName == "Dev Kumar" })
         #expect(store.lastAdded.count == 7)
-        #expect(await store.undoAdd(ids: store.lastAdded))
-        #expect(students.deletedMany == [store.lastAdded])
+        let ids = store.lastAdded
+        students.nextError = URLError(.notConnectedToInternet)
+        #expect(
+            await store.undoAdd(ids: ids) == "Couldn't undo. Check your connection and try again.",
+            "the words for the Students list's toast, where the tutor is now"
+        )
+        #expect(await store.undoAdd(ids: ids) == nil)
+        #expect(students.deletedMany == [ids])
         await store.read(Self.photo)
         students.nextError = URLError(.notConnectedToInternet)
         #expect(await store.add() == nil && store.message == "Couldn't add them. Check your connection and try again.")

@@ -84,11 +84,16 @@ public struct APIClient: AIRepository {
         do {
             (data, response) = try await session.data(for: request)
         } catch {
-            throw .offline
+            throw Self.failure(transport: error)
         }
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
         guard status != 200 else { return data }
         throw Self.failure(status: status, body: try? JSONDecoder().decode(ErrorBody.self, from: data))
+    }
+
+    /// A request that never got its answer: the app's own deadline (`timeout`) is not being offline.
+    static func failure(transport error: any Error) -> APIFailure {
+        (error as? URLError)?.code == .timedOut ? .timedOut : .offline
     }
 
     static func failure(status: Int, body: ErrorBody?) -> APIFailure {
