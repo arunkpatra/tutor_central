@@ -52,6 +52,11 @@ public struct Period: Hashable, Sendable, Comparable, Codable {
         formatted("MMMM yyyy")
     }
 
+    /// "October".
+    public var monthName: String {
+        formatted("MMMM")
+    }
+
     /// "Oct 2026".
     public var shortTitle: String {
         formatted("MMM yyyy")
