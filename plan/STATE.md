@@ -3,7 +3,7 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 10 (the Phase 5 boards, on Fable). **Session 10:** Phase 0 step 0.6 done: 27 Phase 5 boards in row 8 of the canvas, approved by the owner, mirrored into `docs/design/`; the Phase 5 plan in progress. Before that, session 9 (Phase 4 built, on Opus 5.5). **Session 9:** Phase 4 done: PRs #36 to #42 as
+**Last updated:** 2026-10-08, session 10 (the Phase 5 boards and plan, on Fable). **Session 10:** Phase 0 step 0.6 done: 27 Phase 5 boards in row 8 of the canvas, approved, mirrored into `docs/design/`; `plan/phase-05-plan.md` written and approved (15 tasks, 6 pull requests, no migration); `resume/010-phase-5-build.md` written. **Next:** the Phase 5 build in a fresh Opus 5.5 session from `resume/010-phase-5-build.md`. **Session 9:** Phase 4 done: PRs #36 to #42 as
 the plan's seven, the final review's fixes #44 (one Critical, four Important); migrations 0004 `save_attendance` and
 0005 `message_log.about_date` in production; the D32 hand run of every Phase 4 write path (issue #43, four bugs found
 and fixed); build 0.1.0 (7) on TestFlight, tested on the owner's iPhone: all good. U1 to U4 done. The schedule's
@@ -19,7 +19,8 @@ Phase 5 boards) and the Phase 5 plan on Fable, from `resume/009-phase-5-boards-a
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
 | 4 Attendance, schedule, tasks, Today live | Done, PRs #36 to #42, review fixes #44 | "As built" in `phase-04-attendance-schedule-today.md`; closed U1 to U4 |
-| 5 to 7 | Not started | Scoped in their files |
+| 5 Fees, UPI settings, reminders, receipts, reports | Planned: boards approved, plan approved (session 10) | `phase-05-plan.md`; build from `resume/010-phase-5-build.md` |
+| 6 and 7 | Not started | Scoped in their files |
 | 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them) |
 
 ## In flight
@@ -54,7 +55,7 @@ the remote; delete them when convenient). `main`'s check is green; build 0.1.0 (
   eight in `plan/sessions/009/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
-- **UI polish:** `plan/ui-polish.md`: U5 to U12 open (seen in session 9); U1 to U4 done in #42.
+- **UI polish:** `plan/ui-polish.md`: U5 to U12 open (seen in session 9); U1 to U4 done in #42. U12 closes with Phase 5's PR 3; U9 was offered with the Phase 5 plan and not taken (the owner may still ask for it as its own pull request after a board).
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).

@@ -1,7 +1,8 @@
 # Phase 5: Fees, UPI settings, reminders, receipts, reports
 
-**Status:** Not started. **Depends on:** Phase 3 (Phase 4 for the attendance part of reports); Phase 0's
-Phase 5 boards approved.
+**Status:** Planned (session 10, 2026-10-08): the 27 boards approved (row 8 of the canvas), `phase-05-plan.md` approved; the
+build next from `resume/010-phase-5-build.md`. **Depends on:** Phase 3 (Phase 4 for the attendance part of reports); Phase 0's
+Phase 5 boards (approved 2026-10-08).
 
 ## Goal
 

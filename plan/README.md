@@ -18,12 +18,12 @@ Always:
 
 | # | Phase | File | Status |
 |---|---|---|---|
-| 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | In progress: steps 0.1 to 0.5 approved, 0.6 next (how: `phase-00-plan.md`) |
+| 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | In progress: steps 0.1 to 0.6 approved, 0.7 next (how: `phase-00-plan.md`) |
 | 1 | Foundation: monorepo, project, modules, Supabase, API skeleton, CI, `check` | `phase-01-foundation.md` | Done (session 2, PRs #1 to #8); the API in production |
 | 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Done (session 4, PRs #9 to #21); build 0.1.0 (3) on the owner's phone |
 | 3 | Students and classes | `phase-03-students-and-classes.md` | Done (session 6, PRs #24 to #31, review fixes #33); migration 0003 in production; build 0.1.0 (6) on TestFlight |
 | 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Done (session 9, PRs #36 to #42, review fixes #44); migrations 0004 and 0005 in production; build 0.1.0 (7) on TestFlight |
-| 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Not started |
+| 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Planned (session 10): boards approved, `phase-05-plan.md` approved; the build next from `resume/010-phase-5-build.md` |
 | 6 | AI tools through the API | `phase-06-ai-tools.md` | Not started |
 | 7 | Settings, account, notifications, offline hardening, release candidate | `phase-07-settings-and-hardening.md` | Not started |
 | 8 | The product website, tutorcentral.in: home, `/privacy`, `/terms`, support; live before the first App Store submission | `phase-08-website.md` | Not started |
