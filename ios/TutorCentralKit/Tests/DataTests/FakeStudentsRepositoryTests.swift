@@ -41,4 +41,28 @@ import Testing
         await #expect(throws: URLError.self) { try await fake.setArchived(id: FakeStudentsRepository.akshita, true) }
         await #expect(throws: Never.self) { try await fake.setArchived(id: FakeStudentsRepository.akshita, true) }
     }
+
+    @Test func createManyDeleteManyAndUpdateNotesAreRecorded() async throws {
+        let fake = FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        var one = StudentDraft()
+        one.name = "Aarav Mehta"
+        one.parentDigits = "9876543210"
+        var two = StudentDraft()
+        two.name = "Kavya Nair"
+        two.fee = Money(rupees: 1200)
+        let made = try await fake.createMany([one, two], centre: UUID())
+        #expect(made.map(\.name) == ["Aarav Mehta", "Kavya Nair"] && fake.createdMany.count == 1)
+        #expect(made[0].parentPhone?.e164 == "+919876543210" && made[1].monthlyFee == Money(rupees: 1200))
+        let october = Period(year: 2026, month: 10)
+        #expect(try await fake.students(centre: UUID(), period: october).count == 12)
+        try await fake.deleteMany(ids: made.map(\.id))
+        #expect(try await fake.students(centre: UUID(), period: october).count == 10)
+        #expect(fake.deletedMany == [made.map(\.id)])
+        let updated = try await fake.updateNotes(id: FakeStudentsRepository.akshita, notes: "A line")
+        #expect(updated.notes == "A line" && fake.notesUpdates.last?.notes == "A line")
+        fake.nextError = URLError(.notConnectedToInternet)
+        await #expect(throws: URLError.self) {
+            try await fake.updateNotes(id: FakeStudentsRepository.akshita, notes: nil)
+        }
+    }
 }

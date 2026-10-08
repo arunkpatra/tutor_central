@@ -74,7 +74,7 @@ jobs:
       - run: bun install --frozen-lockfile
 
       - name: Local xcconfig (CI values; nothing is called)
-        run: printf 'SUPABASE_URL = http:/$()/127.0.0.1:54321\nSUPABASE_ANON_KEY = ci\n' > ios/Config/Local.xcconfig
+        run: printf 'SUPABASE_URL = http:/$()/127.0.0.1:54321\nSUPABASE_ANON_KEY = ci\nAPI_ORIGIN = http:/$()/127.0.0.1:3000\n' > ios/Config/Local.xcconfig
 
       - name: bun check
         run: bun check --only=format,lint,ios,tools $FRESH

@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 const Common = { subject: z.string().min(1).max(80), classLevel: z.string().min(1).max(40) };
+/** Recorded with the input (never sent to Claude), so a result read back from the database names its class again. */
+const ClassId = { classId: z.guid().optional() };
 const Topic = z.string().min(1).max(200);
 export const Level = z.enum(["easy", "medium", "hard"]);
 
@@ -10,6 +12,7 @@ export const GenerateInput = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("paper"),
     ...Common,
+    ...ClassId,
     topic: Topic,
     level: Level.default("medium"),
     marks: z.number().int().min(5).max(100).default(20),
@@ -18,6 +21,7 @@ export const GenerateInput = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("homework"),
     ...Common,
+    ...ClassId,
     topic: Topic,
     level: Level.default("medium"),
     questions: z.number().int().min(1).max(30).default(5),
@@ -25,6 +29,7 @@ export const GenerateInput = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("worksheet"),
     ...Common,
+    ...ClassId,
     topic: Topic,
     level: Level.default("medium"),
     questions: z.number().int().min(1).max(40).default(10),
@@ -33,6 +38,8 @@ export const GenerateInput = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("progress_note"),
     ...Common,
+    /** Recorded, never sent to Claude: a note read back from History can still be sent to the parent. */
+    studentId: z.guid().optional(),
     studentName: z.string().min(1).max(80),
     parentName: z.string().max(80).optional(),
     observations: z.string().min(1).max(2000),

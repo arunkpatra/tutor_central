@@ -83,3 +83,24 @@ test("a body without a centre is refused before anything runs", async () => {
   expect(r.status).toBe(400);
   expect(db.started).toHaveLength(0);
 });
+
+test("the record keeps the class's and the student's ids, so a result read back names them again", async () => {
+  const db = fakeDb();
+  const classId = "33333333-3333-3333-3333-333333333331";
+  await post(app(fakeClaude({ answer: SAMPLE.paper }), db), "/ai/generate", { ...paper, classId });
+  expect(db.started[0]).toMatchObject({ input: { classId } });
+  const studentId = "aaaaaaaa-0000-0000-0000-000000000005";
+  const note = {
+    kind: "progress_note",
+    centreId,
+    subject: "Mathematics",
+    classLevel: "Class 10 Maths",
+    studentId,
+    studentName: "Hemanth Reddy",
+    observations: "Improving",
+    tutorName: "Meera Nair",
+    centreName: "Bright Minds Tuition",
+  };
+  await post(app(fakeClaude({ answer: SAMPLE.progress_note }), db), "/ai/generate", note);
+  expect(db.started[1]).toMatchObject({ input: { studentId } });
+});

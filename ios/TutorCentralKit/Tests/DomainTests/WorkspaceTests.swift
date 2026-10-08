@@ -33,4 +33,13 @@ struct WorkspaceTests {
         let merged = Self.current.takingPayments(from: edited)
         #expect(merged.centre.name == "Bright Minds Tuition" && merged.centre.payments == edited.centre.payments)
     }
+
+    @Test func takingAIConsentChangesThatFieldAlone() {
+        var consented = Self.current
+        consented.centre.aiConsentAt = Date(timeIntervalSince1970: 1_790_000_000)
+        consented.centre.name = "Renamed elsewhere"
+        let merged = Self.current.takingAIConsent(from: consented)
+        #expect(merged.centre.aiConsentAt == consented.centre.aiConsentAt)
+        #expect(merged.centre.name == Self.current.centre.name, "only the consent crosses")
+    }
 }

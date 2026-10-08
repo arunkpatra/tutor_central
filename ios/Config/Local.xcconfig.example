@@ -2,3 +2,5 @@
 // The $() keeps xcconfig from reading // as a comment.
 SUPABASE_URL = http:/$()/127.0.0.1:54321
 SUPABASE_ANON_KEY = <ANON_KEY from supabase status -o env>
+// Our API (the AI tools): `cd api && bun run dev` serves it locally, AI_FAKE=1 for runs that cost nothing.
+API_ORIGIN = http:/$()/127.0.0.1:3000

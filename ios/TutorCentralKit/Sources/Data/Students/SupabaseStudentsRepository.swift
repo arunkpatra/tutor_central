@@ -57,6 +57,32 @@ public final class SupabaseStudentsRepository: StudentsRepository {
             .execute()
     }
 
+    public func createMany(_ drafts: [StudentDraft], centre: UUID) async throws -> [Student] {
+        guard !drafts.isEmpty else { return [] }
+        let rows = drafts.map { draft in
+            var values = Self.values(draft)
+            values["centre_id"] = .string(centre.uuidString)
+            return values
+        }
+        let response = try await client.from("students").insert(rows).select(Self.columns).execute()
+        return try Self.decoder.decode([StudentRow].self, from: response.data).map { $0.student(calendar: calendar) }
+    }
+
+    public func deleteMany(ids: [UUID]) async throws {
+        guard !ids.isEmpty else { return }
+        try await client.from("students").delete().in("id", values: ids.map(\.uuidString)).execute()
+    }
+
+    public func updateNotes(id: UUID, notes: String?) async throws -> Student {
+        let response = try await client.from("students")
+            .update(["notes": notes.map(AnyJSON.string) ?? .null])
+            .eq("id", value: id)
+            .select(Self.columns)
+            .single()
+            .execute()
+        return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
+    }
+
     /// Every column the form owns, nulls included, so an edit clears what the tutor cleared.
     static func values(_ draft: StudentDraft) -> [String: AnyJSON] {
         [
@@ -70,4 +96,10 @@ public final class SupabaseStudentsRepository: StudentsRepository {
             "notes": draft.trimmedNotes.map(AnyJSON.string) ?? .null,
         ]
     }
+}
+
+/// A notes update's answer when only the notes are asked for.
+struct NotesRow: Decodable {
+    let id: UUID
+    let notes: String?
 }

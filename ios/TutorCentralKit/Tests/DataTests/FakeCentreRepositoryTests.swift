@@ -47,4 +47,14 @@ import Testing
         #expect(FakeCentreRepository.meeraWorkspaceUnconfirmed.centre.payments.needsConfirmation)
         #expect(FakeCentreRepository.meeraWorkspaceWithoutUPI.centre.payments.upiID == nil)
     }
+
+    @Test func theConsentIsRecordedAndTheConsentedWorkspaceCarriesIt() async throws {
+        let fake = FakeCentreRepository()
+        let at = Date(timeIntervalSince1970: 1_791_444_900)
+        try await fake.recordAIConsent(id: FakeCentreRepository.meeraWorkspace.centre.id, at: at)
+        #expect(fake.consents == [at])
+        let consented = try #require(FakeCentreRepository.meeraWorkspaceConsented.centre.aiConsentAt)
+        #expect(Day(consented, calendar: DayHeading.india) == Day(year: 2026, month: 10, day: 1))
+        #expect(FakeCentreRepository.meeraWorkspace.centre.aiConsentAt == nil)
+    }
 }
