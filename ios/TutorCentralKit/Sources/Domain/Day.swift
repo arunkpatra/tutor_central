@@ -61,6 +61,21 @@ public struct Day: Hashable, Sendable, Comparable, Codable {
         formatted("d MMMM")
     }
 
+    /// "Mon 5 Oct".
+    public var shortWeekdayText: String {
+        formatted("EEE d MMM")
+    }
+
+    /// "Saturday 10 October".
+    public var weekdayLongText: String {
+        formatted("EEEE d MMMM")
+    }
+
+    /// The month it is in.
+    public var period: Period {
+        Period(year: year, month: month)
+    }
+
     public static func < (lhs: Day, rhs: Day) -> Bool {
         (lhs.year, lhs.month, lhs.day) < (rhs.year, rhs.month, rhs.day)
     }
