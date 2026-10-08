@@ -95,4 +95,55 @@ import Testing
             "back in today's month, today is chosen again"
         )
     }
+
+    @Test func aQuickSecondMonthMoveWins() async {
+        // Review, Important: November's events read is slow; a quick move back to October must show October.
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let store = ScheduleStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register,
+            events: SlowNovemberEvents(events: FakeEventsRepository.seed),
+            attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithToday),
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await store.load()
+        async let ahead: Void = store.nextMonth()
+        try? await Task.sleep(for: .milliseconds(10))
+        await store.previousMonth()
+        await ahead
+        #expect(store.monthTitle == "October 2026" && store.events.count == 2)
+    }
+}
+
+/// Events whose read of a range starting in November is slow, so two month moves finish in the other order.
+@MainActor final class SlowNovemberEvents: EventsRepository {
+    let fake: FakeEventsRepository
+
+    init(events: [CalendarEvent]) {
+        fake = FakeEventsRepository(events: events)
+    }
+
+    func events(centre: UUID, from: Day, to: Day) async throws -> [CalendarEvent] {
+        if from.month == 11 {
+            try await Task.sleep(for: .milliseconds(150))
+            return []
+        }
+        return try await fake.events(centre: centre, from: from, to: to)
+    }
+
+    func create(_ draft: EventDraft, centre: UUID) async throws -> CalendarEvent {
+        try await fake.create(draft, centre: centre)
+    }
+
+    func update(id: UUID, with draft: EventDraft) async throws -> CalendarEvent {
+        try await fake.update(id: id, with: draft)
+    }
+
+    func delete(id: UUID) async throws {
+        try await fake.delete(id: id)
+    }
 }

@@ -36,4 +36,59 @@ import Testing
         await store.nextMonth()
         #expect(store.hero.percent == nil && store.hero.line == "Nothing marked in November yet")
     }
+
+    @Test func aQuickSecondMonthMoveWins() async {
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let slow = MonthDelayAttendance(
+            sessions: FakeAttendanceRepository.seedWithToday,
+            slow: Period(year: 2026, month: 8)
+        )
+        let store = StudentMonthStore(
+            studentID: FakeAttendanceRepository.hemanth, workspace: FakeCentreRepository.meeraWorkspace,
+            register: register, attendance: slow,
+            messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed),
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await store.load()
+        async let back: Void = store.previousMonth()
+        try? await Task.sleep(for: .milliseconds(10))
+        await store.nextMonth()
+        await back
+        #expect(store.monthTitle == "October 2026" && store.hero.percent == "33%")
+    }
+
+    @Test func aParentToldTheNextDayStillReadsAsTold() async throws {
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let wednesday = try #require(Day(year: 2026, month: 10, day: 7))
+        let thursdayMorning = try #require(DayHeading.india.date(from: DateComponents(
+            year: 2026,
+            month: 10,
+            day: 8,
+            hour: 9
+        )))
+        let store = StudentMonthStore(
+            studentID: FakeAttendanceRepository.hemanth, workspace: FakeCentreRepository.meeraWorkspace,
+            register: register, attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithToday),
+            messages: FakeMessageLogRepository(logs: [
+                AbsenceLog(
+                    studentID: FakeAttendanceRepository.hemanth,
+                    openedAt: thursdayMorning,
+                    aboutDate: wednesday
+                ),
+            ]),
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await store.load()
+        #expect(store.absences.first?.date == "7 Oct" && store.absences.first?.line == "Parent told on Thu 8 Oct")
+    }
 }

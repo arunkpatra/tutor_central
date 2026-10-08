@@ -241,6 +241,17 @@ test("an absence can be logged and read back by student and day", async () => {
   expect(read.data?.length).toBe(1);
 });
 
+test("an absence log carries the day the child was absent", async () => {
+  const s = await a.from("students").select("id").eq("name", "Mark One").single();
+  const log = await a.from("message_log")
+    .insert({ centre_id: centreA, student_id: s.data!.id, kind: "absence", about_date: "2026-10-05" })
+    .select("about_date").single();
+  expect(log.error).toBeNull();
+  expect(log.data!.about_date).toBe("2026-10-05");
+  const read = await a.from("message_log").select("student_id").eq("centre_id", centreA).eq("about_date", "2026-10-05");
+  expect(read.data?.length).toBe(1);
+});
+
 test("only the owner can delete the centre, and it cascades", async () => {
   expect((await b.rpc("delete_centre", { p_centre: centreA })).error).not.toBeNull();
   expect((await a.rpc("delete_centre", { p_centre: centreA })).error).toBeNull();

@@ -8,7 +8,8 @@ import Foundation
     public nonisolated static let seed = [
         AbsenceLog(
             studentID: FakeAttendanceRepository.hemanth,
-            openedAt: DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 5, hour: 18, minute: 10))!
+            openedAt: DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 5, hour: 18, minute: 10))!,
+            aboutDate: Day(year: 2026, month: 10, day: 5)
         ),
     ]
 
@@ -24,14 +25,14 @@ import Foundation
 
     public func absences(centre _: UUID, month: Period) async throws -> [AbsenceLog] {
         try takeError()
-        return logs.filter { Day($0.openedAt, calendar: DayHeading.india).period == month }
+        return logs.filter { $0.day(in: DayHeading.india).period == month }
             .sorted { $0.openedAt > $1.openedAt }
     }
 
-    public func logAbsence(centre _: UUID, studentID: UUID) async throws -> AbsenceLog {
+    public func logAbsence(centre _: UUID, studentID: UUID, about: Day) async throws -> AbsenceLog {
         try takeError()
         logged.append(studentID)
-        let made = AbsenceLog(studentID: studentID, openedAt: now())
+        let made = AbsenceLog(studentID: studentID, openedAt: now(), aboutDate: about)
         logs.append(made)
         return made
     }

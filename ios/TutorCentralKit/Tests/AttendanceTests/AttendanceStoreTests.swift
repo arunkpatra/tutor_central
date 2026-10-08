@@ -251,6 +251,49 @@ import Testing
     }
 }
 
+extension AttendanceStoreTests {
+    @Test func aFailedReadBlocksSaving() async throws {
+        // Review, Critical: without the month's sessions the store cannot know what was saved; "everyone present"
+        // saved over it would erase real absences.
+        let store = await make()
+        attendance.nextError = URLError(.notConnectedToInternet)
+        try await store.open(classID: maths, date: #require(Day(year: 2026, month: 9, day: 28)))
+        #expect(store.error != nil && !store.canSave)
+        #expect(await store.save() == false && attendance.saves.isEmpty)
+    }
+
+    @Test func aStudentWhoLeftTheClassKeepsTheirMarkOnResave() async throws {
+        // Review, Important: a re-save sends the saved marks of students no longer in the class, so their history
+        // stays.
+        let monday = try #require(Day(year: 2026, month: 10, day: 5))
+        var sessions = attendance.sessions
+        let index = try #require(sessions.firstIndex { $0.date == monday && $0.classID == maths })
+        let gone = UUID()
+        sessions[index].marks[gone] = .absent
+        attendance.sessions = sessions
+        let store = await make()
+        await store.open(classID: maths, date: monday)
+        store.toggle(FakeStudentsRepository.akshita)
+        #expect(await store.save())
+        #expect(attendance.saves.last?.marks[gone] == .absent && attendance.saves.last?.marks.count == 7)
+        #expect(attendance.saves.last?.marks[FakeStudentsRepository.akshita] == .absent)
+    }
+}
+
+extension AttendanceStoreTests {
+    @Test func tellingAboutAPastDayShowsToldAndLogsOnce() async throws {
+        // Review, Important: told the next morning about yesterday's class, the row says Told and a second tap is gone.
+        let store = await make()
+        let friday = try #require(Day(year: 2026, month: 10, day: 2))
+        await store.open(classID: maths, date: friday)
+        let absent = try #require(store.absentRows.first)
+        #expect(absent.told == nil)
+        #expect(await store.tell(absent.student.id) != nil)
+        #expect(store.absentRows.first?.told == "Told today" && store.alert(for: absent.student.id) == nil)
+        #expect(messages.logged == [absent.student.id] && messages.logs.last?.aboutDate == friday)
+    }
+}
+
 /// Attendance whose read of one month is slow, so two opens finish in the other order.
 @MainActor final class MonthDelayAttendance: AttendanceRepository {
     let fake: FakeAttendanceRepository

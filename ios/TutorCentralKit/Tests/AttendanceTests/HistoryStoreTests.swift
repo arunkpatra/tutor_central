@@ -58,4 +58,28 @@ import Testing
         #expect(store.monthTitle == "November 2026" && store.summary == nil && store.dateRows.isEmpty && store
             .studentRows.isEmpty)
     }
+
+    @Test func aQuickSecondMonthMoveWins() async {
+        // Review, Important: September's read is slow; the month moved back to October must show October's rows.
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let slow = MonthDelayAttendance(
+            sessions: FakeAttendanceRepository.seedWithToday,
+            slow: Period(year: 2026, month: 9)
+        )
+        let store = HistoryStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, attendance: slow,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await store.load()
+        async let back: Void = store.previousMonth()
+        try? await Task.sleep(for: .milliseconds(10))
+        await store.nextMonth()
+        await back
+        #expect(store.monthTitle == "October 2026" && store.summary?.title == "5 classes marked")
+    }
 }

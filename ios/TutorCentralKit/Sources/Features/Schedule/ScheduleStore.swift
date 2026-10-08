@@ -51,6 +51,8 @@ import Observation
     public private(set) var canRetry = false
     public private(set) var lastSavedAt: Date?
     private var lastFailed: (@MainActor () async -> Void)?
+    /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
+    private var loadGeneration = 0
     private let workspace: Workspace
     private let register: any Register
     private let eventsRepository: any EventsRepository
@@ -130,18 +132,27 @@ import Observation
     }
 
     public func load() async {
+        loadGeneration += 1
+        let generation = loadGeneration
         await register.loadIfNeeded()
         loading = true
-        defer { loading = false }
+        defer {
+            if generation == loadGeneration {
+                loading = false
+            }
+        }
         guard let first = Day(iso: month.isoDay), let last = Day(iso: month.next.previousDayISO) else { return }
         do {
             // Coming up runs past the month's end: read its two weeks beyond it.
             let to = last.adding(days: Self.comingUpDays, calendar: calendar)
             async let read = eventsRepository.events(centre: workspace.centre.id, from: first, to: to)
             async let marked = attendance.sessions(centre: workspace.centre.id, month: month)
-            (events, sessions) = try await (read, marked)
+            let result = try await (read, marked)
+            guard generation == loadGeneration else { return }
+            (events, sessions) = result
             error = nil
         } catch {
+            guard generation == loadGeneration else { return }
             self.error = "Couldn't load the schedule. Check your connection and try again."
         }
     }

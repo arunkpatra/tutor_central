@@ -71,4 +71,24 @@ struct SessionRowTests {
         let logs = try SupabaseMessageLogRepository.decoder.decode([LogRow].self, from: read).compactMap(\.log)
         #expect(logs.map(\.studentID) == [Self.hemanth])
     }
+
+    @Test func aLogCarriesTheDayItIsAbout() throws {
+        // The local stack's answers after migration 0005: an insert about 30 September, an old row without the day.
+        let inserted = Data("""
+        {"student_id":"ccf28636-4356-4cfe-af5a-23b12dc01599","opened_at":"2026-10-08T11:24:45.348033+00:00",\
+        "about_date":"2026-09-30"}
+        """.utf8)
+        let made = try SupabaseMessageLogRepository.decoder.decode(LogRow.self, from: inserted).log
+        #expect(made?.aboutDate == Day(year: 2026, month: 9, day: 30))
+        let old = Data("""
+        [{"student_id":"ccf28636-4356-4cfe-af5a-23b12dc01599","opened_at":"2026-10-08T11:24:45.38443+00:00",\
+        "about_date":null}]
+        """.utf8)
+        let logs = try SupabaseMessageLogRepository.decoder.decode([LogRow].self, from: old).compactMap(\.log)
+        #expect(logs.first?.aboutDate == nil && logs.first?.day(in: DayHeading.india) == Day(
+            year: 2026,
+            month: 10,
+            day: 8
+        ))
+    }
 }

@@ -49,6 +49,8 @@ import Observation
     public private(set) var sessions: [AttendanceSession] = []
     public private(set) var loading = false
     public private(set) var error: String?
+    /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
+    private var loadGeneration = 0
     private let workspace: Workspace
     private let register: any Register
     private let attendance: any AttendanceRepository
@@ -111,13 +113,22 @@ import Observation
     }
 
     public func load() async {
+        loadGeneration += 1
+        let generation = loadGeneration
         await register.loadIfNeeded()
         loading = true
-        defer { loading = false }
+        defer {
+            if generation == loadGeneration {
+                loading = false
+            }
+        }
         do {
-            sessions = try await attendance.sessions(centre: workspace.centre.id, month: month)
+            let read = try await attendance.sessions(centre: workspace.centre.id, month: month)
+            guard generation == loadGeneration else { return }
+            sessions = read
             error = nil
         } catch {
+            guard generation == loadGeneration else { return }
             self.error = "Couldn't load attendance. Check your connection and try again."
         }
     }

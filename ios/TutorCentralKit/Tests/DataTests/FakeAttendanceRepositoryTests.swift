@@ -52,7 +52,13 @@ import Testing
         let log = FakeMessageLogRepository(logs: FakeMessageLogRepository.seed)
         let october = try await log.absences(centre: centre, month: Period(year: 2026, month: 10))
         #expect(october.map(\.studentID) == [FakeAttendanceRepository.hemanth])
-        let made = try await log.logAbsence(centre: centre, studentID: FakeStudentsRepository.akshita)
+        let made = try await log.logAbsence(
+            centre: centre, studentID: FakeStudentsRepository.akshita, about: #require(Day(
+                year: 2026,
+                month: 10,
+                day: 7
+            ))
+        )
         #expect(made.studentID == FakeStudentsRepository.akshita && log.logged == [FakeStudentsRepository.akshita])
         #expect(try await log.absences(centre: centre, month: Period(year: 2026, month: 10)).count == 2)
     }
