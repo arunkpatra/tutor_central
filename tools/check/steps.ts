@@ -40,6 +40,10 @@ export function localConfigHint(exists: boolean): string | null {
 /** The simulator build is signed ad hoc ("Sign to Run Locally"), never with a team: the Sign in with Apple
  *  entitlement must not make it look for one, and an unsigned build has no keychain, so no session survives. */
 const XCODEBUILD = `xcodebuild -project TutorCentral.xcodeproj -scheme TutorCentral -destination '${simulatorDestination(process.env)}' CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER=`;
+/** A failing test made xcodebuild collect simulator diagnostics for ten minutes before it reported (session 6). */
+export function iosTestCommand(): string {
+  return `${XCODEBUILD} test-without-building -collect-test-diagnostics never`;
+}
 const IOS_INPUTS = [
   "ios/**/*.swift",
   "ios/project.yml",
@@ -69,7 +73,7 @@ export const STEPS: Step[] = [
       if (hint) throw new Error(hint);
       await run("xcodegen generate --quiet", "ios");
       await run(`${XCODEBUILD} build-for-testing 2>&1 | xcbeautify --quiet`, "ios");
-      await run(`${XCODEBUILD} test-without-building 2>&1 | xcbeautify --quiet`, "ios");
+      await run(`${iosTestCommand()} 2>&1 | xcbeautify --quiet`, "ios");
     },
   },
   {
