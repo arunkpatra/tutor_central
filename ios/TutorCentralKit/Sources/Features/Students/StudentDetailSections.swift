@@ -92,3 +92,41 @@ struct MonthFeeCard: View {
         }
     }
 }
+
+/// This month's attendance (P4-StudentDetail-Attendance): the month over its bar and line, the percent on the right;
+/// See all opens the student's month. Nothing marked: the empty row.
+struct AttendanceCard: View {
+    let store: StudentDetailStore
+    let seeAll: () -> Void
+
+    private var emptyLine: String {
+        "Mark \(store.student?.firstName ?? "the student")'s class from the Attendance tab to see this month here."
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+            SectionHeader("Attendance", action: ("See all", seeAll))
+            Card {
+                if let card = store.attendanceCard {
+                    HStack(spacing: Tokens.rowPaddingDense) {
+                        VStack(alignment: .leading, spacing: Tokens.fieldGap) {
+                            Text(card.title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                            ProgressBar(fraction: card.fraction)
+                            Text(card.line).typeStyle(Tokens.footnote).monospacedDigit()
+                                .foregroundStyle(Tokens.text2.color)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(card.percent).typeStyle(Tokens.numberRow).monospacedDigit()
+                            .foregroundStyle(Tokens.text.color)
+                    }
+                    .padding(.vertical, Tokens.rowPaddingDense)
+                    .padding(.horizontal, Tokens.rowPaddingHorizontal)
+                    .accessibilityElement(children: .combine)
+                } else {
+                    EmptyRow(symbol: "checkmark.circle", title: "Nothing marked yet", line: emptyLine)
+                }
+            }
+        }
+        .task { await store.loadAttendance() }
+    }
+}

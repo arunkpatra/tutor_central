@@ -145,7 +145,7 @@ import Observation
 
     private static func absences(_ count: Int) -> String {
         switch count {
-        case 0: "No absences"
+        case 0: "no absences"
         case 1: "1 absence"
         default: "\(count) absences"
         }

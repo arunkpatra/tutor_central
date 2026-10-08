@@ -10,10 +10,14 @@ public enum StudentDetailBoardState: Sendable {
 }
 
 /// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent
-/// with Call and WhatsApp, this month's fee, attendance (later), notes, then Archive or Restore and Delete. Edit opens
+/// with Call and WhatsApp, this month's fee, this month's attendance, notes, then Archive or Restore and Delete. Edit
+/// opens
 /// the student form (P3-EditStudent).
 public struct StudentDetailView: View {
-    let store: StudentDetailStore
+    /// Kept for the life of the screen: AppShell makes a store each time it builds the view, and this month's
+    /// attendance
+    /// read into the first must not be lost to the next.
+    @State private var store: StudentDetailStore
     let register: RegisterStore
     let actions: StudentsActions
     let navigation: StudentsNavigation
@@ -33,7 +37,7 @@ public struct StudentDetailView: View {
         boardState: StudentDetailBoardState? = nil,
         onMissing: @escaping () -> Void
     ) {
-        self.store = store
+        _store = State(initialValue: store)
         self.register = register
         self.actions = actions
         self.navigation = navigation
@@ -148,17 +152,7 @@ public struct StudentDetailView: View {
     }
 
     private var attendance: some View {
-        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Attendance")
-            Card {
-                EmptyRow(
-                    symbol: "checkmark.circle",
-                    title: "Attendance comes in the next build",
-                    line: "This month's presence and each absence will show here."
-                )
-            }
-            .opacity(Tokens.opacityLater)
-        }
+        AttendanceCard(store: store) { actions.openStudentAttendance(store.id) }
     }
 
     private func notes(_ student: Student) -> some View {

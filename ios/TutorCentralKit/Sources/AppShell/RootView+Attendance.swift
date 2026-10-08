@@ -32,6 +32,33 @@ extension RootView {
         Task { await store.open(classID: classID, date: date ?? store.today) }
     }
 
+    /// History, pushed on the Attendance tab; a class opens on the mark root at its day.
+    @ViewBuilder var historyView: some View {
+        if case let .ready(workspace) = session.state {
+            HistoryView(
+                store: HistoryStore(
+                    workspace: workspace, register: register(for: workspace), attendance: deps.attendance, now: deps.now
+                ),
+                openSession: { openAttendance(classID: $0.classID, date: $0.date, in: workspace) },
+                openStudent: { shell.tabs.push(.historyStudent($0)) },
+                boardState: launch.flatMap(Self.historyBoardState)
+            )
+        }
+    }
+
+    /// A student's month, from History or from the student detail's See all.
+    @ViewBuilder func studentMonthView(_ id: UUID) -> some View {
+        if case let .ready(workspace) = session.state {
+            StudentMonthView(
+                store: StudentMonthStore(
+                    studentID: id, workspace: workspace, register: register(for: workspace),
+                    attendance: deps.attendance, messages: deps.messages, now: deps.now
+                ),
+                openSession: { openAttendance(classID: $0.classID, date: $0.date, in: workspace) }
+            )
+        }
+    }
+
     @ViewBuilder var attendanceView: some View {
         if case let .ready(workspace) = session.state {
             let store = attendanceStore(for: workspace)

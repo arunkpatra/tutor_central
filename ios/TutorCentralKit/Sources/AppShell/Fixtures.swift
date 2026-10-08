@@ -45,7 +45,8 @@ public enum Fixtures {
              .studentNewInvalid, .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm,
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
-             .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty: .ready(meeraWorkspace)
+             .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
+             .historyStudent, .historyEmpty: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -61,10 +62,15 @@ public enum Fixtures {
         }
     }
 
-    /// The saved attendance each state starts with: the seed's four weeks. Saved and the alert save the 7th on screen,
-    /// at their own clock.
-    static func attendance(for _: LaunchState) -> [AttendanceSession] {
-        FakeAttendanceRepository.seed
+    /// The saved attendance each state starts with: the seed's four weeks; History and the student detail also hold
+    /// the 7th's Class 10 Maths (P4-History-*, P4-StudentDetail-Attendance). Saved and the alert save the 7th on
+    /// screen, at their own clock.
+    static func attendance(for state: LaunchState) -> [AttendanceSession] {
+        switch state {
+        case .history, .historyByStudent, .historyStudent, .student: FakeAttendanceRepository.seedWithToday
+        case .historyEmpty: []
+        default: FakeAttendanceRepository.seed
+        }
     }
 
     /// Each state's clock: the boards' Wednesday at 18:30, or the minute a board names (P4-Attendance-Mark-Saved and

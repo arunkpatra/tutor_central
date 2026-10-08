@@ -17,7 +17,8 @@ extension RootView {
              .classArchiveConfirm, .classDetail, .classAddMembers: .students
         case .laterFees: .fees
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
-             .attendanceAlert, .attendancePast, .attendanceEmpty: .attendance
+             .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
+             .historyEmpty: .attendance
         case .laterMore: .more
         default: nil
         }
@@ -31,6 +32,8 @@ extension RootView {
             [.student(FakeStudentsRepository.akshita)]
         case .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: [.classes]
         case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
+        case .history, .historyByStudent, .historyEmpty: [.history]
+        case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
         default: []
         }
     }
@@ -84,6 +87,10 @@ extension RootView {
         case .attendancePast: .past
         default: nil
         }
+    }
+
+    static func historyBoardState(_ state: LaunchState) -> HistoryBoardState? {
+        state == .historyByStudent ? .byStudent : nil
     }
 
     static func classDetailBoardState(_ state: LaunchState) -> ClassDetailBoardState? {
