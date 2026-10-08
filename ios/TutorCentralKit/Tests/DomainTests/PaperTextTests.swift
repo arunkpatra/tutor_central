@@ -18,4 +18,22 @@ struct PaperTextTests {
         #expect(PaperText
             .plain(.homework(set)) == "Fractions\n\nShow your working.\n\n1. Add ½ and ⅓.\n\nAnswer key\n1. ⅚")
     }
+
+    @Test func aWorksheetWhoseKeyIsOffLeavesTheKeyOut() {
+        let set = QuestionSetResult(
+            title: "Fractions", instructions: nil, questions: [.init(number: 1, text: "Add ½ and ⅓.", answer: "⅚")]
+        )
+        let off = Generation(
+            id: UUID(), kind: .worksheet, createdAt: Date(),
+            request: .worksheet(WorksheetForm(withAnswers: false)), result: .worksheet(set)
+        )
+        let on = Generation(
+            id: UUID(), kind: .worksheet, createdAt: Date(), request: .worksheet(WorksheetForm()),
+            result: .worksheet(set)
+        )
+        let unknown = Generation(id: UUID(), kind: .worksheet, createdAt: Date(), request: nil, result: .worksheet(set))
+        #expect(!off.printsKey && on.printsKey && unknown.printsKey)
+        #expect(PaperText.plain(.worksheet(set), key: false) == "Fractions\n\n1. Add ½ and ⅓.")
+        #expect(PaperText.plain(.worksheet(set)).hasSuffix("Answer key\n1. ⅚"))
+    }
 }

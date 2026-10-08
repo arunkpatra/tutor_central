@@ -157,6 +157,13 @@ public struct Generation: Hashable, Sendable, Identifiable {
         self.result = result
     }
 
+    /// Whether Copy and the PDF carry the answer key: not for a worksheet whose key was switched off (the answers came
+    /// back for the tutor's screen); yes when the form no longer reads.
+    public var printsKey: Bool {
+        guard case let .worksheet(form)? = request else { return true }
+        return form.withAnswers
+    }
+
     /// The student a note is about.
     public var studentID: UUID? {
         guard case let .progressNote(form)? = request else { return nil }
