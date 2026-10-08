@@ -54,7 +54,7 @@ struct StudentPickerSheet: View {
             pick(student.id)
         } label: {
             HStack(spacing: Tokens.rowPaddingDense) {
-                Avatar(name: student.name)
+                Avatar(initials: student.initials)
                 VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                     Text(student.name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
                     Text(className(student.classID) ?? "No class")

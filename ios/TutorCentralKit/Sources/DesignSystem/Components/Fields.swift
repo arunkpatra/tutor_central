@@ -237,15 +237,17 @@ public struct MultilineWell: View {
     let limit: Int
     let minHeight: CGFloat
     let showsFocus: Bool
+    let counter: Bool
     @FocusState private var focused: Bool
     public static var minHeight: CGFloat {
         96
     }
 
-    /// `minHeight` 220 holds a note for editing (P6-Result-ProgressNote); `showsFocus` draws the ring for a board.
+    /// `minHeight` 220 holds a note for editing, without the counter (P6-Result-ProgressNote); `showsFocus` draws
+    /// the ring for a board.
     public init(
         label: String, text: Binding<String>, placeholder: String, limit: Int, minHeight: CGFloat = Self.minHeight,
-        showsFocus: Bool = false
+        showsFocus: Bool = false, counter: Bool = true
     ) {
         self.label = label
         _text = text
@@ -253,6 +255,7 @@ public struct MultilineWell: View {
         self.limit = limit
         self.minHeight = minHeight
         self.showsFocus = showsFocus
+        self.counter = counter
     }
 
     public var body: some View {
@@ -270,10 +273,12 @@ public struct MultilineWell: View {
                 .padding(.bottom, Tokens.sectionGap)
                 .frame(minHeight: minHeight, alignment: .top)
                 .overlay(alignment: .bottomTrailing) {
-                    Text("\(text.count) of \(limit.formatted())")
-                        .typeStyle(Tokens.caption)
-                        .foregroundStyle(Tokens.text3.color)
-                        .padding(.bottom, Tokens.tileGap)
+                    if counter {
+                        Text("\(text.count) of \(limit.formatted())")
+                            .typeStyle(Tokens.caption)
+                            .foregroundStyle(Tokens.text3.color)
+                            .padding(.bottom, Tokens.tileGap)
+                    }
                 }
         }
     }

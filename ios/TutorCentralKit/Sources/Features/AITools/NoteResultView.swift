@@ -57,7 +57,7 @@ struct NoteResultView: View {
                 BackRow(title: "Progress note") { dismiss() }
                 if let student {
                     HStack(spacing: Tokens.cardPaddingCompact) {
-                        Avatar(name: student.name, size: Self.avatarSize)
+                        Avatar(initials: student.initials, size: Self.avatarSize)
                         VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                             Text(student.name).typeStyle(Tokens.title3).foregroundStyle(Tokens.text.color)
                             Text(parentLine(student)).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
@@ -66,7 +66,14 @@ struct NoteResultView: View {
                     .accessibilityElement(children: .combine)
                 }
                 VStack(alignment: .leading, spacing: Tokens.fieldGap) {
-                    MultilineWell(label: "Note", text: $text, placeholder: "", limit: 4000, minHeight: Self.wellHeight)
+                    MultilineWell(
+                        label: "Note",
+                        text: $text,
+                        placeholder: "",
+                        limit: 4000,
+                        minHeight: Self.wellHeight,
+                        counter: false
+                    )
                     Text("Edit anything before it goes. Tap Write again for a fresh draft.")
                         .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                         .padding(.horizontal, Tokens.fieldGap)

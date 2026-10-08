@@ -40,6 +40,7 @@ public struct ResultView: View {
             }
         }
         .task {
+            await store.prepare()
             generation = await store.generation(generationID)
             if generation == nil {
                 onMissing()

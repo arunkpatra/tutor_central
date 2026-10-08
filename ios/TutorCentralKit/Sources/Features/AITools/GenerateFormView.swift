@@ -102,7 +102,12 @@ public struct GenerateFormView: View {
                 consent = true
             }
         }
+        .task {
+            await store.prepare()
+            fillClassIfNone()
+        }
         .task(id: note.studentID) {
+            await store.prepare()
             if let id = note.studentID {
                 await store.loadMonthLine(for: id)
             }
@@ -234,9 +239,23 @@ public struct GenerateFormView: View {
     }
 
     private func studentLine(_ student: Student) -> String {
-        let parent = [student.parentName, student.parentPhone?.display].compactMap(\.self).joined(separator: ", ")
+        // A number never breaks across lines.
+        let phone = student.parentPhone?.display.replacingOccurrences(of: " ", with: "\u{00A0}")
+        let parent = [student.parentName, phone].compactMap(\.self).joined(separator: ", ")
         return [store.className(student.classID), parent.isEmpty ? nil : parent].compactMap(\.self)
             .joined(separator: " · ")
+    }
+
+    /// A new form opened before the register was read: the first active class and its subject, once it is.
+    private func fillClassIfNone() {
+        guard let first = store.register.activeClasses.first else { return }
+        let subject = first.subject ?? ""
+        switch kind {
+        case .paper where paper.classID == nil: (paper.classID, paper.subject) = (first.id, subject)
+        case .homework where homework.classID == nil: (homework.classID, homework.subject) = (first.id, subject)
+        case .worksheet where worksheet.classID == nil: (worksheet.classID, worksheet.subject) = (first.id, subject)
+        default: break
+        }
     }
 
     private func create() {

@@ -114,7 +114,13 @@ import UIKit
         self.workspace = workspace
     }
 
+    /// The register the names come from: read once, by whichever AI screen shows first.
+    public func prepare() async {
+        await register.loadIfNeeded()
+    }
+
     public func loadHistory() async {
+        await prepare()
         do {
             let loaded = try await historyRepository.generations(centre: workspace.centre.id)
             let ids = Set(loaded.map(\.id))
