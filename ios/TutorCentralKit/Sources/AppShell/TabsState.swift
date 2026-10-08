@@ -38,10 +38,13 @@ import SwiftUI
         paths[link.tab] = []
         switch link {
         case .today, .authCallback, .attendance: return true
+        case let .event(id):
+            paths[link.tab] = [.schedule, .event(id)]
+            return true
         case let .student(id):
             paths[link.tab] = [.student(id)]
             return true
-        case .fees, .event: return false
+        case .fees: return false
         }
     }
 }
@@ -55,4 +58,7 @@ enum Route: Hashable {
     case classroom(UUID)
     case history
     case historyStudent(UUID)
+    case schedule
+    /// The schedule with an event's Edit sheet open (`tutorcentral://event/<id>`).
+    case event(UUID)
 }

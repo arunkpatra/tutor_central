@@ -143,7 +143,8 @@ public struct RootView: View {
                 settings: { settingsView },
                 attendance: { attendanceView },
                 history: { historyView },
-                studentMonth: { studentMonthView($0) }
+                studentMonth: { studentMonthView($0) },
+                schedule: { scheduleView(openEvent: $0) }
             )
         }
     }
@@ -179,11 +180,11 @@ public struct RootView: View {
                     openTab: { shell.tabs.select($0) },
                     openLater: { target in
                         switch target {
-                        case .schedule: shell.tabs.push(.later(.schedule))
                         case .tasks: shell.tabs.push(.later(.tasks))
                         case .students: shell.tabs.select(.students)
                         }
-                    }
+                    },
+                    openSchedule: { shell.tabs.push(.schedule) }
                 )
             )
             .onAppear {

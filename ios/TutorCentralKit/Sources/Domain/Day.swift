@@ -66,6 +66,11 @@ public struct Day: Hashable, Sendable, Comparable, Codable {
         formatted("EEE d MMM")
     }
 
+    /// "Sat 10 Oct 2026" (the event form's day).
+    public var fullText: String {
+        formatted("EEE d MMM yyyy")
+    }
+
     /// "Saturday 10 October".
     public var weekdayLongText: String {
         formatted("EEEE d MMMM")

@@ -10,6 +10,8 @@ public struct CalendarMonth: View {
     @Binding var selected: Date?
     let marked: Set<Date>
     let calendar: Calendar
+    /// The month and week forms draw their own card; the schedule's sits in a card with its month header.
+    let framed: Bool
     static var dayHeight: CGFloat {
         40
     }
@@ -40,12 +42,41 @@ public struct CalendarMonth: View {
         self.init(days: days, today: today, selected: selected, marked: marked, calendar: calendar)
     }
 
-    private init(days: [Date?], today: Date, selected: Binding<Date?>, marked: Set<Date>, calendar: Calendar) {
+    /// A month of days in the centre's calendar (Schedule): no card of its own, so the month header sits with it in
+    /// the caller's (P4-Schedule-Month). `components` are year, month and day; DesignSystem knows no Domain types.
+    public init(
+        year: Int, month: Int, today: DateComponents, selected: Binding<DateComponents>, marked: Set<DateComponents>,
+        calendar: Calendar
+    ) {
+        let first = calendar.date(from: DateComponents(year: year, month: month, day: 1)) ?? .now
+        let date: (DateComponents) -> Date? = { calendar.date(from: $0) }
+        self.init(
+            days: Self.monthDays(first, calendar),
+            today: date(today) ?? .now,
+            selected: Binding(
+                get: { date(selected.wrappedValue) },
+                set: { picked in
+                    if let picked {
+                        selected.wrappedValue = calendar.dateComponents([.year, .month, .day], from: picked)
+                    }
+                }
+            ),
+            marked: Set(marked.compactMap(date)),
+            calendar: calendar,
+            framed: false
+        )
+    }
+
+    private init(
+        days: [Date?], today: Date, selected: Binding<Date?>, marked: Set<Date>, calendar: Calendar,
+        framed: Bool = true
+    ) {
         self.days = days
         self.today = today
         _selected = selected
         self.marked = Set(marked.map { calendar.startOfDay(for: $0) })
         self.calendar = calendar
+        self.framed = framed
     }
 
     public var body: some View {
@@ -64,9 +95,7 @@ public struct CalendarMonth: View {
                 }
             }
         }
-        .padding(.vertical, Tokens.rowPaddingDense)
-        .padding(.horizontal, Tokens.cardPaddingCompact)
-        .surface(radius: Tokens.radiusCard)
+        .modifier(CalendarFrame(framed: framed))
     }
 
     private func dayCell(_ day: Date) -> some View {
@@ -97,17 +126,34 @@ public struct CalendarMonth: View {
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+        .accessibilityLabel(day
+            .formatted(Date.FormatStyle(timeZone: calendar.timeZone).weekday(.wide).day().month(.wide)))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
-    static func monday(of date: Date, _ calendar: Calendar) -> Date {
+    /// The month and week forms' own card: padding 12 14, radiusCard.
+    private struct CalendarFrame: ViewModifier {
+        let framed: Bool
+
+        func body(content: Content) -> some View {
+            if framed {
+                content
+                    .padding(.vertical, Tokens.rowPaddingDense)
+                    .padding(.horizontal, Tokens.cardPaddingCompact)
+                    .surface(radius: Tokens.radiusCard)
+            } else {
+                content
+            }
+        }
+    }
+
+    nonisolated static func monday(of date: Date, _ calendar: Calendar) -> Date {
         let start = calendar.startOfDay(for: date)
         let weekday = calendar.component(.weekday, from: start) // Sunday 1 … Saturday 7
         return calendar.date(byAdding: .day, value: -((weekday + 5) % 7), to: start) ?? start
     }
 
-    static func monthDays(_ month: Date, _ calendar: Calendar) -> [Date?] {
+    nonisolated static func monthDays(_ month: Date, _ calendar: Calendar) -> [Date?] {
         guard let interval = calendar.dateInterval(of: .month, for: month),
               let count = calendar.range(of: .day, in: .month, for: month)?.count else { return [] }
         let first = interval.start

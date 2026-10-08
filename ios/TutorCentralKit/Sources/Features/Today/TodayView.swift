@@ -22,7 +22,7 @@ public struct TodayView: View {
                     refreshError(error)
                 }
                 startHere
-                section("Today", action: ("Schedule", { actions.openLater(.schedule) })) {
+                section("Today", action: ("Schedule", { actions.openSchedule() })) {
                     EmptyRow(
                         symbol: "calendar",
                         title: "No classes yet",
@@ -82,7 +82,7 @@ public struct TodayView: View {
                 label: "Classes today",
                 tone: tone(store.counts.classesToday)
             ) {
-                actions.openLater(.schedule)
+                actions.openSchedule()
             }
         }
         .opacity(store.loading ? Tokens.opacityStale : 1)

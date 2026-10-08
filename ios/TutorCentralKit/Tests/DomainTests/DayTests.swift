@@ -38,4 +38,8 @@ struct DayTests {
         #expect(saturday.shortWeekdayText == "Sat 10 Oct" && saturday.weekdayLongText == "Saturday 10 October")
         #expect(saturday.period == Period(year: 2026, month: 10))
     }
+
+    @Test func theEventFormsDay() {
+        #expect(Day(year: 2026, month: 10, day: 10)?.fullText == "Sat 10 Oct 2026")
+    }
 }

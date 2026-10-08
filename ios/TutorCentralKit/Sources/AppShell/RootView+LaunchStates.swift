@@ -3,6 +3,7 @@ import Data
 import DesignSystem
 import Domain
 import Onboarding
+import Schedule
 import Students
 import SwiftUI
 
@@ -19,7 +20,7 @@ extension RootView {
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
-        case .laterMore: .more
+        case .laterMore, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm: .more
         default: nil
         }
     }
@@ -34,6 +35,7 @@ extension RootView {
         case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
         case .history, .historyByStudent, .historyEmpty: [.history]
         case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
+        case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm: [.schedule]
         default: []
         }
     }
@@ -91,6 +93,16 @@ extension RootView {
 
     static func historyBoardState(_ state: LaunchState) -> HistoryBoardState? {
         state == .historyByStudent ? .byStudent : nil
+    }
+
+    static func scheduleBoardState(_ state: LaunchState) -> ScheduleBoardState? {
+        switch state {
+        case .scheduleDay: .saturday
+        case .eventNew: .newEvent
+        case .eventEdit: .editEvent
+        case .eventDeleteConfirm: .deleteConfirm
+        default: nil
+        }
     }
 
     static func classDetailBoardState(_ state: LaunchState) -> ClassDetailBoardState? {

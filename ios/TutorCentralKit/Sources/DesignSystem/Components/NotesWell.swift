@@ -8,6 +8,7 @@ public struct NotesWell: View {
     let placeholder: String
     let limit: Int
     let error: String?
+    let optional: Bool
     @FocusState private var focused: Bool
     static var minHeight: CGFloat {
         96
@@ -18,16 +19,20 @@ public struct NotesWell: View {
         28
     }
 
-    public init(label: String, text: Binding<String>, placeholder: String, limit: Int, error: String? = nil) {
+    public init(
+        label: String, text: Binding<String>, placeholder: String, limit: Int, error: String? = nil,
+        optional: Bool = false
+    ) {
         self.label = label
         _text = text
         self.placeholder = placeholder
         self.limit = limit
         self.error = error
+        self.optional = optional
     }
 
     public var body: some View {
-        Well(label: label, error: error, focused: focused, height: nil) {
+        Well(label: label, optional: optional, error: error, focused: focused, height: nil) {
             ZStack(alignment: .topLeading) {
                 if text.isEmpty {
                     Text(placeholder)

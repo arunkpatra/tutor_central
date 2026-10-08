@@ -134,4 +134,14 @@ struct LaunchStateTests {
         #expect(RootView.historyBoardState(.historyByStudent) == .byStudent && RootView
             .historyBoardState(.history) == nil)
     }
+
+    @MainActor @Test func theScheduleStatesPushOnTheMoreTab() {
+        for state in [LaunchState.schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm] {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.schedule])
+        }
+        #expect(RootView.scheduleBoardState(.scheduleDay) == .saturday)
+        #expect(RootView.scheduleBoardState(.eventDeleteConfirm) == .deleteConfirm)
+        #expect(RootView.scheduleBoardState(.schedule) == nil)
+    }
 }
