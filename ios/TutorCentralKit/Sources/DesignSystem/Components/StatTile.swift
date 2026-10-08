@@ -8,7 +8,8 @@ public enum StatTone: Sendable {
 }
 
 /// surface1, line border, radiusTile, padding 14, shadowRaised; value numberTile, label footnote text2, 6 apart; the
-/// whole tile presses.
+/// whole tile presses. In a row whose height is fixed by its tallest tile, every tile fills that height with its words
+/// at the top (U4: "Classes today" wrapping makes all three taller, never one).
 public struct StatTile: View {
     let value: String
     let label: String
@@ -44,7 +45,7 @@ public struct StatTile: View {
                     .minimumScaleFactor(Self.smallestValue)
                 Text(label).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding(Tokens.cardPaddingCompact)
             .surface(radius: Tokens.radiusTile)
         }

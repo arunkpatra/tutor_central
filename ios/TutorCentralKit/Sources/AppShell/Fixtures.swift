@@ -23,15 +23,17 @@ public enum Fixtures {
         return Dependencies(
             auth: auth,
             centres: centres,
-            counts: FakeCountsRepository(),
+            counts: FakeCountsRepository(counts: counts(for: state)),
             students: FakeStudentsRepository(students: register(for: state).students),
             classes: FakeClassesRepository(classes: register(for: state).classes),
             attendance: FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) }),
             messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed, now: { clock(for: state) }),
-            events: FakeEventsRepository(events: FakeEventsRepository.seed),
-            tasks: FakeTasksRepository(tasks: state == .tasksEmpty ? [] : FakeTasksRepository.seed),
+            events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
+            tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
+                .seed),
             cachesRegister: false,
             now: { clock(for: state) },
+            fixedClock: true,
             bundleVersion: "0.1 (12)"
         )
     }
@@ -47,7 +49,8 @@ public enum Fixtures {
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
-             .eventDeleteConfirm, .tasks, .tasksEmpty: .ready(meeraWorkspace)
+             .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
+             .todayAddingTask: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -56,7 +59,7 @@ public enum Fixtures {
     /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
     static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
         switch state {
-        case .studentsEmpty, .classesEmpty, .attendanceEmpty: ([], [])
+        case .studentsEmpty, .classesEmpty, .attendanceEmpty, .todayEmpty: ([], [])
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
@@ -69,7 +72,7 @@ public enum Fixtures {
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
         case .history, .historyByStudent, .historyStudent, .student, .schedule, .scheduleDay, .eventNew, .eventEdit,
-             .eventDeleteConfirm: FakeAttendanceRepository.seedWithToday
+             .eventDeleteConfirm, .todayEvening: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         default: FakeAttendanceRepository.seed
         }
@@ -80,8 +83,25 @@ public enum Fixtures {
     static func clock(for state: LaunchState) -> Date {
         switch state {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
+        case .today, .todayAddingTask: india(day: 7, hour: 16, minute: 35)
+        case .todayEvening: india(day: 7, hour: 19, minute: 30)
+        case .todayNoClass: india(day: 10, hour: 9, minute: 30)
         default: now
         }
+    }
+
+    /// Today's tiles on the boards: ten students, ₹4,000 due (the seed's four unpaid), the classes meeting that day.
+    static func counts(for state: LaunchState) -> TodayCounts {
+        switch state {
+        case .today, .todayEvening, .todayAddingTask:
+            TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
+        case .todayNoClass: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
+        default: .zero
+        }
+    }
+
+    private static func india(day: Int, hour: Int, minute: Int) -> Date {
+        DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? now
     }
 
     /// P3-StudentDetail-Archived: Akshita archived on the boards' day.

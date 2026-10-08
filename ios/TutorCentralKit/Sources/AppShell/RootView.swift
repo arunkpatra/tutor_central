@@ -170,28 +170,37 @@ public struct RootView: View {
         }
     }
 
-    /// One Today store for the life of the workspace, so its counts survive a tab switch.
+    /// One Today store for the life of the workspace, so its counts survive a tab switch; it reads the shared register
+    /// and tasks.
     @ViewBuilder private var todayView: some View {
         if case let .ready(workspace) = session.state {
-            let store = shell.today ?? TodayStore(workspace: workspace, counts: deps.counts, now: deps.now)
+            let store = shell.today ?? TodayStore(
+                workspace: workspace, counts: deps.counts, register: register(for: workspace),
+                attendance: deps.attendance, events: deps.events, tasks: tasksStore(for: workspace), now: deps.now
+            )
             TodayView(
                 store: store,
                 actions: TodayActions(
                     openSettings: { shell.tabs.push(.settings) },
                     openTab: { shell.tabs.select($0) },
-                    openLater: { target in
-                        switch target {
-                        case .tasks: shell.tabs.push(.tasks)
-                        case .students: shell.tabs.select(.students)
-                        }
-                    },
-                    openSchedule: { shell.tabs.push(.schedule) }
-                )
+                    openSchedule: { shell.tabs.push(.schedule) },
+                    openMarkAttendance: { openAttendance(classID: $0, date: nil, in: workspace) },
+                    openClass: { shell.tabs.push(.classroom($0)) },
+                    openEvent: { shell.tabs.push(.event($0)) }
+                ),
+                ticks: !deps.fixedClock,
+                boardState: launch.flatMap(Self.todayBoardState)
             )
             .onAppear {
                 if shell.today == nil {
                     shell.today = store
                 }
+            }
+            .onChange(of: store.tasks.message) { _, message in
+                guard let message else { return }
+                Haptic.play(.error)
+                toasts.show(message, action: store.tasks.canRetry ? Self.retry(store.tasks) : nil)
+                store.tasks.message = nil
             }
         }
     }

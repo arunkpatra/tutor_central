@@ -10,7 +10,16 @@ import Today
 /// another tutor, starts at Today with nothing pushed and a fresh Today store.
 @MainActor struct ShellStateTests {
     func today(_ workspace: Workspace) -> TodayStore {
-        TodayStore(workspace: workspace, counts: FakeCountsRepository(), now: { Fixtures.now })
+        TodayStore(
+            workspace: workspace, counts: FakeCountsRepository(),
+            register: RegisterStore(
+                workspace: workspace, students: FakeStudentsRepository(), classes: FakeClassesRepository(), cache: nil,
+                now: { Fixtures.now }
+            ),
+            attendance: FakeAttendanceRepository(), events: FakeEventsRepository(),
+            tasks: TasksStore(workspace: workspace, tasks: FakeTasksRepository(), now: { Fixtures.now }),
+            now: { Fixtures.now }
+        )
     }
 
     @Test func signingOutResetsTheTabsAndToday() {

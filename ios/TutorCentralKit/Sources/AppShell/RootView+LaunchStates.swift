@@ -108,6 +108,10 @@ extension RootView {
         }
     }
 
+    static func todayBoardState(_ state: LaunchState) -> TodayBoardState? {
+        state == .todayAddingTask ? .addingTask : nil
+    }
+
     static func classDetailBoardState(_ state: LaunchState) -> ClassDetailBoardState? {
         state == .classAddMembers ? .addMembers : nil
     }

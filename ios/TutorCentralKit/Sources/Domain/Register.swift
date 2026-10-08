@@ -9,6 +9,8 @@ import Foundation
     func members(of classID: UUID) -> [Student]
     func student(_ id: UUID) -> Student?
     func classroom(_ id: UUID?) -> Classroom?
+    /// True only once a read said the centre has no students: never while loading or after a failed first read.
+    var showsEmptyRegister: Bool { get }
     /// Reads only when nothing has been read or cached yet.
     func loadIfNeeded() async
 }
