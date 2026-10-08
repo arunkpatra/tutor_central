@@ -134,6 +134,7 @@ public struct RootView: View {
                 today: { todayView },
                 students: { studentsView },
                 studentDetail: { studentDetailView($0) },
+                classes: { classesView },
                 settings: { settingsView }
             )
         }
@@ -215,7 +216,11 @@ public struct RootView: View {
         StudentsNavigation(
             openStudent: { shell.tabs.push(.student($0)) },
             openClasses: { shell.tabs.push(.classes) },
-            openClass: { shell.tabs.push(.classroom($0)) }
+            openClass: { shell.tabs.push(.classroom($0)) },
+            showUnassigned: {
+                shell.tabs.paths[.students] = []
+                shell.register?.filter = .unassigned
+            }
         )
     }
 
@@ -233,6 +238,16 @@ public struct RootView: View {
                 toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
             }
+        }
+    }
+
+    @ViewBuilder private var classesView: some View {
+        if case let .ready(workspace) = session.state {
+            ClassesView(
+                register: register(for: workspace),
+                navigation: studentsNavigation,
+                boardState: launch.flatMap(Self.classesBoardState)
+            )
         }
     }
 

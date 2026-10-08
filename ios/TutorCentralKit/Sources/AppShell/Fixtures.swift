@@ -39,7 +39,7 @@ public enum Fixtures {
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
              .studentNewInvalid, .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm,
-             .studentEdit: .ready(meeraWorkspace)
+             .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -48,7 +48,7 @@ public enum Fixtures {
     /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
     static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
         switch state {
-        case .studentsEmpty: ([], [])
+        case .studentsEmpty, .classesEmpty: ([], [])
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)

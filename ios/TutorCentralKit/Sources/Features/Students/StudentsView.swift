@@ -19,15 +19,19 @@ public struct StudentsNavigation {
     let openStudent: (UUID) -> Void
     let openClasses: () -> Void
     let openClass: (UUID) -> Void
+    let showUnassigned: () -> Void
 
+    /// `showUnassigned` goes back to the list with the "No class" filter on.
     public init(
         openStudent: @escaping (UUID) -> Void,
         openClasses: @escaping () -> Void,
-        openClass: @escaping (UUID) -> Void
+        openClass: @escaping (UUID) -> Void,
+        showUnassigned: @escaping () -> Void
     ) {
         self.openStudent = openStudent
         self.openClasses = openClasses
         self.openClass = openClass
+        self.showUnassigned = showUnassigned
     }
 }
 
@@ -41,6 +45,7 @@ public struct StudentsView: View {
     @State private var searching = false
     @State private var showsMenu = false
     @State private var newStudent: StudentFormStore?
+    @State private var newClass: ClassFormStore?
     @State private var topInset: CGFloat = 0
     /// The inline title row while searching (P3-Students-Searching): a navigation bar's height.
     static var inlineTitleHeight: CGFloat {
@@ -100,6 +105,14 @@ public struct StudentsView: View {
                 onClose: { newStudent = nil }
             )
         }
+        .sheet(item: $newClass) { form in
+            ClassFormSheet(
+                store: form,
+                autofocus: true,
+                onSave: { await store.addClass($0) != nil },
+                onClose: { newClass = nil }
+            )
+        }
         .task {
             await store.load()
             setUpBoardState()
@@ -148,8 +161,9 @@ public struct StudentsView: View {
         newStudent = StudentFormStore(mode: .new, classes: store.activeClasses, today: store.today)
     }
 
-    /// The new-class sheet arrives with its board (P3-NewClass).
-    private func createClass() {}
+    private func createClass() {
+        newClass = ClassFormStore(mode: .new)
+    }
 
     private func setUpBoardState() {
         switch boardState {

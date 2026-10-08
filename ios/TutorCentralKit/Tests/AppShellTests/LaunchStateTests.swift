@@ -79,4 +79,15 @@ struct LaunchStateTests {
             .students(centre: Fixtures.meeraWorkspace.centre.id, period: Period(year: 2026, month: 10))
         #expect(archived.first { $0.id == FakeStudentsRepository.akshita }?.isArchived == true)
     }
+
+    @MainActor @Test func theClassesStatesOpenTheClassesList() async throws {
+        let states: [LaunchState] = [.classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm]
+        for state in states {
+            #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
+            #expect(RootView.tab(for: state) == .students && RootView.initialRoutes(for: state) == [.classes])
+        }
+        #expect(RootView.classesBoardState(.classNew) == .newClass && RootView.classesBoardState(.classes) == nil)
+        let empty = Fixtures.dependencies(for: .classesEmpty)
+        #expect(try await empty.classes.classes(centre: Fixtures.meeraWorkspace.centre.id).isEmpty)
+    }
 }

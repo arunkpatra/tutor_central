@@ -11,7 +11,9 @@ extension RootView {
         switch state {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .student, .studentArchived,
-             .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit: .students
+             .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
+             .classEdit,
+             .classArchiveConfirm: .students
         case .laterFees: .fees
         case .laterAttendance: .attendance
         case .laterMore: .more
@@ -25,6 +27,7 @@ extension RootView {
         case .settings: [.settings]
         case .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit:
             [.student(FakeStudentsRepository.akshita)]
+        case .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: [.classes]
         default: []
         }
     }
@@ -56,6 +59,15 @@ extension RootView {
         case .studentNew: .newStudentEmpty
         case .studentNewFilled: .newStudentFilled
         case .studentNewInvalid: .newStudentInvalid
+        default: nil
+        }
+    }
+
+    static func classesBoardState(_ state: LaunchState) -> ClassesBoardState? {
+        switch state {
+        case .classNew: .newClass
+        case .classEdit: .editMaths
+        case .classArchiveConfirm: .archiveMaths
         default: nil
         }
     }
