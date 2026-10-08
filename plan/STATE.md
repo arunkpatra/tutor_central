@@ -3,10 +3,10 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 5. **Phase 0 step 0.4 approved** (the 22 Phase 3 boards, row 6 of the canvas,
-mirrored into `docs/design/`). **Phase 3 planned:** `plan/phase-03-plan.md` approved by the owner. **Next:** the
-Phase 3 build in a fresh Opus 5.5 session from `plan/resume/005-phase-3-build.md` (eight pull requests, then the
-review). After it: Phase 0 step 0.5 (the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
+**Last updated:** 2026-10-08, session 6. **Phase 3 done:** PRs #24 to #31 merged; migration 0003 in production;
+build 0.1.0 (5) on TestFlight (run 5). The final review of the eight PRs is recorded in `plan/sessions/006/record.md`.
+**Next:** the owner installs build 5 and tries the register with real students and a class; then Phase 0 step 0.5
+(the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
 
 ## Where we are
 
@@ -15,26 +15,26 @@ review). After it: Phase 0 step 0.5 (the Phase 4 boards) on Fable, or the owner'
 | 0 Design | In progress: 0.1 to 0.4 approved, plus the app icon (D29); 0.5 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
-| 3 Students and classes | Planned, not started | `phase-03-plan.md` (19 tasks, 8 PRs, one migration: 0003 `archive_class`); build from `resume/005-phase-3-build.md` |
+| 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
 | 4 to 7 | Not started | Scoped in their files |
 | 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them) |
 
 ## In flight
 
-Nothing open. No branch but `main` and `pr-shots` (the merged `phase-2/*` branches remain on the remote; delete them
-when convenient). `main`'s check is green; build 0.1.0 (4) is on TestFlight.
+Nothing open. No branch but `main` and `pr-shots` (the merged `phase-2/*` and `phase-3/*` branches remain on the
+remote; delete them when convenient). `main`'s check is green; build 0.1.0 (5) is on TestFlight.
 
 ## Production
 
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 and 0002. Migrations go up
-  only through `deploy.yml`'s migrate job, before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and
-  `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`. Phase 3 adds 0003 (`archive_class`) through the
-  same lane.
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0003 (0003
+  `archive_class` by deploy run 37724513096 after PR #25; nothing pending at run 37731454614). Migrations go up only
+  through `deploy.yml`'s migrate job, before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and
+  `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
 - **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
   and secret), email code, password; redirect URL `tutorcentral://auth-callback`. Email through Resend SMTP from
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
-- **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`api-ten-orpin-51.vercel.app`), commit `bf6c3d2`.
+- **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`api-ten-orpin-51.vercel.app`), commit `7a5596a`.
   Vercel Hobby refuses deploys whose commit author it does not know; this repo's git email stays
   `arunkpatra@gmail.com`.
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
@@ -44,12 +44,12 @@ when convenient). `main`'s check is green; build 0.1.0 (4) is on TestFlight.
 
 ## Open items
 
-- **Design documents to correct at the end of the Phase 3 build** (plan Task 19): the "+" menu is a popover with the
-  board's rows, not a system `Menu`; removal from a class is the row's context menu, not a swipe; the
-  `class-archive-confirm` launch state joins the table in `information-architecture.md`.
-- **Review minors** (Phase 2's final review): the list is in `plan/sessions/004/record.md`, "Deferred minors". The
-  Phase 3 plan takes the ones in its files (Task 18: ASCII digits, shadows parsed once, two haptics); the rest wait
-  for the polish slice or the phase that touches them.
+- **The owner's first hand run of the register** on build 5: Phase 3's flows were tested against the fakes and its
+  writes run with curl against the local stack, but not driven in the simulator against the local stack (typing
+  into the simulator was unreliable in session 6).
+- **Board content to confirm:** P3-Students-Searching draws "3 of 10 match" for "sh"; the rule finds 4 (Lakshmi).
+- **Review minors:** Phase 2's remaining list is in `plan/sessions/004/record.md` (Phase 3 took the digits,
+  shadows and haptics); Phase 3's are in `plan/sessions/006/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
 - **UI polish** (owner, after the first install): a pass over the built screens; seen so far: Today's content

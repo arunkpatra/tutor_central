@@ -12,9 +12,9 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   every screen for both (D13).
 - Tests: Swift Testing (`import Testing`, `@Test`, `#expect`; no bare `@Suite`, SwiftFormat removes it) in
   `Tests/DesignSystemTests`, `DomainTests`, `DataTests`, `AppShellTests`, `OnboardingTests`, `TodayTests`,
-  `SettingsTests`; stores are tested against the in-memory fakes. XCTest only in `SmokeTests` (the launch, and
-  iPhone only). No UI
-  test suites (D15). A new test target goes in `Package.swift` and in the scheme in `project.yml`.
+  `SettingsTests`, `StudentsTests`; stores are tested against the in-memory fakes. XCTest only in `SmokeTests`
+  (the launch, and iPhone only). No UI test suites (D15). A new test target goes in `Package.swift` and in the
+  scheme in `project.yml`.
 - The package is iOS only: build and test it with `xcodebuild` for the simulator (or `bun check`), not
   `swift test`.
 - Screens are proven by `bun shots <state>` and the pictures in the PR (D7). Every state a board has gets a
@@ -27,6 +27,16 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - Shadows: `shadowed(_:radius:)` takes a token or a list through one fixed view structure. Never wrap views in
   `AnyView` per state: a view that changes type loses its text field's focus.
 - One `SupabaseClient` per process (`RootView.live`); a client made per view would split the session.
+- One `RegisterStore` per centre (`ShellState.register`, `@ObservationIgnored`, filled by the first Students screen
+  built), so the list and a pushed detail share it. It is cached as JSON in Application Support,
+  `TutorCentral/register-<centre id>.json`; fixtures never write it (`Dependencies.cachesRegister`).
+- A pushed screen that cannot show (a link to a student no longer here) is taken off the stack by AppShell
+  (`TabsState.remove`); `dismiss()` during a push is lost.
+- A pure `static func` on a SwiftUI view is `nonisolated` when tests call it: a closure inside it inherits the main
+  actor and traps off it.
+- Pickers the boards draw as accent values (a date of birth, a class's times) are buttons opening the system's
+  picker in a popover; the compact `DatePicker` draws a capsule the boards do not.
+- `bun shots` photographs the last `bun check` build: rebuild before shooting a change.
 - Boards draw focus without a keyboard: fields take `showsFocus` for board states and `autofocus` for real use.
 - Local config: `Config/Local.xcconfig` (ignored) from `Config/Local.xcconfig.example`; the anon key (the JWT,
   `ANON_KEY`) from `supabase status -o env`. The local stack sends the code email

@@ -39,6 +39,7 @@ status (`due` for money owed). Three in a row with `tileGap`.
 | List | `surface1`, `line`, `shadowRaised` | `radiusCard` | 0; rows inside carry their own | A group of rows |
 | Compact | `surface1`, `line`, `shadowRaised` | `radiusTile` | 14 | A single row with its own border (a student in a list) |
 | Selected | `surface1`, `accent` border, `haloFocus` | as above | | A chosen option |
+| On sheet | `surface2`, `line`, no shadow | `radiusCard` | 0 | A list inside a sheet (the add-students checklist) |
 
 Rows inside a list card are divided by `line`; the last has no divider.
 
@@ -145,10 +146,11 @@ under the time rows. Selection haptic.
 
 ## Menu
 
-The "+" button's menu is the system pull-down menu from the icon button; the board draws it as `chrome` glass
-with `lineGlass` border, `shadowFloat`, radius `radiusTile`, 260 wide; rows 46 with the label `body` on the left
-and its symbol 20 on the right: Add a student (`person.badge.plus`), Scan paper register (`doc.viewfinder`),
-Create a class (`book.closed`). On iOS the system draws it.
+The "+" button's menu is a popover from the icon button holding the board's rows (a popover rather than the system
+pull-down, so its state can be photographed); the board draws it as `chrome` glass with `lineGlass` border,
+`shadowFloat`, radius `radiusTile`, 260 wide; rows 46 with the label `body` on the left and its symbol 20 on the
+right, divided by `lineGlass`: Add a student (`person.badge.plus`), Scan paper register (`doc.viewfinder`), Create
+a class (`book.closed`). On iOS the popover's glass and shadow are the system's.
 
 ## Tab bar
 

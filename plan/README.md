@@ -21,7 +21,7 @@ Always:
 | 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | In progress: steps 0.1 to 0.4 approved, 0.5 next (how: `phase-00-plan.md`) |
 | 1 | Foundation: monorepo, project, modules, Supabase, API skeleton, CI, `check` | `phase-01-foundation.md` | Done (session 2, PRs #1 to #8); the API in production |
 | 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Done (session 4, PRs #9 to #21); build 0.1.0 (3) on the owner's phone |
-| 3 | Students and classes | `phase-03-students-and-classes.md` | Planned (session 5: `phase-03-plan.md` approved); the build next, on Opus 5.5 from `resume/005-phase-3-build.md` |
+| 3 | Students and classes | `phase-03-students-and-classes.md` | Done (session 6, PRs #24 to #31); migration 0003 in production; build 0.1.0 (5) on TestFlight |
 | 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Not started |
 | 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Not started |
 | 6 | AI tools through the API | `phase-06-ai-tools.md` | Not started |

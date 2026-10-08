@@ -85,7 +85,8 @@ Phase 3's states (`plan/phase-03-plan.md` builds them; the light twins come from
 | `classes-empty` | Classes, nothing yet |
 | `classes` | Classes, the seed's two and the "Not in a class" row |
 | `class-new` | New class, Class 12 Physics filled in |
-| `class-edit` | Edit class, Class 10 Maths, nothing changed, with Archive class |
+| `class-edit` | Edit class, Class 10 Maths, nothing changed, with Archive class (over the Classes list, as the board draws it) |
+| `class-archive-confirm` | The class archive confirmation over Edit class: the dialog pattern with the class's words |
 | `class` | Class detail, Class 10 Maths: this week and six students |
 | `class-add-members` | Class detail with the add-students sheet |
 
@@ -128,7 +129,8 @@ What the boards settle for the Students tab:
   the sort menu (Name, Fee) and the list card. Pushed screens on this tab (student detail, classes, class detail)
   hide the tab bar; the roots keep it.
 - The "+" menu: Add a student (sheet), Scan paper register (Phase 6; until then the later board, as the inventory
-  says), Create a class (sheet).
+  says), Create a class (sheet). In the app it is a popover holding the board's three rows on the system's own glass
+  (so its state can be photographed); the system does not dim the screen behind it as the board does.
 - Forms are floating sheets (D28): the student form at the large detent, the class form at its content height.
   Save is disabled until the form is valid and, when editing, until something changed. Cancel asks before
   discarding typed changes (components.md, Sheets).
@@ -137,8 +139,9 @@ What the boards settle for the Students tab:
   with the typed confirmation. A class is archived from the bottom of its edit sheet; its students stay, with no
   class.
 - Class detail: the week's meetings from the meeting days (today's row marked), the members with "Add" (a
-  checklist sheet of students not in the class; a student moved keeps a fee of their own), removal by the
-  system's swipe action with the row's context menu as the visible alternative (not drawn: the system draws it).
+  checklist sheet of students not in the class; a student moved keeps a fee of their own), removal through the row's
+  context menu ("Remove from class", not drawn: the system draws it) or the student's own Edit; the members are a
+  card, not a list, so there is no swipe action.
   "Mark attendance" and the detail's Fees "See all" open the later board until Phases 4 and 5.
 - Searching matches names and phone numbers across every class and the archive; the matched letters are in
   `accentText`; the matching phone takes the row's second line.
