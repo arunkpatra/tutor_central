@@ -141,7 +141,7 @@ public struct RootView: View {
     static func tab(for state: LaunchState) -> AppTab? {
         switch state {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
-             .studentsAddMenu: .students
+             .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid: .students
         case .laterFees: .fees
         case .laterAttendance: .attendance
         case .laterMore: .more
@@ -255,6 +255,9 @@ public struct RootView: View {
         case .studentsSearching: .searching
         case .studentsFiltered: .filteredToScience
         case .studentsAddMenu: .addMenu
+        case .studentNew: .newStudentEmpty
+        case .studentNewFilled: .newStudentFilled
+        case .studentNewInvalid: .newStudentInvalid
         default: nil
         }
     }
