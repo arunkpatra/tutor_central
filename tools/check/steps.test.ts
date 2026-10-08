@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { dbSkipReason, localConfigHint, simulatorDestination, STEPS } from "./steps";
+import { dbSkipReason, iosTestCommand, localConfigHint, simulatorDestination, STEPS } from "./steps";
 
 test("the db step runs locally when supabase is up", () => {
   expect(dbSkipReason({}, true)).toBeNull();
@@ -27,4 +27,9 @@ test("the simulator is the iPhone 17 unless TC_SIMULATOR names another", () => {
 test("a missing Local.xcconfig gets a one-line hint instead of XcodeGen's error", () => {
   expect(localConfigHint(false)).toContain("cp ios/Config/Local.xcconfig.example ios/Config/Local.xcconfig");
   expect(localConfigHint(true)).toBeNull();
+});
+
+test("a failing test reports at once instead of stalling ten minutes collecting simulator diagnostics", () => {
+  expect(iosTestCommand()).toContain(" test-without-building ");
+  expect(iosTestCommand()).toContain(" -collect-test-diagnostics never");
 });
