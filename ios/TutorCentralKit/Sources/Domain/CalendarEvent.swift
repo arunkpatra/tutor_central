@@ -32,6 +32,15 @@ public struct CalendarEvent: Hashable, Sendable, Identifiable, Codable {
         note ?? timeRange
     }
 
+    /// A coming-up row's line (P4-Today-Soon, P4-Schedule-Month): the time, then the note's first sentence without its
+    /// full stop ("11:00–12:00 · Class 10 parents").
+    public var comingUpLine: String? {
+        let sentence = note?.split(separator: ".", maxSplits: 1).first
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+        let parts = [timeRange, sentence].compactMap(\.self).filter { !$0.isEmpty }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
     /// Tomorrow to `today + days`, by date then start time (a timeless event first on its day).
     public static func comingUp(
         _ events: [CalendarEvent],

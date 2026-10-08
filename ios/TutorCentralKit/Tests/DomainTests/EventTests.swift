@@ -72,4 +72,12 @@ struct EventTests {
         #expect(back.title == "Mock test" && back.date.day == 17 && back.note == "Hall A" && back.startTime?
             .text == "11:00")
     }
+
+    @Test func comingUpReadsTheTimeAndTheNotesFirstSentence() {
+        #expect(Self.event("Parents' meeting", 10, note: "Class 10 parents. Bring the September test papers.")
+            .comingUpLine == "11:00–12:00 · Class 10 parents")
+        #expect(Self.event("Mock test", 17).comingUpLine == "11:00–12:00", "no note: the time alone")
+        #expect(Self.event("Holiday", 20, nil, end: nil, note: "School closed").comingUpLine == "School closed")
+        #expect(Self.event("Holiday", 20, nil, end: nil).comingUpLine == nil)
+    }
 }

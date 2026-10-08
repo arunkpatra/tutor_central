@@ -54,6 +54,11 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case historyByStudent = "history-by-student"
     case historyStudent = "history-student"
     case historyEmpty = "history-empty"
+    case schedule
+    case scheduleDay = "schedule-day"
+    case eventNew = "event-new"
+    case eventEdit = "event-edit"
+    case eventDeleteConfirm = "event-delete-confirm"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }

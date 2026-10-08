@@ -46,7 +46,8 @@ public enum Fixtures {
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
-             .historyStudent, .historyEmpty: .ready(meeraWorkspace)
+             .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
+             .eventDeleteConfirm: .ready(meeraWorkspace)
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword: .signedOut
         }
@@ -67,7 +68,8 @@ public enum Fixtures {
     /// screen, at their own clock.
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
-        case .history, .historyByStudent, .historyStudent, .student: FakeAttendanceRepository.seedWithToday
+        case .history, .historyByStudent, .historyStudent, .student, .schedule, .scheduleDay, .eventNew, .eventEdit,
+             .eventDeleteConfirm: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         default: FakeAttendanceRepository.seed
         }

@@ -56,20 +56,22 @@ public struct TodayActions {
     let openSettings: () -> Void
     let openTab: (AppTab) -> Void
     let openLater: (LaterTarget) -> Void
+    let openSchedule: () -> Void
 
     public init(
         openSettings: @escaping () -> Void,
         openTab: @escaping (AppTab) -> Void,
-        openLater: @escaping (LaterTarget) -> Void
+        openLater: @escaping (LaterTarget) -> Void,
+        openSchedule: @escaping () -> Void
     ) {
         self.openSettings = openSettings
         self.openTab = openTab
         self.openLater = openLater
+        self.openSchedule = openSchedule
     }
 
     /// Today's actions whose screens arrive in later builds.
     public enum LaterTarget: Sendable {
-        case schedule
         case tasks
         case students
     }

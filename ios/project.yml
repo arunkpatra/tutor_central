@@ -68,6 +68,7 @@ schemes:
         - package: TutorCentralKit/OnboardingTests
         - package: TutorCentralKit/TodayTests
         - package: TutorCentralKit/AttendanceTests
+        - package: TutorCentralKit/ScheduleTests
         - package: TutorCentralKit/StudentsTests
         - package: TutorCentralKit/SettingsTests
   TutorCentral Kit:

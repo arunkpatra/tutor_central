@@ -35,4 +35,11 @@ import Testing
         #expect(tabs.open(.attendance(date: "2026-10-05", classID: nil)))
         #expect(tabs.selected == .attendance && tabs.paths[.attendance] == [])
     }
+
+    @Test func anEventLinkOpensItOnTheMoreTab() {
+        let tabs = TabsState(selected: .today)
+        let id = UUID()
+        #expect(tabs.open(.event(id)))
+        #expect(tabs.selected == .more && tabs.paths[.more] == [.schedule, .event(id)])
+    }
 }

@@ -53,7 +53,6 @@ struct LaterView: View {
 enum LaterPlace: Hashable, Sendable {
     case tab(AppTab)
     case tasks
-    case schedule
     case scanRegister
     case studentFees
 
@@ -73,7 +72,6 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.attendance): "Attendance"
         case .tab(.more): "More"
         case .tasks: "Tasks"
-        case .schedule: "Schedule"
         case .scanRegister: "Scan register"
         case .studentFees: "Fees"
         }
@@ -88,7 +86,6 @@ enum LaterPlace: Hashable, Sendable {
         case .scanRegister: "doc.viewfinder"
         case .studentFees: "indianrupeesign"
         case .tab(.more): "ellipsis"
-        case .schedule: "calendar"
         }
     }
 
@@ -107,7 +104,7 @@ enum LaterPlace: Hashable, Sendable {
         case .tab(.attendance): "Marking attendance and its history arrive"
         case .tab(.more): "Schedule, classes, reports and the AI tools arrive"
         case .tasks: "Tasks arrive"
-        case .schedule, .tab(.today): "The schedule arrives"
+        case .tab(.today): "The schedule arrives"
         case .scanRegister: "Photographing your paper register and reading it arrives"
         case .studentFees: "The fee ledger, reminders and receipts arrive"
         }
