@@ -12,8 +12,8 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   every screen for both (D13).
 - Tests: Swift Testing (`import Testing`, `@Test`, `#expect`; no bare `@Suite`, SwiftFormat removes it) in
   `Tests/DesignSystemTests`, `DomainTests`, `DataTests`, `AppShellTests`, `OnboardingTests`, `TodayTests`,
-  `SettingsTests`, `StudentsTests`, `AttendanceTests`, `ScheduleTests`; stores are tested against the in-memory
-  fakes. XCTest only in `SmokeTests` (the launch, and iPhone only). No UI test suites (D15). A new test target goes
+  `SettingsTests`, `StudentsTests`, `AttendanceTests`, `ScheduleTests`, `FeesTests`; stores are tested against the
+  in-memory fakes. XCTest only in `SmokeTests` (the launch, and iPhone only). No UI test suites (D15). A new test target goes
   in `Package.swift` and in the scheme in `project.yml`.
 - The package is iOS only: build and test it with `xcodebuild` for the simulator (or `bun check`), not
   `swift test`.
@@ -67,6 +67,17 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   fixtures' boards are Wednesday 7 October.
 - A paused Docker container hangs requests; stop the gateway (`docker stop supabase_kong_tutor_central`, then `docker
   start`) to test offline paths (supabase-swift takes about 20 s to give up).
+- A screen that changes the workspace hands its change to `RootView.applyWorkspace`, which merges only that screen's
+  fields onto the session's current workspace (`Workspace.takingSettings(from:)`, `takingPayments(from:)`) before
+  Today and Fees hear of it: a store's own copy is older than the session's (Settings' copy put back a replaced UPI id).
+- Vision's barcode revisions 2 to 4 cannot run in the simulator ("Could not create inference context") and answer
+  empty on CI's runner: `QRDecoder` tries the current revision, then revision 1 whenever it reads nothing.
+- The camera: ask with `AVCaptureDevice.requestAccess` before presenting VisionKit's scanner
+  (`DataScannerViewController.isAvailable` is false until access is granted); present it in a sheet, which a swipe
+  closes.
+- A pushed screen's top row (`BackRow`) and the Saved mark (`SaveMark`) are DesignSystem's, for every feature.
+- `String(contentsOf:)` drops a file's BOM: test a written CSV as bytes.
+- A sheet opened on one tab stays up when a link switches tabs (U13).
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

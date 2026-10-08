@@ -30,7 +30,9 @@ screen, several as a polish slice, or not at all.
 | U9 | 2026-10-08 | Sheets with a field | A failure toast draws at the sheet's bottom, behind the keyboard while it is up (Phase 3's sheets too) | Session 9's follow-up hand run |
 | U10 | 2026-10-08 | Attendance mark | A slow or failing read shows nothing for up to 20 s (no spinner by the date), and "Everyone starts present…" stays beside the error line | Session 9's follow-up hand run |
 | U11 | 2026-10-08 | today-adding-task | The launch state cannot scroll Coming up to the top as P4-Today-AddingTask draws (the board's room is the keyboard's) | Session 9, comparing with the board |
-| U12 | 2026-10-08 | Fees tab | The later card still says "This build has sign-in, your profile, Today and the register." | Session 9 |
+| U13 | 2026-10-08 | Any sheet, then a link | A sheet open on one tab (Reports' Share as CSV) stays up over the tab a `tutorcentral://` link opens | Session 11's hand run (issue #50) |
+| U14 | 2026-10-08 | Fees, an empty current month | Before the month is generated, the overdue banner for last month's unpaid fees is not shown (the board draws the empty month without it) | Session 11's final review |
+| U15 | 2026-10-08 | Fees, Due or Paid with nothing in it | "Nothing due · Every fee for October is settled." and "Nothing paid yet" are the Kit's empty row in words no board drew | Session 11 (the plan's unboarded filler) |
 
 ## Done
 
@@ -40,6 +42,7 @@ screen, several as a polish slice, or not at all.
 | U2 | 2026-10-08 | #42 | Today live: "Start here" shows only for an empty register |
 | U3 | 2026-10-08 | #42 | Today's section lists the day's classes and events, so it agrees with the "Classes today" tile |
 | U4 | 2026-10-08 | #42 | The three tiles share the row's height |
+| U12 | 2026-10-08 | #47 | The Fees tab is live; the later card and its stale line are gone |
 
 ## Dropped
 

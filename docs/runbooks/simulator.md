@@ -120,6 +120,20 @@ To paste instead: `printf 'Kavya Nair' | xcrun simctl pbcopy booted`, `tap` the 
 
 There is no reliable "clear the field": to start a form again, Cancel and Discard.
 
+### Switches, toasts, Photos and Files (session 11)
+
+- **A switch (iOS 26):** the tool's instant `tap` sometimes does not move it; `tap` with `duration` 0.15 does. Check
+  the switch and the row after each tap.
+- **An Undo toast stays 8 s.** Tap Undo straight after the action (`sleep 1.5`, then the tap at the toast's place),
+  without reading a screenshot in between: a screenshot read can take longer than the toast.
+- **A picture in Photos:** `xcrun simctl addmedia booted <file.png>`. A UPI QR can be made on the Mac with Core Image
+  (a short Swift script: `CIFilter.qrCodeGenerator`, scaled ×12, a white margin, `NSBitmapImageRep` to PNG).
+- **A file saved to Files** ("On My iPhone") lands in the device's `File Provider Storage`: `find
+  ~/Library/Developer/CoreSimulator/Devices/<udid> -name 'fees-*.csv' -mmin -5`. Numbers is "Numbers Creator Studio"
+  on this Mac; `osascript -e 'tell application "Numbers Creator Studio" to tell table 1 of sheet 1 of front document to
+  get {row count, column count}'` reads it back.
+- The signed-in session survives an uninstall, a reinstall and `supabase db reset` (the seed keeps the tutor's id).
+
 ## 7. Confirm a write in the database
 
 ```bash

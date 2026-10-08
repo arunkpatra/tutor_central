@@ -283,8 +283,13 @@ number on a due row ("Ramesh Kumar · +91 98848 43831"), "Reminded Tue 6 Oct" in
 opened, "Paid by UPI on 4 Oct" on a paid row, "Waived · <reason>" on a waived row; on the right the amount `numberRow`
 over a compact chip (Paid `ok`, Due `due`, Overdue `overdue`, Waived neutral); a due or overdue row carries a second
 line of two 44 pt buttons, radius 14: Remind (secondary, `bell`) and Mark paid (primary, `checkmark`). In All, due rows
-come first, then paid, then waived, each group by name. The same row lists a student's months on their fees screen
+come first, then paid, then waived, each group by name. The row does not press, its name included. The same row lists a student's months on their fees screen
 (the month as the title) and this month on the student detail.
+
+**As built (session 11):** the boards' money pair draws its numbers white through a CSS typo in their source; the
+numbers are `due` and `ok` as written here. A past month's Outstanding line reads "1 parent, overdue". The on-sheet
+row's label is 15 600 (700 for the total), as P5-Generate draws. On the fee sheets the toast sits above the footer
+button.
 
 **Overdue banner (Fees, the current month):** the Banner pattern in `overdue` with `exclamationmark.circle` and a
 chevron: "₹1,000 overdue from September · 1 parent"; tapping moves the month to the latest month with an overdue fee.
@@ -339,7 +344,8 @@ its optional field and the helper "Added to reminders when set, for parents who 
 switch row "Offer a receipt after Mark paid" and its line. Saves as you go, as Settings does.
 
 **Student detail, Fees:** this month's fee row with its buttons when due; See all opens the student's fees (pushed,
-"Hemanth's fees"): the money pair for the months with a fee, then one row per month, newest first, and a footnote
+"Hemanth's fees"): the money pair for the months with a fee, then one row per month, newest first (a waived month
+offers Mark paid alone across the row, D34), and a footnote
 ("Months before Hemanth joined have no fee. A month's fee is made when you generate that month.").
 
 **Reports (pushed from More):** the nav row with Back and the quiet Share on the right; the month header; a

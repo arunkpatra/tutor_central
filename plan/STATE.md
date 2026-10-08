@@ -3,12 +3,12 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-08, session 10 (the Phase 5 boards and plan, on Fable). **Session 10:** Phase 0 step 0.6 done: 27 Phase 5 boards in row 8 of the canvas, approved, mirrored into `docs/design/`; `plan/phase-05-plan.md` written and approved (15 tasks, 6 pull requests, no migration); `resume/010-phase-5-build.md` written. **Next:** the Phase 5 build in a fresh Opus 5.5 session from `resume/010-phase-5-build.md`. **Session 9:** Phase 4 done: PRs #36 to #42 as
-the plan's seven, the final review's fixes #44 (one Critical, four Important); migrations 0004 `save_attendance` and
-0005 `message_log.about_date` in production; the D32 hand run of every Phase 4 write path (issue #43, four bugs found
-and fixed); build 0.1.0 (7) on TestFlight, tested on the owner's iPhone: all good. U1 to U4 done. The schedule's
-14-day Coming up confirmed; the boards' figures are illustrative, so none is redrawn. **Next:** Phase 0 step 0.6 (the
-Phase 5 boards) and the Phase 5 plan on Fable, from `resume/009-phase-5-boards-and-plan.md`.
+**Last updated:** 2026-10-08, session 11 (the Phase 5 build, on Opus 5.5). **Session 11:** Phase 5 done: PRs #45 to #49 and
+#51 as the plan's six, #52 the hand run's and the final review's fixes (four Important: Undo after paying a waived fee,
+Settings' stale workspace, the camera's permission and the scanner's way out); the D32 hand run on issue #50 (two bugs
+found and fixed); D34 (a waived month offers Mark paid alone, the owner's call); no migration; build 0.1.0 (8) on
+TestFlight; the owner's camera check: see "In flight". **Next:** Phase 0 step 0.7 (the Phase 6 boards) and the Phase 6
+plan on Fable.
 
 ## Where we are
 
@@ -25,8 +25,9 @@ Phase 5 boards) and the Phase 5 plan on Fable, from `resume/009-phase-5-boards-a
 
 ## In flight
 
-Nothing open. No branch but `main` and `pr-shots` (the merged `phase-2/*`, `phase-3/*` and `phase-4/*` branches remain on
-the remote; delete them when convenient). `main`'s check is green; build 0.1.0 (7) is on TestFlight.
+The owner's camera check on build 0.1.0 (8): Settings → Parent payments → Scan a QR at a real UPI app's QR (the first
+tap asks for the camera). Record the answer in Phase 5's "As built". No branch but `main` and `pr-shots` (the merged
+`phase-*` branches remain on the remote; delete them when convenient). `main`'s check is green.
 
 ## Production
 
@@ -52,10 +53,15 @@ the remote; delete them when convenient). `main`'s check is green; build 0.1.0 (
 - **The owner's call (from Phase 3):** the register cache stays on disk after sign-out, as the Phase 3 plan settled; the
   final review would remove it on sign-out and write it with complete file protection, for a shared phone.
 - **Review minors:** Phase 2's in `plan/sessions/004/record.md`, Phase 3's in `plan/sessions/006/record.md`, Phase 4's
-  eight in `plan/sessions/009/record.md`.
+  eight in `plan/sessions/009/record.md`, Phase 5's thirteen in `plan/sessions/011/record.md`.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
-- **UI polish:** `plan/ui-polish.md`: U5 to U12 open (seen in session 9); U1 to U4 done in #42. U12 closes with Phase 5's PR 3; U9 was offered with the Phase 5 plan and not taken (the owner may still ask for it as its own pull request after a board).
+- **UI polish:** `plan/ui-polish.md`: U5 to U11 and U13 to U15 open; U1 to U4 done in #42, U12 in #47. U9 was offered
+  with the Phase 5 plan and not taken.
+- **Phase 5's deferred minors** (the final review's, `plan/sessions/011/record.md`): a failed read's toasts and the ₹0
+  ledger under the error line, Reports' Share while loading, "The's fee" fallback copy, one retry slot for reads and
+  writes, a double haptic, the UPI field's double write and autocorrect, archived students in Reports' attendance, a
+  failed due-before read failing the month, a QR image kept when its id did not save, CSV formula injection.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).

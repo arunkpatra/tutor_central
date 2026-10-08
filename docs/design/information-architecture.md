@@ -310,8 +310,8 @@ What the boards settle (the parts are in `components.md`, "Phase 5 parts"):
 - **Fees** is the tab's root: the large title with a quiet Payments action (opens Parent payments), the month header
   with chevrons (the current month first; any month can be opened), the money pair, the payee card until the UPI id is
   confirmed once, the overdue banner when an earlier month still has a due fee, All | Due | Paid, and the ledger card
-  with Generate as its section action. The whole fee row is not a link; Remind and Mark paid are its buttons; the name
-  opens the student detail.
+  with Generate as its section action. The fee row is not a link, its name included (as the boards draw it); Remind
+  and Mark paid are its buttons; the student detail is reached through the Students tab.
 - **Overdue** is a fee of a month before the current one that is still due. Its own month's view marks it Overdue; the
   current month's view shows the banner and moves to that month on tap. The Due filter shows the shown month's fees
   only. Outstanding on the hero is the shown month's.
@@ -330,10 +330,11 @@ What the boards settle (the parts are in `components.md`, "Phase 5 parts"):
   and can still be marked paid later from the student's fees.
 - **Parent payments** is one pushed screen, from Settings' row and from Fees' Payments: the UPI id (saved as you go,
   with the Saved mark; editing it clears the confirmation), Scan a QR (the camera) and From Photos (the photo picker),
-  both decoded on the device (`upi://pay?pa=…`) to fill the id and keep the QR image on this iPhone (shown as a
+  both decoded on the device (`upi://pay?pa=…`; the camera, in a sheet a swipe closes, is asked for the first time) to fill the id and keep the QR image on this iPhone (shown as a
   thumbnail with Remove; not synced), the optional payment link, the receipts switch (`send_receipts`).
 - **The student detail's Fees section** reads this month's fee with Remind and Mark paid when due; See all pushes the
-  student's fees: the money pair over the months with a fee and one row per month. Today's Due tile opens Fees at Due.
+  student's fees: the money pair over the months with a fee and one row per month; a waived month there offers Mark paid
+  alone (D34). Today's Due tile opens Fees at this month's Due.
 - **Reports** is pushed from More: the month header, Fees | Attendance, the hero and per-student rows; Share opens the
   CSV sheet that names the file and its columns, then the system share sheet. The fees CSV: student, class, amount,
   status, paid on, paid by, reminded on. The attendance CSV: student, class, present, absent, percentage.
