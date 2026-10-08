@@ -62,4 +62,20 @@ import Testing
         #expect(made.studentID == FakeStudentsRepository.akshita && log.logged == [FakeStudentsRepository.akshita])
         #expect(try await log.absences(centre: centre, month: Period(year: 2026, month: 10)).count == 2)
     }
+
+    @Test func theMessageLogRemembersFeeMessages() async throws {
+        let log = FakeMessageLogRepository(logs: [], feeLogs: FakeMessageLogRepository.feeSeed)
+        let october = Period(year: 2026, month: 10)
+        let reminded = try await log.feeLogs(centre: centre, month: october)
+        #expect(reminded.map(\.studentID) == [FakeStudentsRepository.id(4)] && reminded[0].kind == .reminder)
+        #expect(Day(reminded[0].openedAt, calendar: DayHeading.india) == Day(year: 2026, month: 10, day: 6))
+        let made = try await log.logFee(
+            centre: centre, studentID: FakeAttendanceRepository.hemanth, kind: .receipt, month: october
+        )
+        #expect(made.kind == .receipt && log.feeLogged == [made])
+        #expect(try await log.feeLogs(centre: centre, student: FakeAttendanceRepository.hemanth)
+            .map(\.kind) == [.receipt])
+        let september = try await log.feeLogs(centre: centre, month: Period(year: 2026, month: 9))
+        #expect(september.map(\.studentID) == [FakeStudentsRepository.id(8)])
+    }
 }

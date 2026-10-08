@@ -29,4 +29,22 @@ import Testing
         await #expect(throws: URLError.self) { try await fake.updateProfile(displayName: "x") }
         await #expect(throws: Never.self) { try await fake.updateProfile(displayName: "x") }
     }
+
+    @Test func paymentsAreWrittenOneColumnAtATime() async throws {
+        let repo = FakeCentreRepository(workspace: FakeCentreRepository.meeraWorkspace)
+        try await repo.updateUPI(id: repo.workspace?.centre.id ?? UUID(), upiID: "meera@ybl")
+        #expect(repo.upiUpdates == ["meera@ybl"] && repo.workspace?.centre.payments.upiID == "meera@ybl")
+        #expect(repo.workspace?.centre.payments.upiConfirmedAt == nil, "a changed id is unconfirmed again")
+        try await repo.confirmUPI(id: UUID(), at: FakeCountsRepository.fixedNow)
+        #expect(repo.workspace?.centre.payments.upiConfirmedAt == FakeCountsRepository.fixedNow)
+        #expect(repo.confirmations == [FakeCountsRepository.fixedNow])
+        try await repo.updatePaymentLink(id: UUID(), link: "https://pay.example/meera")
+        try await repo.updateSendReceipts(id: UUID(), on: false)
+        #expect(repo.linkUpdates == ["https://pay.example/meera"] && repo.receiptUpdates == [false])
+        #expect(repo.workspace?.centre.payments.paymentLink == "https://pay.example/meera")
+        #expect(repo.workspace?.centre.payments.sendReceipts == false)
+        #expect(FakeCentreRepository.meeraWorkspace.centre.payments.upiConfirmedAt != nil)
+        #expect(FakeCentreRepository.meeraWorkspaceUnconfirmed.centre.payments.needsConfirmation)
+        #expect(FakeCentreRepository.meeraWorkspaceWithoutUPI.centre.payments.upiID == nil)
+    }
 }

@@ -14,6 +14,9 @@ public struct Dependencies: Sendable {
     public let messages: any MessageLogRepository
     public let events: any EventsRepository
     public let tasks: any TasksRepository
+    public let fees: any FeesRepository
+    /// The UPI QR image, kept on this iPhone only.
+    public let qrImages: any QRImageStore
     /// The register is kept on disk for the next launch (`RegisterCache`); the fixtures never write a file.
     public let cachesRegister: Bool
     public let now: @Sendable () -> Date
@@ -32,6 +35,8 @@ public struct Dependencies: Sendable {
         messages: any MessageLogRepository,
         events: any EventsRepository,
         tasks: any TasksRepository,
+        fees: any FeesRepository,
+        qrImages: any QRImageStore,
         cachesRegister: Bool,
         now: @escaping @Sendable () -> Date,
         fixedClock: Bool = false,
@@ -46,6 +51,8 @@ public struct Dependencies: Sendable {
         self.messages = messages
         self.events = events
         self.tasks = tasks
+        self.fees = fees
+        self.qrImages = qrImages
         self.cachesRegister = cachesRegister
         self.now = now
         self.fixedClock = fixedClock
@@ -67,6 +74,8 @@ public struct Dependencies: Sendable {
             messages: SupabaseMessageLogRepository(client: client),
             events: SupabaseEventsRepository(client: client),
             tasks: SupabaseTasksRepository(client: client),
+            fees: SupabaseFeesRepository(client: client),
+            qrImages: FileQRImageStore(),
             cachesRegister: true,
             now: { Date() },
             bundleVersion: version

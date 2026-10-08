@@ -11,4 +11,10 @@ public protocol CentreRepository: Sendable {
     func updateCentreName(id: UUID, name: String) async throws
     func updateWhatsAppNumber(id: UUID, number: String?) async throws
     func updateProfile(displayName: String) async throws
+    /// The UPI id; a changed id is unconfirmed again (`upi_confirmed_at` null in the same update).
+    func updateUPI(id: UUID, upiID: String?) async throws
+    func updatePaymentLink(id: UUID, link: String?) async throws
+    func updateSendReceipts(id: UUID, on: Bool) async throws
+    /// "That's right" on Fees' payee card.
+    func confirmUPI(id: UUID, at: Date) async throws
 }
