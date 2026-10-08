@@ -96,28 +96,10 @@ struct ScanReviewView: View {
     }
 
     private func fixSheet(_ row: ScanRow) -> some View {
-        let form = StudentFormStore(
-            mode: .fix(row.draft(classID: store.classID)), classes: store.register.activeClasses,
-            today: store.register.today
-        )
-        return StudentFormSheet(
-            store: form, showsFocus: boardState == .edit, autofocus: false,
-            onSave: { draft in
-                var fixed = row
-                fixed.name = draft.trimmedName
-                fixed.phone = draft.parentPhone
-                fixed.fee = draft.fee
-                fixed.parentName = draft.trimmedParentName ?? ""
-                fixed.classID = draft.classID == store.classID ? nil : draft.classID
-                store.update(fixed)
-                return true
-            },
-            onClose: { discardIfBlank(row) },
-            onRemove: {
-                fixing = nil
-                store.remove(row.id)
-            }
-        )
+        FixRowSheet(row: row, store: store, showsFocus: boardState == .edit) { discardIfBlank(row) } remove: {
+            fixing = nil
+            store.remove(row.id)
+        }
     }
 
     /// A row added by hand and closed without a name goes again.
