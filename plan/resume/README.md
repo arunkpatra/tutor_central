@@ -14,3 +14,4 @@ phase and slice, what to read first, what is already true, what to do and what t
 | 006 | `006-simulator-runbook.md` | Issue #34: research how to drive the app in the Simulator against the local stack reliably, write the runbook, link it from `CLAUDE.md`, prove it end to end; Opus 5.5 |
 | 007 | `007-phase-4-boards-and-plan.md` | Phase 4 (attendance, schedule, tasks, Today live): Phase 0 step 0.5 (the Phase 4 boards) and `plan/phase-04-plan.md` on Fable 5.1, then resume 008 for the build |
 | 008 | `008-phase-4-build.md` | Phase 4, the build: execute `plan/phase-04-plan.md` natively on Opus 5.5, seven pull requests, the hand runs by the runbook, then the review |
+| 009 | `009-phase-5-boards-and-plan.md` | Phase 5 (fees, UPI settings, reminders, receipts, reports): Phase 0 step 0.6 (the Phase 5 boards) and `plan/phase-05-plan.md` on Fable 5.1, then resume 010 for the build |

@@ -234,8 +234,8 @@ the symbol named in `components.md`.
 
 ## Numbers in code
 
-Values the code needs that are not visual tokens: the "in N min" threshold for "next class" is 90 min before
-start to the end of the class; a task falls off Today one day after it is done; a toast with undo waits 8 s
-before committing; the month of fees opens on the current month; an event's note is at most 500 characters and its
-title 120; Today's "Coming up" is the next seven days' events and
-the schedule's the next fourteen (confirmed by the owner, 2026-10-08); a done task stays on the Tasks screen until cleared.
+Values the code needs that are not visual tokens: the "in N min" threshold for "next class" is 90 min before start to
+the end of the class; a task falls off Today one day after it is done; a toast with undo waits 8 s before committing;
+the month of fees opens on the current month; an event's note is at most 500 characters and its title 120; Today's
+"Coming up" is the next seven days' events and the schedule's the next fourteen (confirmed by the owner, 2026-10-08);
+a done task stays on the Tasks screen until cleared.

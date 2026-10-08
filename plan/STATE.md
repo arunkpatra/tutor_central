@@ -5,10 +5,10 @@ short and true. History belongs in git and in the phase files, not here.
 
 **Last updated:** 2026-10-08, session 9 (Phase 4 built, on Opus 5.5). **Session 9:** Phase 4 done: PRs #36 to #42 as
 the plan's seven, the final review's fixes #44 (one Critical, four Important); migrations 0004 `save_attendance` and
-0005 `message_log.about_date` in production; the D32 hand run of every Phase 4 write path (issue #43, four bugs found and
-fixed); build 0.1.0 (7) on TestFlight, tested on the owner's iPhone: all good. U1 to U4 done. The schedule's 14-day Coming up
-confirmed; the boards' figures are illustrative, so none is redrawn. **Next:** Phase 0 step 0.6 (the Phase 5 boards)
-on Fable.
+0005 `message_log.about_date` in production; the D32 hand run of every Phase 4 write path (issue #43, four bugs found
+and fixed); build 0.1.0 (7) on TestFlight, tested on the owner's iPhone: all good. U1 to U4 done. The schedule's
+14-day Coming up confirmed; the boards' figures are illustrative, so none is redrawn. **Next:** Phase 0 step 0.6 (the
+Phase 5 boards) and the Phase 5 plan on Fable, from `resume/009-phase-5-boards-and-plan.md`.
 
 ## Where we are
 
