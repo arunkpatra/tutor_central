@@ -36,3 +36,52 @@ export type ScanRegisterInput = z.infer<typeof ScanRegisterInput>;
 /** POST /ai/check-paper: up to six page photos and the marking scheme. */
 export const CheckPaperInput = z.object({ pages: z.array(Image).min(1).max(6), markingScheme: z.string().min(1).max(4000) });
 export type CheckPaperInput = z.infer<typeof CheckPaperInput>;
+
+// The outputs Claude is held to (structured outputs, src/claude.ts); the app decodes the same shapes.
+export const PaperOutput = z.object({
+  title: z.string(),
+  sections: z
+    .array(
+      z.object({
+        title: z.string(),
+        marksEach: z.number().int().min(1),
+        questions: z
+          .array(z.object({ number: z.number().int().min(1), text: z.string(), marks: z.number().int().min(1), answer: z.string() }))
+          .min(1),
+      }),
+    )
+    .min(1),
+});
+export type PaperOutput = z.infer<typeof PaperOutput>;
+
+export const QuestionSetOutput = z.object({
+  title: z.string(),
+  instructions: z.string().nullable(),
+  questions: z.array(z.object({ number: z.number().int().min(1), text: z.string(), answer: z.string() })).min(1),
+});
+export type QuestionSetOutput = z.infer<typeof QuestionSetOutput>;
+
+export const NoteOutput = z.object({ note: z.string().min(1) });
+export type NoteOutput = z.infer<typeof NoteOutput>;
+
+export const ScanOutput = z.object({
+  rows: z.array(z.object({ name: z.string().min(1), phone: z.string().nullable(), fee: z.number().int().min(0).nullable() })),
+});
+export type ScanOutput = z.infer<typeof ScanOutput>;
+
+/** A mark above its question's maximum is not refused here: the app clamps it on arrival and says so. */
+export const CheckOutput = z.object({
+  questions: z
+    .array(
+      z.object({
+        number: z.number().int().min(1),
+        text: z.string(),
+        note: z.string(),
+        marks: z.number().int().min(0),
+        of: z.number().int().min(1),
+      }),
+    )
+    .min(1),
+  summary: z.string(),
+});
+export type CheckOutput = z.infer<typeof CheckOutput>;
