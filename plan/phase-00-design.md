@@ -1,6 +1,6 @@
 # Phase 0: Design
 
-**Status:** In progress (step 0.1 drawn 2026-10-07). **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
+**Status:** In progress: steps 0.1 to 0.4 approved (0.4 on 2026-10-08); 0.5 next. **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
 
 ## Goal
 

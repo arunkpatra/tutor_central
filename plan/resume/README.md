@@ -10,3 +10,4 @@ phase and slice, what to read first, what is already true, what to do and what t
 | 002 | `002-phase-2-plan.md` | Phase 2 (shell, sign-in, onboarding, first TestFlight): write and approve `plan/phase-02-plan.md` on Fable 5.1, then resume 003 for the build |
 | 003 | `003-phase-2-build.md` | Phase 2, the build: execute `plan/phase-02-plan.md` natively on Opus 5.5, nine pull requests, then the review |
 | 004 | `004-phase-3-boards-and-plan.md` | Phase 3 (students and classes): Phase 0 step 0.4 (the Phase 3 boards) and `plan/phase-03-plan.md` on Fable 5.1, then resume 005 for the build |
+| 005 | `005-phase-3-build.md` | Phase 3, the build: execute `plan/phase-03-plan.md` natively on Opus 5.5, eight pull requests, then the review |

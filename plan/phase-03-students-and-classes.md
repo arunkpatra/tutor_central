@@ -1,6 +1,6 @@
 # Phase 3: Students and classes
 
-**Status:** Not started. **Depends on:** Phase 2; Phase 0's Phase 3 boards approved.
+**Status:** Planned (session 5, 2026-10-08): `phase-03-plan.md` approved; the build next. **Depends on:** Phase 2 (done); Phase 0's Phase 3 boards (approved 2026-10-08, `docs/design/mockups/P3-*`).
 
 ## Goal
 

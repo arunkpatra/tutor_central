@@ -3,31 +3,33 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-07, session 4. **Phase 2 done.** PRs #9 to #23 merged (the last two the final
-review's fixes); build 0.1.0 (4) is on TestFlight; (3) is on the owner's iPhone, signed in with Apple, on Today. Decisions D26 to D30 taken. The owner
-wants a UI polish pass later. **Next:** the owner chooses: UI polish, Phase 0 step 0.4 (Phase 3 boards), or the
-website (Phase 8).
+**Last updated:** 2026-10-08, session 5. **Phase 0 step 0.4 approved** (the 22 Phase 3 boards, row 6 of the canvas,
+mirrored into `docs/design/`). **Phase 3 planned:** `plan/phase-03-plan.md` approved by the owner. **Next:** the
+Phase 3 build in a fresh Opus 5.5 session from `plan/resume/005-phase-3-build.md` (eight pull requests, then the
+review). After it: Phase 0 step 0.5 (the Phase 4 boards) on Fable, or the owner's UI polish pass, or the website.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1, 0.2 and 0.3 approved, plus the app icon (D29); 0.4 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md` |
+| 0 Design | In progress: 0.1 to 0.4 approved, plus the app icon (D29); 0.5 next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
-| 2 Shell and sign-in | Done, PRs #9 to #21 | "As built" in `phase-02-shell-and-sign-in.md` |
-| 3 to 7 | Not started | Scoped in their files |
+| 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
+| 3 Students and classes | Planned, not started | `phase-03-plan.md` (19 tasks, 8 PRs, one migration: 0003 `archive_class`); build from `resume/005-phase-3-build.md` |
+| 4 to 7 | Not started | Scoped in their files |
 | 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them) |
 
 ## In flight
 
-Nothing open. No branch but `main` and `pr-shots`. The review fixes (PRs #22, #23) are merged (the owner fixed
-GitHub billing and merged them); `main`'s check is green at `88d9e02`; build 0.1.0 (4) from it is on TestFlight.
+Nothing open. No branch but `main` and `pr-shots` (the merged `phase-2/*` branches remain on the remote; delete them
+when convenient). `main`'s check is green; build 0.1.0 (4) is on TestFlight.
 
 ## Production
 
 - **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 and 0002. Migrations go up
   only through `deploy.yml`'s migrate job, before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and
-  `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
+  `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`. Phase 3 adds 0003 (`archive_class`) through the
+  same lane.
 - **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
   and secret), email code, password; redirect URL `tutorcentral://auth-callback`. Email through Resend SMTP from
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
@@ -42,13 +44,16 @@ GitHub billing and merged them); `main`'s check is green at `88d9e02`; build 0.1
 
 ## Open items
 
-- **Review minors** (Phase 2's final review): the list is in `plan/sessions/004/record.md`, "Deferred minors". Take
-  them with the UI polish slice or the phase that touches each.
+- **Design documents to correct at the end of the Phase 3 build** (plan Task 19): the "+" menu is a popover with the
+  board's rows, not a system `Menu`; removal from a class is the row's context menu, not a swipe; the
+  `class-archive-confirm` launch state joins the table in `information-architecture.md`.
+- **Review minors** (Phase 2's final review): the list is in `plan/sessions/004/record.md`, "Deferred minors". The
+  Phase 3 plan takes the ones in its files (Task 18: ASCII digits, shadows parsed once, two haptics); the rest wait
+  for the polish slice or the phase that touches them.
 - **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
   owner's call before App Store review.
-
 - **UI polish** (owner, after the first install): a pass over the built screens; seen so far: Today's content
-  scrolls under the status bar.
+  scrolls under the status bar. Its own slice with its own boards where anything changes.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
