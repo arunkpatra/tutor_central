@@ -33,3 +33,14 @@ public extension Sequence<Money> {
         reduce(.zero, +)
     }
 }
+
+extension Money: Codable {}
+
+public extension Money {
+    /// What a tutor types in a fee field: digits with any ₹, commas and spaces; nothing else.
+    init?(typed: String) {
+        let kept = typed.filter { !$0.isWhitespace && $0 != "," && $0 != "₹" }
+        guard !kept.isEmpty, kept.allSatisfy({ $0.isASCII && $0.isNumber }), let rupees = Int(kept) else { return nil }
+        self.init(rupees: rupees)
+    }
+}

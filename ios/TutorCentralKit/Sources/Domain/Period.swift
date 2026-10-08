@@ -1,7 +1,7 @@
 import Foundation
 
 /// A fee month. Stored as the first day of the month (`fee_invoices.period`).
-public struct Period: Hashable, Sendable, Comparable {
+public struct Period: Hashable, Sendable, Comparable, Codable {
     public let year: Int
     public let month: Int
 

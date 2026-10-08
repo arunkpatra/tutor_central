@@ -31,3 +31,5 @@ public struct PhoneNumber: Hashable, Sendable {
         "+91 \(nationalDigits.prefix(5)) \(nationalDigits.dropFirst(5))"
     }
 }
+
+extension PhoneNumber: Codable {}
