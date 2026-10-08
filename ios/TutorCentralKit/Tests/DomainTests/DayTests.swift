@@ -32,4 +32,10 @@ struct DayTests {
         #expect(DayHeading.india.component(.hour, from: day.date(in: DayHeading.india)) == 0)
         #expect(try #require(Day(year: 2026, month: 9, day: 30)) < day)
     }
+
+    @Test func theWordsThePhaseFourBoardsUse() throws {
+        let saturday = try #require(Day(year: 2026, month: 10, day: 10))
+        #expect(saturday.shortWeekdayText == "Sat 10 Oct" && saturday.weekdayLongText == "Saturday 10 October")
+        #expect(saturday.period == Period(year: 2026, month: 10))
+    }
 }
