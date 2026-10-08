@@ -17,10 +17,7 @@ extension RootView {
             workspace: workspace, register: register(for: workspace), fees: deps.fees, messages: deps.messages,
             centres: deps.centres, now: deps.now
         )
-        made.onWorkspaceChanged = { [session, shell] changed in
-            session.workspaceChanged(changed)
-            shell.today?.workspaceChanged(changed)
-        }
+        made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingPayments(from: changed) } }
         made.onFeesChanged = { [shell] in
             Task { await shell.register?.refresh() }
         }
@@ -38,8 +35,20 @@ extension RootView {
 
     /// Today's Due tile: the tab at Due.
     func openFeesDue(in workspace: Workspace) {
-        feesStore(for: workspace).filter = .due
-        shell.tabs.select(.fees)
+        let store = feesStore(for: workspace)
+        shell.tabs.paths[.fees] = []
+        shell.tabs.selected = .fees
+        Task { await store.showDue() }
+    }
+
+    /// A screen's change, merged onto the session's current workspace with only the fields that screen owns, then
+    /// handed to every store that shows the workspace (review: Settings' older copy put back a replaced UPI id).
+    func applyWorkspace(_ merge: (Workspace) -> Workspace) {
+        guard case let .ready(current) = session.state else { return }
+        let merged = merge(current)
+        session.workspaceChanged(merged)
+        shell.today?.workspaceChanged(merged)
+        shell.fees?.workspaceChanged(merged)
     }
 
     /// Remind or Mark paid from the Students tab (the detail, a student's fees): the Fees tab at that month with the
@@ -85,11 +94,7 @@ extension RootView {
             PaymentsView(
                 store: PaymentsStore(workspace: workspace, centres: deps.centres, qrImages: deps.qrImages),
                 boardState: launch.flatMap(Self.paymentsBoardState),
-                onWorkspaceChanged: { changed in
-                    session.workspaceChanged(changed)
-                    shell.today?.workspaceChanged(changed)
-                    shell.fees?.workspaceChanged(changed)
-                },
+                onWorkspaceChanged: { changed in applyWorkspace { $0.takingPayments(from: changed) } },
                 onMessage: { toasts.show($0) }
             )
         }

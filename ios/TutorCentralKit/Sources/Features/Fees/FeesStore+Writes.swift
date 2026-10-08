@@ -32,7 +32,11 @@ public extension FeesStore {
         defer { writing = false }
         do {
             let at = FeeInvoice.paidAt(for: day, today: today, now: now(), calendar: calendar)
+            let before = invoice(id)
             let paid = try await fees.markPaid(id: id, method: method, at: at)
+            if before?.status == .waived, let reason = before?.waivedReason {
+                reasonsBeforePaid[id] = reason
+            }
             replace(paid)
             succeeded()
             undo = UndoToast(text: "\(firstName(of: paid))'s fee marked paid\(Self.by(method)).", invoiceID: id)
@@ -48,15 +52,23 @@ public extension FeesStore {
         }
     }
 
-    /// Undo: the one fee back to due, nothing paid, a second write.
+    /// Undo: the one fee back as it was, nothing paid, a second write: due, or waived again with its reason.
     func undoPaid(_ id: UUID) async -> Bool {
         let name = invoice(id).map(firstName(of:)) ?? "The"
         undo = nil
         writing = true
         defer { writing = false }
         do {
-            let due = try await fees.markDue(id: id)
-            replace(due)
+            let restored = if let reason = reasonsBeforePaid[id] {
+                try await fees.waive(id: id, reason: reason)
+            } else {
+                try await fees.markDue(id: id)
+            }
+            reasonsBeforePaid[id] = nil
+            replace(restored)
+            if sheet == .receipt(id) {
+                sheet = nil
+            }
             succeeded()
             onFeesChanged()
             return true

@@ -10,3 +10,22 @@ public struct Workspace: Hashable, Sendable {
         self.profile = profile
     }
 }
+
+public extension Workspace {
+    /// Settings' fields (the centre's name and number, the profile) from `edited`; the payments stay as they are here,
+    /// so an older copy cannot put back a UPI id another screen has replaced.
+    func takingSettings(from edited: Workspace) -> Workspace {
+        var merged = self
+        merged.centre.name = edited.centre.name
+        merged.centre.whatsappNumber = edited.centre.whatsappNumber
+        merged.profile = edited.profile
+        return merged
+    }
+
+    /// The payment settings alone from `edited` (Parent payments, Fees' That's right).
+    func takingPayments(from edited: Workspace) -> Workspace {
+        var merged = self
+        merged.centre.payments = edited.centre.payments
+        return merged
+    }
+}

@@ -18,11 +18,7 @@ extension RootView {
             SettingsView(
                 store: store,
                 boardState: launch == .settings,
-                onWorkspaceChanged: { changed in
-                    session.workspaceChanged(changed)
-                    shell.today?.workspaceChanged(changed)
-                    shell.fees?.workspaceChanged(changed)
-                },
+                onWorkspaceChanged: { changed in applyWorkspace { $0.takingSettings(from: changed) } },
                 onMessage: { toasts.show($0) },
                 openPayments: { shell.tabs.push(.payments) }
             )

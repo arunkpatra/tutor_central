@@ -84,6 +84,8 @@ import Observation
     let now: @Sendable () -> Date
     let calendar: Calendar
     var lastFailed: (@MainActor () async -> Void)?
+    /// A waived fee's reason while it is marked paid, so its Undo waives it again rather than leaving it due.
+    var reasonsBeforePaid: [UUID: String] = [:]
     /// True once a month was asked for (the tab's first open, a link, an action from the student detail).
     private var opened = false
     /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
@@ -213,6 +215,13 @@ import Observation
     /// The same month again: after a write from elsewhere (the student detail's actions) or a pull.
     public func reload() async {
         await open(month: month)
+    }
+
+    /// Today's Due tile: this month's fees at Due, whichever month was open (a link may have left another).
+    public func showDue() async {
+        filter = .due
+        guard month != today.period || !loaded else { return }
+        await open(month: today.period)
     }
 
     /// The banner: the latest month with a fee still due, from any month.

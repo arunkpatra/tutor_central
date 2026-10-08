@@ -1,3 +1,4 @@
+import AVFoundation
 import Data
 import DesignSystem
 import Domain
@@ -72,12 +73,14 @@ public struct PaymentsView: View {
             guard let item else { return }
             Task { await readPhoto(item) }
         }
-        .fullScreenCover(isPresented: $scanning) {
+        // A sheet, not a full-screen cover: a swipe down closes the camera when there is no QR to hand (review).
+        .sheet(isPresented: $scanning) {
             QRScannerView { payload in
                 scanning = false
                 Task { _ = await store.applyQR(payload: payload, image: Data()) }
             }
             .ignoresSafeArea()
+            .presentationDragIndicator(.visible)
         }
     }
 
@@ -156,13 +159,22 @@ public struct PaymentsView: View {
         }
     }
 
-    /// The camera; the simulator has none, so it says so.
+    /// The camera: asked for the first time; a refusal says where to allow it; the simulator has none and says so.
     private func scan() {
-        guard QRScannerView.isAvailable else {
-            onMessage("No camera on this device.")
-            return
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch CameraAccess.decide(supported: QRScannerView.isSupported, status: status) {
+        case .scan: scanning = true
+        case .ask:
+            Task {
+                if await AVCaptureDevice.requestAccess(for: .video) {
+                    scanning = true
+                } else {
+                    onMessage(CameraAccess.deniedMessage)
+                }
+            }
+        case .denied: onMessage(CameraAccess.deniedMessage)
+        case .noCamera: onMessage(CameraAccess.noCameraMessage)
         }
-        scanning = true
     }
 
     /// A picture from Photos: its QR read on this iPhone, the payee filled, the picture kept.
