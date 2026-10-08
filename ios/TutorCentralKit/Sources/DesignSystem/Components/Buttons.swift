@@ -78,21 +78,24 @@ public struct SecondaryButtonStyle: ButtonStyle {
     }
 }
 
-/// Quiet: accentText 15 600, no fill, no border. Inline in headers and rows; `size` gives it a button's height.
+/// Quiet: accentText 15 600, no fill, no border. Inline in headers and rows; `size` gives it a button's height; a
+/// `tone` colours it instead (a quiet Remove in `overdue`, P5-Payments-QR).
 public struct QuietButtonStyle: ButtonStyle {
     let size: ButtonSize?
     let emphasised: Bool
+    let tone: StatusTone?
     @Environment(\.isEnabled) private var isEnabled
 
-    public init(size: ButtonSize? = nil, emphasised: Bool = false) {
+    public init(size: ButtonSize? = nil, emphasised: Bool = false, tone: StatusTone? = nil) {
         self.size = size
         self.emphasised = emphasised
+        self.tone = tone
     }
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .typeStyle(emphasised ? Tokens.buttonStrong : Tokens.buttonSecondary)
-            .foregroundStyle(Tokens.accentText.color)
+            .foregroundStyle((tone?.color ?? Tokens.accentText).color)
             .frame(minHeight: size?.rawValue)
             .padding(.horizontal, size == nil ? 0 : Tokens.rowPaddingHorizontal)
             .contentShape(.rect)
@@ -200,6 +203,10 @@ public extension ButtonStyle where Self == QuietButtonStyle {
 
     static func quiet(_ size: ButtonSize? = nil, emphasised: Bool = false) -> Self {
         .init(size: size, emphasised: emphasised)
+    }
+
+    static func quiet(tone: StatusTone) -> Self {
+        .init(tone: tone)
     }
 }
 

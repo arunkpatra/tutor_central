@@ -225,55 +225,6 @@ public struct ClassRow: View {
     }
 }
 
-/// Fee: name and phone; the amount and a compact status chip; on a due row a second line of two buttons, Remind
-/// (secondary, bell) and Mark paid (primary, checkmark.circle), 10 apart.
-public struct FeeRow: View {
-    let name: String
-    let phone: String
-    let amount: String
-    let status: (StatusTone, String)
-    let onRemind: (() -> Void)?
-    let onMarkPaid: (() -> Void)?
-
-    public init(
-        name: String,
-        phone: String,
-        amount: String,
-        status: (StatusTone, String),
-        onRemind: (() -> Void)? = nil,
-        onMarkPaid: (() -> Void)? = nil
-    ) {
-        self.name = name
-        self.phone = phone
-        self.amount = amount
-        self.status = status
-        self.onRemind = onRemind
-        self.onMarkPaid = onMarkPaid
-    }
-
-    public var body: some View {
-        VStack(spacing: Tokens.tileGap) {
-            HStack(alignment: .top, spacing: Tokens.rowPaddingDense) {
-                RowTitles(title: name, subtitle: phone)
-                VStack(alignment: .trailing, spacing: Tokens.rowGapInner * 2) {
-                    Text(amount).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
-                    Chip(.status(status.0, status.1), compact: true)
-                }
-            }
-            .accessibilityElement(children: .combine)
-            if let onRemind, let onMarkPaid {
-                HStack(spacing: Tokens.tileGap) {
-                    Button(action: onRemind) { Label("Remind", systemImage: "bell") }.buttonStyle(.secondary(.row))
-                    Button(action: onMarkPaid) { Label("Mark paid", systemImage: "checkmark.circle") }
-                        .buttonStyle(.primary(.row))
-                }
-            }
-        }
-        .padding(.vertical, Tokens.rowPaddingDense)
-        .padding(.horizontal, Tokens.rowPaddingHorizontal)
-    }
-}
-
 /// Attendance (Phase 4): the whole row toggles and one pill says the state, Present (ok fill, okInk) or Absent
 /// (overdue fill, overdueInk), 96 × 40, radius 13, segmentActive. Selection haptic. The step 0.2 row's two toggles
 /// left too little room for a name (components.md, Rows).
