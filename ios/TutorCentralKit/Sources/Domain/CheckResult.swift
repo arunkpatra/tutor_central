@@ -95,7 +95,7 @@ public enum SchemeSource: Hashable, Sendable {
         case .paper: return true
         case let .typed(text):
             let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            return !trimmed.isEmpty && trimmed.count <= Self.typedLimit
+            return !trimmed.isEmpty && trimmed.storedCount <= Self.typedLimit
         }
     }
 }

@@ -284,7 +284,8 @@ public struct MultilineWell: View {
                 }
                 .overlay(alignment: .bottomTrailing) {
                     if counter {
-                        Text("\(text.count) of \(limit.formatted())")
+                        // Counted as the database counts, as Domain's limits are (D48: `storedCount`).
+                        Text("\(text.unicodeScalars.count) of \(limit.formatted())")
                             .typeStyle(Tokens.caption)
                             .foregroundStyle(Tokens.text3.color)
                             .padding(.bottom, Tokens.tileGap)

@@ -19,7 +19,7 @@ public enum NotesAppend {
     public static func append(_ line: String, to notes: String?) -> String? {
         let base = notes ?? ""
         let joined = base.isEmpty || base.hasSuffix("\n") ? base + line : base + "\n" + line
-        return joined.count > limit ? nil : joined
+        return joined.storedCount > limit ? nil : joined
     }
 
     public static func overflow(studentFirstName: String) -> String {

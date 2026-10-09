@@ -46,6 +46,11 @@ test("a scan asks Opus at high effort with the page first, and phones are normal
   expect(normalisePhone("919884843831")).toBe("+919884843831");
   expect(normalisePhone("4321")).toBeNull();
   expect(normalisePhone(null)).toBeNull();
+  // A trunk 0 and 0091 (Phase 6's minor 6), as the app's PhoneNumber reads them; a mobile starts 6 to 9.
+  expect(normalisePhone("09876543210")).toBe("+919876543210");
+  expect(normalisePhone("0091 98765 43210")).toBe("+919876543210");
+  expect(normalisePhone("0987654321")).toBeNull();
+  expect(normalisePhone("1234567890")).toBeNull();
 });
 
 test("a check sends every page in order with the scheme text; a paper's output becomes a scheme", () => {

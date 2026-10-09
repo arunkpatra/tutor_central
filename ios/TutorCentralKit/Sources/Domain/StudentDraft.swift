@@ -67,10 +67,10 @@ public struct StudentDraft: Hashable, Sendable {
         if trimmedName.isEmpty {
             found.insert(.nameMissing)
         }
-        if trimmedName.count > Self.nameLimit {
+        if trimmedName.storedCount > Self.nameLimit {
             found.insert(.nameTooLong)
         }
-        if (trimmedParentName?.count ?? 0) > Self.nameLimit {
+        if (trimmedParentName?.storedCount ?? 0) > Self.nameLimit {
             found.insert(.parentNameTooLong)
         }
         if let fee, fee > Self.feeCeiling {
@@ -80,7 +80,7 @@ public struct StudentDraft: Hashable, Sendable {
            parentPhone == nil {
             found.insert(.phoneInvalid)
         }
-        if (trimmedNotes?.count ?? 0) > Self.notesLimit {
+        if (trimmedNotes?.storedCount ?? 0) > Self.notesLimit {
             found.insert(.notesTooLong)
         }
         if let dateOfBirth,

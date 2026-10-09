@@ -48,10 +48,10 @@ public struct EventDraft: Hashable, Sendable {
         if trimmedTitle.isEmpty {
             found.insert(.titleMissing)
         }
-        if trimmedTitle.count > Self.titleLimit {
+        if trimmedTitle.storedCount > Self.titleLimit {
             found.insert(.titleTooLong)
         }
-        if (trimmedNote?.count ?? 0) > Self.noteLimit {
+        if (trimmedNote?.storedCount ?? 0) > Self.noteLimit {
             found.insert(.noteTooLong)
         }
         if let startTime, let endTime, endTime <= startTime {

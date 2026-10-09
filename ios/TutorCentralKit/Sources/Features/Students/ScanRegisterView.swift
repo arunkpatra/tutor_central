@@ -114,7 +114,11 @@ public struct ScanRegisterView: View {
                 + "check row by row."
         )
         NoticesCard([
-            .init(symbol: "lock", text: "The photo goes to our AI service to be read and is not kept, there or here."),
+            .init(
+                symbol: "lock",
+                text: "The photo goes to our AI service to be read. We keep no copy; the service deletes it "
+                    + "within 30 days."
+            ),
             .init(symbol: "checkmark", text: "Nothing is saved until you have checked every row and tapped Add."),
         ])
         VStack(spacing: Tokens.rowPaddingDense) {

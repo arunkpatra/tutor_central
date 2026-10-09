@@ -95,7 +95,7 @@ public struct NoticesCard: View {
             line: "Take a photo of a page of your register. We read the names into a list you check."
         )
         NoticesCard([
-            .init(symbol: "lock", text: "The photo goes to our AI service to be read and is not kept."),
+            .init(symbol: "lock", text: "The photo goes to our AI service to be read. We keep no copy."),
             .init(symbol: "checkmark", text: "Nothing is saved until you have checked every row and tapped Add."),
         ])
     }
