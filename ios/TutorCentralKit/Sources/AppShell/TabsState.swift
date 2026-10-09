@@ -7,6 +7,8 @@ import SwiftUI
 @MainActor @Observable final class TabsState {
     var selected: AppTab
     var paths: [AppTab: [Route]] = [:]
+    /// Counts the pushes of Scan register: each is a new visit with its own store (`ShellState.scan`).
+    @ObservationIgnored private(set) var scanVisits = 0
 
     init(selected: AppTab = .today) {
         self.selected = selected
@@ -21,6 +23,9 @@ import SwiftUI
     }
 
     func push(_ route: Route) {
+        if route == .scanRegister {
+            scanVisits += 1
+        }
         paths[selected, default: []].append(route)
     }
 

@@ -18,6 +18,7 @@ public struct ScanRegisterView: View {
     @State private var store: ScanStore
     private let boardState: ScanBoardState?
     private let sample: ImageUpload?
+    private let onLeave: () -> Void
     @State private var picked: PhotosPickerItem?
     @State private var scanning = false
     @State private var consent = false
@@ -26,18 +27,23 @@ public struct ScanRegisterView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(ToastCenter.self) private var toasts: ToastCenter?
 
-    /// `sample` is the fixtures' photo for a board state (the simulator has no camera).
-    public init(store: ScanStore, boardState: ScanBoardState? = nil, sample: ImageUpload? = nil) {
+    /// `sample` is the fixtures' photo for a board state (the simulator has no camera); `onLeave` ends the visit when
+    /// the tutor goes back (its store is let go).
+    public init(
+        store: ScanStore, boardState: ScanBoardState? = nil, sample: ImageUpload? = nil,
+        onLeave: @escaping () -> Void = {}
+    ) {
         _store = State(initialValue: store)
         self.boardState = boardState
         self.sample = sample
+        self.onLeave = onLeave
         _consent = State(initialValue: boardState == .consent)
     }
 
     public var body: some View {
         Group {
             if store.stage == .review {
-                ScanReviewView(store: store, boardState: boardState) { dismiss() }
+                ScanReviewView(store: store, boardState: boardState) { leave() }
             } else {
                 screen
             }
@@ -89,7 +95,7 @@ public struct ScanRegisterView: View {
     private var screen: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                BackRow(title: "Scan register") { dismiss() }
+                BackRow(title: "Scan register") { leave() }
                 switch store.stage {
                 case .reading: reading
                 case .nothing: nothing
@@ -223,6 +229,11 @@ public struct ScanRegisterView: View {
         } else {
             store.begin(upload)
         }
+    }
+
+    private func leave() {
+        onLeave()
+        dismiss()
     }
 
     private func setUpBoard() {
