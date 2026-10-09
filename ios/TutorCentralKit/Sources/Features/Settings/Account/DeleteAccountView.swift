@@ -14,21 +14,20 @@ public enum DeleteAccountBoardState: Sendable {
 
 /// Delete account (P7-Delete): what goes, the centre's name typed to confirm, Delete my account (solid destructive,
 /// live only when the name matches, loading while it runs), the line under it by phase; a failure above the field
-/// with Retry. Pushed from Account. `onDone` is AppShell's: it wipes the phone and shows the landing.
+/// with Retry. Pushed from Account. What follows a deletion (the wipe, the landing) is the store's, not the screen's.
 public struct DeleteAccountView: View {
     @State private var store: DeleteAccountStore
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
     private let boardState: DeleteAccountBoardState?
-    private let onDone: () -> Void
+    @FocusState private var focused: Bool
 
-    public init(store: DeleteAccountStore, boardState: DeleteAccountBoardState? = nil, onDone: @escaping () -> Void) {
+    public init(store: DeleteAccountStore, boardState: DeleteAccountBoardState? = nil) {
         if boardState != nil {
             store.typed = store.centreName
         }
         _store = State(initialValue: store)
         self.boardState = boardState
-        self.onDone = onDone
     }
 
     public var body: some View {
@@ -74,9 +73,7 @@ public struct DeleteAccountView: View {
         }
         .onChange(of: store.phase) { _, phase in
             switch phase {
-            case .done:
-                Haptic.play(.success)
-                onDone()
+            case .done: Haptic.play(.success)
             case .failed: Haptic.play(.error)
             default: break
             }
@@ -89,7 +86,7 @@ public struct DeleteAccountView: View {
     }
 
     private var field: some View {
-        Well(label: "Type the centre's name to confirm", focused: false) {
+        Well(label: "Type the centre's name to confirm", focused: focused) {
             TextField(text: $store.typed) {
                 Text(store.centreName).foregroundStyle(Tokens.text3.color)
             }
@@ -99,6 +96,7 @@ public struct DeleteAccountView: View {
             .textInputAutocapitalization(.words)
             .autocorrectionDisabled()
             .submitLabel(.done)
+            .focused($focused)
         }
         .disabled(store.busy)
     }

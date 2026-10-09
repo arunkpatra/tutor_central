@@ -8,6 +8,12 @@ import Testing
 @MainActor struct DeleteAccountStoreTests {
     let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
     let account = FakeAccountRepository()
+    let followUps = FollowUps()
+
+    /// What ran after the deletion, before the store said done.
+    @MainActor final class FollowUps {
+        var count = 0
+    }
 
     func make(
         apple: Bool = true, reauthorize: @escaping @MainActor () async throws(AccountFailure) -> String = { "code-1" }
@@ -18,9 +24,10 @@ import Testing
             students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
             classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil, now: { Date() }
         )
+        let followUps = followUps
         return DeleteAccountStore(
             workspace: FakeCentreRepository.meeraWorkspace, register: register, auth: auth, account: account,
-            reauthorize: reauthorize
+            reauthorize: reauthorize, onDeleted: { followUps.count += 1 }
         )
     }
 
@@ -44,6 +51,22 @@ import Testing
         store.typed = "Bright Minds Tuition"
         await store.delete()
         #expect(account.revoked == ["code-1"] && auth.deleted == 1 && store.phase == .done)
+    }
+
+    /// Run 5: the deletion's own sign-out takes the screen away, so the wipe and the landing's words are the store's
+    /// to run, not the view's.
+    @Test func theFollowUpRunsOnceFromTheStoreAfterTheDeletion() async {
+        let store = make(apple: false)
+        await store.load()
+        store.typed = "Bright Minds Tuition"
+        await store.delete()
+        #expect(followUps.count == 1 && store.phase == .done)
+        auth.nextAccountFailure = .offline
+        let failing = make(apple: false)
+        await failing.load()
+        failing.typed = "Bright Minds Tuition"
+        await failing.delete()
+        #expect(followUps.count == 1)
     }
 
     @Test func aFailedDeleteAfterAppleKeepsTheTutorSignedInAndRetries() async {

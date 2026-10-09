@@ -6,7 +6,8 @@ import Observation
 /// Delete account (P7-Delete, D37, D38): what goes, the centre's name typed, then Apple's confirmation and revocation
 /// for an Apple account, then `delete_account()`. A failure before the deletion leaves everything and the tutor signed
 /// in; Retry runs every step again (a second Apple authorization gives a fresh code). The run is the store's task:
-/// refused while one runs; Back cancels it and a late answer is dropped.
+/// refused while one runs; Back cancels it and a late answer is dropped. Once the account is deleted, `onDeleted` (the
+/// wipe, the landing) runs whatever happened to the screen.
 @MainActor @Observable public final class DeleteAccountStore {
     public struct Failure: Equatable, Sendable {
         public let title: String
@@ -30,18 +31,21 @@ import Observation
     private let auth: any AuthRepository
     private let account: any AccountRepository
     private let reauthorize: @MainActor () async throws(AccountFailure) -> String
+    private let onDeleted: @MainActor () async -> Void
     private var generation = 0
     private var run: Task<Void, Never>?
 
     public init(
         workspace: Workspace, register: any Register, auth: any AuthRepository, account: any AccountRepository,
-        reauthorize: @escaping @MainActor () async throws(AccountFailure) -> String
+        reauthorize: @escaping @MainActor () async throws(AccountFailure) -> String,
+        onDeleted: @escaping @MainActor () async -> Void
     ) {
         centreName = workspace.centre.name
         self.register = register
         self.auth = auth
         self.account = account
         self.reauthorize = reauthorize
+        self.onDeleted = onDeleted
     }
 
     /// The methods (whether Apple must confirm) and the register's counts for the notices.
@@ -94,7 +98,9 @@ import Observation
             }
             phase = .deleting
             try await auth.deleteAccount()
-            guard mine == generation else { return }
+            // The account is gone whatever the screen does now: the deletion's own sign-out can take the screen away
+            // before this line, so the wipe and the landing's words run here, from the store's task.
+            await onDeleted()
             phase = .done
         } catch {
             guard mine == generation else { return }

@@ -71,14 +71,12 @@ extension RootView {
                 store: DeleteAccountStore(
                     workspace: workspace, register: register(for: workspace), auth: deps.auth, account: deps.account,
                     reauthorize: reauthorize
-                ),
-                boardState: launch.flatMap(Self.deleteAccountBoardState)
-            ) {
-                Task {
+                ) {
                     await wipe.run()
                     session.deleted(centreName: workspace.centre.name)
-                }
-            }
+                },
+                boardState: launch.flatMap(Self.deleteAccountBoardState)
+            )
         }
     }
 
