@@ -57,6 +57,12 @@ import UIKit
     public internal(set) var history: [Generation] = []
     public private(set) var historyLoaded = false
     public private(set) var historyError: String?
+    /// When History on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var historySavedAt: Date?
+    /// History's last read failed for the network, not the server.
+    public private(set) var historyOfflineRead = false
+    /// History's copy on this iPhone (AppShell's).
+    public var historyCache: CachedRead<[Generation]>?
     public internal(set) var results: [UUID: Generation] = [:]
     public internal(set) var inFlight: InFlight?
     public internal(set) var failure: Failure?
@@ -121,15 +127,25 @@ import UIKit
 
     public func loadHistory() async {
         await prepare()
+        if !historyLoaded, let cached = historyCache?.load() {
+            history = cached.value
+            historySavedAt = cached.savedAt
+            historyLoaded = true
+        }
         do {
             let loaded = try await historyRepository.generations(centre: workspace.centre.id)
+            historyCache?.keep(loaded, at: now())
+            historySavedAt = nil
+            historyOfflineRead = false
             let ids = Set(loaded.map(\.id))
             history = (Array(results.values.filter { !ids.contains($0.id) }) + loaded)
                 .sorted { $0.createdAt > $1.createdAt }
             historyLoaded = true
             historyError = nil
         } catch {
-            historyError = "Couldn't load History. Check your connection and try again."
+            historyOfflineRead = TransportError.isOffline(error)
+            historyError = historyLoaded && historyOfflineRead
+                ? nil : "Couldn't load History. Check your connection and try again."
         }
     }
 

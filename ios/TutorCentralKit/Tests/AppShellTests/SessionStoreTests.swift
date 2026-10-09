@@ -23,6 +23,8 @@ import Testing
             account: FakeAccountRepository(),
             notifications: FakeNotificationCenter(),
             reminderSettings: ReminderSettingsStore(defaults: UserDefaults(suiteName: "session-tests") ?? .standard),
+            connectivity: FakeConnectivity(),
+            cachesLists: false,
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"

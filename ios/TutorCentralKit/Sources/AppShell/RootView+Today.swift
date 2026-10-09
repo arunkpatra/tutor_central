@@ -11,7 +11,8 @@ extension RootView {
         if case let .ready(workspace) = session.state {
             let store = shell.today ?? TodayStore(
                 workspace: workspace, counts: deps.counts, register: register(for: workspace),
-                attendance: deps.attendance, events: deps.events, tasks: tasksStore(for: workspace), now: deps.now
+                attendance: deps.attendance, events: deps.events, tasks: tasksStore(for: workspace), now: deps.now,
+                cache: cachedRead(workspace, "today")
             )
             TodayView(
                 store: store,
@@ -26,7 +27,8 @@ extension RootView {
                     openAI: { shell.tabs.push(.aiAssistant) }
                 ),
                 ticks: !deps.fixedClock,
-                boardState: launch.flatMap(Self.todayBoardState)
+                boardState: launch.flatMap(Self.todayBoardState),
+                status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead)
             )
             .onAppear {
                 if shell.today == nil {

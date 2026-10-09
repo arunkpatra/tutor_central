@@ -7,11 +7,14 @@ public struct RegisterSnapshot: Codable, Sendable {
     public var students: [Student]
     public var classes: [Classroom]
     public var period: Period
+    /// When it was read (nil in a file written before Phase 7): the offline line says it.
+    public var savedAt: Date?
 
-    public init(students: [Student], classes: [Classroom], period: Period) {
+    public init(students: [Student], classes: [Classroom], period: Period, savedAt: Date? = nil) {
         self.students = students
         self.classes = classes
         self.period = period
+        self.savedAt = savedAt
     }
 }
 

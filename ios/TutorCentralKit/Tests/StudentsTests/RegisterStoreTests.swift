@@ -98,18 +98,21 @@ import Testing
         students.nextError = URLError(.notConnectedToInternet)
         let store = make(cache: cache)
         await store.load()
-        #expect(store.students.allSatisfy { $0.thisMonth == nil } && store
-            .error == "Couldn't refresh. Check your connection and try again.")
+        // Offline with a saved copy: the offline line says so (D39), not the error line.
+        #expect(store.students.allSatisfy { $0.thisMonth == nil } && store.error == nil && store.offlineRead)
     }
 
     @Test func aFailedRefreshKeepsTheRowsAndSaysSo() async {
         let store = make()
         await store.load()
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         await store.refresh()
         #expect(store.students.count == 10 && store.error == "Couldn't refresh. Check your connection and try again.")
         await store.refresh()
         #expect(store.error == nil)
+        students.nextError = URLError(.notConnectedToInternet)
+        await store.refresh()
+        #expect(store.students.count == 10 && store.error == nil && store.offlineRead)
     }
 
     @Test func addingAStudentIsOptimisticAndTheServersRowReplacesIt() async {

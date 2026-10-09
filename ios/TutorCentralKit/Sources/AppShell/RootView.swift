@@ -38,8 +38,18 @@ public struct RootView: View {
             tabs.push(route)
         }
         let shell = ShellState(tabs: tabs)
-        shell.sessionChanged(initial, files: deps.filesDirectory)
+        Self.follow(initial, shell: shell, deps: deps)
         _shell = State(initialValue: shell)
+    }
+
+    /// The shell follows the session: a centre's place, its queue and the queue's runner.
+    static func follow(_ state: SessionStore.State, shell: ShellState, deps: Dependencies) {
+        shell.sessionChanged(state, files: deps.filesDirectory)
+        guard case let .ready(workspace) = state, shell.runner == nil, let queue = shell.queue else { return }
+        shell.runner = QueueRunner(
+            queue: queue, centre: workspace.centre.id, attendance: deps.attendance, fees: deps.fees,
+            messages: deps.messages
+        )
     }
 
     /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
@@ -87,10 +97,18 @@ public struct RootView: View {
             .onChange(of: scenePhase) { _, phase in
                 // The foreground refresh hook: the centre and profile read again when the app comes back.
                 if phase == .active, launch == nil {
-                    Task { await session.refresh() }
+                    Task {
+                        await session.refresh()
+                        await runQueue()
+                    }
                 }
             }
-            .onChange(of: session.state) { _, state in shell.sessionChanged(state, files: deps.filesDirectory) }
+            .onChange(of: session.state) { _, state in
+                Self.follow(state, shell: shell, deps: deps)
+                if session.isReady {
+                    Task { await runQueue() }
+                }
+            }
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
@@ -99,6 +117,7 @@ public struct RootView: View {
                     await session.start()
                 }
             }
+            .task { await followConnectivity() }
     }
 
     @ViewBuilder private var content: some View {
@@ -170,7 +189,10 @@ public struct RootView: View {
             workspace: workspace,
             students: deps.students,
             classes: deps.classes,
-            cache: deps.cachesRegister ? .forCentre(workspace.centre.id) : nil,
+            // The fixtures keep theirs in their own folder.
+            cache: deps.cachesRegister
+                ? .forCentre(workspace.centre.id)
+                : deps.filesDirectory.map { RegisterCache.forCentre(workspace.centre.id, directory: $0) },
             now: deps.now
         )
         // Kept at once, in the same pass: the detail pushed by a launch state or a link reads the same register as the
@@ -186,7 +208,8 @@ public struct RootView: View {
                 store: store,
                 actions: studentsActions,
                 navigation: studentsNavigation,
-                boardState: launch.flatMap(Self.studentsBoardState)
+                boardState: launch.flatMap(Self.studentsBoardState),
+                status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead)
             )
             .onChange(of: store.message) { _, message in
                 guard let message else { return }

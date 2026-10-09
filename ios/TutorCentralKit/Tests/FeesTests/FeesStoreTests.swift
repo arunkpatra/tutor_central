@@ -255,7 +255,7 @@ import Testing
 
     @Test func aFailedReadSaysSoAndKeepsTheLastMonth() async {
         let store = await make()
-        fees.nextError = URLError(.notConnectedToInternet)
+        fees.nextError = URLError(.badServerResponse)
         await store.next()
         #expect(store.error == "Couldn't load fees. Check your connection and try again." && store.month == Period(
             year: 2026,

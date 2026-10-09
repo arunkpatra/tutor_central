@@ -11,6 +11,12 @@ import Observation
     public private(set) var tasks: [TaskItem] = []
     public private(set) var loading = false
     public private(set) var error: String?
+    /// When the copy on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public private(set) var offlineRead = false
+    /// The tasks' copy on this iPhone (AppShell's).
+    public var cache: CachedRead<[TaskItem]>?
     public var message: String?
     public private(set) var canRetry = false
     public private(set) var lastSavedAt: Date?
@@ -88,14 +94,24 @@ import Observation
     }
 
     public func load() async {
+        if !loaded, let cached = cache?.load() {
+            tasks = cached.value
+            savedAt = cached.savedAt
+            loaded = true
+        }
         loading = !loaded
         defer { loading = false }
         do {
             tasks = try await repository.tasks(centre: workspace.centre.id)
+            cache?.keep(tasks, at: now())
+            savedAt = nil
+            offlineRead = false
             loaded = true
             error = nil
         } catch {
-            self.error = "Couldn't load your tasks. Check your connection and try again."
+            offlineRead = TransportError.isOffline(error)
+            // A saved copy offline: the line under the title says it.
+            self.error = loaded && offlineRead ? nil : "Couldn't load your tasks. Check your connection and try again."
         }
     }
 

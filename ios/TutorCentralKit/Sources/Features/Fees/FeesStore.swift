@@ -62,6 +62,14 @@ import Observation
     /// True once a month's read has landed.
     public internal(set) var loaded = false
     public internal(set) var error: String?
+    /// When the month on screen was saved on this iPhone, until the network replaces it (D39).
+    public internal(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public internal(set) var offlineRead = false
+    /// Offline (AppShell says so): Remind and Generate are disabled; Mark paid queues (D39).
+    public var offline = false
+    /// A month's copy on this iPhone (AppShell's; nil in previews and most tests).
+    public var cache: ((Period) -> CachedRead<FeesSnapshot>)?
     public var message: String?
     public internal(set) var canRetry = false
     public internal(set) var lastSavedAt: Date?
@@ -148,7 +156,19 @@ import Observation
 
     /// Read, and nothing in it: the empty card with Generate (P5-Fees-Empty). A failed read is not empty.
     public var isEmptyMonth: Bool {
-        loaded && invoices.isEmpty && error == nil && !loading
+        loaded && invoices.isEmpty && error == nil && !loading && !showsNothingSaved
+    }
+
+    /// Offline with no copy of the month on this iPhone (P7-Offline-NoCache): the empty card with Try again.
+    public var showsNothingSaved: Bool {
+        offlineRead && invoicesMonth != month
+    }
+
+    private func apply(_ snapshot: FeesSnapshot, month: Period) {
+        invoices = snapshot.invoices
+        invoicesMonth = month
+        dueBefore = snapshot.dueBefore
+        logs = snapshot.logs
     }
 
     /// What Generate will make for the shown month, counted here by `generate_fees`' rule.
@@ -178,6 +198,11 @@ import Observation
             }
         }
         let centre = workspace.centre.id
+        if invoicesMonth != month, let cached = cache?(month).load() {
+            apply(cached.value, month: month)
+            savedAt = cached.savedAt
+            loaded = true
+        }
         do {
             async let monthRead = fees.invoices(centre: centre, month: month)
             async let earlier = fees.dueBefore(centre: centre, month: today.period)
@@ -186,21 +211,25 @@ import Observation
             let before = try await earlier
             let readLogs = try await logRead
             guard generation == loadGeneration else { return }
-            invoices = read
-            invoicesMonth = month
-            dueBefore = before
-            logs = readLogs
+            let snapshot = FeesSnapshot(invoices: read, dueBefore: before, logs: readLogs)
+            apply(snapshot, month: month)
+            cache?(month).keep(snapshot, at: now())
+            savedAt = nil
+            offlineRead = false
             error = nil
             loaded = true
         } catch {
             guard generation == loadGeneration else { return }
+            offlineRead = TransportError.isOffline(error)
             if invoicesMonth != month {
                 invoices = []
                 logs = []
+                savedAt = nil
             }
-            self.error = "Couldn't load fees. Check your connection and try again."
             canRetry = true
             lastFailed = { [weak self] in await self?.open(month: month) }
+            // Offline, the line under the title says it: a saved copy shows, or the empty card says nothing is saved.
+            self.error = offlineRead ? nil : "Couldn't load fees. Check your connection and try again."
         }
     }
 
@@ -285,5 +314,18 @@ import Observation
     static func parentLine(_ student: Student?) -> String? {
         let parts = [student?.parentName, student?.parentPhone?.display].compactMap(\.self)
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+}
+
+/// A fees month's copy on this iPhone (D39): its invoices, the fees due before it, its message log.
+public struct FeesSnapshot: Codable, Sendable {
+    public let invoices: [FeeInvoice]
+    public let dueBefore: [FeeInvoice]
+    public let logs: [FeeLog]
+
+    public init(invoices: [FeeInvoice], dueBefore: [FeeInvoice], logs: [FeeLog]) {
+        self.invoices = invoices
+        self.dueBefore = dueBefore
+        self.logs = logs
     }
 }

@@ -57,6 +57,8 @@ enum Route: Hashable {
     case deleteAccount
     /// Help, from Settings and More.
     case help
+    /// Pending changes, from Settings and the failure line on every root.
+    case pendingChanges
     case student(UUID)
     case classes
     case classroom(UUID)

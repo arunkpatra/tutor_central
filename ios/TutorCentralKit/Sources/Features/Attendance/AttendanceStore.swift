@@ -45,7 +45,13 @@ import Observation
     public private(set) var saved: AttendanceSession?
     public private(set) var phase: Phase = .fresh
     public private(set) var loading = false
-    public private(set) var error: String?
+    public internal(set) var error: String?
+    /// When the month's sessions on screen were saved on this iPhone, until the network replaces them (D39).
+    public internal(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public internal(set) var offlineRead = false
+    /// A month's copy on this iPhone (AppShell's): its sessions and the absence alerts told.
+    public var cache: ((Period) -> CachedRead<AttendanceSnapshot>)?
     public var message: String?
     public private(set) var canRetry = false
     public private(set) var lastSavedAt: Date?
@@ -54,9 +60,9 @@ import Observation
     /// Counts the opens asked for (the tab's first, a link, Mark attendance, the menus): only the newest lands, however
     /// the reads interleave, so a slower earlier read never replaces the day chosen last.
     private var openGeneration = 0
-    private var sessions: [AttendanceSession] = []
-    private var told: [AbsenceLog] = []
-    private var loadedMonth: Period?
+    var sessions: [AttendanceSession] = []
+    var told: [AbsenceLog] = []
+    var loadedMonth: Period?
     private var lastFailed: (@MainActor () async -> Void)?
     private let workspace: Workspace
     private let register: any Register
@@ -171,6 +177,7 @@ import Observation
         if loadedMonth != date.period {
             loading = true
             defer { loading = false }
+            let cached = cache?(date.period).load()
             do {
                 async let read = attendance.sessions(centre: workspace.centre.id, month: date.period)
                 async let logs = messages.absences(centre: workspace.centre.id, month: date.period)
@@ -178,10 +185,16 @@ import Observation
                 guard generation == openGeneration else { return }
                 (sessions, told) = (month, monthLogs)
                 loadedMonth = date.period
+                cache?(date.period).keep(AttendanceSnapshot(sessions: month, told: monthLogs), at: now())
+                savedAt = nil
+                offlineRead = false
                 error = nil
             } catch {
                 guard generation == openGeneration else { return }
-                self.error = "Couldn't load attendance. Check your connection and try again."
+                offlineRead = TransportError.isOffline(error)
+                if !showSaved(cached, month: date.period) {
+                    self.error = "Couldn't load attendance. Check your connection and try again."
+                }
             }
         }
         guard generation == openGeneration else { return }
@@ -302,5 +315,16 @@ public struct AbsenceAlert: Hashable, Sendable, Identifiable {
     public let url: URL?
     public var id: UUID {
         student.id
+    }
+}
+
+/// An attendance month's copy on this iPhone (D39): its saved sessions and the absence alerts told.
+public struct AttendanceSnapshot: Codable, Sendable {
+    public let sessions: [AttendanceSession]
+    public let told: [AbsenceLog]
+
+    public init(sessions: [AttendanceSession], told: [AbsenceLog]) {
+        self.sessions = sessions
+        self.told = told
     }
 }

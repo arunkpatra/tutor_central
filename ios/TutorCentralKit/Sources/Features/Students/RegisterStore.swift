@@ -21,6 +21,10 @@ import Observation
     private let studentsRepository: any StudentsRepository
     let classesRepository: any ClassesRepository
     private let cache: RegisterCache?
+    /// When the register on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public private(set) var offlineRead = false
     let now: @Sendable () -> Date
     private let calendar: Calendar
     private var loaded = false
@@ -127,6 +131,7 @@ import Observation
 
     public func load() async {
         if !loaded, let snapshot = cache?.load() {
+            savedAt = snapshot.savedAt
             classes = snapshot.classes
             students = snapshot.period == period ? snapshot.students : snapshot.students
                 .map(Self.withoutFeeMark)
@@ -160,15 +165,19 @@ import Observation
             async let classRead = classesRepository.classes(centre: workspace.centre.id)
             (students, classes) = try await (read, classRead)
             error = nil
+            offlineRead = false
+            savedAt = nil
             loaded = true
             persist()
         } catch {
-            self.error = "Couldn't refresh. Check your connection and try again."
+            offlineRead = TransportError.isOffline(error)
+            // A saved register offline: the line under the title says it.
+            self.error = loaded && offlineRead ? nil : "Couldn't refresh. Check your connection and try again."
         }
     }
 
     private func persist() {
-        try? cache?.save(RegisterSnapshot(students: students, classes: classes, period: period))
+        try? cache?.save(RegisterSnapshot(students: students, classes: classes, period: period, savedAt: now()))
     }
 
     func replace(_ id: UUID, with student: Student) {

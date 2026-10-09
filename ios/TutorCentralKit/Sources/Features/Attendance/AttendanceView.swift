@@ -22,20 +22,29 @@ public struct AttendanceView: View {
     let boardState: AttendanceBoardState?
     @State private var topInset: CGFloat = 0
     @State private var picksDate = false
+    /// AppShell's: the offline or sync line under the title (D39).
+    let status: RootStatus
     @State private var picksClass = false
     @State private var alert: AbsenceAlert?
     @Environment(\.openURL) private var openURL
 
-    public init(store: AttendanceStore, actions: AttendanceActions, boardState: AttendanceBoardState? = nil) {
+    public init(
+        store: AttendanceStore, actions: AttendanceActions, boardState: AttendanceBoardState? = nil,
+        status: RootStatus = .online
+    ) {
         self.store = store
         self.actions = actions
         self.boardState = boardState
+        self.status = status
     }
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 titleRow
+                if let line = status.line {
+                    StatusLine(line)
+                }
                 if store.hasStudents {
                     pickers
                     if let error = store.error {

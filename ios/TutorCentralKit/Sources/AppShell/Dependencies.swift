@@ -25,6 +25,10 @@ public struct Dependencies: Sendable {
     /// The device's notification centre and the tutor's reminder choices on this iPhone.
     public let notifications: any NotificationCenterClient
     public let reminderSettings: ReminderSettingsStore
+    /// The network (D39): the offline bar and the replay follow it.
+    public let connectivity: any ConnectivityMonitor
+    /// The lists keep a copy on this iPhone (`CachedRead`); the fixtures write theirs into `filesDirectory`.
+    public let cachesLists: Bool
     /// Where this iPhone's files go (the queue, the lists' caches): nil is Application Support/TutorCentral; the
     /// fixtures give a fresh temporary folder, so `bun shots` never touches the app's own files.
     public let filesDirectory: URL?
@@ -53,6 +57,8 @@ public struct Dependencies: Sendable {
         account: any AccountRepository,
         notifications: any NotificationCenterClient,
         reminderSettings: ReminderSettingsStore,
+        connectivity: any ConnectivityMonitor,
+        cachesLists: Bool,
         filesDirectory: URL? = nil,
         cachesRegister: Bool,
         now: @escaping @Sendable () -> Date,
@@ -75,6 +81,8 @@ public struct Dependencies: Sendable {
         self.account = account
         self.notifications = notifications
         self.reminderSettings = reminderSettings
+        self.connectivity = connectivity
+        self.cachesLists = cachesLists
         self.filesDirectory = filesDirectory
         self.cachesRegister = cachesRegister
         self.now = now
@@ -107,6 +115,8 @@ public struct Dependencies: Sendable {
             account: api,
             notifications: UNClient(),
             reminderSettings: ReminderSettingsStore(),
+            connectivity: PathMonitor(),
+            cachesLists: true,
             cachesRegister: true,
             now: { Date() },
             bundleVersion: version
