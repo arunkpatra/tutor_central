@@ -8,9 +8,10 @@ deployed to `main`'s head (`999e881`, run 37965871936); build 18 passed on the o
 notes written (`docs/release.md`); the tester's guide (`docs/testing/tester-guide.md`) and the findings file
 (`plan/phase-09-findings.md`); Test Information saved, the "Tutors" group made, **build 18 submitted to Beta App Review on
 2026-10-09**. **Session 18:** `plan/phase-09-plan.md` approved, D52 to D55.
-**Next session:** the owner's choice, likely not Phase 9 (new product features, he said on 2026-10-09: "we will discuss at that
-time"). Ask him what it is; Phase 9 carries on alongside while Apple and the tester answer. Do not start a feature without a
-phase, a plan and boards (rule 1).
+**Next session (2026-10-10):** a new track, V2. The owner: V1 is the baseline (a working app for one use case, valuable to
+tutors) and goes on through Phase 9's testing for technical, usability, UI and crash feedback; separately, think about V2 to
+compete with the top apps in the category. Start with brainstorming (`superpowers:brainstorming`), then a plan; no feature
+without a phase, a plan and boards (rule 1). Phase 9 carries on alongside.
 **Phase 9's next:** each later session opens from `plan/resume/018-phase-9-run.md` with what the owner brings: Apple's answer on build 18
 (approved, or a message to answer), the tester's lines for D1 to D6 and D8 (Task 4, sent to the tester on 2026-10-09), then
 D7 and the invitations (Task 5, where the testers' facts T1 to T6 are filled and checked against D52 first), then the readings
