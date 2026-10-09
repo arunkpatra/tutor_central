@@ -12,8 +12,11 @@ The owner tests build 18 on the phone: U33's alerts and in-place successes, and 
 **App Store page (D51, before Phase 9):** the Store boards approved (canvas row 13); `bun store-shots` (#88) made
 `docs/store/screenshots/`; the listing and App Review notes are `docs/store/listing.md`. The review account
 `review@tutorcentral.in` (made by the owner in the Supabase dashboard, setup finished in the app as Bright Minds Tuition)
-was seeded by `seed-review` (#89, run 37956309559; every parent +919611385678, the owner's). Waiting on the owner: the
-account's password in App Review Information, App Privacy, the age rating.
+was seeded by `seed-review` (#89, run 37956309559; every parent +919611385678, the owner's). App Store Connect filled and
+saved by the owner on 2026-10-09, not submitted: the version page (six screenshots, promotional text, description,
+keywords, URLs, copyright), App Information (subtitle, Education and Productivity, no third-party content), App Privacy
+published (seven types, all App Functionality, linked, no tracking), age rating 4+ (Not Applicable), App Review
+Information (the demo account, contact, notes). Left for submission day: attach a build, then Add for Review.
 
 ## Where we are
 

@@ -31,3 +31,11 @@ In order, in the owner's words.
 19. "What's next on our plates?" (answered: Phase 9 user testing, its plan first).
 20. "We will do user testing next. Found an issue - see the image" (Add to class: a long title ran under Cancel; fixed in #87,
     the owner merged it and started build 18).
+21. "What's is apple's blessed patter for adding assets media that they need for app store etc.?"; then "we will do it just
+    before Phase 9" (captions over the app, Store boards approved, D51, #88).
+22. "Ensure that Apple should have no objections with text and verbiage is ultra polished and suitable... no funky stuff"
+    (the listing held to App Review Guidelines 2.3; WhatsApp kept in the Fees caption by the owner).
+23. "You will create the demo account and seed it" (refused: no account or password by Claude; the owner made it in the
+    Supabase dashboard, setup in the app; `seed-review` #89 filled it, every parent +919611385678).
+24. "let's do App Store Connect now. But we will not do the actual submission - we will fill out the information and save"
+    (five steps, all saved; App Privacy published; 4+).
