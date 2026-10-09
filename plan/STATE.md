@@ -35,9 +35,11 @@ every parent +919611385678). Left for Phase 9's end (Owner step 6): attach the f
 
 ## In flight
 
-Nothing open on GitHub. Phase 9: Task 1 under way (session 19): the API deployed to `main`'s head (`999e881`, run
-37965871936); the checklist ticked for build 18 and its notes written in `docs/release.md`. No reading yet; no build to the Tutors group yet; the group does not
-exist yet (Owner step 2). TestFlight 1.0.0 (18) from run 37950611572 is the candidate for Beta App Review. The remote holds
+Nothing open on GitHub. Phase 9 (session 19): Tasks 1 and 2 done (the API at `999e881`, run 37965871936; the checklist and
+build 18's notes; the guide and the findings file); Owner steps 1 to 3 done: Test Information saved, the "Tutors" group made,
+**build 18 submitted to Beta App Review on 2026-10-09 (Waiting for Review)**. Next: Task 4, the tester's D1 to D6 and D8 on
+the internal install while Apple reviews; D7 and the invitations after approval. The testers' facts (T1 to T6) wait for
+Owner step 4 (the owner does not know the tutors yet). No reading yet. TestFlight 1.0.0 (18) from run 37950611572 is the candidate for Beta App Review. The remote holds
 `main`, `pr-shots` and two branches of merged pull requests (`tools/review-seed`, `tools/store-shots`), the owner's to delete.
 
 ## Production

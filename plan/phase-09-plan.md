@@ -363,7 +363,7 @@ git add docs/testing/tester-guide.md docs/testing/device-tests.md plan/phase-09-
 
 One message per step; the next waits for "done" and the check.
 
-- [ ] **Owner step 1: Test Information.** App Store Connect → Tutor Central → TestFlight → Test Information. Check and fill:
+- [x] **Owner step 1: Test Information.** App Store Connect → Tutor Central → TestFlight → Test Information. Check and fill:
   Beta App Description = "Tutor Central helps tutors who run their own tuition centre keep students and parents, attendance,
   monthly fees, classes and teaching tools on their iPhone. This is a trial build before the App Store." Feedback Email
   `hello@tutorcentral.in` (set). Marketing URL `https://tutorcentral.in`. Privacy Policy URL `https://tutorcentral.in/privacy`
@@ -371,9 +371,9 @@ One message per step; the next waits for "done" and the check.
   `review@tutorcentral.in` and its password (typed by the owner; never in chat); Notes = the "Signing in" and "Teaching tools"
   paragraphs of `docs/store/listing.md`'s App Review notes. Save. **Check:** the page saves with no field in red; the owner
   says "done".
-- [ ] **Owner step 2: the group.** TestFlight → External Testing → "+" beside "External Groups" → name "Tutors" → Create. Leave
+- [x] **Owner step 2: the group.** TestFlight → External Testing → "+" beside "External Groups" → name "Tutors" → Create. Leave
   "Enable Public Link" off (D53). **Check:** "Tutors" appears with 0 testers and no build.
-- [ ] **Owner step 3: the build to review.** Tutors → Builds → "+" → version 1.0.0 → build 18 (or Task 1's candidate) → Next;
+- [x] **Owner step 3: the build to review.** Tutors → Builds → "+" → version 1.0.0 → build 18 (or Task 1's candidate) → Next;
   "What to Test" = the text under "1.0 (build 18)" in `docs/release.md`, pasted whole; Next → Submit for Review. **Check:** the
   build's status in the group reads "Waiting for Review"; the owner says so. Beta App Review usually answers within a day or
   two. If it comes back rejected, the owner pastes Apple's message; the session answers it (a fix by Task 7, or the words
