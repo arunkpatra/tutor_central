@@ -22,6 +22,15 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
   and `/ai/generate` for a 401, and prints the rollback (`vercel promote <previous>`). Git deploys are off
   (`vercel.json`). Production: the repo variable `API_ORIGIN`. Vercel blocks deployments that carry a commit
   author it does not know, so never deploy from a local checkout.
+- Claude through `@anthropic-ai/sdk` (D35), the named `Anthropic` export (the default breaks Vercel's CommonJS type
+  check): `messages.parse` with `zodOutputFormat`, one model per route, no fallbacks. One deadline across both tries
+  (`CLAUDE_DEADLINE_MS`, 110 s, under the app's 125 s); a timeout is a 502 and the row is marked failed.
+- `AI_FAKE=1` answers from `claude-fake.ts` (local runs only; never set on Vercel); the consent, limit and record paths
+  still run against the database.
+- Every database call is made as the user (`db.ts`, the user's JWT); `start_ai_generation` is the consent and limit gate.
+  No photo is stored: `ai_generations.input` holds the page count and bytes, never the image.
+- Photos are checked before any cost: magic bytes, round-trip base64, 3 MB decoded, six pages.
+- `test/entry.test.ts` spawns the entry with `--no-env-file`, so `.env.local` does not leak into it.
 
 Commands: `bun run dev` (local on :3000, needs `api/.env.local`); `bun run check` (tsc and tests);
 `bun check --only=api`; `gh workflow run deploy`.

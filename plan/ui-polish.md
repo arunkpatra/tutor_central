@@ -33,6 +33,15 @@ screen, several as a polish slice, or not at all.
 | U13 | 2026-10-08 | Any sheet, then a link | A sheet open on one tab (Reports' Share as CSV) stays up over the tab a `tutorcentral://` link opens | Session 11's hand run (issue #50) |
 | U14 | 2026-10-08 | Fees, an empty current month | Before the month is generated, the overdue banner for last month's unpaid fees is not shown (the board draws the empty month without it) | Session 11's final review |
 | U15 | 2026-10-08 | Fees, Due or Paid with nothing in it | "Nothing due · Every fee for October is settled." and "Nothing paid yet" are the Kit's empty row in words no board drew | Session 11 (the plan's unboarded filler) |
+| U16 | 2026-10-09 | Pushed screens with a footer (Check a paper's marks, Scan's list) | A toast sits over the footer button, where the boards put it above; on check-saved it hides the Saved mark | Session 13 (Task 18) |
+| U17 | 2026-10-09 | The note's observations, the typed scheme | The counter reads "80 of 2,000" (the Kit's notes counter); P6-Form-ProgressNote draws "135 / 2000" | Session 13, comparing with the board |
+| U18 | 2026-10-09 | Progress note, Send the note | The sheet opens lower than P6-ProgressNote-Send: its top sits under the student row, the board's under the nav row | Session 13, comparing with the board |
+| U19 | 2026-10-09 | today-ai-tools (launch state) | Today is not scrolled to Create as P6-Today-AITools draws (like U11) | Session 13, comparing with the board |
+| U20 | 2026-10-09 | Progress note, the consent sheet | Over the note form the sheet reads "Before the first photo" and speaks of photos; a note has none (the plan chose the same sheet) | Session 13's hand run (issue #61) |
+| U21 | 2026-10-09 | Homework and worksheet forms, the failure row | "Couldn't create the homework." breaks after "create" (the board's "the paper." fits one line) | Session 13's hand run |
+| U22 | 2026-10-09 | Check a paper, the scheme | Two papers on one topic look alike (title, kind, class, marks and day the same); nothing says which is newer | Session 13's hand run |
+| U23 | 2026-10-09 | Check a paper, the pages | After removing every page the heading reads "0 pages" | Session 13's hand run |
+| U24 | 2026-10-09 | Scan's list to check, scrolled | The list scrolls under the status bar with no glass (U1's `statusBarGlass()` is not on the pushed AI screens) | Session 13's hand run |
 
 ## Done
 

@@ -64,6 +64,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | UI polish list: small visual and copy fixes, taken when the owner chooses | `plan/ui-polish.md` | Its "How it works" |
 | Scripts: check, shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
 | Runbooks: driving the app in the simulator against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32) |
+| Device tests: what a tester checks on a real iPhone (camera, WhatsApp, network, real handwriting), with a log | `docs/testing/device-tests.md` | Its "How to run" |
 
 ## Engineering standard
 Production software, not a prototype. Test first where there is logic (Domain, Data, API, RLS). Small units

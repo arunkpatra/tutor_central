@@ -24,7 +24,7 @@ Always:
 | 3 | Students and classes | `phase-03-students-and-classes.md` | Done (session 6, PRs #24 to #31, review fixes #33); migration 0003 in production; build 0.1.0 (6) on TestFlight |
 | 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Done (session 9, PRs #36 to #42, review fixes #44); migrations 0004 and 0005 in production; build 0.1.0 (7) on TestFlight |
 | 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Done (session 11, PRs #45 to #49, #51, #52; hand run #50); no migration; build 0.1.0 (8) on TestFlight |
-| 6 | AI tools through the API | `phase-06-ai-tools.md` | Planned (session 12): boards approved, plan approved; build from `resume/012-phase-6-build.md` |
+| 6 | AI tools through the API | `phase-06-ai-tools.md` | Done (session 13, PRs #53 to #60, #62; hand run #61); migrations 0006 and 0007 in production; build 0.1.0 (9) on TestFlight |
 | 7 | Settings, account, notifications, offline hardening, release candidate | `phase-07-settings-and-hardening.md` | Not started |
 | 8 | The product website, tutorcentral.in: home, `/privacy`, `/terms`, support; live before the first App Store submission | `phase-08-website.md` | Not started |
 

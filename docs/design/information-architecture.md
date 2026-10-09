@@ -438,14 +438,20 @@ What the boards settle (the parts are in `components.md`, "Phase 6 parts"):
   with a checkbox (ticked unless it matches a student already in the register, then "Already here" and the match), the
   number and fee read ("No number read" in `due` when none), a chevron to Fix this row (the student form with "Remove
   this row"); a removed row offers Undo; Back asks "Leave without adding?"; Add N students creates the ticked rows in
-  one write and pops to the Students list with a toast and Undo (which deletes those rows). Nothing found and a
-  failure (Retry sends the same photo again) have their screens.
+  one write and pops to the Students list with a toast and Undo (which deletes those rows; a failed Undo says
+  "Couldn't undo. Check your connection and try again." there). Nothing found and a failure (Retry sends the same
+  photo again) have their screens.
 - **Check a paper** is pushed from More's row: the intro with the student (a tile picker) and the notice, then the
   pages (tiles with Remove, Add a page through the document camera, From Photos; up to six, reduced on the iPhone),
   the marking scheme (a paper created here, its answer key and marks; or typed, 4000), checking, then the marks: the
   hero with the total and a bar, one row per question with the AI's note and a mark tile that opens a popover of
   chips 0 to the question's marks; a changed mark says "Changed from N" and the total rolls; Share is in the nav row;
   Save to the student's notes appends one line ("7 Oct · Quadratic equations · 15 of 20 · the notes") and offers
-  Undo. Nothing is written before Save.
+  Undo. Nothing is written before Save. One check runs at a time; Cancel or Back while checking abandons it. If the
+  server says the centre has not agreed (the session thought it had), the consent sheet opens over the failure and
+  the check runs on agreeing.
+- **Every AI call** waits up to 125 s; the API gives Claude 110 s. A timeout says "That took too long to come back.
+  Try again in a minute." (not the offline words, which promise nothing was used). A worksheet whose answer key is
+  off shows the key on screen "(for you)" and leaves it out of Copy and the PDF.
 - **More** gains the three rows live; **Today** gains the Create row at its end. The camera usage text covers the
   register, answer sheets and the UPI QR.

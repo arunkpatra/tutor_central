@@ -78,6 +78,22 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - A pushed screen's top row (`BackRow`) and the Saved mark (`SaveMark`) are DesignSystem's, for every feature.
 - `String(contentsOf:)` drops a file's BOM: test a written CSV as bytes.
 - A sheet opened on one tab stays up when a link switches tabs (U13).
+- The camera's access and VisionKit's document camera are DesignSystem's (`Camera/`), for Fees' QR, Scan register and
+  Check a paper. `PhotoReducer` (2000 px JPEG at 0.7) is Data's, so Students and AITools both reduce a photo (D36).
+- The AI screens read the register themselves (`AIStore.prepare()`, `ScanStore.read`): the Students tab may never have
+  been opened.
+- A sheet that builds a form store keeps it in `@State` (`FixRowSheet`): built in the sheet's content, it is remade on
+  every re-render of the list behind and typed text is lost.
+- A call the tutor can leave (Check a paper) runs in a task its store owns, refused while one runs; Cancel and Back
+  cancel it and a late answer is dropped (`CheckStore.begin()` and `cancel()`, `ScanStore.begin()`).
+- A store's failure words for a screen that has gone are returned to the caller, not set on the store (`undoAdd`
+  answers the words AppShell's toast shows).
+- A button under fields puts the keyboard away when its result appears in place (`Keyboard.dismiss()`); a multiline
+  well takes a tap anywhere through a layer behind its field.
+- `supabase db reset` ends the API's session for the signed-in app (401 "sign in again"): sign out and in after a reset.
+- The local API: `cd api && SUPABASE_URL=… SUPABASE_ANON_KEY=… bun run dev`, with `AI_FAKE=1` for the fake (a 1.5 s
+  answer; a register photo under 1400 base64 characters reads nothing). `API_ORIGIN` in `Local.xcconfig` is
+  `http:/$()/127.0.0.1:3000`.
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.
