@@ -121,8 +121,9 @@ public struct TodayView: View {
     private static let tasksID = "tasks"
     private static let tickSeconds: Double = 60
 
+    /// The account picture at the top right, level with the date; the greeting wraps under it (P7-Today-Header).
     private var header: some View {
-        HStack(alignment: .bottom) {
+        HStack(alignment: .top, spacing: Tokens.rowPaddingDense) {
             VStack(alignment: .leading, spacing: Tokens.rowGapInner * 2) {
                 Eyebrow(store.heading)
                 Text(store.greeting)

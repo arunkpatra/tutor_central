@@ -114,6 +114,9 @@ public struct RootView: View {
             // Apple's way out of the keyboard (Messages, Notes, Settings): drag the content down and it goes with it.
             // Set here, it reaches every scroll view and sheet in the app.
             .scrollDismissesKeyboard(.interactively)
+            // The launch screen fades into the first screen once the session is read (P7-Launch-Fade); never in a
+            // launch state, whose screen is ready at once.
+            .opening(ready: session.state != .loading, shown: launch == nil)
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
