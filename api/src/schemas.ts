@@ -130,3 +130,6 @@ export const CheckOutput = z.object({
   summary: z.string(),
 });
 export type CheckOutput = z.infer<typeof CheckOutput>;
+
+/** POST /account/revoke-apple (D38): the fresh authorization code the app got from Apple at deletion. */
+export const RevokeAppleInput = z.object({ code: z.string().min(1).max(2000) });

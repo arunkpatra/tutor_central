@@ -19,14 +19,24 @@ test("src/index.ts exports the server as its default", async () => {
   process.env.SUPABASE_URL ??= "http://127.0.0.1:54321";
   process.env.SUPABASE_ANON_KEY ??= "test";
   process.env.ANTHROPIC_API_KEY ??= "test";
+  process.env.APPLE_TEAM_ID ??= "test";
+  process.env.APPLE_KEY_ID ??= "test";
+  process.env.APPLE_SIGNIN_KEY ??= "test";
   const entry = await import("../src/index.js");
   expect(typeof entry.default.fetch).toBe("function");
 });
 
-const SETTINGS = { SUPABASE_URL: "http://127.0.0.1:54321", SUPABASE_ANON_KEY: "k", ANTHROPIC_API_KEY: "a" };
+const SETTINGS = {
+  SUPABASE_URL: "http://127.0.0.1:54321",
+  SUPABASE_ANON_KEY: "k",
+  ANTHROPIC_API_KEY: "a",
+  APPLE_TEAM_ID: "t",
+  APPLE_KEY_ID: "k",
+  APPLE_SIGNIN_KEY: "p",
+};
 
 test("the server refuses to start without its settings, so /health and the deploy's smoke fail", async () => {
-  for (const missing of ["SUPABASE_URL", "SUPABASE_ANON_KEY", "ANTHROPIC_API_KEY"]) {
+  for (const missing of Object.keys(SETTINGS)) {
     const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS };
     delete env[missing];
     const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
@@ -39,6 +49,15 @@ test("the server refuses to start without its settings, so /health and the deplo
 test("with AI_FAKE=1 the server starts without the Anthropic key (local runs that cost nothing)", async () => {
   const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS, AI_FAKE: "1" };
   delete env.ANTHROPIC_API_KEY;
+  const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
+  expect(await proc.exited).toBe(0);
+});
+
+test("with APPLE_FAKE=1 the server starts without the Apple key (a local deletion run touches no Apple)", async () => {
+  const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS, APPLE_FAKE: "1" };
+  delete env.APPLE_TEAM_ID;
+  delete env.APPLE_KEY_ID;
+  delete env.APPLE_SIGNIN_KEY;
   const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
   expect(await proc.exited).toBe(0);
 });

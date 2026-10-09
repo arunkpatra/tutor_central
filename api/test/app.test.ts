@@ -1,9 +1,10 @@
 import { expect, test } from "bun:test";
+import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 
-const deps = { claude: fakeClaude({ refuse: true }), db: fakeDb() };
+const deps = { claude: fakeClaude({ refuse: true }), db: fakeDb(), apple: fakeApple({}) };
 const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), commit: "abc1234", ...deps });
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
 const post = (path: string, body: string) => app.request(path, { method: "POST", headers: auth, body });

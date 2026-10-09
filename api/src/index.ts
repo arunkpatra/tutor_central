@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Hono } from "hono";
+import { appleHttp } from "./apple.js";
+import { fakeApple } from "./apple-fake.js";
 import type { Vars } from "./auth.js";
 import { anthropicClaude } from "./claude.js";
 import { fakeClaude, localScript } from "./claude-fake.js";
@@ -13,6 +15,17 @@ import { makeApp } from "./make-app.js";
 const supabaseUrl = env("SUPABASE_URL");
 const supabaseAnonKey = env("SUPABASE_ANON_KEY");
 const claude = process.env.AI_FAKE === "1" ? fakeClaude(localScript) : anthropicClaude(env("ANTHROPIC_API_KEY"));
+/** The Sign in with Apple key signs the client secret for revocation (D38). Vercel keeps the .p8's newlines; a one-line
+ *  value with "\n" (api/.env.local) is turned back. APPLE_FAKE=1 (local runs only) answers without Apple. */
+const apple =
+  process.env.APPLE_FAKE === "1"
+    ? fakeApple({})
+    : appleHttp({
+        teamId: env("APPLE_TEAM_ID"),
+        keyId: env("APPLE_KEY_ID"),
+        privateKeyPem: env("APPLE_SIGNIN_KEY").replace(/\\n/g, "\n"),
+        clientId: "in.tutorcentral.app",
+      });
 
 /** Verifies a Supabase access token by asking Supabase for its user. One call per request; a JWKS cache is a later
  *  optimisation. */
@@ -31,5 +44,6 @@ const app: Hono<Vars> = makeApp({
   commit: process.env.TC_COMMIT,
   claude,
   db: makeDb(supabaseUrl, supabaseAnonKey),
+  apple,
 });
 export default app;

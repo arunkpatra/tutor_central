@@ -14,7 +14,7 @@ function decode(part: string) {
 test("the client secret is an ES256 JWT Apple will accept: the header, the claims, a signature the public key verifies", () => {
   const now = new Date("2026-10-09T10:00:00Z");
   const jwt = clientSecret(key, now);
-  const [header, payload, signature] = jwt.split(".");
+  const [header = "", payload = "", signature = ""] = jwt.split(".");
   expect(decode(header)).toEqual({ alg: "ES256", kid: "ABC123DEFG" });
   expect(decode(payload)).toEqual({
     iss: "Y7SW6436RD",
@@ -44,12 +44,12 @@ test("revokeAuthorization exchanges the code, then revokes the refresh token, as
   }) as typeof fetch;
   await appleHttp(key, fetchImpl).revokeAuthorization("code-1");
   expect(calls.map((c) => c.url)).toEqual(["https://appleid.apple.com/auth/token", "https://appleid.apple.com/auth/revoke"]);
-  const token = new URLSearchParams(calls[0].body);
+  const token = new URLSearchParams(calls[0]?.body);
   expect(token.get("grant_type")).toBe("authorization_code");
   expect(token.get("code")).toBe("code-1");
   expect(token.get("client_id")).toBe("in.tutorcentral.app");
   expect(token.get("client_secret")?.split(".").length).toBe(3);
-  const revoke = new URLSearchParams(calls[1].body);
+  const revoke = new URLSearchParams(calls[1]?.body);
   expect(revoke.get("token")).toBe("r-1");
   expect(revoke.get("token_type_hint")).toBe("refresh_token");
 });
