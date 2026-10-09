@@ -50,25 +50,18 @@ public struct FeatureTile: View {
     }
 }
 
-/// The board's stand-in for Google's mark (A-SignIn): a 20 ring, 2 text2 stroke, a "G" at 12 heavy in text2. No
-/// Google asset ships with the app.
+/// Google's mark on Continue with Google (A-SignIn drew a stand-in ring): 20 pt, beside the label.
 public struct GoogleMark: View {
-    static var stroke: CGFloat {
-        2
-    }
-
-    static var letter: CGFloat {
-        12
-    }
+    /// Google's own "G", in its colours, as its sign-in branding guidelines ask (the owner, 2026-10-09).
+    static let image = "GoogleG"
 
     public init() {}
 
     public var body: some View {
-        Text("G")
-            .font(.system(size: Self.letter, weight: .heavy))
-            .foregroundStyle(Tokens.text2.color)
+        Image(Self.image, bundle: .module)
+            .resizable()
+            .scaledToFit()
             .frame(width: Tokens.iconButton, height: Tokens.iconButton)
-            .overlay(Circle().strokeBorder(Tokens.text2.color, lineWidth: Self.stroke))
             .accessibilityHidden(true)
     }
 }

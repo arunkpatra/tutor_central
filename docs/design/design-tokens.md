@@ -73,6 +73,9 @@ colour and a tint for a chip behind it. Never red for anything that is not overd
 | `okInk` | #0B2A1D | #0B2A1D | Text on an `ok` fill (Present when on) |
 | `overdueInk` | #2B0906 | #2B0906 | Text on an `overdue` fill (Absent when on, the Delete that confirms) |
 | `onStatus` | #FFFFFF | #FFFFFF | The tick on a checked checkbox |
+| `googleFill` | #131314 | #FFFFFF | Continue with Google's fill, Google's own (its sign-in branding guidelines, P7-SignIn-Google) |
+| `googleLine` | #8E918F | #747775 | Continue with Google's 1 pt outline |
+| `googleInk` | #E3E3E3 | #1F1F1F | Continue with Google's label |
 
 ## Type
 

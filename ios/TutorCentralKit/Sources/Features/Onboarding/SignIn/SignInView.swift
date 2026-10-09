@@ -146,7 +146,8 @@ public struct SignInView: View {
             }
             .signInWithAppleButtonStyle(scheme == .dark ? .white : .black)
             .frame(height: ButtonSize.sheet.rawValue)
-            .clipShape(.rect(cornerRadius: Tokens.radiusControl, style: .continuous))
+            // A pill like the two below it (P7-SignIn-Google); Apple allows its button's corners to be set.
+            .clipShape(.capsule)
             Button {
                 Task {
                     if let user = await store.continueWithGoogle() {
@@ -156,7 +157,7 @@ public struct SignInView: View {
             } label: {
                 Label { Text("Continue with Google") } icon: { GoogleMark() }
             }
-            .buttonStyle(.landing(loading: store.busy == .google))
+            .buttonStyle(.landing(loading: store.busy == .google, google: true))
             Button {
                 showsEmail = true
             } label: {

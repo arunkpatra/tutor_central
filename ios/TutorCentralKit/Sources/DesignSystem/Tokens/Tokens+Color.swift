@@ -30,10 +30,15 @@ public extension Tokens {
     static let okInk = ColorToken("okInk", dark: "#0B2A1D", light: "#0B2A1D")
     static let overdueInk = ColorToken("overdueInk", dark: "#2B0906", light: "#2B0906")
     static let onStatus = ColorToken("onStatus", dark: "#FFFFFF", light: "#FFFFFF")
+    /// Continue with Google as Google's sign-in branding guidelines draw it (P7-SignIn-Google).
+    static let googleFill = ColorToken("googleFill", dark: "#131314", light: "#FFFFFF")
+    static let googleLine = ColorToken("googleLine", dark: "#8E918F", light: "#747775")
+    static let googleInk = ColorToken("googleInk", dark: "#E3E3E3", light: "#1F1F1F")
 
     static let colors: [ColorToken] = [
         ground, surface1, surface2, well, chrome, dim, line, lineStrong, lineGlass, text, text2, text3, textOnAccent,
         accent, accentPressed, accentText, accentTint, ok, okTint, due, dueTint, overdue, overdueTint, neutral,
-        glowHero, glowHeroSoft, buttonFill, okInk, overdueInk, onStatus,
+        glowHero, glowHeroSoft, buttonFill, okInk, overdueInk, onStatus, googleFill, googleLine,
+        googleInk,
     ]
 }

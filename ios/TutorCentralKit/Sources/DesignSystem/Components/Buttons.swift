@@ -221,15 +221,31 @@ public extension ButtonStyle where Self == DestructiveButtonStyle {
     }
 }
 
-/// The landing's Google and email buttons (A-SignIn, P2-SignIn-Light): 52 high, surface1, lineStrong border,
-/// shadowButtonLanding, label 17 600, the icon 10 from it.
+/// The landing's Google and email buttons (P7-SignIn-Google): pills 52 high, the label 17 600, the icon 10 from it.
+/// Email is surface1 with a lineStrong border and shadowButtonLanding; Google is drawn as Google's sign-in branding
+/// guidelines ask (its fill, outline and ink, no shadow).
 public struct LandingButtonStyle: ButtonStyle {
     let loading: Bool
+    let google: Bool
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    public init(loading: Bool = false) {
+    public init(loading: Bool = false, google: Bool = false) {
         self.loading = loading
+        self.google = google
+    }
+
+    /// A pill's corner: half the button's height.
+    static var radius: CGFloat {
+        ButtonSize.sheet.rawValue / 2
+    }
+
+    private var fill: ColorToken {
+        google ? Tokens.googleFill : Tokens.surface1
+    }
+
+    private var ink: ColorToken {
+        google ? Tokens.googleInk : Tokens.text
     }
 
     public func makeBody(configuration: Configuration) -> some View {
@@ -238,11 +254,11 @@ public struct LandingButtonStyle: ButtonStyle {
         }
         .labelStyle(LandingLabelStyle())
         .typeStyle(Tokens.bodyStrong)
-        .foregroundStyle(Tokens.text.color)
+        .foregroundStyle(ink.color)
         .opacity(loading ? 0 : 1)
         .overlay {
             if loading {
-                ProgressView().tint(Tokens.text.color).accessibilityLabel("Working")
+                ProgressView().tint(ink.color).accessibilityLabel("Working")
             }
         }
         .multilineTextAlignment(.center)
@@ -252,15 +268,12 @@ public struct LandingButtonStyle: ButtonStyle {
             maxHeight: TypeSizeLayout.stacks(typeSize) ? nil : ButtonSize.sheet.rawValue
         )
         .contentShape(.rect)
-        .background(
-            (configuration.isPressed ? Tokens.well : Tokens.surface1).color,
-            in: .rect(cornerRadius: Tokens.radiusControl, style: .continuous)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: Tokens.radiusControl, style: .continuous)
-                .strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline)
-        )
-        .shadowed(isEnabled ? [Tokens.shadowButtonLanding] : [], radius: Tokens.radiusControl)
+        .background((configuration.isPressed && !google ? Tokens.well : fill).color, in: .capsule)
+        .overlay(Capsule().strokeBorder(
+            (google ? Tokens.googleLine : Tokens.lineStrong).color,
+            lineWidth: Tokens.hairline
+        ))
+        .shadowed(isEnabled && !google ? [Tokens.shadowButtonLanding] : [], radius: Self.radius)
         .opacity(isEnabled ? 1 : Tokens.opacityDisabled)
         .pressEffect(configuration.isPressed)
     }
@@ -276,7 +289,7 @@ private struct LandingLabelStyle: LabelStyle {
 }
 
 public extension ButtonStyle where Self == LandingButtonStyle {
-    static func landing(loading: Bool = false) -> Self {
-        .init(loading: loading)
+    static func landing(loading: Bool = false, google: Bool = false) -> Self {
+        .init(loading: loading, google: google)
     }
 }
