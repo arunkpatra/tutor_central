@@ -19,14 +19,17 @@ public final class SupabaseCentreRepository: CentreRepository {
             .execute()
         guard let row = try Self.decoder.decode([CentreRow].self, from: response.data).first else { return nil }
         let profiles: [ProfileRow] = try await client.from("profiles")
-            .select("display_name")
+            .select("display_name, has_password")
             .eq("user_id", value: user.id)
             .execute()
             .value
         return Workspace(
             user: user,
             centre: row.centre,
-            profile: Profile(displayName: profiles.first?.displayName)
+            profile: Profile(
+                displayName: profiles.first?.displayName,
+                hasPassword: profiles.first?.hasPassword ?? false
+            )
         )
     }
 
@@ -155,8 +158,10 @@ struct PaymentsRow: Decodable {
 
 private struct ProfileRow: Decodable {
     let displayName: String?
+    let hasPassword: Bool?
 
     enum CodingKeys: String, CodingKey {
         case displayName = "display_name"
+        case hasPassword = "has_password"
     }
 }

@@ -68,6 +68,8 @@ import Foundation
     public private(set) var confirmations: [Date] = []
     public private(set) var consents: [Date] = []
     public private(set) var hasPasswordSet = 0
+    /// `setHasPassword` waits this long first: lets a store show its busy state.
+    public var delay: Duration?
 
     public init(workspace: Workspace? = nil) {
         self.workspace = workspace
@@ -144,6 +146,9 @@ import Foundation
     }
 
     public func setHasPassword() async throws {
+        if let delay {
+            try? await Task.sleep(for: delay)
+        }
         try takeError()
         hasPasswordSet += 1
     }

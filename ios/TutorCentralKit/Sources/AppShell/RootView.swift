@@ -17,6 +17,7 @@ public struct RootView: View {
     @State var toasts = ToastCenter()
     @State var shell: ShellState
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.openURL) var systemOpenURL
     let deps: Dependencies
     let launch: LaunchState?
 
@@ -36,7 +37,7 @@ public struct RootView: View {
             tabs.push(route)
         }
         let shell = ShellState(tabs: tabs)
-        shell.sessionChanged(initial)
+        shell.sessionChanged(initial, files: deps.filesDirectory)
         _shell = State(initialValue: shell)
     }
 
@@ -88,7 +89,7 @@ public struct RootView: View {
                     Task { await session.refresh() }
                 }
             }
-            .onChange(of: session.state) { _, state in shell.sessionChanged(state) }
+            .onChange(of: session.state) { _, state in shell.sessionChanged(state, files: deps.filesDirectory) }
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)
@@ -143,7 +144,7 @@ public struct RootView: View {
                 studentDetail: { studentDetailView($0) },
                 classes: { classesView },
                 classDetail: { classDetailView($0) },
-                settings: { settingsView },
+                settings: { settingsScreen($0) },
                 attendance: { attendanceView },
                 history: { historyView },
                 studentMonth: { studentMonthView($0) },

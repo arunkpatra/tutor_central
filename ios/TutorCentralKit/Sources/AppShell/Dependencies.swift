@@ -20,6 +20,14 @@ public struct Dependencies: Sendable {
     /// Our API's AI routes (never Anthropic's: D11) and the results it recorded.
     public let ai: any AIRepository
     public let aiHistory: any AIHistoryRepository
+    /// The API's account route (D38): Apple told to forget the app before a deletion.
+    public let account: any AccountRepository
+    /// The device's notification centre and the tutor's reminder choices on this iPhone.
+    public let notifications: any NotificationCenterClient
+    public let reminderSettings: ReminderSettingsStore
+    /// Where this iPhone's files go (the queue, the lists' caches): nil is Application Support/TutorCentral; the
+    /// fixtures give a fresh temporary folder, so `bun shots` never touches the app's own files.
+    public let filesDirectory: URL?
     /// The register is kept on disk for the next launch (`RegisterCache`); the fixtures never write a file.
     public let cachesRegister: Bool
     public let now: @Sendable () -> Date
@@ -42,6 +50,10 @@ public struct Dependencies: Sendable {
         qrImages: any QRImageStore,
         ai: any AIRepository,
         aiHistory: any AIHistoryRepository,
+        account: any AccountRepository,
+        notifications: any NotificationCenterClient,
+        reminderSettings: ReminderSettingsStore,
+        filesDirectory: URL? = nil,
         cachesRegister: Bool,
         now: @escaping @Sendable () -> Date,
         fixedClock: Bool = false,
@@ -60,6 +72,10 @@ public struct Dependencies: Sendable {
         self.qrImages = qrImages
         self.ai = ai
         self.aiHistory = aiHistory
+        self.account = account
+        self.notifications = notifications
+        self.reminderSettings = reminderSettings
+        self.filesDirectory = filesDirectory
         self.cachesRegister = cachesRegister
         self.now = now
         self.fixedClock = fixedClock
@@ -72,6 +88,8 @@ public struct Dependencies: Sendable {
         let client = SupabaseClientFactory.make(config)
         let info = Bundle.main.infoDictionary ?? [:]
         let version = "\(info["CFBundleShortVersionString"] ?? "0") (\(info["CFBundleVersion"] ?? "0"))"
+        // supabase-swift refreshes the session before it hands the token over.
+        let api = APIClient(origin: config.apiOrigin, token: { try await client.auth.session.accessToken })
         return Dependencies(
             auth: SupabaseAuthRepository(client: client),
             centres: SupabaseCentreRepository(client: client),
@@ -84,9 +102,11 @@ public struct Dependencies: Sendable {
             tasks: SupabaseTasksRepository(client: client),
             fees: SupabaseFeesRepository(client: client),
             qrImages: FileQRImageStore(),
-            // supabase-swift refreshes the session before it hands the token over.
-            ai: APIClient(origin: config.apiOrigin, token: { try await client.auth.session.accessToken }),
+            ai: api,
             aiHistory: SupabaseAIHistoryRepository(client: client),
+            account: api,
+            notifications: UNClient(),
+            reminderSettings: ReminderSettingsStore(),
             cachesRegister: true,
             now: { Date() },
             bundleVersion: version

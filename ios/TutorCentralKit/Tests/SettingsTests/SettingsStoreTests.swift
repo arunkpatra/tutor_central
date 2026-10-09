@@ -5,16 +5,12 @@ import Testing
 @testable import Settings
 
 @MainActor struct SettingsStoreTests {
-    func make(
-        _ centres: FakeCentreRepository = FakeCentreRepository(),
-        auth: FakeAuthRepository = FakeAuthRepository(user: FakeAuthRepository.meera)
-    ) -> SettingsStore {
+    func make(_ centres: FakeCentreRepository = FakeCentreRepository()) -> SettingsStore {
         centres.workspace = FakeCentreRepository.meeraWorkspace
         return SettingsStore(
-            workspace: FakeCentreRepository.meeraWorkspace,
-            auth: auth,
-            centres: centres,
-            version: "0.1 (12)"
+            workspace: FakeCentreRepository.meeraWorkspace, centres: centres, version: "0.1 (12)",
+            defaults: UserDefaults(suiteName: "settings-store-tests") ?? .standard,
+            reminders: ReminderSummary(permission: .notAsked, settings: ReminderSettings()), pendingCount: 0
         )
     }
 
@@ -77,14 +73,7 @@ import Testing
         store.centreName = "Bright Minds"
         await store.commitCentre()
         #expect(store.centreName == "Bright Minds" && store.saveState == .idle)
-        #expect(store.message == "Couldn't save. Check your connection and try again.")
-    }
-
-    @Test func signOutSignsOut() async {
-        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
-        let store = make(auth: auth)
-        await store.signOut()
-        #expect(auth.signedOut == 1)
+        #expect(store.message == "Couldn't save the centre's name. Check your connection and try again.")
     }
 
     /// Review, Important 5: each field writes only its own column, so two quick edits cannot undo each other.

@@ -6,6 +6,7 @@ import Domain
 import Fees
 import Onboarding
 import Schedule
+import Settings
 import Students
 import SwiftUI
 import Today
@@ -125,7 +126,10 @@ extension RootView {
 
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.
     static func initialRoutes(for state: LaunchState) -> [Route] {
-        switch state {
+        if let routes = settingsRoutes(for: state) {
+            return routes
+        }
+        return switch state {
         case .settings: [.settings]
         case .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit:
             [.student(FakeStudentsRepository.akshita)]

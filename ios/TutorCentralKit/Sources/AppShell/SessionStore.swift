@@ -85,7 +85,9 @@ import Observation
         }
     }
 
-    public func signOut() async {
+    /// Sign-out wipes the phone first (D40): the centre's files, this iPhone's settings, the queue, the reminders.
+    public func signOut(wiping wipe: SignOutWipe) async {
+        await wipe.run()
         await deps.auth.signOut()
         state = .signedOut
     }
@@ -116,5 +118,32 @@ import Observation
     private func withKnownName(_ user: AuthUser) -> AuthUser {
         guard user.fullName == nil, let name = knownNames[user.id] else { return user }
         return AuthUser(id: user.id, email: user.email, fullName: name)
+    }
+}
+
+/// What sign-out and deletion clear on this iPhone (D40): the centre's files under Application Support, this iPhone's
+/// settings in `UserDefaults`, the queue, and the pending reminders.
+public struct SignOutWipe {
+    let centre: UUID
+    let directory: URL?
+    let defaults: UserDefaults
+    let queue: ChangeQueue?
+    let notifications: any NotificationCenterClient
+
+    public init(
+        centre: UUID, directory: URL? = nil, defaults: UserDefaults = .standard, queue: ChangeQueue?,
+        notifications: any NotificationCenterClient
+    ) {
+        self.centre = centre
+        self.directory = directory
+        self.defaults = defaults
+        self.queue = queue
+        self.notifications = notifications
+    }
+
+    @MainActor func run() async {
+        queue?.wipe()
+        Wipe.everything(centre: centre, directory: directory, defaults: defaults)
+        await notifications.removeAll()
     }
 }

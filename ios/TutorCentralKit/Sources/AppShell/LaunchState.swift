@@ -124,6 +124,16 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case checkResultEdited = "check-result-edited"
     case checkSaved = "check-saved"
     case checkFailed = "check-failed"
+    case settingsEnd = "settings-end"
+    case settingsSaveFailed = "settings-save-failed"
+    case help
+    case helpAnswer = "help-answer"
+    case account
+    case accountPassword = "account-password"
+    case accountPasswordFailed = "account-password-failed"
+    case accountPasswordSaved = "account-password-saved"
+    case accountSignOut = "account-sign-out"
+    case accountSignOutPending = "account-sign-out-pending"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }

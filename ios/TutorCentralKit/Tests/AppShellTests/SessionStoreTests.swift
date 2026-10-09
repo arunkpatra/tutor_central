@@ -20,6 +20,9 @@ import Testing
             qrImages: MemoryQRImageStore(),
             ai: FakeAIRepository(),
             aiHistory: FakeAIHistoryRepository(),
+            account: FakeAccountRepository(),
+            notifications: FakeNotificationCenter(),
+            reminderSettings: ReminderSettingsStore(defaults: UserDefaults(suiteName: "session-tests") ?? .standard),
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"
@@ -59,7 +62,12 @@ import Testing
         let workspace = try await centres.createCentre(draft, for: FakeAuthRepository.meera)
         store.centreCreated(workspace)
         #expect(store.state == .ready(workspace))
-        await store.signOut()
+        await store.signOut(wiping: SignOutWipe(
+            centre: workspace.centre.id,
+            directory: FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),
+            defaults: UserDefaults(suiteName: "session-sign-out") ?? .standard, queue: nil,
+            notifications: FakeNotificationCenter()
+        ))
         #expect(store.state == .signedOut && auth.signedOut == 1)
     }
 

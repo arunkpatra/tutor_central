@@ -1,9 +1,12 @@
 /// The tutor as the app names them.
 public struct Profile: Hashable, Sendable {
     public var displayName: String?
+    /// Whether the tutor set a password (`profiles.has_password`): Account's row and the sign-in sheet's offer.
+    public var hasPassword: Bool
 
-    public init(displayName: String?) {
+    public init(displayName: String?, hasPassword: Bool = false) {
         self.displayName = displayName
+        self.hasPassword = hasPassword
     }
 
     /// "Meera Nair" → "Meera"; nil when there is no name.
