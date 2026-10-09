@@ -16,3 +16,7 @@ In order, in the owner's words.
     and redirected to tutorcentral.in - will they do? you can access both domains and check"
 11. Owner step 6: "done, both saved"
 12. "ok, go ahead with build 14 after the review"
+13. On the review's wording note: "use "normally within 30 days".  Also start a new PR for all the other `Deferred (small, yours
+    to schedule):` you surfaced"
+14. "Also check if you could pull crash reports for the app, a tester logged one"; then chose "You download it once" and sent
+    `testflight_feedback.zip` (the crash log and the tester's feedback).

@@ -58,6 +58,14 @@ absolute (Anthropic keeps flagged inputs longer: the owner's call); the hero pho
 Chrome's stderr; `web-shots` not reporting `scrollWidth`; a spare scan store possible between Back and the pop; orphan words in
 doc comments; the smoke not pinning `/Privacy` → 404.
 
+## After the close
+
+- The owner chose "normally within 30 days" (#83, site and app) and asked for every deferred minor in one PR (#85).
+- A tester's crash on build 13 (tapping a class reminder), from the TestFlight feedback the owner downloaded: the async
+  `didReceive` finished off the main thread and UIKit aborted (its state restoration asserts the main thread). #84 handles the
+  tap and completes on the main thread; build 14 had the same code, so build 15 carries the fix. The tap itself is device
+  test D2 (the simulator's banners take no taps).
+
 ## Machine
 
 Xcode 27, Google Chrome 155 headless driven over DevTools from Bun, Python 3 with Pillow for pixel diffs, bun 1.3.11, the local

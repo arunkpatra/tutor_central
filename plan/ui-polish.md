@@ -44,12 +44,12 @@ screen, several as a polish slice, or not at all.
 | U29 | 2026-10-09 | Students, the "+" menu at the largest text sizes | The system menu cuts "Scan paper register" to "Scan paper regis…" | Session 15's Dynamic Type check |
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
-| U31 | 2026-10-09 | tutorcentral.in Home at 320 px wide | The phone picture's rim reaches into the right-hand margin (the boards stop at 390) | Session 17, PR #76's 320 picture |
 
 ## Done
 
 | # | Done | Pull request | What changed |
 |---|---|---|---|
+| U31 | 2026-10-09 | #85 | Home's phone is 240 × 520 at 360 px and below, inside the gutters |
 | U7 | 2026-10-09 | #79 | Edit event keeps its fields and the note's well whole with the keyboard up; Delete event scrolls under the keyboard (P8-Event-Edit-Keyboard) |
 | U16 | 2026-10-09 | #80 | A toast lifts above any footer on screen (D49); Suggested marks drops its AI line once saved, as P6-Check-Saved |
 | U24 | 2026-10-09 | #80 | The pushed AI and scan screens draw the glass under the status bar once they scroll (P8-Scan-List-Scrolled, P8-Check-Marks-Scrolled) |
