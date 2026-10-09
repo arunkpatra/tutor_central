@@ -95,9 +95,6 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   answer; a register photo under 1400 base64 characters reads nothing). `API_ORIGIN` in `Local.xcconfig` is
   `http:/$()/127.0.0.1:3000`.
 
-Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
-`bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.
-
 - Offline (D39, D40): a list's copy is `CachedRead` under the centre (`cache-<centre>-<key>.json`, file protection until
   first unlock); three writes queue in `ChangeQueue` (`queue-<centre>.json`) and `QueueRunner` sends them in order, reading
   the queue again before each send and removing only what it sent. A store gets the queue through
@@ -123,3 +120,6 @@ Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat 
   scroll). `scrollDismissesKeyboard(.interactively)` is set once on the root.
 - The launch screen is carried on by `OpeningCover` until the session is read, then fades over `opening` (500 ms,
   ease-in-out): never in a launch state. Prove a motion by recording (`simctl io booted recordVideo`) and reading frames.
+
+Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
+`bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.
