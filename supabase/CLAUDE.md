@@ -25,5 +25,9 @@
   0007 are on the hosted project. Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
+- App Review's demo centre (D51): `gh workflow run seed-review -f email=… -f parent_phone=…` fills an existing account's
+  centre with a sample centre (`tools/review-seed.ts`, tested by `tests/review-seed.test.ts`); it refuses a centre that
+  already has students. The account itself is made by the owner (Supabase dashboard), never by a script.
+
 Commands: `bun check --only=db` (resets the local database, runs the tests, re-seeds);
 `cd supabase && bun test tests`.

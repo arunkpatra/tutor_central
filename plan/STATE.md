@@ -10,8 +10,10 @@ TestFlight. **Session 16:** the Phase 8 boards and plan. **Next:** Phase 9, user
 The owner tests build 18 on the phone: U33's alerts and in-place successes, and a long class name on Add to class (#87).
 
 **App Store page (D51, before Phase 9):** the Store boards approved (canvas row 13); `bun store-shots` (#88) made
-`docs/store/screenshots/`; the listing and App Review notes are `docs/store/listing.md`. Waiting on the owner: the review
-account (made by him in the app, seeded by a workflow being built), App Privacy, the age rating.
+`docs/store/screenshots/`; the listing and App Review notes are `docs/store/listing.md`. The review account
+`review@tutorcentral.in` (made by the owner in the Supabase dashboard, setup finished in the app as Bright Minds Tuition)
+was seeded by `seed-review` (#89, run 37956309559; every parent +919611385678, the owner's). Waiting on the owner: the
+account's password in App Review Information, App Privacy, the age rating.
 
 ## Where we are
 
