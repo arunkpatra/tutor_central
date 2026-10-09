@@ -1,6 +1,6 @@
 # Phase 9: Extensive user testing
 
-**Status:** Not started (added in session 15 at the owner's request, D43). **Depends on:** Phase 7's release candidate
+**Status:** Planned, not yet started (session 18, 2026-10-09): `phase-09-plan.md`, decisions D52 to D55; added in session 15 at the owner's request (D43). **Depends on:** Phase 7's release candidate
 (build 1.0.0 on TestFlight); Phase 8's `/privacy` page live (TestFlight's external group and Beta App Review need its
 URL). **Must end before:** the first App Store submission.
 
