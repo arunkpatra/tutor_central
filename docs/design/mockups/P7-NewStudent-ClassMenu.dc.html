@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 7 · New student, the class menu with New class</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+input::placeholder,textarea::placeholder{color:#958B80;opacity:1}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --over:#FF6F61; --dim:rgba(8,6,5,.6); --halo:0 0 0 3px rgba(255,171,56,.18); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: var(--dim)"></div>
+
+  <div role="dialog" aria-labelledby="ns-title" style="position: absolute; left: 0; right: 0; top: 56px; bottom: 0; display: flex; flex-direction: column; gap: 18px; padding: 8px 20px 0; box-sizing: border-box; background: var(--s1); border: 1px solid var(--line); border-bottom: 0; border-radius: 22px 22px 0 0; box-shadow: var(--shadowFloat); overflow: hidden">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div aria-hidden="true" style="width: 36px; height: 5px; border-radius: 3px; background: var(--line2); margin: 0 auto"></div>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center">
+        <button style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 15px; font-weight: 600; padding: 0; text-align: left">Cancel</button>
+        <div id="ns-title" style="font-size: 17px; font-weight: 700">New student</div>
+        <button disabled style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 15px; font-weight: 700; padding: 0; text-align: right; opacity: .45">Save</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="ns-name" style="font-size: 13px; line-height: 18px; color: var(--t2)">Name</label>
+        <input id="ns-name" autocomplete="off" placeholder="The student's full name" style="height: 46px; box-sizing: border-box; border: 1px solid var(--acc); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell), var(--halo)">
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 46px; box-sizing: border-box; padding: 0 14px; background: var(--s2); border: 1px solid var(--line); border-radius: 15px">
+        <span style="font-size: 17px">Class</span>
+        <button style="border: 0; background: transparent; color: var(--accText); font: inherit; font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 4px; padding: 0">No class<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="ns-fee" style="font-size: 13px; line-height: 18px; color: var(--t2)">Monthly fee</label>
+        <div style="display: flex; align-items: center; gap: 8px; height: 46px; box-sizing: border-box; padding: 0 14px; border-radius: 15px; background: var(--well); border: 1px solid var(--line); box-shadow: var(--shadowWell)">
+          <span style="color: var(--t2); font-size: 17px">₹</span>
+          <input id="ns-fee" inputmode="numeric" placeholder="0" style="flex: 1; min-width: 0; border: 0; background: transparent; color: var(--t); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+          <span style="font-size: 13px; color: var(--t3)">per month</span>
+        </div>
+        <div style="font-size: 13px; line-height: 18px; color: var(--t3)">Pick a class to use its fee, or type one here.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="ns-parent" style="font-size: 13px; line-height: 18px; color: var(--t2)">Parent's name</label>
+        <input id="ns-parent" autocomplete="off" placeholder="Who you call about this student" style="height: 46px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; padding: 0 14px; outline: none; box-shadow: var(--shadowWell)">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="ns-phone" style="font-size: 13px; line-height: 18px; color: var(--t2)">Parent's WhatsApp number</label>
+        <div style="display: flex; align-items: center; gap: 8px; height: 46px; box-sizing: border-box; padding: 0 14px; border-radius: 15px; background: var(--well); border: 1px solid var(--line); box-shadow: var(--shadowWell)">
+          <span style="color: var(--t2); font-size: 17px; font-weight: 600">+91</span>
+          <input id="ns-phone" type="tel" inputmode="tel" placeholder="98765 43210" style="flex: 1; min-width: 0; border: 0; background: transparent; color: var(--t); font: inherit; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; outline: none; padding: 0">
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 46px; box-sizing: border-box; padding: 0 14px; background: var(--s2); border: 1px solid var(--line); border-radius: 15px">
+        <span style="font-size: 17px">Date of birth</span>
+        <span style="position: relative; display: inline-block; width: 51px; height: 31px"><input type="checkbox" aria-label="Add a date of birth" style="appearance: none; -webkit-appearance: none; width: 51px; height: 31px; margin: 0; border-radius: 16px; background: var(--line2); box-shadow: inset 0 1px 3px rgba(0,0,0,.35)"><span aria-hidden="true" style="position: absolute; left: 2px; top: 2px; width: 27px; height: 27px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,.35)"></span></span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 13px; line-height: 18px; color: var(--t2)">Gender <span style="color: var(--t3)">(optional)</span></div>
+        <div role="group" aria-label="Gender" style="display: flex; gap: 8px">
+          <button aria-pressed="false" style="height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: var(--s2); color: var(--t2); font: inherit; font-size: 13px; font-weight: 600">Girl</button>
+          <button aria-pressed="false" style="height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: var(--s2); color: var(--t2); font: inherit; font-size: 13px; font-weight: 600">Boy</button>
+          <button aria-pressed="false" style="height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: var(--s2); color: var(--t2); font: inherit; font-size: 13px; font-weight: 600">Other</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="ns-notes" style="font-size: 13px; line-height: 18px; color: var(--t2)">Notes</label>
+        <div style="position: relative">
+          <textarea id="ns-notes" placeholder="School, board, pickup, anything to remember" style="display: block; width: 100%; min-height: 96px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 15px; background: var(--well); color: var(--t); font: inherit; font-size: 17px; line-height: 22px; padding: 12px 14px 28px; outline: none; resize: none; box-shadow: var(--shadowWell)"></textarea>
+          <div style="position: absolute; right: 14px; bottom: 10px; font-size: 12px; line-height: 16px; color: var(--t3); font-variant-numeric: tabular-nums">0 of 2,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+
+  <div role="menu" aria-label="Class" style="position: absolute; top: 255px; right: 20px; width: 270px; display: flex; flex-direction: column; background: var(--glass); border: 1px solid var(--glassLine); border-radius: 16px; box-shadow: var(--shadowFloat); backdrop-filter: blur(22px) saturate(1.3); -webkit-backdrop-filter: blur(22px) saturate(1.3); overflow: hidden">
+    <a role="menuitemradio" aria-checked="true" href="#" style="text-decoration: none; color: var(--t); display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 46px; padding: 0 16px; font-size: 17px; border-bottom: 1px solid var(--glassLine);"><span style="color: var(--accText); display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span><span>No class</span><span></span></a>
+    <a role="menuitemradio" aria-checked="false" href="#" style="text-decoration: none; color: var(--t); display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 46px; padding: 0 16px; font-size: 17px; border-bottom: 1px solid var(--glassLine);"><span></span><span>Class 10 Maths</span><span style="color: var(--t3); font-variant-numeric: tabular-nums">6</span></a>
+    <a role="menuitemradio" aria-checked="false" href="#" style="text-decoration: none; color: var(--t); display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 46px; padding: 0 16px; font-size: 17px;"><span></span><span>Class 8 Science</span><span style="color: var(--t3); font-variant-numeric: tabular-nums">3</span></a>
+    <div aria-hidden="true" style="height: 6px; background: var(--line)"></div>
+    <a role="menuitem" href="P7-NewStudent-NewClass.dc.html" style="text-decoration: none; color: var(--t); display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 46px; padding: 0 16px; font-size: 17px"><span></span><span>New class…</span><span style="display: flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></span></a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

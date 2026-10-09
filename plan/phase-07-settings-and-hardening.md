@@ -1,6 +1,6 @@
 # Phase 7: Settings, account, notifications, offline hardening, release candidate
 
-**Status:** Planned: `phase-07-plan.md` approved 2026-10-09 (session 14); the build is next (resume 014). **Depends on:** Phases 2 to 6; Phase 0's Phase 7 boards (approved 2026-10-09, row 10).
+**Status:** Done (session 15, 2026-10-09, PRs #63 to #73). **Depends on:** Phases 2 to 6; Phase 0's Phase 7 boards (approved 2026-10-09, row 10).
 
 ## Goal
 
@@ -38,4 +38,37 @@ TestFlight with the help and legal pages in place.
 
 ## As built
 
-(Written when the phase ends.)
+Session 15 (2026-10-09, Opus 5.5, from `resume/014-phase-7-build.md`), the plan's 23 tasks in eleven pull requests:
+
+| PR | What |
+|---|---|
+| #63 | `public.delete_account()` (migration 0008, D37), the second and last `security definer`; two RLS tests |
+| #64 | The API's `POST /account/revoke-apple` (D38): a client secret signed with the Sign in with Apple key (ES256, Node `crypto`), `APPLE_FAKE=1` locally |
+| #65 | Domain: the reminder planner, pending changes, the cache age, the account rules |
+| #66 | Data: account, connectivity, cached reads with file protection, the change queue and its runner, the notification centre, the wipe (D39, D40) |
+| #67 | Settings in full, Account, a password, sign out that wipes, Delete account, Help, More's rows |
+| #68 | Offline: every list from its copy on the iPhone, three writes queued and sent in order, Pending changes; no technical words on screen (D41) |
+| #69 | Teacher reminders: the screen, the planner on sign-in, foreground and every saved write, a tapped reminder opens its link |
+| #70 | Hardening: Dynamic Type, VoiceOver, reduced motion, the Kit's Phase 7 parts, no backend words, the launch screen, 1.0.0 |
+| #71 | The whole-phase review's fixes (one Critical, four Important, three minors regraded), fresh data on foreground |
+| #72 | The owner's build-10 findings: Start here's labels, every calendar, sheet headers, the keyboard, the task field; New class… from the student form |
+| #73 | Today's account picture at the top right; the launch screen fading into the app |
+
+**Production:** migration 0008 and the API at `2448295` with `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` (deploy run
+37897295893; Apple accepted the signed secret, answering a made-up code with `invalid_grant`). TestFlight: 1.0.0 (10) (run
+37899341603) on the owner's phone; 1.0.0 (11) with #72 and #73.
+
+**Where it moved from the plan, and why** (the rulings are in `plan/sessions/015/record.md`):
+- D41, from the owner mid-build: no technical words on screen; the approved texts with "server" were reworded and a test
+  (`ErrorWordsTests`) reads every on-screen sentence in the sources. It replaced the plan's `ErrorWords` table.
+- The Dynamic Type layer (`AdaptiveRow` and its kin) stacks rows only at the accessibility sizes; at every other size the
+  boards' layout is unchanged, proven by a pixel diff. Text now follows a size changed while the app runs.
+- The reviewer found the queue could drop a correction made during a send and send a change undone during a run; the
+  runner now reads the queue before each send and removes only what it sent, and runs at once for a change queued online.
+- Every list reads again on coming back to the app (the owner saw stale data on build 9).
+- Run 6's tap-to-open could not be driven in the simulator (its lock screen takes no injected taps); the reminder's link
+  was opened directly and the tap is the tester's D2.
+- Google's official mark was offered and not taken (the owner's call, still open).
+
+**Not done here:** the external group and Beta App Review (they need Phase 8's privacy page; Phase 9 runs them, D43);
+the tester's D1 to D7; seven review minors (`plan/sessions/015/record.md`); U7, U16, U24 and U25 to U30 on the polish list.

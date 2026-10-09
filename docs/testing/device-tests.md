@@ -80,6 +80,9 @@ The tester writes results in the log at the end.
 | D6 | Account → Password → set one. Sign out. Continue with email → Use my password instead → the password. | Signs in without a code. |
 | D7 | Install the build from the external TestFlight group's invitation email (not the internal group). | It installs and signs in; the version on Settings reads 1.0 with the build number from the email. |
 
+The simulator proved the reminder fires on time and that its link opens Attendance for the class (session 15, run 6); the
+tap on the lock screen itself is D2's. The opening fade (P7-Launch-Fade) is the owner's to judge on build 11.
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |

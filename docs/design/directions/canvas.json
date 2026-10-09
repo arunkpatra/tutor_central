@@ -1,1604 +1,1708 @@
 {
- "v": 3,
- "attachments": {},
- "boards": {
-  "A-Controls.dc.html": {
-   "h": 852,
-   "title": "A Ember · Controls",
-   "w": 393,
-   "x": 1419,
-   "y": 0
-  },
-  "A-SignIn.dc.html": {
-   "h": 852,
-   "title": "A Ember · Sign in · dark",
-   "w": 393,
-   "x": 946,
-   "y": 0
-  },
-  "A-Today-Light.dc.html": {
-   "h": 852,
-   "title": "A Ember · Today · light",
-   "w": 393,
-   "x": 473,
-   "y": 0
-  },
-  "B-Controls.dc.html": {
-   "h": 852,
-   "title": "B Indigo · Controls",
-   "w": 393,
-   "x": 1419,
-   "y": 1400
-  },
-  "B-SignIn.dc.html": {
-   "h": 852,
-   "title": "B Indigo · Sign in · dark",
-   "w": 393,
-   "x": 946,
-   "y": 1400
-  },
-  "B-Today-Dark.dc.html": {
-   "h": 852,
-   "title": "B Indigo · Today · dark",
-   "w": 393,
-   "x": 0,
-   "y": 1400
-  },
-  "B-Today-Light.dc.html": {
-   "h": 852,
-   "title": "B Indigo · Today · light",
-   "w": 393,
-   "x": 473,
-   "y": 1400
-  },
-  "C-Controls.dc.html": {
-   "h": 852,
-   "title": "C Ink · Controls",
-   "w": 393,
-   "x": 1419,
-   "y": 2800
-  },
-  "C-SignIn.dc.html": {
-   "h": 852,
-   "title": "C Ink · Sign in · dark",
-   "w": 393,
-   "x": 946,
-   "y": 2800
-  },
-  "C-Today-Dark.dc.html": {
-   "h": 852,
-   "title": "C Ink · Today · dark",
-   "w": 393,
-   "x": 0,
-   "y": 2800
-  },
-  "C-Today-Light.dc.html": {
-   "h": 852,
-   "title": "C Ink · Today · light",
-   "w": 393,
-   "x": 473,
-   "y": 2800
-  },
-  "Kit-Controls-Dark.dc.html": {
-   "h": 1240,
-   "title": "Ember kit · controls · dark",
-   "w": 393,
-   "x": 0,
-   "y": 4200
-  },
-  "Kit-Controls-Light.dc.html": {
-   "h": 1240,
-   "title": "Ember kit · controls · light",
-   "w": 393,
-   "x": 473,
-   "y": 4200
-  },
-  "Kit-Surfaces-Dark.dc.html": {
-   "h": 1560,
-   "title": "Ember kit · surfaces and patterns · dark",
-   "w": 393,
-   "x": 946,
-   "y": 4200
-  },
-  "Kit-Surfaces-Light.dc.html": {
-   "h": 1560,
-   "title": "Ember kit · surfaces and patterns · light",
-   "w": 393,
-   "x": 1419,
-   "y": 4200
-  },
-  "Main.dc.html": {
-   "h": 852,
-   "title": "A Ember · Today · dark",
-   "w": 393,
-   "x": 0,
-   "y": 0
-  },
-  "P2-AppIcon.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · App icon, Ember glow with Lucide's book",
-   "w": 393,
-   "x": 4730,
-   "y": 6200
-  },
-  "P2-Email-Code.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Email: enter the code (and the wrong-code state)",
-   "w": 393,
-   "x": 946,
-   "y": 6200
-  },
-  "P2-Email-Password.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Email: sign in with a password (and the wrong-password state)",
-   "w": 393,
-   "x": 4257,
-   "y": 6200
-  },
-  "P2-Email-Request.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Email: request a code",
-   "w": 393,
-   "x": 473,
-   "y": 6200
-  },
-  "P2-Later.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · A tab that comes later",
-   "w": 393,
-   "x": 3784,
-   "y": 6200
-  },
-  "P2-Onboarding-Dark.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Onboarding · dark",
-   "w": 393,
-   "x": 1419,
-   "y": 6200
-  },
-  "P2-Onboarding-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Onboarding · light",
-   "w": 393,
-   "x": 1892,
-   "y": 6200
-  },
-  "P2-Settings.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Settings, minimal",
-   "w": 393,
-   "x": 3311,
-   "y": 6200
-  },
-  "P2-SignIn-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Sign in · light",
-   "w": 393,
-   "x": 0,
-   "y": 6200
-  },
-  "P2-Today-Empty-Dark.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Today, empty · dark",
-   "w": 393,
-   "x": 2365,
-   "y": 6200
-  },
-  "P2-Today-Empty-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 2 · Today, empty · light",
-   "w": 393,
-   "x": 2838,
-   "y": 6200
-  },
-  "P3-Archive-Confirm.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Archive a student, the confirmation",
-   "w": 393,
-   "x": 6622,
-   "y": 7600
-  },
-  "P3-ClassDetail-AddMembers.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Class detail, add students",
-   "w": 393,
-   "x": 9933,
-   "y": 7600
-  },
-  "P3-ClassDetail.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Class detail",
-   "w": 393,
-   "x": 9460,
-   "y": 7600
-  },
-  "P3-Classes-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Classes, empty",
-   "w": 393,
-   "x": 7568,
-   "y": 7600
-  },
-  "P3-Classes-List.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Classes",
-   "w": 393,
-   "x": 8041,
-   "y": 7600
-  },
-  "P3-Delete-Confirm.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Delete a student, the typed confirmation",
-   "w": 393,
-   "x": 7095,
-   "y": 7600
-  },
-  "P3-EditClass.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Edit class, with Archive class",
-   "w": 393,
-   "x": 8987,
-   "y": 7600
-  },
-  "P3-EditStudent.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Edit student",
-   "w": 393,
-   "x": 4730,
-   "y": 7600
-  },
-  "P3-NewClass.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · New class",
-   "w": 393,
-   "x": 8514,
-   "y": 7600
-  },
-  "P3-NewStudent-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · New student, empty",
-   "w": 393,
-   "x": 3311,
-   "y": 7600
-  },
-  "P3-NewStudent-Filled.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · New student, filled",
-   "w": 393,
-   "x": 3784,
-   "y": 7600
-  },
-  "P3-NewStudent-Invalid.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · New student, a number that is not complete",
-   "w": 393,
-   "x": 4257,
-   "y": 7600
-  },
-  "P3-StudentDetail-Archived.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Student detail, archived, with Restore",
-   "w": 393,
-   "x": 6149,
-   "y": 7600
-  },
-  "P3-StudentDetail-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Student detail · light",
-   "w": 393,
-   "x": 5676,
-   "y": 7600
-  },
-  "P3-StudentDetail.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Student detail · dark",
-   "w": 393,
-   "x": 5203,
-   "y": 7600
-  },
-  "P3-Students-AddMenu.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, the add menu",
-   "w": 393,
-   "x": 2838,
-   "y": 7600
-  },
-  "P3-Students-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, empty",
-   "w": 393,
-   "x": 0,
-   "y": 7600
-  },
-  "P3-Students-Few.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, the first three, no classes yet",
-   "w": 393,
-   "x": 473,
-   "y": 7600
-  },
-  "P3-Students-Filtered.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, filtered to one class",
-   "w": 393,
-   "x": 2365,
-   "y": 7600
-  },
-  "P3-Students-Many-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, the whole register · light",
-   "w": 393,
-   "x": 1419,
-   "y": 7600
-  },
-  "P3-Students-Many.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, the whole register · dark",
-   "w": 393,
-   "x": 946,
-   "y": 7600
-  },
-  "P3-Students-Searching.dc.html": {
-   "h": 852,
-   "title": "Phase 3 · Students, searching",
-   "w": 393,
-   "x": 1892,
-   "y": 7600
-  },
-  "P4-Absence-Alert.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · The absence alert: the WhatsApp message before it opens",
-   "w": 393,
-   "x": 4730,
-   "y": 9000
-  },
-  "P4-Attendance-ClassMenu.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, choosing the class",
-   "w": 393,
-   "x": 3311,
-   "y": 9000
-  },
-  "P4-Attendance-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, no students yet",
-   "w": 393,
-   "x": 5676,
-   "y": 9000
-  },
-  "P4-Attendance-Mark-Exceptions.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, mark: one absent",
-   "w": 393,
-   "x": 3784,
-   "y": 9000
-  },
-  "P4-Attendance-Mark-Fresh-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, mark: a fresh class, everyone present · light",
-   "w": 393,
-   "x": 2838,
-   "y": 9000
-  },
-  "P4-Attendance-Mark-Fresh.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, mark: a fresh class, everyone present · dark",
-   "w": 393,
-   "x": 2365,
-   "y": 9000
-  },
-  "P4-Attendance-Mark-PastDate.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, a past date: the saved class reopened",
-   "w": 393,
-   "x": 5203,
-   "y": 9000
-  },
-  "P4-Attendance-Mark-Saved.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance, saved: the absent student and the alert",
-   "w": 393,
-   "x": 4257,
-   "y": 9000
-  },
-  "P4-Event-Delete-Confirm.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Delete an event, the confirmation",
-   "w": 393,
-   "x": 11352,
-   "y": 9000
-  },
-  "P4-Event-Edit.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Edit event, with Delete event",
-   "w": 393,
-   "x": 10879,
-   "y": 9000
-  },
-  "P4-Event-New.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · New event",
-   "w": 393,
-   "x": 10406,
-   "y": 9000
-  },
-  "P4-History-ByDate.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance history by date",
-   "w": 393,
-   "x": 6149,
-   "y": 9000
-  },
-  "P4-History-ByStudent.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance history by student",
-   "w": 393,
-   "x": 6622,
-   "y": 9000
-  },
-  "P4-History-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Attendance history, nothing marked yet",
-   "w": 393,
-   "x": 7568,
-   "y": 9000
-  },
-  "P4-History-Student.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · One student's attendance for the month",
-   "w": 393,
-   "x": 7095,
-   "y": 9000
-  },
-  "P4-More-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · More: Schedule, Tasks, Classes, Settings live; the rest named · light",
-   "w": 393,
-   "x": 8987,
-   "y": 9000
-  },
-  "P4-More.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · More: Schedule, Tasks, Classes, Settings live; the rest named · dark",
-   "w": 393,
-   "x": 8514,
-   "y": 9000
-  },
-  "P4-Schedule-Day.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Schedule: a chosen day with an event and no class",
-   "w": 393,
-   "x": 9933,
-   "y": 9000
-  },
-  "P4-Schedule-Month.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Schedule: the month, today's classes and events",
-   "w": 393,
-   "x": 9460,
-   "y": 9000
-  },
-  "P4-StudentDetail-Attendance.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Student detail: the attendance section, live",
-   "w": 393,
-   "x": 8041,
-   "y": 9000
-  },
-  "P4-Tasks-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Tasks, nothing yet",
-   "w": 393,
-   "x": 12298,
-   "y": 9000
-  },
-  "P4-Tasks.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Tasks: everything, to do and done",
-   "w": 393,
-   "x": 11825,
-   "y": 9000
-  },
-  "P4-Today-AddingTask.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Today: adding a task inline (scrolled to Tasks; the status bar on glass, U1)",
-   "w": 393,
-   "x": 1892,
-   "y": 9000
-  },
-  "P4-Today-Evening.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Today live: the evening, nothing left",
-   "w": 393,
-   "x": 946,
-   "y": 9000
-  },
-  "P4-Today-NoClass.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Today live: a day with no class",
-   "w": 393,
-   "x": 1419,
-   "y": 9000
-  },
-  "P4-Today-Soon-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Today live: a class starts soon · light",
-   "w": 393,
-   "x": 473,
-   "y": 9000
-  },
-  "P4-Today-Soon.dc.html": {
-   "h": 852,
-   "title": "Phase 4 · Today live: a class starts soon · dark",
-   "w": 393,
-   "x": 0,
-   "y": 9000
-  },
-  "P5-Fees-All-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees: the month, every fee · light",
-   "w": 393,
-   "x": 946,
-   "y": 10400
-  },
-  "P5-Fees-All.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees: the month, every fee · dark",
-   "w": 393,
-   "x": 473,
-   "y": 10400
-  },
-  "P5-Fees-Due.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees: due, with Remind and Mark paid",
-   "w": 393,
-   "x": 1419,
-   "y": 10400
-  },
-  "P5-Fees-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees before generation: a fresh centre, no UPI id yet",
-   "w": 393,
-   "x": 0,
-   "y": 10400
-  },
-  "P5-Fees-MarkedPaid.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · After Mark paid: the row moves, the toast with Undo",
-   "w": 393,
-   "x": 4730,
-   "y": 10400
-  },
-  "P5-Fees-Overdue.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees: a past month with a fee still due (overdue)",
-   "w": 393,
-   "x": 2365,
-   "y": 10400
-  },
-  "P5-Fees-Paid.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees: paid",
-   "w": 393,
-   "x": 1892,
-   "y": 10400
-  },
-  "P5-Fees-Payee.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Fees: the payee confirmation, until confirmed once",
-   "w": 393,
-   "x": 2838,
-   "y": 10400
-  },
-  "P5-Generate-Nothing.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Generate again: nothing to create",
-   "w": 393,
-   "x": 3784,
-   "y": 10400
-  },
-  "P5-Generate.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Generate the month's fees: what will be created",
-   "w": 393,
-   "x": 3311,
-   "y": 10400
-  },
-  "P5-MarkPaid.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Mark paid: method, date, waive instead",
-   "w": 393,
-   "x": 4257,
-   "y": 10400
-  },
-  "P5-More-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · More: Reports live · light",
-   "w": 393,
-   "x": 11825,
-   "y": 10400
-  },
-  "P5-More.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · More: Reports live · dark",
-   "w": 393,
-   "x": 11352,
-   "y": 10400
-  },
-  "P5-Payments-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Parent payments: nothing set yet",
-   "w": 393,
-   "x": 6622,
-   "y": 10400
-  },
-  "P5-Payments-Filled.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Parent payments: the UPI id set and saved",
-   "w": 393,
-   "x": 7095,
-   "y": 10400
-  },
-  "P5-Payments-QR.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Parent payments: a QR added, the id read from it",
-   "w": 393,
-   "x": 7568,
-   "y": 10400
-  },
-  "P5-Receipt.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · The receipt: the WhatsApp message before it opens",
-   "w": 393,
-   "x": 5203,
-   "y": 10400
-  },
-  "P5-Remind.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Remind: the WhatsApp message before it opens",
-   "w": 393,
-   "x": 5676,
-   "y": 10400
-  },
-  "P5-Reports-Attendance.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Reports: the month's attendance",
-   "w": 393,
-   "x": 9933,
-   "y": 10400
-  },
-  "P5-Reports-Empty.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Reports: a month with nothing yet",
-   "w": 393,
-   "x": 10879,
-   "y": 10400
-  },
-  "P5-Reports-Export.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Share a report as CSV",
-   "w": 393,
-   "x": 10406,
-   "y": 10400
-  },
-  "P5-Reports-Fees-Light.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Reports: the month's fees · light",
-   "w": 393,
-   "x": 9460,
-   "y": 10400
-  },
-  "P5-Reports-Fees.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Reports: the month's fees · dark",
-   "w": 393,
-   "x": 8987,
-   "y": 10400
-  },
-  "P5-Settings.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Settings: Parent payments live",
-   "w": 393,
-   "x": 12298,
-   "y": 10400
-  },
-  "P5-StudentDetail-Fees.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Student detail: the fees section live",
-   "w": 393,
-   "x": 8041,
-   "y": 10400
-  },
-  "P5-StudentFees.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · A student's fees: every month with a fee",
-   "w": 393,
-   "x": 8514,
-   "y": 10400
-  },
-  "P5-Waive.dc.html": {
-   "h": 852,
-   "title": "Phase 5 · Waive a fee, with a reason",
-   "w": 393,
-   "x": 6149,
-   "y": 10400
-  },
-  "P6-Assistant.dc.html": {
-   "x": 0,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · AI Assistant: the four tools and recent results · dark"
-  },
-  "P6-Assistant-Light.dc.html": {
-   "x": 473,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · AI Assistant: the four tools and recent results · light"
-  },
-  "P6-Assistant-Empty.dc.html": {
-   "x": 946,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · AI Assistant: nothing created yet"
-  },
-  "P6-Form-Paper.dc.html": {
-   "x": 1419,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Question paper: the form, topic focused"
-  },
-  "P6-Form-Homework.dc.html": {
-   "x": 1892,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Homework: the form"
-  },
-  "P6-Form-Worksheet.dc.html": {
-   "x": 2365,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Worksheet: the form, with an answer key"
-  },
-  "P6-Form-ProgressNote.dc.html": {
-   "x": 2838,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Progress note: the form, a student chosen"
-  },
-  "P6-ProgressNote-StudentPicker.dc.html": {
-   "x": 3311,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Progress note: choosing the student (a floating sheet)"
-  },
-  "P6-Generating.dc.html": {
-   "x": 3784,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Question paper: creating (the form held, the button loading)"
-  },
-  "P6-Generate-Failed.dc.html": {
-   "x": 4257,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Question paper: the call failed, Retry"
-  },
-  "P6-Result-Paper.dc.html": {
-   "x": 4730,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Question paper: the result, copy, share as PDF, create again · dark"
-  },
-  "P6-Result-Paper-Light.dc.html": {
-   "x": 5203,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Question paper: the result · light"
-  },
-  "P6-Result-Regenerating.dc.html": {
-   "x": 5676,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Question paper: creating again, the old paper kept"
-  },
-  "P6-Result-ProgressNote.dc.html": {
-   "x": 6149,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Progress note: the result, editable, send on WhatsApp"
-  },
-  "P6-ProgressNote-Send.dc.html": {
-   "x": 6622,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Progress note: the WhatsApp message before it opens (logged as progress)"
-  },
-  "P6-History.dc.html": {
-   "x": 7095,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · History: everything created, newest first"
-  },
-  "P6-History-Empty.dc.html": {
-   "x": 7568,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · History: nothing created yet"
-  },
-  "P6-Scan-Intro.dc.html": {
-   "x": 8041,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: the intro with the notices"
-  },
-  "P6-Scan-Consent.dc.html": {
-   "x": 8514,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · The consent, asked once per centre before the first photo (a floating sheet)"
-  },
-  "P6-Scan-CameraAsk.dc.html": {
-   "x": 8987,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · The first camera ask (the system's alert)"
-  },
-  "P6-Scan-CameraRefused.dc.html": {
-   "x": 9460,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · A refused camera: where to allow it, with Open Settings"
-  },
-  "P6-Scan-Camera.dc.html": {
-   "x": 9933,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · The camera: the system's document camera (VisionKit); Cancel is the way out"
-  },
-  "P6-Scan-Photos.dc.html": {
-   "x": 10406,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Photos as the other way in (the system's picker)"
-  },
-  "P6-Scan-Reading.dc.html": {
-   "x": 10879,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: reading the photo"
-  },
-  "P6-Scan-Review.dc.html": {
-   "x": 11352,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: the list to check, one already here, one without a number"
-  },
-  "P6-Scan-Review-Edit.dc.html": {
-   "x": 11825,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: fixing a row (the student form, with Remove this row)"
-  },
-  "P6-Scan-Review-RowRemoved.dc.html": {
-   "x": 12298,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: a row removed, with Undo"
-  },
-  "P6-Scan-Review-Leave.dc.html": {
-   "x": 12771,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: leaving the list before adding (the confirmation)"
-  },
-  "P6-Scan-Nothing.dc.html": {
-   "x": 13244,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: no names found"
-  },
-  "P6-Scan-Failed.dc.html": {
-   "x": 13717,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: the call failed, Retry or another photo"
-  },
-  "P6-Scan-Saved.dc.html": {
-   "x": 14190,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Scan register: added, the list with the new students and the toast"
-  },
-  "P6-Check-Intro.dc.html": {
-   "x": 14663,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: the intro, the student, the ways in"
-  },
-  "P6-Check-Pages.dc.html": {
-   "x": 15136,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: the pages, add or remove one"
-  },
-  "P6-Check-Scheme.dc.html": {
-   "x": 15609,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: the marking scheme from a paper you created"
-  },
-  "P6-Check-Scheme-Typed.dc.html": {
-   "x": 16082,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: the marking scheme typed"
-  },
-  "P6-Check-Checking.dc.html": {
-   "x": 16555,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: checking the pages"
-  },
-  "P6-Check-Result.dc.html": {
-   "x": 17028,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: the suggested marks, each one editable"
-  },
-  "P6-Check-MarkPicker.dc.html": {
-   "x": 17501,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: changing a mark (a popover from the mark)"
-  },
-  "P6-Check-Result-Edited.dc.html": {
-   "x": 17974,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: a mark changed, the total rolled"
-  },
-  "P6-Check-Saved.dc.html": {
-   "x": 18447,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: saved to the student's notes, with Undo"
-  },
-  "P6-Check-Failed.dc.html": {
-   "x": 18920,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Check a paper: the call failed, Retry or back to the pages"
-  },
-  "P6-More.dc.html": {
-   "x": 19393,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · More: the three AI rows live · dark"
-  },
-  "P6-More-Light.dc.html": {
-   "x": 19866,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · More: the three AI rows live · light"
-  },
-  "P6-Today-AITools.dc.html": {
-   "x": 20339,
-   "y": 11800,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 6 · Today: the AI tools row (scrolled to the end)"
-  },
-  "P7-Settings.dc.html": {
-   "x": 0,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Settings in full: the profile saved as you go, parents, this iPhone (reminders, haptics, appearance, pending changes), account, about · dark"
-  },
-  "P7-Settings-Light.dc.html": {
-   "x": 473,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Settings in full · light"
-  },
-  "P7-Settings-End.dc.html": {
-   "x": 946,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Settings scrolled to the end: this iPhone, account, about (version, help, the legal pages)"
-  },
-  "P7-Settings-SaveFailed.dc.html": {
-   "x": 1419,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Settings: a save failed; the mark is gone and the toast says which field"
-  },
-  "P7-Account.dc.html": {
-   "x": 1892,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Account: email, sign-in methods, password, sign out, delete account · dark"
-  },
-  "P7-Account-Light.dc.html": {
-   "x": 2365,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Account · light"
-  },
-  "P7-Account-Password.dc.html": {
-   "x": 2838,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Set a password (a floating sheet): the field focused, Set password until 8 characters"
-  },
-  "P7-Account-Password-Failed.dc.html": {
-   "x": 3311,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Set a password: the write failed, the field keeps the password, Set password tries again"
-  },
-  "P7-Account-Password-Saved.dc.html": {
-   "x": 3784,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Account after the password was set: the row reads Set (opens Change password), the toast"
-  },
-  "P7-Account-SignOut.dc.html": {
-   "x": 4257,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Sign out? The confirmation; what's saved on this iPhone goes with it"
-  },
-  "P7-Account-SignOut-Pending.dc.html": {
-   "x": 4730,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Sign out with changes still waiting to be sent: they would be lost"
-  },
-  "P7-Delete.dc.html": {
-   "x": 5203,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Delete account: what goes, the typed confirmation, the button disabled"
-  },
-  "P7-Delete-Typed.dc.html": {
-   "x": 5676,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Delete account: the centre's name typed, Delete my account live"
-  },
-  "P7-Delete-Deleting.dc.html": {
-   "x": 6149,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Delete account: removing everything (Apple confirmed, the function running)"
-  },
-  "P7-Delete-Failed.dc.html": {
-   "x": 6622,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Delete account: the call failed, nothing was removed, Retry"
-  },
-  "P7-Delete-Done.dc.html": {
-   "x": 7095,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · After deletion: the sign-in landing says so; a new sign-in starts at onboarding"
-  },
-  "P7-Reminders-NotAsked.dc.html": {
-   "x": 7568,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Teacher reminders before iOS has been asked: what they are, Turn on reminders"
-  },
-  "P7-Reminders-Ask.dc.html": {
-   "x": 8041,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · The notification permission (the system's alert)"
-  },
-  "P7-Reminders-On.dc.html": {
-   "x": 8514,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Teacher reminders on: the next one, the three switches with their timing, what is set on this iPhone, Refresh"
-  },
-  "P7-Reminders-AllOff.dc.html": {
-   "x": 8987,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Teacher reminders allowed but every switch off: nothing is set"
-  },
-  "P7-Reminders-Refused.dc.html": {
-   "x": 9460,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Notifications refused or turned off in iOS: where to allow them, Open Settings; the switches wait"
-  },
-  "P7-Reminders-DayPicker.dc.html": {
-   "x": 9933,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Choosing the day of the month (a wheel in a popover from the tile)"
-  },
-  "P7-Help.dc.html": {
-   "x": 10406,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Help: write to us, the common questions"
-  },
-  "P7-Help-Answer.dc.html": {
-   "x": 10879,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Help: a question opened"
-  },
-  "P7-More.dc.html": {
-   "x": 11352,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · More: Account and Help live · dark"
-  },
-  "P7-More-Light.dc.html": {
-   "x": 11825,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · More: Account and Help live · light"
-  },
-  "P7-Offline-Today.dc.html": {
-   "x": 12298,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Today offline: everything from the cache, the bar says when it was saved; Mark attendance stays live"
-  },
-  "P7-Sync-Sending.dc.html": {
-   "x": 12771,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Back online: the saved changes being sent (the bar becomes the banner)"
-  },
-  "P7-Sync-Sent.dc.html": {
-   "x": 13244,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · The saved changes sent: the toast on whichever screen is open"
-  },
-  "P7-Sync-Failed.dc.html": {
-   "x": 13717,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · A saved change couldn't be sent: the banner opens Pending changes"
-  },
-  "P7-Offline-Students.dc.html": {
-   "x": 14190,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Students offline: the register from the cache, the bar with its age"
-  },
-  "P7-Offline-WriteRefused.dc.html": {
-   "x": 14663,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · A write refused offline: Save on the student form says so; the form keeps what was typed"
-  },
-  "P7-Offline-Fees.dc.html": {
-   "x": 15136,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Fees offline: the month from the cache; Mark paid stays live (it is kept here), Remind and Generate wait for a connection"
-  },
-  "P7-Offline-FeeMarked.dc.html": {
-   "x": 15609,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · A fee marked paid offline: the row moves, its line says it is kept here, the toast with Undo"
-  },
-  "P7-Offline-NoCache.dc.html": {
-   "x": 16082,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Offline with nothing saved yet (a screen never opened online)"
-  },
-  "P7-Offline-AttendanceSaved.dc.html": {
-   "x": 16555,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Attendance saved offline: kept on this iPhone, the footer and banner say so; Tell parent still opens WhatsApp"
-  },
-  "P7-Pending.dc.html": {
-   "x": 17028,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Pending changes: what is waiting, what failed and why, Send again, Discard"
-  },
-  "P7-Pending-Discard.dc.html": {
-   "x": 17501,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · Discarding a failed change (the confirmation)"
-  },
-  "P7-Notifications.dc.html": {
-   "x": 17974,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · The three reminders as iOS shows them on the lock screen: a class, an event, the month's unpaid fees; each opens its link"
-  },
-  "P7-Launch.dc.html": {
-   "x": 18447,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · The launch screen: the ground and the book, nothing else; dark whatever the iPhone's setting"
-  },
-  "P7-AppIcon-Home.dc.html": {
-   "x": 18920,
-   "y": 13200,
-   "w": 393,
-   "h": 852,
-   "title": "Phase 7 · The app icon in place on the home screen (the other icons are stand-ins)"
-  }
- },
- "createdOnFiles": {
-  "at": "2026-10-07T14:20:00Z",
-  "v": 1
- },
- "designSystems": [],
- "launch": {
-  "view": "canvas"
- },
- "notes": {
-  "dirA": {
-   "kind": "title1",
-   "maxW": 1812,
-   "text": "Direction A · Ember — warm charcoal, marigold, native SF Pro",
-   "w": 240,
-   "x": 0,
-   "y": -300
-  },
-  "dirB": {
-   "kind": "title1",
-   "maxW": 1812,
-   "text": "Direction B · Indigo — deep night blue, lime, geometric Sora, glass",
-   "w": 240,
-   "x": 0,
-   "y": 1100
-  },
-  "dirC": {
-   "kind": "title1",
-   "maxW": 1812,
-   "text": "Direction C · Ink — neutral graphite, cobalt, editorial serif",
-   "w": 240,
-   "x": 0,
-   "y": 2500
-  },
-  "kit": {
-   "kind": "title1",
-   "maxW": 1812,
-   "text": "Step 0.2 · Ember design system — the Kit (D20)",
-   "w": 240,
-   "x": 0,
-   "y": 3900
-  },
-  "p2": {
-   "kind": "title1",
-   "maxW": 5123,
-   "text": "Step 0.3 · Phase 2 boards — sign-in flow, onboarding, Today empty, Settings minimal, password (sign-in dark is board A in row 1)",
-   "w": 240,
-   "x": 0,
-   "y": 5900
-  },
-  "p3": {
-   "kind": "title1",
-   "maxW": 8000,
-   "text": "Step 0.4 · Phase 3 boards — students (list states, add menu, form, detail, confirmations) and classes",
-   "w": 240,
-   "x": 0,
-   "y": 7300
-  },
-  "p4": {
-   "kind": "title1",
-   "maxW": 8000,
-   "text": "Step 0.5 · Phase 4 boards — Today live, attendance (mark, saved, past date, the alert), history, More, schedule and events, tasks",
-   "w": 240,
-   "x": 0,
-   "y": 8700
-  },
-  "p5": {
-   "kind": "title1",
-   "maxW": 8000,
-   "text": "Step 0.6 · Phase 5 boards — fees (the month, due, paid, overdue, the payee), generate, mark paid, receipt, remind, waive, parent payments and the QR, a student's fees, reports and CSV, More and Settings live",
-   "w": 240,
-   "x": 0,
-   "y": 10100
-  },
-  "p6": {
-   "kind": "title1",
-   "maxW": 8000,
-   "w": 240,
-   "x": 0,
-   "y": 11500,
-   "text": "Step 0.7 · Phase 6 boards — AI Assistant (home, the four forms, the student picker, creating, results, create again, failure, the note on WhatsApp, history), scan register (intro, consent, the camera asks, the camera and Photos, reading, the list to check, fixing and removing a row, leaving, nothing found, failure, added), check a paper (intro, pages, the scheme, checking, the marks, changing one, saved, failure), More and Today's row"
-  },
-  "p7": {
-   "kind": "title1",
-   "maxW": 8000,
-   "w": 240,
-   "x": 0,
-   "y": 12900,
-   "text": "Step 0.8 · Phase 7 boards — Settings in full (the profile saved as you go, parents, this iPhone, account, about), Account (methods, a password, sign out, delete account and what follows), Teacher reminders (not asked, the ask, on, all off, refused, the day), Help, More, offline (lists from the cache with their age, nothing saved, a write refused, attendance and a fee saved here), back online (sending, sent, a failure), pending changes, the notifications, the launch screen, the icon in place"
-  }
- },
- "order": [
-  "Main.dc.html",
-  "A-Today-Light.dc.html",
-  "A-SignIn.dc.html",
-  "A-Controls.dc.html",
-  "B-Today-Dark.dc.html",
-  "B-Today-Light.dc.html",
-  "B-SignIn.dc.html",
-  "B-Controls.dc.html",
-  "C-Today-Dark.dc.html",
-  "C-Today-Light.dc.html",
-  "C-SignIn.dc.html",
-  "C-Controls.dc.html",
-  "Kit-Controls-Dark.dc.html",
-  "Kit-Controls-Light.dc.html",
-  "Kit-Surfaces-Dark.dc.html",
-  "Kit-Surfaces-Light.dc.html",
-  "P2-SignIn-Light.dc.html",
-  "P2-Email-Request.dc.html",
-  "P2-Email-Code.dc.html",
-  "P2-Onboarding-Dark.dc.html",
-  "P2-Onboarding-Light.dc.html",
-  "P2-Today-Empty-Dark.dc.html",
-  "P2-Today-Empty-Light.dc.html",
-  "P2-Settings.dc.html",
-  "P2-Later.dc.html",
-  "P2-Email-Password.dc.html",
-  "P2-AppIcon.dc.html",
-  "P3-Students-Empty.dc.html",
-  "P3-Students-Few.dc.html",
-  "P3-Students-Many.dc.html",
-  "P3-Students-Many-Light.dc.html",
-  "P3-Students-Searching.dc.html",
-  "P3-Students-Filtered.dc.html",
-  "P3-Students-AddMenu.dc.html",
-  "P3-NewStudent-Empty.dc.html",
-  "P3-NewStudent-Filled.dc.html",
-  "P3-NewStudent-Invalid.dc.html",
-  "P3-EditStudent.dc.html",
-  "P3-StudentDetail.dc.html",
-  "P3-StudentDetail-Light.dc.html",
-  "P3-StudentDetail-Archived.dc.html",
-  "P3-Archive-Confirm.dc.html",
-  "P3-Delete-Confirm.dc.html",
-  "P3-Classes-Empty.dc.html",
-  "P3-Classes-List.dc.html",
-  "P3-NewClass.dc.html",
-  "P3-EditClass.dc.html",
-  "P3-ClassDetail.dc.html",
-  "P3-ClassDetail-AddMembers.dc.html",
-  "P4-Today-Soon.dc.html",
-  "P4-Today-Soon-Light.dc.html",
-  "P4-Today-Evening.dc.html",
-  "P4-Today-NoClass.dc.html",
-  "P4-Today-AddingTask.dc.html",
-  "P4-Attendance-Mark-Fresh.dc.html",
-  "P4-Attendance-Mark-Fresh-Light.dc.html",
-  "P4-Attendance-ClassMenu.dc.html",
-  "P4-Attendance-Mark-Exceptions.dc.html",
-  "P4-Attendance-Mark-Saved.dc.html",
-  "P4-Absence-Alert.dc.html",
-  "P4-Attendance-Mark-PastDate.dc.html",
-  "P4-Attendance-Empty.dc.html",
-  "P4-History-ByDate.dc.html",
-  "P4-History-ByStudent.dc.html",
-  "P4-History-Student.dc.html",
-  "P4-History-Empty.dc.html",
-  "P4-StudentDetail-Attendance.dc.html",
-  "P4-More.dc.html",
-  "P4-More-Light.dc.html",
-  "P4-Schedule-Month.dc.html",
-  "P4-Schedule-Day.dc.html",
-  "P4-Event-New.dc.html",
-  "P4-Event-Edit.dc.html",
-  "P4-Event-Delete-Confirm.dc.html",
-  "P4-Tasks.dc.html",
-  "P4-Tasks-Empty.dc.html",
-  "P5-Fees-Empty.dc.html",
-  "P5-Fees-All.dc.html",
-  "P5-Fees-All-Light.dc.html",
-  "P5-Fees-Due.dc.html",
-  "P5-Fees-Paid.dc.html",
-  "P5-Fees-Overdue.dc.html",
-  "P5-Fees-Payee.dc.html",
-  "P5-Generate.dc.html",
-  "P5-Generate-Nothing.dc.html",
-  "P5-MarkPaid.dc.html",
-  "P5-Fees-MarkedPaid.dc.html",
-  "P5-Receipt.dc.html",
-  "P5-Remind.dc.html",
-  "P5-Waive.dc.html",
-  "P5-Payments-Empty.dc.html",
-  "P5-Payments-Filled.dc.html",
-  "P5-Payments-QR.dc.html",
-  "P5-StudentDetail-Fees.dc.html",
-  "P5-StudentFees.dc.html",
-  "P5-Reports-Fees.dc.html",
-  "P5-Reports-Fees-Light.dc.html",
-  "P5-Reports-Attendance.dc.html",
-  "P5-Reports-Export.dc.html",
-  "P5-Reports-Empty.dc.html",
-  "P5-More.dc.html",
-  "P5-More-Light.dc.html",
-  "P5-Settings.dc.html",
-  "P6-Assistant.dc.html",
-  "P6-Assistant-Light.dc.html",
-  "P6-Assistant-Empty.dc.html",
-  "P6-Form-Paper.dc.html",
-  "P6-Form-Homework.dc.html",
-  "P6-Form-Worksheet.dc.html",
-  "P6-Form-ProgressNote.dc.html",
-  "P6-ProgressNote-StudentPicker.dc.html",
-  "P6-Generating.dc.html",
-  "P6-Generate-Failed.dc.html",
-  "P6-Result-Paper.dc.html",
-  "P6-Result-Paper-Light.dc.html",
-  "P6-Result-Regenerating.dc.html",
-  "P6-Result-ProgressNote.dc.html",
-  "P6-ProgressNote-Send.dc.html",
-  "P6-History.dc.html",
-  "P6-History-Empty.dc.html",
-  "P6-Scan-Intro.dc.html",
-  "P6-Scan-Consent.dc.html",
-  "P6-Scan-CameraAsk.dc.html",
-  "P6-Scan-CameraRefused.dc.html",
-  "P6-Scan-Camera.dc.html",
-  "P6-Scan-Photos.dc.html",
-  "P6-Scan-Reading.dc.html",
-  "P6-Scan-Review.dc.html",
-  "P6-Scan-Review-Edit.dc.html",
-  "P6-Scan-Review-RowRemoved.dc.html",
-  "P6-Scan-Review-Leave.dc.html",
-  "P6-Scan-Nothing.dc.html",
-  "P6-Scan-Failed.dc.html",
-  "P6-Scan-Saved.dc.html",
-  "P6-Check-Intro.dc.html",
-  "P6-Check-Pages.dc.html",
-  "P6-Check-Scheme.dc.html",
-  "P6-Check-Scheme-Typed.dc.html",
-  "P6-Check-Checking.dc.html",
-  "P6-Check-Result.dc.html",
-  "P6-Check-MarkPicker.dc.html",
-  "P6-Check-Result-Edited.dc.html",
-  "P6-Check-Saved.dc.html",
-  "P6-Check-Failed.dc.html",
-  "P6-More.dc.html",
-  "P6-More-Light.dc.html",
-  "P6-Today-AITools.dc.html",
-  "P7-Settings.dc.html",
-  "P7-Settings-Light.dc.html",
-  "P7-Settings-End.dc.html",
-  "P7-Settings-SaveFailed.dc.html",
-  "P7-Account.dc.html",
-  "P7-Account-Light.dc.html",
-  "P7-Account-Password.dc.html",
-  "P7-Account-Password-Failed.dc.html",
-  "P7-Account-Password-Saved.dc.html",
-  "P7-Account-SignOut.dc.html",
-  "P7-Account-SignOut-Pending.dc.html",
-  "P7-Delete.dc.html",
-  "P7-Delete-Typed.dc.html",
-  "P7-Delete-Deleting.dc.html",
-  "P7-Delete-Failed.dc.html",
-  "P7-Delete-Done.dc.html",
-  "P7-Reminders-NotAsked.dc.html",
-  "P7-Reminders-Ask.dc.html",
-  "P7-Reminders-On.dc.html",
-  "P7-Reminders-AllOff.dc.html",
-  "P7-Reminders-Refused.dc.html",
-  "P7-Reminders-DayPicker.dc.html",
-  "P7-Help.dc.html",
-  "P7-Help-Answer.dc.html",
-  "P7-More.dc.html",
-  "P7-More-Light.dc.html",
-  "P7-Offline-Today.dc.html",
-  "P7-Sync-Sending.dc.html",
-  "P7-Sync-Sent.dc.html",
-  "P7-Sync-Failed.dc.html",
-  "P7-Offline-Students.dc.html",
-  "P7-Offline-WriteRefused.dc.html",
-  "P7-Offline-Fees.dc.html",
-  "P7-Offline-FeeMarked.dc.html",
-  "P7-Offline-NoCache.dc.html",
-  "P7-Offline-AttendanceSaved.dc.html",
-  "P7-Pending.dc.html",
-  "P7-Pending-Discard.dc.html",
-  "P7-Notifications.dc.html",
-  "P7-Launch.dc.html",
-  "P7-AppIcon-Home.dc.html"
- ],
- "pages": [],
- "title": "Tutor Central Design"
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "A-Controls.dc.html": {
+      "h": 852,
+      "title": "A Ember · Controls",
+      "w": 393,
+      "x": 1419,
+      "y": 0
+    },
+    "A-SignIn.dc.html": {
+      "h": 852,
+      "title": "A Ember · Sign in · dark",
+      "w": 393,
+      "x": 946,
+      "y": 0
+    },
+    "A-Today-Light.dc.html": {
+      "h": 852,
+      "title": "A Ember · Today · light",
+      "w": 393,
+      "x": 473,
+      "y": 0
+    },
+    "B-Controls.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Controls",
+      "w": 393,
+      "x": 1419,
+      "y": 1400
+    },
+    "B-SignIn.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Sign in · dark",
+      "w": 393,
+      "x": 946,
+      "y": 1400
+    },
+    "B-Today-Dark.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Today · dark",
+      "w": 393,
+      "x": 0,
+      "y": 1400
+    },
+    "B-Today-Light.dc.html": {
+      "h": 852,
+      "title": "B Indigo · Today · light",
+      "w": 393,
+      "x": 473,
+      "y": 1400
+    },
+    "C-Controls.dc.html": {
+      "h": 852,
+      "title": "C Ink · Controls",
+      "w": 393,
+      "x": 1419,
+      "y": 2800
+    },
+    "C-SignIn.dc.html": {
+      "h": 852,
+      "title": "C Ink · Sign in · dark",
+      "w": 393,
+      "x": 946,
+      "y": 2800
+    },
+    "C-Today-Dark.dc.html": {
+      "h": 852,
+      "title": "C Ink · Today · dark",
+      "w": 393,
+      "x": 0,
+      "y": 2800
+    },
+    "C-Today-Light.dc.html": {
+      "h": 852,
+      "title": "C Ink · Today · light",
+      "w": 393,
+      "x": 473,
+      "y": 2800
+    },
+    "Kit-Controls-Dark.dc.html": {
+      "h": 1240,
+      "title": "Ember kit · controls · dark",
+      "w": 393,
+      "x": 0,
+      "y": 4200
+    },
+    "Kit-Controls-Light.dc.html": {
+      "h": 1240,
+      "title": "Ember kit · controls · light",
+      "w": 393,
+      "x": 473,
+      "y": 4200
+    },
+    "Kit-Surfaces-Dark.dc.html": {
+      "h": 1560,
+      "title": "Ember kit · surfaces and patterns · dark",
+      "w": 393,
+      "x": 946,
+      "y": 4200
+    },
+    "Kit-Surfaces-Light.dc.html": {
+      "h": 1560,
+      "title": "Ember kit · surfaces and patterns · light",
+      "w": 393,
+      "x": 1419,
+      "y": 4200
+    },
+    "Main.dc.html": {
+      "h": 852,
+      "title": "A Ember · Today · dark",
+      "w": 393,
+      "x": 0,
+      "y": 0
+    },
+    "P2-AppIcon.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · App icon, Ember glow with Lucide's book",
+      "w": 393,
+      "x": 4730,
+      "y": 6200
+    },
+    "P2-Email-Code.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Email: enter the code (and the wrong-code state)",
+      "w": 393,
+      "x": 946,
+      "y": 6200
+    },
+    "P2-Email-Password.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Email: sign in with a password (and the wrong-password state)",
+      "w": 393,
+      "x": 4257,
+      "y": 6200
+    },
+    "P2-Email-Request.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Email: request a code",
+      "w": 393,
+      "x": 473,
+      "y": 6200
+    },
+    "P2-Later.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · A tab that comes later",
+      "w": 393,
+      "x": 3784,
+      "y": 6200
+    },
+    "P2-Onboarding-Dark.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Onboarding · dark",
+      "w": 393,
+      "x": 1419,
+      "y": 6200
+    },
+    "P2-Onboarding-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Onboarding · light",
+      "w": 393,
+      "x": 1892,
+      "y": 6200
+    },
+    "P2-Settings.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Settings, minimal",
+      "w": 393,
+      "x": 3311,
+      "y": 6200
+    },
+    "P2-SignIn-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Sign in · light",
+      "w": 393,
+      "x": 0,
+      "y": 6200
+    },
+    "P2-Today-Empty-Dark.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Today, empty · dark",
+      "w": 393,
+      "x": 2365,
+      "y": 6200
+    },
+    "P2-Today-Empty-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 2 · Today, empty · light",
+      "w": 393,
+      "x": 2838,
+      "y": 6200
+    },
+    "P3-Archive-Confirm.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Archive a student, the confirmation",
+      "w": 393,
+      "x": 6622,
+      "y": 7600
+    },
+    "P3-ClassDetail-AddMembers.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Class detail, add students",
+      "w": 393,
+      "x": 9933,
+      "y": 7600
+    },
+    "P3-ClassDetail.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Class detail",
+      "w": 393,
+      "x": 9460,
+      "y": 7600
+    },
+    "P3-Classes-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Classes, empty",
+      "w": 393,
+      "x": 7568,
+      "y": 7600
+    },
+    "P3-Classes-List.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Classes",
+      "w": 393,
+      "x": 8041,
+      "y": 7600
+    },
+    "P3-Delete-Confirm.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Delete a student, the typed confirmation",
+      "w": 393,
+      "x": 7095,
+      "y": 7600
+    },
+    "P3-EditClass.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Edit class, with Archive class",
+      "w": 393,
+      "x": 8987,
+      "y": 7600
+    },
+    "P3-EditStudent.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Edit student",
+      "w": 393,
+      "x": 4730,
+      "y": 7600
+    },
+    "P3-NewClass.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New class",
+      "w": 393,
+      "x": 8514,
+      "y": 7600
+    },
+    "P3-NewStudent-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New student, empty",
+      "w": 393,
+      "x": 3311,
+      "y": 7600
+    },
+    "P3-NewStudent-Filled.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New student, filled",
+      "w": 393,
+      "x": 3784,
+      "y": 7600
+    },
+    "P3-NewStudent-Invalid.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · New student, a number that is not complete",
+      "w": 393,
+      "x": 4257,
+      "y": 7600
+    },
+    "P3-StudentDetail-Archived.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Student detail, archived, with Restore",
+      "w": 393,
+      "x": 6149,
+      "y": 7600
+    },
+    "P3-StudentDetail-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Student detail · light",
+      "w": 393,
+      "x": 5676,
+      "y": 7600
+    },
+    "P3-StudentDetail.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Student detail · dark",
+      "w": 393,
+      "x": 5203,
+      "y": 7600
+    },
+    "P3-Students-AddMenu.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the add menu",
+      "w": 393,
+      "x": 2838,
+      "y": 7600
+    },
+    "P3-Students-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, empty",
+      "w": 393,
+      "x": 0,
+      "y": 7600
+    },
+    "P3-Students-Few.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the first three, no classes yet",
+      "w": 393,
+      "x": 473,
+      "y": 7600
+    },
+    "P3-Students-Filtered.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, filtered to one class",
+      "w": 393,
+      "x": 2365,
+      "y": 7600
+    },
+    "P3-Students-Many-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the whole register · light",
+      "w": 393,
+      "x": 1419,
+      "y": 7600
+    },
+    "P3-Students-Many.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, the whole register · dark",
+      "w": 393,
+      "x": 946,
+      "y": 7600
+    },
+    "P3-Students-Searching.dc.html": {
+      "h": 852,
+      "title": "Phase 3 · Students, searching",
+      "w": 393,
+      "x": 1892,
+      "y": 7600
+    },
+    "P4-Absence-Alert.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · The absence alert: the WhatsApp message before it opens",
+      "w": 393,
+      "x": 4730,
+      "y": 9000
+    },
+    "P4-Attendance-ClassMenu.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, choosing the class",
+      "w": 393,
+      "x": 3311,
+      "y": 9000
+    },
+    "P4-Attendance-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, no students yet",
+      "w": 393,
+      "x": 5676,
+      "y": 9000
+    },
+    "P4-Attendance-Mark-Exceptions.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, mark: one absent",
+      "w": 393,
+      "x": 3784,
+      "y": 9000
+    },
+    "P4-Attendance-Mark-Fresh-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, mark: a fresh class, everyone present · light",
+      "w": 393,
+      "x": 2838,
+      "y": 9000
+    },
+    "P4-Attendance-Mark-Fresh.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, mark: a fresh class, everyone present · dark",
+      "w": 393,
+      "x": 2365,
+      "y": 9000
+    },
+    "P4-Attendance-Mark-PastDate.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, a past date: the saved class reopened",
+      "w": 393,
+      "x": 5203,
+      "y": 9000
+    },
+    "P4-Attendance-Mark-Saved.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance, saved: the absent student and the alert",
+      "w": 393,
+      "x": 4257,
+      "y": 9000
+    },
+    "P4-Event-Delete-Confirm.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Delete an event, the confirmation",
+      "w": 393,
+      "x": 11352,
+      "y": 9000
+    },
+    "P4-Event-Edit.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Edit event, with Delete event",
+      "w": 393,
+      "x": 10879,
+      "y": 9000
+    },
+    "P4-Event-New.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · New event",
+      "w": 393,
+      "x": 10406,
+      "y": 9000
+    },
+    "P4-History-ByDate.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance history by date",
+      "w": 393,
+      "x": 6149,
+      "y": 9000
+    },
+    "P4-History-ByStudent.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance history by student",
+      "w": 393,
+      "x": 6622,
+      "y": 9000
+    },
+    "P4-History-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Attendance history, nothing marked yet",
+      "w": 393,
+      "x": 7568,
+      "y": 9000
+    },
+    "P4-History-Student.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · One student's attendance for the month",
+      "w": 393,
+      "x": 7095,
+      "y": 9000
+    },
+    "P4-More-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · More: Schedule, Tasks, Classes, Settings live; the rest named · light",
+      "w": 393,
+      "x": 8987,
+      "y": 9000
+    },
+    "P4-More.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · More: Schedule, Tasks, Classes, Settings live; the rest named · dark",
+      "w": 393,
+      "x": 8514,
+      "y": 9000
+    },
+    "P4-Schedule-Day.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Schedule: a chosen day with an event and no class",
+      "w": 393,
+      "x": 9933,
+      "y": 9000
+    },
+    "P4-Schedule-Month.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Schedule: the month, today's classes and events",
+      "w": 393,
+      "x": 9460,
+      "y": 9000
+    },
+    "P4-StudentDetail-Attendance.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Student detail: the attendance section, live",
+      "w": 393,
+      "x": 8041,
+      "y": 9000
+    },
+    "P4-Tasks-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Tasks, nothing yet",
+      "w": 393,
+      "x": 12298,
+      "y": 9000
+    },
+    "P4-Tasks.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Tasks: everything, to do and done",
+      "w": 393,
+      "x": 11825,
+      "y": 9000
+    },
+    "P4-Today-AddingTask.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Today: adding a task inline (scrolled to Tasks; the status bar on glass, U1)",
+      "w": 393,
+      "x": 1892,
+      "y": 9000
+    },
+    "P4-Today-Evening.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Today live: the evening, nothing left",
+      "w": 393,
+      "x": 946,
+      "y": 9000
+    },
+    "P4-Today-NoClass.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Today live: a day with no class",
+      "w": 393,
+      "x": 1419,
+      "y": 9000
+    },
+    "P4-Today-Soon-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Today live: a class starts soon · light",
+      "w": 393,
+      "x": 473,
+      "y": 9000
+    },
+    "P4-Today-Soon.dc.html": {
+      "h": 852,
+      "title": "Phase 4 · Today live: a class starts soon · dark",
+      "w": 393,
+      "x": 0,
+      "y": 9000
+    },
+    "P5-Fees-All-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees: the month, every fee · light",
+      "w": 393,
+      "x": 946,
+      "y": 10400
+    },
+    "P5-Fees-All.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees: the month, every fee · dark",
+      "w": 393,
+      "x": 473,
+      "y": 10400
+    },
+    "P5-Fees-Due.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees: due, with Remind and Mark paid",
+      "w": 393,
+      "x": 1419,
+      "y": 10400
+    },
+    "P5-Fees-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees before generation: a fresh centre, no UPI id yet",
+      "w": 393,
+      "x": 0,
+      "y": 10400
+    },
+    "P5-Fees-MarkedPaid.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · After Mark paid: the row moves, the toast with Undo",
+      "w": 393,
+      "x": 4730,
+      "y": 10400
+    },
+    "P5-Fees-Overdue.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees: a past month with a fee still due (overdue)",
+      "w": 393,
+      "x": 2365,
+      "y": 10400
+    },
+    "P5-Fees-Paid.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees: paid",
+      "w": 393,
+      "x": 1892,
+      "y": 10400
+    },
+    "P5-Fees-Payee.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Fees: the payee confirmation, until confirmed once",
+      "w": 393,
+      "x": 2838,
+      "y": 10400
+    },
+    "P5-Generate-Nothing.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Generate again: nothing to create",
+      "w": 393,
+      "x": 3784,
+      "y": 10400
+    },
+    "P5-Generate.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Generate the month's fees: what will be created",
+      "w": 393,
+      "x": 3311,
+      "y": 10400
+    },
+    "P5-MarkPaid.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Mark paid: method, date, waive instead",
+      "w": 393,
+      "x": 4257,
+      "y": 10400
+    },
+    "P5-More-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · More: Reports live · light",
+      "w": 393,
+      "x": 11825,
+      "y": 10400
+    },
+    "P5-More.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · More: Reports live · dark",
+      "w": 393,
+      "x": 11352,
+      "y": 10400
+    },
+    "P5-Payments-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Parent payments: nothing set yet",
+      "w": 393,
+      "x": 6622,
+      "y": 10400
+    },
+    "P5-Payments-Filled.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Parent payments: the UPI id set and saved",
+      "w": 393,
+      "x": 7095,
+      "y": 10400
+    },
+    "P5-Payments-QR.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Parent payments: a QR added, the id read from it",
+      "w": 393,
+      "x": 7568,
+      "y": 10400
+    },
+    "P5-Receipt.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · The receipt: the WhatsApp message before it opens",
+      "w": 393,
+      "x": 5203,
+      "y": 10400
+    },
+    "P5-Remind.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Remind: the WhatsApp message before it opens",
+      "w": 393,
+      "x": 5676,
+      "y": 10400
+    },
+    "P5-Reports-Attendance.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Reports: the month's attendance",
+      "w": 393,
+      "x": 9933,
+      "y": 10400
+    },
+    "P5-Reports-Empty.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Reports: a month with nothing yet",
+      "w": 393,
+      "x": 10879,
+      "y": 10400
+    },
+    "P5-Reports-Export.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Share a report as CSV",
+      "w": 393,
+      "x": 10406,
+      "y": 10400
+    },
+    "P5-Reports-Fees-Light.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Reports: the month's fees · light",
+      "w": 393,
+      "x": 9460,
+      "y": 10400
+    },
+    "P5-Reports-Fees.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Reports: the month's fees · dark",
+      "w": 393,
+      "x": 8987,
+      "y": 10400
+    },
+    "P5-Settings.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Settings: Parent payments live",
+      "w": 393,
+      "x": 12298,
+      "y": 10400
+    },
+    "P5-StudentDetail-Fees.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Student detail: the fees section live",
+      "w": 393,
+      "x": 8041,
+      "y": 10400
+    },
+    "P5-StudentFees.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · A student's fees: every month with a fee",
+      "w": 393,
+      "x": 8514,
+      "y": 10400
+    },
+    "P5-Waive.dc.html": {
+      "h": 852,
+      "title": "Phase 5 · Waive a fee, with a reason",
+      "w": 393,
+      "x": 6149,
+      "y": 10400
+    },
+    "P6-Assistant.dc.html": {
+      "x": 0,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · AI Assistant: the four tools and recent results · dark"
+    },
+    "P6-Assistant-Light.dc.html": {
+      "x": 473,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · AI Assistant: the four tools and recent results · light"
+    },
+    "P6-Assistant-Empty.dc.html": {
+      "x": 946,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · AI Assistant: nothing created yet"
+    },
+    "P6-Form-Paper.dc.html": {
+      "x": 1419,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Question paper: the form, topic focused"
+    },
+    "P6-Form-Homework.dc.html": {
+      "x": 1892,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Homework: the form"
+    },
+    "P6-Form-Worksheet.dc.html": {
+      "x": 2365,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Worksheet: the form, with an answer key"
+    },
+    "P6-Form-ProgressNote.dc.html": {
+      "x": 2838,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Progress note: the form, a student chosen"
+    },
+    "P6-ProgressNote-StudentPicker.dc.html": {
+      "x": 3311,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Progress note: choosing the student (a floating sheet)"
+    },
+    "P6-Generating.dc.html": {
+      "x": 3784,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Question paper: creating (the form held, the button loading)"
+    },
+    "P6-Generate-Failed.dc.html": {
+      "x": 4257,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Question paper: the call failed, Retry"
+    },
+    "P6-Result-Paper.dc.html": {
+      "x": 4730,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Question paper: the result, copy, share as PDF, create again · dark"
+    },
+    "P6-Result-Paper-Light.dc.html": {
+      "x": 5203,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Question paper: the result · light"
+    },
+    "P6-Result-Regenerating.dc.html": {
+      "x": 5676,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Question paper: creating again, the old paper kept"
+    },
+    "P6-Result-ProgressNote.dc.html": {
+      "x": 6149,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Progress note: the result, editable, send on WhatsApp"
+    },
+    "P6-ProgressNote-Send.dc.html": {
+      "x": 6622,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Progress note: the WhatsApp message before it opens (logged as progress)"
+    },
+    "P6-History.dc.html": {
+      "x": 7095,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · History: everything created, newest first"
+    },
+    "P6-History-Empty.dc.html": {
+      "x": 7568,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · History: nothing created yet"
+    },
+    "P6-Scan-Intro.dc.html": {
+      "x": 8041,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: the intro with the notices"
+    },
+    "P6-Scan-Consent.dc.html": {
+      "x": 8514,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · The consent, asked once per centre before the first photo (a floating sheet)"
+    },
+    "P6-Scan-CameraAsk.dc.html": {
+      "x": 8987,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · The first camera ask (the system's alert)"
+    },
+    "P6-Scan-CameraRefused.dc.html": {
+      "x": 9460,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · A refused camera: where to allow it, with Open Settings"
+    },
+    "P6-Scan-Camera.dc.html": {
+      "x": 9933,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · The camera: the system's document camera (VisionKit); Cancel is the way out"
+    },
+    "P6-Scan-Photos.dc.html": {
+      "x": 10406,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Photos as the other way in (the system's picker)"
+    },
+    "P6-Scan-Reading.dc.html": {
+      "x": 10879,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: reading the photo"
+    },
+    "P6-Scan-Review.dc.html": {
+      "x": 11352,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: the list to check, one already here, one without a number"
+    },
+    "P6-Scan-Review-Edit.dc.html": {
+      "x": 11825,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: fixing a row (the student form, with Remove this row)"
+    },
+    "P6-Scan-Review-RowRemoved.dc.html": {
+      "x": 12298,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: a row removed, with Undo"
+    },
+    "P6-Scan-Review-Leave.dc.html": {
+      "x": 12771,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: leaving the list before adding (the confirmation)"
+    },
+    "P6-Scan-Nothing.dc.html": {
+      "x": 13244,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: no names found"
+    },
+    "P6-Scan-Failed.dc.html": {
+      "x": 13717,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: the call failed, Retry or another photo"
+    },
+    "P6-Scan-Saved.dc.html": {
+      "x": 14190,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Scan register: added, the list with the new students and the toast"
+    },
+    "P6-Check-Intro.dc.html": {
+      "x": 14663,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: the intro, the student, the ways in"
+    },
+    "P6-Check-Pages.dc.html": {
+      "x": 15136,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: the pages, add or remove one"
+    },
+    "P6-Check-Scheme.dc.html": {
+      "x": 15609,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: the marking scheme from a paper you created"
+    },
+    "P6-Check-Scheme-Typed.dc.html": {
+      "x": 16082,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: the marking scheme typed"
+    },
+    "P6-Check-Checking.dc.html": {
+      "x": 16555,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: checking the pages"
+    },
+    "P6-Check-Result.dc.html": {
+      "x": 17028,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: the suggested marks, each one editable"
+    },
+    "P6-Check-MarkPicker.dc.html": {
+      "x": 17501,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: changing a mark (a popover from the mark)"
+    },
+    "P6-Check-Result-Edited.dc.html": {
+      "x": 17974,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: a mark changed, the total rolled"
+    },
+    "P6-Check-Saved.dc.html": {
+      "x": 18447,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: saved to the student's notes, with Undo"
+    },
+    "P6-Check-Failed.dc.html": {
+      "x": 18920,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Check a paper: the call failed, Retry or back to the pages"
+    },
+    "P6-More.dc.html": {
+      "x": 19393,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · More: the three AI rows live · dark"
+    },
+    "P6-More-Light.dc.html": {
+      "x": 19866,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · More: the three AI rows live · light"
+    },
+    "P6-Today-AITools.dc.html": {
+      "x": 20339,
+      "y": 11800,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 6 · Today: the AI tools row (scrolled to the end)"
+    },
+    "P7-Settings.dc.html": {
+      "x": 0,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Settings in full: the profile saved as you go, parents, this iPhone (reminders, haptics, appearance, pending changes), account, about · dark"
+    },
+    "P7-Settings-Light.dc.html": {
+      "x": 473,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Settings in full · light"
+    },
+    "P7-Settings-End.dc.html": {
+      "x": 946,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Settings scrolled to the end: this iPhone, account, about (version, help, the legal pages)"
+    },
+    "P7-Settings-SaveFailed.dc.html": {
+      "x": 1419,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Settings: a save failed; the mark is gone and the toast says which field"
+    },
+    "P7-Account.dc.html": {
+      "x": 1892,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Account: email, sign-in methods, password, sign out, delete account · dark"
+    },
+    "P7-Account-Light.dc.html": {
+      "x": 2365,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Account · light"
+    },
+    "P7-Account-Password.dc.html": {
+      "x": 2838,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Set a password (a floating sheet): the field focused, Set password until 8 characters"
+    },
+    "P7-Account-Password-Failed.dc.html": {
+      "x": 3311,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Set a password: the write failed, the field keeps the password, Set password tries again"
+    },
+    "P7-Account-Password-Saved.dc.html": {
+      "x": 3784,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Account after the password was set: the row reads Set (opens Change password), the toast"
+    },
+    "P7-Account-SignOut.dc.html": {
+      "x": 4257,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Sign out? The confirmation; what's saved on this iPhone goes with it"
+    },
+    "P7-Account-SignOut-Pending.dc.html": {
+      "x": 4730,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Sign out with changes still waiting to be sent: they would be lost"
+    },
+    "P7-Delete.dc.html": {
+      "x": 5203,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Delete account: what goes, the typed confirmation, the button disabled"
+    },
+    "P7-Delete-Typed.dc.html": {
+      "x": 5676,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Delete account: the centre's name typed, Delete my account live"
+    },
+    "P7-Delete-Deleting.dc.html": {
+      "x": 6149,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Delete account: removing everything (Apple confirmed, the function running)"
+    },
+    "P7-Delete-Failed.dc.html": {
+      "x": 6622,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Delete account: the call failed, nothing was removed, Retry"
+    },
+    "P7-Delete-Done.dc.html": {
+      "x": 7095,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · After deletion: the sign-in landing says so; a new sign-in starts at onboarding"
+    },
+    "P7-Reminders-NotAsked.dc.html": {
+      "x": 7568,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Teacher reminders before iOS has been asked: what they are, Turn on reminders"
+    },
+    "P7-Reminders-Ask.dc.html": {
+      "x": 8041,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · The notification permission (the system's alert)"
+    },
+    "P7-Reminders-On.dc.html": {
+      "x": 8514,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Teacher reminders on: the next one, the three switches with their timing, what is set on this iPhone, Refresh"
+    },
+    "P7-Reminders-AllOff.dc.html": {
+      "x": 8987,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Teacher reminders allowed but every switch off: nothing is set"
+    },
+    "P7-Reminders-Refused.dc.html": {
+      "x": 9460,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Notifications refused or turned off in iOS: where to allow them, Open Settings; the switches wait"
+    },
+    "P7-Reminders-DayPicker.dc.html": {
+      "x": 9933,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Choosing the day of the month (a wheel in a popover from the tile)"
+    },
+    "P7-Help.dc.html": {
+      "x": 10406,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Help: write to us, the common questions"
+    },
+    "P7-Help-Answer.dc.html": {
+      "x": 10879,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Help: a question opened"
+    },
+    "P7-More.dc.html": {
+      "x": 11352,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · More: Account and Help live · dark"
+    },
+    "P7-More-Light.dc.html": {
+      "x": 11825,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · More: Account and Help live · light"
+    },
+    "P7-Offline-Today.dc.html": {
+      "x": 12298,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Today offline: everything from the cache, the bar says when it was saved; Mark attendance stays live"
+    },
+    "P7-Sync-Sending.dc.html": {
+      "x": 12771,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Back online: the saved changes being sent (the bar becomes the banner)"
+    },
+    "P7-Sync-Sent.dc.html": {
+      "x": 13244,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · The saved changes sent: the toast on whichever screen is open"
+    },
+    "P7-Sync-Failed.dc.html": {
+      "x": 13717,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · A saved change couldn't be sent: the banner opens Pending changes"
+    },
+    "P7-Offline-Students.dc.html": {
+      "x": 14190,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Students offline: the register from the cache, the bar with its age"
+    },
+    "P7-Offline-WriteRefused.dc.html": {
+      "x": 14663,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · A write refused offline: Save on the student form says so; the form keeps what was typed"
+    },
+    "P7-Offline-Fees.dc.html": {
+      "x": 15136,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Fees offline: the month from the cache; Mark paid stays live (it is kept here), Remind and Generate wait for a connection"
+    },
+    "P7-Offline-FeeMarked.dc.html": {
+      "x": 15609,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · A fee marked paid offline: the row moves, its line says it is kept here, the toast with Undo"
+    },
+    "P7-Offline-NoCache.dc.html": {
+      "x": 16082,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Offline with nothing saved yet (a screen never opened online)"
+    },
+    "P7-Offline-AttendanceSaved.dc.html": {
+      "x": 16555,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Attendance saved offline: kept on this iPhone, the footer and banner say so; Tell parent still opens WhatsApp"
+    },
+    "P7-Pending.dc.html": {
+      "x": 17028,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Pending changes: what is waiting, what failed and why, Send again, Discard"
+    },
+    "P7-Pending-Discard.dc.html": {
+      "x": 17501,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Discarding a failed change (the confirmation)"
+    },
+    "P7-Notifications.dc.html": {
+      "x": 17974,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · The three reminders as iOS shows them on the lock screen: a class, an event, the month's unpaid fees; each opens its link"
+    },
+    "P7-Launch.dc.html": {
+      "x": 18447,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · The launch screen: the ground and the book, nothing else; dark whatever the iPhone's setting"
+    },
+    "P7-AppIcon-Home.dc.html": {
+      "x": 18920,
+      "y": 13200,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · The app icon in place on the home screen (the other icons are stand-ins)"
+    },
+    "P7-NewStudent-ClassMenu.dc.html": {
+      "x": 0,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · New student: the class menu ends with New class… after a section break, as Apple's own menus do (Reminders' New list) · dark"
+    },
+    "P7-NewStudent-ClassMenu-NoClasses.dc.html": {
+      "x": 473,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · New student, no classes yet: No class and New class… · dark"
+    },
+    "P7-NewStudent-NewClass.dc.html": {
+      "x": 946,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · New class… opens the New class sheet on top of New student; Cancel goes back with nothing changed · dark"
+    },
+    "P7-NewStudent-ClassMade.dc.html": {
+      "x": 1419,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Saved: back on New student with the new class chosen and its fee in · dark"
+    },
+    "P7-NewStudent-ClassMenu-Light.dc.html": {
+      "x": 1892,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · New student: the class menu ends with New class… after a section break, as Apple's own menus do (Reminders' New list) · light"
+    },
+    "P7-NewStudent-ClassMenu-NoClasses-Light.dc.html": {
+      "x": 2365,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · New student, no classes yet: No class and New class… · light"
+    },
+    "P7-NewStudent-NewClass-Light.dc.html": {
+      "x": 2838,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · New class… opens the New class sheet on top of New student; Cancel goes back with nothing changed · light"
+    },
+    "P7-NewStudent-ClassMade-Light.dc.html": {
+      "x": 3311,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Saved: back on New student with the new class chosen and its fee in · light"
+    },
+    "P7-Today-Header.dc.html": {
+      "x": 3784,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Today: the account picture at the top right, level with the date; the greeting wraps under it · dark"
+    },
+    "P7-Today-Header-Light.dc.html": {
+      "x": 4257,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Today: the account picture at the top right, level with the date · light"
+    },
+    "P7-Launch-Fade.dc.html": {
+      "x": 4730,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Opening: the launch screen's book fades as Today comes in, about half a second, no wait added · dark"
+    },
+    "P7-Launch-Fade-Light.dc.html": {
+      "x": 5203,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Opening: the dark launch screen fades into light Today · light"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-07T14:20:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "dirA": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Direction A · Ember — warm charcoal, marigold, native SF Pro",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "dirB": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Direction B · Indigo — deep night blue, lime, geometric Sora, glass",
+      "w": 240,
+      "x": 0,
+      "y": 1100
+    },
+    "dirC": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Direction C · Ink — neutral graphite, cobalt, editorial serif",
+      "w": 240,
+      "x": 0,
+      "y": 2500
+    },
+    "kit": {
+      "kind": "title1",
+      "maxW": 1812,
+      "text": "Step 0.2 · Ember design system — the Kit (D20)",
+      "w": 240,
+      "x": 0,
+      "y": 3900
+    },
+    "p2": {
+      "kind": "title1",
+      "maxW": 5123,
+      "text": "Step 0.3 · Phase 2 boards — sign-in flow, onboarding, Today empty, Settings minimal, password (sign-in dark is board A in row 1)",
+      "w": 240,
+      "x": 0,
+      "y": 5900
+    },
+    "p3": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Step 0.4 · Phase 3 boards — students (list states, add menu, form, detail, confirmations) and classes",
+      "w": 240,
+      "x": 0,
+      "y": 7300
+    },
+    "p4": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Step 0.5 · Phase 4 boards — Today live, attendance (mark, saved, past date, the alert), history, More, schedule and events, tasks",
+      "w": 240,
+      "x": 0,
+      "y": 8700
+    },
+    "p5": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Step 0.6 · Phase 5 boards — fees (the month, due, paid, overdue, the payee), generate, mark paid, receipt, remind, waive, parent payments and the QR, a student's fees, reports and CSV, More and Settings live",
+      "w": 240,
+      "x": 0,
+      "y": 10100
+    },
+    "p6": {
+      "kind": "title1",
+      "maxW": 8000,
+      "w": 240,
+      "x": 0,
+      "y": 11500,
+      "text": "Step 0.7 · Phase 6 boards — AI Assistant (home, the four forms, the student picker, creating, results, create again, failure, the note on WhatsApp, history), scan register (intro, consent, the camera asks, the camera and Photos, reading, the list to check, fixing and removing a row, leaving, nothing found, failure, added), check a paper (intro, pages, the scheme, checking, the marks, changing one, saved, failure), More and Today's row"
+    },
+    "p7": {
+      "kind": "title1",
+      "maxW": 8000,
+      "w": 240,
+      "x": 0,
+      "y": 12900,
+      "text": "Step 0.8 · Phase 7 boards — Settings in full (the profile saved as you go, parents, this iPhone, account, about), Account (methods, a password, sign out, delete account and what follows), Teacher reminders (not asked, the ask, on, all off, refused, the day), Help, More, offline (lists from the cache with their age, nothing saved, a write refused, attendance and a fee saved here), back online (sending, sent, a failure), pending changes, the notifications, the launch screen, the icon in place"
+    },
+    "p7b": {
+      "kind": "title1",
+      "maxW": 8000,
+      "w": 240,
+      "x": 0,
+      "y": 14300,
+      "text": "Step 0.8b · Phase 7, from build 10 — New class from the student form; the account picture at the top right of Today; opening: the launch screen fading into Today"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "A-Today-Light.dc.html",
+    "A-SignIn.dc.html",
+    "A-Controls.dc.html",
+    "B-Today-Dark.dc.html",
+    "B-Today-Light.dc.html",
+    "B-SignIn.dc.html",
+    "B-Controls.dc.html",
+    "C-Today-Dark.dc.html",
+    "C-Today-Light.dc.html",
+    "C-SignIn.dc.html",
+    "C-Controls.dc.html",
+    "Kit-Controls-Dark.dc.html",
+    "Kit-Controls-Light.dc.html",
+    "Kit-Surfaces-Dark.dc.html",
+    "Kit-Surfaces-Light.dc.html",
+    "P2-SignIn-Light.dc.html",
+    "P2-Email-Request.dc.html",
+    "P2-Email-Code.dc.html",
+    "P2-Onboarding-Dark.dc.html",
+    "P2-Onboarding-Light.dc.html",
+    "P2-Today-Empty-Dark.dc.html",
+    "P2-Today-Empty-Light.dc.html",
+    "P2-Settings.dc.html",
+    "P2-Later.dc.html",
+    "P2-Email-Password.dc.html",
+    "P2-AppIcon.dc.html",
+    "P3-Students-Empty.dc.html",
+    "P3-Students-Few.dc.html",
+    "P3-Students-Many.dc.html",
+    "P3-Students-Many-Light.dc.html",
+    "P3-Students-Searching.dc.html",
+    "P3-Students-Filtered.dc.html",
+    "P3-Students-AddMenu.dc.html",
+    "P3-NewStudent-Empty.dc.html",
+    "P3-NewStudent-Filled.dc.html",
+    "P3-NewStudent-Invalid.dc.html",
+    "P3-EditStudent.dc.html",
+    "P3-StudentDetail.dc.html",
+    "P3-StudentDetail-Light.dc.html",
+    "P3-StudentDetail-Archived.dc.html",
+    "P3-Archive-Confirm.dc.html",
+    "P3-Delete-Confirm.dc.html",
+    "P3-Classes-Empty.dc.html",
+    "P3-Classes-List.dc.html",
+    "P3-NewClass.dc.html",
+    "P3-EditClass.dc.html",
+    "P3-ClassDetail.dc.html",
+    "P3-ClassDetail-AddMembers.dc.html",
+    "P4-Today-Soon.dc.html",
+    "P4-Today-Soon-Light.dc.html",
+    "P4-Today-Evening.dc.html",
+    "P4-Today-NoClass.dc.html",
+    "P4-Today-AddingTask.dc.html",
+    "P4-Attendance-Mark-Fresh.dc.html",
+    "P4-Attendance-Mark-Fresh-Light.dc.html",
+    "P4-Attendance-ClassMenu.dc.html",
+    "P4-Attendance-Mark-Exceptions.dc.html",
+    "P4-Attendance-Mark-Saved.dc.html",
+    "P4-Absence-Alert.dc.html",
+    "P4-Attendance-Mark-PastDate.dc.html",
+    "P4-Attendance-Empty.dc.html",
+    "P4-History-ByDate.dc.html",
+    "P4-History-ByStudent.dc.html",
+    "P4-History-Student.dc.html",
+    "P4-History-Empty.dc.html",
+    "P4-StudentDetail-Attendance.dc.html",
+    "P4-More.dc.html",
+    "P4-More-Light.dc.html",
+    "P4-Schedule-Month.dc.html",
+    "P4-Schedule-Day.dc.html",
+    "P4-Event-New.dc.html",
+    "P4-Event-Edit.dc.html",
+    "P4-Event-Delete-Confirm.dc.html",
+    "P4-Tasks.dc.html",
+    "P4-Tasks-Empty.dc.html",
+    "P5-Fees-Empty.dc.html",
+    "P5-Fees-All.dc.html",
+    "P5-Fees-All-Light.dc.html",
+    "P5-Fees-Due.dc.html",
+    "P5-Fees-Paid.dc.html",
+    "P5-Fees-Overdue.dc.html",
+    "P5-Fees-Payee.dc.html",
+    "P5-Generate.dc.html",
+    "P5-Generate-Nothing.dc.html",
+    "P5-MarkPaid.dc.html",
+    "P5-Fees-MarkedPaid.dc.html",
+    "P5-Receipt.dc.html",
+    "P5-Remind.dc.html",
+    "P5-Waive.dc.html",
+    "P5-Payments-Empty.dc.html",
+    "P5-Payments-Filled.dc.html",
+    "P5-Payments-QR.dc.html",
+    "P5-StudentDetail-Fees.dc.html",
+    "P5-StudentFees.dc.html",
+    "P5-Reports-Fees.dc.html",
+    "P5-Reports-Fees-Light.dc.html",
+    "P5-Reports-Attendance.dc.html",
+    "P5-Reports-Export.dc.html",
+    "P5-Reports-Empty.dc.html",
+    "P5-More.dc.html",
+    "P5-More-Light.dc.html",
+    "P5-Settings.dc.html",
+    "P6-Assistant.dc.html",
+    "P6-Assistant-Light.dc.html",
+    "P6-Assistant-Empty.dc.html",
+    "P6-Form-Paper.dc.html",
+    "P6-Form-Homework.dc.html",
+    "P6-Form-Worksheet.dc.html",
+    "P6-Form-ProgressNote.dc.html",
+    "P6-ProgressNote-StudentPicker.dc.html",
+    "P6-Generating.dc.html",
+    "P6-Generate-Failed.dc.html",
+    "P6-Result-Paper.dc.html",
+    "P6-Result-Paper-Light.dc.html",
+    "P6-Result-Regenerating.dc.html",
+    "P6-Result-ProgressNote.dc.html",
+    "P6-ProgressNote-Send.dc.html",
+    "P6-History.dc.html",
+    "P6-History-Empty.dc.html",
+    "P6-Scan-Intro.dc.html",
+    "P6-Scan-Consent.dc.html",
+    "P6-Scan-CameraAsk.dc.html",
+    "P6-Scan-CameraRefused.dc.html",
+    "P6-Scan-Camera.dc.html",
+    "P6-Scan-Photos.dc.html",
+    "P6-Scan-Reading.dc.html",
+    "P6-Scan-Review.dc.html",
+    "P6-Scan-Review-Edit.dc.html",
+    "P6-Scan-Review-RowRemoved.dc.html",
+    "P6-Scan-Review-Leave.dc.html",
+    "P6-Scan-Nothing.dc.html",
+    "P6-Scan-Failed.dc.html",
+    "P6-Scan-Saved.dc.html",
+    "P6-Check-Intro.dc.html",
+    "P6-Check-Pages.dc.html",
+    "P6-Check-Scheme.dc.html",
+    "P6-Check-Scheme-Typed.dc.html",
+    "P6-Check-Checking.dc.html",
+    "P6-Check-Result.dc.html",
+    "P6-Check-MarkPicker.dc.html",
+    "P6-Check-Result-Edited.dc.html",
+    "P6-Check-Saved.dc.html",
+    "P6-Check-Failed.dc.html",
+    "P6-More.dc.html",
+    "P6-More-Light.dc.html",
+    "P6-Today-AITools.dc.html",
+    "P7-Settings.dc.html",
+    "P7-Settings-Light.dc.html",
+    "P7-Settings-End.dc.html",
+    "P7-Settings-SaveFailed.dc.html",
+    "P7-Account.dc.html",
+    "P7-Account-Light.dc.html",
+    "P7-Account-Password.dc.html",
+    "P7-Account-Password-Failed.dc.html",
+    "P7-Account-Password-Saved.dc.html",
+    "P7-Account-SignOut.dc.html",
+    "P7-Account-SignOut-Pending.dc.html",
+    "P7-Delete.dc.html",
+    "P7-Delete-Typed.dc.html",
+    "P7-Delete-Deleting.dc.html",
+    "P7-Delete-Failed.dc.html",
+    "P7-Delete-Done.dc.html",
+    "P7-Reminders-NotAsked.dc.html",
+    "P7-Reminders-Ask.dc.html",
+    "P7-Reminders-On.dc.html",
+    "P7-Reminders-AllOff.dc.html",
+    "P7-Reminders-Refused.dc.html",
+    "P7-Reminders-DayPicker.dc.html",
+    "P7-Help.dc.html",
+    "P7-Help-Answer.dc.html",
+    "P7-More.dc.html",
+    "P7-More-Light.dc.html",
+    "P7-Offline-Today.dc.html",
+    "P7-Sync-Sending.dc.html",
+    "P7-Sync-Sent.dc.html",
+    "P7-Sync-Failed.dc.html",
+    "P7-Offline-Students.dc.html",
+    "P7-Offline-WriteRefused.dc.html",
+    "P7-Offline-Fees.dc.html",
+    "P7-Offline-FeeMarked.dc.html",
+    "P7-Offline-NoCache.dc.html",
+    "P7-Offline-AttendanceSaved.dc.html",
+    "P7-Pending.dc.html",
+    "P7-Pending-Discard.dc.html",
+    "P7-Notifications.dc.html",
+    "P7-Launch.dc.html",
+    "P7-AppIcon-Home.dc.html",
+    "P7-NewStudent-ClassMenu.dc.html",
+    "P7-NewStudent-ClassMenu-NoClasses.dc.html",
+    "P7-NewStudent-NewClass.dc.html",
+    "P7-NewStudent-ClassMade.dc.html",
+    "P7-NewStudent-ClassMenu-Light.dc.html",
+    "P7-NewStudent-ClassMenu-NoClasses-Light.dc.html",
+    "P7-NewStudent-NewClass-Light.dc.html",
+    "P7-NewStudent-ClassMade-Light.dc.html",
+    "P7-Today-Header.dc.html",
+    "P7-Today-Header-Light.dc.html",
+    "P7-Launch-Fade.dc.html",
+    "P7-Launch-Fade-Light.dc.html"
+  ],
+  "pages": [],
+  "title": "Tutor Central Design"
 }

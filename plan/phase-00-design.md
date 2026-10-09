@@ -1,6 +1,7 @@
 # Phase 0: Design
 
-**Status:** Boards complete: steps 0.1 to 0.8 approved (0.8 on 2026-10-09); the Kit and the mirror are kept current as phases build. **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
+**Status:** Boards for the app complete: steps 0.1 to 0.8 approved (0.8 and 0.8b on 2026-10-09); 0.9, the website, is
+Phase 8's (resume 015); the Kit and the mirror are kept current as phases build. **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
 
 ## Goal
 

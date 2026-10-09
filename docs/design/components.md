@@ -534,3 +534,22 @@ The texts:
 | Offline | "Offline. Showing what was saved at 14:10." (today) · "… saved yesterday at 18:30" · "… saved on Mon 5 Oct" · "Offline. Nothing saved on this iPhone yet." with "Nothing saved here yet" "October's fees appear once this screen has loaded with a connection." and Try again · refused: "You're offline. Adding a student needs a connection; nothing was saved." (editing a student; a class; an event; a task; a note; a fee month; a setting) · attendance: "Saved on this iPhone at 17:05. It reaches the server when you're back online." · a fee: "Paid by UPI on 7 Oct · Kept on this iPhone until you're online" and the toast "Dev's fee marked paid here. It's sent when you're back online." with Undo |
 | Back online | "Back online. Sending 3 saved changes…" · "3 saved changes sent." · "1 saved change couldn't be sent." |
 | Pending changes | "Saved on this iPhone while you were offline, in the order you made them." · a failure: "Dev Kumar is no longer in the register, so his fee can't be marked. Keep it here or discard it." · "Each change is sent on its own; one that fails doesn't hold up the rest. A failed change stays here until you discard it." · Discard: "Discard this change?" "Dev's October fee stays as the server has it: due. The mark you made here is lost." |
+
+### Phase 7 as built (where the build moved from the boards, and why)
+
+- **No technical words on screen (D41).** The approved texts that said "server" were reworded in the build: "It's sent
+  when you're back online.", "haven't been sent yet", "stays as it was", "This change couldn't be saved. Keep it here or
+  discard it.", and the consent "kept neither there nor by us". Pending changes' reason for a removed student uses "their",
+  not "his". A failure the app cannot name reads "That didn't go through. Try again."; a backend's own message never shows.
+- **Banner action.** Open Settings on the refused reminders banner is `bannerAction` (13/700, accentText), a new token.
+- **Picker list row and wheel.** `PickerListRow` and `WheelPopover` (the day of the month, the leads) are DesignSystem's.
+- **Dynamic Type layer.** At the five accessibility sizes rows stack (`AdaptiveRow`, `AdaptiveSpacer`, `TrailingColumn`),
+  filled buttons wrap, fixed-height rows grow (`growsWithText`), drawn-height sheets open full and scroll (`boardDetents`),
+  one-word titles, emails, phones and initials shrink (`singleLineTitle`); the boards' layout is kept at every other size
+  (a pixel diff of 23 states). Record: `docs/design/accessibility-pass.md`.
+- **Build 10 findings (the owner on the phone):** Start here's buttons are plain labels (P2-Today-Empty updated); every
+  calendar is `calendarPopover` (its width, Monday first, the keyboard away as it opens); a picker tile keeps label and
+  value on one line when both fit, else the value goes under the label; sheets sized to their content (New class, Sign in
+  with email) keep the header pinned while the fields scroll (`FittedSheet`); a drag down puts the keyboard away
+  everywhere (`scrollDismissesKeyboard(.interactively)` on the root); Add on Today's Tasks scrolls the field above the
+  keyboard; New class… from the student form; Today's account picture at the top right; the opening fade.

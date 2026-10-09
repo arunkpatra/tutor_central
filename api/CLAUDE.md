@@ -25,6 +25,11 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
 - Claude through `@anthropic-ai/sdk` (D35), the named `Anthropic` export (the default breaks Vercel's CommonJS type
   check): `messages.parse` with `zodOutputFormat`, one model per route, no fallbacks. One deadline across both tries
   (`CLAUDE_DEADLINE_MS`, 110 s, under the app's 125 s); a timeout is a 502 and the row is marked failed.
+- `POST /account/revoke-apple` (D38) exchanges the app's Apple authorization code and revokes the refresh token with a
+  client secret signed from `APPLE_SIGNIN_KEY` (ES256, `dsaEncoding: "ieee-p1363"`, five minutes). The three `APPLE_*`
+  values are read at boot (a deploy without them fails its smoke); Vercel keeps the `.p8`'s newlines, `.env.local` holds
+  it on one line with `\n`, which `index.ts` turns back. `APPLE_FAKE=1` answers without Apple: local runs only. Its
+  failures are Apple refused (400), signed out (401) and Apple unreachable (502); the app never shows the route's words.
 - `AI_FAKE=1` answers from `claude-fake.ts` (local runs only; never set on Vercel); the consent, limit and record paths
   still run against the database.
 - Every database call is made as the user (`db.ts`, the user's JWT); `start_ai_generation` is the consent and limit gate.
@@ -32,5 +37,6 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
 - Photos are checked before any cost: magic bytes, round-trip base64, 3 MB decoded, six pages.
 - `test/entry.test.ts` spawns the entry with `--no-env-file`, so `.env.local` does not leak into it.
 
-Commands: `bun run dev` (local on :3000, needs `api/.env.local`); `bun run check` (tsc and tests);
+Commands: `bun run dev` (local on :3000, needs `api/.env.local`, and `SUPABASE_URL=… SUPABASE_ANON_KEY=…` from `supabase
+status -o env` on the command line); `bun run check` (tsc and tests);
 `bun check --only=api`; `gh workflow run deploy`.

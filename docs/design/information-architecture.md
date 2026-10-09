@@ -517,6 +517,23 @@ October 2026, 16:35; the system surfaces, the lock screen, the launch screen and
 | `pending` | Pending changes: two waiting, one failed with its reason, Send again |
 | `pending-discard` | The discard confirmation over Pending changes |
 
+From build 10 (step 0.8b, approved 2026-10-09, row 10b of the canvas at y 14600): the owner's findings on the phone.
+
+| Board | Source |
+|---|---|
+| New student: the class menu ends with New class… after a section break; no classes yet; the New class sheet on top; back with the class chosen (dark and light) | `P7-NewStudent-ClassMenu`, `-ClassMenu-NoClasses`, `-NewClass`, `-ClassMade`, each with `-Light` |
+| Today: the account picture at the top right, level with the date (every Today state follows it) | `P7-Today-Header`, `-Light` |
+| Opening: the launch screen's book fading into Today over `opening` (500 ms), once the app is ready | `P7-Launch-Fade`, `-Light` |
+
+| State | Shows |
+|---|---|
+| `student-new-new-class` | New class… chosen from the student form: the New class sheet (filled) on top |
+| `student-new-class-made` | Back on New student with Class 12 Physics chosen and its fee in use |
+| `kit-phase7` | The Kit's Phase 7 parts: the status lines, the account rows, a pending change, the picker row and its wheel |
+
+The class menu is the system's (`Menu` with toggles, so each class keeps its count line); the opening has no launch state
+(a recording of the launch proves it).
+
 What the boards settle (the parts are in `components.md`, "Phase 7 parts"):
 
 - **Settings** is pushed from Today's account button and More's row. Sections: Teaching profile (saved as you go, the

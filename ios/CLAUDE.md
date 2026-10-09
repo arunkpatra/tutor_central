@@ -97,3 +97,29 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.
+
+- Offline (D39, D40): a list's copy is `CachedRead` under the centre (`cache-<centre>-<key>.json`, file protection until
+  first unlock); three writes queue in `ChangeQueue` (`queue-<centre>.json`) and `QueueRunner` sends them in order, reading
+  the queue again before each send and removing only what it sent. A store gets the queue through
+  `RootView.centreQueue()` (the tabs are built before `onChange` runs); a change added while online starts a run
+  (`ChangeQueue.onAdded`). Only a PostgREST code fails a change; any outage waits. Sign-out and deletion wipe the
+  centre's files, its defaults and every reminder, pending and shown (`SignOutWipe`, `Wipe`).
+- A stopped gateway keeps `NWPath` satisfied: reads fail after about 20 s and a replay starts on foreground (`HOME`, then
+  `xcrun simctl launch`). Coming back to the app reads every list again (`ShellState.refreshScreens`); a reload that
+  fails keeps what is shown.
+- Reminders: `ReminderScheduler` (AppShell) plans and replaces on sign-in, foreground (after the register is read
+  again), any saved class, student, event or fee write, and a queue run; a call during a run plans again after it; a
+  failed read keeps that kind's pending reminders. `AppDelegate` installs `NotificationDelegate` before launch ends; a
+  tap's link reaches `RootView.openLink`. The simulator's lock screen and banners take no injected taps: open the
+  reminder's link with `simctl openurl` and leave the tap to the tester.
+- No technical words on screen (D41): `ErrorWordsTests` reads every sentence in the sources; never pass a backend's
+  message through.
+- Dynamic Type: rows that put a value beside a title use `AdaptiveRow` (stacks only at the accessibility sizes) with
+  `AdaptiveSpacer` where an `HStack` had a `Spacer`; fixed-height rows `growsWithText()`; a drawn-height sheet
+  `boardDetents(_:)`; a one-line title, email or initials `singleLineTitle()`. `typeStyle` reads the environment's size,
+  so a size changed while the app runs redraws. Compare the default size by pixels before and after.
+- Every graphical calendar takes `calendarPopover(timeZone:)` (`CalendarPopoverUseTests` holds it): its width, Monday
+  first, the keyboard away as it opens. A sheet sized to its content is a `FittedSheet` (the header pinned, the fields
+  scroll). `scrollDismissesKeyboard(.interactively)` is set once on the root.
+- The launch screen is carried on by `OpeningCover` until the session is read, then fades over `opening` (500 ms,
+  ease-in-out): never in a launch state. Prove a motion by recording (`simctl io booted recordVideo`) and reading frames.

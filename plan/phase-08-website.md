@@ -1,6 +1,7 @@
 # Phase 8: The product website, tutorcentral.in
 
-**Status:** Not started (added in session 4 at the owner's request). **Depends on:** Phase 0's website boards
+**Status:** Not started (added in session 4 at the owner's request); the boards and the plan are resume 015. **Next:**
+Phase 9, user testing (D43), which needs this phase's privacy page for TestFlight's external group. **Depends on:** Phase 0's website boards
 approved; the domain `tutorcentral.in`, which the owner has bought. **Must be live before:** the first App Store
 submission (Phase 7's release candidate), because App Store review asks for a privacy policy URL, and the app
 already links `https://tutorcentral.in/terms` and `https://tutorcentral.in/privacy` from sign-in (Phase 2).
@@ -17,11 +18,12 @@ App Store review somewhere to reach the owner.
    Phase 7); `/terms`; `/support` (how to reach the owner). The two legal URLs never move once the app ships.
 2. **Design.** Boards first, in Ember (D20), on the canvas and in `docs/design/`, approved before any page is built
    (rule 1). Both appearances (D13).
-3. **Hosting and DNS.** The owner's decision, asked one question at a time when the phase starts: where it is
-   hosted (Vercel is already in use for the API), how it is built, and the DNS records for `tutorcentral.in` and
-   `www`. HTTPS on both.
-4. **The polish slice and the minors** (the owner, 2026-10-09, on approving the Phase 7 plan): `plan/ui-polish.md`'s U6, U7,
-   U9, U16 and U24, and Phase 6's deferred minors 1 (the two retain cycles in AppShell's closures), 6 (an 11-digit phone
+3. **Hosting and DNS.** Next.js in `web/`, beside `api/` and `ios/`, on Vercel as a second project, built with Bun,
+   deployed by a workflow started by hand (D42, the owner, 2026-10-09). The DNS records for `tutorcentral.in` and `www`
+   (at GoDaddy, where the domain and Resend's records already are) are the owner's steps, one at a time; HTTPS on both.
+   `bun check` gains a `web` step (format, lint, types, tests, build).
+4. **The polish slice and the minors** (the owner, 2026-10-09, on approving the Phase 7 plan): `plan/ui-polish.md`'s U7,
+   U16 and U24 (U6 and U9 were closed in Phase 7, #72 and #70), and Phase 6's deferred minors 1 (the two retain cycles in AppShell's closures), 6 (an 11-digit phone
    with a trunk 0) and 7 (the notes and draft limits count graphemes where Postgres counts code points), from
    `plan/sessions/013/record.md`. Each its own pull request with a board first where what is seen changes, by
    `plan/ui-polish.md`'s "How it works".
