@@ -251,4 +251,19 @@ import Testing
         await store.setArchived(FakeStudentsRepository.akshita, true)
         #expect(store.lastSavedAt == FakeCountsRepository.fixedNow)
     }
+
+    /// The shell plans the reminders again after a saved write (a class's days, a member count); not after a failed
+    /// one.
+    @Test func aSavedWriteIsToldAndAFailedOneIsNot() async {
+        let store = make()
+        await store.load()
+        var told = 0
+        store.onChanged = { told += 1 }
+        var draft = StudentDraft()
+        draft.name = "Zara Khan"
+        _ = await store.addStudent(draft)
+        students.nextError = URLError(.badServerResponse)
+        _ = await store.addStudent(draft)
+        #expect(told == 1)
+    }
 }

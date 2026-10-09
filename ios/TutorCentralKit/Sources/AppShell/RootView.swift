@@ -86,24 +86,16 @@ public struct RootView: View {
                     ToastHost(toasts: toasts)
                 }
             }
-            .onOpenURL { url in
-                guard let link = DeepLink(url: url), session.isReady else { return }
-                if !shell.tabs.open(link) {
-                    toasts.show("That opens in a later build.")
-                }
-                if case let .attendance(date, classID) = link, case let .ready(workspace) = session.state {
-                    openAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
-                }
-                if case let .fees(month) = link, case let .ready(workspace) = session.state {
-                    openFees(month: Self.linkMonth(month), in: workspace)
-                }
-            }
+            .onOpenURL { openLink($0) }
             .onChange(of: scenePhase) { _, phase in
                 // The foreground refresh hook: the centre and profile read again when the app comes back.
                 if phase == .active, launch == nil {
                     Task {
                         await session.refresh()
                         await runQueue()
+                        // The reminders plan from the classes as they are now, not as first read.
+                        await shell.register?.refresh()
+                        replanReminders()
                     }
                 }
             }
@@ -111,6 +103,10 @@ public struct RootView: View {
                 Self.follow(state, shell: shell, deps: deps)
                 if session.isReady {
                     Task { await runQueue() }
+                    replanReminders()
+                    NotificationDelegate.shared.onOpen = { openLink($0) }
+                } else {
+                    NotificationDelegate.shared.onOpen = nil
                 }
             }
             .environment(session)
@@ -122,6 +118,20 @@ public struct RootView: View {
                 }
             }
             .task { await followConnectivity() }
+    }
+
+    /// A `tutorcentral://` link, from outside or from a tapped reminder.
+    func openLink(_ url: URL) {
+        guard let link = DeepLink(url: url), session.isReady else { return }
+        if !shell.tabs.open(link) {
+            toasts.show("That opens in a later build.")
+        }
+        if case let .attendance(date, classID) = link, case let .ready(workspace) = session.state {
+            openAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
+        }
+        if case let .fees(month) = link, case let .ready(workspace) = session.state {
+            openFees(month: Self.linkMonth(month), in: workspace)
+        }
     }
 
     @ViewBuilder private var content: some View {
@@ -199,6 +209,7 @@ public struct RootView: View {
                 : deps.filesDirectory.map { RegisterCache.forCentre(workspace.centre.id, directory: $0) },
             now: deps.now
         )
+        made.onChanged = { replanReminders() }
         // Kept at once, in the same pass: the detail pushed by a launch state or a link reads the same register as the
         // list.
         shell.register = made

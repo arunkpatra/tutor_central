@@ -7,6 +7,7 @@ public struct Banner: View {
     let symbol: String
     let text: String
     let tone: StatusTone?
+    let action: (label: String, run: () -> Void)?
     static var radius: CGFloat {
         12
     }
@@ -15,10 +16,14 @@ public struct Banner: View {
         14
     }
 
-    public init(symbol: String, text: String, tone: StatusTone? = nil) {
+    /// `action` is a word on the right in accentText (Open Settings, P7-Reminders-Refused).
+    public init(
+        symbol: String, text: String, tone: StatusTone? = nil, action: (label: String, run: () -> Void)? = nil
+    ) {
         self.symbol = symbol
         self.text = text
         self.tone = tone
+        self.action = action
     }
 
     public var body: some View {
@@ -26,13 +31,19 @@ public struct Banner: View {
             Image(systemName: symbol).font(.system(size: Self.symbolSize)).accessibilityHidden(true)
             Text(text).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
+            if let action {
+                Button(action.label, action: action.run)
+                    .typeStyle(Tokens.bannerAction)
+                    .foregroundStyle(Tokens.accentText.color)
+                    .buttonStyle(.plain)
+            }
         }
         .typeStyle(Tokens.footnote)
         .foregroundStyle((tone?.color ?? Tokens.text2).color)
         .padding(.vertical, Tokens.inline)
         .padding(.horizontal, Tokens.cardPaddingCompact)
         .background(Tokens.surface2.color, in: .rect(cornerRadius: Self.radius, style: .continuous))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: action == nil ? .combine : .contain)
     }
 }
 

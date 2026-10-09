@@ -4,7 +4,7 @@ import Settings
 import SwiftUI
 
 /// Settings and the screens on its stack: Settings, whose centre changes reach every store that shows the workspace;
-/// Account; Delete account; Help.
+/// Account; Delete account; Help; Pending changes; Teacher reminders.
 extension RootView {
     @ViewBuilder func settingsScreen(_ route: Route) -> some View {
         switch route {
@@ -16,6 +16,8 @@ extension RootView {
             deleteAccountView
         case .pendingChanges:
             pendingChangesView
+        case .reminders:
+            remindersView
         default:
             settingsView
         }
@@ -35,7 +37,7 @@ extension RootView {
                 reminders: { await reminderSummary() },
                 actions: SettingsActions(
                     openPayments: { shell.tabs.push(.payments) },
-                    openReminders: nil,
+                    openReminders: { shell.tabs.push(.reminders) },
                     openPendingChanges: { shell.tabs.push(.pendingChanges) },
                     openAccount: { shell.tabs.push(.account) },
                     openHelp: { shell.tabs.push(.help) },

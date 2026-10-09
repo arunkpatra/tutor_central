@@ -53,6 +53,8 @@ import Observation
     public private(set) var offlineRead = false
     /// A month's copy on this iPhone (AppShell's): its events (with the two weeks after) and its sessions.
     public var cache: ((Period) -> CachedRead<ScheduleSnapshot>)?
+    /// Told after any saved event write, so the shell plans the reminders again.
+    public var onEventsChanged: () -> Void = {}
     private var readMonth: Period?
     public var message: String?
     public internal(set) var canRetry = false

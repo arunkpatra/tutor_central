@@ -83,7 +83,7 @@ public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
     }
 
     /// "17:05" in the calendar's zone; a formatter per call (D8).
-    static func clock(_ date: Date, calendar: Calendar) -> String {
+    public static func clock(_ date: Date, calendar: Calendar) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_IN")
         formatter.timeZone = calendar.timeZone

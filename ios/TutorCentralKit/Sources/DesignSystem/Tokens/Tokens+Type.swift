@@ -54,6 +54,8 @@ public extension Tokens {
     static let avatar = TypeToken("avatar", .subheadline, size: 14, line: 18, weight: 700)
     static let avatarSmall = TypeToken("avatarSmall", .footnote, size: 13, line: 18, weight: 700)
     static let avatarLarge = TypeToken("avatarLarge", .title3, size: 20, line: 25, weight: 700)
+    /// A banner's action word (Open Settings, P7-Reminders-Refused).
+    static let bannerAction = TypeToken("bannerAction", .footnote, size: 13, line: 18, weight: 700)
 
     static let types: [TypeToken] = [
         display, displayHero, displayCompact, title1, title2, title3, headline, wordmark, lead, intro, emptyTitle, body,
@@ -63,6 +65,6 @@ public extension Tokens {
         numberTile, numberHero,
         numberRow, time, button,
         buttonSecondary, buttonStrong, segment, segmentActive, chipLabel, chipCompactLabel, chipNeutralLabel, day,
-        dayToday, avatar, avatarSmall, avatarLarge,
+        dayToday, avatar, avatarSmall, avatarLarge, bannerAction,
     ]
 }
