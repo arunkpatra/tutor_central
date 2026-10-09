@@ -10,13 +10,13 @@ test("the db step is skipped with a reason when local supabase is down", () => {
 });
 
 test("in CI the db step runs only on the runner that asks for it", () => {
-  expect(dbSkipReason({ CI: "true" }, true)).toBe("not on this runner (the api-db job runs it)");
+  expect(dbSkipReason({ CI: "true" }, true)).toBe("not on this runner (the api-web-db job runs it)");
   expect(dbSkipReason({ CI: "true", TC_DB_IN_CI: "1" }, true)).toBeNull();
   expect(dbSkipReason({ CI: "true", TC_DB_IN_CI: "1" }, false)).toContain("not running");
 });
 
 test("steps run in the documented order", () => {
-  expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "db"]);
+  expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "web", "db"]);
 });
 
 test("the simulator is the iPhone 17 unless TC_SIMULATOR names another", () => {
