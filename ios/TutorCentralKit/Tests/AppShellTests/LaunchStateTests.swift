@@ -242,5 +242,9 @@ struct LaunchStateTests {
         #expect(RootView.initialRoutes(for: .checkIntro) == [.checkPaper(visit)])
         #expect(RootView.initialRoutes(for: .checkSaved).last == .checkResult(visit))
         #expect(RootView.checkBoardState(.checkMarkPicker) == .markPicker && RootView.tab(for: .checkFailed) == .more)
+        #expect(RootView.checkBoardState(.checkResultScrolled) == .scrolled)
+        #expect(RootView.scanBoardState(.scanReviewScrolled) == .scrolled)
+        #expect(RootView.checkStates.contains(.checkResultScrolled) && RootView.scanStates
+            .contains(.scanReviewScrolled))
     }
 }

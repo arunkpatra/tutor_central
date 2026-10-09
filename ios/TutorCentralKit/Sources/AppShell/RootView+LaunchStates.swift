@@ -46,14 +46,14 @@ extension RootView {
 
     /// Scan register's states, on the More tab's stack (Saved is the Students list).
     static let scanStates: Set<LaunchState> = [
-        .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
-        .scanReviewLeave, .scanNothing, .scanFailed,
+        .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewScrolled, .scanReviewEdit,
+        .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed,
     ]
 
     /// Check a paper's states, on the More tab's stack; one visit id for all of them.
     static let checkStates: Set<LaunchState> = [
         .checkIntro, .checkPages, .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker,
-        .checkResultEdited, .checkSaved, .checkFailed,
+        .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed,
     ]
     static let checkVisit = UUID(uuidString: "eeeeeeee-0000-0000-0000-000000000001") ?? UUID()
 
@@ -63,7 +63,8 @@ extension RootView {
         case .checkIntro: [.checkPaper(id)]
         case .checkPages: [.checkPaper(id), .checkPages(id)]
         case .checkScheme, .checkSchemeTyped: [.checkPaper(id), .checkPages(id), .checkScheme(id)]
-        case .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited, .checkSaved, .checkFailed:
+        case .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited, .checkResultScrolled, .checkSaved,
+             .checkFailed:
             [.checkPaper(id), .checkPages(id), .checkScheme(id), .checkResult(id)]
         default: []
         }
@@ -74,24 +75,21 @@ extension RootView {
         case .checkSchemeTyped: .typed
         case .checkMarkPicker: .markPicker
         case .checkResultEdited: .edited
+        case .checkResultScrolled: .scrolled
         case .checkSaved: .saved
         default: nil
         }
     }
 
+    /// Each Scan register state's board state (a table: the switch passed the lint's complexity).
+    static let scanBoardStates: [LaunchState: ScanBoardState] = [
+        .scanConsent: .consent, .scanCameraRefused: .cameraRefused, .scanReading: .reading, .scanReview: .review,
+        .scanReviewScrolled: .scrolled, .scanReviewEdit: .edit, .scanReviewRemoved: .rowRemoved,
+        .scanReviewLeave: .leave, .scanNothing: .nothing, .scanFailed: .failed,
+    ]
+
     static func scanBoardState(_ state: LaunchState) -> ScanBoardState? {
-        switch state {
-        case .scanConsent: .consent
-        case .scanCameraRefused: .cameraRefused
-        case .scanReading: .reading
-        case .scanReview: .review
-        case .scanReviewEdit: .edit
-        case .scanReviewRemoved: .rowRemoved
-        case .scanReviewLeave: .leave
-        case .scanNothing: .nothing
-        case .scanFailed: .failed
-        default: nil
-        }
+        scanBoardStates[state]
     }
 
     /// The AI Assistant's stack for each of its states.
