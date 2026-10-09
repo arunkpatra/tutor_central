@@ -26,7 +26,7 @@ The owner looks at build 14 (Edit event with the keyboard, a checked paper's Sav
 
 ## In flight
 
-Nothing open. TestFlight 1.0.0 (14) from `dbe673f` (run 37938735658) is for the owner's phone. Merged `phase-7/*` and `phase-8/*`
+Nothing open. TestFlight 1.0.0 (15) from `e455ba0` (run 37943689238) carries the reminder-tap crash fix (#84), the minors (#85) and "normally within 30 days" (#83); the site is at `e455ba0` (deploy-web run 37943683483). Merged `phase-7/*` and `phase-8/*`
 branches remain on the remote; delete them when convenient.
 
 ## Production
@@ -55,7 +55,7 @@ branches remain on the remote; delete them when convenient.
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (14) by run 37938735658 is the latest (13 by run 37913258080 before it). Each run revokes the Apple Development certificate it makes (#75): a
+  run number. 1.0.0 (15) by run 37943689238 is the latest (14 by run 37938735658, 13 by run 37913258080). Each run revokes the Apple Development certificate it makes (#75): a
   fresh runner makes one per run and the account's cap stopped run 12 after eleven (the owner revoked them, 2026-10-09).
 
 ## Open items

@@ -44,6 +44,7 @@ screen, several as a polish slice, or not at all.
 | U29 | 2026-10-09 | Students, the "+" menu at the largest text sizes | The system menu cuts "Scan paper register" to "Scan paper regis…" | Session 15's Dynamic Type check |
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
+| U33 | 2026-10-09 | Toasts across the app | iOS has no toast: keep the bottom bar only where it carries Undo (as Mail's Undo Send); a confirmation shows in place, a failure that needs a decision is an alert, a list that could not load says so inline with Try Again, camera access and a gone item are alerts | The owner, 2026-10-09 ("remain as Apple native as possible"); boards first |
 
 ## Done
 
