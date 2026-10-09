@@ -41,9 +41,12 @@ struct WaiveSheet: View {
                     .foregroundStyle(Tokens.text3.color)
             }
             Spacer(minLength: 0)
-            Button("Waive \(subject.invoice.amount.formatted)") { waive(reason) }
-                .buttonStyle(.primary(.sheet, loading: writing))
-                .disabled(!canWaive || writing)
+            Button("Waive \(subject.invoice.amount.formatted)") {
+                Keyboard.dismiss()
+                waive(reason)
+            }
+            .buttonStyle(.primary(.sheet, loading: writing))
+            .disabled(!canWaive || writing)
         }
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)

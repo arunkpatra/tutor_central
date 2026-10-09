@@ -161,6 +161,8 @@ public struct EventFormSheet: View {
 
     private func save() {
         saving = true
+        // The keyboard goes first, so a failure's toast is seen above the sheet (U9's cause).
+        Keyboard.dismiss()
         Task {
             if await onSave(store.draft) {
                 onClose()
