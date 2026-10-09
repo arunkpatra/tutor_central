@@ -4,7 +4,7 @@ import Foundation
 /// The AI routes over HTTPS with the tutor's Supabase token (`Authorization: Bearer`). The API checks the token, the
 /// consent and the day's limit, and calls Claude (D11); this client sends, waits up to 125 s, and maps every answer to
 /// a result or an `APIFailure`.
-public struct APIClient: AIRepository {
+public struct APIClient: AIRepository, AccountRepository {
     /// Base64 characters in one request: under Vercel's 4.5 MB body with room for the JSON around it.
     public static let bodyLimit = 4_200_000
     public static let timeout: TimeInterval = 125
@@ -64,6 +64,13 @@ public struct APIClient: AIRepository {
     }
 
     private func post(_ path: String, body: some Encodable) async throws(APIFailure) -> Data {
+        let answer = try await exchange(path, body: body)
+        guard !(200 ..< 300).contains(answer.status) else { return answer.data }
+        throw Self.failure(status: answer.status, body: try? JSONDecoder().decode(ErrorBody.self, from: answer.data))
+    }
+
+    /// One request with the bearer: its status and body, or the failure before any answer came.
+    private func exchange(_ path: String, body: some Encodable) async throws(APIFailure) -> Answer {
         let bearer: String
         do {
             bearer = try await token()
@@ -79,16 +86,17 @@ public struct APIClient: AIRepository {
         } catch {
             throw .server("Couldn't send that. Try again.")
         }
-        let data: Data
-        let response: URLResponse
         do {
-            (data, response) = try await session.data(for: request)
+            let (data, response) = try await session.data(for: request)
+            return Answer(status: (response as? HTTPURLResponse)?.statusCode ?? 0, data: data)
         } catch {
             throw Self.failure(transport: error)
         }
-        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
-        guard status != 200 else { return data }
-        throw Self.failure(status: status, body: try? JSONDecoder().decode(ErrorBody.self, from: data))
+    }
+
+    struct Answer {
+        let status: Int
+        let data: Data
     }
 
     /// A request that never got its answer: the app's own deadline (`timeout`) is not being offline.
@@ -113,5 +121,37 @@ public struct APIClient: AIRepository {
               let result = object["result"],
               let json = try? JSONSerialization.data(withJSONObject: result) else { return nil }
         return String(bytes: json, encoding: .utf8)
+    }
+}
+
+public extension APIClient {
+    /// `POST /account/revoke-apple` (D38): 2xx is done; 400 Apple refused the code; 401 signed out; 502 Apple did not
+    /// answer; no answer at all is offline, a timeout Apple not answering.
+    func revokeApple(code: String) async throws(AccountFailure) {
+        let answer: Answer
+        do {
+            answer = try await exchange("account/revoke-apple", body: ["code": code])
+        } catch {
+            throw switch error {
+            case .signedOut: .signedOut
+            case .timedOut: .appleUnreachable
+            case .offline: .offline
+            default: .server(error.message)
+            }
+        }
+        guard !(200 ..< 300).contains(answer.status) else { return }
+        throw Self.accountFailure(
+            status: answer.status,
+            body: try? JSONDecoder().decode(ErrorBody.self, from: answer.data)
+        )
+    }
+
+    internal static func accountFailure(status: Int, body: ErrorBody?) -> AccountFailure {
+        switch status {
+        case 400: .appleRefused
+        case 401, 403: .signedOut
+        case 502, 503, 504: .appleUnreachable
+        default: .server(body?.error ?? AccountFailure.appleUnreachable.message)
+        }
     }
 }

@@ -33,6 +33,10 @@ import Synchronization
     public private(set) var requested: [EmailAddress] = []
     public private(set) var verified: [(EmailAddress, String)] = []
     public private(set) var signedOut = 0
+    public var methods: [SignInProvider] = [.apple, .email]
+    public private(set) var passwords: [String] = []
+    public private(set) var deleted = 0
+    public var nextAccountFailure: AccountFailure?
     /// Registered synchronously, so a change right after `changes()` is never missed.
     private nonisolated let listeners = Listeners()
 
@@ -101,6 +105,28 @@ import Synchronization
     public func signOut() async {
         signedOut += 1
         emit(nil)
+    }
+
+    public func signInMethods() async -> [SignInProvider] {
+        methods
+    }
+
+    public func setPassword(_ password: String) async throws(AccountFailure) {
+        try takeAccountFailure()
+        passwords.append(password)
+    }
+
+    /// As Supabase does: the user is gone and the local session ends, announced as a sign-out.
+    public func deleteAccount() async throws(AccountFailure) {
+        try takeAccountFailure()
+        deleted += 1
+        emit(nil)
+    }
+
+    private func takeAccountFailure() throws(AccountFailure) {
+        guard let failure = nextAccountFailure else { return }
+        nextAccountFailure = nil
+        throw failure
     }
 
     private func signedIn(_ user: AuthUser) -> AuthUser {

@@ -14,4 +14,11 @@ public protocol AuthRepository: Sendable {
     func verifyCode(email: EmailAddress, code: String) async throws(SignInFailure) -> AuthUser
     func signIn(email: EmailAddress, password: String) async throws(SignInFailure) -> AuthUser
     func signOut() async
+    /// The providers the signed-in user has (`user.identities`), for Account's methods card; email means the code.
+    func signInMethods() async -> [SignInProvider]
+    /// `auth.update(user: UserAttributes(password:))`: no current password (Supabase's secure change is off).
+    func setPassword(_ password: String) async throws(AccountFailure)
+    /// `delete_account()` (D37) as the signed-in user; once it succeeded, the local session is ended whatever that
+    /// step answers.
+    func deleteAccount() async throws(AccountFailure)
 }

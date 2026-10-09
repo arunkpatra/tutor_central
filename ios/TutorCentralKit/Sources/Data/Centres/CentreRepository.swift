@@ -19,4 +19,6 @@ public protocol CentreRepository: Sendable {
     func confirmUPI(id: UUID, at: Date) async throws
     /// "I agree, continue" on the consent sheet: before a child's data first goes to the AI service.
     func recordAIConsent(id: UUID, at: Date) async throws
+    /// `profiles.has_password = true` for the signed-in user, so the sign-in sheet can offer the password.
+    func setHasPassword() async throws
 }

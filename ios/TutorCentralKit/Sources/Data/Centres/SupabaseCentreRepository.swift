@@ -88,6 +88,12 @@ public final class SupabaseCentreRepository: CentreRepository {
         _ = try Self.decoder.decode(ConsentRow.self, from: response.data)
     }
 
+    public func setHasPassword() async throws {
+        let user = try await client.auth.session.user.id
+        try await client.from("profiles").update(["has_password": AnyJSON.bool(true)]).eq("user_id", value: user)
+            .execute()
+    }
+
     public func updateProfile(displayName: String) async throws {
         let userID = try await client.auth.session.user.id
         try await client.from("profiles")
