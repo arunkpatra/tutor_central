@@ -51,3 +51,26 @@ import Testing
         #expect(store.invoices.count == 10 && !store.offlineRead && !store.showsNothingSaved && store.savedAt == nil)
     }
 }
+
+@MainActor struct FeesCancelledReadTests {
+    /// Run 7: leaving the tab cancels the read; that is no failure, and the next visit reads again.
+    @Test func aCancelledReadSaysNothingAndTheNextOpenReadsAgain() async {
+        let fees = FakeFeesRepository(invoices: FakeFeesRepository.seed)
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let store = FeesStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, fees: fees,
+            messages: FakeMessageLogRepository(), centres: FakeCentreRepository(),
+            now: { FakeCountsRepository.fixedNow }
+        )
+        fees.nextError = URLError(.cancelled)
+        await store.load()
+        #expect(store.error == nil && !store.canRetry && !store.offlineRead)
+        await store.load()
+        #expect(store.invoices.count == 10 && store.loaded)
+    }
+}

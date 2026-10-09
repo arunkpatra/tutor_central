@@ -1,5 +1,5 @@
 /// The tutor as the app names them.
-public struct Profile: Hashable, Sendable {
+public struct Profile: Hashable, Sendable, Codable {
     public var displayName: String?
     /// Whether the tutor set a password (`profiles.has_password`): Account's row and the sign-in sheet's offer.
     public var hasPassword: Bool

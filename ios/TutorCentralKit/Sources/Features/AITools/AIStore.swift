@@ -143,6 +143,9 @@ import UIKit
             historyLoaded = true
             historyError = nil
         } catch {
+            if TransportError.isCancelled(error) {
+                return
+            }
             historyOfflineRead = TransportError.isOffline(error)
             historyError = historyLoaded && historyOfflineRead
                 ? nil : "Couldn't load History. Check your connection and try again."

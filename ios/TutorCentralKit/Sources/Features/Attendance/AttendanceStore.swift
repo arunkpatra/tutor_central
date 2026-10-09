@@ -205,6 +205,13 @@ import Observation
                 error = nil
             } catch {
                 guard generation == openGeneration else { return }
+                if TransportError.isCancelled(error) {
+                    // The tab went away mid-read: nothing failed; the next visit opens again.
+                    if !opened {
+                        openGeneration = 0
+                    }
+                    return
+                }
                 offlineRead = TransportError.isOffline(error)
                 if !showSaved(cached, month: date.period) {
                     self.error = "Couldn't load attendance. Check your connection and try again."

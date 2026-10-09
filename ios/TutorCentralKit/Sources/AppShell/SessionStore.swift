@@ -35,15 +35,27 @@ import Observation
     /// same sign-in has none, and either lookup may finish last.
     private var knownNames: [UUID: String] = [:]
 
+    /// The centre as last read, kept on this iPhone, so a launch without the network still opens the tabs (D39);
+    /// gone on sign-out (D40).
+    private let saved: JSONCache<Workspace>
+
     public init(deps: Dependencies, initial: State = .loading) {
         self.deps = deps
         state = initial
+        saved = JSONCache(name: Self.savedName, directory: deps.filesDirectory)
     }
+
+    /// The file the centre's copy is kept in (Application Support/TutorCentral/workspace.json).
+    public static let savedName = "workspace"
 
     /// Reads the keychain user, resolves the workspace, then follows sign-ins and sign-outs from elsewhere.
     public func start() async {
         let changes = deps.auth.changes()
         if let user = await deps.auth.currentUser() {
+            // The centre as last read opens the tabs at once; the read refreshes it behind them (D39).
+            if case .loading = state, let copy = saved.load(), copy.user.id == user.id {
+                state = .ready(copy)
+            }
             await resolve(user)
         } else {
             state = .signedOut
@@ -115,8 +127,18 @@ import Observation
         do {
             let workspace = try await deps.centres.workspace(for: user)
             lastError = nil
+            if let workspace {
+                try? saved.save(workspace)
+            }
             state = workspace.map(State.ready) ?? .needsOnboarding(withKnownName(user))
         } catch {
+            // Offline at launch: the centre as last read on this iPhone, never another tutor's.
+            if case .ready = state {} else if TransportError.isOffline(error), let copy = saved.load(),
+                                              copy.user.id == user.id {
+                lastError = nil
+                state = .ready(copy)
+                return
+            }
             lastError = "Couldn't load your centre. Check your connection and try again."
             if case .ready = state {} else {
                 state = .loading

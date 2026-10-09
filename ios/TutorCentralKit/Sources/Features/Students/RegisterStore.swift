@@ -170,6 +170,10 @@ import Observation
             loaded = true
             persist()
         } catch {
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
             offlineRead = TransportError.isOffline(error)
             // A saved register offline: the line under the title says it.
             self.error = loaded && offlineRead ? nil : "Couldn't refresh. Check your connection and try again."

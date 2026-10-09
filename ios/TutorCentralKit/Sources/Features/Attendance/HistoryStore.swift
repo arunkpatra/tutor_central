@@ -150,6 +150,10 @@ import Observation
             error = nil
         } catch {
             guard generation == loadGeneration else { return }
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
             offlineRead = TransportError.isOffline(error)
             let shown = sessionsMonth == month && savedAt != nil
             self.error = shown && offlineRead ? nil : "Couldn't load attendance. Check your connection and try again."

@@ -229,6 +229,13 @@ import Observation
             loaded = true
         } catch {
             guard generation == loadGeneration else { return }
+            if TransportError.isCancelled(error) {
+                // The tab went away mid-read: nothing failed; the next visit reads again.
+                if invoicesMonth != month {
+                    opened = false
+                }
+                return
+            }
             offlineRead = TransportError.isOffline(error)
             if invoicesMonth != month {
                 invoices = []

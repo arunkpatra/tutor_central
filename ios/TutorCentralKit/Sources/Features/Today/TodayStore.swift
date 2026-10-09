@@ -203,6 +203,9 @@ import Observation
         clock = now()
         let today = today
         async let monthSessions = try? attendance.sessions(centre: workspace.centre.id, month: today.period)
+        // The register and the tasks show their saved copies at once, beside the counts' read (D39).
+        let registerRead = Task { await register.loadIfNeeded() }
+        let tasksRead = Task { await tasks.loadIfNeeded() }
         async let weekEvents = try? eventsRepository.events(
             centre: workspace.centre.id, from: today, to: today.adding(days: 7, calendar: calendar)
         )
@@ -214,12 +217,16 @@ import Observation
             loaded = true
             fresh = true
         } catch {
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
             offlineRead = TransportError.isOffline(error)
             // With a saved copy on screen the offline line says it; the error line is for nothing to show.
             self.error = savedAt == nil || !offlineRead ? "Couldn't refresh. Check your connection and try again." : nil
         }
-        await register.loadIfNeeded()
-        await tasks.loadIfNeeded()
+        await registerRead.value
+        await tasksRead.value
         if let read = await monthSessions {
             sessions = read
         }

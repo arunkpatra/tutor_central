@@ -73,7 +73,7 @@ struct WipeTests {
         let other = UUID().uuidString.lowercased()
         for name in [
             "register-\(mine).json", "cache-\(mine)-fees-2026-10.json", "queue-\(mine).json", "upi-qr-\(mine).png",
-            "register-\(other).json",
+            "register-\(other).json", "workspace.json",
         ] {
             try Data("x".utf8).write(to: dir.appendingPathComponent(name))
         }

@@ -173,6 +173,10 @@ import Observation
             error = nil
         } catch {
             guard generation == loadGeneration else { return }
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
             offlineRead = TransportError.isOffline(error)
             let shown = readMonth == month && savedAt != nil
             self.error = shown && offlineRead ? nil : "Couldn't load the schedule. Check your connection and try again."

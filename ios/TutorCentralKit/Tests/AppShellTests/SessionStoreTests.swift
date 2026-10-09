@@ -5,7 +5,8 @@ import Testing
 @testable import AppShell
 
 @MainActor struct SessionStoreTests {
-    func deps(auth: FakeAuthRepository, centres: FakeCentreRepository = FakeCentreRepository()) -> Dependencies {
+    func deps(auth: FakeAuthRepository, centres: FakeCentreRepository = FakeCentreRepository(), files: URL? = nil)
+        -> Dependencies {
         Dependencies(
             auth: auth,
             centres: centres,
@@ -25,6 +26,7 @@ import Testing
             reminderSettings: ReminderSettingsStore(defaults: UserDefaults(suiteName: "session-tests") ?? .standard),
             connectivity: FakeConnectivity(),
             cachesLists: false,
+            filesDirectory: files ?? FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"
@@ -135,5 +137,55 @@ import Testing
         #expect(store.state == .signedOut && store.deletedCentre == "Bright Minds Tuition")
         await store.signedIn(FakeAuthRepository.meera)
         #expect(store.deletedCentre == nil)
+    }
+
+    /// Run 7: offline at launch the centre is read from this iPhone, so the saved lists can show.
+    @Test func offlineAtLaunchTheSavedCentreOpensTheTabs() async {
+        let files = FileManager.default.temporaryDirectory.appendingPathComponent("session-\(UUID().uuidString)")
+        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        let online = SessionStore(deps: deps(auth: auth, centres: centres, files: files))
+        await online.start()
+        centres.nextError = URLError(.cannotConnectToHost)
+        let offline = SessionStore(deps: deps(auth: auth, centres: centres, files: files))
+        await offline.start()
+        #expect(offline.state == .ready(FakeCentreRepository.meeraWorkspace))
+    }
+
+    @Test func anotherTutorsSavedCentreIsNeverOpened() async {
+        let files = FileManager.default.temporaryDirectory.appendingPathComponent("session-\(UUID().uuidString)")
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        await SessionStore(deps: deps(
+            auth: FakeAuthRepository(user: FakeAuthRepository.meera),
+            centres: centres,
+            files: files
+        ))
+        .start()
+        let someoneElse = AuthUser(id: UUID(), email: "ravi@example.com")
+        centres.nextError = URLError(.cannotConnectToHost)
+        let offline = SessionStore(deps: deps(
+            auth: FakeAuthRepository(user: someoneElse),
+            centres: centres,
+            files: files
+        ))
+        await offline.start()
+        #expect(offline.state == .loading)
+    }
+
+    /// The tabs open at once from the saved centre; the read refreshes it behind them.
+    @Test func theSavedCentreOpensAtOnceWhileTheReadRuns() async throws {
+        let files = FileManager.default.temporaryDirectory.appendingPathComponent("session-\(UUID().uuidString)")
+        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        await SessionStore(deps: deps(auth: auth, centres: centres, files: files)).start()
+        centres.firstLookupDelay = .milliseconds(200)
+        let store = SessionStore(deps: deps(auth: auth, centres: centres, files: files))
+        let starting = Task { await store.start() }
+        try await Task.sleep(for: .milliseconds(20))
+        #expect(store.state == .ready(FakeCentreRepository.meeraWorkspace))
+        await starting.value
     }
 }

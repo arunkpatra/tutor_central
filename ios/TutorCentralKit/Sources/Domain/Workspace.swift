@@ -1,5 +1,5 @@
 /// What a signed-in tutor works in: who they are, their centre, their profile.
-public struct Workspace: Hashable, Sendable {
+public struct Workspace: Hashable, Sendable, Codable {
     public let user: AuthUser
     public var centre: Centre
     public var profile: Profile
