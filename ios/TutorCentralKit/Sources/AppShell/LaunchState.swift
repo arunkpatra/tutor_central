@@ -60,6 +60,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case scheduleDay = "schedule-day"
     case eventNew = "event-new"
     case eventEdit = "event-edit"
+    case eventEditKeyboard = "event-edit-keyboard"
     case eventDeleteConfirm = "event-delete-confirm"
     case tasks
     case tasksEmpty = "tasks-empty"

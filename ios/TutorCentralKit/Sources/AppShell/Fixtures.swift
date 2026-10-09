@@ -151,7 +151,7 @@ public enum Fixtures {
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
-             .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
+             .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
              .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
@@ -213,7 +213,8 @@ public enum Fixtures {
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
         case .history, .historyByStudent, .historyStudent, .student, .studentFeesDue, .studentFees, .schedule,
-             .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .todayEvening, .reports, .reportsAttendance,
+             .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm, .todayEvening, .reports,
+             .reportsAttendance,
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         default: FakeAttendanceRepository.seed
