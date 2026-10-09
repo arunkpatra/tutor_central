@@ -13,6 +13,7 @@ public enum TodayBoardState: Sendable {
 /// nothing yet: the date and greeting, three counts, the next class, today's classes and events, coming up, tasks. The
 /// greeting is the title; the tab's navigation bar is hidden and the status bar sits on glass once scrolled (U1).
 public struct TodayView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let store: TodayStore
     let actions: TodayActions
     let ticks: Bool
@@ -46,7 +47,9 @@ public struct TodayView: View {
                         refreshError(error)
                     }
                     if store.showsStartHere {
-                        StartHereCard(openStudents: { actions.openTab(.students) })
+                        StartHereCard(
+                            openStudents: { actions.openTab(.students) }, openScanRegister: actions.openScanRegister
+                        )
                     }
                     if let hero = store.hero {
                         HeroCard(hero: hero) { actions.openMarkAttendance(hero.classID) }
@@ -55,7 +58,7 @@ public struct TodayView: View {
                     if !store.comingUp.isEmpty {
                         ComingUpSection(rows: store.comingUp, open: actions.openEvent).id(Self.comingUpID)
                     }
-                    TodayTasksSection(store: store.tasks, showsFocus: boardState == .addingTask)
+                    TodayTasksSection(store: store.tasks, showsFocus: boardState == .addingTask).id(Self.tasksID)
                     VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
                         SectionHeader("Create")
                         Card {
@@ -92,6 +95,17 @@ public struct TodayView: View {
                     proxy.scrollTo(Self.comingUpID, anchor: .top)
                 }
             }
+            .onChange(of: store.tasks.adding) { _, adding in
+                // The field opens above the keyboard, not under it (build 10): once the keyboard is up, the Tasks card
+                // is scrolled to the middle of what is left.
+                guard adding, boardState == nil else { return }
+                Task {
+                    try? await Task.sleep(for: .seconds(Tokens.panel))
+                    withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) {
+                        proxy.scrollTo(Self.tasksID, anchor: .center)
+                    }
+                }
+            }
             .task(id: ticks) {
                 // The minute clock: the countdown and the next class follow it while Today is on screen.
                 while ticks, !Task.isCancelled {
@@ -104,6 +118,7 @@ public struct TodayView: View {
     }
 
     private static let comingUpID = "coming-up"
+    private static let tasksID = "tasks"
     private static let tickSeconds: Double = 60
 
     private var header: some View {

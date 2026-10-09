@@ -9,30 +9,21 @@ struct EmailSignInSheet: View {
     let boardState: Bool
     let onSignedIn: (AuthUser) async -> Void
     let onClose: () -> Void
-    @State private var height: CGFloat = 0
-
     var body: some View {
-        VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+        FittedSheet(spacing: Tokens.sectionGap, bottom: Tokens.rowPaddingHorizontal) {
             SheetHeader(
                 title: store.step == .password ? "Sign in with password" : "Sign in with email",
                 cancel: ("Cancel", onClose)
             )
-            if store.step == .password {
-                password
-            } else {
-                request
+        } content: {
+            VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+                if store.step == .password {
+                    password
+                } else {
+                    request
+                }
             }
         }
-        .padding(.top, Tokens.inline)
-        .padding(.horizontal, Tokens.pageSide)
-        .padding(.bottom, Tokens.rowPaddingHorizontal)
-        // The content's own height, not the sheet's: measuring what the detent gives back would grow it each pass.
-        .fixedSize(horizontal: false, vertical: true)
-        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
-        .frame(maxHeight: .infinity, alignment: .top)
-        // Medium until the content is measured: a zero-height detent closes the sheet as it opens.
-        // Medium until the content is measured: a zero-height detent closes the sheet as it opens.
-        .presentationDetents([height > 0 ? .height(height) : .medium])
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
         .presentationBackground(Tokens.surface1.color)

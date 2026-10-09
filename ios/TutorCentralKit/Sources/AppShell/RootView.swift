@@ -111,6 +111,9 @@ public struct RootView: View {
                     NotificationDelegate.shared.onOpen = nil
                 }
             }
+            // Apple's way out of the keyboard (Messages, Notes, Settings): drag the content down and it goes with it.
+            // Set here, it reaches every scroll view and sheet in the app.
+            .scrollDismissesKeyboard(.interactively)
             .environment(session)
             .environment(toasts)
             .preferredColorScheme(appearance.colorScheme)

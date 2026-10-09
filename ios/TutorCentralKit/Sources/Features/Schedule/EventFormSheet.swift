@@ -206,6 +206,7 @@ struct EventTimeControl: View {
                 }
                 .padding(Tokens.cardPaddingCompact)
                 .presentationCompactAdaptation(.popover)
+                .onAppear { Keyboard.dismiss() }
             }
         } else {
             Button("Not set") { set(fresh) }.buttonStyle(.quiet)

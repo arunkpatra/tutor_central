@@ -5,6 +5,14 @@ import SwiftUI
 public enum CalendarPopover {
     /// The calendar's natural width on an iPhone.
     public static let width: CGFloat = 320
+
+    /// Gregorian, Monday first, in the centre's zone.
+    static func calendar(_ timeZone: TimeZone) -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        calendar.firstWeekday = 2
+        return calendar
+    }
 }
 
 public extension View {
@@ -13,8 +21,14 @@ public extension View {
     func calendarPopover(timeZone: TimeZone) -> some View {
         tint(Tokens.accent.color)
             .environment(\.timeZone, timeZone)
+            // Weeks start on Monday, as the app's own month (Schedule, History) draws them; the phone's region
+            // could make the system's calendar start on Sunday (build 10).
+            .environment(\.calendar, CalendarPopover.calendar(timeZone))
             .frame(width: CalendarPopover.width)
             .padding(Tokens.cardPaddingCompact)
             .presentationCompactAdaptation(.popover)
+            // The keyboard goes as the calendar opens: left up, it squeezed the popover and cut the month row (build
+            // 10).
+            .onAppear { Keyboard.dismiss() }
     }
 }

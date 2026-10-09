@@ -41,6 +41,7 @@ public struct WheelPopover<Value: Hashable>: View {
         .padding(.horizontal, Tokens.rowPaddingDense)
         .frame(width: Self.width)
         .presentationCompactAdaptation(.popover)
+        .onAppear { Keyboard.dismiss() }
     }
 
     /// Opens on the chosen row, centred (`scrollPosition` alone does not move before the first layout).

@@ -15,7 +15,6 @@ public struct ClassFormSheet: View {
     let onClose: () -> Void
     @State private var saving = false
     @State private var dialog: Dialog?
-    @State private var height: CGFloat = 0
 
     enum Dialog: Hashable {
         case discard
@@ -45,21 +44,15 @@ public struct ClassFormSheet: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+        FittedSheet(spacing: Tokens.sectionGap, bottom: Tokens.groupGap) {
             SheetHeader(
                 title: store.title,
                 cancel: ("Cancel", cancel),
                 save: .init("Save", enabled: store.canSave && !saving, run: save)
             )
+        } content: {
             fields
         }
-        .padding(.top, Tokens.inline)
-        .padding(.horizontal, Tokens.pageSide)
-        .padding(.bottom, Tokens.groupGap)
-        // The content's own height, as the email sheet: measuring what the detent gives back would grow it each pass.
-        .fixedSize(horizontal: false, vertical: true)
-        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
-        .frame(maxHeight: .infinity, alignment: .top)
         .overlay {
             if let dialog {
                 dialogView(dialog)
@@ -68,7 +61,6 @@ public struct ClassFormSheet: View {
         .animation(.timingCurve(Tokens.easeOut, duration: Tokens.panel), value: dialog)
         .modifier(SheetToasts())
         .interactiveDismissDisabled(store.isChanged)
-        .presentationDetents([height > 0 ? .height(height) : .medium])
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
         .presentationBackground(Tokens.surface1.color)
@@ -255,6 +247,7 @@ struct TimeControl: View {
                 }
                 .padding(Tokens.cardPaddingCompact)
                 .presentationCompactAdaptation(.popover)
+                .onAppear { Keyboard.dismiss() }
             }
         } else {
             Button("Not set") { set(ClassFormStore.defaultStart) }.buttonStyle(.quiet)

@@ -16,7 +16,8 @@ extension RootView {
     static func tab(for state: LaunchState) -> AppTab? {
         switch state {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
-             .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .student, .studentArchived,
+             .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
+             .studentNewClassMade, .student, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
@@ -182,6 +183,8 @@ extension RootView {
         case .studentNew: .newStudentEmpty
         case .studentNewFilled: .newStudentFilled
         case .studentNewInvalid: .newStudentInvalid
+        case .studentNewNewClass: .newStudentNewClass
+        case .studentNewClassMade: .newStudentClassMade
         default: nil
         }
     }

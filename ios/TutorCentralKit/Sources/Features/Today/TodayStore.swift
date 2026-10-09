@@ -257,6 +257,8 @@ public struct TodayActions {
     let openFeesDue: () -> Void
     /// The Create with AI row: the AI Assistant on Today's stack.
     let openAI: () -> Void
+    /// The Start here card's Scan register: the scan on Today's stack.
+    let openScanRegister: () -> Void
 
     public init(
         openSettings: @escaping () -> Void,
@@ -266,7 +268,8 @@ public struct TodayActions {
         openClass: @escaping (UUID) -> Void,
         openEvent: @escaping (UUID) -> Void,
         openFeesDue: @escaping () -> Void,
-        openAI: @escaping () -> Void
+        openAI: @escaping () -> Void,
+        openScanRegister: @escaping () -> Void
     ) {
         self.openSettings = openSettings
         self.openTab = openTab
@@ -276,6 +279,7 @@ public struct TodayActions {
         self.openEvent = openEvent
         self.openFeesDue = openFeesDue
         self.openAI = openAI
+        self.openScanRegister = openScanRegister
     }
 }
 

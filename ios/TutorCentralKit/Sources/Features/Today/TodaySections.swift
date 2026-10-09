@@ -145,9 +145,11 @@ struct TodayTasksSection: View {
     }
 }
 
-/// The empty register's first step (P2-Today-Empty): add students one by one or scan the paper register.
+/// The empty register's first step (P2-Today-Empty): add students one by one or scan the paper register. The buttons
+/// are plain labels, as on the Students empty card (the owner, 2026-10-09).
 struct StartHereCard: View {
     let openStudents: () -> Void
+    let openScanRegister: () -> Void
 
     var body: some View {
         Card(.hero) {
@@ -162,15 +164,12 @@ struct StartHereCard: View {
                 }
                 HStack(spacing: Tokens.tileGap) {
                     Button(action: openStudents) {
-                        Label("Add a student", systemImage: "plus").typeStyle(Tokens.buttonStrong)
+                        Text("Add a student").typeStyle(Tokens.buttonStrong)
                     }
                     .buttonStyle(.primary())
-                    Button(action: openStudents) {
-                        Label("Scan register", systemImage: "viewfinder")
-                    }
-                    .buttonStyle(.secondary())
+                    Button("Scan register", action: openScanRegister)
+                        .buttonStyle(.secondary())
                 }
-                .environment(\.buttonIconSize, Tokens.iconSmall)
             }
         }
     }
