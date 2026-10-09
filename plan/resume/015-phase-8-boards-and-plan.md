@@ -19,9 +19,9 @@ order, before doing anything:
    API (D35), photos never stored (Phase 6), deletion from the app (D37, D38), WhatsApp links only (D3)).
 5. The records of the last two sessions: `plan/sessions/014/record.md` (how the Phase 7 boards were drawn by script,
    checked by headless Chrome and approved, and how the plan was written) and `plan/sessions/015/record.md` and its
-   `ledger.md` (Phase 7's build: its rulings, its review and the owner's findings on build 10).
+   `ledger.md` (Phase 7's build: its rulings, its review, the owner's findings on build 10, and the TestFlight lane's certificate cap).
 
-**What is already true:** Phases 1 to 7 are done (PRs #1 to #73). Build 1.0.0 (11) is on TestFlight's internal group
+**What is already true:** Phases 1 to 7 are done (PRs #1 to #75). Build 1.0.0 (13) is on TestFlight's internal group
 (the owner's phone). Production: Supabase in Mumbai with migrations 0001 to 0008, the API on Vercel (`tutor-central-api`)
 at the commit `STATE.md` names, deployed only through `deploy.yml` (D21, D26). What Phase 8 starts from:
 - **The app already links** `https://tutorcentral.in/terms` and `https://tutorcentral.in/privacy` (sign-in, Settings'

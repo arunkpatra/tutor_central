@@ -1,6 +1,6 @@
 # Phase 7: Settings, account, notifications, offline hardening, release candidate
 
-**Status:** Done (session 15, 2026-10-09, PRs #63 to #73). **Depends on:** Phases 2 to 6; Phase 0's Phase 7 boards (approved 2026-10-09, row 10).
+**Status:** Done (session 15, 2026-10-09, PRs #63 to #75). **Depends on:** Phases 2 to 6; Phase 0's Phase 7 boards (approved 2026-10-09, row 10).
 
 ## Goal
 
@@ -53,10 +53,13 @@ Session 15 (2026-10-09, Opus 5.5, from `resume/014-phase-7-build.md`), the plan'
 | #71 | The whole-phase review's fixes (one Critical, four Important, three minors regraded), fresh data on foreground |
 | #72 | The owner's build-10 findings: Start here's labels, every calendar, sheet headers, the keyboard, the task field; New class… from the student form |
 | #73 | Today's account picture at the top right; the launch screen fading into the app |
+| #74 | Sign-in: Google's official G and button (Google's guidelines), the three buttons as pills (P7-SignIn-Google) |
+| #75 | The TestFlight lane revokes the Apple Development certificate each run makes (eleven had filled Apple's cap and stopped run 12) |
 
 **Production:** migration 0008 and the API at `2448295` with `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` (deploy run
 37897295893; Apple accepted the signed secret, answering a made-up code with `invalid_grant`). TestFlight: 1.0.0 (10) (run
-37899341603) on the owner's phone; 1.0.0 (11) with #72 and #73.
+37899341603) on the owner's phone; 1.0.0 (11) with #72 and #73 (run 37906652352); 1.0.0 (13) with #74 (run 37913258080,
+which revoked its own certificate); run 12 failed at signing and left no build.
 
 **Where it moved from the plan, and why** (the rulings are in `plan/sessions/015/record.md`):
 - D41, from the owner mid-build: no technical words on screen; the approved texts with "server" were reworded and a test
@@ -68,7 +71,9 @@ Session 15 (2026-10-09, Opus 5.5, from `resume/014-phase-7-build.md`), the plan'
 - Every list reads again on coming back to the app (the owner saw stale data on build 9).
 - Run 6's tap-to-open could not be driven in the simulator (its lock screen takes no injected taps); the reminder's link
   was opened directly and the tap is the tester's D2.
-- Google's official mark was offered and not taken (the owner's call, still open).
+- Google's official mark: taken at the end (#74), with Google's button colours and all three buttons as pills.
+- Cloud signing on a fresh runner makes an Apple Development certificate per run; eleven filled the account's cap. The
+  owner revoked them; the lane now revokes its own by serial (#75).
 
 **Not done here:** the external group and Beta App Review (they need Phase 8's privacy page; Phase 9 runs them, D43);
 the tester's D1 to D7; seven review minors (`plan/sessions/015/record.md`); U7, U16, U24 and U25 to U30 on the polish list.

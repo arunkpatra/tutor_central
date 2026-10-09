@@ -39,7 +39,11 @@ every ruling and its cost if wrong, is `ledger.md` beside this record.
    birth calendar collapsed, the New class header cut off, the keyboard not going away, the task field under the
    keyboard, New class from the student form, the account picture's place, the launch screen too quick. Fixed in #72 and
    #73 (three new boards approved: the class menu, Today's header, the opening fade), each proven in the simulator.
-9. Closed the phase: "As built", `README.md` (Phase 7 done; Phases 8 and 9; D42, D43), `STATE.md`, the polish list (U6
+9. Google's official G and button, by Google's guidelines, with the three buttons as pills (#74, board
+   P7-SignIn-Google). Run 12 of the TestFlight lane failed at signing: eleven Apple Development certificates made by
+   earlier runs had filled the account's cap. The owner revoked them; the lane now revokes its own by serial (#75); build
+   1.0.0 (13) uploaded and its run revoked its certificate (204).
+10. Closed the phase: "As built", `README.md` (Phase 7 done; Phases 8 and 9; D42, D43), `STATE.md`, the polish list (U6
    and U9 done; U25 to U30 added), `components.md` and `information-architecture.md`, the rules files, the device tests,
    this record and the owner's messages; `resume/015-phase-8-boards-and-plan.md`.
 

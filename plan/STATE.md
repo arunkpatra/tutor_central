@@ -7,7 +7,7 @@ short and true. History belongs in git and in the phase files, not here.
 the account deletion (D37, D38), Settings, Account, Teacher reminders, offline reads and queued writes (D39, D40), no
 technical words on screen (D41), Dynamic Type, VoiceOver, reduced motion, version 1.0.0; a whole-phase review and its fixes
 (#71); the owner's build-10 findings (#72, #73). Migration 0008 and the API with the Sign in with Apple key in production;
-build 1.0.0 (10) on the owner's phone, 1.0.0 (11) next. The owner added Phase 9, user testing (D43), after the website,
+builds 1.0.0 (10) and (11) on the owner's phone and 1.0.0 (13) with Google's sign-in button (#74) on TestFlight; the lane now revokes the development certificate each run makes (#75). The owner added Phase 9, user testing (D43), after the website,
 which is Next.js on Vercel (D42).
 **Next:** Phase 8's boards and plan on Fable 5.1 from `resume/015-phase-8-boards-and-plan.md`.
 
@@ -28,9 +28,8 @@ which is Next.js on Vercel (D42).
 
 ## In flight
 
-TestFlight build 1.0.0 (11) from `58ce4ba` (run 37906652352, after #73) for the owner's phone. Merged
-`phase-7/*` branches remain on the remote; delete them when convenient. The tester's device tests (D1 to D7) wait for
-Phase 9's external group; the owner checks build 11 on his phone.
+Nothing open. TestFlight 1.0.0 (13) from `d7ee9f5` (run 37913258080) is for the owner's phone. Merged `phase-7/*` branches
+remain on the remote; delete them when convenient. The tester's device tests (D1 to D7) wait for Phase 9's external group.
 
 ## Production
 
@@ -54,7 +53,8 @@ Phase 9's external group; the owner checks build 11 on his phone.
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (10) by run 37899341603 is on the owner's phone.
+  run number. 1.0.0 (13) by run 37913258080 is the latest. Each run revokes the Apple Development certificate it makes (#75): a
+  fresh runner makes one per run and the account's cap stopped run 12 after eleven (the owner revoked them, 2026-10-09).
 
 ## Open items
 
@@ -63,7 +63,7 @@ Phase 9's external group; the owner checks build 11 on his phone.
   timed-out absence log can be noted twice; the API reads `APPLE_*` at boot and does not refuse `APPLE_FAKE` in production;
   two tests the plan named. Earlier phases' minors: `plan/sessions/004`, `006`, `009`, `011`, `013` records (Phase 6's 1, 6
   and 7 are Phase 8's).
-- **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google): Google's own G and colours, the three buttons pills; on `main` for the next build.
+- **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google): Google's own G and colours, the three buttons pills; in build 13.
 - **TestFlight's external group and Beta App Review** wait for Phase 8's `tutorcentral.in/privacy`; Phase 9 runs them (D43).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
 - **UI polish:** `plan/ui-polish.md`: U5, U7, U8, U10, U11, U13 to U30 open; U1 to U4, U6, U9, U12 done. U7, U16 and U24
