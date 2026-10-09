@@ -46,7 +46,9 @@ public struct TodayView: View {
                         refreshError(error)
                     }
                     if store.showsStartHere {
-                        StartHereCard(openStudents: { actions.openTab(.students) })
+                        StartHereCard(
+                            openStudents: { actions.openTab(.students) }, openScanRegister: actions.openScanRegister
+                        )
                     }
                     if let hero = store.hero {
                         HeroCard(hero: hero) { actions.openMarkAttendance(hero.classID) }
