@@ -20,13 +20,15 @@ public protocol NotificationCenterClient: Sendable {
 }
 
 /// The notification centre of tests, previews and `bun shots`: a scripted permission, a record of the ask and of
-/// every plan.
+/// every plan, an optional delay.
 @MainActor public final class FakeNotificationCenter: NotificationCenterClient {
     public var permissionAnswer: NotificationPermission
     public var allowOnAsk: Bool
     public private(set) var asked = 0
     public private(set) var scheduled: [Reminder] = []
     public private(set) var replacements = 0
+    /// Holds each replace this long, as the system's centre can.
+    public var delay: Duration?
 
     public init(permission: NotificationPermission = .notAsked, allowOnAsk: Bool = true) {
         permissionAnswer = permission
@@ -44,6 +46,9 @@ public protocol NotificationCenterClient: Sendable {
     }
 
     public func replace(with reminders: [Reminder]) async {
+        if let delay {
+            try? await Task.sleep(for: delay)
+        }
         replacements += 1
         scheduled = reminders
     }

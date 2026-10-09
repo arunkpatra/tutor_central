@@ -117,6 +117,19 @@ import Testing
         await ahead
         #expect(store.monthTitle == "October 2026" && store.events.count == 2)
     }
+
+    /// The shell plans the reminders again after a saved event; not after a failed one.
+    @Test func aSavedEventIsToldAndAFailedOneIsNot() async throws {
+        let store = await make()
+        var told = 0
+        store.onEventsChanged = { told += 1 }
+        var draft = try EventDraft(date: #require(Day(year: 2026, month: 10, day: 20)))
+        draft.title = "Holiday"
+        _ = await store.add(draft)
+        events.nextError = URLError(.badServerResponse)
+        _ = await store.add(draft)
+        #expect(told == 1)
+    }
 }
 
 /// Events whose read of a range starting in November is slow, so two month moves finish in the other order.

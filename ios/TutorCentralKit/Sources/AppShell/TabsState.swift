@@ -59,6 +59,8 @@ enum Route: Hashable {
     case help
     /// Pending changes, from Settings and the failure line on every root.
     case pendingChanges
+    /// Teacher reminders, from Settings.
+    case reminders
     case student(UUID)
     case classes
     case classroom(UUID)

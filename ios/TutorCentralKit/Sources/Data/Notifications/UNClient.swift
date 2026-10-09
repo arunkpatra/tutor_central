@@ -47,7 +47,7 @@ public final class UNClient: NotificationCenterClient {
         content.title = reminder.title
         content.body = reminder.body
         content.sound = .default
-        content.userInfo = ["link": reminder.link, "kind": kindName(reminder.kind)]
+        content.userInfo = ["link": reminder.link, "kind": kindName(reminder.kind), "subject": reminder.subject]
         var parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.fireAt)
         parts.timeZone = calendar.timeZone
         let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
@@ -64,7 +64,7 @@ public final class UNClient: NotificationCenterClient {
         }
         return Reminder(
             id: request.identifier, kind: kind, title: request.content.title, body: request.content.body,
-            fireAt: fireAt, link: link
+            fireAt: fireAt, link: link, subject: request.content.userInfo["subject"] as? String ?? ""
         )
     }
 

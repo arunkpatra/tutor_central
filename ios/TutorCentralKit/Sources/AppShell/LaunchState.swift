@@ -151,6 +151,11 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case syncFailed = "sync-failed"
     case pending
     case pendingDiscard = "pending-discard"
+    case remindersNotAsked = "reminders-not-asked"
+    case reminders
+    case remindersAllOff = "reminders-all-off"
+    case remindersRefused = "reminders-refused"
+    case remindersDayPicker = "reminders-day-picker"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }

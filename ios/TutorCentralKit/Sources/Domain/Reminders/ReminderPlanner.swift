@@ -45,7 +45,7 @@ public enum ReminderPlanner {
             title: "\(room.name) at \(start.text)",
             body: "In \(minutesText(lead)) · \(studentsText). Tap to mark attendance.",
             fireAt: starts.addingTimeInterval(-Double(lead) * 60),
-            link: "tutorcentral://attendance?date=\(day.iso)&class=\(id)"
+            link: "tutorcentral://attendance?date=\(day.iso)&class=\(id)", subject: room.name
         )
     }
 
@@ -57,7 +57,8 @@ public enum ReminderPlanner {
         case (nil, _): event.date.shortWeekdayText
         }
         let note = event.note?.split(separator: "\n").first.map(String.init)?.trimmingCharacters(in: .whitespaces)
-        let body = [when, note].compactMap { $0?.isEmpty == false ? $0 : nil }.joined(separator: " · ")
+        let joined = [when, note].compactMap { $0?.isEmpty == false ? $0 : nil }.joined(separator: " · ")
+        let body = joined.hasSuffix(".") ? joined : joined + "."
         let fire: Date?
         let title: String
         switch (lead.minutes, event.startTime) {
@@ -78,7 +79,7 @@ public enum ReminderPlanner {
         guard let fire else { return nil }
         return Reminder(
             id: "event-\(event.id.uuidString.lowercased())", kind: .event, title: title, body: body, fireAt: fire,
-            link: "tutorcentral://event/\(event.id.uuidString.lowercased())"
+            link: "tutorcentral://event/\(event.id.uuidString.lowercased())", subject: event.title
         )
     }
 
@@ -93,7 +94,7 @@ public enum ReminderPlanner {
             title: "\(due.count) \(due.count == 1 ? "fee" : "fees") still due for \(period.monthName)",
             body: "\(due.total.formatted) to collect. Tap to remind parents.",
             fireAt: nine(period),
-            link: "tutorcentral://fees?month=\(period.isoMonth)"
+            link: "tutorcentral://fees?month=\(period.isoMonth)", subject: "Fees still due"
         )
     }
 

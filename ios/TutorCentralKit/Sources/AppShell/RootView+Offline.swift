@@ -157,5 +157,6 @@ extension RootView {
             await shell.attendance?.reload()
             await shell.fees?.reload()
         }
+        replanReminders()
     }
 }

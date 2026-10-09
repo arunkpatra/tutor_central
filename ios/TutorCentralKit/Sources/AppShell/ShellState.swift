@@ -37,6 +37,8 @@ struct CheckVisit {
     /// The centre's queue of changes made offline (D39), read from its file when the centre arrives, and its runner.
     @ObservationIgnored var queue: ChangeQueue?
     @ObservationIgnored var runner: QueueRunner?
+    /// The centre's reminder planner, made on first use.
+    @ObservationIgnored var scheduler: ReminderScheduler?
     /// The network as the monitor last said; every root's status line follows it.
     var online = true
     var runState: RunState = .idle
@@ -85,6 +87,7 @@ struct CheckVisit {
         check = nil
         queue = nil
         runner = nil
+        scheduler = nil
         runState = .idle
         centre = nil
     }

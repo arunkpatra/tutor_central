@@ -1,6 +1,7 @@
 import Settings
 
-/// Phase 7's launch states on the Settings stack: Settings, Account, Delete account, Help (P7-*).
+/// Phase 7's launch states on the Settings stack: Settings, Account, Delete account, Help, Pending changes, Teacher
+/// reminders (P7-*).
 extension RootView {
     /// What a Settings-stack state opens, or nil for a state elsewhere.
     static func settingsRoutes(for state: LaunchState) -> [Route]? {
@@ -12,6 +13,8 @@ extension RootView {
         case .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed:
             [.settings, .account, .deleteAccount]
         case .pending, .pendingDiscard: [.settings, .pendingChanges]
+        case .remindersNotAsked, .reminders, .remindersAllOff, .remindersRefused, .remindersDayPicker:
+            [.settings, .reminders]
         default: nil
         }
     }

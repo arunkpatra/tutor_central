@@ -26,7 +26,7 @@ struct ReminderPlannerTests {
         let plan = ReminderPlanner.plan(input(), now: at(7, 16, 35), calendar: calendar) // Wed 7 Oct
         let classes = plan.filter { $0.kind == .classMeeting }
         #expect(classes.first?.fireAt == at(7, 16, 45))
-        #expect(classes.first?.title == "Class 10 Maths at 17:00")
+        #expect(classes.first?.title == "Class 10 Maths at 17:00" && classes.first?.subject == "Class 10 Maths")
         #expect(classes.first?.body == "In 15 minutes · 6 students. Tap to mark attendance.")
         let link = "tutorcentral://attendance?date=2026-10-07&class=\(maths.id.uuidString.lowercased())"
         #expect(classes.first?.link == link)
@@ -65,7 +65,7 @@ struct ReminderPlannerTests {
         let plan = ReminderPlanner.plan(input(settings, events: [meeting]), now: at(7, 9), calendar: calendar)
         let event = try #require(plan.first { $0.kind == .event })
         #expect(event.fireAt == at(10, 10) && event.title == "Parents' meeting in 1 hour")
-        #expect(event.body == "Sat 10 Oct, 11:00–12:00 · Class 10 parents")
+        #expect(event.body == "Sat 10 Oct, 11:00–12:00 · Class 10 parents." && event.subject == "Parents' meeting")
         #expect(event.link == "tutorcentral://event/\(meeting.id.uuidString.lowercased())")
         settings.eventLead = .dayBefore18
         let eve = ReminderPlanner.plan(input(settings, events: [meeting]), now: at(7, 9), calendar: calendar)
@@ -80,7 +80,7 @@ struct ReminderPlannerTests {
         )
         let plan = ReminderPlanner.plan(input(events: [open]), now: at(7, 9), calendar: calendar)
         let event = try #require(plan.first { $0.kind == .event })
-        #expect(event.fireAt == at(10, 9) && event.title == "Open day today" && event.body == "Sat 10 Oct")
+        #expect(event.fireAt == at(10, 9) && event.title == "Open day today" && event.body == "Sat 10 Oct.")
     }
 
     @Test func theFeeReminderNeedsADueFee() {
@@ -92,7 +92,7 @@ struct ReminderPlannerTests {
         #expect(fees.map(\.fireAt) == [at(5, 9)])
         #expect(fees.first?.title == "4 fees still due for October")
         #expect(fees.first?.body == "₹4,000 to collect. Tap to remind parents.")
-        #expect(fees.first?.link == "tutorcentral://fees?month=2026-10")
+        #expect(fees.first?.link == "tutorcentral://fees?month=2026-10" && fees.first?.subject == "Fees still due")
         let one = DueFees(count: 1, total: Money(rupees: 800))
         let past = ReminderPlanner.plan(input(dueFees: one), now: at(6, 9), calendar: calendar)
         let next = calendar.date(from: DateComponents(year: 2026, month: 11, day: 5, hour: 9))

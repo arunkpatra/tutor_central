@@ -17,8 +17,11 @@ public struct Reminder: Hashable, Sendable, Identifiable, Codable {
     /// "tutorcentral://attendance?date=2026-10-07&class=<uuid>", "tutorcentral://event/<uuid>",
     /// "tutorcentral://fees?month=2026-10".
     public let link: String
+    /// What it is about: the class's name, the event's title, "Fees still due" (Teacher reminders' "Next:" line).
+    public let subject: String
 
-    public init(id: String, kind: Kind, title: String, body: String, fireAt: Date, link: String) {
+    public init(id: String, kind: Kind, title: String, body: String, fireAt: Date, link: String, subject: String = "") {
+        self.subject = subject
         self.id = id
         self.kind = kind
         self.title = title

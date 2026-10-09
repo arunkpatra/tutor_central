@@ -44,7 +44,7 @@ public enum Fixtures {
                 generations: [.aiAssistantEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
             ),
             account: FakeAccountRepository(),
-            notifications: FakeNotificationCenter(permission: .allowed),
+            notifications: FakeNotificationCenter(permission: notificationPermission(for: state)),
             reminderSettings: ReminderSettingsStore(defaults: boardDefaults(for: state)),
             connectivity: FakeConnectivity(online: !offlineStates.contains(state)),
             cachesLists: false,
@@ -120,7 +120,24 @@ public enum Fixtures {
         let name = "fixtures-\(state.rawValue)"
         let defaults = UserDefaults(suiteName: name) ?? .standard
         defaults.removePersistentDomain(forName: name)
+        if state == .remindersAllOff {
+            // P7-Reminders-AllOff: allowed, every switch off.
+            var off = ReminderSettings()
+            off.classOn = false
+            off.eventOn = false
+            off.feesOn = false
+            ReminderSettingsStore(defaults: defaults).save(off)
+        }
         return defaults
+    }
+
+    /// What iOS answers about notifications: not asked yet or refused on those boards, allowed elsewhere.
+    static func notificationPermission(for state: LaunchState) -> NotificationPermission {
+        switch state {
+        case .remindersNotAsked: .notAsked
+        case .remindersRefused: .refused
+        default: .allowed
+        }
     }
 
     public static func initialState(for state: LaunchState) -> SessionStore.State {
@@ -148,7 +165,8 @@ public enum Fixtures {
              .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
              .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
              .offlineStudents, .offlineFees, .offlineNoCache, .offlineWriteRefused, .offlineAttendanceSaved,
-             .offlineFeeMarked, .syncSending, .syncSent, .syncFailed, .pending, .pendingDiscard:
+             .offlineFeeMarked, .syncSending, .syncSent, .syncFailed, .pending, .pendingDiscard, .remindersNotAsked,
+             .reminders, .remindersAllOff, .remindersRefused, .remindersDayPicker:
             .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
