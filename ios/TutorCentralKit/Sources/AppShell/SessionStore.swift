@@ -27,6 +27,8 @@ import Observation
     /// Set when the workspace could not be read; the root shows a footnote line and Retry (`refresh()`). Never
     /// onboarding: a tutor with a centre must not be asked to make a second one because the network blinked.
     public private(set) var lastError: String?
+    /// The centre an account deletion just removed: the landing says so until the next sign-in (P7-Delete-Done).
+    public private(set) var deletedCentre: String?
     private let deps: Dependencies
     private var following: Task<Void, Never>?
     /// Names the app's own sign-ins carried (Apple gives one once, in the credential); Supabase's announcement of the
@@ -54,8 +56,15 @@ import Observation
         }
     }
 
+    /// After Delete account (D37): the auth user is gone and the phone wiped; the landing names what was deleted.
+    public func deleted(centreName: String) {
+        deletedCentre = centreName
+        state = .signedOut
+    }
+
     /// Called by the sign-in stores after a success.
     public func signedIn(_ user: AuthUser) async {
+        deletedCentre = nil
         if let name = user.fullName {
             knownNames[user.id] = name
         }

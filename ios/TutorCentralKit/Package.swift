@@ -40,7 +40,8 @@ let package = Package(
             .testTarget(name: "ScheduleTests", dependencies: ["Schedule", "Students"]),
             .testTarget(name: "FeesTests", dependencies: ["Fees", "Students"]),
             .testTarget(name: "StudentsTests", dependencies: ["Students"]),
-            .testTarget(name: "SettingsTests", dependencies: ["Settings"]),
+            // A real register (Students) under Delete account's counts; the feature itself sees only `Register`.
+            .testTarget(name: "SettingsTests", dependencies: ["Settings", "Students"]),
             .testTarget(name: "AIToolsTests", dependencies: ["AITools", "Students"]),
         ],
     swiftLanguageModes: [.v6]

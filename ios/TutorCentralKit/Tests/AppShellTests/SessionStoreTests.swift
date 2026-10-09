@@ -111,4 +111,27 @@ import Testing
         #expect(named.fullName == "Meera Nair")
         #expect(store.state == .needsOnboarding(named))
     }
+
+    @Test func aDeletedUsersSessionBecomesSignedOut() async {
+        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        let store = SessionStore(deps: deps(auth: auth, centres: centres))
+        await store.start()
+        auth.emit(nil) // Supabase's refresh of a deleted user's token fails and announces a sign-out
+        try? await Task.sleep(for: .milliseconds(20))
+        #expect(store.state == .signedOut && store.deletedCentre == nil)
+    }
+
+    @Test func afterADeletionTheLandingNamesTheCentreUntilTheNextSignIn() async {
+        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        let store = SessionStore(deps: deps(auth: auth, centres: centres))
+        await store.start()
+        store.deleted(centreName: "Bright Minds Tuition")
+        #expect(store.state == .signedOut && store.deletedCentre == "Bright Minds Tuition")
+        await store.signedIn(FakeAuthRepository.meera)
+        #expect(store.deletedCentre == nil)
+    }
 }

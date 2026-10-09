@@ -31,10 +31,13 @@ public struct SignInView: View {
     private let legal: Legal
     private let onSignedIn: (AuthUser) async -> Void
     private let onMessage: (String) -> Void
+    /// After an account deletion, the banner under the lead (P7-Delete-Done).
+    private let deletedCentre: String?
     public init(
         auth: any AuthRepository,
         legal: Legal,
         fixture: SignInFixture? = nil,
+        deletedCentre: String? = nil,
         onSignedIn: @escaping (AuthUser) async -> Void,
         onMessage: @escaping (String) -> Void
     ) {
@@ -44,6 +47,7 @@ public struct SignInView: View {
         _showsEmail = State(initialValue: fixture == .email || fixture == .password)
         _path = State(initialValue: fixture == .code || fixture == .codeWrong ? [.code] : [])
         boardState = fixture != nil
+        self.deletedCentre = deletedCentre
         self.legal = legal
         self.onSignedIn = onSignedIn
         self.onMessage = onMessage
@@ -109,6 +113,13 @@ public struct SignInView: View {
                 .typeStyle(Tokens.lead)
                 .foregroundStyle(Tokens.text2.color)
                 .frame(maxWidth: Tokens.measureLead, alignment: .leading)
+            if let deletedCentre {
+                Banner(
+                    symbol: "checkmark.circle", text: "Your account and \(deletedCentre)'s records were deleted.",
+                    tone: .ok
+                )
+                .padding(.top, Tokens.inline)
+            }
         }
     }
 

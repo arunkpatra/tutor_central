@@ -12,6 +12,8 @@ extension RootView {
             HelpView(version: deps.bundleVersion, boardOpen: launch == .helpAnswer ? 0 : nil) { openExternal($0) }
         case .account:
             accountView
+        case .deleteAccount:
+            deleteAccountView
         default:
             settingsView
         }
@@ -59,6 +61,40 @@ extension RootView {
                 boardState: launch.flatMap(Self.accountBoardState)
             )
         }
+    }
+
+    @ViewBuilder private var deleteAccountView: some View {
+        if case let .ready(workspace) = session.state {
+            // Captured now: the deletion's own sign-out drops the shell's queue before the wipe runs.
+            let wipe = wipe(for: workspace)
+            DeleteAccountView(
+                store: DeleteAccountStore(
+                    workspace: workspace, register: register(for: workspace), auth: deps.auth, account: deps.account,
+                    reauthorize: reauthorize
+                ),
+                boardState: launch.flatMap(Self.deleteAccountBoardState)
+            ) {
+                Task {
+                    await wipe.run()
+                    session.deleted(centreName: workspace.centre.name)
+                }
+            }
+        }
+    }
+
+    /// Apple's confirmation (D38); the fixture's for `bun shots` (Deleting's never answers).
+    private var reauthorize: @MainActor () async throws(AccountFailure) -> String {
+        if launch == .deleteAccountDeleting {
+            return {
+                try? await Task.sleep(for: .seconds(3600))
+                return "never"
+            }
+        }
+        if launch != nil {
+            return { "fixture-code" }
+        }
+        let apple = AppleReauthorizer(controller: authorizationController)
+        return { () async throws(AccountFailure) -> String in try await apple.authorizationCode() }
     }
 
     /// What sign-out and deletion clear for this centre (D40).

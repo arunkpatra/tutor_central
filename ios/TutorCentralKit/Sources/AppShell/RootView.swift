@@ -18,6 +18,7 @@ public struct RootView: View {
     @State var shell: ShellState
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.openURL) var systemOpenURL
+    @Environment(\.authorizationController) var authorizationController
     let deps: Dependencies
     let launch: LaunchState?
 
@@ -121,6 +122,7 @@ public struct RootView: View {
                 auth: deps.auth,
                 legal: Legal.links,
                 fixture: launch.flatMap(Self.signInFixture),
+                deletedCentre: launch == .signinDeleted ? Fixtures.meeraWorkspace.centre.name : session.deletedCentre,
                 onSignedIn: { await session.signedIn($0) },
                 onMessage: { toasts.show($0) }
             )

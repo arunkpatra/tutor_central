@@ -22,8 +22,8 @@ public enum Fixtures {
                 // P7-Settings-SaveFailed: the centre's name does not save.
                 centres.nextError = URLError(.notConnectedToInternet)
             }
-            if state == .accountPasswordFailed {
-                // P7-Account-Password-Failed: the password does not save.
+            if state == .accountPasswordFailed || state == .deleteAccountFailed {
+                // P7-Account-Password-Failed, P7-Delete-Failed: the write does not go through.
                 auth.nextAccountFailure = .offline
             }
         case .loading, .signedOut: break
@@ -124,10 +124,11 @@ public enum Fixtures {
              .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
              .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
              .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
-             .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending:
+             .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
+             .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed:
             .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
-             .signinCodeWrong, .signinPassword: .signedOut
+             .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
         }
     }
 

@@ -9,6 +9,8 @@ extension RootView {
         case .help, .helpAnswer: [.settings, .help]
         case .account, .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut,
              .accountSignOutPending: [.settings, .account]
+        case .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed:
+            [.settings, .account, .deleteAccount]
         default: nil
         }
     }
@@ -28,6 +30,15 @@ extension RootView {
         case .accountPasswordFailed: .passwordFailed
         case .accountPasswordSaved: .passwordSaved
         case .accountSignOut, .accountSignOutPending: .signOut
+        default: nil
+        }
+    }
+
+    static func deleteAccountBoardState(_ state: LaunchState) -> DeleteAccountBoardState? {
+        switch state {
+        case .deleteAccountTyped: .typed
+        case .deleteAccountDeleting: .deleting
+        case .deleteAccountFailed: .failed
         default: nil
         }
     }
