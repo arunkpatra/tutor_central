@@ -248,4 +248,13 @@ up to 120 s before it is a failure; each centre may make 40 generations, 20 regi
 (the limit is in Postgres and the failure names it); a checked paper's note on a student is appended to `students.notes`
 (2000 characters: when it would not fit, the save says so and offers Share instead); Undo after "Add N students" deletes
 those rows and nothing else, Undo after "Saved to the student's notes" puts back the notes exactly as they were; the
-consent is asked once per centre (`centres.ai_consent_at`) before the first photo, for the register and the paper alike.
+consent is asked once per centre (`centres.ai_consent_at`) before the first photo, for the register and the paper alike. Phase 7 (settings, account, reminders, offline): a password is at least 8 characters; a class reminder fires 15 min
+before the class by default (5, 10, 15, 30 or 60), an event reminder 1 hour before (15 min, 30 min, 1 hour, the day before
+at 18:00), the unpaid-fee reminder at 09:00 on the chosen day of the month (1st to 28th, default the 5th) and only when a
+fee is still due; reminders are scheduled 14 days ahead (iOS keeps at most 64 pending, so the farthest are dropped first)
+and rebuilt on foreground and after any edit of a class, an event or a fee; the offline bar names the cache's time (today
+as "at 14:10", yesterday as "yesterday at 18:30", else "on Mon 5 Oct"); the write queue holds attendance saves, Mark paid
+and the absence alert's log, replays them in the order made, one at a time, each on its own, with last write wins per
+row, and keeps a failed one until it is discarded; a toast after Undo on a queued fee removes it from the queue (nothing
+was written); account deletion asks Apple to revoke first, then deletes the auth user, then wipes the register cache,
+the queue, the QR image and the settings on the iPhone; sign-out wipes the same.

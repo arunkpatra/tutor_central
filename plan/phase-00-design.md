@@ -1,6 +1,6 @@
 # Phase 0: Design
 
-**Status:** In progress: steps 0.1 to 0.7 approved (0.7 on 2026-10-08); 0.8 next. **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
+**Status:** Boards complete: steps 0.1 to 0.8 approved (0.8 on 2026-10-09); the Kit and the mirror are kept current as phases build. **Plan:** `phase-00-plan.md`. **Runs beside:** Phase 1 (D6).
 
 ## Goal
 

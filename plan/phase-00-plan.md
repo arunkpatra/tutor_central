@@ -38,7 +38,7 @@ approved, except step 2, which starts with step 1's choice.
   student detail fees, reports month, export.
 - [x] **0.7 Phase 6 boards.** (approved 2026-10-08, 44 boards in row 9) AI Assistant home, each tool's form, generating, result, history; scan register
   intro, consent, review table, saved; check paper intro, capture, result, edited marks.
-- [ ] **0.8 Phase 7 boards.** Settings full, account, delete account, notification permission, offline
+- [x] **0.8 Phase 7 boards.** (approved 2026-10-09, 41 boards in row 10) Settings full, account, delete account, notification permission, offline
   states (list from cache, write refused, queued), about, help, launch screen and app icon.
 
 Steps 0.4 to 0.8 may be drawn just ahead of their build phase rather than all before Phase 2, so the first

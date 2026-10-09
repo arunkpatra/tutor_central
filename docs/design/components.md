@@ -467,3 +467,70 @@ The texts:
 | The notices | "The photo goes to our AI service to be read and is not kept, there or here." · "Nothing is saved until you have checked every row and tapped Add." |
 | Send the note | The note as edited, a blank line, then the tutor's name and the centre's name (the absence alert's signature); the footnote "Opens WhatsApp with the note ready to send. We note the date on Hemanth's page. The text is copied too, in case WhatsApp can't open." |
 | The note on a student | "7 Oct · Quadratic equations · 15 of 20 · " then the AI's summary line as edited, appended to the student's notes on its own line |
+
+## Phase 7 parts (step 0.8, approved 2026-10-09)
+
+**Setting row with a line:** the Setting row with a `footnote` `text2` line under the label (Parent messages); the value
+stays on the right; no chevron when the row does nothing.
+
+**Segmented row (Appearance):** the Setting row's label and symbol over a three-segment control inside the same row
+(padding 14 16, 12 between); the segments never wrap (Match iPhone).
+
+**Tile row:** a tile picker as a row of a list card: the label `body`, the value in `accentText` 600 with
+`chevron.up.chevron.down`; minutes and hours open a wheel in a popover, the day of the month a wheel of 1st to 28th.
+
+**Saved mark, saving:** the Saved mark reads "Saving" with a 14 pt spinner in `text3` while a write runs.
+
+**Account hero:** avatar 56 beside the name `title3` and the email `subhead` `text2`.
+
+**Method row:** the Setting row with the provider's symbol (`apple.logo`, `envelope`, `key`) and a value: "Connected"
+in `ok`, "On" in `text2`, "Not set" or "Set" with a chevron.
+
+**Destructive row:** a list-card row in `overdue` 600 with its symbol (`rectangle.portrait.and.arrow.right` for Sign
+out, `trash` for Delete account permanently, the latter with a chevron).
+
+**Delete screen:** the intro hero with its tile in `overdue`, the notices card, the typed field ("Type the centre's name
+to confirm", the name as the placeholder), the solid destructive 50 (disabled until the typed name matches, loading
+while it runs), a `footnote`. The error row sits above the field.
+
+**Status banner:** the Banner with a tone: `ok` with `checkmark.circle` ("Reminders are on. Next: …"; "Saved at
+17:05"), `due` with `clock` ("Saved on this iPhone at 17:05 …") or `bell.slash` ("Notifications are off …", with the
+quiet Open Settings on the right), `overdue` with `exclamationmark.circle` and a chevron ("1 saved change couldn't be
+sent."), `text2` with a 14 pt spinner ("Back online. Sending 3 saved changes…"). The offline bar is the `text2` one
+with `wifi.slash` and the time.
+
+**Saved here mark:** the footer's Saved mark in the `due` tone (`dueTint`, `due`, `clock`): "Saved on this iPhone".
+
+**Dimmed cards:** a group waiting for a permission or a connection sits at opacity 0.45 (the Teacher reminders cards
+before the permission and when refused).
+
+**Wheel popover:** the Phase 6 popover (the menu's glass, 200 wide) with an eyebrow and a wheel of five visible rows 36
+high, the chosen one on `surface2` in 700, the others `text3`.
+
+**Disclosure row (Help):** `rowTitle` with `chevron.down` in `text3`; open, `chevron.up` and the answer in `rowLine`
+`text2` under it. One open at a time.
+
+**Pending row:** an icon tile 40 (`checkmark.circle` attendance, `indianrupeesign` a fee, `text.bubble` a message log),
+the title `rowTitle` ("Fee · Dev Kumar"), the line with its state first in 600 ("Waiting" `text3`, "Failed" `overdue`)
+then what and when; a failed row adds a second line in `overdue` with the reason and a quiet Discard in `overdue`.
+
+**Notification (the system's, not drawn by the app):** the app icon, a title (the thing and its time) and one body line
+that ends with what a tap does. The lock-screen board draws iOS's banner for reference only.
+
+**Launch screen:** `ground` with the book from the icon (D29) at 88 pt in `accent`, centred; always dark.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| A failed save on Settings | "Couldn't save the centre's name. Check your connection and try again." (your name; the WhatsApp number) |
+| The methods' footnote | "Any of these signs you in to Bright Minds Tuition. The code always works; a password is optional." |
+| Set a password | "At least 8 characters. You can still sign in with a code; the password is another way in." · failed: "Couldn't set the password. Check your connection and try again." · set: "Password set. Use it with your email next time you sign in." |
+| Sign out | "Sign out?" · "You can sign back in with Apple, Google or your email. What Tutor Central saved on this iPhone for Bright Minds Tuition is removed." · pending: "2 saved changes haven't reached the server yet: attendance for Class 10 Maths and Dev's fee. Sign out now and they are lost. Connect first and they go on their own." with "Sign out anyway" |
+| Delete account | "Delete your account permanently" · "Everything in Bright Minds Tuition goes, and your sign-in with it. There is no way back." · the notices: "10 students with their fees and attendance, 2 classes, your events, tasks, notes and everything created with AI." · "Your sign-in. Signing in again later starts a new, empty centre." · "Apple is asked to forget this app, so your Apple ID no longer lists it. You confirm with Apple first." · the footnote "Takes a moment. You are signed out when it is done." · deleting: "Removing everything. Keep the app open until it is done." · failed: "Couldn't delete your account." "Check your connection and try again. Nothing was removed; you are still signed in." · done: "Your account and Bright Minds Tuition's records were deleted." |
+| Teacher reminders | "Reminders on this iPhone" · "A nudge before each class and event, and once a month about fees still due. Set on this iPhone only; parents get nothing from here." · "iOS asks once. You can change your mind any time in the iPhone's Settings." · on: "Reminders are on. Next: Class 10 Maths, today at 16:45." · all off: "Reminders are allowed, but every switch below is off." · refused: "Notifications are off for Tutor Central." with Open Settings and "Allow them under Settings → Tutor Central → Notifications, then come back here. Your switches are kept." · the rows: "Before each class" "Class 10 Maths and Class 8 Science on their days"; "Before each event" "Everything on your schedule"; "Fees still due" "Who hasn't paid this month, with the total, at 09:00" · "14 reminders set · through Fri 23 Oct" / "No reminders set" · "Reminders are set two weeks ahead and refreshed whenever you open the app or change a class, an event or a fee." |
+| The notifications | "Class 10 Maths at 17:00" "In 15 minutes · 6 students. Tap to mark attendance." · "Parents' meeting in 1 hour" "Sat 10 Oct, 11:00–12:00 · Class 10 parents." · "4 fees still due for October" "₹4,000 to collect. Tap to remind parents." |
+| Help | "How can we help?" · "Short answers below. For anything else, write to us; a reply usually comes within a day." · "Opens Mail with the app's version filled in, so we know what you're on." · the four questions and answers are on P7-Help-Answer and the board's source |
+| Offline | "Offline. Showing what was saved at 14:10." (today) · "… saved yesterday at 18:30" · "… saved on Mon 5 Oct" · "Offline. Nothing saved on this iPhone yet." with "Nothing saved here yet" "October's fees appear once this screen has loaded with a connection." and Try again · refused: "You're offline. Adding a student needs a connection; nothing was saved." (editing a student; a class; an event; a task; a note; a fee month; a setting) · attendance: "Saved on this iPhone at 17:05. It reaches the server when you're back online." · a fee: "Paid by UPI on 7 Oct · Kept on this iPhone until you're online" and the toast "Dev's fee marked paid here. It's sent when you're back online." with Undo |
+| Back online | "Back online. Sending 3 saved changes…" · "3 saved changes sent." · "1 saved change couldn't be sent." |
+| Pending changes | "Saved on this iPhone while you were offline, in the order you made them." · a failure: "Dev Kumar is no longer in the register, so his fee can't be marked. Keep it here or discard it." · "Each change is sent on its own; one that fails doesn't hold up the rest. A failed change stays here until you discard it." · Discard: "Discard this change?" "Dev's October fee stays as the server has it: due. The mark you made here is lost." |

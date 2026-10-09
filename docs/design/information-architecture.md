@@ -25,7 +25,7 @@ The session gate lives in `AppShell` and is the only thing that decides which of
 | Students | Students list | Student detail, a student's fees, Class detail, Classes list | New student, Edit student, New class, Edit class, Scan register, archive and delete confirmations |
 | Fees | Fees (month) | Parent payments (via Payments), Student detail (via a row) | Generate month, Mark paid, Waive, Remind, Receipt |
 | Attendance | Attendance (Mark) | History (by date, by student, one student's month); a saved class reopens on the Mark root by date and class | Absence alert |
-| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account and Help named with their phase until it ships; Settings pushes Parent payments | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
+| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account (its password sheet, sign out, Delete account), Help; Settings pushes Parent payments, Teacher reminders, Account, Help and Pending changes (also reached from the failed-send banner on any tab root) | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
 
 Each tab keeps its own navigation stack. Tapping the active tab pops to its root. A student detail reached
 from Today or Fees is pushed on that tab's stack, not a jump to the Students tab.
@@ -40,7 +40,9 @@ from Today or Fees is pushed on that tab's stack, not a jump to the Students tab
 | `attendance?date=YYYY-MM-DD&class=<id>` | Attendance mark for that day and class |
 | `event/<id>` | The event in Schedule on the More tab |
 
-Notifications (Phase 7) carry these links.
+Notifications (Phase 7) carry these links: a class reminder opens `attendance?date=&class=`, an event reminder `event/<id>`, the
+unpaid-fee reminder `fees?month=`.
+
 
 ## Launch states (`bun shots <state>`)
 
@@ -455,3 +457,118 @@ What the boards settle (the parts are in `components.md`, "Phase 6 parts"):
   off shows the key on screen "(for you)" and leaves it out of Copy and the PDF.
 - **More** gains the three rows live; **Today** gains the Create row at its end. The camera usage text covers the
   register, answer sheets and the UPI QR.
+
+## Phase 7 boards (step 0.8, approved 2026-10-09)
+
+Row 10 of the canvas; sources `mockups/P7-*.dc.html`. Dark for every state; light for Settings, Account and More. Content
+is the seed's on Wednesday 7 October 2026 (Meera Nair, Bright Minds Tuition, meera.nair@gmail.com, Class 10 Maths at
+17:00); the version "1.0 (14)", the reminder counts, the cache's time and the pending changes are illustrative (the owner's
+rule: the screens follow the data).
+
+| Board | Source |
+|---|---|
+| Settings in full (dark and light), scrolled to the end, a save failed | `P7-Settings`, `-Light`, `-End`, `-SaveFailed` |
+| Account (dark and light); Set a password (empty, failed), after it was set; Sign out, Sign out with changes pending | `P7-Account`, `-Light`, `P7-Account-Password`, `-Failed`, `-Saved`, `P7-Account-SignOut`, `-Pending` |
+| Delete account: the screen, typed, deleting, failed, done (the sign-in landing) | `P7-Delete`, `-Typed`, `-Deleting`, `-Failed`, `-Done` |
+| Teacher reminders: not asked, the system's ask, on, all off, refused, the day picker | `P7-Reminders-NotAsked`, `-Ask`, `-On`, `-AllOff`, `-Refused`, `-DayPicker` |
+| Help, an answer open | `P7-Help`, `P7-Help-Answer` |
+| More with Account and Help live (dark and light) | `P7-More`, `P7-More-Light` |
+| Offline: Today, Students, Fees from the cache; nothing saved yet; a write refused; attendance saved here; a fee marked paid here | `P7-Offline-Today`, `-Students`, `-Fees`, `-NoCache`, `-WriteRefused`, `-AttendanceSaved`, `-FeeMarked` |
+| Back online: sending, sent, a change that failed; Pending changes, discarding one | `P7-Sync-Sending`, `-Sent`, `-Failed`, `P7-Pending`, `P7-Pending-Discard` |
+| The three notifications on the lock screen; the launch screen; the icon in place | `P7-Notifications`, `P7-Launch`, `P7-AppIcon-Home` |
+
+Phase 7's launch states (`plan/phase-07-plan.md` builds them; light twins from `--appearance light`; the clock is Wednesday 7
+October 2026, 16:35; the system surfaces, the lock screen, the launch screen and the home screen have none):
+
+| State | Shows |
+|---|---|
+| `settings` | Settings in full (supersedes P5-Settings): the profile with its Saved mark, Parents, This iPhone, Account, About |
+| `settings-end` | Settings scrolled to the end: This iPhone, Account, About, with the glass under the status bar |
+| `settings-save-failed` | Settings after a failed save: no mark, the typed value kept, the toast naming the field |
+| `account` | Account: the tutor, the sign-in methods (Apple connected, the code on, no password), Sign out, Delete |
+| `account-password` | The Set a password sheet, the field focused, the button disabled |
+| `account-password-failed` | The sheet after a failed write: the error under the field, the button live |
+| `account-password-saved` | Account with Password "Set" and the toast |
+| `account-sign-out` | The sign-out confirmation over Account |
+| `account-sign-out-pending` | The same with two changes waiting: they would be lost |
+| `delete-account` | Delete account: what goes, the empty confirmation field, the button disabled |
+| `delete-account-typed` | The centre's name typed, the button live |
+| `delete-account-deleting` | The button loading, the field dimmed, the line "Removing everything" |
+| `delete-account-failed` | The error row above the field, Retry, nothing removed |
+| `signin-deleted` | The sign-in landing with the "deleted" banner under the lead (after a deletion) |
+| `reminders-not-asked` | Teacher reminders before the permission: the intro, Turn on reminders, the switches dimmed |
+| `reminders` | Reminders on: the next one, the three cards, 14 set, Refresh |
+| `reminders-all-off` | Allowed, every switch off, nothing set |
+| `reminders-refused` | Notifications off in iOS: the banner with Open Settings, the cards dimmed |
+| `reminders-day-picker` | The day-of-the-month wheel in a popover |
+| `help` | Help: Email us, the four questions closed |
+| `help-answer` | Help with the first question open |
+| `more` | The More root with Account and Help live (supersedes P6-More) |
+| `offline-today` | Today offline, from the cache, the bar with its time |
+| `offline-students` | Students offline, from the cache |
+| `offline-fees` | Fees offline: Mark paid live, Remind and Generate disabled |
+| `offline-no-cache` | Fees offline with nothing cached: the empty card with Try again |
+| `offline-write-refused` | The New student sheet filled, the keyboard away, the refused toast |
+| `offline-attendance-saved` | Attendance saved on the iPhone: the banner, the footer "Saved on this iPhone", Tell parent live |
+| `offline-fee-marked` | Fees after Mark paid offline: the row moved with its "kept here" line, the toast with Undo |
+| `sync-sending` | Today, back online, the banner with the spinner |
+| `sync-sent` | Today with the "3 saved changes sent." toast |
+| `sync-failed` | Today with the failure banner that opens Pending changes |
+| `pending` | Pending changes: two waiting, one failed with its reason, Send again |
+| `pending-discard` | The discard confirmation over Pending changes |
+
+What the boards settle (the parts are in `components.md`, "Phase 7 parts"):
+
+- **Settings** is pushed from Today's account button and More's row. Sections: Teaching profile (saved as you go, the
+  Saved mark; a failed save keeps the typed value, drops the mark and toasts the field's name); Parents (Parent payments;
+  Parent messages, WhatsApp, not tappable, D3); This iPhone (Teacher reminders with its state as the value, Haptic
+  feedback, Appearance as a three-segment control Dark, Light, Match iPhone (D23), Pending changes with None or the
+  count); Account (the email as the value); About (Version "1.0 (14)", Help, Privacy policy and Terms of use, which open
+  the Phase 8 pages in Safari). Sign out moves to Account.
+- **Account** is pushed from Settings and from More: the tutor's initials, name and email; Sign-in methods lists only the
+  methods the account has (Apple or Google "Connected", Email code "On") plus Password always ("Not set" opens Set a
+  password; "Set" opens Change password, the same sheet retitled; nothing connects a new provider in this build); Sign
+  out (the dialog, which also says what is cached on the iPhone is removed; with queued changes it says they would be
+  lost and the action reads "Sign out anyway"); Delete account permanently (a pushed screen).
+- **Set a password** is a floating sheet (D28, content height): one secure field, the helper, the primary disabled until
+  8 characters; a failed write shows the error under the field and the button tries again; success closes the sheet,
+  the row reads Set and a toast says so. `profiles.has_password` is set with it.
+- **Delete account** (the owner, 2026-10-09: option A): the intro names what goes, the notices card lists it (the count
+  of students and classes from the register; the Apple row only for an Apple account), the centre's name is typed, the
+  solid destructive button runs: Apple users confirm with Apple first (a fresh authorization, its code sent to the API,
+  which revokes the token), then `delete_account()` in Postgres deletes the auth user and the cascades take the centre,
+  its rows, the membership and the profile; the app then wipes its caches and the queue and shows the sign-in landing
+  with the "deleted" banner. A failure says nothing was removed (Retry); the field keeps the name. A second sign-in
+  starts at onboarding.
+- **Teacher reminders** is pushed from Settings. Before the permission: the intro and Turn on reminders (the system's
+  alert follows), the switches shown dimmed. Allowed: the banner names the next reminder; three cards: Classes (a
+  switch, "How long before" 5, 10, 15, 30 or 60 min), Events (a switch, "How long before" 15 min, 30 min, 1 hour, the
+  day before at 18:00), Fees (a switch, "Day of the month" 1st to 28th in a wheel; at 09:00); "On this iPhone" counts
+  what is scheduled through its last day, with Refresh. Refused: the banner with Open Settings, the cards dimmed, the
+  choices kept. All off: the banner says so and nothing is set. Reminders are local notifications scheduled two weeks
+  ahead on foreground and after any edit of a class, an event or a fee; each carries its deep link.
+- **Help** is pushed from Settings and More: Email hello@tutorcentral.in (opens Mail with the version in the subject),
+  four questions as disclosure rows (one open at a time), the version line.
+- **Offline** (the honest states of guidelines.md): every tab root and list reads from its cache first and shows the
+  bar "Offline. Showing what was saved at 14:10." (today's time; "yesterday at 18:30"; "on Mon 5 Oct") between the
+  title and the content; a screen never loaded online shows the bar "Offline. Nothing saved on this iPhone yet." and
+  the empty card with Try again. Three writes work offline and queue: an attendance save (the footer reads "Saved on
+  this iPhone" in the due tone, the banner says it reaches the server later; Tell parent still opens WhatsApp and its
+  log is queued), Mark paid (the row moves, its line says it is kept here, the toast offers Undo, which removes it from
+  the queue), and the absence alert's log. Every other write is refused on Save with a toast that names it ("You're
+  offline. Adding a student needs a connection; nothing was saved.") and keeps the form; Remind, Generate and the AI
+  tools are disabled offline.
+- **Back online**: the bar becomes "Back online. Sending N saved changes…" on the open screen, then a toast "N saved
+  changes sent."; a change that fails leaves the banner "N saved change(s) couldn't be sent." on every tab root until
+  it is dealt with. Changes replay in the order they were made, each on its own; last write wins per row (the server's
+  row is overwritten by the phone's); a replay that the server refuses (the student or class is gone, the session is
+  out) is a failed change. **Pending changes** (from the banner and Settings) lists each change with its state and
+  time; a failed one carries its reason in overdue and a quiet Discard (confirmed by a dialog: the server's state
+  stands); Send again retries every failed change. Sign-out with changes pending warns.
+- **The notifications**: "Class 10 Maths at 17:00 · In 15 minutes · 6 students. Tap to mark attendance." opens
+  attendance for that day and class; "Parents' meeting in 1 hour · Sat 10 Oct, 11:00–12:00 · Class 10 parents." opens the
+  event; "4 fees still due for October · ₹4,000 to collect. Tap to remind parents." opens the month on Fees. In the
+  foreground the system's banner shows and the tap does the same.
+- **The launch screen** is the ground colour with the book in marigold, always dark (the app opens dark, D23;
+  `UILaunchScreen` with a colour and an image). **The icon** is D29's, drawn in place; the other icons on the board are
+  stand-ins.
