@@ -93,6 +93,8 @@ public struct RootView: View {
                     Task {
                         await session.refresh()
                         await runQueue()
+                        // The reminders plan from the classes as they are now, not as first read.
+                        await shell.register?.refresh()
                         replanReminders()
                     }
                 }
