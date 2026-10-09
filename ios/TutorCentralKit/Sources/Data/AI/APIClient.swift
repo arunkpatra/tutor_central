@@ -136,22 +136,20 @@ public extension APIClient {
             case .signedOut: .signedOut
             case .timedOut: .appleUnreachable
             case .offline: .offline
-            default: .server(error.message)
+            default: .unexpected
             }
         }
         guard !(200 ..< 300).contains(answer.status) else { return }
-        throw Self.accountFailure(
-            status: answer.status,
-            body: try? JSONDecoder().decode(ErrorBody.self, from: answer.data)
-        )
+        throw Self.accountFailure(status: answer.status)
     }
 
-    internal static func accountFailure(status: Int, body: ErrorBody?) -> AccountFailure {
+    internal static func accountFailure(status: Int) -> AccountFailure {
         switch status {
         case 400: .appleRefused
         case 401, 403: .signedOut
         case 502, 503, 504: .appleUnreachable
-        default: .server(body?.error ?? AccountFailure.appleUnreachable.message)
+        // Anything else (a route missing, a fault) is never shown in the API's own words (D41).
+        default: .unexpected
         }
     }
 }

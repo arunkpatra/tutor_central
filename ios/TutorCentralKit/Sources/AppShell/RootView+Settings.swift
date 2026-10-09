@@ -55,7 +55,13 @@ extension RootView {
     @ViewBuilder private var accountView: some View {
         if case let .ready(workspace) = session.state, let queue = centreQueue() {
             AccountView(
-                store: AccountStore(workspace: workspace, auth: deps.auth, queue: queue),
+                store: AccountStore(workspace: workspace, auth: deps.auth, queue: queue) {
+                    applyWorkspace { current in
+                        var changed = current
+                        changed.profile.hasPassword = true
+                        return changed
+                    }
+                },
                 actions: AccountActions(
                     openDelete: { shell.tabs.push(.deleteAccount) },
                     signOut: { await session.signOut(wiping: wipe(for: workspace)) },

@@ -34,17 +34,19 @@ public enum RunOutcome: Hashable, Sendable {
         self.messages = messages
     }
 
-    /// Sends every waiting change in order; refused while a run is in progress (answers nil).
+    /// Sends every waiting change in order until none waits; refused while a run is in progress (answers nil). The
+    /// queue is read again before each send, so a change undone or discarded meanwhile is not sent, and one added or
+    /// corrected meanwhile goes in this run.
     public func run() async -> RunOutcome? {
         guard !running else { return nil }
         running = true
         defer { running = false }
         var sent = 0
         var failed = 0
-        for change in queue.pending.inOrder {
+        while let change = queue.pending.inOrder.first {
             do {
                 try await send(change)
-                queue.remove(id: change.id)
+                queue.removeSent(change)
                 sent += 1
             } catch {
                 switch Self.classify(error) {
@@ -74,8 +76,10 @@ public enum RunOutcome: Hashable, Sendable {
         case offline, signedOut, refused
     }
 
+    /// Wait, or fail. Anything on the way (no network, a gateway's 5xx, a cancelled request) waits for the next run;
+    /// only the database refusing the row (a PostgREST code) fails it.
     static func classify(_ error: any Error) -> Kind {
-        if TransportError.isOffline(error) {
+        if TransportError.isOffline(error) || TransportError.isCancelled(error) || error is URLError {
             return .offline
         }
         switch error {
@@ -83,6 +87,8 @@ public enum RunOutcome: Hashable, Sendable {
         case let .api(_, _, _, response) as AuthError where response.statusCode == 401: return .signedOut
         case let postgrest as PostgrestError where postgrest.code == "PGRST301": return .signedOut
         case let http as HTTPError where http.response.statusCode == 401: return .signedOut
+        case let http as HTTPError where http.response.statusCode >= 500: return .offline
+        case let postgrest as PostgrestError where postgrest.code == nil: return .offline
         default: return .refused
         }
     }

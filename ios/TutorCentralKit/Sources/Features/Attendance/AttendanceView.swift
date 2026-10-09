@@ -66,6 +66,8 @@ public struct AttendanceView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.sectionGap)
         }
+        // A pull reads the class and day again, as Today, Students and Fees do; unsaved marks are kept.
+        .refreshable { await store.reload() }
         .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)

@@ -116,10 +116,20 @@ import Synchronization
         passwords.append(password)
     }
 
+    /// Holds the deletion this long, as the network can.
+    public var deleteDelay: Duration?
+
     /// As Supabase does: the user is gone and the local session ends, announced as a sign-out.
     public func deleteAccount() async throws(AccountFailure) {
         try takeAccountFailure()
+        if let deleteDelay {
+            try? await Task.sleep(for: deleteDelay)
+        }
         deleted += 1
+        // A cancelled request loses its answer, though the database has already deleted.
+        if Task.isCancelled {
+            throw .unexpected
+        }
         emit(nil)
     }
 

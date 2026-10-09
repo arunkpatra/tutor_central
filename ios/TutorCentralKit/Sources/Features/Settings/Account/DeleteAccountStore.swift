@@ -77,8 +77,11 @@ import Observation
         await task.value
     }
 
-    /// Back while it runs: the task is cancelled and its answer dropped.
+    /// Back while it runs: Apple's step is cancelled and its answer dropped. Once the deletion is on its way it is
+    /// left to finish, so the wipe and the landing still run (review I4: a cancelled request could leave a deleted
+    /// tutor inside the app).
     public func cancel() {
+        guard phase != .deleting else { return }
         generation += 1
         run?.cancel()
         run = nil

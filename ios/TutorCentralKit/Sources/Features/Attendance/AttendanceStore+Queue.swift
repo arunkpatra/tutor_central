@@ -37,10 +37,30 @@ extension AttendanceStore {
 
     /// After the queue sent or dropped a change: the shown class and day read again from the server (a draft
     /// with unsaved toggles is left alone).
+    /// A save kept here that the queue no longer holds was sent: it reads saved. A read that fails (the network just
+    /// back, or gone again) keeps what was shown rather than the older copy saved on this iPhone (hand run after the
+    /// review).
     public func reload() async {
         guard opened, phase != .saving, !draft.isChanged(from: saved, members: members) else { return }
+        if case let .savedHere(at) = phase, !stillWaits {
+            phase = .saved(at: at)
+        }
+        let shown = (sessions, told, saved, draft, phase, loadedMonth, savedAt, offlineRead)
         loadedMonth = nil
         await open(classID: draft.classID, date: draft.date)
+        guard error != nil || offlineRead else { return }
+        (sessions, told, saved, draft, phase, loadedMonth, savedAt, offlineRead) = shown
+        error = nil
+    }
+
+    /// Whether the queue still holds a save of the shown class and day.
+    private var stillWaits: Bool {
+        queue?.pending.changes.contains { change in
+            if case let .attendance(classID, _, date, _, _, _) = change.kind {
+                return classID == draft.classID && date == draft.date
+            }
+            return false
+        } ?? false
     }
 
     /// The alert's log kept here; the row reads told, as it would online.

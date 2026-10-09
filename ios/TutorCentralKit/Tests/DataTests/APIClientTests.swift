@@ -103,7 +103,8 @@ import Testing
         #expect(recorder.requests.first?.url?.path == "/account/revoke-apple")
         #expect(try Self.sent(recorder)["code"] as? String == "c.abc")
         let answers: [(Int, AccountFailure)] = [
-            (400, .appleRefused), (401, .signedOut), (502, .appleUnreachable), (500, .server("Boom.")),
+            // Any other answer is never shown as the API wrote it (D41).
+            (400, .appleRefused), (401, .signedOut), (502, .appleUnreachable), (500, .unexpected), (404, .unexpected),
         ]
         for (status, failure) in answers {
             let (failing, _) = Self.client(status: status, body: #"{"error":"Boom."}"#)

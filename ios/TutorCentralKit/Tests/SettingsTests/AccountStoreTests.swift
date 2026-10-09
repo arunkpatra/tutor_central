@@ -49,6 +49,17 @@ import Testing
         #expect(store.passwordSet() == "Password set. Use it with your email next time you sign in.")
         #expect(store.hasPassword && store.passwordValue == "Set")
     }
+
+    /// Review minor 8: the shell hears of it, so Account opened again reads Set, not the session's older Not set.
+    @Test func aPasswordSetIsToldToTheShell() {
+        var told = 0
+        let store = AccountStore(
+            workspace: FakeCentreRepository.meeraWorkspace, auth: FakeAuthRepository(),
+            queue: ChangeQueue(centre: UUID(), directory: FileManager.default.temporaryDirectory)
+        ) { told += 1 }
+        _ = store.passwordSet()
+        #expect(told == 1)
+    }
 }
 
 @MainActor struct PasswordStoreTests {

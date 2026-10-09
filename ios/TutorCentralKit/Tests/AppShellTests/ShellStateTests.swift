@@ -91,4 +91,24 @@ import Today
         shell.sessionChanged(.signedOut, files: files)
         #expect(shell.register == nil)
     }
+
+    /// The owner, 2026-10-09: coming back to the app shows what changed meanwhile (here a task added on another
+    /// device), without a pull.
+    @Test func refreshScreensReadsTheListsAgain() async {
+        let shell = ShellState()
+        let repository = FakeTasksRepository(tasks: FakeTasksRepository.seed)
+        let tasks = TasksStore(
+            workspace: Fixtures.meeraWorkspace,
+            tasks: repository,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await tasks.load()
+        shell.tasks = tasks
+        let before = tasks.tasks.count
+        repository.tasks.append(TaskItem(
+            id: UUID(), title: "Added on the iPad", dueDate: nil, doneAt: nil, createdAt: FakeCountsRepository.fixedNow
+        ))
+        await shell.refreshScreens()
+        #expect(tasks.tasks.count == before + 1)
+    }
 }

@@ -38,7 +38,6 @@ import Testing
         #expect(AccountFailure.appleRefused.message == "Apple didn't accept the confirmation. Try again.")
         #expect(AccountFailure.offline.message == "You're offline. Connect and try again.")
         #expect(AccountFailure.signedOut.message == "Your sign-in has ended. Sign in again.")
-        #expect(AccountFailure.server("Nope.").message == "Nope.")
     }
 
     @Test func theFakeCentreRecordsThePasswordFlagAndTheAccountRepositoryTheCodes() async throws {
@@ -72,7 +71,9 @@ struct WipeTests {
         let mine = UUID().uuidString.lowercased()
         let other = UUID().uuidString.lowercased()
         for name in [
-            "register-\(mine).json", "cache-\(mine)-fees-2026-10.json", "queue-\(mine).json", "upi-qr-\(mine).png",
+            "register-\(mine).json", "cache-\(mine)-fees-2026-10.json", "queue-\(mine).json",
+            "queue-\(mine).unreadable.json",
+            "upi-qr-\(mine).png",
             "register-\(other).json", "workspace.json",
         ] {
             try Data("x".utf8).write(to: dir.appendingPathComponent(name))

@@ -1,7 +1,8 @@
-import Data
 import Domain
 import Foundation
+import Supabase
 import Testing
+@testable import Data
 
 @MainActor struct QueueRunnerTests {
     let attendance = FakeAttendanceRepository()
@@ -111,5 +112,62 @@ import Testing
         struct Odd: Error {}
         #expect(try QueueRunner.reason(for: save(at: Date()), error: Odd())
             == "This change couldn't be saved. Keep it here or discard it.")
+    }
+
+    /// Review C1: a save corrected while its first version is being sent is sent too, not removed with the first.
+    @Test func aChangeReplacedDuringItsSendIsSentAfterIt() async throws {
+        let day = try #require(Day(year: 2026, month: 10, day: 7))
+        let first = QueuedChange(
+            kind: .attendance(classID: nil, className: "All students", date: day, marks: [:], present: 6, total: 6),
+            madeAt: Date(timeIntervalSince1970: 1)
+        )
+        let (queue, runner) = make([first])
+        attendance.delay = .milliseconds(100)
+        let run = Task { await runner.run() }
+        try await Task.sleep(for: .milliseconds(20))
+        let absent = [FakeAttendanceRepository.hemanth: AttendanceStatus.absent]
+        queue.add(QueuedChange(
+            kind: .attendance(classID: nil, className: "All students", date: day, marks: absent, present: 5, total: 6),
+            madeAt: Date(timeIntervalSince1970: 2)
+        ))
+        _ = await run.value
+        #expect(attendance.saves.map(\.marks) == [[:], absent])
+        #expect(queue.pending.isEmpty)
+    }
+
+    /// Review C1: a change undone or discarded while the run sends an earlier one is never sent.
+    @Test func aChangeRemovedDuringARunIsNotSent() async throws {
+        let invoice = try #require(fees.invoices.first { $0.status == .due }?.id)
+        let later = paid(invoice, at: Date(timeIntervalSince1970: 2))
+        let (queue, runner) = try make([save(at: Date(timeIntervalSince1970: 1)), later])
+        attendance.delay = .milliseconds(100)
+        let run = Task { await runner.run() }
+        try await Task.sleep(for: .milliseconds(20))
+        queue.remove(id: later.id)
+        _ = await run.value
+        #expect(fees.paid.isEmpty && attendance.saves.count == 1)
+    }
+
+    /// Review I1: a change added while a run sends the last one goes in the same run.
+    @Test func aChangeAddedDuringARunGoesInTheSameRun() async throws {
+        let invoice = try #require(fees.invoices.first { $0.status == .due }?.id)
+        let (queue, runner) = try make([save(at: Date(timeIntervalSince1970: 1))])
+        attendance.delay = .milliseconds(100)
+        let run = Task { await runner.run() }
+        try await Task.sleep(for: .milliseconds(20))
+        queue.add(paid(invoice, at: Date(timeIntervalSince1970: 2)))
+        #expect(await run.value == .done(sent: 2, failed: 0))
+        #expect(fees.paid == [invoice] && queue.pending.isEmpty)
+    }
+
+    /// Review I2: an outage (a gateway's 5xx, any transport error, a cancelled request) waits; only the database
+    /// refusing the row fails it.
+    @Test func anOutageWaitsAndOnlyARefusedRowFails() {
+        #expect(QueueRunner.classify(URLError(.badServerResponse)) == .offline)
+        #expect(QueueRunner.classify(URLError(.secureConnectionFailed)) == .offline)
+        #expect(QueueRunner.classify(CancellationError()) == .offline)
+        #expect(QueueRunner.classify(PostgrestError(message: "Bad gateway")) == .offline)
+        #expect(QueueRunner.classify(FakeFeesRepository.noSuchRow) == .refused)
+        #expect(QueueRunner.classify(PostgrestError(code: "42501", message: "denied")) == .refused)
     }
 }

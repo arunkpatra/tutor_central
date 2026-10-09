@@ -98,6 +98,8 @@ extension RootView {
     /// update that makes the session ready, before `onChange` runs (run 8: the stores got none).
     func centreQueue() -> ChangeQueue? {
         Self.follow(session.state, shell: shell, deps: deps)
+        // A change queued while online (behind a waiting one) is sent at once (review I1).
+        shell.queue?.onAdded = { Task { await runQueue() } }
         return shell.queue
     }
 
@@ -145,18 +147,22 @@ extension RootView {
         return outcome
     }
 
-    /// What a sent change changes elsewhere: the screens read again.
-    private func afterRun(_: RunOutcome) {
-        afterQueueChanged()
+    /// What a sent change changes elsewhere: the screens read again, only when the run sent or failed something (a run
+    /// that stopped offline at once changed nothing, and its read would only fail).
+    private func afterRun(_ outcome: RunOutcome) {
+        let changed = switch outcome {
+        case let .done(sent, failed): sent + failed > 0
+        case let .offline(sent), let .signedOut(sent): sent > 0
+        }
+        if changed {
+            afterQueueChanged()
+        }
     }
 
     /// The queue sent or dropped changes: Attendance and Fees read what the server has now (run 9 and run 10: a
     /// sent save still read "saved on this iPhone"; a discarded fee still read paid here).
     func afterQueueChanged() {
-        Task {
-            await shell.attendance?.reload()
-            await shell.fees?.reload()
-        }
+        Task { await shell.refreshScreens() }
         replanReminders()
     }
 }
