@@ -168,7 +168,8 @@ public enum Fixtures {
              .offlineFeeMarked, .syncSending, .syncSent, .syncFailed, .pending, .pendingDiscard, .remindersNotAsked,
              .reminders, .remindersAllOff, .remindersRefused, .remindersDayPicker:
             .ready(workspace(for: state))
-        case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
+        case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .kitPhase7, .signin, .signinEmail,
+             .signinCode,
              .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
         }
     }
