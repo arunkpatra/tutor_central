@@ -10,6 +10,11 @@ import SwiftUI
     /// Counts the pushes of Scan register: each is a new visit with its own store (`ShellState.scan`).
     @ObservationIgnored private(set) var scanVisits = 0
 
+    /// Scan register is on some tab's stack; when it goes (Back, Add, a tab popped to its root) the visit ends.
+    var scanOnStack: Bool {
+        paths.values.contains { $0.contains(.scanRegister) }
+    }
+
     init(selected: AppTab = .today) {
         self.selected = selected
     }

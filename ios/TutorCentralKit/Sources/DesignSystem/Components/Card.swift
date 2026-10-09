@@ -56,8 +56,7 @@ public struct Card<Content: View>: View {
 
 public extension View {
     /// A raised surface: surface1 fill clipped to `radius`, a line border (accent when selected), shadowRaised
-    /// (haloFocus
-    /// when selected).
+    /// (haloFocus when selected).
     func surface(radius: CGFloat, selected: Bool = false) -> some View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         return background(Tokens.surface1.color, in: shape)

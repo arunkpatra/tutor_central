@@ -1,8 +1,7 @@
 import SwiftUI
 
 /// Draws the current toast at the bottom, above the tab bar when there is one and above a footer on screen; it slides
-/// in
-/// and out in `panel`.
+/// in and out in `panel`.
 public struct ToastHost: View {
     let toasts: ToastCenter
     let base: CGFloat

@@ -58,4 +58,16 @@ import Testing
         tabs.push(.scanRegister)
         #expect(tabs.scanVisits == first + 1)
     }
+
+    @Test func scanIsOnTheStackUntilItsRouteGoesFromAnyTab() {
+        let tabs = TabsState(selected: .more)
+        #expect(!tabs.scanOnStack)
+        tabs.push(.scanRegister)
+        #expect(tabs.scanOnStack)
+        tabs.select(.more) // tapping the active tab pops it to its root
+        #expect(!tabs.scanOnStack)
+        tabs.push(.scanRegister)
+        tabs.remove(.scanRegister)
+        #expect(!tabs.scanOnStack)
+    }
 }

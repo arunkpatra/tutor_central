@@ -34,8 +34,7 @@ public enum AccountBoardState: Sendable {
 }
 
 /// Account (P7-Account): the tutor, the sign-in methods, the password, Sign out, Delete account permanently. Pushed
-/// from
-/// Settings and More.
+/// from Settings and More.
 public struct AccountView: View {
     @State private var store: AccountStore
     @State private var passwordSheet: PasswordStore?

@@ -9,14 +9,12 @@ public enum StudentDetailBoardState: Sendable {
     case edit
 }
 
-/// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent
-/// with Call and WhatsApp, this month's fee, this month's attendance, notes, then Archive or Restore and Delete. Edit
-/// opens
+/// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent with
+/// Call and WhatsApp, this month's fee, this month's attendance, notes, then Archive or Restore and Delete. Edit opens
 /// the student form (P3-EditStudent).
 public struct StudentDetailView: View {
     /// Kept for the life of the screen: AppShell makes a store each time it builds the view, and this month's
-    /// attendance
-    /// read into the first must not be lost to the next.
+    /// attendance read into the first must not be lost to the next.
     @State private var store: StudentDetailStore
     let register: RegisterStore
     let actions: StudentsActions

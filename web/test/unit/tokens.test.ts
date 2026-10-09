@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { viewport } from "../../app/layout";
 
 const ROOT = join(import.meta.dir, "..", "..");
 const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
@@ -24,6 +25,11 @@ const USED = [
   "accentTint",
   "textOnAccent",
 ];
+
+function themeColor(scheme: "dark" | "light"): string {
+  const colours = viewport.themeColor as { media: string; color: string }[];
+  return colours.find((c) => c.media.includes(scheme))?.color ?? "";
+}
 
 function documented(token: string): { dark: string; light: string } {
   const row = doc.split("\n").find((l) => l.startsWith(`| \`${token}\` |`));
@@ -58,7 +64,13 @@ test("every colour token the site uses has the document's value in both schemes"
 
 test("no raw colour outside the token blocks", () => {
   const after = css.slice(css.indexOf("\n", css.lastIndexOf("--textOnAccent:")));
-  const raw = after.match(/#[0-9A-Fa-f]{3,8}\b|rgba?\(/g) ?? [];
-  // The glow is the one allowed literal (glowHero, a token whose value is a gradient stop).
-  expect(raw.filter((r) => r !== "rgba(")).toEqual([]);
+  // Every colour, shadows' included, is a variable in a token block; the rules below only use var(--…).
+  const tail = after.slice(after.indexOf("\n}") + 2);
+  expect(tail.match(/#[0-9A-Fa-f]{3,8}\b|rgba?\(/g) ?? []).toEqual([]);
+});
+
+test("the browser's bar colour is the ground token in both schemes", () => {
+  const { dark, light } = documented("ground");
+  expect(normal(themeColor("dark"))).toBe(normal(dark));
+  expect(normal(themeColor("light"))).toBe(normal(light));
 });

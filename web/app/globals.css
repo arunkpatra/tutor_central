@@ -9,6 +9,7 @@
   /* The hero's phone is dark on both pages (the app opens dark): its rim is the dark surface1 and lineStrong. */
   --phoneRim: #1c1917;
   --phoneEdge: #3d3632;
+  --phoneShadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   --ground: #f8f4ee;
   --surface1: #ffffff;
   --surface2: #f1ebe2;
@@ -424,7 +425,7 @@ p.updated {
   box-shadow:
     0 0 0 10px var(--phoneRim),
     0 0 0 11px var(--phoneEdge),
-    0 30px 80px rgba(0, 0, 0, 0.45);
+    var(--phoneShadow);
 }
 .phone img {
   display: block;
@@ -477,5 +478,13 @@ p.updated {
   .phone {
     width: 275px;
     height: 597px;
+  }
+}
+
+/* The narrowest phones (320): the phone and its 11 px rim stay inside the 24 px gutters (U31). */
+@media (max-width: 360px) {
+  .phone {
+    width: 240px;
+    height: 520px;
   }
 }

@@ -9,10 +9,8 @@ import Students
 import Today
 
 /// What the tabs remember while one tutor works in one centre: the selected tab, each tab's stack, Today's store and
-/// the register.
-/// Leaving the tabs (sign-out) or arriving in another centre starts afresh, so the next tutor never sees the last
-/// one's place, greeting or counts.
-/// One visit of Check a paper: its routes' id and its store.
+/// the register. Leaving the tabs (sign-out) or arriving in another centre starts afresh, so the next tutor never sees
+/// the last one's place, greeting or counts. One visit of Check a paper: its routes' id and its store.
 struct CheckVisit {
     let id: UUID
     let store: CheckStore
@@ -70,8 +68,7 @@ struct ScanVisit {
 
     /// The screens read what the server has now: on coming back to the app and after the queue sent (the owner,
     /// 2026-10-09: what changed meanwhile shows without a pull). Attendance keeps unsaved marks; a read that fails
-    /// keeps
-    /// what is shown.
+    /// keeps what is shown.
     func refreshScreens() async {
         async let today: Void? = today?.load()
         async let tasks: Void? = tasks?.load()

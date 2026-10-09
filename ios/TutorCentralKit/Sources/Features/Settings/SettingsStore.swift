@@ -6,8 +6,7 @@ import Observation
 
 /// Settings (P7-Settings): the onboarding fields saved as they are committed (return or leaving the field), this
 /// iPhone's choices (appearance, haptics) written at once, the reminders' and the queue's summaries, the account and
-/// the
-/// version.
+/// the version.
 @MainActor @Observable public final class SettingsStore {
     public enum SaveState: Equatable, Sendable {
         case idle

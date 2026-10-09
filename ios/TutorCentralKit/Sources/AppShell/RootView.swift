@@ -87,6 +87,7 @@ public struct RootView: View {
                 }
             }
             .onOpenURL { openLink($0) }
+            .modifier(EndsScanVisits(shell: shell))
             .onChange(of: scenePhase) { _, phase in
                 // The foreground refresh hook: the centre and profile read again when the app comes back.
                 if phase == .active, launch == nil {

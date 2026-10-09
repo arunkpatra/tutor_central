@@ -2,10 +2,9 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// New event and Edit event (P4-Event-New, -Edit): a floating sheet (D28) with Cancel and Save, the title, the day
-/// from the system's date picker, optional start and end times, an optional note with its counter; Edit event ends
-/// with Delete event, which the schedule confirms over itself (P4-Event-Delete-Confirm). With the keyboard up the
-/// fields
+/// New event and Edit event (P4-Event-New, -Edit): a floating sheet (D28) with Cancel and Save, the title, the day from
+/// the system's date picker, optional start and end times, an optional note with its counter; Edit event ends with
+/// Delete event, which the schedule confirms over itself (P4-Event-Delete-Confirm). With the keyboard up the fields
 /// keep their size and Delete event scrolls under the keyboard (U7, P8-Event-Edit-Keyboard).
 public struct EventFormSheet: View {
     @Bindable var store: EventFormStore
@@ -40,8 +39,7 @@ public struct EventFormSheet: View {
 
     /// The fields' column is at least the sheet's room under the header, so Delete event sits at the bottom with the
     /// keyboard away and, with the keyboard up, the column keeps that height and scrolls: the well stays whole above
-    /// the
-    /// keyboard and Delete is under it (U7, P8-Event-Edit-Keyboard).
+    /// the keyboard and Delete is under it (U7, P8-Event-Edit-Keyboard).
     nonisolated static func contentMinHeight(sheetHeight: CGFloat, headerHeight: CGFloat) -> CGFloat {
         max(0, sheetHeight - headerHeight - Tokens.sectionGap)
     }

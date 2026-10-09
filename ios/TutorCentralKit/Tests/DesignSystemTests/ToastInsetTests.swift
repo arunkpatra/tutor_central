@@ -3,8 +3,7 @@ import Testing
 @testable import DesignSystem
 
 /// D49, U16: a toast never covers a footer. The footers on screen tell the centre their height; the toast lifts above
-/// the
-/// newest one and comes back down when the last footer goes.
+/// the newest one and comes back down when the last footer goes.
 @MainActor struct ToastInsetTests {
     @Test func aToastSitsAboveAFooterWhileOneIsOnScreen() {
         #expect(ToastHost.bottom(base: Tokens.pageSide, footerInset: 0) == Tokens.pageSide)

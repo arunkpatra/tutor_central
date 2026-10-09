@@ -95,9 +95,8 @@ public struct MessageSheet: View {
 }
 
 /// The consent sheet (P6-Scan-Consent; components.md, Consent sheet): Cancel and "Before the first photo", the text,
-/// the
-/// footnote with the centre's name, and "I agree, continue" (loading while the agreement is written). Shown before the
-/// first photo or the first progress note of a centre, by Students and AITools alike.
+/// the footnote with the centre's name, and "I agree, continue" (loading while the agreement is written). Shown before
+/// the first photo or the first progress note of a centre, by Students and AITools alike.
 public struct ConsentSheet: View {
     let centreName: String
     let agree: () async -> Bool

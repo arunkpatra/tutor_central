@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { fileFor, parseWebShotsArgs, shotName } from "./web-shots";
+import { fileFor, parseWebShotsArgs, shotName, sideways } from "./web-shots";
 
 test("defaults: the five pages at both widths and both appearances into .shots/web", () => {
   expect(parseWebShotsArgs([])).toEqual({
@@ -37,4 +37,9 @@ test("a picture's name", () => {
   expect(shotName("/", 1280, "dark", exported)).toBe("home-1280-dark.png");
   expect(shotName("/privacy", 390, "light", exported)).toBe("privacy-390-light.png");
   expect(shotName("/anything-else", 390, "dark", exported)).toBe("not-found-390-dark.png");
+});
+
+test("a page wider than its viewport is reported: the picture clips to the width and would hide it", () => {
+  expect(sideways("/", 320, 320)).toBeNull();
+  expect(sideways("/", 320, 804)).toBe("/ at 320 lays out 804 px wide: it scrolls sideways");
 });

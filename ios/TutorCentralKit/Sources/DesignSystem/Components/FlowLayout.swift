@@ -1,8 +1,7 @@
 import SwiftUI
 
 /// Lays its children in rows, left to right, wrapping when a row is full (chips). A child wider than a whole row (a
-/// long
-/// line at the larger text sizes) is given the row's width, so its text wraps instead of running off the edge.
+/// long line at the larger text sizes) is given the row's width, so its text wraps instead of running off the edge.
 public struct FlowLayout: Layout {
     let spacing: CGFloat
 
