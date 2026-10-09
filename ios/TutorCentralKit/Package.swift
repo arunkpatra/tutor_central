@@ -14,7 +14,8 @@ let package = Package(
         .package(url: "https://github.com/supabase/supabase-swift.git", exact: "2.55.3"),
     ],
     targets: [
-        .target(name: "DesignSystem"),
+        // Marks.xcassets: Google's "G" for Sign in with Google, in its own colours.
+        .target(name: "DesignSystem", resources: [.process("Resources")]),
         .target(name: "Domain"),
         .target(name: "Data", dependencies: [
             "Domain",
