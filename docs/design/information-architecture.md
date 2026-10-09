@@ -597,7 +597,7 @@ Row 11 of the canvas (y 16000 on; the title note at y 15700); sources `mockups/P
 (D42), is drawn as pages, not phone frames: one HTML per page and appearance, laid out by container queries, rendered at
 1280 (desktop) and 390 (phone) as the built site will be; each frame is fluid (`expand: fill`) and as tall as the page at
 its width. Dark and light for every page (D13). The hero's phone is the seed's Today board (P4-Today-Soon), dark on both
-pages because the app opens dark (D23). Facts only the owner knows are `[OWNER: …]` on the pages until he fills them.
+pages because the app opens dark (D23). Facts only the owner knows are `[OWNER: …]` on the pages until he fills them. As built (session 17): GoodGround LLP, Bangalore; 30 days' notice; and D50, the site names no vendor or internal technology, so the built `/privacy` and Home reword the boards' hosting sentences (the board settles the layout, the page's words are the owner's).
 
 | Board | Source |
 |---|---|
@@ -660,9 +660,10 @@ the page in the same phase):
 | A message log of student, kind and time, never the text | `message_log` (0001, 0005): `student_id`, `kind`, `channel`, `opened_at`, `about_date` |
 | AI inputs and answers kept in history; photos not stored, only page count and size | `ai_generations.input` holds counts and bytes, never the image (`api/CLAUDE.md`, Phase 6) |
 | Copies on the iPhone behind the lock, removed on sign-out and deletion | `CachedRead` with file protection, `Wipe.everything` (D39, D40) |
-| Database and sign-in: Supabase, Mumbai; the AI part: Vercel, Mumbai; codes by Resend | `supabase/CLAUDE.md` (ap-south-1), D21 (`bom1`), D30 |
-| Claude by Anthropic reads what is sent, outside India; not used to train; kept per Anthropic's terms | D35; Anthropic's commercial terms (`[OWNER: confirm]`) |
+| Records kept in India by the companies that host the app; sign-in codes by an email service (no vendor named, D50) | `supabase/CLAUDE.md` (ap-south-1), D21 (`bom1`), D30 |
+| Claude by Anthropic reads what is sent, outside India; never used to train; deleted within 30 days | D35; Anthropic's commercial terms (privacy center, 2026-10-09; the owner, Owner step 0) |
 | One centre never reads another's | Row-level security on every table (rule 6) |
+| No backup copies of deleted records (the sentence is not on the page; Supabase Free keeps none) | The owner, 2026-10-09; moving to a plan with backups means saying so on `/privacy` |
 | No ads, analytics or tracking; no cookies on the site | D18; the site is static with no third-party script |
 | Crash reports only through Apple's sharing setting | D18 (no crash SDK); Apple's own analytics sharing |
 | Delete account removes everything at once; Apple is told to forget | `delete_account()` and the cascades (D37); the revoke route (D38) |

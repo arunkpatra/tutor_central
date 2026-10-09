@@ -1603,7 +1603,7 @@ Commands: `bun run dev` (local on :3000); `bun run check`; `bun check --only=web
   `Part = { kind: "p"; text: string } | { kind: "h3"; text: string } | { kind: "p"; text: string; link: { label: string; href: string; after: string } }`;
   `SUPPORT`: `{ eyebrow, title, line, emailLine, questions: { question, answer }[], also: … }`.
 
-- [ ] **Step 1: the content, from the boards**
+- [x] **Step 1: the content, from the boards**
 
 Print each board's text as in Task 4 Step 2 (`P8-Privacy`, `P8-Terms`, `P8-Support`) and transcribe it into the content
 modules, section by section, verbatim. The owner's answers from step 0 replace `[OWNER: legal name]`, `[OWNER: city]`,
@@ -1685,7 +1685,7 @@ export const SUPPORT = {
 
 (Help's four answers are `HelpView.questions` word for word; a later change there changes both.)
 
-- [ ] **Step 2: the tests**
+- [x] **Step 2: the tests**
 
 `web/test/unit/pages.test.ts`:
 
@@ -1749,7 +1749,7 @@ its placeholder test (the rule is in force from here). Flip `fileFor("/privacy")
 
 Run: `cd web && bun test test/unit` → FAIL (no pages).
 
-- [ ] **Step 3: the pages**
+- [x] **Step 3: the pages**
 
 One component renders a legal document; `web/app/privacy/page.tsx`:
 
@@ -1846,7 +1846,7 @@ export default function Support() {
 
 Run: `cd web && bun run check` → green. `bun check` → green.
 
-- [ ] **Step 4: pictures, the pull request**
+- [x] **Step 4: pictures, the pull request**
 
 ```bash
 bun web-shots --pages /privacy,/terms,/support
@@ -1925,7 +1925,7 @@ test("http and www must redirect to the apex over https; a trailing slash must l
 
 Run: `bun test tools/web-smoke.test.ts` → FAIL.
 
-- [ ] **Step 2: the smoke**
+- [x] **Step 2: the smoke**
 
 `tools/web-smoke.ts`:
 
@@ -1993,7 +1993,7 @@ if (import.meta.main) {
 
 Run: `bun test tools/web-smoke.test.ts` → PASS.
 
-- [ ] **Step 3: Vercel's file and the workflow**
+- [x] **Step 3: Vercel's file and the workflow**
 
 `web/vercel.json`:
 
@@ -2129,13 +2129,13 @@ steps 1 to 5; then `gh workflow run deploy-web`; then Task 8; then Owner step 6.
 
 One at a time; each checked before the next. The words below are what to say to the owner.
 
-- [ ] **Step 1: the Vercel project.** In Vercel ("Arun's projects"): Add New → Project → import `arunkpatra/tutor_central` again
+- [x] **Step 1: the Vercel project.** In Vercel ("Arun's projects"): Add New → Project → import `arunkpatra/tutor_central` again
   (a second project from the same repository is allowed). Name `tutor-central-web`. Framework preset Next.js. Root Directory
   `web`. No environment variables yet. Deploy once (the import's first build; it may succeed or fail, either is fine: the repo's
   `web/vercel.json` turns git deploys off from here on). Then Settings → General: copy the Project ID.
   Check: `bun x vercel@59.19.0 project ls --scope aruns-projects-abe1e969` lists `tutor-central-web` (with the owner's token), or
   the owner reads the id back.
-- [ ] **Step 2: the repository variables.** `gh variable set VERCEL_WEB_PROJECT_ID --body "<id>"` and
+- [x] **Step 2: the repository variables.** `gh variable set VERCEL_WEB_PROJECT_ID --body "<id>"` and
   `gh variable set WEB_ORIGIN --body "https://tutorcentral.in"` (the session can run these once the owner gives the id; the
   existing `VERCEL_ORG_ID` and the `VERCEL_TOKEN` secret are reused). Check: `gh variable list` shows both.
 - [ ] **Step 3: the domain in Vercel.** Project → Settings → Domains → add `tutorcentral.in`; when asked, also add
