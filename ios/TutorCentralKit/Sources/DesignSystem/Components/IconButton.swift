@@ -34,6 +34,10 @@ public struct IconButton: View {
                 Text(text)
                     .typeStyle(Tokens.avatar)
                     .foregroundStyle(Tokens.accentText.color)
+                    // The circle keeps its size; the initials shrink into it at the largest sizes instead of "…".
+                    .lineLimit(1)
+                    .minimumScaleFactor(SingleLineTitle.smallest)
+                    .padding(.horizontal, Tokens.rowGapInner)
                     .frame(width: Self.size, height: Self.size)
                     .background(Tokens.buttonFill.color, in: .circle)
                     .overlay(Circle().strokeBorder(Tokens.lineStrong.color, lineWidth: Tokens.hairline))

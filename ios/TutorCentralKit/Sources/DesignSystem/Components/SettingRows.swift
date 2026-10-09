@@ -11,7 +11,7 @@ public struct RowValue: View {
     }
 
     public var body: some View {
-        Text(text).typeStyle(Tokens.subhead).foregroundStyle(tone.color).lineLimit(1).monospacedDigit()
+        Text(text).typeStyle(Tokens.subhead).foregroundStyle(tone.color).singleLineTitle().monospacedDigit()
     }
 }
 
