@@ -553,3 +553,40 @@ The texts:
   with email) keep the header pinned while the fields scroll (`FittedSheet`); a drag down puts the keyboard away
   everywhere (`scrollDismissesKeyboard(.interactively)` on the root); Add on Today's Tasks scrolls the field above the
   keyboard; New class… from the student form; Today's account picture at the top right; the opening fade.
+
+## Phase 8 parts (step 0.9, approved 2026-10-09): the website
+
+The site is built from the app's colour tokens and its own type scale (`information-architecture.md`, Phase 8 boards). Its parts:
+
+**Site header:** the brand (a 28 px tile in `ground` with the book in `accent`, the wordmark 17/700) and a `nav` of three links
+15/600 in `text2` (the current page in `text`), a `line` hairline under; the links drop under the brand at phone width.
+
+**Site footer:** a `line` hairline above; the brand at 24 px, the one-line promise in `text2`, the copyright in `text3`; the three
+links and the email (in `accentText`) on the right, under the brand at phone width.
+
+**Page title:** an eyebrow 15/600 in `accentText` naming the page, the title (44/50; 34/40 at phone width), a lead 19/29 in `text2`,
+at most 720 px wide.
+
+**Prose:** h2 28/34, h3 20/27 600, body 17/27 in `text2` on `ground`, links in `accentText` underlined (offset 3, thickness 1), at most
+680 px wide; sections 40 px apart.
+
+**List card (web):** `surface1`, `line` border, radius 20, `shadowRaised`; rows 20 × 22 with a `line` divider: a feature row has a
+44 px tile in `surface2` with the symbol in `accentText`, the title 18/24 600 and the line 16/24 `text2`; a question row the question
+18/24 600 over the answer 16/24 `text2`.
+
+**Plain row:** a title 18/24 600 over a line 16/24 `text2`, in two or three columns of the section (one at phone width).
+
+**Buttons:** the primary 52 high, radius 15, `accent` fill, `accentInk` 16/700, `shadowPrimary`; the secondary 52 high, `buttonFill`
+with a `lineStrong` border, 16/600, `shadowButton`; both carry a 20 px symbol on the left.
+
+**Hero:** two columns (text, then the phone) 72 px apart, stacked at phone width; `glowHero` as a 920 × 620 radial behind, from the
+top; the phone an iPhone shape (radius 48, a `surface1` and `lineStrong` rim, the Today board scaled to 0.78, 0.7 at phone width).
+
+**App Store badge (a stand-in):** 52 high, black with a #A6A6A6 rim, Apple's mark and "Download on the App Store"; the real page uses
+Apple's badge artwork from its marketing tools, never this drawing.
+
+**Keyboard (boards only):** a stand-in for the system keyboard, 336 high, `well` with keys in `buttonFill`; drawn only where a
+state is defined by the keyboard being up (P8-Event-Edit-Keyboard).
+
+The texts are on the boards' sources; `/privacy` and `/terms` are the owner's once he fills the `[OWNER: …]` placeholders and
+reviews the claims table in `information-architecture.md`.

@@ -590,3 +590,83 @@ What the boards settle (the parts are in `components.md`, "Phase 7 parts"):
 - **The launch screen** is the ground colour with the book in marigold, always dark (the app opens dark, D23;
   `UILaunchScreen` with a colour and an image). **The icon** is D29's, drawn in place; the other icons on the board are
   stand-ins.
+
+## Phase 8 boards (step 0.9, approved 2026-10-09)
+
+Row 11 of the canvas (y 16000 on; the title note at y 15700); sources `mockups/P8-*.dc.html`. The website, tutorcentral.in
+(D42), is drawn as pages, not phone frames: one HTML per page and appearance, laid out by container queries, rendered at
+1280 (desktop) and 390 (phone) as the built site will be; each frame is fluid (`expand: fill`) and as tall as the page at
+its width. Dark and light for every page (D13). The hero's phone is the seed's Today board (P4-Today-Soon), dark on both
+pages because the app opens dark (D23). Facts only the owner knows are `[OWNER: …]` on the pages until he fills them.
+
+| Board | Source |
+|---|---|
+| Home before the App Store link (the promise, the phone, what it does, how it works, what it does not do, who makes it) | `P8-Home`, `-Light`, `-Phone`, `-Phone-Light` |
+| Home once the app is on the App Store: Apple's badge in the hero (a stand-in; Apple's own badge artwork replaces it) | `P8-Home-Badge`, `-Light`, `-Phone`, `-Phone-Light` |
+| `/privacy`: who is responsible, what the app keeps, where, who can see it, children's details, nothing watches you, removing everything, your choices, changes | `P8-Privacy`, `-Light`, `-Phone`, `-Phone-Light` |
+| `/terms`: the short agreement in plain words | `P8-Terms`, `-Light`, `-Phone`, `-Phone-Light` |
+| `/support`: the email, Help's four questions and two more, the links | `P8-Support`, `-Light`, `-Phone`, `-Phone-Light` |
+| Not found: the line, Home and Support | `P8-NotFound`, `-Light`, `-Phone`, `-Phone-Light` |
+| U7: Edit event with the keyboard up, the note's well whole and focused, Delete event under the keyboard | `P8-Event-Edit-Keyboard` |
+| U24: Scan register's list and Suggested marks scrolled, the glass under the status bar (every pushed AI screen) | `P8-Scan-List-Scrolled`, `P8-Check-Marks-Scrolled` |
+
+The website has no launch states: its pages are proven by `bun web-shots` (each page at both widths and both appearances,
+`plan/phase-08-plan.md`). The polish boards' states:
+
+| State | Shows |
+|---|---|
+| `event-edit-keyboard` | Edit event with the note focused: the keyboard up, the well whole above it, Delete event below (reached by a scroll or when the keyboard goes) |
+| `scan-review-scrolled` | Scan register's list scrolled under the status bar with the glass |
+| `check-result-scrolled` | Suggested marks scrolled under the status bar with the glass |
+
+What the boards settle:
+
+- **The site's frame.** A header with the book mark and the wordmark on the left and three links (Support, Privacy, Terms)
+  on the right, which drop under the brand at phone width; a footer with the brand, "Made in India for tutors who run their
+  own centre.", the copyright line, the three links and the email. Content sits in one column of at most 1120 px with 24 px
+  gutters; text runs at most 680 px. Appearance follows the device's setting; there is no toggle on the site.
+- **Type.** The system stack (`-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, 'Segoe UI',
+  Roboto, 'Helvetica Neue', Arial, sans-serif`): SF Pro on Apple devices, the platform's own face elsewhere, no font file and
+  no third-party request. The web's scale: display 60/64 (40/44 at phone width), page title 44/50 (34/40), h2 28/34 (24/30),
+  h3 20/27, lead 21/32 (19/28), body 17/27, row title 18/24, row line 16/24, small 15/22, caption 13/18; weights 400, 600, 700;
+  tracking as the app's tokens. Colours are the app's tokens, dark and light.
+- **Home.** The hero: "More time to teach." over the lead, with the app's `glowHero` behind and the Today board in an iPhone
+  shape on the right (under the text at phone width). Before the app is on the App Store the call to action is a secondary
+  button "Email hello@tutorcentral.in" with "Coming to the App Store. Write to us and we will tell you when it is there."; after,
+  Apple's badge with "Free on the App Store. Needs an iPhone with iOS 26 or later." Then "What it does" as one list card of
+  seven rows (students and parents, attendance, fees by UPI, classes and the schedule, papers, checking and progress notes, the
+  paper register), "Made for how a tutor works" (six short entries in three columns), "What it does not do" (no ads or tracking,
+  records in India, nothing sent on its own, no lock-in, a link to the privacy page), "Who makes it".
+- **The legal pages** read in plain words (D41 holds on the site: no "server", "sync", "cache", "API"); every sentence states
+  something the app does today, from the code and the decisions (the table below). `/privacy` and `/terms` never move (the app
+  links them since Phase 2).
+- **Support** is Help's content on the web: the primary Email button, the six questions (Help's four word for word, plus which
+  phones and what it costs), the two links.
+- **Not found** is a page (Vercel's `404.html` from the static export), never a redirect.
+- **U7.** With the keyboard up, Edit event's fields keep their size; the note's well is whole and focused; Delete event sits under
+  the keyboard, reached by scrolling or when the keyboard goes (`scrollDismissesKeyboard(.interactively)` is on the root). Nothing
+  rides on top of the keyboard.
+- **U24.** The pushed AI screens (Scan register's list, Suggested marks, the pages, the result) draw `statusBarGlass()` once they
+  scroll, as the roots and Help do.
+
+Where each claim on `/privacy` and `/terms` comes from (the build keeps them true; a change to the app that breaks one changes
+the page in the same phase):
+
+| Claim | Source |
+|---|---|
+| Name and email from Apple, Google or the email code; a password stored scrambled; whether one is set | Supabase Auth (bcrypt); `profiles.has_password` (0001) |
+| The centre's name, WhatsApp number, UPI id, payment link, send receipts, the consent day | `centres` columns (0001, 0007 `ai_consent_at`) |
+| Students: name, class, fee, parent's name and phone, date of birth, gender, notes; attendance; fees with status, paid date and method; classes, events, tasks | `students`, `attendance_*`, `fee_invoices`, `classes`, `calendar_events`, `tasks` (0001) |
+| A message log of student, kind and time, never the text | `message_log` (0001, 0005): `student_id`, `kind`, `channel`, `opened_at`, `about_date` |
+| AI inputs and answers kept in history; photos not stored, only page count and size | `ai_generations.input` holds counts and bytes, never the image (`api/CLAUDE.md`, Phase 6) |
+| Copies on the iPhone behind the lock, removed on sign-out and deletion | `CachedRead` with file protection, `Wipe.everything` (D39, D40) |
+| Database and sign-in: Supabase, Mumbai; the AI part: Vercel, Mumbai; codes by Resend | `supabase/CLAUDE.md` (ap-south-1), D21 (`bom1`), D30 |
+| Claude by Anthropic reads what is sent, outside India; not used to train; kept per Anthropic's terms | D35; Anthropic's commercial terms (`[OWNER: confirm]`) |
+| One centre never reads another's | Row-level security on every table (rule 6) |
+| No ads, analytics or tracking; no cookies on the site | D18; the site is static with no third-party script |
+| Crash reports only through Apple's sharing setting | D18 (no crash SDK); Apple's own analytics sharing |
+| Delete account removes everything at once; Apple is told to forget | `delete_account()` and the cascades (D37); the revoke route (D38) |
+| Reports gives a month's fees as a file | Phase 5's CSV export |
+| Nothing to pay today | D4 |
+| Sign in with Apple, Google or an email code; a password optional | Phase 2, Phase 7 |
+| iPhone with iOS 26 or later; no iPad, Android or web | D1 |

@@ -42,9 +42,10 @@ approved, except step 2, which starts with step 1's choice.
   states (list from cache, write refused, queued), about, help, launch screen and app icon. Plus 0.8b (approved
   2026-10-09, 12 boards at y 14600, from the owner's build-10 findings): New class from the student form, Today's
   account picture at the top right, the opening fade.
-- [ ] **0.9 Phase 8 boards, the website** (tutorcentral.in, Next.js on Vercel, D42). Home, `/privacy`, `/terms`,
-  `/support`, a not-found page; desktop and phone widths, dark and light (D13); plus a board for each polish-slice item
-  Phase 8 takes where what is seen changes (U7, U16, U24).
+- [x] **0.9 Phase 8 boards, the website** (approved 2026-10-09, 27 boards in row 11; tutorcentral.in, Next.js on Vercel, D42). Home
+  (before and after the App Store link), `/privacy`, `/terms`, `/support`, not found; 1280 and 390, dark and light (D13), one source per
+  page and appearance; plus U7 and U24 (U16 needs no board: P6-Check-Saved and P6-Scan-Review-RowRemoved already draw the toast above
+  the footer).
 
 Steps 0.4 to 0.8 may be drawn just ahead of their build phase rather than all before Phase 2, so the first
 screens are built sooner (D6's spirit); `STATE.md` says which are approved.
