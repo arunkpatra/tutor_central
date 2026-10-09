@@ -8,7 +8,10 @@ export function SiteFooter() {
         <div className="ftrBrand">
           <Brand small />
           <p className="small">{PROMISE}</p>
-          <p className="caption">© 2026 {MAKER}</p>
+          {/* The year the export was built. */}
+          <p className="caption">
+            © {new Date().getFullYear()} {MAKER}
+          </p>
         </div>
         <nav className="nav ftrNav" aria-label="Footer">
           <a href={ROUTES.support}>Support</a>

@@ -80,7 +80,10 @@ extension RootView {
         )
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
         made.onAdded = Self.addedHandler(for: made, shell: shell, toasts: toasts)
-        shell.scan = ScanVisit(number: shell.tabs.scanVisits, store: made)
+        // A rebuild while the route leaves (its pop) must not leave a spare store on the shell.
+        if shell.tabs.scanOnStack {
+            shell.scan = ScanVisit(number: shell.tabs.scanVisits, store: made)
+        }
         return made
     }
 
@@ -171,6 +174,19 @@ extension RootView {
                 guard let message else { return }
                 toasts.show(message)
                 store.message = nil
+            }
+        }
+    }
+}
+
+/// A scan visit ends when its route leaves the stack, however it left: Back, Add, or a tab popped to its root.
+struct EndsScanVisits: ViewModifier {
+    let shell: ShellState
+
+    func body(content: Content) -> some View {
+        content.onChange(of: shell.tabs.scanOnStack) { _, onStack in
+            if !onStack {
+                shell.endScan()
             }
         }
     }

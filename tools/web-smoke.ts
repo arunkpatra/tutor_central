@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /** bun tools/web-smoke.ts <origin> --commit <sha>: the deployed site serves the four pages from that commit, an unknown path
- *  is the not-found page with a 404, http and www redirect to the apex, a trailing slash lands (D45). Retries while the alias
+ *  and a capitalised one are the not-found page with a 404, http and www redirect to the apex, a trailing slash lands (D45). Retries while the alias
  *  moves. Exit 1 with the problems in words. */
 const PAGES = ["/", "/privacy", "/terms", "/support"];
 const NOT_FOUND_WORDS = "There is nothing at this address.";
@@ -23,9 +23,12 @@ export async function once(origin: string, commit: string, fetchLike: typeof fet
       const served = commitOf(await r.text());
       if (served !== commit) problems.push(`${path} serves ${served ?? "no commit"}, not ${commit}`);
     }
-    const unknown = await get(`${origin}/students/abc`);
-    if (unknown.status !== 404 || !(await unknown.text()).includes(NOT_FOUND_WORDS))
-      problems.push("/students/abc is not the not-found page");
+    // A deep unknown path and a capital letter (paths are case-sensitive) are both the not-found page with a 404.
+    for (const path of ["/students/abc", "/Privacy"]) {
+      const unknown = await get(origin + path);
+      if (unknown.status !== 404 || !(await unknown.text()).includes(NOT_FOUND_WORDS))
+        problems.push(`${path} is not the not-found page`);
+    }
     const slash = await get(`${origin}/privacy/`);
     if (!(slash.status === 200 || redirectsTo(slash, (l) => l.endsWith("/privacy"))))
       problems.push("/privacy/ does not reach /privacy");

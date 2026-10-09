@@ -19,5 +19,5 @@ test("the footer carries the promise, the links, the email and the copyright", (
   expect(html).toContain("Made in India for tutors who run their own centre.");
   expect(html).toContain(`href="mailto:${EMAIL}"`);
   for (const href of ["/support", "/privacy", "/terms"]) expect(html).toContain(`href="${href}"`);
-  expect(html).toContain("© 2026");
+  expect(html).toContain(`© ${new Date().getFullYear()} GoodGround LLP`);
 });

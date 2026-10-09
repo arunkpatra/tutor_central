@@ -16,8 +16,7 @@ struct TokenDocumentTests {
     }()
 
     /// Every "| `token` | a | b | ... |" row under a "## Heading", as cells without the back-ticks; the first cell is
-    /// the
-    /// token's name alone.
+    /// the token's name alone.
     static func rows(under heading: String) -> [[String]] {
         guard let start = document.range(of: "\n## \(heading)") else { return [] }
         let rest = document[start.upperBound...]

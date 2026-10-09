@@ -2,8 +2,7 @@ import Foundation
 
 /// Sign-out and deletion wipe the phone (D40): every file of the centre under Application Support/TutorCentral (the
 /// centre's copy, the register, the lists' caches, the queue, the QR image) and this iPhone's settings (haptics,
-/// appearance, reminders).
-/// Pending notifications are the notification client's; the caller removes them.
+/// appearance, reminders). Pending notifications are the notification client's; the caller removes them.
 public enum Wipe {
     public static let defaultsKeys = ["haptics", "appearance", "reminders", "reminders.asked"]
 

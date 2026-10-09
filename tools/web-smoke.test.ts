@@ -39,6 +39,8 @@ test("every page must be there with the commit; an unknown path is 404 with the 
   expect(await once("https://tutorcentral.in", "abc", site(blank404))).toEqual([
     "/students/abc is not the not-found page",
   ]);
+  const capital = { ...GOOD, "https://tutorcentral.in/Privacy": { status: 200, body: html("Privacy · Tutor Central") } };
+  expect(await once("https://tutorcentral.in", "abc", site(capital))).toEqual(["/Privacy is not the not-found page"]);
   const soft404 = {
     ...GOOD,
     "https://tutorcentral.in/students/abc": { status: 200, body: html("There is nothing at this address.") },

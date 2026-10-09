@@ -53,6 +53,11 @@ export function shotName(
   return `${page}-${width}-${appearance}.png`;
 }
 
+/** A page laid out wider than its viewport scrolls sideways on a phone; the picture clips to the width and hides it. */
+export function sideways(path: string, width: number, scrollWidth: number): string | null {
+  return scrollWidth > width ? `${path} at ${width} lays out ${scrollWidth} px wide: it scrolls sideways` : null;
+}
+
 /** The export on a local port, the way Vercel would serve it. `stop()` closes it. */
 export function serveExport(): { origin: string; stop: () => void } {
   const server = Bun.serve({
@@ -91,7 +96,10 @@ export async function cdp(chromeArgs: string[]) {
     if (done) throw new Error(`Chrome did not start: ${text}`);
     text += new TextDecoder().decode(value);
   }
-  reader.releaseLock();
+  // Keep reading: a chatty Chrome would otherwise fill the pipe and stall.
+  void (async () => {
+    while (!(await reader.read()).done) {}
+  })();
   const browserWs = text.match(/DevTools listening on (ws:\/\/\S+)/)?.[1];
   if (!browserWs) throw new Error("no DevTools address");
   const port = new URL(browserWs).port;
@@ -149,6 +157,7 @@ if (import.meta.main) {
   mkdirSync(args.out, { recursive: true });
   const site = serveExport();
   const chrome = await cdp([]);
+  const problems: string[] = [];
   try {
     for (const path of args.pages) {
       for (const width of args.widths) {
@@ -161,6 +170,12 @@ if (import.meta.main) {
           const loaded = chrome.once("Page.loadEventFired");
           await chrome.send("Page.navigate", { url: site.origin + path });
           await loaded;
+          const scroll = await chrome.send<{ result: { value: number } }>("Runtime.evaluate", {
+            expression: "document.documentElement.scrollWidth",
+            returnByValue: true,
+          });
+          const wide = sideways(path, width, scroll.result.value);
+          if (wide) problems.push(wide);
           const layout = await chrome.send<{ cssContentSize: { height: number } }>("Page.getLayoutMetrics");
           const height = Math.ceil(layout.cssContentSize.height);
           await chrome.send("Emulation.setDeviceMetricsOverride", { ...metrics, height });
@@ -178,5 +193,9 @@ if (import.meta.main) {
   } finally {
     chrome.close();
     site.stop();
+  }
+  if (problems.length > 0) {
+    console.error(problems.join("\n"));
+    process.exit(1);
   }
 }
