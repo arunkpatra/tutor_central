@@ -2138,21 +2138,21 @@ One at a time; each checked before the next. The words below are what to say to 
 - [x] **Step 2: the repository variables.** `gh variable set VERCEL_WEB_PROJECT_ID --body "<id>"` and
   `gh variable set WEB_ORIGIN --body "https://tutorcentral.in"` (the session can run these once the owner gives the id; the
   existing `VERCEL_ORG_ID` and the `VERCEL_TOKEN` secret are reused). Check: `gh variable list` shows both.
-- [ ] **Step 3: the domain in Vercel.** Project → Settings → Domains → add `tutorcentral.in`; when asked, also add
+- [x] **Step 3: the domain in Vercel.** Project → Settings → Domains → add `tutorcentral.in`; when asked, also add
   `www.tutorcentral.in` and choose "Redirect to tutorcentral.in" (308). Vercel then shows the records it wants: an `A` record
   for `@` (76.76.21.21 as of this writing; use what Vercel shows) and a `CNAME` for `www` (`cname.vercel-dns.com`). Leave the page
   open.
-- [ ] **Step 4: the records at GoDaddy.** My Products → `tutorcentral.in` → DNS → Add: `A`, name `@`, value as Vercel shows, TTL
+- [x] **Step 4: the records at GoDaddy.** My Products → `tutorcentral.in` → DNS → Add: `A`, name `@`, value as Vercel shows, TTL
   600; `CNAME`, name `www`, value as Vercel shows. Change nothing else: Resend's records (`resend._domainkey` TXT/CNAME, the
   `send` MX and TXT, `_dmarc` TXT) stay exactly as they are. If GoDaddy already has an `A` for `@` pointing at a parking page
   (`Parked`), replace it rather than adding a second. Check from the session: `dig +short tutorcentral.in A` and
   `dig +short www.tutorcentral.in CNAME` answer the values (minutes to an hour); Vercel's Domains page says "Valid
   Configuration" and issues the certificate itself (HTTPS needs nothing more). Check that mail still works:
   `dig +short TXT send.tutorcentral.in` still shows Resend's SPF.
-- [ ] **Step 5: the first deploy.** `gh workflow run deploy-web` from `main` (PR 3 merged). Watch it: `gh run watch`. The
+- [x] **Step 5: the first deploy.** `gh workflow run deploy-web` from `main` (PR 3 merged). Watch it: `gh run watch`. The
   summary shows the deployment and the smoke's line. Check in a browser: `https://tutorcentral.in/privacy` in dark and in light
   (the system setting), and on the owner's phone.
-- [ ] **Step 6: App Store Connect.** My Apps → Tutor Central → App Information → Privacy Policy URL:
+- [x] **Step 6: App Store Connect.** My Apps → Tutor Central → App Information → Privacy Policy URL:
   `https://tutorcentral.in/privacy`; Save. Then TestFlight → Test Information → Privacy Policy URL: the same; Feedback Email
   `hello@tutorcentral.in`; Save. Tick the two lines in `docs/release.md` with the date (a documents commit) and note in
   `plan/phase-09-user-testing.md` that the external group can be made. (The App Privacy questionnaire, "data types collected",
@@ -2162,7 +2162,7 @@ One at a time; each checked before the next. The words below are what to say to 
 
 ### Task 8: the live site proven (after Owner step 5)
 
-- [ ] **Step 1: the smoke, by hand as well**
+- [x] **Step 1: the smoke, by hand as well**
 
 ```bash
 bun tools/web-smoke.ts https://tutorcentral.in --commit "$(git rev-parse origin/main)"
@@ -2174,7 +2174,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://tutorcentral.in/students/abc
 
 Expected: the smoke's line; `200`, `content-type: text/html`; `location: https://tutorcentral.in/`; the same; `404`.
 
-- [ ] **Step 2: the app's links open the live pages, in the simulator**
+- [x] **Step 2: the app's links open the live pages, in the simulator**
 
 By `docs/runbooks/simulator.md` sections 1 to 5 (the local stack, a Debug build, a cold boot, sign in as the seed's tutor):
 

@@ -79,9 +79,11 @@ The tester writes results in the log at the end.
 | D5 | Sign in with Apple on a test Apple ID. Settings → Account → Delete account permanently → type the centre's name → Delete my account → confirm with Apple. Then on the phone: Settings → your name → Sign-In & Security → Sign in with Apple. | The Apple sheet appears before deletion; the sign-in landing says the account was deleted; Tutor Central is no longer in the phone's Sign in with Apple list; signing in with Apple again starts at onboarding with an empty centre. |
 | D6 | Account → Password → set one. Sign out. Continue with email → Use my password instead → the password. | Signs in without a code. |
 | D7 | Install the build from the external TestFlight group's invitation email (not the internal group). | It installs and signs in; the version on Settings reads 1.0 with the build number from the email. |
+| D8 | Settings → Help → Email hello@tutorcentral.in. Then Settings → About → Privacy policy, and on the sign-in screen the "terms" link. | Mail opens a new message to hello@tutorcentral.in with the app's version in it (do not send it unless you mean to). The privacy page and the terms open in Safari at tutorcentral.in, in the phone's dark or light setting. |
 
 The simulator proved the reminder fires on time and that its link opens Attendance for the class (session 15, run 6); the
-tap on the lock screen itself is D2's. The opening fade (P7-Launch-Fade) is the owner's to judge on build 11.
+tap on the lock screen itself is D2's. The simulator has no Mail app, so Help's email (D8) was never seen there; the links to
+the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner's to judge on build 11.
 
 ## Log
 

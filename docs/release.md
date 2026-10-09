@@ -21,8 +21,8 @@ link, a screenshot, a line in a log).
 
 ## App Store Connect
 
-- [ ] The privacy policy URL is set: `https://tutorcentral.in/privacy` (live in Phase 8).
-- [ ] The test information is filled in, with the feedback email `hello@tutorcentral.in`.
+- [x] The privacy policy URL is set: `https://tutorcentral.in/privacy` (live in Phase 8): App Information and TestFlight's Test Information, 2026-10-09.
+- [x] The test information is filled in, with the feedback email `hello@tutorcentral.in` (2026-10-09).
 - [ ] The external group is made and the build is added to it.
 - [ ] Beta App Review is submitted and approved.
 

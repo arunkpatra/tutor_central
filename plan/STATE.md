@@ -3,7 +3,10 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-09, session 16 (the Phase 8 boards and plan, on Fable 5.1). **Session 16:** Phase 0 step 0.9 done: the
+**Last updated:** 2026-10-09, session 17 (the Phase 8 build, on Opus 5.5), in progress. **Session 17:** PRs #76 to #78: tutorcentral.in
+live (Home, `/privacy`, `/terms`, `/support`, not found) by `deploy-web` run 37929980186, the privacy URL in App Store Connect and
+TestFlight's Test Information: **Phase 9 can start**. D50 (no internal names on the site). PRs 4 to 6 (U7, U16, U24, Phase 6's
+minors) and build 14 next. **Session 16:** Phase 0 step 0.9 done: the
 website's 27 boards in row 11 of the canvas (the five pages at 1280 and 390, dark and light, as fluid frames; U7 and U24),
 approved and mirrored (`1af47d1`); `plan/phase-08-plan.md` approved (14 tasks, 6 PRs, 6 owner steps); decisions D44 to D49.
 **Session 15:** Phase 7 done in PRs #63 to #75; build 1.0.0 (13) on TestFlight; Phases 8 and 9 set (D42, D43).
@@ -22,17 +25,20 @@ live and the privacy URL into App Store Connect (what Phase 9 waits for); PRs 4 
 | 5 Fees, UPI settings, reminders, receipts, reports | Done, PRs #45 to #49, #51, #52 | "As built" in `phase-05-fees-and-reports.md` |
 | 6 AI tools | Done, PRs #53 to #60, #62; hand run #61 | "As built" in `phase-06-ai-tools.md`; device tests in `docs/testing/device-tests.md` |
 | 7 Settings, account, notifications, offline, hardening, release candidate | Done, PRs #63 to #73 | "As built" in `phase-07-settings-and-hardening.md`; the accessibility record in `docs/design/accessibility-pass.md`; the release checklist in `docs/release.md` |
-| 8 Website | Boards and plan approved 2026-10-09; the build next (resume 016) | `phase-08-plan.md`: `web/` in Next.js (static export, D44) on a second Vercel project by `deploy-web.yml` (D45), pictures by `web-shots` (D46), the `web` check step (D47); U7, U16, U24 and Phase 6's minors 1, 6, 7 as PRs 4 to 6 (D48, D49) |
+| 8 Website | Site live 2026-10-09 (PRs #76 to #78); the polish slice (PRs 4 to 6) and build 14 in progress | `phase-08-plan.md`: `web/` in Next.js (static export, D44) on a second Vercel project by `deploy-web.yml` (D45), pictures by `web-shots` (D46), the `web` check step (D47); U7, U16, U24 and Phase 6's minors 1, 6, 7 as PRs 4 to 6 (D48, D49) |
 | 9 User testing | Not started | `phase-09-user-testing.md` (D43): tutors on TestFlight's external group, the tester's device tests, triage, before the App Store |
 
 ## In flight
 
-Nothing open. The Phase 8 build has not started: no `web/` yet, no Vercel project `tutor-central-web`, no DNS records for the
-web root (Resend's records stand). The legal pages carry `[OWNER: …]` placeholders until the owner answers Owner step 0 of the plan. TestFlight 1.0.0 (13) from `d7ee9f5` (run 37913258080) is for the owner's phone. Merged `phase-7/*` branches
+Phase 8's PRs 4 to 6 (Tasks 9 to 13) and Task 14 (build 14, the close); the ledger is `plan/sessions/017/ledger.md`. TestFlight 1.0.0 (13) from `d7ee9f5` (run 37913258080) is for the owner's phone. Merged `phase-7/*` branches
 remain on the remote; delete them when convenient. The tester's device tests (D1 to D7) wait for Phase 9's external group.
 
 ## Production
 
+- **Website:** tutorcentral.in on Vercel `tutor-central-web` (id in `VERCEL_WEB_PROJECT_ID`, root `web`, git deploys off),
+  deployed only by `deploy-web.yml` (D45), commit `f3f734d` (run 37929980186), smoke green. GoDaddy DNS: `A @ 216.198.79.1`,
+  `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and `api.tutorcentral.in` (a CNAME to Vercel,
+  attached to `tutor-central-api`, not yet `API_ORIGIN`) untouched. `APP_STORE_URL` unset (Home shows the email call to action).
 - **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0008 (0008 `delete_account()` by deploy run
   37897295893 after PR #70) (0004
   `save_attendance` by deploy run 37758056602 after PR #37; 0005 `message_log.about_date` by run 37773505389 after PR
@@ -64,7 +70,7 @@ remain on the remote; delete them when convenient. The tester's device tests (D1
   two tests the plan named. Earlier phases' minors: `plan/sessions/004`, `006`, `009`, `011`, `013` records (Phase 6's 1, 6
   and 7 are Phase 8's).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google): Google's own G and colours, the three buttons pills; in build 13.
-- **TestFlight's external group and Beta App Review** wait for Phase 8's `tutorcentral.in/privacy`; Phase 9 runs them (D43).
+- **TestFlight's external group and Beta App Review:** the privacy URL and test information are set (2026-10-09); Phase 9 runs them (D43).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
 - **UI polish:** `plan/ui-polish.md`: U5, U7, U8, U10, U11, U13 to U30 open; U1 to U4, U6, U9, U12 done. U7, U16 and U24
   are Phase 8's (the owner, 2026-10-09): boards P8-Event-Edit-Keyboard, P8-Scan-List-Scrolled, P8-Check-Marks-Scrolled; U16 needs

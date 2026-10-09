@@ -4,6 +4,10 @@
 (build 1.0.0 on TestFlight); Phase 8's `/privacy` page live (TestFlight's external group and Beta App Review need its
 URL). **Must end before:** the first App Store submission.
 
+**Ready to start (2026-10-09, session 17):** `https://tutorcentral.in/privacy` is live (deploy-web run 37929980186) and is the
+Privacy Policy URL in App Store Connect's App Information and in TestFlight's Test Information, with the feedback email
+`hello@tutorcentral.in`. The external group can be made.
+
 ## Goal
 
 Tutors other than the owner run their centres on the app for a stretch of real weeks, on their own iPhones and networks,
