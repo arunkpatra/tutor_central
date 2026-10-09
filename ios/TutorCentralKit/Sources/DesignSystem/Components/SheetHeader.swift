@@ -7,6 +7,8 @@ public struct SheetHeader: View {
     let title: String
     let cancel: (label: String, run: () -> Void)
     let save: Save?
+    @State private var cancelWidth: CGFloat = 0
+    @State private var saveWidth: CGFloat = 0
     static var grabber: CGSize {
         CGSize(width: 36, height: 5)
     }
@@ -48,11 +50,20 @@ public struct SheetHeader: View {
                 }
             } else {
                 ZStack {
+                    // Centred, clear of both buttons, truncated when still too long (as Apple's bars do).
                     titleText
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                        .padding(.horizontal, Self.titleInset(cancelWidth: cancelWidth, saveWidth: saveWidth))
                     buttons
                 }
             }
         }
+    }
+
+    /// The title's room on each side: the wider button and a gap, so a centred title never runs under either.
+    nonisolated static func titleInset(cancelWidth: CGFloat, saveWidth: CGFloat) -> CGFloat {
+        max(cancelWidth, saveWidth) + Tokens.inline
     }
 
     private var titleText: some View {
@@ -63,10 +74,12 @@ public struct SheetHeader: View {
     private var buttons: some View {
         HStack {
             Button(cancel.label, action: cancel.run).buttonStyle(.quiet)
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { cancelWidth = $0 }
             Spacer()
             if let save {
                 Button(save.label, action: save.run).buttonStyle(.quiet(emphasised: true))
                     .disabled(!save.enabled)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { saveWidth = $0 }
             }
         }
     }
