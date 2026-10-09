@@ -3,26 +3,27 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-09, session 13 (the Phase 6 build, on Opus 5.5). **Session 13:** Phase 6 done: PRs #53 to
-#59 as the plan's six (#55 the SDK's named import for Vercel), #60 the hand run's two focus fixes, #62 the final
-review's six Important fixes; the D32 hand run on issue #61, against the fake API and against Claude; D35 (the SDK) and
-D36 (Scan register in Students); migrations 0006 and 0007 in production; build 0.1.0 (9) on TestFlight, the owner's
-camera scan on the iPhone: "Works". The remaining device checks are a tester's: `docs/testing/device-tests.md`.
-**Next:** Phase 0 step 0.8 (the Phase 7 boards) and the Phase 7 plan, on Fable.
+**Last updated:** 2026-10-09, session 14 (the Phase 7 boards and the Phase 7 plan, on Fable 5.1). **Session 14:** Phase 0
+step 0.8 done: 41 boards in row 10 of the canvas, approved and mirrored (`docs/design/mockups/P7-*`); `plan/phase-07-plan.md`
+written and approved (23 tasks, 8 pull requests; D37 to D40 to be numbered in the pull requests that act on them); the
+owner chose option A for deletion (`delete_account()` as a `security definer`, proven locally) plus Apple token revocation
+through the API; the polish slice and Phase 6's minors 1, 6 and 7 moved to Phase 8; `docs/testing/device-tests.md` gained
+D1 to D7; `resume/014-phase-7-build.md` written. No code.
+**Next:** the Phase 7 build on Opus 5.5 from `resume/014-phase-7-build.md`.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | In progress: 0.1 to 0.7 approved, plus the app icon (D29); 0.8 (Phase 7 boards) next | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 the Phase 4 boards, row 8 the Phase 5 boards, row 9 the Phase 6 boards |
+| 0 Design | Boards complete: 0.1 to 0.8 approved (0.8 on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7 |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
 | 4 Attendance, schedule, tasks, Today live | Done, PRs #36 to #42, review fixes #44 | "As built" in `phase-04-attendance-schedule-today.md`; closed U1 to U4 |
 | 5 Fees, UPI settings, reminders, receipts, reports | Done, PRs #45 to #49, #51, #52 | "As built" in `phase-05-fees-and-reports.md` |
 | 6 AI tools | Done, PRs #53 to #60, #62; hand run #61 | "As built" in `phase-06-ai-tools.md`; device tests in `docs/testing/device-tests.md` |
-| 7 Settings, account, hardening, release candidate | Not started | Scoped in `phase-07-settings-and-hardening.md`; boards are Phase 0 step 0.8 |
-| 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them) |
+| 7 Settings, account, notifications, offline, hardening, release candidate | Planned, not built | `phase-07-plan.md` approved 2026-10-09; the boards in row 10; the build is resume 014 |
+| 8 Website | Not started | `phase-08-website.md`: tutorcentral.in; `/privacy` and `/terms` live before the first App Store submission (the app links them; TestFlight's external group needs the privacy URL too); plus the polish slice and Phase 6's minors 1, 6, 7 (the owner, 2026-10-09) |
 
 ## In flight
 
@@ -53,17 +54,20 @@ a test centre (production AI, the daily limits apply) and writes the log there.
 
 ## Open items
 
-- **The owner's call (from Phase 3):** the register cache stays on disk after sign-out, as the Phase 3 plan settled; the
-  final review would remove it on sign-out and write it with complete file protection, for a shared phone.
+- **Settled by the Phase 7 plan (D40, in PR 4 of the build):** the register cache and every other cache go on sign-out and
+  after deletion; caches are written with complete file protection. (The Phase 3 open call, closed.)
 - **Review minors:** Phase 2's in `plan/sessions/004/record.md`, Phase 3's in `plan/sessions/006/record.md`, Phase 4's
   eight in `plan/sessions/009/record.md`, Phase 5's thirteen in `plan/sessions/011/record.md`, Phase 6's eleven in
-  `plan/sessions/013/record.md` (among them: an 11-digit phone with a trunk 0 reads as no number; homework and
-  worksheet schemes carry no marks; two concurrent calls at 39 can pass the limit; retain cycles in two AppShell
-  closures).
-- **Google's mark** on sign-in is a hand-drawn stand-in; Google's branding rules for the official asset are the
-  owner's call before App Store review.
+  `plan/sessions/013/record.md` (its 1, 6 and 7, the retain cycles, the trunk-0 phone and the grapheme limits, are
+  Phase 8's: the owner, 2026-10-09; the rest stay the owner's).
+- **Google's mark** on sign-in is a hand-drawn stand-in; the Phase 7 plan (Task 18, step 8) offers Google's official
+  sign-in logo asset; the owner has not yet said to take it.
+- **Phase 8 before Beta App Review:** TestFlight's external group needs the privacy policy URL; the Phase 7 plan's Task 22
+  step 5 waits for `tutorcentral.in/privacy`. Everything up to the internal build proceeds.
+- **The Sign in with Apple key** (the owner's step 1 of the Phase 7 build): a `.p8` from the developer portal into
+  Vercel (`APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY`) and `api/.env.local`; the deploy after PR 2 needs it.
 - **UI polish:** `plan/ui-polish.md`: U5 to U11 and U13 to U24 open (U16 to U24 from Phase 6); U1 to U4 done in #42,
-  U12 in #47. U9 was offered with the Phase 5 plan and not taken.
+  U12 in #47. U6, U7, U9, U16 and U24 are Phase 8's (the owner, 2026-10-09); Phase 7 takes none.
 - **Phase 5's deferred minors** (the final review's, `plan/sessions/011/record.md`): a failed read's toasts and the ₹0
   ledger under the error line, Reports' Share while loading, "The's fee" fallback copy, one retry slot for reads and
   writes, a double haptic, the UPI field's double write and autocorrect, archived students in Reports' attendance, a

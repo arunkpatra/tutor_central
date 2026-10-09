@@ -18,15 +18,15 @@ Always:
 
 | # | Phase | File | Status |
 |---|---|---|---|
-| 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | In progress: steps 0.1 to 0.7 approved, 0.8 next (how: `phase-00-plan.md`) |
+| 0 | Design: direction, boards for every screen, tokens, components | `phase-00-design.md` | Boards complete: steps 0.1 to 0.8 approved (0.8 on 2026-10-09); the Kit and the mirror are kept current as phases build (how: `phase-00-plan.md`) |
 | 1 | Foundation: monorepo, project, modules, Supabase, API skeleton, CI, `check` | `phase-01-foundation.md` | Done (session 2, PRs #1 to #8); the API in production |
 | 2 | Design system, shell, sign-in, onboarding, first TestFlight | `phase-02-shell-and-sign-in.md` | Done (session 4, PRs #9 to #21); build 0.1.0 (3) on the owner's phone |
 | 3 | Students and classes | `phase-03-students-and-classes.md` | Done (session 6, PRs #24 to #31, review fixes #33); migration 0003 in production; build 0.1.0 (6) on TestFlight |
 | 4 | Attendance, schedule, tasks, Today live | `phase-04-attendance-schedule-today.md` | Done (session 9, PRs #36 to #42, review fixes #44); migrations 0004 and 0005 in production; build 0.1.0 (7) on TestFlight |
 | 5 | Fees, UPI settings, reminders, receipts, reports | `phase-05-fees-and-reports.md` | Done (session 11, PRs #45 to #49, #51, #52; hand run #50); no migration; build 0.1.0 (8) on TestFlight |
 | 6 | AI tools through the API | `phase-06-ai-tools.md` | Done (session 13, PRs #53 to #60, #62; hand run #61); migrations 0006 and 0007 in production; build 0.1.0 (9) on TestFlight |
-| 7 | Settings, account, notifications, offline hardening, release candidate | `phase-07-settings-and-hardening.md` | Not started |
-| 8 | The product website, tutorcentral.in: home, `/privacy`, `/terms`, support; live before the first App Store submission | `phase-08-website.md` | Not started |
+| 7 | Settings, account, notifications, offline hardening, release candidate | `phase-07-settings-and-hardening.md` | Planned (session 14, 2026-10-09): boards in row 10, `phase-07-plan.md` approved; the build next on Opus 5.5 |
+| 8 | The product website, tutorcentral.in: home, `/privacy`, `/terms`, support; live before the first App Store submission; the polish slice and Phase 6's minors 1, 6, 7 | `phase-08-website.md` | Not started |
 
 A phase starts with its plan file (`phase-NN-plan.md`: tasks, order, tests first, PR boundaries), written and
 shown before any work. A phase ends with "As built" in its scope file: what exists, what deviated and why.

@@ -20,7 +20,12 @@ App Store review somewhere to reach the owner.
 3. **Hosting and DNS.** The owner's decision, asked one question at a time when the phase starts: where it is
    hosted (Vercel is already in use for the API), how it is built, and the DNS records for `tutorcentral.in` and
    `www`. HTTPS on both.
-4. **Process.** Same as every phase: a plan file first, a pull request per change with pictures of each page
+4. **The polish slice and the minors** (the owner, 2026-10-09, on approving the Phase 7 plan): `plan/ui-polish.md`'s U6, U7,
+   U9, U16 and U24, and Phase 6's deferred minors 1 (the two retain cycles in AppShell's closures), 6 (an 11-digit phone
+   with a trunk 0) and 7 (the notes and draft limits count graphemes where Postgres counts code points), from
+   `plan/sessions/013/record.md`. Each its own pull request with a board first where what is seen changes, by
+   `plan/ui-polish.md`'s "How it works".
+5. **Process.** Same as every phase: a plan file first, a pull request per change with pictures of each page
    (D7), deployed by a workflow started by hand, never from a local machine (as D21 does for the API).
 
 ## Acceptance

@@ -1,6 +1,6 @@
 # Phase 7: Settings, account, notifications, offline hardening, release candidate
 
-**Status:** Not started. **Depends on:** Phases 2 to 6; Phase 0's Phase 7 boards approved.
+**Status:** Planned: `phase-07-plan.md` approved 2026-10-09 (session 14); the build is next (resume 014). **Depends on:** Phases 2 to 6; Phase 0's Phase 7 boards (approved 2026-10-09, row 10).
 
 ## Goal
 
