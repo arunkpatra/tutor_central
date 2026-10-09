@@ -27,7 +27,8 @@ extension RootView {
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
         case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .more
-        case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .tasks,
+        case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm,
+             .tasks,
              .tasksEmpty:
             .more
         case .todayAI: .today
@@ -139,7 +140,7 @@ extension RootView {
         case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
         case .history, .historyByStudent, .historyEmpty: [.history]
         case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
-        case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm: [.schedule]
+        case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm: [.schedule]
         case .tasks, .tasksEmpty: [.tasks]
         default: studentFeesRoutes(for: state)
         }
@@ -218,6 +219,7 @@ extension RootView {
         case .scheduleDay: .saturday
         case .eventNew: .newEvent
         case .eventEdit: .editEvent
+        case .eventEditKeyboard: .editEventKeyboard
         case .eventDeleteConfirm: .deleteConfirm
         default: nil
         }

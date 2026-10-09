@@ -4,11 +4,13 @@ import Domain
 import SwiftUI
 
 /// What a launch state sets up on the schedule so it can be photographed beside its board: Saturday 10 October
-/// chosen, New event filled in, Edit event, the delete confirmation.
+/// chosen, New event filled in, Edit event, Edit event with the note focused and the keyboard up (U7), the delete
+/// confirmation.
 public enum ScheduleBoardState: Sendable {
     case saturday
     case newEvent
     case editEvent
+    case editEventKeyboard
     case deleteConfirm
 }
 
@@ -93,7 +95,8 @@ public struct ScheduleView: View {
                     return await store.update(id, with: draft)
                 },
                 onDelete: { confirmDelete(form) },
-                onClose: { editing = nil }
+                onClose: { editing = nil },
+                focusNote: boardState == .editEventKeyboard
             )
         }
         .task {
@@ -273,7 +276,7 @@ public struct ScheduleView: View {
             await store.select(parents.date)
         case .newEvent:
             adding = EventFormSheet.fixture()
-        case .editEvent:
+        case .editEvent, .editEventKeyboard:
             edit(parents)
         case .deleteConfirm:
             await store.select(parents.date)
