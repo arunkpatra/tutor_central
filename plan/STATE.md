@@ -26,8 +26,7 @@ The owner looks at build 14 (Edit event with the keyboard, a checked paper's Sav
 
 ## In flight
 
-Nothing open. TestFlight 1.0.0 (15) from `e455ba0` (run 37943689238) carries the reminder-tap crash fix (#84), the minors (#85) and "normally within 30 days" (#83); the site is at `e455ba0` (deploy-web run 37943683483). Merged `phase-7/*` and `phase-8/*`
-branches remain on the remote; delete them when convenient.
+Nothing open. TestFlight 1.0.0 (15) from `e455ba0` (run 37943689238) carries the reminder-tap crash fix (#84), the minors (#85) and "normally within 30 days" (#83); the site is at `e455ba0` (deploy-web run 37943683483). The remote holds only `main` and `pr-shots` (merged branches deleted 2026-10-09).
 
 ## Production
 

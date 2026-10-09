@@ -27,3 +27,4 @@ In order, in the owner's words.
 17. "approved, build it" (the U33 boards); then "ALso update CLAUDE.md etc in ios app to note this pattern and apply it uniformly
     in future, link a doc to the claude.md (progressive disclosure)" (became `docs/design/feedback.md`, linked from `CLAUDE.md` and
     `ios/CLAUDE.md`).
+18. "delete the merged branches on the remote" (25 deleted; each PR checked merged first; main and pr-shots kept).
