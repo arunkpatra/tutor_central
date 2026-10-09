@@ -17,9 +17,10 @@ public enum PDFMaker {
         case noContext
     }
 
-    @MainActor public static func pdf(for result: GenerationResult, title: String) throws -> URL {
+    @MainActor public static func pdf(for result: GenerationResult, title: String, key: Bool = true) throws -> URL {
         let width = page.width - 2 * margin
-        let renderer = ImageRenderer(content: PDFContent(result: result, title: title).frame(width: width))
+        let renderer = ImageRenderer(content: PDFContent(result: result, title: title, showsKey: key)
+            .frame(width: width))
         renderer.proposedSize = ProposedViewSize(width: width, height: nil)
         let data = NSMutableData()
         var box = page
@@ -53,10 +54,12 @@ public enum PDFMaker {
 }
 
 /// What the PDF shows: the title, then the paper's sections and numbered questions with their marks, then the answer
-/// key; homework and worksheets without marks; a note its text. Always light: a page is printed on white.
+/// key (unless `showsKey` is false); homework and worksheets without marks; a note its text. Always light: a page is
+/// printed on white.
 private struct PDFContent: View {
     let result: GenerationResult
     let title: String
+    let showsKey: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionGap) {
@@ -106,9 +109,12 @@ private struct PDFContent: View {
         }
     }
 
+    @ViewBuilder
     private func key(_ answers: [(number: Int, answer: String)]) -> some View {
-        block("Answer key") {
-            ForEach(answers, id: \.number) { line($0.number, $0.answer, marks: nil) }
+        if showsKey {
+            block("Answer key") {
+                ForEach(answers, id: \.number) { line($0.number, $0.answer, marks: nil) }
+            }
         }
     }
 

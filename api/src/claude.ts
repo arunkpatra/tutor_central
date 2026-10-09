@@ -22,12 +22,21 @@ export type ClaudeAnswer<T> =
   | { kind: "failed"; reason: string };
 export type ClaudeClient = { complete<T>(request: ClaudeRequest<T>): Promise<ClaudeAnswer<T>> };
 
+/** How long one request may take, its retry included: under the app's 125 s (`APIClient.timeout`), so the API
+ *  answers 502 and marks the row failed before the app gives up on it. */
+export const CLAUDE_DEADLINE_MS = 110_000;
+
 /** One call per request: images first ("Page 1:" and so on), then the text; the answer parsed against the schema. A
  *  refusal (stop_reason), or an answer that did not fit the schema (the SDK throws before the stop reason can be read),
  *  is "refused"; anything else the SDK throws is "failed" in a word. No fallbacks: one model per route, a predictable
  *  cost (plan/phase-06-plan.md, the decisions table). */
-export function anthropicClaude(apiKey: string): ClaudeClient {
-  const client = new Anthropic({ apiKey, timeout: 120_000, maxRetries: 1 });
+export function anthropicClaude(
+  apiKey: string,
+  options: { deadlineMs?: number; fetch?: typeof fetch } = {},
+): ClaudeClient {
+  const deadline = options.deadlineMs ?? CLAUDE_DEADLINE_MS;
+  // One try may last the whole deadline; the signal ends both tries together, so a retry only follows a quick failure.
+  const client = new Anthropic({ apiKey, timeout: deadline + 1_000, maxRetries: 1, fetch: options.fetch });
   return {
     async complete<T>(request: ClaudeRequest<T>): Promise<ClaudeAnswer<T>> {
       const content: Anthropic.ContentBlockParam[] = [];
@@ -43,14 +52,16 @@ export function anthropicClaude(apiKey: string): ClaudeClient {
           system: request.system,
           output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
           messages: [{ role: "user", content }],
-        });
+        }, { signal: AbortSignal.timeout(deadline) });
         const tokens = { tokensIn: response.usage.input_tokens, tokensOut: response.usage.output_tokens };
         if (response.stop_reason === "refusal" || response.parsed_output == null) {
           return { kind: "refused", model: response.model, ...tokens };
         }
         return { kind: "ok", parsed: response.parsed_output as T, model: response.model, ...tokens };
       } catch (e) {
-        if (e instanceof Anthropic.APIConnectionTimeoutError) return failed("timeout", e);
+        if (e instanceof Anthropic.APIConnectionTimeoutError || e instanceof Anthropic.APIUserAbortError) {
+          return failed("timeout", e);
+        }
         if (e instanceof Anthropic.APIError) return failed(`api ${e.status}`, e);
         if (e instanceof Anthropic.AnthropicError && e.message.startsWith("Failed to parse structured output")) {
           console.error("claude", "unfit answer", e.message);

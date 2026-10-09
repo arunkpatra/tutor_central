@@ -45,6 +45,17 @@ public struct CheckResultView: View {
                 footer
             }
         }
+        .sheet(isPresented: $store.askingConsent) {
+            ConsentSheet(centreName: store.workspace.centre.name) {
+                let agreed = await store.recordConsent()
+                if agreed {
+                    store.begin()
+                }
+                return agreed
+            } close: {
+                store.askingConsent = false
+            }
+        }
         .sheet(isPresented: $sharing) { ActivitySheet(text: store.shareText).presentationDetents([.medium, .large]) }
         .onChange(of: store.message) { _, message in
             guard let message else { return }
@@ -53,6 +64,12 @@ public struct CheckResultView: View {
         }
         .onChange(of: store.stage) { applyBoard() }
         .onAppear(perform: applyBoard)
+    }
+
+    /// Back or Cancel while checking abandons the check.
+    private func leave() {
+        store.cancel()
+        dismiss()
     }
 
     private var firstPage: UIImage? {
@@ -64,12 +81,12 @@ public struct CheckResultView: View {
     }
 
     @ViewBuilder private var checking: some View {
-        BackRow(title: "Check a paper") { dismiss() }
+        BackRow(title: "Check a paper", back: leave)
         let against = store.schemeMarks.map { "Against \(store.title) · \($0) marks. " } ?? "Against \(store.title). "
         CreatingCard(
             title: pagesTitle, line: against + "Usually a minute or two.", thumbnail: firstPage, cancel: nil
         )
-        Button("Cancel") { dismiss() }.buttonStyle(.quiet).frame(maxWidth: .infinity)
+        Button("Cancel", action: leave).buttonStyle(.quiet).frame(maxWidth: .infinity)
     }
 
     @ViewBuilder
@@ -82,7 +99,7 @@ public struct CheckResultView: View {
             title: "Couldn't check the paper.",
             line: message == APIFailure.offline.message
                 ? "Check your connection and try again. The pages are sent again as they are." : message,
-            retry: { Task { await store.retry() } }
+            retry: { store.begin() }
         )
         Button("Back to the pages", action: backToPages).buttonStyle(.secondary(.card))
     }

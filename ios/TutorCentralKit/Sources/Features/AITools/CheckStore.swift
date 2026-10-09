@@ -28,6 +28,8 @@ import Observation
     /// After Save: "Saved to Hemanth's notes: 15 of 20 on Quadratic equations." with Undo.
     public internal(set) var toast: String?
     public var message: String?
+    /// The server refused for want of consent (the session thought it given): the consent sheet, then Retry.
+    public var askingConsent = false
     public internal(set) var workspace: Workspace
     public var onWorkspaceChanged: ((Workspace) -> Void)?
     /// AppShell refreshes the register after Save or Undo (the detail's notes).
@@ -44,6 +46,8 @@ import Observation
     @ObservationIgnored var notesNow: [UUID: String?] = [:]
     /// The scheme's title at the time of the check.
     @ObservationIgnored var checkedTitle: String?
+    /// The check in flight, so Cancel can abandon it.
+    @ObservationIgnored var task: Task<Void, Never>?
 
     public init(
         workspace: Workspace, register: any Register, ai: any AIRepository, history: any AIHistoryRepository,
@@ -135,35 +139,66 @@ import Observation
             return false
         }
         workspace.centre.aiConsentAt = at
+        askingConsent = false
         onWorkspaceChanged?(workspace)
         return true
     }
 
-    /// Checking: the pages and the scheme to the API, the marks clamped on arrival.
+    /// Checking: the pages and the scheme to the API, the marks clamped on arrival. One at a time: a check while one
+    /// runs is refused; an answer that arrives after Cancel is dropped.
     public func check() async {
-        guard let student, !pages.isEmpty, scheme.isValid else { return }
+        guard canCheck else { return }
         stage = .checking
+        await run()
+    }
+
+    var canCheck: Bool {
+        student != nil && !pages.isEmpty && scheme.isValid && stage != .checking
+    }
+
+    func run() async {
+        guard let student else { return }
         saved = false
         let title = schemeTitle
         do {
             let answer = try await ai.checkPaper(
                 pages: pages, scheme: scheme, studentName: student.name, centre: workspace.centre.id
             )
+            guard !Task.isCancelled, stage == .checking else { return }
             result = answer.result
             checkedTitle = title
             stage = .result
         } catch {
+            guard !Task.isCancelled, stage == .checking else { return }
             if error == .consent {
                 workspace.centre.aiConsentAt = nil
-                stage = .scheme
-                message = error.message
-            } else {
-                stage = .failed(error.message)
+                askingConsent = true
             }
+            stage = .failed(error.message)
         }
     }
 
     public func retry() async {
         await check()
+    }
+}
+
+public extension CheckStore {
+    /// Checking in a task the store owns; refused while one runs.
+    func begin() {
+        guard canCheck else { return }
+        stage = .checking
+        task = Task { [weak self] in
+            await self?.run()
+        }
+    }
+
+    /// Cancel or Back while checking: the check is abandoned (its row stays on the server), back at the scheme.
+    func cancel() {
+        task?.cancel()
+        task = nil
+        if stage == .checking {
+            stage = .scheme
+        }
     }
 }

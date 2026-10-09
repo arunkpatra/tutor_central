@@ -30,7 +30,7 @@ struct ResultFooter: View {
                 }
                 HStack(spacing: Tokens.tileGap) {
                     Button {
-                        UIPasteboard.general.string = PaperText.plain(generation.result)
+                        UIPasteboard.general.string = PaperText.plain(generation.result, key: generation.printsKey)
                         onMessage("Copied.")
                     } label: {
                         Label("Copy", systemImage: "doc.on.doc")
@@ -42,7 +42,10 @@ struct ResultFooter: View {
             }
         }
         .task(id: generation.id) {
-            pdf = try? PDFMaker.pdf(for: generation.result, title: generation.title(studentName: store.studentName))
+            pdf = try? PDFMaker.pdf(
+                for: generation.result, title: generation.title(studentName: store.studentName),
+                key: generation.printsKey
+            )
         }
     }
 
