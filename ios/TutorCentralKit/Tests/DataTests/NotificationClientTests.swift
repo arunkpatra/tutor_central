@@ -50,4 +50,30 @@ import UserNotifications
         delegate.open(URL(string: "tutorcentral://fees"))
         #expect(opened.map(\.absoluteString) == ["tutorcentral://today", "tutorcentral://fees"])
     }
+
+    /// Build 13 aborted when a tester tapped a reminder: the async `didReceive` finished on a background thread and
+    /// UIKit
+    /// heard the tap was handled there (its state restoration asserts the main thread). Wherever the tap arrives, the
+    /// link opens and the completion runs on the main thread.
+    @Test func aTappedReminderFinishesOnTheMainThreadWhereverItArrives() async {
+        let delegate = NotificationDelegate()
+        var opened: [URL] = []
+        delegate.onOpen = { opened.append($0) }
+        let finishedOnMain = await withCheckedContinuation { (done: CheckedContinuation<Bool, Never>) in
+            Task.detached {
+                delegate.received(
+                    URL(string: "tutorcentral://attendance"),
+                    then: { done.resume(returning: Thread.isMainThread) }
+                )
+            }
+        }
+        #expect(finishedOnMain)
+        #expect(opened.map(\.absoluteString) == ["tutorcentral://attendance"])
+    }
+
+    @Test func aReminderCarriesItsLinkInUserInfo() {
+        #expect(NotificationDelegate.link(from: ["link": "tutorcentral://fees"])?
+            .absoluteString == "tutorcentral://fees")
+        #expect(NotificationDelegate.link(from: [:]) == nil)
+    }
 }
