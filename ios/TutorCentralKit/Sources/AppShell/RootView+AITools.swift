@@ -41,8 +41,10 @@ extension RootView {
     /// After Add: the scan's screen leaves, Students shows the added count with Undo (P6-Scan-Saved), and the visit's
     /// store is let go. The handler holds its store weakly; the Undo holds it on purpose, so the toast can undo after
     /// the screen has gone (the toast's life bounds it).
-    static func addedHandler(for store: ScanStore, shell: ShellState, toasts: ToastCenter) -> (Int) -> Void {
-        { [weak store, shell, toasts] count in
+    static func addedHandler(
+        for store: ScanStore, shell: ShellState, toasts: ToastCenter, notices: NoticeCenter
+    ) -> (Int) -> Void {
+        { [weak store, shell, toasts, notices] count in
             guard let store else { return }
             shell.tabs.remove(.scanRegister)
             shell.tabs.paths[.students] = []
@@ -52,7 +54,7 @@ extension RootView {
             toasts.show(ScanReview.addedToast(count: count), action: ("Undo", {
                 Task {
                     if let failure = await store.undoAdd(ids: ids) {
-                        toasts.show(failure)
+                        notices.show(failure)
                     }
                 }
             }))
@@ -79,7 +81,7 @@ extension RootView {
             centres: deps.centres, now: deps.now
         )
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
-        made.onAdded = Self.addedHandler(for: made, shell: shell, toasts: toasts)
+        made.onAdded = Self.addedHandler(for: made, shell: shell, toasts: toasts, notices: notices)
         // A rebuild while the route leaves (its pop) must not leave a spare store on the shell.
         if shell.tabs.scanOnStack {
             shell.scan = ScanVisit(number: shell.tabs.scanVisits, store: made)
@@ -154,7 +156,7 @@ extension RootView {
                     )
                 case let .aiResult(id):
                     ResultView(
-                        store: store, generationID: id, boardState: board, onMessage: { toasts.show($0) },
+                        store: store, generationID: id, boardState: board, onMessage: { notices.show($0) },
                         onMissing: { shell.tabs.remove(.aiResult(id)) }
                     )
                 case .aiHistory:
@@ -172,7 +174,7 @@ extension RootView {
             }
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
-                toasts.show(message)
+                notices.show(message)
                 store.message = nil
             }
         }
@@ -189,5 +191,14 @@ struct EndsScanVisits: ViewModifier {
                 shell.endScan()
             }
         }
+    }
+}
+
+extension View {
+    /// The app's two ways of telling the tutor what happened from anywhere (U33, `docs/design/feedback.md`): the Undo
+    /// bar
+    /// and the system alert, for every screen and sheet below.
+    func tellsTheTutor(toasts: ToastCenter, notices: NoticeCenter) -> some View {
+        environment(toasts).environment(notices).notices(notices)
     }
 }

@@ -41,7 +41,12 @@ import Testing
                 workspace: Fixtures.meeraWorkspace, register: Self.register(deps), ai: deps.ai, students: deps.students,
                 centres: deps.centres, now: { Fixtures.now }
             )
-            store.onAdded = RootView.addedHandler(for: store, shell: shell, toasts: ToastCenter())
+            store.onAdded = RootView.addedHandler(
+                for: store,
+                shell: shell,
+                toasts: ToastCenter(),
+                notices: NoticeCenter()
+            )
             shell.scan = ScanVisit(number: shell.tabs.scanVisits, store: store)
             weakStore = store
             shell.endScan()

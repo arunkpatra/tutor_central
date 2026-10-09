@@ -9,7 +9,6 @@ public enum CameraAccess: Equatable, Sendable {
     case denied
     case noCamera
 
-    public static let deniedMessage = "Allow the camera for Tutor Central in Settings."
     public static let noCameraMessage = "No camera on this device."
 
     public static func decide(supported: Bool, status: AVAuthorizationStatus) -> CameraAccess {

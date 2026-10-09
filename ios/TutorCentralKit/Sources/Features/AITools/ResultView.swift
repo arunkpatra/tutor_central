@@ -72,7 +72,10 @@ public struct ResultView: View {
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             if let generation {
-                ResultFooter(store: store, generation: generation, regenerating: regenerating, onMessage: onMessage)
+                ResultFooter(
+                    store: store, generation: generation, regenerating: regenerating, copied: boardState == .copied,
+                    onMessage: onMessage
+                )
             }
         }
     }

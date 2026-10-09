@@ -52,7 +52,13 @@ public struct FeesView: View {
                         next: { Task { await store.next() } }
                     )
                     if let error = store.error {
-                        FeesErrorLine(error) { Task { await store.retryLast() } }
+                        if store.loaded {
+                            FeesErrorLine(error) { Task { await store.retryLast() } }
+                        } else {
+                            // Nothing loaded to show: the unavailable view in its place (U33-Fees-LoadFailed).
+                            LoadFailedView("Couldn't load the fees") { Task { await store.retryLast() } }
+                                .padding(.top, Tokens.sectionGap * 3)
+                        }
                     }
                     if store.showsNothingSaved {
                         NothingSavedCard(month: store.month) { Task { await store.reload() } }

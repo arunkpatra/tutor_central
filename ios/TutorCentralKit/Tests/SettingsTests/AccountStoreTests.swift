@@ -46,7 +46,7 @@ import Testing
     @Test func aPasswordSetFlipsTheRowAndSaysSo() {
         let store = make()
         #expect(store.passwordValue == "Not set")
-        #expect(store.passwordSet() == "Password set. Use it with your email next time you sign in.")
+        store.passwordSet()
         #expect(store.hasPassword && store.passwordValue == "Set")
     }
 
@@ -57,7 +57,7 @@ import Testing
             workspace: FakeCentreRepository.meeraWorkspace, auth: FakeAuthRepository(),
             queue: ChangeQueue(centre: UUID(), directory: FileManager.default.temporaryDirectory)
         ) { told += 1 }
-        _ = store.passwordSet()
+        store.passwordSet()
         #expect(told == 1)
     }
 }

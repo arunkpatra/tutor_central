@@ -10,6 +10,8 @@ public extension Tokens {
     static let opening = 0.5
     static let toastStay = 5.0
     static let toastStayUndo = 8.0
+    /// A button's done state ("✓ Copied") before it is itself again (U33).
+    static let doneStay = 2.0
     /// cubic-bezier(.2, .8, .2, 1) for every transition the system does not own.
     static let easeOut = UnitCurve.bezier(
         startControlPoint: UnitPoint(x: 0.2, y: 0.8),
@@ -21,5 +23,6 @@ public extension Tokens {
         ("press", press), ("panel", panel), ("number", number), ("breathe", breathe), ("opening", opening),
         ("toastStay", toastStay),
         ("toastStayUndo", toastStayUndo),
+        ("doneStay", doneStay),
     ]
 }

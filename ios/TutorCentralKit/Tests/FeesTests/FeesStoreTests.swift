@@ -114,7 +114,7 @@ import Testing
         #expect(store.isEmptyMonth && store.generatePreview.canCreate && store.generatePreview
             .buttonLabel == "Create 10 fees")
         let made = await store.generate()
-        #expect(made == 10 && store.invoices.count == 10 && store.message == "10 fees created for October." && !store
+        #expect(made == 10 && store.invoices.count == 10 && store.message == nil && !store
             .canRetry)
         #expect(store.sheet == nil && store.lastSavedAt != nil)
     }
@@ -250,7 +250,7 @@ import Testing
         #expect(row?.state == .waived && row?.line == "Waived · Joined mid-month" && row?.showsButtons == false)
         #expect(store.totals.outstanding == Money(rupees: 3200) && store.totals
             .collected == Money(rupees: 7300) && store.sheet == nil)
-        #expect(store.message == "Sahil's fee waived." && fees.waived == [FakeFeesRepository.sahilOctober])
+        #expect(store.message == nil && fees.waived == [FakeFeesRepository.sahilOctober])
     }
 
     @Test func aFailedReadSaysSoAndKeepsTheLastMonth() async {

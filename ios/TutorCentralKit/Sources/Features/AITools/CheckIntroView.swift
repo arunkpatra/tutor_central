@@ -26,7 +26,7 @@ public struct CheckIntroView: View {
     @State private var pending: [ImageUpload] = []
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
-    @Environment(ToastCenter.self) private var toasts: ToastCenter?
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
     public init(store: CheckStore, openPages: @escaping () -> Void) {
         self.store = store
@@ -139,16 +139,12 @@ public struct CheckIntroView: View {
                 }
             }
         case .denied: showRefused()
-        case .noCamera: toasts?.show(CameraAccess.noCameraMessage)
+        case .noCamera: notices?.show(CameraAccess.noCameraMessage)
         }
     }
 
     private func showRefused() {
-        toasts?.show(CameraAccess.deniedMessage, action: ("Open Settings", {
-            if let url = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.open(url)
-            }
-        }))
+        notices?.cameraOff(to: "photograph an answer sheet", otherwise: "You can also choose photos you already have.")
     }
 
     private func readPicked(_ items: [PhotosPickerItem]) async {
@@ -159,7 +155,7 @@ public struct CheckIntroView: View {
             }
         }
         if uploads.count < items.count {
-            toasts?.show("Couldn't read that picture.")
+            notices?.show("Couldn't read that picture. Try another photo.")
         }
         start(uploads)
     }

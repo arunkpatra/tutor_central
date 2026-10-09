@@ -18,15 +18,6 @@ enum RunState: Hashable, Sendable {
         case .signedOut: .signedOut
         }
     }
-
-    /// "3 saved changes sent." when anything went; the toast is AppShell's, on whichever screen is open.
-    static func toast(for outcome: RunOutcome) -> String? {
-        let sent = switch outcome {
-        case let .done(sent, _), let .offline(sent), let .signedOut(sent): sent
-        }
-        guard sent > 0 else { return nil }
-        return sent == 1 ? "1 saved change sent." : "\(sent) saved changes sent."
-    }
 }
 
 extension StatusLineModel {
@@ -133,16 +124,13 @@ extension RootView {
     }
 
     /// Sends what waits, one run at a time (D39): when the network returns, on foreground, after a sign-in, and on
-    /// Send again. The toast is AppShell's, shown on whichever screen is open.
+    /// Send again. The status line says it is sending; what was sent shows in place on its screens (U33).
     @discardableResult func runQueue() async -> RunOutcome? {
         guard let runner = shell.runner, !runner.running, !runner.queue.pending.inOrder.isEmpty,
               await deps.connectivity.isOnline else { return nil }
         shell.runState = .sending(runner.queue.pending.inOrder.count)
         guard let outcome = await runner.run() else { return nil }
         shell.runState = RunState.after(outcome)
-        if let toast = RunState.toast(for: outcome) {
-            toasts.show(toast)
-        }
         afterRun(outcome)
         return outcome
     }

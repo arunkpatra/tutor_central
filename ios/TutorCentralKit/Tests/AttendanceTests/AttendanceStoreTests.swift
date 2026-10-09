@@ -104,7 +104,9 @@ import Testing
         attendance.nextError = URLError(.notConnectedToInternet)
         #expect(await store.save() == false)
         #expect(store.draft.marks[hemanth] == .absent && store.phase == .fresh && store.canSave)
-        #expect(store.message == "Couldn't save attendance. Check your connection and try again." && store.canRetry)
+        #expect(store
+            .message == "Attendance wasn't saved. Check your connection and try again. Your marks are still here." &&
+            store.canRetry)
         await store.retryLast()
         #expect(attendance.saves.count == 1, "the failed attempt never reached the fake; the retry did")
         guard case .saved = store.phase else { Issue.record("not saved after retry"); return }

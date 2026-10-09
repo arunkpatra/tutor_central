@@ -51,15 +51,15 @@ import Testing
         centres.nextError = URLError(.notConnectedToInternet)
         store.centreName = "Bright Minds Tuition Centre"
         await store.commitCentre()
-        #expect(store.message == "Couldn't save the centre's name. Check your connection and try again.")
+        #expect(store.centreError == "Couldn't save the centre's name. Check your connection and try again.")
         #expect(store.centreName == "Bright Minds Tuition Centre" && store.saveState == .idle)
         centres.nextError = URLError(.notConnectedToInternet)
         store.displayName = "Meera N"
         await store.commitName()
-        #expect(store.message == "Couldn't save your name. Check your connection and try again.")
+        #expect(store.nameError == "Couldn't save your name. Check your connection and try again.")
         centres.nextError = URLError(.notConnectedToInternet)
         store.digits = "9611299900"
         await store.commitPhone()
-        #expect(store.message == "Couldn't save your WhatsApp number. Check your connection and try again.")
+        #expect(store.phoneError == "Couldn't save your WhatsApp number. Check your connection and try again.")
     }
 }

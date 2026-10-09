@@ -48,6 +48,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case attendance
     case attendanceClassMenu = "attendance-class-menu"
     case attendanceExceptions = "attendance-exceptions"
+    case attendanceSaveFailed = "attendance-save-failed"
     case attendanceSaved = "attendance-saved"
     case attendanceAlert = "attendance-alert"
     case attendancePast = "attendance-past"
@@ -61,6 +62,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case eventNew = "event-new"
     case eventEdit = "event-edit"
     case eventEditKeyboard = "event-edit-keyboard"
+    case eventGone = "event-gone"
     case eventDeleteConfirm = "event-delete-confirm"
     case tasks
     case tasksEmpty = "tasks-empty"
@@ -71,6 +73,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case more
     case feesEmpty = "fees-empty"
     case fees
+    case feesLoadFailed = "fees-load-failed"
     case feesDue = "fees-due"
     case feesPaid = "fees-paid"
     case feesOverdue = "fees-overdue"
@@ -101,6 +104,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case aiGenerating = "ai-generating"
     case aiGenerateFailed = "ai-generate-failed"
     case aiResultPaper = "ai-result-paper"
+    case aiResultCopied = "ai-result-copied"
     case aiResultRegenerating = "ai-result-regenerating"
     case aiResultNote = "ai-result-note"
     case aiNoteSend = "ai-note-send"

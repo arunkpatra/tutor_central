@@ -80,7 +80,7 @@ extension RootView {
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
                 Haptic.play(.error)
-                toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
+                notices.show(message, retry: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
             }
         }

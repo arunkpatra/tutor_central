@@ -8,16 +8,14 @@ public struct AccountActions {
     let openDelete: () -> Void
     let signOut: () async -> Void
     let makePassword: (_ hasPassword: Bool) -> PasswordStore
-    let onMessage: (String) -> Void
 
     public init(
         openDelete: @escaping () -> Void, signOut: @escaping () async -> Void,
-        makePassword: @escaping (_ hasPassword: Bool) -> PasswordStore, onMessage: @escaping (String) -> Void
+        makePassword: @escaping (_ hasPassword: Bool) -> PasswordStore
     ) {
         self.openDelete = openDelete
         self.signOut = signOut
         self.makePassword = makePassword
-        self.onMessage = onMessage
     }
 }
 
@@ -90,7 +88,7 @@ public struct AccountView: View {
             PasswordSheet(store: password, showsFocus: boardState == .password, autofocus: boardState == nil) {
                 passwordSheet = nil
                 Haptic.play(.success)
-                actions.onMessage(store.passwordSet())
+                store.passwordSet()
             } close: {
                 passwordSheet = nil
             }
@@ -165,7 +163,7 @@ public struct AccountView: View {
             passwordSheet = password
             _ = await password.submit()
         case .passwordSaved:
-            actions.onMessage(store.passwordSet())
+            store.passwordSet()
         case .signOut, nil:
             break
         }

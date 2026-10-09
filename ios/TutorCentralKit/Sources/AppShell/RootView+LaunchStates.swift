@@ -21,13 +21,16 @@ extension RootView {
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
-        case .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate, .feesGenerateNothing,
+        case .feesEmpty, .fees, .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
+             .feesGenerateNothing,
              .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive: .fees
-        case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved,
+        case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaveFailed,
+             .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .attendance
         case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .more
-        case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm,
+        case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone,
+             .eventDeleteConfirm,
              .tasks,
              .tasksEmpty:
             .more
@@ -41,7 +44,8 @@ extension RootView {
     /// The AI Assistant's states, all on the More tab's stack.
     static let aiStates: Set<LaunchState> = [
         .aiAssistant, .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
-        .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
+        .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
+        .aiHistory,
         .aiHistoryEmpty,
     ]
 
@@ -102,7 +106,8 @@ extension RootView {
         case .aiHomework: [.aiAssistant, .aiForm(.homework)]
         case .aiWorksheet: [.aiAssistant, .aiForm(.worksheet)]
         case .aiNote, .aiNoteStudent: [.aiAssistant, .aiForm(.progressNote)]
-        case .aiResultPaper, .aiResultRegenerating: [.aiAssistant, .aiResult(FakeAIHistoryRepository.quadraticID)]
+        case .aiResultPaper, .aiResultCopied, .aiResultRegenerating:
+            [.aiAssistant, .aiResult(FakeAIHistoryRepository.quadraticID)]
         case .aiResultNote, .aiNoteSend: [.aiAssistant, .aiResult(note)]
         case .aiHistory, .aiHistoryEmpty: [.aiAssistant, .aiHistory]
         default: scanStates.contains(state) ? [.scanRegister] : checkRoutes(for: state)
@@ -116,6 +121,7 @@ extension RootView {
         case .aiGenerateFailed: .failed
         case .aiResultRegenerating: .regenerating
         case .aiNoteSend: .noteSend
+        case .aiResultCopied: .copied
         default: nil
         }
     }
@@ -138,7 +144,9 @@ extension RootView {
         case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
         case .history, .historyByStudent, .historyEmpty: [.history]
         case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
-        case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm: [.schedule]
+        // U33-Event-Gone: a link to an event that was deleted.
+        case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm, .eventGone:
+            state == .eventGone ? [.event(Fixtures.goneEvent)] : [.schedule]
         case .tasks, .tasksEmpty: [.tasks]
         default: studentFeesRoutes(for: state)
         }
@@ -201,6 +209,7 @@ extension RootView {
         switch state {
         case .attendanceClassMenu: .classMenu
         case .attendanceExceptions: .oneAbsent
+        case .attendanceSaveFailed: .saveFailed
         case .attendanceSaved: .saved
         case .attendanceAlert: .alert
         case .attendancePast: .past
@@ -268,36 +277,24 @@ extension RootView {
         state == .classAddMembers ? .addMembers : nil
     }
 
-    /// The toast's Retry for the register's last failed write.
-    static func retry(_ store: RegisterStore) -> (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = {
-            Task { await store.retryLast() }
-        }
-        return ("Retry", run)
+    /// The alert's Try Again for the register's last failed write (U33).
+    static func retry(_ store: RegisterStore) -> @MainActor () -> Void {
+        { Task { await store.retryLast() } }
     }
 
-    /// The toast's Retry for the mark screen's failed save.
-    static func retry(_ store: AttendanceStore) -> (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = {
-            Task { await store.retryLast() }
-        }
-        return ("Retry", run)
+    /// The alert's Try Again for the mark screen's failed save (U33).
+    static func retry(_ store: AttendanceStore) -> @MainActor () -> Void {
+        { Task { await store.retryLast() } }
     }
 
-    /// The toast's Retry for a fee's failed write.
-    static func retry(_ store: FeesStore) -> (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = {
-            Task { await store.retryLast() }
-        }
-        return ("Retry", run)
+    /// The alert's Try Again for a fee's failed write (U33).
+    static func retry(_ store: FeesStore) -> @MainActor () -> Void {
+        { Task { await store.retryLast() } }
     }
 
-    /// The toast's Retry for a task's failed write.
-    static func retry(_ store: TasksStore) -> (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = {
-            Task { await store.retryLast() }
-        }
-        return ("Retry", run)
+    /// The alert's Try Again for a task's failed write (U33).
+    static func retry(_ store: TasksStore) -> @MainActor () -> Void {
+        { Task { await store.retryLast() } }
     }
 
     #if DEBUG
@@ -313,4 +310,21 @@ extension RootView {
             }
         }
     #endif
+}
+
+extension RootView {
+    /// What the Students boards show over the list: P6-Scan-Saved's Undo after Add; P7-Offline-WriteRefused's alert,
+    /// raised
+    /// as Save on the sheet does, once the sheet is up (it shows the alert over itself).
+    func studentsBoardEffects() {
+        if launch == .scanSaved {
+            toasts.show(ScanReview.addedToast(count: 7), action: ("Undo", {}), stay: .seconds(3600))
+        }
+        if launch == .offlineWriteRefused {
+            Task {
+                try? await Task.sleep(for: .seconds(Tokens.panel * 4))
+                notices.show(OfflineRefusal.words(for: .addStudent))
+            }
+        }
+    }
 }

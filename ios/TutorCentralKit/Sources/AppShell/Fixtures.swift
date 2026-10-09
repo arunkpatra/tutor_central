@@ -9,6 +9,8 @@ public enum Fixtures {
     public static let now = FakeCountsRepository.fixedNow
 
     public static let meeraWorkspace = FakeCentreRepository.meeraWorkspace
+    /// An event id no longer in the schedule (U33-Event-Gone).
+    static let goneEvent = UUID(uuidString: "eeeeeeee-0000-0000-0000-00000000dead") ?? UUID()
 
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
         let (auth, centres) = session(for: state)
@@ -16,6 +18,14 @@ public enum Fixtures {
         let students = FakeStudentsRepository(students: register(for: state).students)
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
         let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
+        if state == .feesLoadFailed {
+            // U33-Fees-LoadFailed: the month does not load, and there is nothing saved to show.
+            fees.nextError = URLError(.badServerResponse)
+        }
+        if state == .attendanceSaveFailed {
+            // U33-Attendance-SaveFailed: the save is refused (not a lost connection, which would keep it here).
+            attendance.saveError = URLError(.badServerResponse)
+        }
         if offlineStates.contains(state) {
             // The boards' offline screens: every read fails for the network; the copies on this iPhone show.
             counts.nextError = URLError(.notConnectedToInternet)
@@ -150,15 +160,19 @@ public enum Fixtures {
              .studentArchiveConfirm, .studentDeleteConfirm,
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
+             .attendanceSaveFailed,
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
+             .eventGone,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
-             .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
+             .todayAddingTask, .more, .feesEmpty, .fees, .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
+             .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
              .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
              .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
              .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
-             .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
+             .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
+             .aiHistory,
              .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview,
              .scanReviewScrolled, .scanReviewEdit,
              .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
@@ -216,7 +230,8 @@ public enum Fixtures {
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
         case .history, .historyByStudent, .historyStudent, .student, .studentFeesDue, .studentFees, .schedule,
-             .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm, .todayEvening, .reports,
+             .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone, .eventDeleteConfirm, .todayEvening,
+             .reports,
              .reportsAttendance,
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []

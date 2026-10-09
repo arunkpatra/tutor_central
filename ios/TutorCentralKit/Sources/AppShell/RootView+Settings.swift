@@ -46,8 +46,7 @@ extension RootView {
                     terms: Legal.terms
                 ),
                 boardState: launch.flatMap(Self.settingsBoardState),
-                onWorkspaceChanged: { changed in applyWorkspace { $0.takingSettings(from: changed) } },
-                onMessage: { toasts.show($0, stay: launch == nil ? nil : .seconds(3600)) }
+                onWorkspaceChanged: { changed in applyWorkspace { $0.takingSettings(from: changed) } }
             )
         }
     }
@@ -65,8 +64,7 @@ extension RootView {
                 actions: AccountActions(
                     openDelete: { shell.tabs.push(.deleteAccount) },
                     signOut: { await session.signOut(wiping: wipe(for: workspace)) },
-                    makePassword: { PasswordStore(auth: deps.auth, centres: deps.centres, hasPassword: $0) },
-                    onMessage: { toasts.show($0, stay: launch == nil ? nil : .seconds(3600)) }
+                    makePassword: { PasswordStore(auth: deps.auth, centres: deps.centres, hasPassword: $0) }
                 ),
                 boardState: launch.flatMap(Self.accountBoardState)
             )
