@@ -48,7 +48,7 @@ public struct ClassroomDraft: Hashable, Sendable {
         if trimmedName.isEmpty {
             found.insert(.nameMissing)
         }
-        if trimmedName.count > Self.nameLimit {
+        if trimmedName.storedCount > Self.nameLimit {
             found.insert(.nameTooLong)
         }
         if let fee, fee > Self.feeCeiling {

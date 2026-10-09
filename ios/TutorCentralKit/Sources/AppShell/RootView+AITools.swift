@@ -21,30 +21,34 @@ extension RootView {
         if let launch, Self.aiStates.contains(launch) {
             made.forms = Fixtures.aiForms(for: launch)
         }
-        made.onResult = { [shell] generation in
-            let top = shell.tabs.paths[shell.tabs.selected]?.last
-            let replaced = made.lastReplaced.map(Route.aiResult)
-            if top == .aiForm(generation.kind) || (replaced != nil && top == replaced) {
-                shell.tabs.push(.aiResult(generation.id))
-            }
-        }
+        made.onResult = Self.resultHandler(for: made, shell: shell)
         shell.ai = made
         return made
     }
 
-    /// Scan register with its own store for this visit (the list lives only until Add or Back); Add pops to the
-    /// Students list and offers Undo there (P6-Scan-Saved).
-    func scanView(in workspace: Workspace) -> some View {
-        let store = ScanStore(
-            workspace: workspace, register: register(for: workspace), ai: deps.ai, students: deps.students,
-            centres: deps.centres, now: deps.now
-        )
-        store.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
-        store.onAdded = { [shell, toasts] count in
+    /// The result handler, holding its store weakly: the store owns the closure (Phase 6's minor 1).
+    static func resultHandler(for store: AIStore, shell: ShellState) -> (Generation) -> Void {
+        { [weak store, shell] generation in
+            guard let store else { return }
+            let top = shell.tabs.paths[shell.tabs.selected]?.last
+            let replaced = store.lastReplaced.map(Route.aiResult)
+            if top == .aiForm(generation.kind) || (replaced != nil && top == replaced) {
+                shell.tabs.push(.aiResult(generation.id))
+            }
+        }
+    }
+
+    /// After Add: the scan's screen leaves, Students shows the added count with Undo (P6-Scan-Saved), and the visit's
+    /// store is let go. The handler holds its store weakly; the Undo holds it on purpose, so the toast can undo after
+    /// the screen has gone (the toast's life bounds it).
+    static func addedHandler(for store: ScanStore, shell: ShellState, toasts: ToastCenter) -> (Int) -> Void {
+        { [weak store, shell, toasts] count in
+            guard let store else { return }
             shell.tabs.remove(.scanRegister)
             shell.tabs.paths[.students] = []
             shell.tabs.selected = .students
             let ids = store.lastAdded
+            shell.endScan()
             toasts.show(ScanReview.addedToast(count: count), action: ("Undo", {
                 Task {
                     if let failure = await store.undoAdd(ids: ids) {
@@ -53,9 +57,31 @@ extension RootView {
                 }
             }))
         }
+    }
+
+    /// Scan register with one store for the visit (the list lives only until Add or Back), kept on the shell so a
+    /// redraw never makes another.
+    func scanView(in workspace: Workspace) -> some View {
+        let store = if let visit = shell.scan, visit.number == shell.tabs.scanVisits {
+            visit.store
+        } else {
+            makeScanStore(in: workspace)
+        }
         return ScanRegisterView(
-            store: store, boardState: launch.flatMap(Self.scanBoardState), sample: launch.map(Fixtures.scanSample)
+            store: store, boardState: launch.flatMap(Self.scanBoardState), sample: launch.map(Fixtures.scanSample),
+            onLeave: { shell.endScan() }
         )
+    }
+
+    private func makeScanStore(in workspace: Workspace) -> ScanStore {
+        let made = ScanStore(
+            workspace: workspace, register: register(for: workspace), ai: deps.ai, students: deps.students,
+            centres: deps.centres, now: deps.now
+        )
+        made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
+        made.onAdded = Self.addedHandler(for: made, shell: shell, toasts: toasts)
+        shell.scan = ScanVisit(number: shell.tabs.scanVisits, store: made)
+        return made
     }
 
     /// One store per visit of Check a paper: its steps are pushed routes carrying the visit's id.

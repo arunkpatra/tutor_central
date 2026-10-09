@@ -65,7 +65,8 @@ public struct NotesWell: View {
             }
             .frame(minHeight: Self.minHeight, alignment: .topLeading)
             .overlay(alignment: .bottomTrailing) {
-                Text("\(text.count.formatted()) of \(limit.formatted())")
+                // Counted as the database counts, as Domain's limits are (D48: `storedCount`).
+                Text("\(text.unicodeScalars.count.formatted()) of \(limit.formatted())")
                     .typeStyle(Tokens.caption)
                     .foregroundStyle(Tokens.text3.color)
                     .padding(.bottom, Tokens.tileGap)

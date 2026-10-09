@@ -80,15 +80,13 @@ function helpAnswers(swift: string): string {
     .replaceAll(" → ", ", then ");
 }
 
-test("support's last four answers are Help's in the app", async () => {
+test("support's last four answers are Help's in the app, word for word", async () => {
   const source = await Bun.file(
     new URL("../../../ios/TutorCentralKit/Sources/Features/Settings/Help/HelpView.swift", import.meta.url),
   ).text();
   const swift = helpAnswers(source);
   for (const q of SUPPORT.questions.slice(2)) {
     expect(swift, q.question).toContain(`"${q.question}"`);
-    // The photos answer says 30 days (Owner step 0); the app's Help says it from PR 6 (Task 12), when this line goes.
-    if (q.question === "Where do photos of registers and papers go?") continue;
     expect(swift, q.question).toContain(q.answer);
   }
 });

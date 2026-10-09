@@ -18,6 +18,12 @@ struct CheckVisit {
     let store: CheckStore
 }
 
+/// A visit of Scan register: its number (`TabsState.scanVisits` when it was pushed) and its store.
+struct ScanVisit {
+    let number: Int
+    let store: ScanStore
+}
+
 @MainActor @Observable final class ShellState {
     var tabs: TabsState
     var today: TodayStore?
@@ -34,6 +40,8 @@ struct CheckVisit {
     @ObservationIgnored var ai: AIStore?
     /// The visit of Check a paper in progress, by its routes' id.
     @ObservationIgnored var check: CheckVisit?
+    /// The visit of Scan register in progress: its list lives until Add or Back (Phase 6's minor 1).
+    @ObservationIgnored var scan: ScanVisit?
     /// The centre's queue of changes made offline (D39), read from its file when the centre arrives, and its runner.
     @ObservationIgnored var queue: ChangeQueue?
     @ObservationIgnored var runner: QueueRunner?
@@ -87,6 +95,11 @@ struct CheckVisit {
         centre = workspace.centre.id
     }
 
+    /// The scan visit is over (Add or Back): its store is let go.
+    func endScan() {
+        scan = nil
+    }
+
     private func reset() {
         tabs = TabsState()
         today = nil
@@ -97,6 +110,7 @@ struct CheckVisit {
         ai?.cancel()
         ai = nil
         check = nil
+        scan = nil
         queue = nil
         runner = nil
         scheduler = nil

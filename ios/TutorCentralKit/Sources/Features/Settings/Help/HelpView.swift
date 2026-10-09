@@ -14,8 +14,8 @@ public struct HelpView: View {
         ),
         (
             "Where do photos of registers and papers go?",
-            "To our AI service, to be read, and nowhere else. They are not kept there or here. You agree once per "
-                + "centre before the first photo."
+            "To our AI service, to be read, and nowhere else. We keep no copy, and the AI service deletes them "
+                + "within 30 days and never uses them for training. You agree once per centre before the first photo."
         ),
         (
             "How do parents get reminders and receipts?",

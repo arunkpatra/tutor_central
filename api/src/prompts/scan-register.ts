@@ -22,11 +22,13 @@ export function request(image: DecodedImage): ClaudeRequest<ScanOutput> {
   };
 }
 
-/** Digits only; ten digits are an Indian mobile (+91); twelve starting 91 already carry it; anything else is no number,
- *  never a wrong one. */
+/** Digits only; ten digits starting 6 to 9 are an Indian mobile (+91), as are eleven with a trunk 0, twelve starting 91 and
+ *  fourteen starting 0091 (what a register writes; the app's PhoneNumber reads the same); anything else is no number, never a
+ *  wrong one. */
 export function normalisePhone(raw: string | null): string | null {
-  const digits = (raw ?? "").replace(/\D/g, "");
-  if (digits.length === 10) return `+91${digits}`;
-  if (digits.length === 12 && digits.startsWith("91")) return `+${digits}`;
-  return null;
+  let digits = (raw ?? "").replace(/\D/g, "");
+  if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4);
+  else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+  else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+  return digits.length === 10 && /^[6-9]/.test(digits) ? `+91${digits}` : null;
 }

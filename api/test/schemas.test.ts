@@ -68,3 +68,16 @@ test("the outputs hold Claude to the shape the app decodes", () => {
   // A mark over its maximum is clamped by the app, not refused here.
   expect(CheckOutput.safeParse({ questions: [{ number: 1, text: "q", note: "n", marks: 2, of: 1 }], summary: "s" }).success).toBe(true);
 });
+
+test("lengths count code points, as the app and Postgres do (D48)", () => {
+  const note = { kind: "progress_note", subject: "M", classLevel: "C", studentName: "H", tutorName: "M", centreName: "B" };
+  // 1,500 code points but 3,000 UTF-16 units: the app and Postgres accept it, so the API must.
+  expect(GenerateInput.safeParse({ ...note, observations: "😀".repeat(1500) }).success).toBe(true);
+  expect(GenerateInput.safeParse({ ...note, observations: "क्ष".repeat(700) }).success).toBe(false); // 2,100
+  expect(GenerateInput.safeParse({ ...note, observations: "क्ष".repeat(600) }).success).toBe(true); // 1,800
+  const page = { imageBase64: "AAAA", mediaType: "image/jpeg" };
+  const typed = (text: string) => CheckPaperInput.safeParse({ pages: [page], scheme: { kind: "typed", text }, studentName: "H" });
+  expect(typed("👩‍🏫".repeat(1000)).success).toBe(true); // 3,000 code points, 5,000 UTF-16 units
+  expect(typed("👩‍🏫".repeat(1400)).success).toBe(false); // 4,200 code points
+  expect(GenerateInput.safeParse({ kind: "homework", subject: "गणित".repeat(20), classLevel: "C", topic: "T" }).success).toBe(true);
+});

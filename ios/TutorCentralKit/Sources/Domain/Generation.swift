@@ -220,6 +220,6 @@ public enum GenerateRequest: Hashable, Sendable, Codable {
 
     private static func within(_ text: String, limit: Int) -> Bool {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !trimmed.isEmpty && trimmed.count <= limit
+        return !trimmed.isEmpty && trimmed.storedCount <= limit
     }
 }
