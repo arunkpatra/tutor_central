@@ -56,13 +56,14 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 |---|---|---|
 | iOS app and package | `ios/` | `ios/CLAUDE.md` |
 | API (Hono on Vercel) | `api/` | `api/CLAUDE.md` |
+| Website, tutorcentral.in (Next.js static export on Vercel) | `web/` | `web/CLAUDE.md` |
 | Database (Supabase) | `supabase/` | `supabase/CLAUDE.md` |
 | Design: boards, tokens, components, guidelines | `docs/design/` | `docs/design/README.md` |
 | Reference app and the functional contract | `docs/reference/` | |
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
 | UI polish list: small visual and copy fixes, taken when the owner chooses | `plan/ui-polish.md` | Its "How it works" |
-| Scripts: check, shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
+| Scripts: check, shots, web-shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
 | Runbooks: driving the app in the simulator against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32) |
 | Device tests: what a tester checks on a real iPhone (camera, WhatsApp, network, real handwriting), with a log | `docs/testing/device-tests.md` | Its "How to run" |
 
@@ -75,9 +76,10 @@ change per pull request, described by what it does and how it was checked.
 ## Commands
 | Command | Use |
 |---|---|
-| `bun check` | Every check in order, stopping at the first failure: format, lint, ios (build and tests on the iPhone 17 simulator), tools, api, db. A step whose inputs have not changed since it was last green is not run, and the summary says so; `db` is skipped with a line when local Supabase is down. `--fresh` ignores the cache; `--only=a,b` runs some |
+| `bun check` | Every check in order, stopping at the first failure: format, lint, ios (build and tests on the iPhone 17 simulator), tools, api, web, db. A step whose inputs have not changed since it was last green is not run, and the summary says so; `db` is skipped with a line when local Supabase is down. `--fresh` ignores the cache; `--only=a,b` runs some |
 | `bun gen` | Regenerate `ios/TutorCentral.xcodeproj` from `ios/project.yml` |
 | `bun shots <state> [--appearance dark\|light\|both]` | Screenshots of the app in the simulator at a launch state, both appearances by default, into `.shots/<state>/` |
+| `bun web-shots [--pages /,/privacy] [--widths 1280,390] [--appearance dark\|light\|both]` | Pictures of the website's export (build it first with `bun check --only=web`) by headless Chrome, full page at 2×, into `.shots/web/` (D46) |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
 | `cd supabase && supabase start` | The local database stack (Docker) |
 | `cd api && bun run dev` | The API locally |
@@ -85,4 +87,4 @@ change per pull request, described by what it does and how it was checked.
 | `gh workflow run testflight` | Archive `main`'s head with cloud signing and upload it to TestFlight (D24); stops while migrations are pending |
 
 CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`, except a commit of
-documents only (D31): iOS on the `xcode-27` image, api and db on Ubuntu (D22).
+documents only (D31): iOS on the `xcode-27` image, api, web and db on Ubuntu (D22).

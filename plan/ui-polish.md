@@ -46,6 +46,7 @@ screen, several as a polish slice, or not at all.
 | U28 | 2026-10-09 | Fees, Mark paid offline | The receipt sheet is not offered after an offline Mark paid (no log can queue a receipt) | Session 14's plan, seen in session 15 |
 | U29 | 2026-10-09 | Students, the "+" menu at the largest text sizes | The system menu cuts "Scan paper register" to "Scan paper regis…" | Session 15's Dynamic Type check |
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
+| U31 | 2026-10-09 | tutorcentral.in Home at 320 px wide | The phone picture's rim reaches into the right-hand margin (the boards stop at 390) | Session 17, PR #76's 320 picture |
 
 ## Done
 

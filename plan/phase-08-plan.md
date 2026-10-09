@@ -185,7 +185,7 @@ page (Task 8's export test refuses `[OWNER:` on `/privacy` and `/terms`).
   (`{ home: "/", privacy: "/privacy", terms: "/terms", support: "/support" }`), `UPDATED = "9 October 2026"`; the CSS variables
   and classes of `globals.css` every later task uses (named below).
 
-- [ ] **Step 1: the manifest and configuration**
+- [x] **Step 1: the manifest and configuration**
 
 `web/package.json`:
 
@@ -292,7 +292,7 @@ web/.next/
 web/out/
 ```
 
-- [ ] **Step 2: install and see the empty app build**
+- [x] **Step 2: install and see the empty app build**
 
 Run: `bun install` (at the root; the lockfile gains the four packages and their tree). Then write the smallest layout and page:
 
@@ -359,7 +359,7 @@ replaces it; it exists so the export has `/`).
 Run: `cd web && bun run build`
 Expected: `out/index.html` exists. (The theme-colour hexes in `layout.tsx` are the `ground` tokens; the token test below holds them.)
 
-- [ ] **Step 3: the tokens as CSS, and the test that reads them from the design document**
+- [x] **Step 3: the tokens as CSS, and the test that reads them from the design document**
 
 `web/test/unit/tokens.test.ts` first (it fails until the CSS exists):
 
@@ -557,7 +557,7 @@ shadow, which the token document also writes as rgba; the second token test allo
 Run: `cd web && bun test test/unit/tokens.test.ts`
 Expected: PASS.
 
-- [ ] **Step 4: the layout test and the export test**
+- [x] **Step 4: the layout test and the export test**
 
 `web/test/unit/layout.test.ts`:
 
@@ -628,7 +628,7 @@ the tasks land; the final table is the one above).
 Run: `cd web && bun run check`
 Expected: biome, tsc, the unit tests, the build and the export test all pass.
 
-- [ ] **Step 5: the `web` check step and CI**
+- [x] **Step 5: the `web` check step and CI**
 
 `tools/check/steps.test.ts`: change the order test to
 
@@ -665,7 +665,7 @@ to its `path` list so Next's build cache comes back between runs.
 
 `CLAUDE.md` (root, documents commit) names `web` in the `bun check` row: "format, lint, ios, tools, api, web, db".
 
-- [ ] **Step 6: commit**
+- [x] **Step 6: commit**
 
 ```bash
 git checkout -b phase-8/web-foundation
@@ -690,7 +690,7 @@ git commit -m "web: the Next.js app (static export), the tokens as CSS with thei
   `ListCard({ children })`, `FeatureRow({ icon, title, line })`, `QuestionRow({ question, answer })`, `PlainRow({ title, line })`,
   `PrimaryLink({ href, icon?, children })`, `SecondaryLink({ href, icon?, children })`, `TextLink({ href, children })`.
 
-- [ ] **Step 1: the test**
+- [x] **Step 1: the test**
 
 `web/test/unit/frame.test.ts`:
 
@@ -722,7 +722,7 @@ test("the footer carries the promise, the links, the email and the copyright", (
 
 Run: `cd web && bun test test/unit/frame.test.ts` → FAIL (no components).
 
-- [ ] **Step 2: the icons**
+- [x] **Step 2: the icons**
 
 `web/components/Icon.tsx` (the boards' stroke paths; an icon is decorative unless given a `label`):
 
@@ -767,7 +767,7 @@ export function Icon({ name, size = 20, width = 1.8, label }: { name: IconName; 
 radius 14, the marigold book (`#FFAB38`, stroke 2.2, the book path above at `translate(14 14) scale(1.5)`). Next serves it as
 `/icon.svg` and links it from every page.
 
-- [ ] **Step 3: the frame**
+- [x] **Step 3: the frame**
 
 `web/components/Brand.tsx`:
 
@@ -862,7 +862,7 @@ export function Page({ current, children }: { current: Current; children: ReactN
 
 so `layout.tsx` keeps only `<html>`, `<head>` and `<body>{children}</body>`.
 
-- [ ] **Step 4: the parts**
+- [x] **Step 4: the parts**
 
 `web/components/parts.tsx` (beside `Page`):
 
@@ -961,7 +961,7 @@ export function TextLink({ href, children }: { href: string; children: ReactNode
 
 Run: `cd web && bun test test/unit/frame.test.ts` → PASS. `bun run check` → green.
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add web
@@ -981,7 +981,7 @@ git commit -m "web: the frame (header, footer, brand), the icons and the page pa
   pictures named `<page>-<width>-<appearance>.png` where `<page>` is `home` for `/`, else the path without its slash
   (`privacy`, `not-found` for `/anything-else`). Exports `parseWebShotsArgs`, `fileFor`, `shotName`, `serveExport`, `cdp`.
 
-- [ ] **Step 1: the tests of the pure parts**
+- [x] **Step 1: the tests of the pure parts**
 
 `tools/web-shots.test.ts`:
 
@@ -1026,7 +1026,7 @@ test("a picture's name", () => {
 
 Run: `bun test tools/web-shots.test.ts` → FAIL.
 
-- [ ] **Step 2: the tool**
+- [x] **Step 2: the tool**
 
 `tools/web-shots.ts`:
 
@@ -1177,7 +1177,7 @@ it so for now and flip it in Task 6).
 Run: `bun web-shots --pages / --widths 1280,390` → two or four pictures in `.shots/web/`; open them. The `tools` check step's
 `tsc` covers the new file; `bun check --only=tools` green.
 
-- [ ] **Step 3: commit**
+- [x] **Step 3: commit**
 
 ```bash
 git add tools/web-shots.ts tools/web-shots.test.ts package.json
@@ -1198,7 +1198,7 @@ git commit -m "tools: bun web-shots photographs the site's export by headless Ch
 - Produces: `content/home.ts` → `HOME` (`headline`, `lead`, `comingSoon`, `badgeLine`, `features: {icon, title, line}[]`,
   `how: {title, line}[]`, `not: {title, line}[]`, `notLink`, `maker`, `write`).
 
-- [ ] **Step 1: the hero's phone picture**
+- [x] **Step 1: the hero's phone picture**
 
 Render the Today board once and keep where it came from:
 
@@ -1211,7 +1211,7 @@ printf 'docs/design/mockups/P4-Today-Soon.dc.html, dark, 393 × 852 at 2×. Rend
 
 (786 × 1704 px, about 150 KB. The `.phone` box crops it to the board's shape.)
 
-- [ ] **Step 2: the content, from the board**
+- [x] **Step 2: the content, from the board**
 
 Every string is on `docs/design/mockups/P8-Home.dc.html`. Print the board's text to copy from:
 
@@ -1261,7 +1261,7 @@ export const HOME = {
 } as const;
 ```
 
-- [ ] **Step 3: the tests**
+- [x] **Step 3: the tests**
 
 `web/test/unit/home.test.ts`:
 
@@ -1341,7 +1341,7 @@ test("no technical words on any page", () => {
 
 Run: `cd web && bun test test/unit` → FAIL (the page is Task 1's stub).
 
-- [ ] **Step 4: the page**
+- [x] **Step 4: the page**
 
 `web/app/page.tsx`:
 
@@ -1452,7 +1452,7 @@ board shows).
 
 Run: `cd web && bun test test/unit` → PASS. `bun run check` → green (the export test's `index.html` row holds).
 
-- [ ] **Step 5: look, at 320 as well**
+- [x] **Step 5: look, at 320 as well**
 
 ```bash
 bun check --only=web && bun web-shots --pages / --widths 1280,390,320
@@ -1462,7 +1462,7 @@ Open the six pictures; compare with `docs/design/mockups/P8-Home` renders (the s
 the board yourself with the Chrome line from Step 1 at `--window-size=1280,3200`). At 320 nothing may scroll sideways and the
 header's links sit under the brand. Fix spacing in `globals.css` only.
 
-- [ ] **Step 6: commit**
+- [x] **Step 6: commit**
 
 ```bash
 git add web
@@ -1477,7 +1477,7 @@ git commit -m "web: Home to P8-Home (the email call to action; Apple's badge whe
 - Create: `web/app/not-found.tsx`, `web/content/notFound.ts`
 - Modify: `web/test/unit/words.test.ts` (the page joins `PAGES`), `web/test/export/export.test.ts` (the `404.html` row)
 
-- [ ] **Step 1: test first**
+- [x] **Step 1: test first**
 
 Add to `web/test/unit/home.test.ts` (or a new `notFound.test.ts`):
 
@@ -1499,7 +1499,7 @@ and in `words.test.ts`: `notFound: () => renderToStaticMarkup(createElement(NotF
 
 Run: `cd web && bun test test/unit` → FAIL.
 
-- [ ] **Step 2: the page**
+- [x] **Step 2: the page**
 
 `web/content/notFound.ts`:
 
@@ -1544,7 +1544,7 @@ export default function NotFound() {
 
 Run: `cd web && bun run check` → green (`out/404.html` carries the words).
 
-- [ ] **Step 3: pictures and the pull request**
+- [x] **Step 3: pictures and the pull request**
 
 ```bash
 bun check
