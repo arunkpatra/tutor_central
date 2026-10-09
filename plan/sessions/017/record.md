@@ -66,6 +66,17 @@ doc comments; the smoke not pinning `/Privacy` → 404.
   tap and completes on the main thread; build 14 had the same code, so build 15 carries the fix. The tap itself is device
   test D2 (the simulator's banners take no taps).
 
+- Toasts the Apple way (U33, #86): the toast is for Undo only; a success shows in place, a failed or refused write is the
+  system alert (`NoticeCenter`), a field's failure is under it, a list that could not load says so in its place. The rule
+  is `docs/design/feedback.md`, linked from both CLAUDE.md files. The app points at `https://api.tutorcentral.in` (build 16).
+- The owner's finding on build 16: a long sheet title ran under Cancel. `SheetHeader` keeps the centred title clear of the
+  wider button and truncates it (#87, build 18). Swift Testing's `#expect` read `58 + Tokens.inline` as false against an
+  equal value: the gap is bound to a typed `CGFloat` first.
+- The App Store page (D51), before Phase 9: the Store boards (canvas row 13), `bun store-shots` (#88), the listing and review
+  notes (`docs/store/listing.md`, held to App Review Guidelines 2.3), the review account `review@tutorcentral.in` (made by
+  the owner in the Supabase dashboard: Claude creates no account and handles no password), seeded by `seed-review` (#89).
+  App Store Connect filled and saved by the owner, not submitted; App Privacy published; 4+.
+
 ## Machine
 
 Xcode 27, Google Chrome 155 headless driven over DevTools from Bun, Python 3 with Pillow for pixel diffs, bun 1.3.11, the local
@@ -74,5 +85,4 @@ Supabase stack and the API with `AI_FAKE=1`. The Vercel CLI on this Mac is the o
 
 ## Next
 
-Phase 9 (user testing, D43): its first step is the external group in App Store Connect. The owner installs build 14 and looks at
-Edit event with the keyboard, a checked paper's Saved mark with its toast, and the scan list scrolled.
+Phase 9 (user testing, D43), from `plan/resume/017-phase-9-plan.md` on Fable 5.1: the plan first. Build 18 is on TestFlight.

@@ -6,7 +6,7 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-09, session 17 (the Phase 8 build, on Opus 5.5). **Session 17:** Phase 8 done in PRs #76 to #82:
 tutorcentral.in live (Home, `/privacy`, `/terms`, `/support`, not found) by `deploy-web` run 37929980186; the privacy URL in App
 Store Connect and TestFlight's Test Information; U7, U16, U24 and Phase 6's minors 1, 6, 7 in the app; D50; build 1.0.0 (14) on
-TestFlight. **Session 16:** the Phase 8 boards and plan. **Next:** Phase 9, user testing (D43): its plan, then the external group.
+TestFlight. **Session 16:** the Phase 8 boards and plan. **Next:** Phase 9, user testing (D43): its plan, from `plan/resume/017-phase-9-plan.md` (Fable 5.1), then the external group.
 The owner tests build 18 on the phone: U33's alerts and in-place successes, and a long class name on Add to class (#87).
 
 **App Store page (D51, before Phase 9):** the Store boards approved (canvas row 13); `bun store-shots` (#88) made
