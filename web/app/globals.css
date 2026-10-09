@@ -1,0 +1,405 @@
+/* Ember on the web (D44). Colours are the app's tokens (docs/design/design-tokens.md, checked by test/unit/tokens.test.ts);
+   light is the browser's default scheme, dark follows the device. Sizes are the web's scale (information-architecture.md,
+   "Phase 8 boards"). */
+:root {
+  /* The app icon's own colours (D29), the brand tile in both schemes. */
+  --iconGround: #131110;
+  --iconMark: #ffab38;
+  --ground: #f8f4ee;
+  --surface1: #ffffff;
+  --surface2: #f1ebe2;
+  --buttonFill: #ffffff;
+  --well: #f3eee6;
+  --line: #e8e0d5;
+  --lineStrong: #d5cbbe;
+  --text: #1f1b17;
+  --text2: #625a52;
+  --text3: #766d66;
+  --accent: #ffab38;
+  --accentPressed: #e6952a;
+  --accentText: #a35f00;
+  --accentTint: rgba(224, 138, 0, 0.14);
+  --textOnAccent: #231500;
+  --shadowRaised: 0 1px 2px rgba(40, 30, 20, 0.05), 0 10px 28px rgba(40, 30, 20, 0.07);
+  --shadowButton: 0 1px 2px rgba(40, 30, 20, 0.08);
+  --shadowPrimary: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 22px rgba(224, 138, 0, 0.26);
+  --glowHero: rgba(255, 171, 56, 0.18);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #131110;
+    --surface1: #1c1917;
+    --surface2: #272220;
+    --buttonFill: #272220;
+    --well: #0e0c0b;
+    --line: #302a27;
+    --lineStrong: #3d3632;
+    --text: #f6f1ea;
+    --text2: #b9afa5;
+    --text3: #958b80;
+    --accent: #ffab38;
+    --accentPressed: #e6952a;
+    --accentText: #ffab38;
+    --accentTint: rgba(255, 171, 56, 0.14);
+    --textOnAccent: #221400;
+    --shadowRaised:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.28);
+    --shadowButton: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadowPrimary: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 22px rgba(255, 171, 56, 0.28);
+    --glowHero: rgba(255, 171, 56, 0.18);
+    color-scheme: dark;
+  }
+}
+
+html {
+  background: var(--ground);
+}
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 17px;
+  line-height: 27px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a {
+  color: var(--accentText);
+}
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+p,
+li {
+  color: var(--text2);
+  text-wrap: pretty;
+}
+ul {
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Layout */
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+.hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.nav {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.nav a {
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--text2);
+  padding: 12px 0;
+}
+.nav a[aria-current="page"] {
+  color: var(--text);
+}
+.brand {
+  text-decoration: none;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.brandMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--iconGround);
+  color: var(--iconMark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-shadow: inset 0 0 0 1px var(--accentTint);
+}
+.ftr {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  border-top: 1px solid var(--line);
+  padding: 32px 0 48px;
+}
+.sec {
+  padding: 64px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.sec.tight {
+  padding-top: 0;
+  padding-bottom: 40px;
+}
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 720px;
+  padding: 56px 0 40px;
+}
+.eyebrow {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--accentText);
+}
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 680px;
+}
+.cols2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 56px;
+}
+.cols3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px 48px;
+}
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 72px;
+  align-items: center;
+  padding: 56px 0 72px;
+}
+.glow {
+  position: absolute;
+  left: 50%;
+  top: -120px;
+  width: 920px;
+  height: 620px;
+  transform: translateX(-30%);
+  background: radial-gradient(closest-side, var(--glowHero), transparent 70%);
+  pointer-events: none;
+}
+
+/* Type */
+.h1 {
+  font-size: 60px;
+  line-height: 64px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+.t1 {
+  font-size: 44px;
+  line-height: 50px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.h2 {
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+.h3 {
+  font-size: 20px;
+  line-height: 27px;
+  font-weight: 600;
+  color: var(--text);
+}
+.lead {
+  font-size: 21px;
+  line-height: 32px;
+}
+.lead2 {
+  font-size: 19px;
+  line-height: 29px;
+}
+.small {
+  font-size: 15px;
+  line-height: 22px;
+}
+.caption {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text3);
+}
+.rowTitle {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text);
+}
+.rowLine {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text2);
+}
+
+/* Parts */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface1);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadowRaised);
+  overflow: hidden;
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.tile {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: var(--surface2);
+  color: var(--accentText);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.plain {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 22px;
+  border-radius: 15px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+.btnPrimary {
+  background: var(--accent);
+  color: var(--textOnAccent);
+  font-weight: 700;
+  box-shadow: var(--shadowPrimary);
+}
+.btnPrimary:active {
+  background: var(--accentPressed);
+}
+.btnSecondary {
+  background: var(--buttonFill);
+  border: 1px solid var(--lineStrong);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: var(--shadowButton);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+.phone {
+  position: relative;
+  width: 307px;
+  height: 665px;
+  border-radius: 48px;
+  overflow: hidden;
+  flex: none;
+  box-shadow:
+    0 0 0 10px var(--surface1),
+    0 0 0 11px var(--lineStrong),
+    0 30px 80px rgba(0, 0, 0, 0.45);
+}
+.phone img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+:focus-visible {
+  outline: 3px solid var(--accentTint);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 32px 0 48px;
+    justify-items: start;
+  }
+  .h1 {
+    font-size: 40px;
+    line-height: 44px;
+  }
+  .t1 {
+    font-size: 34px;
+    line-height: 40px;
+  }
+  .h2 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .lead {
+    font-size: 19px;
+    line-height: 28px;
+  }
+  .cols2,
+  .cols3 {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .sec {
+    padding: 40px 0;
+  }
+  .nav {
+    gap: 18px;
+  }
+  .ftr {
+    flex-direction: column;
+  }
+  .phone {
+    width: 275px;
+    height: 597px;
+  }
+}

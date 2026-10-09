@@ -1,7 +1,7 @@
 name: check
 
-# The same `bun check` as on the owner's machine, split over two runners: the iOS steps on macOS with Xcode 27, the API
-# and database steps on Ubuntu with a local Supabase. `.check-cache` comes back from the last run, so a step whose
+# The same `bun check` as on the owner's machine, split over two runners: the iOS steps on macOS with Xcode 27, the API,
+# website and database steps on Ubuntu with a local Supabase. `.check-cache` comes back from the last run, so a step whose
 # inputs did not change is not run again; on main every step runs (--fresh) to keep main honest.
 # Every action is pinned to a commit (D14); the tag it was is in the comment.
 
@@ -79,8 +79,8 @@ jobs:
       - name: bun check
         run: bun check --only=format,lint,ios,tools $FRESH
 
-  api-db:
-    name: api, db
+  api-web-db:
+    name: api, web, db
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -102,6 +102,7 @@ jobs:
           path: |
             ~/.bun/install/cache
             .check-cache
+            web/.next/cache
           key: api-db-${{ hashFiles('bun.lock') }}-${{ github.sha }}
           restore-keys: |
             api-db-${{ hashFiles('bun.lock') }}-
@@ -115,4 +116,4 @@ jobs:
         run: supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       - name: bun check
-        run: bun check --only=api,db $FRESH
+        run: bun check --only=api,web,db $FRESH

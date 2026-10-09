@@ -39,3 +39,10 @@ supabase/.temp/
 
 # Local build config (copy of ios/Config/Local.xcconfig.example)
 ios/Config/Local.xcconfig
+
+# Next.js (web/, D44)
+web/.next/
+web/out/
+web/*.tsbuildinfo
+# Next writes it on every build and typegen; it imports .next/types, so it cannot be committed
+web/next-env.d.ts

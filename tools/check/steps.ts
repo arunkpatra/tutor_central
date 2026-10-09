@@ -21,7 +21,7 @@ export async function toolchainSalt(): Promise<string> {
 
 /** Why the db step should not run here, or null. CI runs it only on the job that sets TC_DB_IN_CI. */
 export function dbSkipReason(env: Record<string, string | undefined>, supabaseRunning: boolean): string | null {
-  if (env.CI && !env.TC_DB_IN_CI) return "not on this runner (the api-db job runs it)";
+  if (env.CI && !env.TC_DB_IN_CI) return "not on this runner (the api-web-db job runs it)";
   return supabaseRunning ? null : "local supabase is not running (cd supabase && supabase start)";
 }
 
@@ -88,6 +88,26 @@ export const STEPS: Step[] = [
     name: "api",
     inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock"],
     run: () => run("bun run check", "api"),
+  },
+  {
+    name: "web",
+    inputs: [
+      "web/app/**",
+      "web/components/**",
+      "web/content/**",
+      "web/lib/**",
+      "web/public/**",
+      "web/test/**",
+      "web/package.json",
+      "web/tsconfig.json",
+      "web/next.config.ts",
+      "web/biome.json",
+      "web/vercel.json",
+      "bun.lock",
+      // The token test reads the document.
+      "docs/design/design-tokens.md",
+    ],
+    run: () => run("bun run check", "web"),
   },
   {
     name: "db",
