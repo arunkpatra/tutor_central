@@ -90,12 +90,16 @@ public struct Dependencies: Sendable {
         self.bundleVersion = bundleVersion
     }
 
+    /// "1.0.0 (14)": the marketing version and the build, as Settings' About and Help show them.
+    static func version(from info: [String: Any]) -> String {
+        "\(info["CFBundleShortVersionString"] ?? "0") (\(info["CFBundleVersion"] ?? "0"))"
+    }
+
     /// The real thing, from Info.plist (SupabaseConfig) and the bundle's version strings.
     public static func live() throws -> Dependencies {
         let config = try SupabaseConfig.fromMainBundle()
         let client = SupabaseClientFactory.make(config)
-        let info = Bundle.main.infoDictionary ?? [:]
-        let version = "\(info["CFBundleShortVersionString"] ?? "0") (\(info["CFBundleVersion"] ?? "0"))"
+        let version = version(from: Bundle.main.infoDictionary ?? [:])
         // supabase-swift refreshes the session before it hands the token over.
         let api = APIClient(origin: config.apiOrigin, token: { try await client.auth.session.accessToken })
         return Dependencies(
