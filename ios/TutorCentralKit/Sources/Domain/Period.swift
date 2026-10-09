@@ -22,6 +22,11 @@ public struct Period: Hashable, Sendable, Comparable, Codable {
         String(format: "%04d-%02d-01", year, month)
     }
 
+    /// "2026-10": the month in a deep link and a reminder's id.
+    public var isoMonth: String {
+        String(format: "%04d-%02d", year, month)
+    }
+
     public var next: Period {
         month == 12 ? Period(year: year + 1, month: 1) : Period(year: year, month: month + 1)
     }
