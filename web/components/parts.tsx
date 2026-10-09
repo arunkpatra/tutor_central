@@ -48,7 +48,7 @@ export function FeatureRow({ icon, title, line }: { icon: IconName; title: strin
       <span className="tile">
         <Icon name={icon} size={22} width={1.9} />
       </span>
-      <div className="plain">
+      <div className="plain featureText">
         <div className="rowTitle">{title}</div>
         <div className="rowLine">{line}</div>
       </div>

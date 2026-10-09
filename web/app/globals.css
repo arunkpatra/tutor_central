@@ -6,6 +6,9 @@
   --iconGround: #131110;
   --iconMark: #ffab38;
   --iconRim: rgba(255, 171, 56, 0.25);
+  /* The hero's phone is dark on both pages (the app opens dark): its rim is the dark surface1 and lineStrong. */
+  --phoneRim: #1c1917;
+  --phoneEdge: #3d3632;
   --ground: #f8f4ee;
   --surface1: #ffffff;
   --surface2: #f1ebe2;
@@ -67,6 +70,11 @@ body {
   line-height: 27px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+/* The hero's glow is wider than a phone: cut at the page's edge, never a sideways scroll. On main, not body: the body's
+   overflow moves to the viewport, which a phone's browser still widens. Clip keeps the glow's spill above the hero. */
+main {
+  overflow-x: clip;
 }
 a {
   color: var(--accentText);
@@ -213,6 +221,24 @@ ul {
   align-items: center;
   padding: 56px 0 72px;
 }
+.heroWrap {
+  position: relative;
+}
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 560px;
+}
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+.notCols {
+  max-width: 980px;
+}
 .glow {
   position: absolute;
   left: 50%;
@@ -326,6 +352,10 @@ ul {
   flex-direction: column;
   gap: 6px;
 }
+.featureText {
+  gap: 4px;
+  min-width: 0;
+}
 .btn {
   text-decoration: none;
   display: inline-flex;
@@ -368,8 +398,8 @@ ul {
   overflow: hidden;
   flex: none;
   box-shadow:
-    0 0 0 10px var(--surface1),
-    0 0 0 11px var(--lineStrong),
+    0 0 0 10px var(--phoneRim),
+    0 0 0 11px var(--phoneEdge),
     0 30px 80px rgba(0, 0, 0, 0.45);
 }
 .phone img {
