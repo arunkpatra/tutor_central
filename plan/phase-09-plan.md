@@ -144,7 +144,7 @@ Dates follow the owner's steps; the shape is fixed. Today is Friday 9 October 20
 - Produces: the release-notes text under "1.0 (build 18)" that Owner step 3 pastes as "What to Test" and Task 2's guide
   shortens; the ticked "Before the build" and "The build" lines.
 
-- [ ] **Step 1: confirm the candidate build with the owner.** Ask (one question): "Build 18 passed on your phone (U33's alerts,
+- [x] **Step 1: confirm the candidate build with the owner.** Ask (one question): "Build 18 passed on your phone (U33's alerts,
   the long class name on Add to class)?" A finding here is the first row of Task 2's findings file, fixed by Task 7 before this
   task continues; the candidate becomes the build that carries the fix.
 
@@ -165,7 +165,7 @@ gh workflow run deploy && sleep 20 && gh run list --workflow deploy --limit 1
   requests that carried build 18's write changes: #84, #86, #87, each with its hand run in its description);
   `MARKETING_VERSION` 1.0.0 (`ios/project.yml` line 15).
 
-- [ ] **Step 4: tick "The build"**: run 37950611572, build 1.0.0 (18); the internal group installed it (the owner's phone, step
+- [x] **Step 4: tick "The build"**: run 37950611572, build 1.0.0 (18); the internal group installed it (the owner's phone, step
   1). The tester's line waits for Task 4.
 
 - [x] **Step 5: write the release notes** under "Release notes", replacing the template "1.0 (build N)" with this text (the

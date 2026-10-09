@@ -15,7 +15,7 @@ link, a screenshot, a line in a log).
 ## The build
 
 - [x] `gh workflow run testflight` has run; its build number is noted below, under the release notes. Run 37950611572, build 1.0.0 (18).
-- [ ] The internal group has installed the build.
+- [x] The internal group has installed the build. Build 18: the owner's iPhone, passed (U33's alerts and in-place successes, a long class name on Add to class), 2026-10-09.
 - [ ] The tester's lines in `docs/testing/device-tests.md` for this build all Pass, or each Fail has its fix merged
   and a new build.
 
