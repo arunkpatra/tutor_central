@@ -165,13 +165,14 @@ public struct StudentFormSheet: View {
                                     displayedComponents: .date
                                 )
                                 .datePickerStyle(.graphical)
-                                .tint(Tokens.accent.color)
-                                // The day is the centre's (India's), whatever zone the phone is in.
-                                .environment(\.timeZone, DayHeading.india.timeZone)
-                                .padding(Tokens.cardPaddingCompact)
-                                .presentationCompactAdaptation(.popover)
+                                // Its width (without it the calendar collapses to a sliver: build 10) and the
+                                // centre's day, whatever zone the phone is in.
+                                .calendarPopover(timeZone: DayHeading.india.timeZone)
                             }
                     }
+                    // Nothing on one line (the tile fixes the row's size); the switch at the right edge when the
+                    // date goes under the label.
+                    Spacer(minLength: 0)
                     Switch(isOn: $store.hasBirthDate, label: "Add a date of birth")
                 }
             }

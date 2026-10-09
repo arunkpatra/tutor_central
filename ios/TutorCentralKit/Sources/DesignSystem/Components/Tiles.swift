@@ -20,15 +20,28 @@ public struct TileRow<Trailing: View>: View {
         self.trailing = trailing()
     }
 
+    private var labelText: some View {
+        Text(label).typeStyle(labelType).foregroundStyle(labelTone.color)
+    }
+
     public var body: some View {
-        AdaptiveRow(spacing: Tokens.inline) {
-            Text(label).typeStyle(labelType).foregroundStyle(labelTone.color)
-            AdaptiveSpacer(minLength: Tokens.inline)
-            trailing
+        // On one line when label and value fit whole; otherwise the value under the label (a date beside a switch was
+        // cut to "9 Oct 20…" at the larger sizes: build 10).
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: Tokens.inline) {
+                labelText
+                Spacer(minLength: Tokens.inline)
+                trailing.fixedSize()
+            }
+            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                labelText
+                trailing
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, Tokens.cardPaddingCompact)
-        // 46 high as drawn; taller at the accessibility sizes.
-        .growsWithText()
+        // 46 high as drawn; taller when the value goes under the label (the padding only shows then).
+        .padding(.vertical, Tokens.inline)
         .frame(minHeight: Well<EmptyView>.height)
         .background(Tokens.surface2.color, in: .rect(cornerRadius: Tokens.radiusControl, style: .continuous))
         .overlay(
@@ -73,7 +86,7 @@ public struct PickerValue: View {
 
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
-            Text(value).typeStyle(Tokens.bodyStrong)
+            Text(value).typeStyle(Tokens.bodyStrong).lineLimit(1)
             Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
                 .font(.system(size: Tokens.iconInline))
         }
