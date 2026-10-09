@@ -87,7 +87,7 @@ export const PRIVACY = {
           kind: "p",
           text:
             "The AI tools use Claude, by Anthropic. What you send to them (your words and the photos you choose) is read on " +
-            `Anthropic's systems, which are outside India. Anthropic never uses it to train its models and deletes it within ${AI_RETENTION}.`,
+            `Anthropic's systems, which are outside India. Anthropic never uses it to train its models and normally deletes it within ${AI_RETENTION}.`,
         },
       ],
     },

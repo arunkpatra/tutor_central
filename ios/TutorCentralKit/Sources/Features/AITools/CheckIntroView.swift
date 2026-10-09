@@ -35,7 +35,8 @@ public struct CheckIntroView: View {
 
     static let notice = NoticesCard.Notice(
         symbol: "lock",
-        text: "The photos go to our AI service to be read. We keep no copy; the service deletes them within 30 days."
+        text: "The photos go to our AI service to be read. We keep no copy; the service normally deletes them "
+            + "within 30 days."
     )
 
     public var body: some View {

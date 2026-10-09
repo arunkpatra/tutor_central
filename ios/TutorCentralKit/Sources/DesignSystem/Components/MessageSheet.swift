@@ -109,8 +109,8 @@ public struct ConsentSheet: View {
     }
 
     public static let text = "A photo of a register or an answer sheet carries children's names and details. It is "
-        + "sent to our AI service (Claude, by Anthropic) only to be read. We keep no copy; the service deletes it "
-        + "within 30 days and never uses it for training. "
+        + "sent to our AI service (Claude, by Anthropic) only to be read. We keep no copy; the service normally "
+        + "deletes it within 30 days and never uses it for training. "
         + "Make sure the parents are fine with their details being kept in Tutor Central."
 
     public init(centreName: String, agree: @escaping () async -> Bool, close: @escaping () -> Void) {
