@@ -35,8 +35,8 @@ every parent +919611385678). Left for Phase 9's end (Owner step 6): attach the f
 
 ## In flight
 
-Nothing open on GitHub. Phase 9: Task 1 is next (the API deploy is part of it: production's `/health` reports `2448295`,
-behind `main` by #81's phone reading and D48's limits). No reading yet; no build to the Tutors group yet; the group does not
+Nothing open on GitHub. Phase 9: Task 1 under way (session 19): the API deployed to `main`'s head (`999e881`, run
+37965871936); the checklist ticked for build 18 and its notes written in `docs/release.md`. No reading yet; no build to the Tutors group yet; the group does not
 exist yet (Owner step 2). TestFlight 1.0.0 (18) from run 37950611572 is the candidate for Beta App Review. The remote holds
 `main`, `pr-shots` and two branches of merged pull requests (`tools/review-seed`, `tools/store-shots`), the owner's to delete.
 
@@ -55,8 +55,8 @@ exist yet (Owner step 2). TestFlight 1.0.0 (18) from run 37950611572 is the cand
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `2448295` (deploy run 37897295893, after #70):
-  **behind `main`** (#81's phone trunk 0 and D48's limits) until Phase 9's Task 1 runs `gh workflow run deploy`.
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `999e881` (deploy run 37965871936, 2026-10-09, Phase 9's Task 1: #81's phone trunk 0 and D48's limits are
+  live); nothing pending in the database.
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
   `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.

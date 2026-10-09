@@ -145,7 +145,7 @@ Dates follow the owner's steps; the shape is fixed. Today is Friday 9 October 20
   the long class name on Add to class)?" A finding here is the first row of Task 2's findings file, fixed by Task 7 before this
   task continues; the candidate becomes the build that carries the fix.
 
-- [ ] **Step 2: deploy the API** so production carries #81's phone reading and D48's limits:
+- [x] **Step 2: deploy the API** so production carries #81's phone reading and D48's limits:
 
 ```bash
 gh workflow run deploy && sleep 20 && gh run list --workflow deploy --limit 1
@@ -155,7 +155,7 @@ gh workflow run deploy && sleep 20 && gh run list --workflow deploy --limit 1
   `curl -s https://api.tutorcentral.in/health` prints `main`'s head (`git rev-parse HEAD`). Record the run id and the commit
   in `STATE.md`'s Production.
 
-- [ ] **Step 3: tick "Before the build"** in `docs/release.md`, each with its proof in the line:
+- [x] **Step 3: tick "Before the build"** in `docs/release.md`, each with its proof in the line:
   `main` green (the `check` run id of the head commit, `gh run list --workflow check --limit 1`); no migration pending
   (the deploy run's summary, and the TestFlight lane of build 18 passed its migration gate); `/health` at the head (the
   curl's commit); `bun check --fresh` green locally (the summary's last line, with the date); the D32 hand runs (the pull
@@ -165,7 +165,7 @@ gh workflow run deploy && sleep 20 && gh run list --workflow deploy --limit 1
 - [ ] **Step 4: tick "The build"**: run 37950611572, build 1.0.0 (18); the internal group installed it (the owner's phone, step
   1). The tester's line waits for Task 4.
 
-- [ ] **Step 5: write the release notes** under "Release notes", replacing the template "1.0 (build N)" with this text (the
+- [x] **Step 5: write the release notes** under "Release notes", replacing the template "1.0 (build N)" with this text (the
   Phase 7 list moves under it as history: "Earlier: build 10 to 18 brought …", one line). This is also "What to Test" for
   the build, pasted whole by Owner step 3:
 
