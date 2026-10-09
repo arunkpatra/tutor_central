@@ -53,6 +53,9 @@ import Observation
         case let .attendance(_, className, date, _, _, _):
             return "Attendance for \(className) on \(date.shortWeekdayText) stays as it was. "
                 + "What you marked here is lost."
+        case .markPaid where change.state != .waiting:
+            // A failed change: the server already refused it, so nothing there changes either way.
+            return "The mark you made here is lost. Nothing else changes."
         case let .markPaid(_, studentName, month, _, _, _):
             return "\(Self.firstName(studentName))'s \(month.monthName) fee stays as it was: due. "
                 + "The mark you made here is lost."

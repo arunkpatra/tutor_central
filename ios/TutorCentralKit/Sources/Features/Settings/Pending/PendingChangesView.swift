@@ -9,16 +9,17 @@ public struct PendingChangesView: View {
     @State private var store: PendingChangesStore
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
-    private let onSent: (RunOutcome?) -> Void
+    private let onChanged: (RunOutcome?) -> Void
 
-    /// `boardDiscard` opens the dialog over the failed row (P7-Pending-Discard). `onSent` is AppShell's: the toast,
+    /// `boardDiscard` opens the dialog over the failed row (P7-Pending-Discard). `onChanged` is AppShell's (after Send
+    /// again or a discard):
     /// and back when nothing is left.
-    public init(store: PendingChangesStore, boardDiscard: Bool = false, onSent: @escaping (RunOutcome?) -> Void) {
+    public init(store: PendingChangesStore, boardDiscard: Bool = false, onChanged: @escaping (RunOutcome?) -> Void) {
         if boardDiscard {
             store.confirmingDiscard = store.rows.first { $0.state != .waiting }?.id
         }
         _store = State(initialValue: store)
-        self.onSent = onSent
+        self.onChanged = onChanged
     }
 
     public var body: some View {
@@ -65,7 +66,7 @@ public struct PendingChangesView: View {
         FooterButton {
             VStack(alignment: .leading, spacing: Tokens.rowPaddingDense) {
                 Button("Send again") {
-                    Task { await onSent(store.sendAgain()) }
+                    Task { await onChanged(store.sendAgain()) }
                 }
                 .buttonStyle(.primary(.card, loading: store.sending))
                 .disabled(!store.canSend)
@@ -88,9 +89,7 @@ public struct PendingChangesView: View {
                 destructive: true, onCancel: { store.confirmingDiscard = nil },
                 onAction: {
                     store.discard(id: id)
-                    if store.rows.isEmpty {
-                        dismiss()
-                    }
+                    onChanged(nil)
                 }
             )
             .padding(.horizontal, Tokens.pageSide)

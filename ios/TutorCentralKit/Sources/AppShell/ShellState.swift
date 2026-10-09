@@ -40,7 +40,7 @@ struct CheckVisit {
     /// The network as the monitor last said; every root's status line follows it.
     var online = true
     var runState: RunState = .idle
-    private var centre: UUID?
+    @ObservationIgnored private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
         self.tabs = tabs

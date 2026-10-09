@@ -94,6 +94,13 @@ extension RootView {
         }
     }
 
+    /// The centre's queue, made now if the shell has not followed the session yet: the tab roots are built in the same
+    /// update that makes the session ready, before `onChange` runs (run 8: the stores got none).
+    func centreQueue() -> ChangeQueue? {
+        Self.follow(session.state, shell: shell, deps: deps)
+        return shell.queue
+    }
+
     /// What a root is told: its line and whether it is offline.
     func rootStatus(savedAt: Date?, offlineRead: Bool) -> RootStatus {
         RootStatus(line: statusLine(savedAt: savedAt, offlineRead: offlineRead), offline: !shell.online || offlineRead)
@@ -139,8 +146,16 @@ extension RootView {
     }
 
     /// What a sent change changes elsewhere: the screens read again.
-    private func afterRun(_ outcome: RunOutcome) {
-        guard RunState.toast(for: outcome) != nil else { return }
-        Task { await shell.fees?.reload() }
+    private func afterRun(_: RunOutcome) {
+        afterQueueChanged()
+    }
+
+    /// The queue sent or dropped changes: Attendance and Fees read what the server has now (run 9 and run 10: a
+    /// sent save still read "saved on this iPhone"; a discarded fee still read paid here).
+    func afterQueueChanged() {
+        Task {
+            await shell.attendance?.reload()
+            await shell.fees?.reload()
+        }
     }
 }

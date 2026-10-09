@@ -89,3 +89,41 @@ import Testing
         #expect(store.absentRows.first?.told == "Told today")
     }
 }
+
+@MainActor struct AttendanceAfterSendTests {
+    /// Run 9: once the queue sent the save, the screen reads the server's session again: no "saved on this iPhone".
+    @Test func reloadAfterTheSendReadsWhatTheServerHas() async {
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await register.load()
+        let queue = ChangeQueue(
+            centre: FakeCentreRepository.meeraWorkspace.centre.id,
+            directory: FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        )
+        let store = AttendanceStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, attendance: attendance,
+            messages: FakeMessageLogRepository(), now: { FakeCountsRepository.fixedNow }
+        )
+        store.queue = queue
+        store.online = { false }
+        await store.load()
+        store.toggle(FakeAttendanceRepository.hemanth)
+        _ = await store.save()
+        let runner = QueueRunner(
+            queue: queue, centre: FakeCentreRepository.meeraWorkspace.centre.id, attendance: attendance,
+            fees: FakeFeesRepository(), messages: FakeMessageLogRepository()
+        )
+        #expect(await runner.run() == .done(sent: 1, failed: 0))
+        store.online = { true }
+        await store.reload()
+        if case .reopened = store.phase {} else {
+            Issue.record("not reopened: \(store.phase)")
+        }
+        #expect(store.saved?.marks[FakeAttendanceRepository.hemanth] == .absent && store.savedAt == nil)
+    }
+}

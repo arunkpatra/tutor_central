@@ -19,7 +19,7 @@ extension RootView {
         )
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingPayments(from: changed) } }
         made.cache = monthCache(workspace, "fees")
-        made.queue = shell.queue
+        made.queue = centreQueue()
         made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onFeesChanged = { [shell] in
             Task { await shell.register?.refresh() }

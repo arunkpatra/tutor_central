@@ -35,6 +35,14 @@ extension AttendanceStore {
         lastSavedAt = at
     }
 
+    /// After the queue sent or dropped a change: the shown class and day read again from the server (a draft
+    /// with unsaved toggles is left alone).
+    public func reload() async {
+        guard opened, phase != .saving, !draft.isChanged(from: saved, members: members) else { return }
+        loadedMonth = nil
+        await open(classID: draft.classID, date: draft.date)
+    }
+
     /// The alert's log kept here; the row reads told, as it would online.
     func keepAlertHere(_ student: Student, about day: Day) {
         let at = now()

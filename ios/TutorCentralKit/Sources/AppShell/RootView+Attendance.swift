@@ -20,7 +20,7 @@ extension RootView {
             now: deps.now
         )
         made.cache = monthCache(workspace, "attendance")
-        made.queue = shell.queue
+        made.queue = centreQueue()
         made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         shell.attendance = made
         return made

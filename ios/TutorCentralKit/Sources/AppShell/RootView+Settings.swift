@@ -51,7 +51,7 @@ extension RootView {
     }
 
     @ViewBuilder private var accountView: some View {
-        if case let .ready(workspace) = session.state, let queue = shell.queue {
+        if case let .ready(workspace) = session.state, let queue = centreQueue() {
             AccountView(
                 store: AccountStore(workspace: workspace, auth: deps.auth, queue: queue),
                 actions: AccountActions(
@@ -106,6 +106,7 @@ extension RootView {
                 if queue.pending.isEmpty {
                     shell.tabs.remove(.pendingChanges)
                 }
+                afterQueueChanged()
             }
         }
     }

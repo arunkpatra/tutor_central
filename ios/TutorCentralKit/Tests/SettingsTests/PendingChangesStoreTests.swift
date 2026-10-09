@@ -47,8 +47,8 @@ import Testing
         #expect(store.rows.map(\.title) == ["Attendance · Class 10 Maths", "Fee · Dev Kumar"])
         #expect(store.rows.map(\.state) == [.waiting, .failed(reason: reason)])
         let fee = try #require(store.rows.last?.id)
-        #expect(store.discardWords(for: fee)
-            == "Dev's October fee stays as it was: due. The mark you made here is lost.")
+        // A failed change: the server already said no, so nothing there changes either way.
+        #expect(store.discardWords(for: fee) == "The mark you made here is lost. Nothing else changes.")
         let attendance = try #require(store.rows.first?.id)
         #expect(store.discardWords(for: attendance)
             == "Attendance for Class 10 Maths on Wed 7 Oct stays as it was. What you marked here is lost.")
