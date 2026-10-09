@@ -148,6 +148,22 @@ jobs:
           grep -E 'error:|Upload|EXPORT' export.log || tail -40 export.log
           grep -q 'EXPORT SUCCEEDED' export.log
 
+      # A fresh runner makes an Apple Development certificate to sign the archive, and Apple caps how many an account
+      # holds (build 12 stopped on it). This run's own certificate, matched by serial number, is revoked, pass or fail.
+      - name: Release the run's development certificate
+        if: always()
+        env:
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          mkdir -p certs && cd certs
+          security find-certificate -a -c "Apple Development" -p 2>/dev/null \
+            | awk '/BEGIN CERTIFICATE/ { n++ } { print > ("cert" n ".pem") }'
+          serials=$(for f in cert*.pem; do [ -f "$f" ] && openssl x509 -in "$f" -noout -serial | cut -d= -f2; done)
+          cd ..
+          APP_STORE_CONNECT_KEY_PATH="$HOME/private_keys/AuthKey_$KEY_ID.p8" bun tools/release-dev-certificate.ts $serials
+
       - name: Summary
         env:
           COMMIT: ${{ steps.commit.outputs.sha }}
