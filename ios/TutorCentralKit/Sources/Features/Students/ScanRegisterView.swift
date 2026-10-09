@@ -9,6 +9,8 @@ import UIKit
 /// What a launch state sets up on Scan register (P6-Scan-*).
 public enum ScanBoardState: Hashable, Sendable {
     case consent, cameraRefused, reading, review, edit, rowRemoved, leave, nothing, failed
+    /// The list opened at its end, so the glass under the status bar shows (U24, P8-Scan-List-Scrolled).
+    case scrolled
 }
 
 /// Scan register (P6-Scan-Intro to -Failed), pushed from More, the Students "+" menu and the empty register: the
@@ -107,6 +109,7 @@ public struct ScanRegisterView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
@@ -241,7 +244,7 @@ public struct ScanRegisterView: View {
         switch boardState {
         case .cameraRefused: showRefused()
         case .consent: pending = sample
-        case .reading, .review, .edit, .rowRemoved, .leave, .nothing, .failed:
+        case .reading, .review, .scrolled, .edit, .rowRemoved, .leave, .nothing, .failed:
             if let sample {
                 store.begin(sample)
             }

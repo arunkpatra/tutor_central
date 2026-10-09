@@ -151,7 +151,7 @@ public enum Fixtures {
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
-             .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit,
+             .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
              .todayAddingTask, .more, .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
@@ -159,9 +159,11 @@ public enum Fixtures {
              .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
              .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
              .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
-             .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit,
+             .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview,
+             .scanReviewScrolled, .scanReviewEdit,
              .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
              .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
+             .checkResultScrolled,
              .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
              .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
              .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
@@ -181,7 +183,8 @@ public enum Fixtures {
         switch state {
         case .feesEmpty, .feesGenerate, .paymentsEmpty: FakeCentreRepository.meeraWorkspaceWithoutUPI
         case .feesPayee: FakeCentreRepository.meeraWorkspaceUnconfirmed
-        case .scanIntro, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
+        case .scanIntro, .scanCameraRefused, .scanReading, .scanReview, .scanReviewScrolled, .scanReviewEdit,
+             .scanReviewRemoved,
              .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved: FakeCentreRepository.meeraWorkspaceConsented
         case _ where RootView.checkStates.contains(state): FakeCentreRepository.meeraWorkspaceConsented
         default: meeraWorkspace
@@ -213,7 +216,8 @@ public enum Fixtures {
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
         case .history, .historyByStudent, .historyStudent, .student, .studentFeesDue, .studentFees, .schedule,
-             .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm, .todayEvening, .reports, .reportsAttendance,
+             .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm, .todayEvening, .reports,
+             .reportsAttendance,
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         default: FakeAttendanceRepository.seed

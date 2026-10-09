@@ -60,6 +60,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case scheduleDay = "schedule-day"
     case eventNew = "event-new"
     case eventEdit = "event-edit"
+    case eventEditKeyboard = "event-edit-keyboard"
     case eventDeleteConfirm = "event-delete-confirm"
     case tasks
     case tasksEmpty = "tasks-empty"
@@ -111,6 +112,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case scanCameraRefused = "scan-camera-refused"
     case scanReading = "scan-reading"
     case scanReview = "scan-review"
+    case scanReviewScrolled = "scan-review-scrolled"
     case scanReviewEdit = "scan-review-edit"
     case scanReviewRemoved = "scan-review-removed"
     case scanReviewLeave = "scan-review-leave"
@@ -125,6 +127,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case checkResult = "check-result"
     case checkMarkPicker = "check-mark-picker"
     case checkResultEdited = "check-result-edited"
+    case checkResultScrolled = "check-result-scrolled"
     case checkSaved = "check-saved"
     case checkFailed = "check-failed"
     case settingsEnd = "settings-end"

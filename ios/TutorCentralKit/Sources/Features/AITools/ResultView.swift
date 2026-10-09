@@ -65,6 +65,7 @@ public struct ResultView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)

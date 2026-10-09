@@ -1,14 +1,22 @@
 import SwiftUI
 
-/// Draws the current toast at the bottom, above the tab bar when there is one; it slides in and out in `panel`.
+/// Draws the current toast at the bottom, above the tab bar when there is one and above a footer on screen; it slides
+/// in
+/// and out in `panel`.
 public struct ToastHost: View {
     let toasts: ToastCenter
-    let bottom: CGFloat
+    let base: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(toasts: ToastCenter, bottom: CGFloat = Tokens.pageSide) {
         self.toasts = toasts
-        self.bottom = bottom
+        base = bottom
+    }
+
+    /// The toast's distance from the bottom: its base (the page side, or over a sheet's footer) plus a footer on screen
+    /// and a gap (D49, U16): a toast never hides Save attendance, Add N students or the Saved mark.
+    public nonisolated static func bottom(base: CGFloat, footerInset: CGFloat) -> CGFloat {
+        footerInset > 0 ? base + footerInset + Tokens.tileGap : base
     }
 
     public var body: some View {
@@ -24,7 +32,7 @@ public struct ToastHost: View {
                     }
                 )
                 .padding(.horizontal, Tokens.pageSide)
-                .padding(.bottom, bottom)
+                .padding(.bottom, Self.bottom(base: base, footerInset: toasts.footerInset))
                 .transition(reduceMotion ? .identity : .move(edge: .bottom).combined(with: .opacity))
             }
         }

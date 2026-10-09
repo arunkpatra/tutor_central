@@ -137,12 +137,20 @@ struct LaunchStateTests {
     }
 
     @MainActor @Test func theScheduleStatesPushOnTheMoreTab() {
-        for state in [LaunchState.schedule, .scheduleDay, .eventNew, .eventEdit, .eventDeleteConfirm] {
+        for state in [
+            LaunchState.schedule,
+            .scheduleDay,
+            .eventNew,
+            .eventEdit,
+            .eventEditKeyboard,
+            .eventDeleteConfirm,
+        ] {
             #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
             #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.schedule])
         }
         #expect(RootView.scheduleBoardState(.scheduleDay) == .saturday)
         #expect(RootView.scheduleBoardState(.eventDeleteConfirm) == .deleteConfirm)
+        #expect(RootView.scheduleBoardState(.eventEditKeyboard) == .editEventKeyboard)
         #expect(RootView.scheduleBoardState(.schedule) == nil)
     }
 
@@ -242,5 +250,9 @@ struct LaunchStateTests {
         #expect(RootView.initialRoutes(for: .checkIntro) == [.checkPaper(visit)])
         #expect(RootView.initialRoutes(for: .checkSaved).last == .checkResult(visit))
         #expect(RootView.checkBoardState(.checkMarkPicker) == .markPicker && RootView.tab(for: .checkFailed) == .more)
+        #expect(RootView.checkBoardState(.checkResultScrolled) == .scrolled)
+        #expect(RootView.scanBoardState(.scanReviewScrolled) == .scrolled)
+        #expect(RootView.checkStates.contains(.checkResultScrolled) && RootView.scanStates
+            .contains(.scanReviewScrolled))
     }
 }

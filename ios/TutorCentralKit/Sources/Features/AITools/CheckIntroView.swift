@@ -9,6 +9,8 @@ import UIKit
 /// What a launch state sets up on Check a paper (P6-Check-*).
 public enum CheckBoardState: Hashable, Sendable {
     case typed, markPicker, edited, saved
+    /// The edited marks opened at their end, so the glass under the status bar shows (U24, P8-Check-Marks-Scrolled).
+    case scrolled
 }
 
 /// Check a paper's intro (P6-Check-Intro), pushed from More: the student (a picker), the notice, Take photos (the
@@ -75,6 +77,7 @@ public struct CheckIntroView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
