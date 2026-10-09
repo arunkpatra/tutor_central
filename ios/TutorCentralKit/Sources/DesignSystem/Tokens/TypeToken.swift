@@ -48,10 +48,22 @@ public struct TypeToken: Hashable, Sendable {
         }
     }
 
-    /// Scaled with the text style's Dynamic Type curve.
+    /// Scaled with the text style's Dynamic Type curve, at the app's text size now (for UIKit text built outside a
+    /// view). Views go through `typeStyle`, which follows the environment's size.
     public var font: Font {
         let scaled = UIFontMetrics(forTextStyle: style.uiKit).scaledValue(for: size)
         return .system(size: scaled, weight: weight).monospacedDigit()
+    }
+
+    /// The point size at a given text size, on the text style's Dynamic Type curve.
+    public func scaledSize(at typeSize: DynamicTypeSize) -> CGFloat {
+        let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(typeSize))
+        return UIFontMetrics(forTextStyle: style.uiKit).scaledValue(for: size, compatibleWith: traits)
+    }
+
+    /// The font at a given text size.
+    public func font(at typeSize: DynamicTypeSize) -> Font {
+        .system(size: scaledSize(at: typeSize), weight: weight).monospacedDigit()
     }
 
     /// Extra space between lines so the line height matches the design at the default size: the design's line less
