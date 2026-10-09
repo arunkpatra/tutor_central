@@ -34,7 +34,7 @@ branches remain on the remote; delete them when convenient.
 - **Website:** tutorcentral.in on Vercel `tutor-central-web` (id in `VERCEL_WEB_PROJECT_ID`, root `web`, git deploys off),
   deployed only by `deploy-web.yml` (D45), commit `f3f734d` (run 37929980186), smoke green. GoDaddy DNS: `A @ 216.198.79.1`,
   `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and `api.tutorcentral.in` (a CNAME to Vercel,
-  attached to `tutor-central-api`, not yet `API_ORIGIN`) untouched. `APP_STORE_URL` unset (Home shows the email call to action).
+  attached to `tutor-central-api`, now `API_ORIGIN`) untouched. `APP_STORE_URL` unset (Home shows the email call to action).
 - **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0008 (0008 `delete_account()` by deploy run
   37897295893 after PR #70) (0004
   `save_attendance` by deploy run 37758056602 after PR #37; 0005 `message_log.about_date` by run 37773505389 after PR
@@ -46,7 +46,8 @@ branches remain on the remote; delete them when convenient.
   and secret), email code, password; redirect URL `tutorcentral://auth-callback`. Email through Resend SMTP from
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
-- **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`api-ten-orpin-51.vercel.app`), commit `2448295` (deploy run 37897295893, after #70).
+- **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since 2026-10-09, build 16; the generated
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `2448295` (deploy run 37897295893, after #70).
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
   `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.
@@ -77,8 +78,7 @@ branches remain on the remote; delete them when convenient.
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
 - **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9); D1 to D7 wait for the tester (Phase 9).
-- Vercel's production domain for the API is the generated one; the website gets tutorcentral.in (Phase 8, D45: project
-  `tutor-central-web`, variables `VERCEL_WEB_PROJECT_ID` and `WEB_ORIGIN`, the owner's steps in `phase-08-plan.md`).
+- The API's production domain is `api.tutorcentral.in` (the owner, 2026-10-09); the website is tutorcentral.in (D45).
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.
 - Crash reporting: no decision yet (D18 leaves it open); TestFlight's crash reports cover Phase 9.

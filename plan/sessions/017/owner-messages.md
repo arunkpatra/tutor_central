@@ -20,3 +20,7 @@ In order, in the owner's words.
     to schedule):` you surfaced"
 14. "Also check if you could pull crash reports for the app, a tester logged one"; then chose "You download it once" and sent
     `testflight_feedback.zip` (the crash log and the tester's feedback).
+15. On toasts: "We used some toast messages. Is that the Apple blessed approach, or is there a native affordance for that. I
+    would rather try to remain as "Apple native" as possible.suggest"; then "yes, add it and draw the boards. before that, what
+    else is pending?" (became U33).
+16. "yes, we need to switch : Point the app at api.tutorcentral.in." (API_ORIGIN → https://api.tutorcentral.in; build 16).
