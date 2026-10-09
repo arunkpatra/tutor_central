@@ -37,6 +37,9 @@ public struct CheckResultView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        // A launch state cannot scroll by hand (U11): the scrolled board state opens at the end.
+        .defaultScrollAnchor(boardState == .scrolled ? .bottom : nil)
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
@@ -169,9 +172,12 @@ public struct CheckResultView: View {
     private var footer: some View {
         FooterButton {
             VStack(spacing: Tokens.rowPaddingDense) {
-                Text("AI can make mistakes. Read each answer yourself; every mark is a suggestion until you save.")
-                    .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                // Once saved the marks are no longer a suggestion: the line goes (P6-Check-Saved draws none).
+                if !store.saved {
+                    Text("AI can make mistakes. Read each answer yourself; every mark is a suggestion until you save.")
+                        .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 if store.saved, let name = store.student?.firstName {
                     SavedMark("Saved to \(name)'s notes")
                 } else {
@@ -195,7 +201,7 @@ public struct CheckResultView: View {
         boardApplied = true
         switch boardState {
         case .markPicker: picking = 4
-        case .edited: store.set(question: 6, to: 2)
+        case .edited, .scrolled: store.set(question: 6, to: 2)
         case .saved:
             store.set(question: 6, to: 2)
             save()

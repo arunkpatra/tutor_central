@@ -60,6 +60,7 @@ public struct CheckSchemeView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .scrollDismissesKeyboard(.interactively)
         .background(Tokens.ground.color)

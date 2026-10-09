@@ -159,9 +159,11 @@ public enum Fixtures {
              .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
              .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
              .aiGenerateFailed, .aiResultPaper, .aiResultRegenerating, .aiResultNote, .aiNoteSend, .aiHistory,
-             .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit,
+             .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview,
+             .scanReviewScrolled, .scanReviewEdit,
              .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
              .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
+             .checkResultScrolled,
              .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
              .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
              .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
@@ -181,7 +183,8 @@ public enum Fixtures {
         switch state {
         case .feesEmpty, .feesGenerate, .paymentsEmpty: FakeCentreRepository.meeraWorkspaceWithoutUPI
         case .feesPayee: FakeCentreRepository.meeraWorkspaceUnconfirmed
-        case .scanIntro, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit, .scanReviewRemoved,
+        case .scanIntro, .scanCameraRefused, .scanReading, .scanReview, .scanReviewScrolled, .scanReviewEdit,
+             .scanReviewRemoved,
              .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved: FakeCentreRepository.meeraWorkspaceConsented
         case _ where RootView.checkStates.contains(state): FakeCentreRepository.meeraWorkspaceConsented
         default: meeraWorkspace

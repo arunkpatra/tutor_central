@@ -53,6 +53,9 @@ struct ScanReviewView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        // A launch state cannot scroll by hand (U11): the scrolled board state opens at the end.
+        .defaultScrollAnchor(boardState == .scrolled ? .bottom : nil)
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)

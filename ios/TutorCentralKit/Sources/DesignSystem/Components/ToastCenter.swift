@@ -15,6 +15,13 @@ import Observation
     }
 
     public private(set) var current: Toast?
+    /// The newest footer on screen's height, 0 when there is none: `ToastHost` lifts the toast above it (D49, U16).
+    public var footerInset: CGFloat {
+        footers.last?.height ?? 0
+    }
+
+    /// The footers on screen, oldest first; a footer that appears again moves to the end.
+    private var footers: [(id: UUID, height: CGFloat)] = []
     private var leaving: Task<Void, Never>?
 
     public init() {}
@@ -37,6 +44,17 @@ import Observation
     public func dismiss() {
         leaving?.cancel()
         current = nil
+    }
+
+    /// A `FooterButton` on screen, or its new height.
+    public func footerShown(_ id: UUID, height: CGFloat) {
+        footers.removeAll { $0.id == id }
+        footers.append((id, height))
+    }
+
+    /// The footer left the screen (its screen was popped, its tab left, or the footer went).
+    public func footerGone(_ id: UUID) {
+        footers.removeAll { $0.id == id }
     }
 
     static func stay(hasAction: Bool) -> Duration {

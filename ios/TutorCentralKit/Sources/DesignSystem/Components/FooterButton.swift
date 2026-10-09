@@ -3,8 +3,12 @@ import SwiftUI
 /// The footer above the tab bar on a root whose primary action must never need a scroll (Save attendance): 12 of
 /// ground above and below, pageSide beside; the list scrolls under its ground. Applied with
 /// `.safeAreaInset(edge: .bottom)` on the root's scroll view (components.md, Footer button on a root).
+/// While on screen it tells the toasts its height, so a toast sits above it (D49, U16).
 public struct FooterButton<Content: View>: View {
     let content: Content
+    @Environment(ToastCenter.self) private var toasts: ToastCenter?
+    @State private var id = UUID()
+    @State private var height: CGFloat = 0
 
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -16,6 +20,16 @@ public struct FooterButton<Content: View>: View {
             .padding(.vertical, Tokens.rowPaddingDense)
             .frame(maxWidth: .infinity)
             .background(Tokens.ground.color)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { new in
+                height = new
+                toasts?.footerShown(id, height: new)
+            }
+            .onAppear {
+                if height > 0 {
+                    toasts?.footerShown(id, height: height)
+                }
+            }
+            .onDisappear { toasts?.footerGone(id) }
     }
 }
 
