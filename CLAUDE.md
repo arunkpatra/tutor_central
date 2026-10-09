@@ -63,7 +63,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
 | UI polish list: small visual and copy fixes, taken when the owner chooses | `plan/ui-polish.md` | Its "How it works" |
-| Scripts: check, shots, web-shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
+| Scripts: check, shots, web-shots, store-shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
 | Runbooks: driving the app in the simulator against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32) |
 | Device tests: what a tester checks on a real iPhone (camera, WhatsApp, network, real handwriting), with a log | `docs/testing/device-tests.md` | Its "How to run" |
 
@@ -80,6 +80,7 @@ change per pull request, described by what it does and how it was checked.
 | `bun gen` | Regenerate `ios/TutorCentral.xcodeproj` from `ios/project.yml` |
 | `bun shots <state> [--appearance dark\|light\|both]` | Screenshots of the app in the simulator at a launch state, both appearances by default, into `.shots/<state>/` |
 | `bun web-shots [--pages /,/privacy] [--widths 1280,390] [--appearance dark\|light\|both]` | Pictures of the website's export (build it first with `bun check --only=web`) by headless Chrome, full page at 2×, into `.shots/web/` (D46) |
+| `bun store-shots` | The App Store screenshots: the approved `Store-*` boards rendered with fresh simulator screens (dark, 9:41) at 1206 × 2622 JPEG into `docs/store/screenshots/` (D51); needs the `bun check` build. The listing's words are `docs/store/listing.md` |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
 | `cd supabase && supabase start` | The local database stack (Docker) |
 | `cd api && bun run dev` | The API locally |

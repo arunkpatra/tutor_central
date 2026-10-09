@@ -9,6 +9,10 @@ Store Connect and TestFlight's Test Information; U7, U16, U24 and Phase 6's mino
 TestFlight. **Session 16:** the Phase 8 boards and plan. **Next:** Phase 9, user testing (D43): its plan, then the external group.
 The owner tests build 18 on the phone: U33's alerts and in-place successes, and a long class name on Add to class (#87).
 
+**App Store page (D51, before Phase 9):** the Store boards approved (canvas row 13); `bun store-shots` (#88) made
+`docs/store/screenshots/`; the listing and App Review notes are `docs/store/listing.md`. Waiting on the owner: the review
+account (made by him in the app, seeded by a workflow being built), App Privacy, the age rating.
+
 ## Where we are
 
 | Phase | Status | Notes |
