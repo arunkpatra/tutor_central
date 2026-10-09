@@ -32,7 +32,7 @@ public extension AccountFailure {
     }
 }
 
-/// The URL errors that mean the network, not the server.
+/// The URL errors that mean the network, not the server (`TransportError`).
 enum TransportCodes {
     static let offline: Set<URLError.Code> = [
         .notConnectedToInternet, .timedOut, .networkConnectionLost, .cannotFindHost, .cannotConnectToHost,
