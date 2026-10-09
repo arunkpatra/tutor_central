@@ -149,4 +149,12 @@ import Testing
         store.password = "right"
         #expect(await store.signInWithPassword()?.email == "a@b.co")
     }
+
+    /// A backend's own words never reach the screen (D41): each step says what failed and Try again.
+    @Test func aBackendMessageIsNeverShown() {
+        let raw = SignInFailure.other("Email rate limit exceeded: 429")
+        #expect(EmailSignInStore.requestWords(raw) == "Couldn't send the code. Try again.")
+        #expect(EmailSignInStore.codeWords(raw) == "Couldn't sign in. Try again.")
+        #expect(EmailSignInStore.passwordWords(raw) == "Couldn't sign in. Try again.")
+    }
 }

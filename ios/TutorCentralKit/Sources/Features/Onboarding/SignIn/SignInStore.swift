@@ -65,7 +65,7 @@ import Observation
         case .offline: return "You're offline. Connect and try again."
         case .providerRefused: return "\(name) didn't complete the sign-in. Try again, or use your email."
         case .tooManyRequests: return "Too many tries. Wait a minute and try again."
-        case let .other(message): return "Couldn't sign in. \(message)"
+        case .other: return "Couldn't sign in. Try again."
         case .wrongCode, .codeExpired, .wrongPassword: return "Couldn't sign in. Try again, or use your email."
         }
     }
