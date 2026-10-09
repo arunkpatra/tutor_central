@@ -44,12 +44,12 @@ screen, several as a polish slice, or not at all.
 | U29 | 2026-10-09 | Students, the "+" menu at the largest text sizes | The system menu cuts "Scan paper register" to "Scan paper regis…" | Session 15's Dynamic Type check |
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
-| U33 | 2026-10-09 | Toasts across the app | iOS has no toast: keep the bottom bar only where it carries Undo (as Mail's Undo Send); a confirmation shows in place, a failure that needs a decision is an alert, a list that could not load says so inline with Try Again, camera access and a gone item are alerts | The owner, 2026-10-09 ("remain as Apple native as possible"); boards first |
 
 ## Done
 
 | # | Done | Pull request | What changed |
 |---|---|---|---|
+| U33 | 2026-10-09 | #86 | The toast is for Undo only; a success shows in place, a failed or refused write is the system alert, a field's failure is under it, a list with nothing loaded says so in its place (`docs/design/feedback.md`) |
 | U31 | 2026-10-09 | #85 | Home's phone is 240 × 520 at 360 px and below, inside the gutters |
 | U7 | 2026-10-09 | #79 | Edit event keeps its fields and the note's well whole with the keyboard up; Delete event scrolls under the keyboard (P8-Event-Edit-Keyboard) |
 | U16 | 2026-10-09 | #80 | A toast lifts above any footer on screen (D49); Suggested marks drops its AI line once saved, as P6-Check-Saved |

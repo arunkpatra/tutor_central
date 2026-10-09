@@ -56,7 +56,7 @@ branches remain on the remote; delete them when convenient.
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (15) by run 37943689238 is the latest (14 by run 37938735658, 13 by run 37913258080). Each run revokes the Apple Development certificate it makes (#75): a
+  run number. 1.0.0 (17) by run 37948604787 (U33, #86) is building; 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238. Each run revokes the Apple Development certificate it makes (#75): a
   fresh runner makes one per run and the account's cap stopped run 12 after eleven (the owner revoked them, 2026-10-09).
 
 ## Open items
@@ -71,7 +71,7 @@ branches remain on the remote; delete them when convenient.
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google): Google's own G and colours, the three buttons pills; in build 13.
 - **TestFlight's external group and Beta App Review:** the privacy URL and test information are set (2026-10-09); Phase 9 runs them (D43).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
-- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U32 open; U1 to U4, U6, U7, U9, U12, U16, U24 done. U7, U16 and U24
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32 open; U1 to U4, U6, U7, U9, U12, U16, U24, U31, U33 done. U7, U16 and U24
   were Phase 8's and are done (#79, #80); U31 (Home's phone at 320) and U32 (the glass on the other pushed screens) are new.
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest

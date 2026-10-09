@@ -106,3 +106,4 @@ U33: Ruling: the camera-off alert's words name what the camera was for (a regist
 U33: Ruling: LoadFailedView only when nothing is loaded (Fees, the board); with something loaded the existing footnote line with Try Again stays (it is already in place) — cost: other lists keep their line.
 U33: Ruling: `doneStay` 2000 ms is a token (D10); the document writes it in ms as the token test reads the Motion table — cost: none.
 U33: Ruling: the offline-write-refused launch state raises its alert after the sheet is up (Tokens.panel × 4), as a real Save does; raised before, the root and the sheet raced and neither showed — cost: none (fixtures only).
+U33: merged #86 (CI green); testflight run 37948604787 (build 17).
