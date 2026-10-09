@@ -60,6 +60,18 @@ struct CheckVisit {
         return runState == .signedOut ? .signedOut : .idle
     }
 
+    /// The screens read what the server has now: on coming back to the app and after the queue sent (the owner,
+    /// 2026-10-09: what changed meanwhile shows without a pull). Attendance keeps unsaved marks; a read that fails
+    /// keeps
+    /// what is shown.
+    func refreshScreens() async {
+        async let today: Void? = today?.load()
+        async let tasks: Void? = tasks?.load()
+        async let fees: Void? = fees?.reload()
+        async let attendance: Void? = attendance?.reload()
+        _ = await (today, tasks, fees, attendance)
+    }
+
     /// `files` is where the centre's queue file lives (nil: Application Support).
     func sessionChanged(_ state: SessionStore.State, files: URL?) {
         guard case let .ready(workspace) = state else {

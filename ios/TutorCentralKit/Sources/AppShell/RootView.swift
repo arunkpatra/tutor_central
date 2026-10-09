@@ -93,9 +93,11 @@ public struct RootView: View {
                     Task {
                         await session.refresh()
                         await runQueue()
-                        // The reminders plan from the classes as they are now, not as first read.
+                        // The reminders plan from the classes as they are now, not as first read; every list reads
+                        // what changed while the app was away.
                         await shell.register?.refresh()
                         replanReminders()
+                        await shell.refreshScreens()
                     }
                 }
             }

@@ -88,6 +88,31 @@ import Testing
         #expect(waiting.pending.changes.contains { $0.title == "Absence alert · Hemanth Reddy" })
         #expect(store.absentRows.first?.told == "Told today")
     }
+
+    /// Hand run after the review: the send went, then the read after it failed (the network just back); the screen
+    /// keeps the marks it showed, saved, never the older copy saved on this iPhone.
+    @Test func aFailedReloadAfterTheSendKeepsWhatWasShown() async {
+        let waiting = queue()
+        let store = await make(online: false, queue: waiting)
+        store.toggle(hemanth)
+        _ = await store.save()
+        waiting.remove(id: waiting.pending.changes[0].id)
+        attendance.nextError = URLError(.notConnectedToInternet)
+        await store.reload()
+        #expect(store.saved?.marks[hemanth] == .absent && store.absentRows.map(\.student.id) == [hemanth])
+        #expect(store.phase == .saved(at: FakeCountsRepository.fixedNow))
+    }
+
+    /// A save still waiting (the run stopped offline) stays "kept here" through a failed reload.
+    @Test func aFailedReloadWhileTheSaveWaitsKeepsItHere() async {
+        let waiting = queue()
+        let store = await make(online: false, queue: waiting)
+        store.toggle(hemanth)
+        _ = await store.save()
+        attendance.nextError = URLError(.notConnectedToInternet)
+        await store.reload()
+        #expect(store.phase == .savedHere(at: FakeCountsRepository.fixedNow) && store.saved?.marks[hemanth] == .absent)
+    }
 }
 
 @MainActor struct AttendanceAfterSendTests {

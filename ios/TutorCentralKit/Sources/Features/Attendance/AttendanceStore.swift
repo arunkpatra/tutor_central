@@ -45,7 +45,7 @@ import Observation
         }
     }
 
-    public private(set) var draft: AttendanceDraft
+    public internal(set) var draft: AttendanceDraft
     public internal(set) var saved: AttendanceSession?
     public internal(set) var phase: Phase = .fresh
     public private(set) var loading = false
