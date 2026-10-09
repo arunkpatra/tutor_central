@@ -10,3 +10,4 @@ In order, in the owner's words.
 6. Owner step 3: "done, Waiting for Review. What can i expect next? what will actually happen now? will Apple review/ Will random people review?"
 7. "is this review by Apple mandatory?"
 8. "ok, as the testing proceeds, i will start new sessions and share feedback. tehse will be new sessions"
+9. "THe next session will not be related to testing. It might be related to new product features etc. FYI. We will discuss at that time"
