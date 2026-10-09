@@ -9,8 +9,10 @@ public enum AccountFailure: Error, Hashable, Sendable {
     case appleUnreachable
     /// The tutor closed Apple's sheet: nothing to say, back where they were.
     case cancelled
-    /// Anything else, in the server's words.
+    /// Our own API's words (written for the screen).
     case server(String)
+    /// Anything else: never a backend's own words, which are technical (the owner, 2026-10-09).
+    case unexpected
 
     public var message: String {
         switch self {
@@ -21,6 +23,7 @@ public enum AccountFailure: Error, Hashable, Sendable {
         case .appleUnreachable: "Apple didn't answer. Try again in a minute."
         case .cancelled: ""
         case let .server(words): words
+        case .unexpected: "That didn't go through. Try again."
         }
     }
 }

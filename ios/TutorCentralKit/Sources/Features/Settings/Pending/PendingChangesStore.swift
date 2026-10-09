@@ -51,10 +51,10 @@ import Observation
         guard let change = queue.pending.changes.first(where: { $0.id == id }) else { return "" }
         switch change.kind {
         case let .attendance(_, className, date, _, _, _):
-            return "Attendance for \(className) on \(date.shortWeekdayText) stays as the server has it. "
+            return "Attendance for \(className) on \(date.shortWeekdayText) stays as it was. "
                 + "What you marked here is lost."
         case let .markPaid(_, studentName, month, _, _, _):
-            return "\(Self.firstName(studentName))'s \(month.monthName) fee stays as the server has it: due. "
+            return "\(Self.firstName(studentName))'s \(month.monthName) fee stays as it was: due. "
                 + "The mark you made here is lost."
         case let .absenceLog(_, studentName, _):
             return "The absence alert for \(Self.firstName(studentName)) isn't noted on their page. "

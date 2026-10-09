@@ -49,7 +49,7 @@ import Testing
             Issue.record("not attendance")
         }
         #expect(store.phase == .savedHere(at: FakeCountsRepository.fixedNow))
-        #expect(store.banner?.text == "Saved on this iPhone at 18:30. It reaches the server when you're back online.")
+        #expect(store.banner?.text == "Saved on this iPhone at 18:30. It's sent when you're back online.")
         #expect(store.absentRows.map(\.student.id) == [hemanth])
     }
 

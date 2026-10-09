@@ -149,7 +149,7 @@ import Observation
         case let .savedHere(at):
             MarkBanner(
                 symbol: "clock",
-                text: "Saved on this iPhone at \(clock(at)). It reaches the server when you're back online.",
+                text: "Saved on this iPhone at \(clock(at)). It's sent when you're back online.",
                 ok: false, due: true
             )
         case .fresh, .saving: nil

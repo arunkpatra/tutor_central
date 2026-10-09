@@ -48,10 +48,10 @@ import Testing
         #expect(store.rows.map(\.state) == [.waiting, .failed(reason: reason)])
         let fee = try #require(store.rows.last?.id)
         #expect(store.discardWords(for: fee)
-            == "Dev's October fee stays as the server has it: due. The mark you made here is lost.")
+            == "Dev's October fee stays as it was: due. The mark you made here is lost.")
         let attendance = try #require(store.rows.first?.id)
         #expect(store.discardWords(for: attendance)
-            == "Attendance for Class 10 Maths on Wed 7 Oct stays as the server has it. What you marked here is lost.")
+            == "Attendance for Class 10 Maths on Wed 7 Oct stays as it was. What you marked here is lost.")
         store.discard(id: fee)
         #expect(queue.pending.failedCount == 0 && store.rows.count == 1)
     }

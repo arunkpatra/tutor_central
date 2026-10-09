@@ -103,8 +103,8 @@ public enum RunOutcome: Hashable, Sendable {
         case let .absenceLog(_, studentName, _) where gone:
             return "\(studentName) is no longer in the register, so the absence alert can't be noted. \(keep)"
         default:
-            let words = (error as? PostgrestError)?.message ?? error.localizedDescription
-            return "The server refused it: \(words)"
+            // Never the backend's own words on screen: they are technical (the owner, 2026-10-09).
+            return "This change couldn't be saved. \(keep)"
         }
     }
 }

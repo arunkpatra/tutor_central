@@ -56,9 +56,10 @@ import Testing
         #expect(AccountFailure(URLError(.notConnectedToInternet)) == .offline)
         #expect(AccountFailure(AccountFailure.weakPassword) == .weakPassword)
         struct Other: Error {}
-        if case .server = AccountFailure(Other()) {} else {
-            Issue.record("not server")
-        }
+        // A backend's own words never reach the screen (the owner, 2026-10-09).
+        #expect(AccountFailure(Other()) == .unexpected)
+        #expect(AccountFailure(URLError(.badServerResponse)) == .unexpected)
+        #expect(AccountFailure.unexpected.message == "That didn't go through. Try again.")
     }
 }
 
