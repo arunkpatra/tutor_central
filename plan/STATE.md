@@ -3,16 +3,15 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-09, session 18 (the Phase 9 plan, on Fable 5.1). **Session 18:** `plan/phase-09-plan.md` approved
-by the owner; decisions D52 to D55 (six tutors for three weeks, the tester's device checks before the invitations; the
-"Tutors" group with named invitations and Thursday builds; the tester's guide sent on WhatsApp; the findings file and its
-triage); resume 018 for the run. **Session 17:** Phase 8 done in PRs #76 to #82: tutorcentral.in live; the privacy URL in
-App Store Connect; U33, the crash fix (#84), the sheet title (#87); the App Store page filled and saved (D51); build 1.0.0 (18).
-**Next:** run Phase 9 from `plan/resume/018-phase-9-run.md` (Opus 5.5): Task 1 first (confirm build 18 with the owner, deploy
-the API to `main`'s head, the checklist and notes), then Task 2 and Owner step 1.
-
-The owner tests build 18 on the phone: U33's alerts and in-place successes, and a long class name on Add to class (#87);
-his answer is Task 1's step 1.
+**Last updated:** 2026-10-09, session 19 (Phase 9's run begins, on Opus 5.5). **Session 19:** Tasks 1 to 3 done: the API
+deployed to `main`'s head (`999e881`, run 37965871936); build 18 passed on the owner's iPhone, its checklist ticked and its
+notes written (`docs/release.md`); the tester's guide (`docs/testing/tester-guide.md`) and the findings file
+(`plan/phase-09-findings.md`); Test Information saved, the "Tutors" group made, **build 18 submitted to Beta App Review on
+2026-10-09**. **Session 18:** `plan/phase-09-plan.md` approved, D52 to D55.
+**Next:** each later session opens from `plan/resume/018-phase-9-run.md` with what the owner brings: Apple's answer on build 18
+(approved, or a message to answer), the tester's lines for D1 to D6 and D8 (Task 4, sent to the tester on 2026-10-09), then
+D7 and the invitations (Task 5, where the testers' facts T1 to T6 are filled and checked against D52 first), then the readings
+(Task 6, Monday and Thursday).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted (the version page, App Information, App
 Privacy published, 4+, App Review Information with the demo account `review@tutorcentral.in`, seeded by `seed-review` #89,
@@ -31,7 +30,7 @@ every parent +919611385678). Left for Phase 9's end (Owner step 6): attach the f
 | 6 AI tools | Done, PRs #53 to #60, #62; hand run #61 | "As built" in `phase-06-ai-tools.md`; device tests in `docs/testing/device-tests.md` |
 | 7 Settings, account, notifications, offline, hardening, release candidate | Done, PRs #63 to #73 | "As built" in `phase-07-settings-and-hardening.md`; the accessibility record in `docs/design/accessibility-pass.md`; the release checklist in `docs/release.md` |
 | 8 Website | Done, PRs #76 to #82 | "As built" in `phase-08-website.md`; then #83 to #89 after the close (the 30-day words, the crash fix, the minors, U33, the sheet title, store-shots, seed-review) |
-| 9 User testing | Planned (session 18), not started | `phase-09-plan.md` (D52 to D55): Task 1 next; the run by `resume/018-phase-9-run.md`; the findings in `phase-09-findings.md` once Task 2 makes it |
+| 9 User testing | Running since session 19 (2026-10-09) | `phase-09-plan.md` (D52 to D55): Tasks 1 to 3 done, build 18 in Beta App Review; Task 4 (the tester) next; the run by `resume/018-phase-9-run.md`; findings in `phase-09-findings.md` |
 
 ## In flight
 

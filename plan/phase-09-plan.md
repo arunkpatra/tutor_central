@@ -386,7 +386,7 @@ One message per step; the next waits for "done" and the check.
 **Files:**
 - Modify: `docs/testing/device-tests.md` (the log lines)
 
-- [ ] **Step 1: hand the tester the list.** The owner sends the tester the build number and the tests D1 to D6 and D8 (the
+- [x] **Step 1: hand the tester the list.** The owner sends the tester the build number and the tests D1 to D6 and D8 (the
   internal install; D7 waits for the group). Session 17's note: D2 re-checks build 13's crash fix (#84); D3 is the queue; D5
   deletes a test Apple ID's account, so a throwaway Apple ID.
 - [ ] **Step 2: log the lines** as they come back, one per test, in the log table: date, build, test, Pass or Fail, what was
