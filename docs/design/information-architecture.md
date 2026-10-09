@@ -524,6 +524,7 @@ From build 10 (step 0.8b, approved 2026-10-09, row 10b of the canvas at y 14600)
 | New student: the class menu ends with New class… after a section break; no classes yet; the New class sheet on top; back with the class chosen (dark and light) | `P7-NewStudent-ClassMenu`, `-ClassMenu-NoClasses`, `-NewClass`, `-ClassMade`, each with `-Light` |
 | Today: the account picture at the top right, level with the date (every Today state follows it) | `P7-Today-Header`, `-Light` |
 | Opening: the launch screen's book fading into Today over `opening` (500 ms), once the app is ready | `P7-Launch-Fade`, `-Light` |
+| Sign-in: Continue with Google as Google's guidelines draw it (its fill, outline, label and G), the three buttons pills of one size (supersedes A-SignIn's and P2-SignIn-Light's buttons) | `P7-SignIn-Google`, `-Light` |
 
 | State | Shows |
 |---|---|

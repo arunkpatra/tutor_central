@@ -1401,6 +1401,20 @@
       "w": 393,
       "h": 852,
       "title": "Phase 7 · Opening: the dark launch screen fades into light Today · light"
+    },
+    "P7-SignIn-Google.dc.html": {
+      "x": 5676,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Sign-in: Continue with Google as Google's guidelines draw it (#131314, outline #8E918F, the G, a pill); the three buttons pills of one size · dark"
+    },
+    "P7-SignIn-Google-Light.dc.html": {
+      "x": 6149,
+      "y": 14600,
+      "w": 393,
+      "h": 852,
+      "title": "Phase 7 · Sign-in: Continue with Google as Google's guidelines draw it (white, outline #747775, the G, a pill) · light"
     }
   },
   "createdOnFiles": {
@@ -1498,7 +1512,7 @@
       "w": 240,
       "x": 0,
       "y": 14300,
-      "text": "Step 0.8b · Phase 7, from build 10 — New class from the student form; the account picture at the top right of Today; opening: the launch screen fading into Today"
+      "text": "Step 0.8b · Phase 7, from build 10 — New class from the student form; the account picture at the top right of Today; opening: the launch screen fading into Today; sign-in with Google's button by Google's guidelines"
     }
   },
   "order": [
@@ -1701,7 +1715,9 @@
     "P7-Today-Header.dc.html",
     "P7-Today-Header-Light.dc.html",
     "P7-Launch-Fade.dc.html",
-    "P7-Launch-Fade-Light.dc.html"
+    "P7-Launch-Fade-Light.dc.html",
+    "P7-SignIn-Google.dc.html",
+    "P7-SignIn-Google-Light.dc.html"
   ],
   "pages": [],
   "title": "Tutor Central Design"
