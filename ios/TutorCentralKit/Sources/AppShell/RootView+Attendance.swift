@@ -20,6 +20,8 @@ extension RootView {
             now: deps.now
         )
         made.cache = monthCache(workspace, "attendance")
+        made.queue = shell.queue
+        made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         shell.attendance = made
         return made
     }
@@ -71,7 +73,8 @@ extension RootView {
                     openStudents: { shell.tabs.select(.students) },
                     openHistory: { shell.tabs.push(.history) }
                 ),
-                boardState: launch.flatMap(Self.attendanceBoardState),
+                boardState: launch.flatMap(Self.attendanceBoardState)
+                    ?? (launch == .offlineAttendanceSaved ? .saved : nil),
                 status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead)
             )
             .onChange(of: store.message) { _, message in

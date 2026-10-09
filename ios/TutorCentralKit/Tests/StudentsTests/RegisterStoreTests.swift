@@ -135,7 +135,7 @@ import Testing
         await store.load()
         var draft = StudentDraft()
         draft.name = "Riya Sharma"
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         let made = await store.addStudent(draft)
         #expect(made == nil && store.students.count == 10)
         #expect(store.message == "Couldn't save Riya. Check your connection and try again." && store.canRetry)
@@ -146,7 +146,7 @@ import Testing
         await store.load()
         var draft = StudentDraft()
         draft.name = "Riya Sharma"
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         await store.addStudent(draft)
         await store.retryLast()
         // The fake records what reached it: the failed attempt never did, the retry did once.
@@ -178,13 +178,13 @@ import Testing
     @Test func aFailedEditRollsBackAndAFailedDeleteKeepsTheStudent() async throws {
         let store = make()
         await store.load()
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         var draft = try StudentDraft(#require(store.student(FakeStudentsRepository.akshita)))
         draft.name = "Akshita R"
         #expect(await store.updateStudent(FakeStudentsRepository.akshita, with: draft) == false)
         #expect(store.student(FakeStudentsRepository.akshita)?.name == "Akshita Rao" && store
             .message == "Couldn't save Akshita. Check your connection and try again.")
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         #expect(await store.deleteStudent(FakeStudentsRepository.akshita) == false)
         #expect(store.student(FakeStudentsRepository.akshita) != nil && store
             .message == "Couldn't delete Akshita. Check your connection and try again.")
@@ -245,7 +245,7 @@ import Testing
         let store = make()
         await store.load()
         #expect(store.lastSavedAt == nil)
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         await store.setArchived(FakeStudentsRepository.akshita, true)
         #expect(store.lastSavedAt == nil)
         await store.setArchived(FakeStudentsRepository.akshita, true)

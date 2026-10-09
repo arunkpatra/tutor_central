@@ -30,10 +30,9 @@ extension RootView {
              .tasksEmpty:
             .more
         case .todayAI: .today
-        case .offlineStudents: .students
-        case .offlineFees, .offlineNoCache: .fees
         case .scanSaved: .students
-        default: aiStates.contains(state) || scanStates.contains(state) || checkStates.contains(state) ? .more : nil
+        default: Fixtures.offlineTab(state)
+            ?? (aiStates.contains(state) || scanStates.contains(state) || checkStates.contains(state) ? .more : nil)
         }
     }
 

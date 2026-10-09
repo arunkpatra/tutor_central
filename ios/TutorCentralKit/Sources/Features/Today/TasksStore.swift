@@ -141,7 +141,11 @@ import Observation
             newTitle = title
             newDue = due
             adding = true
-            failed("Couldn't add the task. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't add the task. Check your connection and try again.",
+                .addTask,
+                error: error
+            ) { [weak self] in
                 await self?.add()
             }
             return false
@@ -170,7 +174,11 @@ import Observation
             saved()
         } catch {
             replace(id, with: before)
-            failed("Couldn't update the task. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't update the task. Check your connection and try again.",
+                .editTask,
+                error: error
+            ) { [weak self] in
                 await self?.setDone(id, done)
             }
         }
@@ -185,7 +193,11 @@ import Observation
             saved()
         } catch {
             tasks.append(contentsOf: gone)
-            failed("Couldn't clear the done tasks. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't clear the done tasks. Check your connection and try again.",
+                .editTask,
+                error: error
+            ) { [weak self] in
                 await self?.clearDone()
             }
         }
@@ -219,7 +231,17 @@ import Observation
         canRetry = false
     }
 
-    private func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
+    private func failed(
+        _ text: String, _ refusal: OfflineRefusal.Write? = nil, error: (any Error)? = nil,
+        retry: @escaping @MainActor () async -> Void
+    ) {
+        if let error, let refusal, TransportError.isOffline(error) {
+            // Offline: the write needs a connection; nothing was saved, and Retry would only fail again (D39).
+            message = OfflineRefusal.words(for: refusal)
+            canRetry = false
+            lastFailed = nil
+            return
+        }
         message = text
         canRetry = true
         lastFailed = retry

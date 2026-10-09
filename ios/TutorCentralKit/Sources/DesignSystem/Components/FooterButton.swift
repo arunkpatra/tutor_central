@@ -23,24 +23,32 @@ public struct FooterButton<Content: View>: View {
 /// button.
 public struct SavedMark: View {
     let text: String
+    let keptHere: Bool
     static var height: CGFloat {
         ButtonSize.card.rawValue
     }
 
-    public init(_ text: String = "Saved") {
+    /// `keptHere` is the saved-here mark (P7-Offline-AttendanceSaved): "Saved on this iPhone" in the due tone with
+    /// its clock.
+    public init(_ text: String = "Saved", keptHere: Bool = false) {
         self.text = text
+        self.keptHere = keptHere
     }
 
     public var body: some View {
         HStack(spacing: Tokens.inline) {
-            Image(systemName: "checkmark").font(.system(size: Tokens.iconSmall, weight: .bold))
+            Image(systemName: keptHere ? "clock" : "checkmark")
+                .font(.system(size: Tokens.iconSmall, weight: keptHere ? .semibold : .bold))
             Text(text)
         }
         .typeStyle(Tokens.buttonStrong)
-        .foregroundStyle(Tokens.ok.color)
+        .foregroundStyle((keptHere ? Tokens.due : Tokens.ok).color)
         .frame(maxWidth: .infinity)
         .frame(height: Self.height)
-        .background(Tokens.okTint.color, in: .rect(cornerRadius: Tokens.radiusControl, style: .continuous))
+        .background(
+            (keptHere ? Tokens.dueTint : Tokens.okTint).color,
+            in: .rect(cornerRadius: Tokens.radiusControl, style: .continuous)
+        )
         .accessibilityElement(children: .combine)
     }
 }

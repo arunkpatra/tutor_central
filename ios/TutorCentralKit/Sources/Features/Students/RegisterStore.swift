@@ -195,7 +195,17 @@ import Observation
         persist()
     }
 
-    func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
+    func failed(
+        _ text: String, _ refusal: OfflineRefusal.Write? = nil, error: (any Error)? = nil,
+        retry: @escaping @MainActor () async -> Void
+    ) {
+        if let error, let refusal, TransportError.isOffline(error) {
+            // Offline: the write needs a connection; nothing was saved, and Retry would only fail again (D39).
+            message = OfflineRefusal.words(for: refusal)
+            canRetry = false
+            lastFailed = nil
+            return
+        }
         message = text
         lastFailed = retry
         canRetry = true
@@ -232,7 +242,7 @@ public extension RegisterStore {
         } catch {
             students.removeAll { $0.id == placeholder.id }
             let text = "Couldn't save \(firstWord(draft.trimmedName)). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .addStudent, error: error) { [weak self] in
                 await self?.addStudent(draft)
             }
             return nil
@@ -260,7 +270,7 @@ public extension RegisterStore {
         } catch {
             replace(id, with: before)
             let text = "Couldn't save \(before.firstName). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .editStudent, error: error) { [weak self] in
                 _ = await self?.updateStudent(
                     id,
                     with: draft
@@ -280,13 +290,10 @@ public extension RegisterStore {
             succeeded()
         } catch {
             replace(id, with: before)
-            failed(
-                "Couldn't \(archived ? "archive" : "restore") \(before.firstName). Check your connection and try again."
-            ) { [weak self] in
-                await self?.setArchived(
-                    id,
-                    archived
-                )
+            let verb = archived ? "archive" : "restore"
+            let text = "Couldn't \(verb) \(before.firstName). Check your connection and try again."
+            failed(text, .editStudent, error: error) { [weak self] in
+                await self?.setArchived(id, archived)
             }
         }
     }
@@ -301,7 +308,7 @@ public extension RegisterStore {
             return true
         } catch {
             let text = "Couldn't delete \(before.firstName). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .editStudent, error: error) { [weak self] in
                 _ = await self?.deleteStudent(id)
             }
             return false
@@ -319,7 +326,7 @@ public extension RegisterStore {
         } catch {
             setClass(of: ids) { previous[$0] ?? nil }
             let text = "Couldn't move \(names ?? "the students"). Check your connection and try again."
-            failed(text) { [weak self] in await self?.assign(ids, to: classID) }
+            failed(text, .editStudent, error: error) { [weak self] in await self?.assign(ids, to: classID) }
         }
     }
 

@@ -135,7 +135,8 @@ import Observation
             saveState = .saved
         } catch {
             saveState = .idle
-            message = "Couldn't save. Check your connection and try again."
+            message = TransportError.isOffline(error)
+                ? OfflineRefusal.words(for: .editPayments) : "Couldn't save. Check your connection and try again."
         }
     }
 }

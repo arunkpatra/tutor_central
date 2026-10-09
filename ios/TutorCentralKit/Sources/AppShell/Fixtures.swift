@@ -15,11 +15,13 @@ public enum Fixtures {
         let counts = FakeCountsRepository(counts: counts(for: state))
         let students = FakeStudentsRepository(students: register(for: state).students)
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
+        let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
         if offlineStates.contains(state) {
             // The boards' offline screens: every read fails for the network; the copies on this iPhone show.
             counts.nextError = URLError(.notConnectedToInternet)
             students.nextError = URLError(.notConnectedToInternet)
             fees.nextError = URLError(.notConnectedToInternet)
+            attendance.nextError = URLError(.notConnectedToInternet)
         }
         return Dependencies(
             auth: auth,
@@ -27,7 +29,7 @@ public enum Fixtures {
             counts: counts,
             students: students,
             classes: FakeClassesRepository(classes: register(for: state).classes),
-            attendance: FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) }),
+            attendance: attendance,
             messages: FakeMessageLogRepository(
                 logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed,
                 now: { clock(for: state) }
@@ -144,7 +146,8 @@ public enum Fixtures {
              .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
              .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
              .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
-             .offlineStudents, .offlineFees, .offlineNoCache:
+             .offlineStudents, .offlineFees, .offlineNoCache, .offlineWriteRefused, .offlineAttendanceSaved,
+             .offlineFeeMarked:
             .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
@@ -203,7 +206,7 @@ public enum Fixtures {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
         case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
-        case _ where offlineStates.contains(state): india(day: 7, hour: 16, minute: 35)
+        case _ where offlineStates.contains(state): offlineClock(state)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         case .todayNoClass: india(day: 10, hour: 9, minute: 30)
         default: now

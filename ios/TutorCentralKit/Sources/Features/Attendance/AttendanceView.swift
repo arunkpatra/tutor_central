@@ -137,7 +137,7 @@ public struct AttendanceView: View {
     /// The hint while nothing is saved; the banner after a save or on a day marked before.
     @ViewBuilder private var stateLine: some View {
         if let banner = store.banner {
-            Banner(symbol: banner.symbol, text: banner.text, tone: banner.ok ? .ok : nil)
+            Banner(symbol: banner.symbol, text: banner.text, tone: banner.ok ? .ok : banner.due ? .due : nil)
         } else {
             Text("Everyone starts present. Tap anyone who did not come, then save.")
                 .typeStyle(Tokens.footnote)
@@ -149,6 +149,8 @@ public struct AttendanceView: View {
     @ViewBuilder private var footer: some View {
         if case .saved = store.phase {
             SavedMark()
+        } else if case .savedHere = store.phase, !store.canSave {
+            SavedMark("Saved on this iPhone", keptHere: true)
         } else {
             let saving = store.phase == .saving
             Button(store.saveLabel) { Task { await store.save() } }

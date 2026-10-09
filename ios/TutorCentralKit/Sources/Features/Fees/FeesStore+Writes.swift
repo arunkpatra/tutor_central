@@ -18,7 +18,11 @@ public extension FeesStore {
             onFeesChanged()
             return count
         } catch {
-            failed("Couldn't create the fees. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't create the fees. Check your connection and try again.",
+                .generateFees,
+                error: error
+            ) { [weak self] in
                 _ = await self?.generate()
             }
             return nil
@@ -30,8 +34,11 @@ public extension FeesStore {
     func markPaid(_ id: UUID, method: MonthFee.PaidMethod, on day: Day) async -> Bool {
         writing = true
         defer { writing = false }
+        let at = FeeInvoice.paidAt(for: day, today: today, now: now(), calendar: calendar)
+        if await mustQueueMarkPaid() {
+            return keepPaidHere(id, method: method, at: at)
+        }
         do {
-            let at = FeeInvoice.paidAt(for: day, today: today, now: now(), calendar: calendar)
             let before = invoice(id)
             let paid = try await fees.markPaid(id: id, method: method, at: at)
             if before?.status == .waived, let reason = before?.waivedReason {
@@ -45,6 +52,9 @@ public extension FeesStore {
             onFeesChanged()
             return true
         } catch {
+            if queue != nil, TransportError.isOffline(error) {
+                return keepPaidHere(id, method: method, at: at)
+            }
             failed("Couldn't mark the fee paid. Check your connection and try again.") { [weak self] in
                 _ = await self?.markPaid(id, method: method, on: day)
             }
@@ -56,6 +66,11 @@ public extension FeesStore {
     func undoPaid(_ id: UUID) async -> Bool {
         let name = invoice(id).map(firstName(of:)) ?? "The"
         undo = nil
+        if keptHere.contains(id) {
+            // Nothing was written: the change leaves the queue and the row is as it was (D39).
+            undoKeptHere(id)
+            return true
+        }
         writing = true
         defer { writing = false }
         do {
@@ -93,7 +108,11 @@ public extension FeesStore {
             onFeesChanged()
             return true
         } catch {
-            failed("Couldn't waive the fee. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't waive the fee. Check your connection and try again.",
+                .waiveFee,
+                error: error
+            ) { [weak self] in
                 _ = await self?.waive(id, reason: trimmed)
             }
             return false
@@ -111,7 +130,7 @@ public extension FeesStore {
             succeeded()
             onWorkspaceChanged(workspace)
         } catch {
-            failed("Couldn't save. Check your connection and try again.") { [weak self] in
+            failed("Couldn't save. Check your connection and try again.", .editPayments, error: error) { [weak self] in
                 await self?.confirmPayee()
             }
         }
@@ -125,13 +144,23 @@ public extension FeesStore {
         }
     }
 
-    private func succeeded() {
+    internal func succeeded() {
         lastSavedAt = now()
         lastFailed = nil
         canRetry = false
     }
 
-    private func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
+    private func failed(
+        _ text: String, _ refusal: OfflineRefusal.Write? = nil, error: (any Error)? = nil,
+        retry: @escaping @MainActor () async -> Void
+    ) {
+        if let error, let refusal, TransportError.isOffline(error) {
+            // Offline: the write needs a connection; nothing was saved, and Retry would only fail again (D39).
+            message = OfflineRefusal.words(for: refusal)
+            canRetry = false
+            lastFailed = nil
+            return
+        }
         message = text
         canRetry = true
         lastFailed = retry

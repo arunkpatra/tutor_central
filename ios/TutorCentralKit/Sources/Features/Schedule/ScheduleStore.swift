@@ -55,16 +55,16 @@ import Observation
     public var cache: ((Period) -> CachedRead<ScheduleSnapshot>)?
     private var readMonth: Period?
     public var message: String?
-    public private(set) var canRetry = false
-    public private(set) var lastSavedAt: Date?
-    private var lastFailed: (@MainActor () async -> Void)?
+    public internal(set) var canRetry = false
+    public internal(set) var lastSavedAt: Date?
+    var lastFailed: (@MainActor () async -> Void)?
     /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
     private var loadGeneration = 0
     private let workspace: Workspace
     private let register: any Register
     private let eventsRepository: any EventsRepository
     private let attendance: any AttendanceRepository
-    private let now: @Sendable () -> Date
+    let now: @Sendable () -> Date
     private let calendar: Calendar
 
     public init(
@@ -203,7 +203,11 @@ import Observation
             saved()
             return made
         } catch {
-            failed("Couldn't save the event. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't save the event. Check your connection and try again.",
+                .addEvent,
+                error: error
+            ) { [weak self] in
                 _ = await self?.add(draft)
             }
             return nil
@@ -229,7 +233,11 @@ import Observation
             if let now = events.firstIndex(where: { $0.id == id }) {
                 events[now] = before
             }
-            failed("Couldn't save the event. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't save the event. Check your connection and try again.",
+                .editEvent,
+                error: error
+            ) { [weak self] in
                 _ = await self?.update(id, with: draft)
             }
             return false
@@ -244,7 +252,11 @@ import Observation
             saved()
             return true
         } catch {
-            failed("Couldn't delete the event. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't delete the event. Check your connection and try again.",
+                .editEvent,
+                error: error
+            ) { [weak self] in
                 _ = await self?.delete(id)
             }
             return false
@@ -263,18 +275,6 @@ import Observation
         month = period
         selected = period == today.period ? today : Day(iso: period.isoDay) ?? today
         await load()
-    }
-
-    private func saved() {
-        lastSavedAt = now()
-        lastFailed = nil
-        canRetry = false
-    }
-
-    private func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
-        message = text
-        canRetry = true
-        lastFailed = retry
     }
 }
 

@@ -208,7 +208,8 @@ public struct RootView: View {
                 store: store,
                 actions: studentsActions,
                 navigation: studentsNavigation,
-                boardState: launch.flatMap(Self.studentsBoardState),
+                boardState: launch.flatMap(Self.studentsBoardState)
+                    ?? (launch == .offlineWriteRefused ? .newStudentFilled : nil),
                 status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead)
             )
             .onChange(of: store.message) { _, message in
@@ -221,6 +222,10 @@ public struct RootView: View {
                 // P6-Scan-Saved: the list after Add, with its toast.
                 if launch == .scanSaved {
                     toasts.show(ScanReview.addedToast(count: 7), action: ("Undo", {}), stay: .seconds(3600))
+                }
+                // P7-Offline-WriteRefused: Save on the filled sheet, offline.
+                if launch == .offlineWriteRefused {
+                    toasts.show(OfflineRefusal.words(for: .addStudent), stay: .seconds(3600))
                 }
             }
         }

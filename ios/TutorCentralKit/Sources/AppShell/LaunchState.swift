@@ -143,6 +143,9 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case offlineStudents = "offline-students"
     case offlineFees = "offline-fees"
     case offlineNoCache = "offline-no-cache"
+    case offlineWriteRefused = "offline-write-refused"
+    case offlineAttendanceSaved = "offline-attendance-saved"
+    case offlineFeeMarked = "offline-fee-marked"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }

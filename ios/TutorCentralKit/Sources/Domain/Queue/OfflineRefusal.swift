@@ -1,0 +1,29 @@
+import Foundation
+
+/// The writes that need a connection (D39: only attendance, Mark paid and the absence alert's log wait on this iPhone)
+/// and what the tutor is told when one fails offline: what it was, that it needs a connection, that nothing was saved.
+public enum OfflineRefusal {
+    public enum Write: CaseIterable, Sendable {
+        case addStudent, editStudent, addClass, editClass, addEvent, editEvent, addTask, editTask, editPayments
+        case generateFees, waiveFee, remind, note
+    }
+
+    public static func words(for write: Write) -> String {
+        switch write {
+        case .remind: "You're offline. Reminders need a connection to be noted on the fee."
+        case .generateFees: "You're offline. Creating the month's fees needs a connection; nothing was created."
+        default: "You're offline. \(action(write)) needs a connection; nothing was saved."
+        }
+    }
+
+    private static let actions: [Write: String] = [
+        .addStudent: "Adding a student", .editStudent: "Editing a student", .addClass: "Adding a class",
+        .editClass: "Editing a class", .addEvent: "Adding an event", .editEvent: "Editing an event",
+        .addTask: "Adding a task", .editTask: "Changing a task", .editPayments: "Changing payment details",
+        .waiveFee: "Waiving a fee", .note: "Adding a note",
+    ]
+
+    private static func action(_ write: Write) -> String {
+        actions[write] ?? "That"
+    }
+}
