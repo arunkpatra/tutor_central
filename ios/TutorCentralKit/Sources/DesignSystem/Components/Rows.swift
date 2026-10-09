@@ -36,7 +36,7 @@ public struct SettingRow<Trailing: View>: View {
     private var content: some View {
         HStack(spacing: Tokens.rowPaddingDense) {
             if let symbol {
-                Image(systemName: symbol)
+                Image(systemName: symbol).accessibilityHidden(true)
                     .font(.system(size: Tokens.iconButton))
                     .foregroundStyle(Tokens.text2.color)
                     .frame(width: Tokens.iconButton + Tokens.fieldGap)
@@ -291,6 +291,7 @@ public struct AttendanceRow: View {
         .pressable()
         .accessibilityLabel(name)
         .accessibilityValue(present ? "Present" : "Absent")
+        .accessibilityHint(present ? "Marks absent" : "Marks present")
         .accessibilityAddTraits(.isToggle)
     }
 }

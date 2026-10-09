@@ -64,7 +64,7 @@ public struct Chip: View {
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
             if let symbol {
-                Image(systemName: symbol).font(.system(size: Self.symbolSize, weight: .bold))
+                Image(systemName: symbol).accessibilityHidden(true).font(.system(size: Self.symbolSize, weight: .bold))
             }
             Text(title)
         }

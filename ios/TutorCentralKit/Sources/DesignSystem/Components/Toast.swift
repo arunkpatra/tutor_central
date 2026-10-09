@@ -46,7 +46,7 @@ public struct OfflineBar: View {
 
     public var body: some View {
         HStack(spacing: Tokens.inline) {
-            Image(systemName: "wifi.slash").font(.system(size: Tokens.iconInline))
+            Image(systemName: "wifi.slash").accessibilityHidden(true).font(.system(size: Tokens.iconInline))
             Text(text)
             Spacer(minLength: 0)
         }

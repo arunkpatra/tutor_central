@@ -51,7 +51,7 @@ struct ClassMenu: View {
                             .foregroundStyle(Tokens.text3.color)
                         Spacer(minLength: Tokens.inline)
                         if option.classID == chosen {
-                            Image(systemName: "checkmark")
+                            Image(systemName: "checkmark").accessibilityHidden(true)
                                 .font(.system(size: Tokens.iconSmall, weight: .semibold))
                                 .foregroundStyle(Tokens.accentText.color)
                         }

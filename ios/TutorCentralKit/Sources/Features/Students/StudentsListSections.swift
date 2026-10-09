@@ -116,7 +116,8 @@ struct RegisterList: View {
                 } label: {
                     HStack(spacing: Tokens.rowGapInner * 2) {
                         Text(store.sort.label).typeStyle(Tokens.buttonSecondary)
-                        Image(systemName: "chevron.up.chevron.down").font(.system(size: Tokens.iconInline))
+                        Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
+                            .font(.system(size: Tokens.iconInline))
                     }
                     .foregroundStyle(Tokens.accentText.color)
                 }
@@ -236,7 +237,8 @@ struct AddMenu: View {
             HStack(spacing: Tokens.rowPaddingDense) {
                 Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
                 Spacer(minLength: 0)
-                Image(systemName: symbol).font(.system(size: Tokens.iconButton)).foregroundStyle(Tokens.text.color)
+                Image(systemName: symbol).accessibilityHidden(true).font(.system(size: Tokens.iconButton))
+                    .foregroundStyle(Tokens.text.color)
             }
             .padding(.horizontal, Tokens.rowPaddingHorizontal)
             .frame(height: Well<EmptyView>.height)

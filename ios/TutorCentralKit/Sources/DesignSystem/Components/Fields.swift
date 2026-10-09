@@ -83,7 +83,7 @@ public struct FieldMessage: View {
 
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Tokens.fieldGap) {
-            Image(systemName: "exclamationmark.circle").font(.system(size: Tokens.iconInline))
+            Image(systemName: "exclamationmark.circle").accessibilityHidden(true).font(.system(size: Tokens.iconInline))
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
         .typeStyle(Tokens.footnote)
@@ -320,7 +320,8 @@ public struct PickerRow<Option: Hashable>: View {
             } label: {
                 HStack(spacing: Tokens.rowGapInner * 2) {
                     Text(options.first { $0.0 == selection }?.1 ?? "").typeStyle(Tokens.bodyStrong)
-                    Image(systemName: "chevron.up.chevron.down").font(.system(size: Tokens.iconInline))
+                    Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
+                        .font(.system(size: Tokens.iconInline))
                 }
                 .foregroundStyle(Tokens.accentText.color)
             }

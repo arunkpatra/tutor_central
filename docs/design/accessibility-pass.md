@@ -53,3 +53,23 @@ At every other size, the boards' layout is kept exactly.
 
 Left as they are: a text field shows the end of a long value (Settings' "Bright Minds Tuiti…"), as fields do.
 Onboarding's "Signed in as …" line keeps its middle ellipsis. Both are one line by design.
+
+## VoiceOver
+
+Every `Image(systemName:)` in the features and DesignSystem was checked. Each one now does one of three things:
+
+- It sits in a labelled control: the icon buttons, Back, the month arrows, Clear, Remove page, Sort, Add.
+- It is the label's icon in a `Label`.
+- It is hidden.
+
+Changed:
+
+| Control | Before | Now |
+|---|---|---|
+| The tick on a chosen row (Attendance's class menu, the marking scheme, a student picker, on-sheet choices) | Read "Checkmark" inside the row | Hidden; the row says "Selected" (the trait, already there) |
+| A setting row's symbol, a chip's symbol, the field error's mark, the picker chevrons, the empty state's symbol, Add a page's camera, Tell parent's glyph, the Saved tick, the toast's offline mark, the footer's tick and clock, the add-menu row symbols | Read their symbol names inside combined rows | Hidden (the words beside them say it) |
+| The attendance pill | "Akshita Rao, Present, toggle" | "Akshita Rao, Present, toggle, Marks absent" |
+
+The report rows now also stack at the accessibility sizes, as the other list rows do.
+
+The simulator cannot speak. A tester's run with VoiceOver on a real iPhone is device test D1.

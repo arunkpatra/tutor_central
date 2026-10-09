@@ -67,7 +67,8 @@ public struct EmptyState: View {
 
     public var body: some View {
         VStack(spacing: Tokens.fieldGap) {
-            Image(systemName: symbol).font(.system(size: Self.symbolSize)).foregroundStyle(Tokens.text3.color)
+            Image(systemName: symbol).accessibilityHidden(true).font(.system(size: Self.symbolSize))
+                .foregroundStyle(Tokens.text3.color)
             Text(title).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color).padding(
                 .top,
                 Tokens.rowGapInner * 2

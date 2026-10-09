@@ -74,7 +74,8 @@ public struct PickerValue: View {
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
             Text(value).typeStyle(Tokens.bodyStrong)
-            Image(systemName: "chevron.up.chevron.down").font(.system(size: Tokens.iconInline))
+            Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
+                .font(.system(size: Tokens.iconInline))
         }
         .foregroundStyle(Tokens.accentText.color)
     }
