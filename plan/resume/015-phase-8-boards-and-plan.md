@@ -75,7 +75,7 @@ at the commit `STATE.md` names, deployed only through `deploy.yml` (D21, D26). W
 - The deferred minors of Phase 7 (`plan/sessions/015/record.md`) and earlier phases stay the owner's; offer, take none.
 - Phase 9 (user testing, D43) needs `/privacy` live for TestFlight's external group: the plan should end with the URL in
   App Store Connect, so Phase 9 can start.
-- Google's official mark on sign-in is still the owner's open call.
+- Sign-in follows Google's branding guidelines since #74 (the owner, 2026-10-09); the website's sign-in references, if any, should match.
 
 **How to work:** one question at a time, only for decisions that are the owner's; decide small things yourself and
 write them down. No board, no code; this session writes no code. Documents only go to `main` directly. Update

@@ -63,7 +63,7 @@ Phase 9's external group; the owner checks build 11 on his phone.
   timed-out absence log can be noted twice; the API reads `APPLE_*` at boot and does not refuse `APPLE_FAKE` in production;
   two tests the plan named. Earlier phases' minors: `plan/sessions/004`, `006`, `009`, `011`, `013` records (Phase 6's 1, 6
   and 7 are Phase 8's).
-- **Google's mark** on sign-in is a hand-drawn stand-in; Google's official logo was offered in Phase 7 and not yet taken.
+- **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google): Google's own G and colours, the three buttons pills; on `main` for the next build.
 - **TestFlight's external group and Beta App Review** wait for Phase 8's `tutorcentral.in/privacy`; Phase 9 runs them (D43).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
 - **UI polish:** `plan/ui-polish.md`: U5, U7, U8, U10, U11, U13 to U30 open; U1 to U4, U6, U9, U12 done. U7, U16 and U24
