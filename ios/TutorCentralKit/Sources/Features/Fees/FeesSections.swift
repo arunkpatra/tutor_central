@@ -33,6 +33,23 @@ struct PayeeSection: View {
     }
 }
 
+/// Offline with no copy of the month on this iPhone (P7-Offline-NoCache): what will appear, and Try again.
+struct NothingSavedCard: View {
+    let month: Period
+    let retry: () -> Void
+
+    var body: some View {
+        Card {
+            EmptyState(
+                symbol: "wifi.slash", title: "Nothing saved here yet",
+                line: "\(month.monthName)'s fees appear once this screen has loaded with a connection.",
+                action: .init("Try again", emphasis: .secondary, run: retry),
+                size: .screen
+            )
+        }
+    }
+}
+
 /// A month with no fees yet (P5-Fees-Empty): the one card with Generate.
 struct EmptyMonthCard: View {
     let month: Period
@@ -68,7 +85,7 @@ struct LedgerSections: View {
         }
         Segmented(options: FeeFilter.allCases.map { ($0, $0.title) }, selection: $store.filter)
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader(store.ledgerTitle, action: generateAction)
+            SectionHeader(store.ledgerTitle, action: generateAction, actionEnabled: !store.offline)
             if store.rows.isEmpty {
                 Card { emptyFilter }
             } else {
@@ -93,7 +110,10 @@ struct LedgerSections: View {
     }
 
     private func buttons(_ id: UUID) -> FeeButtons {
-        FeeButtons(remind: { store.sheet = .remind(id) }, markPaid: { store.sheet = .markPaid(id) })
+        FeeButtons(
+            remind: { store.sheet = .remind(id) }, remindEnabled: !store.offline,
+            markPaid: { store.sheet = .markPaid(id) }
+        )
     }
 
     /// Nothing under a filter: the Kit's empty row in the board's words.

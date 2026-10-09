@@ -12,6 +12,8 @@ import Observation
         case saved(at: Date)
         case reopened(savedAt: Date)
         case saving
+        /// Kept on this iPhone while offline (D39): it reaches the server on the next run of the queue.
+        case savedHere(at: Date)
     }
 
     /// A row of the class menu: All students first, then each active class, with how many it holds.
@@ -29,6 +31,8 @@ import Observation
         public let symbol: String
         public let text: String
         public let ok: Bool
+        /// Kept on this iPhone: the due tone with its clock.
+        public var due = false
     }
 
     /// An absent student of the saved class: the parent and their number, and whether they were told that day.
@@ -42,28 +46,38 @@ import Observation
     }
 
     public private(set) var draft: AttendanceDraft
-    public private(set) var saved: AttendanceSession?
-    public private(set) var phase: Phase = .fresh
+    public internal(set) var saved: AttendanceSession?
+    public internal(set) var phase: Phase = .fresh
     public private(set) var loading = false
-    public private(set) var error: String?
+    public internal(set) var error: String?
+    /// When the month's sessions on screen were saved on this iPhone, until the network replaces them (D39).
+    public internal(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public internal(set) var offlineRead = false
+    /// A month's copy on this iPhone (AppShell's): its sessions and the absence alerts told.
+    public var cache: ((Period) -> CachedRead<AttendanceSnapshot>)?
+    /// The centre's queue (AppShell's): a save or an alert's log made offline waits in it (D39).
+    public var queue: (any ChangeQueueing)?
+    /// Whether the network is there (AppShell's monitor).
+    public var online: @Sendable () async -> Bool = { true }
     public var message: String?
-    public private(set) var canRetry = false
-    public private(set) var lastSavedAt: Date?
+    public internal(set) var canRetry = false
+    public internal(set) var lastSavedAt: Date?
     /// True once a class and day have been opened: the empty state waits for it, and `load()` runs only once.
     public private(set) var opened = false
     /// Counts the opens asked for (the tab's first, a link, Mark attendance, the menus): only the newest lands, however
     /// the reads interleave, so a slower earlier read never replaces the day chosen last.
     private var openGeneration = 0
-    private var sessions: [AttendanceSession] = []
-    private var told: [AbsenceLog] = []
-    private var loadedMonth: Period?
+    var sessions: [AttendanceSession] = []
+    var told: [AbsenceLog] = []
+    var loadedMonth: Period?
     private var lastFailed: (@MainActor () async -> Void)?
-    private let workspace: Workspace
-    private let register: any Register
+    let workspace: Workspace
+    let register: any Register
     private let attendance: any AttendanceRepository
-    private let messages: any MessageLogRepository
-    private let now: @Sendable () -> Date
-    private let calendar: Calendar
+    let messages: any MessageLogRepository
+    let now: @Sendable () -> Date
+    let calendar: Calendar
 
     public init(
         workspace: Workspace, register: any Register, attendance: any AttendanceRepository,
@@ -132,6 +146,12 @@ import Observation
                 text: "Marked on \(draft.date.shortWeekdayText) at \(clock(savedAt)). Saving again replaces it.",
                 ok: false
             )
+        case let .savedHere(at):
+            MarkBanner(
+                symbol: "clock",
+                text: "Saved on this iPhone at \(clock(at)). It's sent when you're back online.",
+                ok: false, due: true
+            )
         case .fresh, .saving: nil
         }
     }
@@ -171,6 +191,7 @@ import Observation
         if loadedMonth != date.period {
             loading = true
             defer { loading = false }
+            let cached = cache?(date.period).load()
             do {
                 async let read = attendance.sessions(centre: workspace.centre.id, month: date.period)
                 async let logs = messages.absences(centre: workspace.centre.id, month: date.period)
@@ -178,10 +199,23 @@ import Observation
                 guard generation == openGeneration else { return }
                 (sessions, told) = (month, monthLogs)
                 loadedMonth = date.period
+                cache?(date.period).keep(AttendanceSnapshot(sessions: month, told: monthLogs), at: now())
+                savedAt = nil
+                offlineRead = false
                 error = nil
             } catch {
                 guard generation == openGeneration else { return }
-                self.error = "Couldn't load attendance. Check your connection and try again."
+                if TransportError.isCancelled(error) {
+                    // The tab went away mid-read: nothing failed; the next visit opens again.
+                    if !opened {
+                        openGeneration = 0
+                    }
+                    return
+                }
+                offlineRead = TransportError.isOffline(error)
+                if !showSaved(cached, month: date.period) {
+                    self.error = "Couldn't load attendance. Check your connection and try again."
+                }
             }
         }
         guard generation == openGeneration else { return }
@@ -205,10 +239,14 @@ import Observation
         guard canSave else { return false }
         let before = phase
         phase = .saving
+        // A student saved here before who has since left the class (or the register) keeps that mark: a save
+        // replaces the marks it sends, so it sends theirs too.
+        let marks = (saved?.marks ?? [:]).merging(draft.marks) { _, mark in mark }
+        if await mustQueue(.attendance) {
+            keepHere(marks)
+            return true
+        }
         do {
-            // A student saved here before who has since left the class (or the register) keeps that mark: a save
-            // replaces the marks it sends, so it sends theirs too.
-            let marks = (saved?.marks ?? [:]).merging(draft.marks) { _, mark in mark }
             let session = try await attendance.save(
                 centre: workspace.centre.id, classID: draft.classID, date: draft.date, marks: marks
             )
@@ -222,6 +260,10 @@ import Observation
             message = nil
             return true
         } catch {
+            if queue != nil, TransportError.isOffline(error) {
+                keepHere(marks)
+                return true
+            }
             phase = before
             message = "Couldn't save attendance. Check your connection and try again."
             canRetry = true
@@ -238,44 +280,6 @@ import Observation
         await retry()
     }
 
-    /// The sheet behind Tell parent; nil once that parent was told for the day.
-    public func alert(for studentID: UUID) -> AbsenceAlert? {
-        guard let saved, saved.marks[studentID] == .absent, let student = register.student(studentID),
-              absentRows.first(where: { $0.student.id == studentID })?.told == nil else { return nil }
-        let text = AbsenceMessage(
-            parentName: student.parentName, studentName: student.name,
-            className: register.classroom(saved.classID)?.name, day: saved.date, today: today,
-            tutorName: workspace.profile.displayName, centreName: workspace.centre.name
-        ).text
-        let line = student.parentPhone
-            .map { [student.parentName, $0.display].compactMap(\.self).joined(separator: " · ") }
-        let when = saved.date == today ? "today" : "on \(saved.date.shortWeekdayText)"
-        return AbsenceAlert(
-            student: student,
-            headline: "\(student.firstName) was absent \(when)",
-            parentLine: line ?? "Add the parent's number first",
-            text: text,
-            url: student.parentPhone.map { AbsenceMessage.whatsAppURL(phone: $0, text: text) }
-        )
-    }
-
-    /// Logs the alert (D3), then hands back the link to open. Nil, with a toast, when it could not be logged.
-    public func tell(_ studentID: UUID) async -> URL? {
-        guard let alert = alert(for: studentID), let url = alert.url else { return nil }
-        do {
-            guard let day = saved?.date else { return nil }
-            try await told.insert(
-                messages.logAbsence(centre: workspace.centre.id, studentID: studentID, about: day), at: 0
-            )
-            lastSavedAt = now()
-            return url
-        } catch {
-            message = "Couldn't open WhatsApp. Check your connection and try again."
-            canRetry = false
-            return nil
-        }
-    }
-
     private static func members(of classID: UUID?, in register: any Register) -> [Student] {
         guard let classID else {
             return StudentQuery.apply(
@@ -285,7 +289,7 @@ import Observation
         return register.members(of: classID)
     }
 
-    private func clock(_ date: Date) -> String {
+    func clock(_ date: Date) -> String {
         let parts = calendar.dateComponents([.hour, .minute], from: date)
         return TimeOfDay(hour: parts.hour ?? 0, minute: parts.minute ?? 0)?.text ?? ""
     }
@@ -302,5 +306,16 @@ public struct AbsenceAlert: Hashable, Sendable, Identifiable {
     public let url: URL?
     public var id: UUID {
         student.id
+    }
+}
+
+/// An attendance month's copy on this iPhone (D39): its saved sessions and the absence alerts told.
+public struct AttendanceSnapshot: Codable, Sendable {
+    public let sessions: [AttendanceSession]
+    public let told: [AbsenceLog]
+
+    public init(sessions: [AttendanceSession], told: [AbsenceLog]) {
+        self.sessions = sessions
+        self.told = told
     }
 }

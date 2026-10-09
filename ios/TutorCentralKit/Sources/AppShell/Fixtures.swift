@@ -11,6 +11,53 @@ public enum Fixtures {
     public static let meeraWorkspace = FakeCentreRepository.meeraWorkspace
 
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
+        let (auth, centres) = session(for: state)
+        let counts = FakeCountsRepository(counts: counts(for: state))
+        let students = FakeStudentsRepository(students: register(for: state).students)
+        let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
+        let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
+        if offlineStates.contains(state) {
+            // The boards' offline screens: every read fails for the network; the copies on this iPhone show.
+            counts.nextError = URLError(.notConnectedToInternet)
+            students.nextError = URLError(.notConnectedToInternet)
+            fees.nextError = URLError(.notConnectedToInternet)
+            attendance.nextError = URLError(.notConnectedToInternet)
+        }
+        return Dependencies(
+            auth: auth,
+            centres: centres,
+            counts: counts,
+            students: students,
+            classes: FakeClassesRepository(classes: register(for: state).classes),
+            attendance: attendance,
+            messages: FakeMessageLogRepository(
+                logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed,
+                now: { clock(for: state) }
+            ),
+            events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
+            tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
+                .seed),
+            fees: fees,
+            qrImages: MemoryQRImageStore(images: state == .paymentsQR ? [meeraWorkspace.centre.id: sampleQR()] : [:]),
+            ai: ai(for: state),
+            aiHistory: FakeAIHistoryRepository(
+                generations: [.aiAssistantEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
+            ),
+            account: FakeAccountRepository(),
+            notifications: FakeNotificationCenter(permission: .allowed),
+            reminderSettings: ReminderSettingsStore(defaults: boardDefaults(for: state)),
+            connectivity: FakeConnectivity(online: !offlineStates.contains(state)),
+            cachesLists: false,
+            filesDirectory: filesDirectory(for: state),
+            cachesRegister: false,
+            now: { clock(for: state) },
+            fixedClock: true,
+            bundleVersion: "1.0 (14)"
+        )
+    }
+
+    /// The signed-in tutor and her centre for a state, with the failures a board draws.
+    @MainActor static func session(for state: LaunchState) -> (FakeAuthRepository, FakeCentreRepository) {
         let auth = FakeAuthRepository()
         let centres = FakeCentreRepository()
         switch initialState(for: state) {
@@ -28,35 +75,7 @@ public enum Fixtures {
             }
         case .loading, .signedOut: break
         }
-        return Dependencies(
-            auth: auth,
-            centres: centres,
-            counts: FakeCountsRepository(counts: counts(for: state)),
-            students: FakeStudentsRepository(students: register(for: state).students),
-            classes: FakeClassesRepository(classes: register(for: state).classes),
-            attendance: FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) }),
-            messages: FakeMessageLogRepository(
-                logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed,
-                now: { clock(for: state) }
-            ),
-            events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
-            tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
-                .seed),
-            fees: FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) }),
-            qrImages: MemoryQRImageStore(images: state == .paymentsQR ? [meeraWorkspace.centre.id: sampleQR()] : [:]),
-            ai: ai(for: state),
-            aiHistory: FakeAIHistoryRepository(
-                generations: [.aiAssistantEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
-            ),
-            account: FakeAccountRepository(),
-            notifications: FakeNotificationCenter(permission: .allowed),
-            reminderSettings: ReminderSettingsStore(defaults: boardDefaults(for: state)),
-            filesDirectory: filesDirectory(for: state),
-            cachesRegister: false,
-            now: { clock(for: state) },
-            fixedClock: true,
-            bundleVersion: "1.0 (14)"
-        )
+        return (auth, centres)
     }
 
     /// A fresh folder per launch for the queue and the caches; the states that start with something in them write it.
@@ -69,6 +88,8 @@ public enum Fixtures {
                 queue.add(change)
             }
         }
+        keepCopies(for: state, in: folder)
+        queueChanges(for: state, in: folder)
         return folder
     }
 
@@ -125,7 +146,9 @@ public enum Fixtures {
              .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
              .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
              .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
-             .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed:
+             .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
+             .offlineStudents, .offlineFees, .offlineNoCache, .offlineWriteRefused, .offlineAttendanceSaved,
+             .offlineFeeMarked, .syncSending, .syncSent, .syncFailed, .pending, .pendingDiscard:
             .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
@@ -184,6 +207,8 @@ public enum Fixtures {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
         case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
+        case _ where offlineStates.contains(state): offlineClock(state)
+        case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         case .todayNoClass: india(day: 10, hour: 9, minute: 30)
         default: now
@@ -193,7 +218,7 @@ public enum Fixtures {
     /// Today's tiles on the boards: ten students, ₹4,000 due (the seed's four unpaid), the classes meeting that day.
     static func counts(for state: LaunchState) -> TodayCounts {
         switch state {
-        case .today, .todayEvening, .todayAddingTask, .todayAI:
+        case .today, .todayEvening, .todayAddingTask, .todayAI, .syncSending, .syncSent, .syncFailed:
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoClass: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero

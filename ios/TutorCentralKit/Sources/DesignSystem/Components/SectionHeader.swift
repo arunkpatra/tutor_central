@@ -5,10 +5,13 @@ import SwiftUI
 public struct SectionHeader: View {
     let title: String
     let action: (label: String, run: () -> Void)?
+    let actionEnabled: Bool
 
-    public init(_ title: String, action: (label: String, run: () -> Void)? = nil) {
+    /// `actionEnabled` false dims the action (Generate offline, P7-Offline-Fees).
+    public init(_ title: String, action: (label: String, run: () -> Void)? = nil, actionEnabled: Bool = true) {
         self.title = title
         self.action = action
+        self.actionEnabled = actionEnabled
     }
 
     public var body: some View {
@@ -17,7 +20,7 @@ public struct SectionHeader: View {
                 .accessibilityAddTraits(.isHeader)
             Spacer()
             if let action {
-                Button(action.label, action: action.run).buttonStyle(.quiet)
+                Button(action.label, action: action.run).buttonStyle(.quiet).disabled(!actionEnabled)
             }
         }
         .padding(.horizontal, Tokens.rowGapInner)

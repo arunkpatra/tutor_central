@@ -1,5 +1,5 @@
 /// The three numbers on Today's tiles.
-public struct TodayCounts: Hashable, Sendable {
+public struct TodayCounts: Hashable, Sendable, Codable {
     public var students: Int
     public var due: Money
     public var classesToday: Int

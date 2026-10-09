@@ -17,14 +17,20 @@ public struct TodayView: View {
     let actions: TodayActions
     let ticks: Bool
     let boardState: TodayBoardState?
+    let status: RootStatus
     @State private var topInset: CGFloat = 0
 
-    /// `ticks` runs the minute clock (live); the fixtures hold their moment.
-    public init(store: TodayStore, actions: TodayActions, ticks: Bool = true, boardState: TodayBoardState? = nil) {
+    /// `ticks` runs the minute clock (live); the fixtures hold their moment. `status` is AppShell's: the offline or
+    /// sync line under the greeting, and whether the AI row is live.
+    public init(
+        store: TodayStore, actions: TodayActions, ticks: Bool = true, boardState: TodayBoardState? = nil,
+        status: RootStatus = .online
+    ) {
         self.store = store
         self.actions = actions
         self.ticks = ticks
         self.boardState = boardState
+        self.status = status
     }
 
     public var body: some View {
@@ -32,6 +38,9 @@ public struct TodayView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                     header
+                    if let line = status.line {
+                        StatusLine(line)
+                    }
                     tiles
                     if let error = store.error {
                         refreshError(error)
@@ -54,6 +63,8 @@ public struct TodayView: View {
                                 symbol: "sparkles", title: "Create with AI",
                                 line: "A paper, homework, a worksheet or a progress note", action: actions.openAI
                             )
+                            .disabled(status.offline)
+                            .opacity(status.offline ? Tokens.opacityDisabled : 1)
                         }
                     }
                 }
@@ -71,6 +82,7 @@ public struct TodayView: View {
                 Haptic.play(.impactLight)
             }
             .task {
+                store.showCached()
                 await store.load()
                 if boardState == .addingTask {
                     setUpAddingTask()

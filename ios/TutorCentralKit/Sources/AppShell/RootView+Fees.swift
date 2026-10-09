@@ -18,6 +18,9 @@ extension RootView {
             centres: deps.centres, now: deps.now
         )
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingPayments(from: changed) } }
+        made.cache = monthCache(workspace, "fees")
+        made.queue = centreQueue()
+        made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onFeesChanged = { [shell] in
             Task { await shell.register?.refresh() }
         }
@@ -130,7 +133,8 @@ extension RootView {
             FeesView(
                 store: store,
                 actions: FeesActions(openPayments: { shell.tabs.push(.payments) }),
-                boardState: launch.flatMap(Self.feesBoardState)
+                boardState: launch.flatMap(Self.feesBoardState) ?? (launch == .offlineFeeMarked ? .markedPaid : nil),
+                status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead)
             )
             .onChange(of: store.undo) { _, undo in
                 guard let undo else { return }

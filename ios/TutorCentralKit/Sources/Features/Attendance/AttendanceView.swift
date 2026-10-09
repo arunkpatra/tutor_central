@@ -22,20 +22,29 @@ public struct AttendanceView: View {
     let boardState: AttendanceBoardState?
     @State private var topInset: CGFloat = 0
     @State private var picksDate = false
+    /// AppShell's: the offline or sync line under the title (D39).
+    let status: RootStatus
     @State private var picksClass = false
     @State private var alert: AbsenceAlert?
     @Environment(\.openURL) private var openURL
 
-    public init(store: AttendanceStore, actions: AttendanceActions, boardState: AttendanceBoardState? = nil) {
+    public init(
+        store: AttendanceStore, actions: AttendanceActions, boardState: AttendanceBoardState? = nil,
+        status: RootStatus = .online
+    ) {
         self.store = store
         self.actions = actions
         self.boardState = boardState
+        self.status = status
     }
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 titleRow
+                if let line = status.line {
+                    StatusLine(line)
+                }
                 if store.hasStudents {
                     pickers
                     if let error = store.error {
@@ -128,7 +137,7 @@ public struct AttendanceView: View {
     /// The hint while nothing is saved; the banner after a save or on a day marked before.
     @ViewBuilder private var stateLine: some View {
         if let banner = store.banner {
-            Banner(symbol: banner.symbol, text: banner.text, tone: banner.ok ? .ok : nil)
+            Banner(symbol: banner.symbol, text: banner.text, tone: banner.ok ? .ok : banner.due ? .due : nil)
         } else {
             Text("Everyone starts present. Tap anyone who did not come, then save.")
                 .typeStyle(Tokens.footnote)
@@ -140,6 +149,8 @@ public struct AttendanceView: View {
     @ViewBuilder private var footer: some View {
         if case .saved = store.phase {
             SavedMark()
+        } else if case .savedHere = store.phase, !store.canSave {
+            SavedMark("Saved on this iPhone", keptHere: true)
         } else {
             let saving = store.phase == .saving
             Button(store.saveLabel) { Task { await store.save() } }

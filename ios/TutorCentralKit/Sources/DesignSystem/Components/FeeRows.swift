@@ -22,10 +22,13 @@ public struct FeeRowLine: Hashable, Sendable {
 /// without `remind`, Mark paid alone across the row (a waived month on a student's fees, the owner's call).
 public struct FeeButtons: View {
     let remind: (() -> Void)?
+    let remindEnabled: Bool
     let markPaid: () -> Void
 
-    public init(remind: (() -> Void)?, markPaid: @escaping () -> Void) {
+    /// `remindEnabled` false dims Remind (offline: a reminder is noted on the fee, which needs the server).
+    public init(remind: (() -> Void)?, remindEnabled: Bool = true, markPaid: @escaping () -> Void) {
         self.remind = remind
+        self.remindEnabled = remindEnabled
         self.markPaid = markPaid
     }
 
@@ -36,6 +39,7 @@ public struct FeeButtons: View {
                     Label("Remind", systemImage: "bell")
                 }
                 .buttonStyle(.secondary(.row))
+                .disabled(!remindEnabled)
             }
             Button(action: markPaid) {
                 Label("Mark paid", systemImage: "checkmark")

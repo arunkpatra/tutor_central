@@ -7,12 +7,15 @@ import SwiftUI
 public struct HistoryView: View {
     let store: AIStore
     let actions: AIToolsActions
+    /// AppShell's: the offline or sync line under the title (D39).
+    let status: RootStatus
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
-    public init(store: AIStore, actions: AIToolsActions) {
+    public init(store: AIStore, actions: AIToolsActions, status: RootStatus = .online) {
         self.store = store
         self.actions = actions
+        self.status = status
     }
 
     /// The months, newest first, each with its results.
@@ -27,6 +30,9 @@ public struct HistoryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 BackRow(title: "History") { dismiss() }
+                if let line = status.line {
+                    StatusLine(line)
+                }
                 if let error = store.historyError, !store.historyLoaded {
                     HStack(alignment: .firstTextBaseline) {
                         Text(error).typeStyle(Tokens.footnote).foregroundStyle(Tokens.overdue.color)

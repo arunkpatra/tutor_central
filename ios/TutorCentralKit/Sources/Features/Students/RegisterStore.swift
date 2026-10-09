@@ -21,6 +21,10 @@ import Observation
     private let studentsRepository: any StudentsRepository
     let classesRepository: any ClassesRepository
     private let cache: RegisterCache?
+    /// When the register on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public private(set) var offlineRead = false
     let now: @Sendable () -> Date
     private let calendar: Calendar
     private var loaded = false
@@ -127,6 +131,7 @@ import Observation
 
     public func load() async {
         if !loaded, let snapshot = cache?.load() {
+            savedAt = snapshot.savedAt
             classes = snapshot.classes
             students = snapshot.period == period ? snapshot.students : snapshot.students
                 .map(Self.withoutFeeMark)
@@ -160,15 +165,23 @@ import Observation
             async let classRead = classesRepository.classes(centre: workspace.centre.id)
             (students, classes) = try await (read, classRead)
             error = nil
+            offlineRead = false
+            savedAt = nil
             loaded = true
             persist()
         } catch {
-            self.error = "Couldn't refresh. Check your connection and try again."
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
+            offlineRead = TransportError.isOffline(error)
+            // A saved register offline: the line under the title says it.
+            self.error = loaded && offlineRead ? nil : "Couldn't refresh. Check your connection and try again."
         }
     }
 
     private func persist() {
-        try? cache?.save(RegisterSnapshot(students: students, classes: classes, period: period))
+        try? cache?.save(RegisterSnapshot(students: students, classes: classes, period: period, savedAt: now()))
     }
 
     func replace(_ id: UUID, with student: Student) {
@@ -186,7 +199,17 @@ import Observation
         persist()
     }
 
-    func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
+    func failed(
+        _ text: String, _ refusal: OfflineRefusal.Write? = nil, error: (any Error)? = nil,
+        retry: @escaping @MainActor () async -> Void
+    ) {
+        if let error, let refusal, TransportError.isOffline(error) {
+            // Offline: the write needs a connection; nothing was saved, and Retry would only fail again (D39).
+            message = OfflineRefusal.words(for: refusal)
+            canRetry = false
+            lastFailed = nil
+            return
+        }
         message = text
         lastFailed = retry
         canRetry = true
@@ -223,7 +246,7 @@ public extension RegisterStore {
         } catch {
             students.removeAll { $0.id == placeholder.id }
             let text = "Couldn't save \(firstWord(draft.trimmedName)). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .addStudent, error: error) { [weak self] in
                 await self?.addStudent(draft)
             }
             return nil
@@ -251,7 +274,7 @@ public extension RegisterStore {
         } catch {
             replace(id, with: before)
             let text = "Couldn't save \(before.firstName). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .editStudent, error: error) { [weak self] in
                 _ = await self?.updateStudent(
                     id,
                     with: draft
@@ -271,13 +294,10 @@ public extension RegisterStore {
             succeeded()
         } catch {
             replace(id, with: before)
-            failed(
-                "Couldn't \(archived ? "archive" : "restore") \(before.firstName). Check your connection and try again."
-            ) { [weak self] in
-                await self?.setArchived(
-                    id,
-                    archived
-                )
+            let verb = archived ? "archive" : "restore"
+            let text = "Couldn't \(verb) \(before.firstName). Check your connection and try again."
+            failed(text, .editStudent, error: error) { [weak self] in
+                await self?.setArchived(id, archived)
             }
         }
     }
@@ -292,7 +312,7 @@ public extension RegisterStore {
             return true
         } catch {
             let text = "Couldn't delete \(before.firstName). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .editStudent, error: error) { [weak self] in
                 _ = await self?.deleteStudent(id)
             }
             return false
@@ -310,7 +330,7 @@ public extension RegisterStore {
         } catch {
             setClass(of: ids) { previous[$0] ?? nil }
             let text = "Couldn't move \(names ?? "the students"). Check your connection and try again."
-            failed(text) { [weak self] in await self?.assign(ids, to: classID) }
+            failed(text, .editStudent, error: error) { [weak self] in await self?.assign(ids, to: classID) }
         }
     }
 

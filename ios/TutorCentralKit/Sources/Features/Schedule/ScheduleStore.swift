@@ -47,23 +47,33 @@ import Observation
     public private(set) var sessions: [AttendanceSession] = []
     public private(set) var loading = false
     public private(set) var error: String?
+    /// When the copy on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public private(set) var offlineRead = false
+    /// A month's copy on this iPhone (AppShell's): its events (with the two weeks after) and its sessions.
+    public var cache: ((Period) -> CachedRead<ScheduleSnapshot>)?
+    private var readMonth: Period?
     public var message: String?
-    public private(set) var canRetry = false
-    public private(set) var lastSavedAt: Date?
-    private var lastFailed: (@MainActor () async -> Void)?
+    public internal(set) var canRetry = false
+    public internal(set) var lastSavedAt: Date?
+    var lastFailed: (@MainActor () async -> Void)?
     /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
     private var loadGeneration = 0
     private let workspace: Workspace
     private let register: any Register
     private let eventsRepository: any EventsRepository
     private let attendance: any AttendanceRepository
-    private let now: @Sendable () -> Date
+    let now: @Sendable () -> Date
     private let calendar: Calendar
 
     public init(
         workspace: Workspace, register: any Register, events: any EventsRepository,
-        attendance: any AttendanceRepository, now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india
+        attendance: any AttendanceRepository, now: @escaping @Sendable () -> Date,
+        calendar: Calendar = DayHeading.india,
+        cache: ((Period) -> CachedRead<ScheduleSnapshot>)? = nil
     ) {
+        self.cache = cache
         self.workspace = workspace
         self.register = register
         eventsRepository = events
@@ -142,6 +152,12 @@ import Observation
             }
         }
         guard let first = Day(iso: month.isoDay), let last = Day(iso: month.next.previousDayISO) else { return }
+        let month = month
+        if readMonth != month, let cached = cache?(month).load() {
+            (events, sessions) = (cached.value.events, cached.value.sessions)
+            readMonth = month
+            savedAt = cached.savedAt
+        }
         do {
             // Coming up runs past the month's end: read its two weeks beyond it.
             let to = last.adding(days: Self.comingUpDays, calendar: calendar)
@@ -150,10 +166,20 @@ import Observation
             let result = try await (read, marked)
             guard generation == loadGeneration else { return }
             (events, sessions) = result
+            readMonth = month
+            cache?(month).keep(ScheduleSnapshot(events: result.0, sessions: result.1), at: now())
+            savedAt = nil
+            offlineRead = false
             error = nil
         } catch {
             guard generation == loadGeneration else { return }
-            self.error = "Couldn't load the schedule. Check your connection and try again."
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
+            offlineRead = TransportError.isOffline(error)
+            let shown = readMonth == month && savedAt != nil
+            self.error = shown && offlineRead ? nil : "Couldn't load the schedule. Check your connection and try again."
         }
     }
 
@@ -181,7 +207,11 @@ import Observation
             saved()
             return made
         } catch {
-            failed("Couldn't save the event. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't save the event. Check your connection and try again.",
+                .addEvent,
+                error: error
+            ) { [weak self] in
                 _ = await self?.add(draft)
             }
             return nil
@@ -207,7 +237,11 @@ import Observation
             if let now = events.firstIndex(where: { $0.id == id }) {
                 events[now] = before
             }
-            failed("Couldn't save the event. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't save the event. Check your connection and try again.",
+                .editEvent,
+                error: error
+            ) { [weak self] in
                 _ = await self?.update(id, with: draft)
             }
             return false
@@ -222,7 +256,11 @@ import Observation
             saved()
             return true
         } catch {
-            failed("Couldn't delete the event. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't delete the event. Check your connection and try again.",
+                .editEvent,
+                error: error
+            ) { [weak self] in
                 _ = await self?.delete(id)
             }
             return false
@@ -242,16 +280,15 @@ import Observation
         selected = period == today.period ? today : Day(iso: period.isoDay) ?? today
         await load()
     }
+}
 
-    private func saved() {
-        lastSavedAt = now()
-        lastFailed = nil
-        canRetry = false
-    }
+/// A schedule month's copy on this iPhone (D39).
+public struct ScheduleSnapshot: Codable, Sendable {
+    public let events: [CalendarEvent]
+    public let sessions: [AttendanceSession]
 
-    private func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
-        message = text
-        canRetry = true
-        lastFailed = retry
+    public init(events: [CalendarEvent], sessions: [AttendanceSession]) {
+        self.events = events
+        self.sessions = sessions
     }
 }

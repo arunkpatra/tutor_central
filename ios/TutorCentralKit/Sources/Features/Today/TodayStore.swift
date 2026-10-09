@@ -42,6 +42,10 @@ import Observation
     }
 
     public private(set) var counts: TodayCounts = .zero
+    /// When the copy on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last refresh failed for the network, not the server.
+    public private(set) var offlineRead = false
     public private(set) var loading = false
     public private(set) var error: String?
     public private(set) var workspace: Workspace
@@ -56,13 +60,16 @@ import Observation
     private let eventsRepository: any EventsRepository
     private let now: @Sendable () -> Date
     private let calendar: Calendar
+    private let cache: CachedRead<TodaySnapshot>?
     private var loaded = false
 
     public init(
         workspace: Workspace, counts: any CountsRepository, register: any Register,
         attendance: any AttendanceRepository, events: any EventsRepository, tasks: TasksStore,
-        now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india
+        now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india,
+        cache: CachedRead<TodaySnapshot>? = nil
     ) {
+        self.cache = cache
         self.workspace = workspace
         repository = counts
         self.register = register
@@ -177,6 +184,17 @@ import Observation
         nextClass = NextClass.find(in: register.activeClasses, now: date, calendar: calendar)
     }
 
+    /// The copy saved on this iPhone, at once, before the first read (D39).
+    public func showCached() {
+        guard !loaded, let cached = cache?.load() else { return }
+        counts = cached.value.counts
+        sessions = cached.value.sessions
+        events = cached.value.events
+        savedAt = cached.savedAt
+        loaded = true
+        tick(now())
+    }
+
     public func load() async {
         if !loaded {
             loading = true
@@ -185,23 +203,39 @@ import Observation
         clock = now()
         let today = today
         async let monthSessions = try? attendance.sessions(centre: workspace.centre.id, month: today.period)
+        // The register and the tasks show their saved copies at once, beside the counts' read (D39).
+        let registerRead = Task { await register.loadIfNeeded() }
+        let tasksRead = Task { await tasks.loadIfNeeded() }
         async let weekEvents = try? eventsRepository.events(
             centre: workspace.centre.id, from: today, to: today.adding(days: 7, calendar: calendar)
         )
+        var fresh = false
         do {
             counts = try await repository.todayCounts(centre: workspace.centre.id, on: clock)
             error = nil
+            offlineRead = false
             loaded = true
+            fresh = true
         } catch {
-            self.error = "Couldn't refresh. Check your connection and try again."
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
+            offlineRead = TransportError.isOffline(error)
+            // With a saved copy on screen the offline line says it; the error line is for nothing to show.
+            self.error = savedAt == nil || !offlineRead ? "Couldn't refresh. Check your connection and try again." : nil
         }
-        await register.loadIfNeeded()
-        await tasks.loadIfNeeded()
+        await registerRead.value
+        await tasksRead.value
         if let read = await monthSessions {
             sessions = read
         }
         if let read = await weekEvents {
             events = read
+        }
+        if fresh {
+            savedAt = nil
+            cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
         }
         tick(clock)
     }
@@ -242,5 +276,18 @@ public struct TodayActions {
         self.openEvent = openEvent
         self.openFeesDue = openFeesDue
         self.openAI = openAI
+    }
+}
+
+/// Today's copy on this iPhone (D39): the counts, the month's sessions, the week's events.
+public struct TodaySnapshot: Codable, Sendable {
+    public let counts: TodayCounts
+    public let sessions: [AttendanceSession]
+    public let events: [CalendarEvent]
+
+    public init(counts: TodayCounts, sessions: [AttendanceSession], events: [CalendarEvent]) {
+        self.counts = counts
+        self.sessions = sessions
+        self.events = events
     }
 }

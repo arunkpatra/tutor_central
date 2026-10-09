@@ -15,13 +15,17 @@ public struct HistoryView: View {
     let openSession: (AttendanceSession) -> Void
     let openStudent: (UUID) -> Void
     let boardState: HistoryBoardState?
+    /// AppShell's: the offline or sync line under the title (D39), for this screen's store.
+    let status: StatusFor
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
     public init(
         store: HistoryStore, openSession: @escaping (AttendanceSession) -> Void,
-        openStudent: @escaping (UUID) -> Void, boardState: HistoryBoardState? = nil
+        openStudent: @escaping (UUID) -> Void, boardState: HistoryBoardState? = nil,
+        status: @escaping StatusFor = { _, _ in .online }
     ) {
+        self.status = status
         _store = State(initialValue: store)
         self.openSession = openSession
         self.openStudent = openStudent
@@ -32,6 +36,9 @@ public struct HistoryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 BackRow(title: "History") { dismiss() }
+                if let line = status(store.savedAt, store.offlineRead).line {
+                    StatusLine(line)
+                }
                 Segmented(options: [(.byDate, "By date"), (.byStudent, "By student")], selection: $store.view)
                 MonthHeader(
                     title: store.monthTitle,

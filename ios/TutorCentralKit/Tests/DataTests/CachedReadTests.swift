@@ -34,6 +34,8 @@ struct CachedReadTests {
         #expect(!TransportError.isOffline(URLError(.badServerResponse)))
         struct Other: Error {}
         #expect(!TransportError.isOffline(Other()))
+        #expect(TransportError.isCancelled(URLError(.cancelled)) && TransportError.isCancelled(CancellationError()))
+        #expect(!TransportError.isCancelled(URLError(.notConnectedToInternet)))
     }
 }
 

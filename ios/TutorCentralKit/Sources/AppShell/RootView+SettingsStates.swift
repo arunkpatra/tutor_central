@@ -11,6 +11,7 @@ extension RootView {
              .accountSignOutPending: [.settings, .account]
         case .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed:
             [.settings, .account, .deleteAccount]
+        case .pending, .pendingDiscard: [.settings, .pendingChanges]
         default: nil
         }
     }

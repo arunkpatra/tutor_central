@@ -49,6 +49,14 @@ import Observation
     public private(set) var sessions: [AttendanceSession] = []
     public private(set) var loading = false
     public private(set) var error: String?
+    /// When the copy on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public private(set) var offlineRead = false
+    /// A month's copy on this iPhone (AppShell's).
+    public var cache: ((Period) -> CachedRead<[AttendanceSession]>)?
+    private var sessionsMonth: Period?
+    private let now: @Sendable () -> Date
     /// Counts the reads asked for; only the newest lands (two quick month moves can finish in the other order).
     private var loadGeneration = 0
     private let workspace: Workspace
@@ -57,11 +65,14 @@ import Observation
 
     public init(
         workspace: Workspace, register: any Register, attendance: any AttendanceRepository,
-        now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india
+        now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india,
+        cache: ((Period) -> CachedRead<[AttendanceSession]>)? = nil
     ) {
+        self.cache = cache
         self.workspace = workspace
         self.register = register
         self.attendance = attendance
+        self.now = now
         month = Period.containing(now(), in: calendar.timeZone)
     }
 
@@ -122,14 +133,30 @@ import Observation
                 loading = false
             }
         }
+        let month = month
+        if sessionsMonth != month, let cached = cache?(month).load() {
+            sessions = cached.value
+            sessionsMonth = month
+            savedAt = cached.savedAt
+        }
         do {
             let read = try await attendance.sessions(centre: workspace.centre.id, month: month)
             guard generation == loadGeneration else { return }
             sessions = read
+            sessionsMonth = month
+            cache?(month).keep(read, at: now())
+            savedAt = nil
+            offlineRead = false
             error = nil
         } catch {
             guard generation == loadGeneration else { return }
-            self.error = "Couldn't load attendance. Check your connection and try again."
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
+            offlineRead = TransportError.isOffline(error)
+            let shown = sessionsMonth == month && savedAt != nil
+            self.error = shown && offlineRead ? nil : "Couldn't load attendance. Check your connection and try again."
         }
     }
 

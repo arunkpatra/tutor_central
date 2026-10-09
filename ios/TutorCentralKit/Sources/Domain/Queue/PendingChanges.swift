@@ -53,7 +53,7 @@ public struct PendingChanges: Hashable, Sendable, Codable {
         changes.isEmpty
     }
 
-    /// "2 saved changes haven't reached the server yet: attendance for Class 10 Maths and Dev's fee."; nil when none.
+    /// "2 saved changes haven't been sent yet: attendance for Class 10 Maths and Dev's fee."; nil when none.
     public var signOutWarning: String? {
         guard !changes.isEmpty else { return nil }
         let names = changes.sorted { $0.madeAt < $1.madeAt }.map(\.shortName)
@@ -62,7 +62,7 @@ public struct PendingChanges: Hashable, Sendable, Codable {
         let lead = changes.count == 1
             ? "1 saved change hasn't"
             : "\(changes.count) saved changes haven't"
-        return "\(lead) reached the server yet: \(list)."
+        return "\(lead) been sent yet: \(list)."
     }
 
     /// Whether a change of that kind waits, so a new write of the kind joins the queue behind it.

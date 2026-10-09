@@ -55,7 +55,7 @@ import Testing
         #expect(centres.linkUpdates == ["https://pay.example/meera"] && store.linkError == nil)
         await store.setReceipts(false)
         #expect(centres.receiptUpdates == [false] && !store.sendReceipts)
-        centres.nextError = URLError(.notConnectedToInternet)
+        centres.nextError = URLError(.badServerResponse)
         await store.setReceipts(true)
         #expect(store.sendReceipts == false && store.message == "Couldn't save. Check your connection and try again.")
     }

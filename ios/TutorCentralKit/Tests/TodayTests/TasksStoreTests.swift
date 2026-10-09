@@ -55,7 +55,7 @@ import Testing
         #expect(repo.created.count == 1 && !store.adding && store.newTitle.isEmpty)
         store.adding = true
         store.newTitle = "Lost one"
-        repo.nextError = URLError(.notConnectedToInternet)
+        repo.nextError = URLError(.badServerResponse)
         #expect(await store.add() == false)
         #expect(!store.open.contains { $0.title == "Lost one" } && store
             .message == "Couldn't add the task. Check your connection and try again." && store.canRetry)
@@ -76,7 +76,7 @@ import Testing
         #expect(store.open.contains { $0.id == chalk.id })
         await store.clearDone()
         #expect(store.done.isEmpty && repo.cleared == 1 && store.tasks.count == 2)
-        repo.nextError = URLError(.notConnectedToInternet)
+        repo.nextError = URLError(.badServerResponse)
         await store.setDone(chalk.id, true)
         #expect(try #require(store.open.first { $0.id == chalk.id }).isDone == false)
         #expect(store.message == "Couldn't update the task. Check your connection and try again.")

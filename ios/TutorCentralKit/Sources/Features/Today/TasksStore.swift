@@ -11,6 +11,12 @@ import Observation
     public private(set) var tasks: [TaskItem] = []
     public private(set) var loading = false
     public private(set) var error: String?
+    /// When the copy on screen was saved on this iPhone, until the network replaces it (D39).
+    public private(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public private(set) var offlineRead = false
+    /// The tasks' copy on this iPhone (AppShell's).
+    public var cache: CachedRead<[TaskItem]>?
     public var message: String?
     public private(set) var canRetry = false
     public private(set) var lastSavedAt: Date?
@@ -88,14 +94,28 @@ import Observation
     }
 
     public func load() async {
+        if !loaded, let cached = cache?.load() {
+            tasks = cached.value
+            savedAt = cached.savedAt
+            loaded = true
+        }
         loading = !loaded
         defer { loading = false }
         do {
             tasks = try await repository.tasks(centre: workspace.centre.id)
+            cache?.keep(tasks, at: now())
+            savedAt = nil
+            offlineRead = false
             loaded = true
             error = nil
         } catch {
-            self.error = "Couldn't load your tasks. Check your connection and try again."
+            // Its screen went away mid-read: nothing failed; the next visit reads again.
+            if TransportError.isCancelled(error) {
+                return
+            }
+            offlineRead = TransportError.isOffline(error)
+            // A saved copy offline: the line under the title says it.
+            self.error = loaded && offlineRead ? nil : "Couldn't load your tasks. Check your connection and try again."
         }
     }
 
@@ -125,7 +145,11 @@ import Observation
             newTitle = title
             newDue = due
             adding = true
-            failed("Couldn't add the task. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't add the task. Check your connection and try again.",
+                .addTask,
+                error: error
+            ) { [weak self] in
                 await self?.add()
             }
             return false
@@ -154,7 +178,11 @@ import Observation
             saved()
         } catch {
             replace(id, with: before)
-            failed("Couldn't update the task. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't update the task. Check your connection and try again.",
+                .editTask,
+                error: error
+            ) { [weak self] in
                 await self?.setDone(id, done)
             }
         }
@@ -169,7 +197,11 @@ import Observation
             saved()
         } catch {
             tasks.append(contentsOf: gone)
-            failed("Couldn't clear the done tasks. Check your connection and try again.") { [weak self] in
+            failed(
+                "Couldn't clear the done tasks. Check your connection and try again.",
+                .editTask,
+                error: error
+            ) { [weak self] in
                 await self?.clearDone()
             }
         }
@@ -203,7 +235,17 @@ import Observation
         canRetry = false
     }
 
-    private func failed(_ text: String, retry: @escaping @MainActor () async -> Void) {
+    private func failed(
+        _ text: String, _ refusal: OfflineRefusal.Write? = nil, error: (any Error)? = nil,
+        retry: @escaping @MainActor () async -> Void
+    ) {
+        if let error, let refusal, TransportError.isOffline(error) {
+            // Offline: the write needs a connection; nothing was saved, and Retry would only fail again (D39).
+            message = OfflineRefusal.words(for: refusal)
+            canRetry = false
+            lastFailed = nil
+            return
+        }
         message = text
         canRetry = true
         lastFailed = retry

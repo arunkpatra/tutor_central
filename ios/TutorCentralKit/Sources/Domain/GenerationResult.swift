@@ -95,7 +95,7 @@ public struct NoteResult: Hashable, Sendable, Codable {
 }
 
 /// What a generation made, by kind.
-public enum GenerationResult: Hashable, Sendable {
+public enum GenerationResult: Hashable, Sendable, Codable {
     case paper(PaperResult)
     case homework(QuestionSetResult)
     case worksheet(QuestionSetResult)
@@ -141,7 +141,7 @@ public enum GenerationResult: Hashable, Sendable {
 }
 
 /// One result of the AI Assistant: from this session's call or read back from `ai_generations`.
-public struct Generation: Hashable, Sendable, Identifiable {
+public struct Generation: Hashable, Sendable, Identifiable, Codable {
     public let id: UUID
     public let kind: GenerationKind
     public let createdAt: Date

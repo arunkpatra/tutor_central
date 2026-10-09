@@ -9,25 +9,23 @@ public extension AccountFailure {
         case let failure as AccountFailure:
             self = failure
         case let network as URLError:
-            self = TransportCodes.offline.contains(network.code) ? .offline : .server(network.localizedDescription)
+            self = TransportCodes.offline.contains(network.code) ? .offline : .unexpected
         case AuthError.weakPassword:
             self = .weakPassword
         case AuthError.sessionMissing:
             self = .signedOut
-        case let .api(message, code, _, response) as AuthError:
+        case let .api(_, code, _, response) as AuthError:
             if code == .weakPassword {
                 self = .weakPassword
             } else if response.statusCode == 401 || code == .sessionNotFound || code == .badJWT {
                 self = .signedOut
             } else {
-                self = .server(message)
+                self = .unexpected
             }
         case let postgrest as PostgrestError where postgrest.code == "PGRST301":
             self = .signedOut
-        case let postgrest as PostgrestError:
-            self = .server(postgrest.message)
         default:
-            self = .server(error.localizedDescription)
+            self = .unexpected
         }
     }
 }

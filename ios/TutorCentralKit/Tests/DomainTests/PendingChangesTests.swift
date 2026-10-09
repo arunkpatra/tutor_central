@@ -85,11 +85,11 @@ struct PendingChangesTests {
         #expect(alert.title == "Absence alert · Hemanth Reddy")
         #expect(alert.line(calendar: calendar) == "Wed 7 Oct · WhatsApp opened at 17:06")
         #expect(alert.shortName == "Hemanth's absence alert")
-        let warning = "2 saved changes haven't reached the server yet: attendance for Class 10 Maths and Dev's fee."
+        let warning = "2 saved changes haven't been sent yet: attendance for Class 10 Maths and Dev's fee."
         #expect(pending.signOutWarning == warning)
         #expect(PendingChanges().signOutWarning == nil)
         let one = PendingChanges(changes: [saved])
-        #expect(one.signOutWarning == "1 saved change hasn't reached the server yet: attendance for Class 10 Maths.")
+        #expect(one.signOutWarning == "1 saved change hasn't been sent yet: attendance for Class 10 Maths.")
         pending.add(alert)
         #expect(pending.signOutWarning?.hasSuffix("Class 10 Maths, Hemanth's absence alert and Dev's fee.") == true)
     }

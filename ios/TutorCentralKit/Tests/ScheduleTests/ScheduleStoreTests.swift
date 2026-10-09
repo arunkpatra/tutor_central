@@ -71,13 +71,13 @@ import Testing
         draft.title = "Diwali holiday"
         #expect(await store.update(made.id, with: draft) && store.events.first { $0.id == made.id }?
             .title == "Diwali holiday")
-        events.nextError = URLError(.notConnectedToInternet)
+        events.nextError = URLError(.badServerResponse)
         draft.title = "Lost"
         #expect(await store.update(made.id, with: draft) == false)
         #expect(store.events.first { $0.id == made.id }?.title == "Diwali holiday" && store
             .message == "Couldn't save the event. Check your connection and try again." && store.canRetry)
         #expect(await store.delete(made.id) && !store.events.contains { $0.id == made.id })
-        events.nextError = URLError(.notConnectedToInternet)
+        events.nextError = URLError(.badServerResponse)
         #expect(
             await store.delete(FakeEventsRepository.mockTest.id) == false && store.events.count == 2,
             "a delete waits for the server"

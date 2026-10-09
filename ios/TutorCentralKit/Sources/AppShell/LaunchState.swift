@@ -139,6 +139,18 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case deleteAccountDeleting = "delete-account-deleting"
     case deleteAccountFailed = "delete-account-failed"
     case signinDeleted = "signin-deleted"
+    case offlineToday = "offline-today"
+    case offlineStudents = "offline-students"
+    case offlineFees = "offline-fees"
+    case offlineNoCache = "offline-no-cache"
+    case offlineWriteRefused = "offline-write-refused"
+    case offlineAttendanceSaved = "offline-attendance-saved"
+    case offlineFeeMarked = "offline-fee-marked"
+    case syncSending = "sync-sending"
+    case syncSent = "sync-sent"
+    case syncFailed = "sync-failed"
+    case pending
+    case pendingDiscard = "pending-discard"
 
     public static func fromArguments(_ arguments: [String] = ProcessInfo.processInfo.arguments) -> LaunchState? {
         guard let i = arguments.firstIndex(of: "--state"), arguments.indices.contains(i + 1) else { return nil }

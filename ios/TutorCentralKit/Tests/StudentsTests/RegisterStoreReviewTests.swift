@@ -22,7 +22,7 @@ import Testing
         await store.load()
         let sahil = try #require(store.students.first { $0.name == "Sahil Verma" })
         students.delay = .milliseconds(150)
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         let move = Task { await store.assign([sahil.id], to: FakeClassesRepository.maths.id) }
         try await Task.sleep(for: .milliseconds(30))
         await store.archiveClass(FakeClassesRepository.science.id)
@@ -55,7 +55,7 @@ import Testing
 
     /// Review, Important: with nothing cached and the first read failed, the register is not "empty": it is unread.
     @Test func aFailedFirstReadIsNotAnEmptyRegister() async {
-        students.nextError = URLError(.notConnectedToInternet)
+        students.nextError = URLError(.badServerResponse)
         let store = make()
         await store.load()
         #expect(store.students.isEmpty && store.error != nil && !store.showsEmptyRegister)

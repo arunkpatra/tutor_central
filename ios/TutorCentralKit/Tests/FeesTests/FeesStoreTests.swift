@@ -124,7 +124,7 @@ import Testing
         store.sheet = .generate
         #expect(!store.generatePreview.canCreate && store.generatePreview.buttonLabel == "Nothing to create")
         let empty = await make(invoices: [])
-        fees.nextError = URLError(.notConnectedToInternet)
+        fees.nextError = URLError(.badServerResponse)
         #expect(await empty.generate() == nil && empty
             .message == "Couldn't create the fees. Check your connection and try again." && empty.canRetry)
     }
@@ -161,7 +161,7 @@ import Testing
 
     @Test func aFailedMarkPaidKeepsTheRowDueWithRetry() async {
         let store = await make()
-        fees.nextError = URLError(.notConnectedToInternet)
+        fees.nextError = URLError(.badServerResponse)
         #expect(await store.markPaid(dev, method: .upi, on: store.today) == false)
         #expect(store.rows.first { $0.id == dev }?.state == .due && store.undo == nil && store.sheet == nil)
         #expect(store.message == "Couldn't mark the fee paid. Check your connection and try again." && store.canRetry)
@@ -172,7 +172,7 @@ import Testing
     @Test func aFailedUndoLeavesTheFeePaid() async {
         let store = await make()
         _ = await store.markPaid(dev, method: .upi, on: store.today)
-        fees.nextError = URLError(.notConnectedToInternet)
+        fees.nextError = URLError(.badServerResponse)
         #expect(await store.undoPaid(dev) == false)
         #expect(store.rows.first { $0.id == dev }?.state == .paid && store
             .message == "Couldn't undo. Dev's fee stays paid." && store.canRetry)
@@ -255,7 +255,7 @@ import Testing
 
     @Test func aFailedReadSaysSoAndKeepsTheLastMonth() async {
         let store = await make()
-        fees.nextError = URLError(.notConnectedToInternet)
+        fees.nextError = URLError(.badServerResponse)
         await store.next()
         #expect(store.error == "Couldn't load fees. Check your connection and try again." && store.month == Period(
             year: 2026,

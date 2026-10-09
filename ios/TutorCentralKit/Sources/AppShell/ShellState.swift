@@ -34,12 +34,28 @@ struct CheckVisit {
     @ObservationIgnored var ai: AIStore?
     /// The visit of Check a paper in progress, by its routes' id.
     @ObservationIgnored var check: CheckVisit?
-    /// The centre's queue of changes made offline (D39), read from its file when the centre arrives.
+    /// The centre's queue of changes made offline (D39), read from its file when the centre arrives, and its runner.
     @ObservationIgnored var queue: ChangeQueue?
-    private var centre: UUID?
+    @ObservationIgnored var runner: QueueRunner?
+    /// The network as the monitor last said; every root's status line follows it.
+    var online = true
+    var runState: RunState = .idle
+    @ObservationIgnored private var centre: UUID?
 
     init(tabs: TabsState = TabsState()) {
         self.tabs = tabs
+    }
+
+    /// The replay's state as the status line shows it: sending wins; failed changes in the queue show until they
+    /// are discarded or sent; a sign-out stop waits for the next sign-in.
+    var effectiveRun: RunState {
+        if case .sending = runState {
+            return runState
+        }
+        if let failed = queue?.pending.failedCount, failed > 0 {
+            return .failed(failed)
+        }
+        return runState == .signedOut ? .signedOut : .idle
     }
 
     /// `files` is where the centre's queue file lives (nil: Application Support).
@@ -68,6 +84,8 @@ struct CheckVisit {
         ai = nil
         check = nil
         queue = nil
+        runner = nil
+        runState = .idle
         centre = nil
     }
 }

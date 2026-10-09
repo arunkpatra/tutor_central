@@ -34,7 +34,7 @@ import Testing
             madeAt: Date()
         ))
         let store = make(queue: waiting)
-        #expect(store.signOutDialog.message == "1 saved change hasn't reached the server yet: attendance for Class 10 "
+        #expect(store.signOutDialog.message == "1 saved change hasn't been sent yet: attendance for Class 10 "
             + "Maths. Sign out now and they are lost. Connect first and they go on their own.")
         #expect(store.signOutDialog.action == "Sign out anyway")
         let plain = make().signOutDialog

@@ -11,12 +11,13 @@ extension RootView {
             ScheduleView(
                 store: ScheduleStore(
                     workspace: workspace, register: register(for: workspace), events: deps.events,
-                    attendance: deps.attendance, now: deps.now
+                    attendance: deps.attendance, now: deps.now, cache: monthCache(workspace, "schedule")
                 ),
                 actions: ScheduleActions(openClass: { shell.tabs.push(.classroom($0)) }),
                 boardState: launch.flatMap(Self.scheduleBoardState),
                 openEvent: openEvent,
-                onMissingEvent: { toasts.show("That event is no longer here.") }
+                onMissingEvent: { toasts.show("That event is no longer here.") },
+                status: { rootStatus(savedAt: $0, offlineRead: $1) }
             )
         }
     }
@@ -27,6 +28,7 @@ extension RootView {
             return tasks
         }
         let made = TasksStore(workspace: workspace, tasks: deps.tasks, now: deps.now)
+        made.cache = cachedRead(workspace, "tasks")
         shell.tasks = made
         return made
     }
@@ -34,7 +36,7 @@ extension RootView {
     @ViewBuilder var tasksView: some View {
         if case let .ready(workspace) = session.state {
             let store = tasksStore(for: workspace)
-            TasksView(store: store)
+            TasksView(store: store, status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead))
                 .onChange(of: store.message) { _, message in
                     guard let message else { return }
                     Haptic.play(.error)

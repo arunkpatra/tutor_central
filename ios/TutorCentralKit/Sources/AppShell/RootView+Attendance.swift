@@ -19,6 +19,9 @@ extension RootView {
             messages: deps.messages,
             now: deps.now
         )
+        made.cache = monthCache(workspace, "attendance")
+        made.queue = centreQueue()
+        made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         shell.attendance = made
         return made
     }
@@ -37,11 +40,13 @@ extension RootView {
         if case let .ready(workspace) = session.state {
             HistoryView(
                 store: HistoryStore(
-                    workspace: workspace, register: register(for: workspace), attendance: deps.attendance, now: deps.now
+                    workspace: workspace, register: register(for: workspace), attendance: deps.attendance,
+                    now: deps.now, cache: monthCache(workspace, "history")
                 ),
                 openSession: { openAttendance(classID: $0.classID, date: $0.date, in: workspace) },
                 openStudent: { shell.tabs.push(.historyStudent($0)) },
-                boardState: launch.flatMap(Self.historyBoardState)
+                boardState: launch.flatMap(Self.historyBoardState),
+                status: { rootStatus(savedAt: $0, offlineRead: $1) }
             )
         }
     }
@@ -69,6 +74,8 @@ extension RootView {
                     openHistory: { shell.tabs.push(.history) }
                 ),
                 boardState: launch.flatMap(Self.attendanceBoardState)
+                    ?? (launch == .offlineAttendanceSaved ? .saved : nil),
+                status: rootStatus(savedAt: store.savedAt, offlineRead: store.offlineRead)
             )
             .onChange(of: store.message) { _, message in
                 guard let message else { return }

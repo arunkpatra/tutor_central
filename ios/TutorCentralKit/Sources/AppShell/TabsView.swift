@@ -52,7 +52,7 @@ struct TabsView<
         switch route {
         case .student, .classes, .classroom, .studentFees: studentsDestination(route)
         case .history, .historyStudent: attendanceDestination(route)
-        case .settings, .account, .deleteAccount, .help: settings(route)
+        case .settings, .account, .deleteAccount, .help, .pendingChanges: settings(route)
         case .payments, .reports: moreDestination(route)
         case .schedule: schedule(nil)
         // A newer link in the same place is a new screen, not the last one's state.

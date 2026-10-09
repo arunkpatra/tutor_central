@@ -17,6 +17,7 @@ extension RootView {
             centres: deps.centres, messages: deps.messages, attendance: deps.attendance, now: deps.now
         )
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
+        made.historyCache = cachedRead(workspace, "ai-history")
         if let launch, Self.aiStates.contains(launch) {
             made.forms = Fixtures.aiForms(for: launch)
         }
@@ -128,7 +129,10 @@ extension RootView {
                         onMissing: { shell.tabs.remove(.aiResult(id)) }
                     )
                 case .aiHistory:
-                    HistoryView(store: store, actions: aiToolsActions)
+                    HistoryView(
+                        store: store, actions: aiToolsActions,
+                        status: rootStatus(savedAt: store.historySavedAt, offlineRead: store.historyOfflineRead)
+                    )
                 case .scanRegister:
                     scanView(in: workspace)
                 case .checkPaper, .checkPages, .checkScheme, .checkResult:

@@ -92,6 +92,11 @@ final class Broadcast<Element: Sendable>: Sendable {
 
 /// Whether a thrown error means the network, not the server: no connection, a lost one, no host, a timeout.
 public enum TransportError {
+    /// The read was cancelled (its screen went away): no failure to tell the tutor of.
+    public static func isCancelled(_ error: any Error) -> Bool {
+        error is CancellationError || (error as? URLError)?.code == .cancelled
+    }
+
     public static func isOffline(_ error: any Error) -> Bool {
         if let url = error as? URLError {
             return TransportCodes.offline.contains(url.code)

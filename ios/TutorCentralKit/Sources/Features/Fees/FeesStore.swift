@@ -62,6 +62,22 @@ import Observation
     /// True once a month's read has landed.
     public internal(set) var loaded = false
     public internal(set) var error: String?
+    /// When the month on screen was saved on this iPhone, until the network replaces it (D39).
+    public internal(set) var savedAt: Date?
+    /// The last read failed for the network, not the server.
+    public internal(set) var offlineRead = false
+    /// Offline (AppShell says so): Remind and Generate are disabled; Mark paid queues (D39).
+    public var offline = false
+    /// The centre's queue (AppShell's): a Mark paid made offline waits in it (D39).
+    public var queue: (any ChangeQueueing)?
+    /// Whether the network is there (AppShell's monitor).
+    public var online: @Sendable () async -> Bool = { true }
+    /// The fees marked paid on this iPhone and not yet sent: their rows say so.
+    public internal(set) var keptHere: Set<UUID> = []
+    /// What a kept-here fee was before, for its Undo.
+    var beforeKept: [UUID: FeeInvoice] = [:]
+    /// A month's copy on this iPhone (AppShell's; nil in previews and most tests).
+    public var cache: ((Period) -> CachedRead<FeesSnapshot>)?
     public var message: String?
     public internal(set) var canRetry = false
     public internal(set) var lastSavedAt: Date?
@@ -148,7 +164,20 @@ import Observation
 
     /// Read, and nothing in it: the empty card with Generate (P5-Fees-Empty). A failed read is not empty.
     public var isEmptyMonth: Bool {
-        loaded && invoices.isEmpty && error == nil && !loading
+        loaded && invoices.isEmpty && error == nil && !loading && !showsNothingSaved
+    }
+
+    /// Offline with no copy of the month on this iPhone (P7-Offline-NoCache): the empty card with Try again.
+    public var showsNothingSaved: Bool {
+        offlineRead && invoicesMonth != month
+    }
+
+    private func apply(_ snapshot: FeesSnapshot, month: Period) {
+        invoices = snapshot.invoices
+        invoicesMonth = month
+        dueBefore = snapshot.dueBefore
+        logs = snapshot.logs
+        overlayQueued()
     }
 
     /// What Generate will make for the shown month, counted here by `generate_fees`' rule.
@@ -178,6 +207,11 @@ import Observation
             }
         }
         let centre = workspace.centre.id
+        if invoicesMonth != month, let cached = cache?(month).load() {
+            apply(cached.value, month: month)
+            savedAt = cached.savedAt
+            loaded = true
+        }
         do {
             async let monthRead = fees.invoices(centre: centre, month: month)
             async let earlier = fees.dueBefore(centre: centre, month: today.period)
@@ -186,21 +220,32 @@ import Observation
             let before = try await earlier
             let readLogs = try await logRead
             guard generation == loadGeneration else { return }
-            invoices = read
-            invoicesMonth = month
-            dueBefore = before
-            logs = readLogs
+            let snapshot = FeesSnapshot(invoices: read, dueBefore: before, logs: readLogs)
+            apply(snapshot, month: month)
+            cache?(month).keep(snapshot, at: now())
+            savedAt = nil
+            offlineRead = false
             error = nil
             loaded = true
         } catch {
             guard generation == loadGeneration else { return }
+            if TransportError.isCancelled(error) {
+                // The tab went away mid-read: nothing failed; the next visit reads again.
+                if invoicesMonth != month {
+                    opened = false
+                }
+                return
+            }
+            offlineRead = TransportError.isOffline(error)
             if invoicesMonth != month {
                 invoices = []
                 logs = []
+                savedAt = nil
             }
-            self.error = "Couldn't load fees. Check your connection and try again."
             canRetry = true
             lastFailed = { [weak self] in await self?.open(month: month) }
+            // Offline, the line under the title says it: a saved copy shows, or the empty card says nothing is saved.
+            self.error = offlineRead ? nil : "Couldn't load fees. Check your connection and try again."
         }
     }
 
@@ -254,36 +299,17 @@ import Observation
     func firstName(of invoice: FeeInvoice) -> String {
         register.student(invoice.studentID)?.firstName ?? "The"
     }
+}
 
-    private func row(_ invoice: FeeInvoice) -> Row {
-        let state = invoice.state(current: today.period)
-        let student = register.student(invoice.studentID)
-        let name = student?.name ?? ""
-        guard !state.isSettled else {
-            return Row(
-                invoice: invoice, name: name, line: invoice.settledLine(calendar: calendar) ?? "",
-                lineTone: nil, lineSymbol: nil, state: state, showsButtons: false
-            )
-        }
-        if let reminded = logs.first(where: {
-            $0.kind == .reminder && $0.studentID == invoice.studentID && $0.month == invoice.period
-        }) {
-            let day = Day(reminded.openedAt, calendar: calendar)
-            return Row(
-                invoice: invoice, name: name,
-                line: day == today ? "Reminded today" : "Reminded \(day.shortWeekdayText)",
-                lineTone: .ok, lineSymbol: "checkmark", state: state, showsButtons: true
-            )
-        }
-        return Row(
-            invoice: invoice, name: name, line: Self.parentLine(student) ?? "No parent details yet",
-            lineTone: nil, lineSymbol: nil, state: state, showsButtons: true
-        )
-    }
+/// A fees month's copy on this iPhone (D39): its invoices, the fees due before it, its message log.
+public struct FeesSnapshot: Codable, Sendable {
+    public let invoices: [FeeInvoice]
+    public let dueBefore: [FeeInvoice]
+    public let logs: [FeeLog]
 
-    /// "Ramesh Kumar · +91 98848 43831": the parent's name and number, either alone, or nil with neither.
-    static func parentLine(_ student: Student?) -> String? {
-        let parts = [student?.parentName, student?.parentPhone?.display].compactMap(\.self)
-        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    public init(invoices: [FeeInvoice], dueBefore: [FeeInvoice], logs: [FeeLog]) {
+        self.invoices = invoices
+        self.dueBefore = dueBefore
+        self.logs = logs
     }
 }

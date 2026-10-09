@@ -12,18 +12,24 @@ public enum TasksBoardState: Sendable {
 public struct TasksView: View {
     let store: TasksStore
     let boardState: TasksBoardState?
+    /// AppShell's: the offline or sync line under the title (D39).
+    let status: RootStatus
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
-    public init(store: TasksStore, boardState: TasksBoardState? = nil) {
+    public init(store: TasksStore, boardState: TasksBoardState? = nil, status: RootStatus = .online) {
         self.store = store
         self.boardState = boardState
+        self.status = status
     }
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 navigationRow
+                if let line = status.line {
+                    StatusLine(line)
+                }
                 TaskInlineAdd(store: store, showsFocus: boardState == .adding, autofocus: false)
                 if let error = store.error {
                     TasksErrorLine(error) { Task { await store.load() } }

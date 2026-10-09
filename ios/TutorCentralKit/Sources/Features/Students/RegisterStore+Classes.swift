@@ -20,7 +20,7 @@ public extension RegisterStore {
         } catch {
             classes.removeAll { $0.id == placeholder.id }
             let text = "Couldn't save \(draft.trimmedName). Check your connection and try again."
-            failed(text) { [weak self] in
+            failed(text, .addClass, error: error) { [weak self] in
                 await self?.addClass(draft)
             }
             return nil
@@ -45,7 +45,7 @@ public extension RegisterStore {
         } catch {
             replaceClass(id, with: before)
             let text = "Couldn't save \(before.name). Check your connection and try again."
-            failed(text) { [weak self] in _ = await self?.updateClass(id, with: draft) }
+            failed(text, .editClass, error: error) { [weak self] in _ = await self?.updateClass(id, with: draft) }
             return false
         }
     }
@@ -65,7 +65,7 @@ public extension RegisterStore {
             replaceClass(id, with: before)
             setClass(of: members) { _ in id }
             let text = "Couldn't archive \(before.name). Check your connection and try again."
-            failed(text) { [weak self] in await self?.archiveClass(id) }
+            failed(text, .editClass, error: error) { [weak self] in await self?.archiveClass(id) }
         }
     }
 

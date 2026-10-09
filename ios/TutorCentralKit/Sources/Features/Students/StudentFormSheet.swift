@@ -235,6 +235,8 @@ public struct StudentFormSheet: View {
 
     private func save() {
         saving = true
+        // The keyboard goes first, so a refusal's toast is seen above the sheet (P7-Offline-WriteRefused).
+        Keyboard.dismiss()
         Task {
             if await onSave(store.draft) {
                 onClose()

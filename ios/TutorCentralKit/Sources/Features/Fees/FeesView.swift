@@ -24,19 +24,27 @@ public struct FeesView: View {
     @Bindable var store: FeesStore
     let actions: FeesActions
     let boardState: FeesBoardState?
+    let status: RootStatus
     @State private var topInset: CGFloat = 0
     @Environment(\.openURL) private var openURL
 
-    public init(store: FeesStore, actions: FeesActions, boardState: FeesBoardState? = nil) {
+    /// `status` is AppShell's: the offline or sync line under the title, and whether Remind and Generate are live.
+    public init(
+        store: FeesStore, actions: FeesActions, boardState: FeesBoardState? = nil, status: RootStatus = .online
+    ) {
         self.store = store
         self.actions = actions
         self.boardState = boardState
+        self.status = status
     }
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 titleRow
+                if let line = status.line {
+                    StatusLine(line)
+                }
                 VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                     MonthHeader(
                         title: store.monthTitle,
@@ -46,7 +54,9 @@ public struct FeesView: View {
                     if let error = store.error {
                         FeesErrorLine(error) { Task { await store.retryLast() } }
                     }
-                    if store.isEmptyMonth {
+                    if store.showsNothingSaved {
+                        NothingSavedCard(month: store.month) { Task { await store.reload() } }
+                    } else if store.isEmptyMonth {
                         PayeeSection(store: store, actions: actions)
                         EmptyMonthCard(month: store.month) { store.sheet = .generate }
                     } else if store.loaded {
@@ -76,6 +86,7 @@ public struct FeesView: View {
             await store.load()
             await setUpBoardState()
         }
+        .onChange(of: status.offline, initial: true) { _, offline in store.offline = offline }
     }
 
     private var titleRow: some View {

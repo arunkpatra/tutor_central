@@ -47,6 +47,8 @@ public struct StudentsView: View {
     @State private var newStudent: StudentFormStore?
     @State private var newClass: ClassFormStore?
     @State private var topInset: CGFloat = 0
+    /// AppShell's: the offline or sync line under the title (D39).
+    let status: RootStatus
     /// The inline title row while searching (P3-Students-Searching): a navigation bar's height.
     static var inlineTitleHeight: CGFloat {
         44
@@ -56,18 +58,23 @@ public struct StudentsView: View {
         store: RegisterStore,
         actions: StudentsActions,
         navigation: StudentsNavigation,
-        boardState: StudentsBoardState? = nil
+        boardState: StudentsBoardState? = nil,
+        status: RootStatus = .online
     ) {
         self.store = store
         self.actions = actions
         self.navigation = navigation
         self.boardState = boardState
+        self.status = status
     }
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 titleRow
+                if let line = status.line {
+                    StatusLine(line)
+                }
                 if isEmpty {
                     NoStudentsCard(addStudent: addStudent, scanRegister: actions.openScanRegister)
                 } else {

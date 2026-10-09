@@ -109,6 +109,7 @@ import Testing
         #expect(try QueueRunner.reason(for: alert(at: Date()), error: gone)
             == "Hemanth Reddy is no longer in the register, so the absence alert can't be noted. \(keep)")
         struct Odd: Error {}
-        #expect(try QueueRunner.reason(for: save(at: Date()), error: Odd()).hasPrefix("The server refused it: "))
+        #expect(try QueueRunner.reason(for: save(at: Date()), error: Odd())
+            == "This change couldn't be saved. Keep it here or discard it.")
     }
 }

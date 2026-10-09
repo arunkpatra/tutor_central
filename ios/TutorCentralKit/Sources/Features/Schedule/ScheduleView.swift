@@ -26,14 +26,17 @@ public struct ScheduleView: View {
     @State private var adding: EventFormStore?
     @State private var editing: EventFormStore?
     @State private var deleting: CalendarEvent?
+    /// AppShell's: the offline or sync line under the title (D39), for this screen's store.
+    let status: StatusFor
     @State private var deletingNow = false
     @Environment(\.dismiss) private var dismiss
     @Environment(ToastCenter.self) private var toasts: ToastCenter?
 
     public init(
         store: ScheduleStore, actions: ScheduleActions, boardState: ScheduleBoardState? = nil, openEvent: UUID? = nil,
-        onMissingEvent: @escaping () -> Void = {}
+        onMissingEvent: @escaping () -> Void = {}, status: @escaping StatusFor = { _, _ in .online }
     ) {
+        self.status = status
         _store = State(initialValue: store)
         self.actions = actions
         self.boardState = boardState
@@ -45,6 +48,9 @@ public struct ScheduleView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 navigationRow
+                if let line = status(store.savedAt, store.offlineRead).line {
+                    StatusLine(line)
+                }
                 calendar
                 if let error = store.error {
                     ScheduleErrorLine(error) { Task { await store.load() } }
