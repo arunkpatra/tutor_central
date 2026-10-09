@@ -299,6 +299,9 @@ isOneToOne: false
 "create_centre":
 { Args: { "p_display_name"?: string,"p_name": string,"p_whatsapp"?: string }; Returns: string
                            },
+"delete_account":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
 "delete_centre":
 { Args: { "p_centre": string }; Returns: undefined
                            },

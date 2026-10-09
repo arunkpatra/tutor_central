@@ -404,6 +404,37 @@ test("only the owner can delete the centre, and it cascades", async () => {
   }
 });
 
+test("delete_account removes the user, their centre and every row the cascade reaches; another user is untouched", async () => {
+  const c = await userClient(l, `rls-del-${stamp}@example.com`);
+  const d = await userClient(l, `rls-keep-${stamp}@example.com`);
+  const centreC = (await c.rpc("create_centre", { p_name: "Centre C", p_whatsapp: null })).data as string;
+  const centreD = (await d.rpc("create_centre", { p_name: "Centre D", p_whatsapp: null })).data as string;
+  await c.from("students").insert({ centre_id: centreC, name: "Gone Soon" });
+  await d.from("students").insert({ centre_id: centreD, name: "Stays" });
+  const userC = (await c.auth.getUser()).data.user?.id as string;
+  expect((await c.rpc("delete_account")).error).toBeNull();
+  const sql = new SQL(l.db);
+  try {
+    const users = await sql`select count(*)::int as n from auth.users where id = ${userC}`;
+    expect(users[0].n).toBe(0);
+    const identities = await sql`select count(*)::int as n from auth.identities where user_id = ${userC}`;
+    expect(identities[0].n).toBe(0);
+    for (const table of [...CENTRE_TABLES, "centre_members"]) {
+      const rows = await sql`select count(*)::int as n from public.${sql(table)} where centre_id = ${centreC}`;
+      expect({ table, n: rows[0].n }).toEqual({ table, n: 0 });
+    }
+    expect((await sql`select count(*)::int as n from public.centres where id = ${centreC}`)[0].n).toBe(0);
+    expect((await sql`select count(*)::int as n from public.profiles where user_id = ${userC}`)[0].n).toBe(0);
+  } finally {
+    await sql.close();
+  }
+  expect((await d.from("students").select("name").eq("centre_id", centreD)).data).toEqual([{ name: "Stays" }]);
+});
+
+test("anonymous cannot call delete_account", async () => {
+  expect((await anonClient(l).rpc("delete_account")).error).not.toBeNull();
+});
+
 test("create_centre writes the tutor's name on their profile", async () => {
   const c = await userClient(l, `rls-c-${stamp}@example.com`);
   const { data: centreC, error } = await c.rpc("create_centre", {
