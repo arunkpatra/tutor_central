@@ -58,7 +58,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | API (Hono on Vercel) | `api/` | `api/CLAUDE.md` |
 | Website, tutorcentral.in (Next.js static export on Vercel) | `web/` | `web/CLAUDE.md` |
 | Database (Supabase) | `supabase/` | `supabase/CLAUDE.md` |
-| Design: boards, tokens, components, guidelines | `docs/design/` | `docs/design/README.md` |
+| Design: boards, tokens, components, guidelines | `docs/design/` | `docs/design/README.md`; messages to the tutor: `docs/design/feedback.md` |
 | Reference app and the functional contract | `docs/reference/` | |
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |

@@ -11,6 +11,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | The design canvas (live, zoomable) | https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D (private to the owner until shared) | Looking at the boards as designed; approving them |
 | Direction boards, sources | `directions/*.dc.html`, index `directions/canvas.json` | Exact values: every colour, size, radius and shadow is an inline style or a variable on the board's root |
 | Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Approved 2026-10-07 (step 0.2) |
+| Telling the tutor what happened (U33): undo, in place, alert, inline | `feedback.md` | Choosing how any message reaches the tutor; the toast is for Undo only |
 | Information architecture | `information-architecture.md` | Entry flow, tabs and stacks, deep links, launch states, the Phase 2 board list |
 | Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames) |
 

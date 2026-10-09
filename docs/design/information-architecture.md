@@ -671,3 +671,17 @@ the page in the same phase):
 | Nothing to pay today | D4 |
 | Sign in with Apple, Google or an email code; a password optional | Phase 2, Phase 7 |
 | iPhone with iOS 26 or later; no iPad, Android or web | D1 |
+
+## U33 boards (approved 2026-10-09): telling the tutor what happened, the Apple way
+
+Row 12 of the canvas (y 34400; the title note at 34100); sources `mockups/U33-*.dc.html`, dark and light, each derived from an
+approved board by string edits. The rule they settle is `feedback.md`: the toast is for Undo only.
+
+| Board | Source | Shows |
+|---|---|---|
+| Copied in place | `U33-Result-Copied`, `-Light` | Copy becomes "✓ Copied" in `ok` for two seconds; no toast |
+| A field that did not save | `U33-Settings-NotSaved`, `-Light` | The centre name outlined in `overdue`, its line under it; no toast |
+| A list that could not load | `U33-Fees-LoadFailed`, `-Light` | Nothing loaded: the symbol, "Couldn't load the fees", the line, Try Again |
+| A failed save | `U33-Attendance-SaveFailed`, `-Light` | The system alert: "Attendance wasn't saved", OK and Try Again; the marks stay |
+| The camera is off | `U33-Scan-CameraOff`, `-Light` | The system alert: Not Now and Open Settings |
+| An item no longer here | `U33-Event-Gone`, `-Light` | The system alert with OK |

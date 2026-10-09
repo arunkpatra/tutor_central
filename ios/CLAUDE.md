@@ -109,6 +109,9 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   failed read keeps that kind's pending reminders. `AppDelegate` installs `NotificationDelegate` before launch ends; a
   tap's link reaches `RootView.openLink`. The simulator's lock screen and banners take no injected taps: open the
   reminder's link with `simctl openurl` and leave the tap to the tester.
+- Telling the tutor what happened (U33): the toast is for Undo only; a success shows in place, a failed or refused write is
+  the system alert (`NoticeCenter`), a field's error is under the field, a list that could not load says so in its place.
+  Before adding any message read `docs/design/feedback.md` and pick its row.
 - No technical words on screen (D41): `ErrorWordsTests` reads every sentence in the sources; never pass a backend's
   message through.
 - Dynamic Type: rows that put a value beside a title use `AdaptiveRow` (stacks only at the accessibility sizes) with

@@ -1628,6 +1628,90 @@
       "w": 393,
       "h": 852,
       "title": "Phase 8 · U24 · Suggested marks scrolled: the glass under the status bar"
+    },
+    "U33-Result-Copied.dc.html": {
+      "x": 0,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A confirmation shows in place: Copy becomes Copied with a tick for two seconds (no toast) · dark"
+    },
+    "U33-Settings-NotSaved.dc.html": {
+      "x": 473,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A field that did not save says so under itself, in the overdue colour (no toast) · dark"
+    },
+    "U33-Fees-LoadFailed.dc.html": {
+      "x": 946,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A list that could not load says so in its place, with Try Again (as Apple's unavailable-content view) · dark"
+    },
+    "U33-Attendance-SaveFailed.dc.html": {
+      "x": 1419,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A save that failed and needs a decision: the system alert, OK and Try Again; the marks stay · dark"
+    },
+    "U33-Scan-CameraOff.dc.html": {
+      "x": 1892,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · The camera is off: the system alert, Not Now and Open Settings · dark"
+    },
+    "U33-Event-Gone.dc.html": {
+      "x": 2365,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · An item no longer here: the system alert with OK · dark"
+    },
+    "U33-Result-Copied-Light.dc.html": {
+      "x": 2838,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A confirmation shows in place: Copy becomes Copied with a tick for two seconds (no toast) · light"
+    },
+    "U33-Settings-NotSaved-Light.dc.html": {
+      "x": 3311,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A field that did not save says so under itself, in the overdue colour (no toast) · light"
+    },
+    "U33-Fees-LoadFailed-Light.dc.html": {
+      "x": 3784,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A list that could not load says so in its place, with Try Again (as Apple's unavailable-content view) · light"
+    },
+    "U33-Attendance-SaveFailed-Light.dc.html": {
+      "x": 4257,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · A save that failed and needs a decision: the system alert, OK and Try Again; the marks stay · light"
+    },
+    "U33-Scan-CameraOff-Light.dc.html": {
+      "x": 4730,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · The camera is off: the system alert, Not Now and Open Settings · light"
+    },
+    "U33-Event-Gone-Light.dc.html": {
+      "x": 5203,
+      "y": 34400,
+      "w": 393,
+      "h": 852,
+      "title": "U33 · An item no longer here: the system alert with OK · light"
     }
   },
   "createdOnFiles": {
@@ -1734,6 +1818,14 @@
       "w": 240,
       "x": 0,
       "y": 15700
+    },
+    "u33": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "U33 · Toasts the Apple way: the bottom bar stays only where it carries Undo (as Mail's Undo Send); everything else is native — in place, inline, or the system alert",
+      "w": 240,
+      "x": 0,
+      "y": 34100
     }
   },
   "order": [
@@ -1965,7 +2057,19 @@
     "P8-NotFound-Phone-Light.dc.html",
     "P8-Event-Edit-Keyboard.dc.html",
     "P8-Scan-List-Scrolled.dc.html",
-    "P8-Check-Marks-Scrolled.dc.html"
+    "P8-Check-Marks-Scrolled.dc.html",
+    "U33-Result-Copied.dc.html",
+    "U33-Settings-NotSaved.dc.html",
+    "U33-Fees-LoadFailed.dc.html",
+    "U33-Attendance-SaveFailed.dc.html",
+    "U33-Scan-CameraOff.dc.html",
+    "U33-Event-Gone.dc.html",
+    "U33-Result-Copied-Light.dc.html",
+    "U33-Settings-NotSaved-Light.dc.html",
+    "U33-Fees-LoadFailed-Light.dc.html",
+    "U33-Attendance-SaveFailed-Light.dc.html",
+    "U33-Scan-CameraOff-Light.dc.html",
+    "U33-Event-Gone-Light.dc.html"
   ],
   "pages": [],
   "title": "Tutor Central Design"

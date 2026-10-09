@@ -44,8 +44,8 @@
 | Loading, nothing cached | Skeleton of the real layout |
 | Loading, cached | The cached screen, stale values at 0.55, spinner by the section title |
 | Empty | The empty-state pattern inside the card |
-| Error | The last good screen plus a footnote line and Retry; a toast when the error follows an action |
-| Offline | A footnote bar under the navigation bar: "Offline. Showing what was last saved."; writes refused with a toast |
+| Error | The last good screen plus a footnote line and Try Again; nothing loaded, the unavailable view; an action that failed, the system alert (`feedback.md`) |
+| Offline | A footnote bar under the navigation bar: "Offline. Showing what was last saved."; writes refused with the system alert |
 | Destructive confirmation | The dialog pattern, warning haptic |
 
 ## Accessibility
@@ -64,7 +64,7 @@
 - Presses scale to 0.97 in `press`; nothing bounces.
 - Numbers roll; lists animate insertions with the system's default.
 - Haptics as in `design-tokens.md`; off when the user says so.
-- A successful save closes its sheet and shows a toast only when something is undoable or worth knowing
+- A successful save closes its sheet; a toast only when there is something to undo (`feedback.md`, U33)
   (a reminder opened, a month generated).
 
 ## Boards

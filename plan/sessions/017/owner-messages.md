@@ -24,3 +24,6 @@ In order, in the owner's words.
     would rather try to remain as "Apple native" as possible.suggest"; then "yes, add it and draw the boards. before that, what
     else is pending?" (became U33).
 16. "yes, we need to switch : Point the app at api.tutorcentral.in." (API_ORIGIN → https://api.tutorcentral.in; build 16).
+17. "approved, build it" (the U33 boards); then "ALso update CLAUDE.md etc in ios app to note this pattern and apply it uniformly
+    in future, link a doc to the claude.md (progressive disclosure)" (became `docs/design/feedback.md`, linked from `CLAUDE.md` and
+    `ios/CLAUDE.md`).

@@ -198,10 +198,12 @@ A destructive dialog that removes history asks the user to type the name. Warnin
 A reversible action (archive) is confirmed with a primary button; a deletion with the solid destructive one, which
 stays disabled until the typed name matches. The copy names the student rather than a pronoun.
 
-## Toast
+## Toast (Undo only)
 
-Bottom, above the tab bar, `surface1`, `lineStrong` border, radius `radiusTile`, `shadowFloat`, padding
-12 16, text `subhead`, optional quiet action on the right (Undo, Retry). Stays `toastStay`. One at a time.
+Bottom, above the tab bar and above a footer (D49), `surface1`, `lineStrong` border, radius `radiusTile`, `shadowFloat`,
+padding 12 16, text `subhead`, the quiet Undo on the right. Stays `toastStayUndo`. One at a time. Since U33 the toast carries
+Undo and nothing else: every other message is in place, under its field, in its list, or the system alert
+(`feedback.md`).
 
 ## Empty state
 
