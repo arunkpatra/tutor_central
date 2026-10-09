@@ -1,5 +1,6 @@
 import Domain
 import Foundation
+import Supabase
 
 /// The in-memory attendance for tests, previews and `bun shots`: `seed.sql`'s rule (the four weeks before Wednesday
 /// 7 October 2026 on each class's meeting days, every fifth mark absent ordered by date and name), a scripted error,
@@ -52,6 +53,9 @@ import Foundation
         )
         return [saved] + seed
     }()
+
+    /// What PostgREST answers for an expired token.
+    public nonisolated static let signedOutError = PostgrestError(code: "PGRST301", message: "JWT expired")
 
     public var sessions: [AttendanceSession]
     public var nextError: (any Error)?

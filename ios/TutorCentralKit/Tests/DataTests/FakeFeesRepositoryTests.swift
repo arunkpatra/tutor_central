@@ -1,5 +1,6 @@
 import Domain
 import Foundation
+import Supabase
 import Testing
 @testable import Data
 
@@ -45,7 +46,7 @@ import Testing
         await #expect(throws: URLError.self) {
             try await repo.markPaid(id: FakeFeesRepository.devOctober, method: .upi, at: at)
         }
-        await #expect(throws: URLError.self) { try await repo.markDue(id: UUID()) }
+        await #expect(throws: PostgrestError.self) { try await repo.markDue(id: UUID()) }
     }
 
     @Test func generateMakesOneDueFeePerSeedStudentWithoutOne() async throws {
