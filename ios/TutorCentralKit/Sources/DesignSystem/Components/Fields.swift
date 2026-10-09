@@ -84,7 +84,7 @@ public struct FieldMessage: View {
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Tokens.fieldGap) {
             Image(systemName: "exclamationmark.circle").font(.system(size: Tokens.iconInline))
-            Text(text)
+            Text(text).fixedSize(horizontal: false, vertical: true)
         }
         .typeStyle(Tokens.footnote)
         .foregroundStyle(Tokens.overdue.color)
@@ -188,6 +188,8 @@ public struct TextWell: View {
 /// A secure field in a well (the password state).
 public struct SecureWell: View {
     let label: String
+    let placeholder: String?
+    let helper: String?
     @Binding var text: String
     let error: String?
     let showsFocus: Bool
@@ -195,15 +197,20 @@ public struct SecureWell: View {
     let onCommit: () -> Void
     @FocusState private var focused: Bool
 
+    /// `placeholder` is the prompt in the empty well (the label when nil); `helper` the footnote under it.
     public init(
         label: String,
         text: Binding<String>,
+        placeholder: String? = nil,
+        helper: String? = nil,
         error: String? = nil,
         showsFocus: Bool = false,
         autofocus: Bool = false,
         onCommit: @escaping () -> Void = {}
     ) {
         self.label = label
+        self.placeholder = placeholder
+        self.helper = helper
         _text = text
         self.error = error
         self.showsFocus = showsFocus
@@ -212,8 +219,8 @@ public struct SecureWell: View {
     }
 
     public var body: some View {
-        Well(label: label, error: error, focused: focused || showsFocus) {
-            SecureField(text: $text) { Text(label) }
+        Well(label: label, helper: helper, error: error, focused: focused || showsFocus) {
+            SecureField(text: $text) { Text(placeholder ?? label).foregroundStyle(Tokens.text3.color) }
                 .typeStyle(Tokens.body)
                 .foregroundStyle(Tokens.text.color)
                 .tint(Tokens.accent.color)

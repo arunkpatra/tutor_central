@@ -52,6 +52,11 @@ import SwiftUI
 /// The screens a tab's stack can push in this build.
 enum Route: Hashable {
     case settings
+    /// Account, from Settings and More; Delete account from it.
+    case account
+    case deleteAccount
+    /// Help, from Settings and More.
+    case help
     case student(UUID)
     case classes
     case classroom(UUID)

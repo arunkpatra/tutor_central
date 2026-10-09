@@ -4,21 +4,23 @@ import SwiftUI
 /// emptyTitle and the line in subhead text2, both centred, the line at most 300 wide.
 public struct IntroHero: View {
     let symbol: String
+    let tint: ColorToken
     let title: String
     let line: String
     static var lineWidth: CGFloat {
         300
     }
 
-    public init(symbol: String, title: String, line: String) {
+    public init(symbol: String, tint: ColorToken = Tokens.text2, title: String, line: String) {
         self.symbol = symbol
+        self.tint = tint
         self.title = title
         self.line = line
     }
 
     public var body: some View {
         VStack(spacing: Tokens.rowPaddingDense) {
-            IconTile(symbol: symbol, size: .header)
+            IconTile(symbol: symbol, size: .header, tint: tint)
             VStack(spacing: Tokens.inline) {
                 Text(title).typeStyle(Tokens.emptyTitle).foregroundStyle(Tokens.text.color)
                 Text(line)

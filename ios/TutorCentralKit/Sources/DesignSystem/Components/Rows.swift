@@ -5,18 +5,22 @@ import SwiftUI
 public struct SettingRow<Trailing: View>: View {
     let symbol: String?
     let label: String
+    let line: String?
     let action: (() -> Void)?
     let trailing: Trailing
 
-    /// `trailing` comes before `action` so a trailing closure is the trailing view, never the action.
+    /// `trailing` comes before `action` so a trailing closure is the trailing view, never the action. `line` is the
+    /// footnote under the label (Parent messages, P7-Settings).
     public init(
         symbol: String? = nil,
         label: String,
+        line: String? = nil,
         @ViewBuilder trailing: () -> Trailing = { EmptyView() },
         action: (() -> Void)? = nil
     ) {
         self.symbol = symbol
         self.label = label
+        self.line = line
         self.action = action
         self.trailing = trailing()
     }
@@ -37,7 +41,15 @@ public struct SettingRow<Trailing: View>: View {
                     .foregroundStyle(Tokens.text2.color)
                     .frame(width: Tokens.iconButton + Tokens.fieldGap)
             }
-            Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
+            VStack(alignment: .leading, spacing: SettingRowMetrics.lineGap) {
+                Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
+                if let line {
+                    Text(line)
+                        .typeStyle(Tokens.footnote)
+                        .foregroundStyle(Tokens.text2.color)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
             Spacer(minLength: Tokens.inline)
             trailing
             if action != nil {
@@ -71,6 +83,11 @@ public struct LaterRow: View {
         .opacity(Tokens.opacityLater)
         .accessibilityHint("Arrives in \(phase)")
     }
+}
+
+/// The gap between a setting's label and its line (P7-Settings: 2).
+enum SettingRowMetrics {
+    static let lineGap: CGFloat = 2
 }
 
 /// A row is at least 56 high (components.md, Rows).

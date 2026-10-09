@@ -7,6 +7,8 @@ public enum AccountFailure: Error, Hashable, Sendable {
     case weakPassword
     case appleRefused
     case appleUnreachable
+    /// The tutor closed Apple's sheet: nothing to say, back where they were.
+    case cancelled
     /// Anything else, in the server's words.
     case server(String)
 
@@ -17,6 +19,7 @@ public enum AccountFailure: Error, Hashable, Sendable {
         case .weakPassword: "Choose a password that's harder to guess."
         case .appleRefused: "Apple didn't accept the confirmation. Try again."
         case .appleUnreachable: "Apple didn't answer. Try again in a minute."
+        case .cancelled: ""
         case let .server(words): words
         }
     }

@@ -40,6 +40,7 @@ public struct IconTile: View {
 
     let symbol: String
     let size: Size
+    let tint: ColorToken
     static var rowSize: CGFloat {
         40
     }
@@ -56,9 +57,11 @@ public struct IconTile: View {
         28
     }
 
-    public init(symbol: String, size: Size = .row) {
+    /// `tint` colours the symbol (overdue on Delete account's hero, P7-Delete).
+    public init(symbol: String, size: Size = .row, tint: ColorToken = Tokens.text2) {
         self.symbol = symbol
         self.size = size
+        self.tint = tint
     }
 
     public var body: some View {
@@ -66,7 +69,7 @@ public struct IconTile: View {
         let side = header ? Self.headerSize : Self.rowSize
         Image(systemName: symbol)
             .font(.system(size: header ? Self.headerSymbol : Tokens.iconButton))
-            .foregroundStyle(Tokens.text2.color)
+            .foregroundStyle(tint.color)
             .frame(width: side, height: side)
             .background(
                 Tokens.surface2.color,

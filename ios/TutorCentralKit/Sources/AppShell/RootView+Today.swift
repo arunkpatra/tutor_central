@@ -1,30 +1,10 @@
 import DesignSystem
 import Domain
-import Settings
 import SwiftUI
 import Today
 
-/// Today's and Settings' wiring: Today's one store and its actions; Settings, whose centre changes reach every store
-/// that shows the workspace.
+/// Today's wiring: its one store and its actions.
 extension RootView {
-    @ViewBuilder var settingsView: some View {
-        if case let .ready(workspace) = session.state {
-            let store = SettingsStore(
-                workspace: workspace,
-                auth: deps.auth,
-                centres: deps.centres,
-                version: deps.bundleVersion
-            )
-            SettingsView(
-                store: store,
-                boardState: launch == .settings,
-                onWorkspaceChanged: { changed in applyWorkspace { $0.takingSettings(from: changed) } },
-                onMessage: { toasts.show($0) },
-                openPayments: { shell.tabs.push(.payments) }
-            )
-        }
-    }
-
     /// One Today store for the life of the workspace, so its counts survive a tab switch; it reads the shared register
     /// and tasks.
     @ViewBuilder var todayView: some View {

@@ -27,6 +27,8 @@ import Observation
     /// Set when the workspace could not be read; the root shows a footnote line and Retry (`refresh()`). Never
     /// onboarding: a tutor with a centre must not be asked to make a second one because the network blinked.
     public private(set) var lastError: String?
+    /// The centre an account deletion just removed: the landing says so until the next sign-in (P7-Delete-Done).
+    public private(set) var deletedCentre: String?
     private let deps: Dependencies
     private var following: Task<Void, Never>?
     /// Names the app's own sign-ins carried (Apple gives one once, in the credential); Supabase's announcement of the
@@ -54,8 +56,15 @@ import Observation
         }
     }
 
+    /// After Delete account (D37): the auth user is gone and the phone wiped; the landing names what was deleted.
+    public func deleted(centreName: String) {
+        deletedCentre = centreName
+        state = .signedOut
+    }
+
     /// Called by the sign-in stores after a success.
     public func signedIn(_ user: AuthUser) async {
+        deletedCentre = nil
         if let name = user.fullName {
             knownNames[user.id] = name
         }
@@ -85,7 +94,9 @@ import Observation
         }
     }
 
-    public func signOut() async {
+    /// Sign-out wipes the phone first (D40): the centre's files, this iPhone's settings, the queue, the reminders.
+    public func signOut(wiping wipe: SignOutWipe) async {
+        await wipe.run()
         await deps.auth.signOut()
         state = .signedOut
     }
@@ -116,5 +127,32 @@ import Observation
     private func withKnownName(_ user: AuthUser) -> AuthUser {
         guard user.fullName == nil, let name = knownNames[user.id] else { return user }
         return AuthUser(id: user.id, email: user.email, fullName: name)
+    }
+}
+
+/// What sign-out and deletion clear on this iPhone (D40): the centre's files under Application Support, this iPhone's
+/// settings in `UserDefaults`, the queue, and the pending reminders.
+public struct SignOutWipe {
+    let centre: UUID
+    let directory: URL?
+    let defaults: UserDefaults
+    let queue: ChangeQueue?
+    let notifications: any NotificationCenterClient
+
+    public init(
+        centre: UUID, directory: URL? = nil, defaults: UserDefaults = .standard, queue: ChangeQueue?,
+        notifications: any NotificationCenterClient
+    ) {
+        self.centre = centre
+        self.directory = directory
+        self.defaults = defaults
+        self.queue = queue
+        self.notifications = notifications
+    }
+
+    @MainActor func run() async {
+        queue?.wipe()
+        Wipe.everything(centre: centre, directory: directory, defaults: defaults)
+        await notifications.removeAll()
     }
 }

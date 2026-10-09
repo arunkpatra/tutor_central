@@ -20,6 +20,9 @@ import Testing
             qrImages: MemoryQRImageStore(),
             ai: FakeAIRepository(),
             aiHistory: FakeAIHistoryRepository(),
+            account: FakeAccountRepository(),
+            notifications: FakeNotificationCenter(),
+            reminderSettings: ReminderSettingsStore(defaults: UserDefaults(suiteName: "session-tests") ?? .standard),
             cachesRegister: false,
             now: { Fixtures.now },
             bundleVersion: "0.1 (1)"
@@ -59,7 +62,12 @@ import Testing
         let workspace = try await centres.createCentre(draft, for: FakeAuthRepository.meera)
         store.centreCreated(workspace)
         #expect(store.state == .ready(workspace))
-        await store.signOut()
+        await store.signOut(wiping: SignOutWipe(
+            centre: workspace.centre.id,
+            directory: FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),
+            defaults: UserDefaults(suiteName: "session-sign-out") ?? .standard, queue: nil,
+            notifications: FakeNotificationCenter()
+        ))
         #expect(store.state == .signedOut && auth.signedOut == 1)
     }
 
@@ -102,5 +110,28 @@ import Testing
         try await Task.sleep(for: .milliseconds(300))
         #expect(named.fullName == "Meera Nair")
         #expect(store.state == .needsOnboarding(named))
+    }
+
+    @Test func aDeletedUsersSessionBecomesSignedOut() async {
+        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        let store = SessionStore(deps: deps(auth: auth, centres: centres))
+        await store.start()
+        auth.emit(nil) // Supabase's refresh of a deleted user's token fails and announces a sign-out
+        try? await Task.sleep(for: .milliseconds(20))
+        #expect(store.state == .signedOut && store.deletedCentre == nil)
+    }
+
+    @Test func afterADeletionTheLandingNamesTheCentreUntilTheNextSignIn() async {
+        let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
+        let centres = FakeCentreRepository()
+        centres.workspace = FakeCentreRepository.meeraWorkspace
+        let store = SessionStore(deps: deps(auth: auth, centres: centres))
+        await store.start()
+        store.deleted(centreName: "Bright Minds Tuition")
+        #expect(store.state == .signedOut && store.deletedCentre == "Bright Minds Tuition")
+        await store.signedIn(FakeAuthRepository.meera)
+        #expect(store.deletedCentre == nil)
     }
 }

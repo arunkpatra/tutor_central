@@ -18,6 +18,14 @@ public enum Fixtures {
         case .ready:
             auth.user = FakeAuthRepository.meera
             centres.workspace = workspace(for: state)
+            if state == .settingsSaveFailed {
+                // P7-Settings-SaveFailed: the centre's name does not save.
+                centres.nextError = URLError(.notConnectedToInternet)
+            }
+            if state == .accountPasswordFailed || state == .deleteAccountFailed {
+                // P7-Account-Password-Failed, P7-Delete-Failed: the write does not go through.
+                auth.nextAccountFailure = .offline
+            }
         case .loading, .signedOut: break
         }
         return Dependencies(
@@ -40,11 +48,58 @@ public enum Fixtures {
             aiHistory: FakeAIHistoryRepository(
                 generations: [.aiAssistantEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
             ),
+            account: FakeAccountRepository(),
+            notifications: FakeNotificationCenter(permission: .allowed),
+            reminderSettings: ReminderSettingsStore(defaults: boardDefaults(for: state)),
+            filesDirectory: filesDirectory(for: state),
             cachesRegister: false,
             now: { clock(for: state) },
             fixedClock: true,
-            bundleVersion: "0.1 (12)"
+            bundleVersion: "1.0 (14)"
         )
+    }
+
+    /// A fresh folder per launch for the queue and the caches; the states that start with something in them write it.
+    @MainActor static func filesDirectory(for state: LaunchState) -> URL {
+        let folder = FileManager.default.temporaryDirectory
+            .appendingPathComponent("fixtures-\(state.rawValue)-\(UUID().uuidString)", isDirectory: true)
+        if state == .accountSignOutPending {
+            let queue = ChangeQueue(centre: meeraWorkspace.centre.id, directory: folder)
+            for change in twoWaitingChanges {
+                queue.add(change)
+            }
+        }
+        return folder
+    }
+
+    /// P7-Account-SignOut-Pending's two changes: Class 10 Maths' attendance at 17:05 and Dev's fee at 17:12.
+    static var twoWaitingChanges: [QueuedChange] {
+        let today = Day(year: 2026, month: 10, day: 7) ?? Day(now, calendar: DayHeading.india)
+        return [
+            QueuedChange(
+                kind: .attendance(
+                    classID: FakeClassesRepository.maths.id, className: "Class 10 Maths", date: today, marks: [:],
+                    present: 5, total: 6
+                ),
+                madeAt: india(day: 7, hour: 17, minute: 5)
+            ),
+            QueuedChange(
+                kind: .markPaid(
+                    invoiceID: FakeFeesRepository.devOctober, studentName: "Dev Kumar",
+                    month: Period(year: 2026, month: 10), amount: Money(rupees: 1000), method: .upi,
+                    paidAt: india(day: 7, hour: 17, minute: 12)
+                ),
+                madeAt: india(day: 7, hour: 17, minute: 12)
+            ),
+        ]
+    }
+
+    /// A fresh `UserDefaults` suite per launch, so a fixture's reminder choices never touch the iPhone's own.
+    static func boardDefaults(for state: LaunchState) -> UserDefaults {
+        let name = "fixtures-\(state.rawValue)"
+        let defaults = UserDefaults(suiteName: name) ?? .standard
+        defaults.removePersistentDomain(forName: name)
+        return defaults
     }
 
     public static func initialState(for state: LaunchState) -> SessionStore.State {
@@ -68,9 +123,12 @@ public enum Fixtures {
              .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview, .scanReviewEdit,
              .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
              .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
-             .checkSaved, .checkFailed: .ready(workspace(for: state))
+             .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
+             .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
+             .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed:
+            .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
-             .signinCodeWrong, .signinPassword: .signedOut
+             .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
         }
     }
 
@@ -142,7 +200,7 @@ public enum Fixtures {
         }
     }
 
-    private static func india(day: Int, hour: Int, minute: Int) -> Date {
+    static func india(day: Int, hour: Int, minute: Int) -> Date {
         DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? now
     }
 

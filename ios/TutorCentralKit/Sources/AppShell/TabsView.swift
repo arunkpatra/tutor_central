@@ -18,7 +18,8 @@ struct TabsView<
     let studentDetail: (UUID) -> StudentDetail
     let classes: () -> Classes
     let classDetail: (UUID) -> ClassDetail
-    let settings: () -> Settings
+    /// Settings and the screens on its stack (Account, Delete account, Help).
+    let settings: (Route) -> Settings
     let attendance: () -> Attendance
     let history: () -> History
     let studentMonth: (UUID) -> StudentMonth
@@ -51,7 +52,8 @@ struct TabsView<
         switch route {
         case .student, .classes, .classroom, .studentFees: studentsDestination(route)
         case .history, .historyStudent: attendanceDestination(route)
-        case .settings, .payments, .reports: moreDestination(route)
+        case .settings, .account, .deleteAccount, .help: settings(route)
+        case .payments, .reports: moreDestination(route)
         case .schedule: schedule(nil)
         // A newer link in the same place is a new screen, not the last one's state.
         case let .event(id): schedule(id).id(id)
@@ -71,10 +73,10 @@ struct TabsView<
     }
 
     @ViewBuilder private func moreDestination(_ route: Route) -> some View {
-        switch route {
-        case .payments: payments()
-        case .reports: reports()
-        default: settings()
+        if route == .payments {
+            payments()
+        } else {
+            reports()
         }
     }
 
