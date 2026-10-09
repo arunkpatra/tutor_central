@@ -120,7 +120,15 @@ export const STEPS: Step[] = [
   },
   {
     name: "db",
-    inputs: ["supabase/migrations/**", "supabase/seed.sql", "supabase/tests/**", "supabase/package.json", "supabase/tsconfig.json"],
+    inputs: [
+      "supabase/migrations/**",
+      "supabase/seed.sql",
+      "supabase/tests/**",
+      "supabase/package.json",
+      "supabase/tsconfig.json",
+      // review-seed.test runs the review centre's SQL on the local database.
+      "tools/review-seed.ts",
+    ],
     skipIf: async () => dbSkipReason(process.env, (await sh(["supabase", "status"], { cwd: "supabase" })).code === 0),
     run: async () => {
       // A clean schema for the tests, then the seed back for the app.
