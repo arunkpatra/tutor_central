@@ -8,5 +8,6 @@ export const MAKER = "GoodGround LLP";
 export const CITY = "Bangalore";
 /** How long before retiring the app the owner warns by email (Owner step 0; the terms' "Ending"). */
 export const NOTICE_PERIOD = "30 days";
-/** How long the AI service keeps what it is sent (Anthropic's commercial terms; Owner step 0, the app's consent says the same). */
+/** How long the AI service normally keeps what it is sent (Anthropic's commercial terms keep inputs flagged for abuse longer;
+ *  Owner step 0, the app's consent says the same). */
 export const AI_RETENTION = "30 days";

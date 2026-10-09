@@ -31,7 +31,7 @@ test("privacy says what it must, in order, and marks itself current", () => {
     "GoodGround LLP, Bangalore, India",
     "kept in India",
     "Claude, by Anthropic",
-    "never uses it to train its models and deletes it within 30 days",
+    "never uses it to train its models and normally deletes it within 30 days",
     "Delete account permanently",
     "sets no cookies",
     "Apple is told to forget the app",
@@ -66,6 +66,8 @@ test("support has the email button, the six questions and the two links", () => 
   expect(html).toContain('href="/support" aria-current="page"');
   expect(html).toContain(`href="mailto:${EMAIL}" class="btn btnPrimary"`);
   expect(SUPPORT.questions).toHaveLength(6);
+  // The owner: "normally" (Anthropic keeps inputs flagged for abuse longer).
+  expect(html).toContain("the AI service normally deletes them within 30 days");
   for (const q of SUPPORT.questions) expect(html).toContain(q.question);
   expect(html).toContain('href="/privacy"');
   expect(html).toContain('href="/terms"');

@@ -28,7 +28,7 @@ export const SUPPORT = {
     {
       question: "Where do photos of registers and papers go?",
       answer:
-        "To our AI service, to be read, and nowhere else. We keep no copy, and the AI service deletes them within " +
+        "To our AI service, to be read, and nowhere else. We keep no copy, and the AI service normally deletes them within " +
         `${AI_RETENTION} and never uses them for training. You agree once per centre before the first photo.`,
     },
     {
