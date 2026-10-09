@@ -31,15 +31,37 @@ import UserNotifications
 
     /// In the foreground the banner shows, as it does on the lock screen.
     public nonisolated func userNotificationCenter(
-        _: UNUserNotificationCenter, willPresent _: UNNotification
-    ) async -> UNNotificationPresentationOptions {
-        [.banner, .sound]
+        _: UNUserNotificationCenter, willPresent _: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .sound])
     }
 
+    /// The completion-handler form, not the async one: the async form finished on a background thread and UIKit, told
+    /// there that the tap was handled, aborted (build 13, a tester's crash on tapping a class reminder).
     public nonisolated func userNotificationCenter(
-        _: UNUserNotificationCenter, didReceive response: UNNotificationResponse
-    ) async {
-        let link = (response.notification.request.content.userInfo["link"] as? String).flatMap(URL.init(string:))
-        await open(link)
+        _: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        received(Self.link(from: response.notification.request.content.userInfo), then: completionHandler)
+    }
+
+    /// The reminder's link (`ReminderScheduler` puts it in `userInfo["link"]`).
+    nonisolated static func link(from userInfo: [AnyHashable: Any]) -> URL? {
+        (userInfo["link"] as? String).flatMap(URL.init(string:))
+    }
+
+    /// Opens the link and tells UIKit the tap is handled, both on the main thread, wherever the tap arrived.
+    nonisolated func received(_ link: URL?, then done: @escaping () -> Void) {
+        nonisolated(unsafe) let done = done
+        if Thread.isMainThread {
+            MainActor.assumeIsolated { open(link) }
+            done()
+        } else {
+            DispatchQueue.main.async {
+                MainActor.assumeIsolated { self.open(link) }
+                done()
+            }
+        }
     }
 }
