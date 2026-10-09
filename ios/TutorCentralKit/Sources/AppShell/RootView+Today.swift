@@ -34,6 +34,9 @@ extension RootView {
                 if shell.today == nil {
                     shell.today = store
                 }
+                if launch == .syncSent {
+                    toasts.show("3 saved changes sent.", stay: .seconds(3600))
+                }
             }
             .onChange(of: store.tasks.message) { _, message in
                 guard let message else { return }

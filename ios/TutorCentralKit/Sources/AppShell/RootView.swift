@@ -39,6 +39,10 @@ public struct RootView: View {
         }
         let shell = ShellState(tabs: tabs)
         Self.follow(initial, shell: shell, deps: deps)
+        if launch == .syncSending {
+            // P7-Sync-Sending: back online, three changes going.
+            shell.runState = .sending(3)
+        }
         _shell = State(initialValue: shell)
     }
 

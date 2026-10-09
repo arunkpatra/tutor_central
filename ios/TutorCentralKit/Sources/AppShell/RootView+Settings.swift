@@ -14,6 +14,8 @@ extension RootView {
             accountView
         case .deleteAccount:
             deleteAccountView
+        case .pendingChanges:
+            pendingChangesView
         default:
             settingsView
         }
@@ -26,7 +28,7 @@ extension RootView {
                 centres: deps.centres,
                 version: deps.bundleVersion,
                 reminders: ReminderSummary(permission: .notAsked, settings: ReminderSettings()),
-                pendingCount: 0
+                pendingCount: shell.queue?.pending.changes.count ?? 0
             )
             SettingsView(
                 store: store,
@@ -34,7 +36,7 @@ extension RootView {
                 actions: SettingsActions(
                     openPayments: { shell.tabs.push(.payments) },
                     openReminders: nil,
-                    openPendingChanges: nil,
+                    openPendingChanges: { shell.tabs.push(.pendingChanges) },
                     openAccount: { shell.tabs.push(.account) },
                     openHelp: { shell.tabs.push(.help) },
                     openURL: { openExternal($0) },
@@ -93,6 +95,19 @@ extension RootView {
         }
         let apple = AppleReauthorizer(controller: authorizationController)
         return { () async throws(AccountFailure) -> String in try await apple.authorizationCode() }
+    }
+
+    @ViewBuilder private var pendingChangesView: some View {
+        if let queue = shell.queue {
+            PendingChangesView(
+                store: PendingChangesStore(queue: queue, calendar: DayHeading.india) { await runQueue() },
+                boardDiscard: launch == .pendingDiscard
+            ) { _ in
+                if queue.pending.isEmpty {
+                    shell.tabs.remove(.pendingChanges)
+                }
+            }
+        }
     }
 
     /// What sign-out and deletion clear for this centre (D40).

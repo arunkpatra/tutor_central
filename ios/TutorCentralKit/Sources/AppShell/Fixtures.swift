@@ -89,6 +89,7 @@ public enum Fixtures {
             }
         }
         keepCopies(for: state, in: folder)
+        queueChanges(for: state, in: folder)
         return folder
     }
 
@@ -147,7 +148,7 @@ public enum Fixtures {
              .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
              .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
              .offlineStudents, .offlineFees, .offlineNoCache, .offlineWriteRefused, .offlineAttendanceSaved,
-             .offlineFeeMarked:
+             .offlineFeeMarked, .syncSending, .syncSent, .syncFailed, .pending, .pendingDiscard:
             .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .signin, .signinEmail, .signinCode,
              .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
@@ -207,6 +208,7 @@ public enum Fixtures {
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
         case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
         case _ where offlineStates.contains(state): offlineClock(state)
+        case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         case .todayNoClass: india(day: 10, hour: 9, minute: 30)
         default: now
@@ -216,7 +218,7 @@ public enum Fixtures {
     /// Today's tiles on the boards: ten students, ₹4,000 due (the seed's four unpaid), the classes meeting that day.
     static func counts(for state: LaunchState) -> TodayCounts {
         switch state {
-        case .today, .todayEvening, .todayAddingTask, .todayAI:
+        case .today, .todayEvening, .todayAddingTask, .todayAI, .syncSending, .syncSent, .syncFailed:
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoClass: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero

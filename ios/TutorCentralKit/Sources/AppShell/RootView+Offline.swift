@@ -125,16 +125,17 @@ extension RootView {
 
     /// Sends what waits, one run at a time (D39): when the network returns, on foreground, after a sign-in, and on
     /// Send again. The toast is AppShell's, shown on whichever screen is open.
-    func runQueue() async {
+    @discardableResult func runQueue() async -> RunOutcome? {
         guard let runner = shell.runner, !runner.running, !runner.queue.pending.inOrder.isEmpty,
-              await deps.connectivity.isOnline else { return }
+              await deps.connectivity.isOnline else { return nil }
         shell.runState = .sending(runner.queue.pending.inOrder.count)
-        guard let outcome = await runner.run() else { return }
+        guard let outcome = await runner.run() else { return nil }
         shell.runState = RunState.after(outcome)
         if let toast = RunState.toast(for: outcome) {
             toasts.show(toast)
         }
         afterRun(outcome)
+        return outcome
     }
 
     /// What a sent change changes elsewhere: the screens read again.

@@ -70,3 +70,40 @@ extension Fixtures {
         ))
     }
 }
+
+/// The replay's boards (P7-Sync-*, P7-Pending): what waits in the queue.
+extension Fixtures {
+    @MainActor static func queueChanges(for state: LaunchState, in folder: URL) {
+        let changes: [QueuedChange] = switch state {
+        case .syncFailed: [failedFee]
+        case .pending, .pendingDiscard: threeChanges
+        default: []
+        }
+        guard !changes.isEmpty else { return }
+        let queue = ChangeQueue(centre: meeraWorkspace.centre.id, directory: folder)
+        for change in changes {
+            queue.add(change)
+            if case let .failed(reason) = change.state {
+                queue.fail(id: change.id, reason: reason)
+            }
+        }
+    }
+
+    /// Attendance at 17:05 and Hemanth's alert at 17:06, waiting; Dev's fee at 17:12, failed (P7-Pending).
+    static var threeChanges: [QueuedChange] {
+        let today = Day(year: 2026, month: 10, day: 7) ?? Day(now, calendar: DayHeading.india)
+        let alert = QueuedChange(
+            kind: .absenceLog(studentID: FakeAttendanceRepository.hemanth, studentName: "Hemanth Reddy", about: today),
+            madeAt: india(day: 7, hour: 17, minute: 6)
+        )
+        return [twoWaitingChanges[0], alert, failedFee]
+    }
+
+    static var failedFee: QueuedChange {
+        var fee = twoWaitingChanges[1]
+        fee.state = .failed(
+            reason: "Dev Kumar is no longer in the register, so their fee can't be marked. Keep it here or discard it."
+        )
+        return fee
+    }
+}
