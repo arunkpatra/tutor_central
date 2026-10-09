@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import NotFound from "../../app/not-found";
 import Home from "../../app/page";
 
 /** The app's banned words (ErrorWordsTests) less "database", which the privacy page uses in its plain sense (D41). */
@@ -33,6 +34,7 @@ const BANNED = [
 
 const PAGES: Record<string, () => string> = {
   home: () => renderToStaticMarkup(createElement(Home)),
+  notFound: () => renderToStaticMarkup(createElement(NotFound)),
 };
 
 /** The words a reader sees: tags (and so attributes such as href) removed. */

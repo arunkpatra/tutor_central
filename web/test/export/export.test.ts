@@ -8,6 +8,7 @@ const page = (file: string) => readFileSync(join(OUT, file), "utf8");
 /** The files Vercel serves: `/` → index.html, `/privacy` → privacy.html, …, anything else → 404.html. */
 const PAGES: Record<string, string> = {
   "index.html": "Tutor Central",
+  "404.html": "There is nothing at this address.",
 };
 
 test("the export holds the pages with their titles and the commit", () => {

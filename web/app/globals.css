@@ -390,6 +390,20 @@ ul {
   gap: 14px;
   align-items: center;
 }
+.notFound {
+  min-height: 420px;
+}
+.notFoundBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 640px;
+  padding: 56px 0 24px;
+}
+.actions.notFoundActions {
+  gap: 12px;
+  padding-top: 10px;
+}
 .phone {
   position: relative;
   width: 307px;
