@@ -28,3 +28,6 @@ In order, in the owner's words.
     in future, link a doc to the claude.md (progressive disclosure)" (became `docs/design/feedback.md`, linked from `CLAUDE.md` and
     `ios/CLAUDE.md`).
 18. "delete the merged branches on the remote" (25 deleted; each PR checked merged first; main and pr-shots kept).
+19. "What's next on our plates?" (answered: Phase 9 user testing, its plan first).
+20. "We will do user testing next. Found an issue - see the image" (Add to class: a long title ran under Cancel; fixed in #87,
+    the owner merged it and started build 18).

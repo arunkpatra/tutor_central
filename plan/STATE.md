@@ -7,7 +7,7 @@ short and true. History belongs in git and in the phase files, not here.
 tutorcentral.in live (Home, `/privacy`, `/terms`, `/support`, not found) by `deploy-web` run 37929980186; the privacy URL in App
 Store Connect and TestFlight's Test Information; U7, U16, U24 and Phase 6's minors 1, 6, 7 in the app; D50; build 1.0.0 (14) on
 TestFlight. **Session 16:** the Phase 8 boards and plan. **Next:** Phase 9, user testing (D43): its plan, then the external group.
-The owner looks at build 14 (Edit event with the keyboard, a checked paper's Saved mark, the scan list scrolled).
+The owner tests build 18 on the phone: U33's alerts and in-place successes, and a long class name on Add to class (#87).
 
 ## Where we are
 
@@ -55,7 +55,7 @@ Nothing open. TestFlight 1.0.0 (15) from `e455ba0` (run 37943689238) carries the
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (17) by run 37948604787 (U33, #86) is building; 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238. Each run revokes the Apple Development certificate it makes (#75): a
+  run number. 1.0.0 (18) by run 37950611572 (a sheet's long title clear of Cancel, #87) is building; 17 by run 37948604787 (U33, #86); 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238. Each run revokes the Apple Development certificate it makes (#75): a
   fresh runner makes one per run and the account's cap stopped run 12 after eleven (the owner revoked them, 2026-10-09).
 
 ## Open items
