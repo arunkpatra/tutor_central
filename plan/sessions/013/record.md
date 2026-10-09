@@ -64,15 +64,15 @@ the code are in the phase file's "As built"; the rest:
 
 ## The final review's minors (deferred)
 
-1. Retain cycles: `aiStore(for:)`'s `onResult` captures its store; `scanView`'s `onAdded` captures its store, and
+1. (Done in Phase 8, PR #81.) Retain cycles: `aiStore(for:)`'s `onResult` captures its store; `scanView`'s `onAdded` captures its store, and
    `scanView` builds a `ScanStore` per body evaluation (`@State` keeps the first).
 2. `start_ai_generation`'s limit can be passed by two concurrent calls at 39 (the hard cap bounds it);
    `pg_advisory_xact_lock` would close it.
 3. The centre-delete cascade test runs with no `ai_generations` rows since the revoke.
 4. `sectionPlan` with more questions than marks drops the 0-mark section (fewer questions than asked).
 5. Homework and worksheet schemes carry no marks; Claude invents each question's maximum in a check.
-6. `normalisePhone` reads an 11-digit number with a trunk 0 (`09876543210`) as no number.
-7. The notes and draft limits count graphemes; Postgres counts code points (Indic text near 2000).
+6. (Done in Phase 8, PR #81.) `normalisePhone` reads an 11-digit number with a trunk 0 (`09876543210`) as no number.
+7. (Done in Phase 8, PR #81, D48.) The notes and draft limits count graphemes; Postgres counts code points (Indic text near 2000).
 8. One scan image: the app allows 4.2 M base64 characters, the API's schema 4.0 M.
 9. The "paper is no longer here" 400 goes through `errors.badImage`; `AI_FAKE=1` is not refused on Vercel.
 10. A parse failure is told by the SDK's error message text (brittle across SDK upgrades; the SDK is pinned).

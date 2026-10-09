@@ -463,8 +463,8 @@ The texts:
 | Text | Words |
 |---|---|
 | The AI line | "AI can make mistakes. Check everything before you share it." (the home); "… Check every question and answer before you share it." (a result); "… Read the note as the parent will." (a note); "… Check every name and number before you add them." (the register); "… Every mark is a suggestion until you save it." (a paper) |
-| The consent | "A photo of a register or an answer sheet carries children's names and details. It is sent to our AI service (Claude, by Anthropic) only to be read, and is not stored there or on our servers. Make sure the parents are fine with their details being kept in Tutor Central." |
-| The notices | "The photo goes to our AI service to be read and is not kept, there or here." · "Nothing is saved until you have checked every row and tapped Add." |
+| The consent | "A photo of a register or an answer sheet carries children's names and details. It is sent to our AI service (Claude, by Anthropic) only to be read. We keep no copy; the service deletes it within 30 days and never uses it for training. Make sure the parents are fine with their details being kept in Tutor Central." |
+| The notices | "The photo goes to our AI service to be read. We keep no copy; the service deletes it within 30 days." (Check a paper: "The photos … deletes them within 30 days.") · "Nothing is saved until you have checked every row and tapped Add." |
 | Send the note | The note as edited, a blank line, then the tutor's name and the centre's name (the absence alert's signature); the footnote "Opens WhatsApp with the note ready to send. We note the date on Hemanth's page. The text is copied too, in case WhatsApp can't open." |
 | The note on a student | "7 Oct · Quadratic equations · 15 of 20 · " then the AI's summary line as edited, appended to the student's notes on its own line |
 
@@ -539,7 +539,7 @@ The texts:
 
 - **No technical words on screen (D41).** The approved texts that said "server" were reworded in the build: "It's sent
   when you're back online.", "haven't been sent yet", "stays as it was", "This change couldn't be saved. Keep it here or
-  discard it.", and the consent "kept neither there nor by us". Pending changes' reason for a removed student uses "their",
+  discard it.", and the consent "kept neither there nor by us" (since Phase 8, the owner: "We keep no copy; the service deletes it within 30 days and never uses it for training", as `/privacy` says). Pending changes' reason for a removed student uses "their",
   not "his". A failure the app cannot name reads "That didn't go through. Try again."; a backend's own message never shows.
 - **Banner action.** Open Settings on the refused reminders banner is `bannerAction` (13/700, accentText), a new token.
 - **Picker list row and wheel.** `PickerListRow` and `WheelPopover` (the day of the month, the leads) are DesignSystem's.

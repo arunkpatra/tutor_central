@@ -2210,7 +2210,7 @@ rises the sheet's safe area shrinks, the `VStack` compresses the `ScrollView`, a
 keyboard while the note's well is clipped. The board (P8-Event-Edit-Keyboard) wants the fields unchanged, the well whole and
 focused, and Delete event under the keyboard, reached by a scroll or when the keyboard goes.
 
-- [ ] **Step 1: the launch state and its test**
+- [x] **Step 1: the launch state and its test**
 
 In `LaunchStateTests.theScheduleStatesPushOnTheMoreTab` add `.eventEditKeyboard` to the loop and
 `#expect(RootView.scheduleBoardState(.eventEditKeyboard) == .editEventKeyboard)`. In `EventFormStoreTests`:
@@ -2226,7 +2226,7 @@ In `LaunchStateTests.theScheduleStatesPushOnTheMoreTab` add `.eventEditKeyboard`
 
 Run: `bun check --only=ios` (or the two suites with the `xt.sh` of earlier sessions) → FAIL (no case, no function).
 
-- [ ] **Step 2: the state**
+- [x] **Step 2: the state**
 
 `LaunchState.swift`: `case eventEditKeyboard = "event-edit-keyboard"` after `eventEdit`. `RootView+LaunchStates.swift`: the
 state joins every list `eventEdit` is in (`tab(for:)` → `.more`; `initialRoutes` → `[.schedule]`); `scheduleBoardState` maps it
@@ -2234,7 +2234,7 @@ to `.editEventKeyboard`. `Fixtures.swift`: `attendance(for:)` and `clock(for:)` 
 `ScheduleBoardState` gains `case editEventKeyboard`, handled where `.editEvent` opens the edit sheet, passing
 `focusNote: boardState == .editEventKeyboard`.
 
-- [ ] **Step 3: the sheet**
+- [x] **Step 3: the sheet**
 
 In `EventFormSheet`: a new `let focusNote: Bool` (init default `false`), `@FocusState private var noteFocused: Bool`,
 `@State private var sheetHeight: CGFloat = 0`, `@State private var headerHeight: CGFloat = 0`. The body becomes:
@@ -2284,7 +2284,7 @@ Tokens.groupGap)` stays. `NotesWell` must accept `.focused` (it is a `TextEditor
 
 Run: `bun check --only=format,lint,ios` → green.
 
-- [ ] **Step 4: pictures, with the real keyboard**
+- [x] **Step 4: pictures, with the real keyboard**
 
 `bun shots event-edit` (unchanged: Delete at the bottom, as P4-Event-Edit) and `bun shots event-edit-keyboard`. The simulator
 shows its software keyboard only when the hardware keyboard is disconnected: before shooting, in the Simulator app's menu I/O →
@@ -2293,13 +2293,13 @@ and relaunch the simulator). If the launch state's picture still has no keyboard
 event, tap into the note, wait 1.5 s, `xcrun simctl io booted screenshot`; that picture is the PR's `event-edit-keyboard`.
 Compare with P8-Event-Edit-Keyboard: the fields at their size, the well whole with the focus ring, Delete not visible.
 
-- [ ] **Step 5: the hand run (the event write)**
+- [x] **Step 5: the hand run (the event write)**
 
 By the runbook: Schedule → the parents' meeting → Edit event → tap the note, type " Bring the receipts." (section 6), scroll
 down with the keyboard up and see Delete event, drag down to put the keyboard away, Save; the row shows the note; confirm
 `select note from calendar_events where title = 'Parents'' meeting'` (section 7). Keep the screenshots.
 
-- [ ] **Step 6: commit, the pull request**
+- [x] **Step 6: commit, the pull request**
 
 ```bash
 git checkout -b phase-8/u7-event-keyboard
@@ -2325,7 +2325,7 @@ Documents after: `plan/ui-polish.md` U7 to Done with the PR; `docs/design/inform
 - Produces: `ToastCenter.footerInset: CGFloat` (observable, 0 by default); `ToastHost.bottom(base:footerInset:) -> CGFloat`;
   `FooterButton` reports its height to the environment's `ToastCenter` while on screen.
 
-- [ ] **Step 1: the tests**
+- [x] **Step 1: the tests**
 
 ```swift
 import DesignSystem
@@ -2351,7 +2351,7 @@ import Testing
 
 Run → FAIL.
 
-- [ ] **Step 2: the code**
+- [x] **Step 2: the code**
 
 `ToastCenter`: `public private(set) var footerInset: CGFloat = 0`, `public func footerShown(height: CGFloat) { footerInset =
 height }`, `public func footerGone() { footerInset = 0 }`. `ToastHost`:
@@ -2396,7 +2396,7 @@ Students list's "7 students added" toast at its normal height (the `scan-saved` 
 - Produces: `LaunchState.scanReviewScrolled = "scan-review-scrolled"`, `.checkResultScrolled = "check-result-scrolled"`;
   `ScanBoardState.scrolled`, `CheckBoardState.scrolled`.
 
-- [ ] **Step 1: the test that reads the sources**
+- [x] **Step 1: the test that reads the sources**
 
 ```swift
 import Foundation
@@ -2428,7 +2428,7 @@ struct StatusBarGlassUseTests {
 Run → FAIL naming the AI and Scan files (Students, StudentDetail, ClassDetail, Classes already pass or join the fix; the test
 covers them all, which is the rule).
 
-- [ ] **Step 2: the modifier on each screen, and the scrolled states**
+- [x] **Step 2: the modifier on each screen, and the scrolled states**
 
 Add `.statusBarGlass()` to the `ScrollView` of each file the test names (right after the `ScrollView { … }` block, beside
 `.onGeometryChange`). `LaunchState`: the two cases; `RootView+LaunchStates`: `scanReviewScrolled` goes wherever `scanReview`
@@ -2440,7 +2440,7 @@ result). `LaunchStateTests`: the two states join the scan and check loops.
 
 Run: `bun check --only=format,lint,ios` → green.
 
-- [ ] **Step 3: pictures, the pull request**
+- [x] **Step 3: pictures, the pull request**
 
 `bun shots scan-review-scrolled`, `bun shots check-result-scrolled` (the glass under the clock, as P8-Scan-List-Scrolled and
 P8-Check-Marks-Scrolled), plus Task 10's `check-saved`, `scan-review-removed`, `scan-saved`. Hand run by the runbook: Scan
@@ -2468,7 +2468,7 @@ PR 5; merge on green; documents after: U16 and U24 to Done, the states in `infor
 - Modify: `Domain/StudentDraft.swift`, `EventDraft.swift`, `ClassroomDraft.swift`, `Generation.swift` (`within`), `CheckResult.swift`
   (`SchemeSource.isValid`), `StudentNote.swift` (`NotesAppend`), `DesignSystem/Components/NotesWell.swift` (the counter), their tests
 
-- [ ] **Step 1: the API's phone (minor 6)**
+- [x] **Step 1: the API's phone (minor 6)**
 
 In `api/test/prompts.test.ts` add:
 
@@ -2495,7 +2495,7 @@ export function normalisePhone(raw: string | null): string | null {
 (`PhoneNumber` in Swift already does this; the existing test `normalisePhone("4321")` still answers null; the first-digit rule
 `6` to `9` is `PhoneNumber`'s too: if an existing test used a number starting below 6, change its digits.) Run → PASS.
 
-- [ ] **Step 2: Domain counts scalars (minor 7)**
+- [x] **Step 2: Domain counts scalars (minor 7)**
 
 `StringLengthTests.swift`:
 
@@ -2542,7 +2542,7 @@ Replace `.count` with `.storedCount` in every limit check: `StudentDraft.problem
 `NotesAppend.append`; and `NotesWell`'s counter: `Text("\(text.storedCount.formatted()) of \(limit.formatted())")`. Run → PASS;
 `bun check --only=format,lint,ios` green.
 
-- [ ] **Step 3: the API counts code points too**
+- [x] **Step 3: the API counts code points too**
 
 In `api/test/schemas.test.ts`:
 
@@ -2567,7 +2567,7 @@ and use `z.string().min(1).refine(codePoints(2000), { message: "at most 2000 cha
 `refine(codePoints(4000), …)` for the typed scheme, and the same for every other `.max(n)` on tutor-typed text in the file
 (subject, topic, the note's fields). Run → PASS; `bun check --only=api` green.
 
-- [ ] **Step 4: commit**
+- [x] **Step 4: commit**
 
 ```bash
 git checkout -b phase-8/minors
@@ -2588,7 +2588,7 @@ git commit -m "Lengths count Unicode scalars in Domain, code points in the API, 
 - Produces: `ShellState.scan: ScanStore?` (`@ObservationIgnored`); `RootView.resultHandler(for:shell:) -> (Generation) -> Void`;
   `RootView.addedHandler(for:shell:toasts:) -> (Int) -> Void`; `ShellState.endScan()`.
 
-- [ ] **Step 1: the tests**
+- [x] **Step 1: the tests**
 
 ```swift
 import AITools
@@ -2649,7 +2649,7 @@ import Testing
 
 (`AppShellTests` imports `Students` already for the real register, by `ios/CLAUDE.md`.) Run → FAIL (no such functions).
 
-- [ ] **Step 2: the code**
+- [x] **Step 2: the code**
 
 `RootView+AITools.swift`:
 
@@ -2714,7 +2714,7 @@ holds for `FixRowSheet`).
 Run: `bun check --only=format,lint,ios` → green. Hand run: Scan register from More, Back (the Leave confirmation), then again from
 the Students "+" menu: the list starts fresh (a new store); Add, Undo from Students works (the toast's store).
 
-- [ ] **Step 3: commit, the pull request**
+- [x] **Step 3: commit, the pull request**
 
 ```bash
 bun check
