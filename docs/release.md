@@ -46,13 +46,13 @@ In the first week, try:
   register you already keep: Students, then "+", then "Scan paper register".
 - Mark attendance on each day you teach, and try "Tell parent" for an absent student.
 - Open Fees for this month: send a reminder, mark a fee paid, share the receipt.
-- Turn on reminders in Settings, and see one arrive before your next class.
+- Turn on reminders in More, then Settings, and see one arrive before your next class.
 - Make a question paper or a worksheet in AI Assistant, and share it as a PDF.
 - Check a photographed answer sheet against your marking scheme, and write a progress note.
 - Once, switch off Wi-Fi and mobile data, open the app and mark attendance; then switch them back on.
 
 If something is slow, confusing, wrong or missing: take a screenshot, tap it, tap Done, then "Share Beta Feedback".
-Or write to hello@tutorcentral.in from Settings, then Help.
+Or write to hello@tutorcentral.in from More, then Help.
 
 ### Earlier
 

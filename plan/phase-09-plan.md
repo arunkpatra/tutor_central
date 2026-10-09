@@ -63,6 +63,9 @@ Numbered in `plan/README.md` in the documents commit that records the plan's app
 
 Small decisions, written here so they are not re-decided:
 
+- Session 19: the guide and the notes say "More, then Settings" and "More, then Help" (Settings, Account and Help are under
+  the More tab, not tabs of their own), and "Save attendance" (the button's words); otherwise as written above.
+
 - The first Beta App Review build is the newest build on the internal group that the owner has passed on his phone: build
   1.0.0 (18) today, or the build that carries a fix for what he finds on it.
 - The tester is in the internal group already (build 13's crash came from there); the device checks D1 to D6 and D8 run from
@@ -212,7 +215,7 @@ git add docs/release.md plan/STATE.md && git commit -m "Release checklist and no
 - Produces: the guide the owner sends (Owner step 5); the findings file's three tables that Task 6 fills; the tester
   codes T1 to T6 every later task uses.
 
-- [ ] **Step 1: write the guide**, exactly this (the owner's WhatsApp number is already in the repository, in the review seed):
+- [x] **Step 1: write the guide**, exactly this (the owner's WhatsApp number is already in the repository, in the review seed):
 
 ```markdown
 # Trying Tutor Central before it is in the App Store
@@ -283,7 +286,7 @@ About.
   would rather remove everything: Settings, then Account, then "Delete account permanently".
 ```
 
-- [ ] **Step 2: check the guide's words.**
+- [x] **Step 2: check the guide's words.**
 
 ```bash
 grep -n -i -w -E 'server|servers|sync|syncing|synced|cache|cached|queue|queued|upload|uploaded|database|supabase|postgrest|api|http|json|token|backend|request|error code' docs/testing/tester-guide.md
@@ -293,7 +296,7 @@ grep -n -i -w -E 'server|servers|sync|syncing|synced|cache|cached|queue|queued|u
   (compare "Scan paper register", "Tell parent", "Teacher reminders", "Check a paper", "Delete account permanently" with the
   strings in `ios/TutorCentralKit/Sources`: `grep -rn '"Scan paper register"' ios/TutorCentralKit/Sources` finds each).
 
-- [ ] **Step 3: write the findings file**, exactly this skeleton:
+- [x] **Step 3: write the findings file**, exactly this skeleton:
 
 ```markdown
 # Phase 9 findings
@@ -344,7 +347,7 @@ how many.
   two under 10; Apple, Google and email each at least once; one iPhone 11 or 12; one on mobile data. A gap is said to the
   owner (he may swap a tutor or accept the gap, written in the table's row as "accepted").
 
-- [ ] **Step 5: `docs/testing/device-tests.md`**: D7's "Do" becomes "Install the build from the Tutors group's invitation email
+- [x] **Step 5: `docs/testing/device-tests.md`**: D7's "Do" becomes "Install the build from the Tutors group's invitation email
   (not the internal group)". Under "How to run", add: "For an external build, write the lines under that build's number; a
   test whose screens did not change since it passed may be carried as 'Pass on build N, unchanged'."
 

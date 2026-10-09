@@ -19,6 +19,8 @@ The tester writes results in the log at the end.
   service to be read and is not kept.
 - For each test, write a line in the log: the date, the build number, the test id, Pass or Fail, and what you saw. A
   Fail needs a screenshot (side button and volume up together) and a word on what you expected instead.
+- For an external build, write the lines under that build's number; a test whose screens did not change since it passed
+  may be carried as 'Pass on build N, unchanged'.
 
 ## Tests
 
@@ -78,7 +80,7 @@ The tester writes results in the log at the end.
 | D4 | On the oldest iPhone that runs iOS 26 you can borrow (an iPhone 11 or 12): cold-launch the app five times; scroll the Students list of 30 or more students and the Fees month quickly. | Today appears within about two seconds of the icon tap each time; scrolling never stutters. Note the phone model and anything slower. |
 | D5 | Sign in with Apple on a test Apple ID. Settings → Account → Delete account permanently → type the centre's name → Delete my account → confirm with Apple. Then on the phone: Settings → your name → Sign-In & Security → Sign in with Apple. | The Apple sheet appears before deletion; the sign-in landing says the account was deleted; Tutor Central is no longer in the phone's Sign in with Apple list; signing in with Apple again starts at onboarding with an empty centre. |
 | D6 | Account → Password → set one. Sign out. Continue with email → Use my password instead → the password. | Signs in without a code. |
-| D7 | Install the build from the external TestFlight group's invitation email (not the internal group). | It installs and signs in; the version on Settings reads 1.0 with the build number from the email. |
+| D7 | Install the build from the Tutors group's invitation email (not the internal group). | It installs and signs in; the version on Settings reads 1.0 with the build number from the email. |
 | D8 | Settings → Help → Email hello@tutorcentral.in. Then Settings → About → Privacy policy, and on the sign-in screen the "terms" link. | Mail opens a new message to hello@tutorcentral.in with the app's version in it (do not send it unless you mean to). The privacy page and the terms open in Safari at tutorcentral.in, in the phone's dark or light setting. |
 
 The simulator proved the reminder fires on time and that its link opens Attendance for the class (session 15, run 6); the
