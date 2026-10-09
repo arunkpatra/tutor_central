@@ -1868,7 +1868,7 @@ the boxes here; `docs/design/components.md` if any text moved.
 - Produces: `bun tools/web-smoke.ts <origin> --commit <sha>` exits 0 when the site is right; exports `webSmoke(origin, commit,
   { fetchLike, attempts, waitMs })` and `once(origin, commit, fetchLike)` for the test.
 
-- [ ] **Step 1: the smoke's test**
+- [x] **Step 1: the smoke's test**
 
 `tools/web-smoke.test.ts`:
 
@@ -2187,7 +2187,7 @@ By `docs/runbooks/simulator.md` sections 1 to 5 (the local stack, a Debug build,
 The four Safari screenshots go onto `pr-shots` (`bun pr-shots web-deploy …`) and into a comment on PR 3 with the smoke's
 output. Record the run's time and build in the session's record.
 
-- [ ] **Step 3: documents**
+- [x] **Step 3: documents**
 
 `plan/STATE.md` (Production: the website, its commit, the domain; Phase 8's status), `plan/README.md` (D44 to D49 confirmed with
 the deploy), `docs/release.md` (the two URLs ticked after Owner step 6), this plan's boxes. One documents commit to `main`.
@@ -2729,15 +2729,15 @@ PR 6 (no pictures: nothing seen changes; say so in the body and name the hand ru
 
 ### Task 14: the build with the polish slice, and the close
 
-- [ ] **Step 1: the hand run before the build (D32).** PRs 4 to 6 touch the event write (U7) and the scan's add (minor 1):
+- [x] **Step 1: the hand run before the build (D32).** PRs 4 to 6 touch the event write (U7) and the scan's add (minor 1):
   from a cold simulator, by the runbook: sign in; Edit event with a note and Save (confirmed in `calendar_events`); Scan register
   with the sample, Add 7, Undo, Add again, confirm `students` count; a typed-scheme check saved to notes (the notes counter and
   `NotesAppend` changed); a student's notes with Hindi text near 2,000 characters saved and read back (`char_length` in psql
   equals the counter). Screenshots kept on `pr-shots` under `phase-8-hand-run`.
-- [ ] **Step 2: `gh workflow run testflight`** → build 1.0.0 (14). The owner installs it and looks at Edit event with the keyboard,
+- [x] **Step 2: `gh workflow run testflight`** → build 1.0.0 (14). The owner installs it and looks at Edit event with the keyboard,
   a checked paper's Saved mark with its toast, and the scan list scrolled. What he reports is fixed in its own PR (bugs) or goes
   on the polish list.
-- [ ] **Step 3: documents.** `plan/phase-08-website.md` "As built" (what exists, what moved and why, what remains), `plan/README.md`
+- [x] **Step 3: documents.** `plan/phase-08-website.md` "As built" (what exists, what moved and why, what remains), `plan/README.md`
   (Phase 8 done; D44 to D49 final), `plan/STATE.md` (the website in Production; Phase 9 next, its first step the external group),
   `plan/ui-polish.md`, `docs/release.md`, the session record and `owner-messages.md`; `resume/017-phase-9-...` when the owner asks.
 

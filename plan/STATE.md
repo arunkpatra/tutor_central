@@ -3,15 +3,11 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-09, session 17 (the Phase 8 build, on Opus 5.5), in progress. **Session 17:** PRs #76 to #78: tutorcentral.in
-live (Home, `/privacy`, `/terms`, `/support`, not found) by `deploy-web` run 37929980186, the privacy URL in App Store Connect and
-TestFlight's Test Information: **Phase 9 can start**. D50 (no internal names on the site). PRs 4 to 6 (U7, U16, U24, Phase 6's
-minors) and build 14 next. **Session 16:** Phase 0 step 0.9 done: the
-website's 27 boards in row 11 of the canvas (the five pages at 1280 and 390, dark and light, as fluid frames; U7 and U24),
-approved and mirrored (`1af47d1`); `plan/phase-08-plan.md` approved (14 tasks, 6 PRs, 6 owner steps); decisions D44 to D49.
-**Session 15:** Phase 7 done in PRs #63 to #75; build 1.0.0 (13) on TestFlight; Phases 8 and 9 set (D42, D43).
-**Next:** Phase 8's build on Opus 5.5 from `resume/016-phase-8-build.md`: PRs 1 to 3 and the owner's steps put tutorcentral.in
-live and the privacy URL into App Store Connect (what Phase 9 waits for); PRs 4 to 6 and build 14 follow.
+**Last updated:** 2026-10-09, session 17 (the Phase 8 build, on Opus 5.5). **Session 17:** Phase 8 done in PRs #76 to #82:
+tutorcentral.in live (Home, `/privacy`, `/terms`, `/support`, not found) by `deploy-web` run 37929980186; the privacy URL in App
+Store Connect and TestFlight's Test Information; U7, U16, U24 and Phase 6's minors 1, 6, 7 in the app; D50; build 1.0.0 (14) on
+TestFlight. **Session 16:** the Phase 8 boards and plan. **Next:** Phase 9, user testing (D43): its plan, then the external group.
+The owner looks at build 14 (Edit event with the keyboard, a checked paper's Saved mark, the scan list scrolled).
 
 ## Where we are
 
@@ -25,13 +21,13 @@ live and the privacy URL into App Store Connect (what Phase 9 waits for); PRs 4 
 | 5 Fees, UPI settings, reminders, receipts, reports | Done, PRs #45 to #49, #51, #52 | "As built" in `phase-05-fees-and-reports.md` |
 | 6 AI tools | Done, PRs #53 to #60, #62; hand run #61 | "As built" in `phase-06-ai-tools.md`; device tests in `docs/testing/device-tests.md` |
 | 7 Settings, account, notifications, offline, hardening, release candidate | Done, PRs #63 to #73 | "As built" in `phase-07-settings-and-hardening.md`; the accessibility record in `docs/design/accessibility-pass.md`; the release checklist in `docs/release.md` |
-| 8 Website | Site live 2026-10-09 (PRs #76 to #78); the polish slice (PRs 4 to 6) and build 14 in progress | `phase-08-plan.md`: `web/` in Next.js (static export, D44) on a second Vercel project by `deploy-web.yml` (D45), pictures by `web-shots` (D46), the `web` check step (D47); U7, U16, U24 and Phase 6's minors 1, 6, 7 as PRs 4 to 6 (D48, D49) |
-| 9 User testing | Not started | `phase-09-user-testing.md` (D43): tutors on TestFlight's external group, the tester's device tests, triage, before the App Store |
+| 8 Website | Done, PRs #76 to #82 | "As built" in `phase-08-website.md`; build 1.0.0 (14) | `phase-08-plan.md`: `web/` in Next.js (static export, D44) on a second Vercel project by `deploy-web.yml` (D45), pictures by `web-shots` (D46), the `web` check step (D47); U7, U16, U24 and Phase 6's minors 1, 6, 7 as PRs 4 to 6 (D48, D49) |
+| 9 User testing | Next: ready to start (the privacy URL is in App Store Connect) | `phase-09-user-testing.md` (D43): tutors on TestFlight's external group, the tester's device tests, triage, before the App Store |
 
 ## In flight
 
-Phase 8's PRs 4 to 6 (Tasks 9 to 13) and Task 14 (build 14, the close); the ledger is `plan/sessions/017/ledger.md`. TestFlight 1.0.0 (13) from `d7ee9f5` (run 37913258080) is for the owner's phone. Merged `phase-7/*` branches
-remain on the remote; delete them when convenient. The tester's device tests (D1 to D7) wait for Phase 9's external group.
+Nothing open. TestFlight 1.0.0 (14) from `dbe673f` (run 37938735658) is for the owner's phone. Merged `phase-7/*` and `phase-8/*`
+branches remain on the remote; delete them when convenient.
 
 ## Production
 
@@ -59,22 +55,23 @@ remain on the remote; delete them when convenient. The tester's device tests (D1
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (13) by run 37913258080 is the latest. Each run revokes the Apple Development certificate it makes (#75): a
+  run number. 1.0.0 (14) by run 37938735658 is the latest (13 by run 37913258080 before it). Each run revokes the Apple Development certificate it makes (#75): a
   fresh runner makes one per run and the account's cap stopped run 12 after eleven (the owner revoked them, 2026-10-09).
 
 ## Open items
 
+- **Phase 8 review minors (deferred):** in `plan/sessions/017/record.md` (nine; one is the owner's wording: "deletes it
+  within 30 days" is absolute while Anthropic keeps flagged inputs longer; also the terms' "What it costs" for him to read).
 - **Phase 7 review minors (deferred):** in `plan/sessions/015/record.md`: sign-out does not stop a run in progress; a
   timed-out delete says "Nothing was removed"; the fee reminder after its day names next month with this month's count; a
   timed-out absence log can be noted twice; the API reads `APPLE_*` at boot and does not refuse `APPLE_FAKE` in production;
   two tests the plan named. Earlier phases' minors: `plan/sessions/004`, `006`, `009`, `011`, `013` records (Phase 6's 1, 6
-  and 7 are Phase 8's).
+  and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google): Google's own G and colours, the three buttons pills; in build 13.
 - **TestFlight's external group and Beta App Review:** the privacy URL and test information are set (2026-10-09); Phase 9 runs them (D43).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
-- **UI polish:** `plan/ui-polish.md`: U5, U7, U8, U10, U11, U13 to U30 open; U1 to U4, U6, U9, U12 done. U7, U16 and U24
-  are Phase 8's (the owner, 2026-10-09): boards P8-Event-Edit-Keyboard, P8-Scan-List-Scrolled, P8-Check-Marks-Scrolled; U16 needs
-  none (P6-Check-Saved already draws the toast above the footer).
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U32 open; U1 to U4, U6, U7, U9, U12, U16, U24 done. U7, U16 and U24
+  were Phase 8's and are done (#79, #80); U31 (Home's phone at 320) and U32 (the glass on the other pushed screens) are new.
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.

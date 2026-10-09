@@ -1,6 +1,6 @@
 # Phase 8: The product website, tutorcentral.in
 
-**Status:** Boards (step 0.9, 27 in row 11) and the plan (`phase-08-plan.md`) approved 2026-10-09 (session 16); the build is next on Opus 5.5 (resume 016). **Next:**
+**Status:** Done 2026-10-09 (session 17, Opus 5.5): tutorcentral.in live, PRs #76 to #82, build 1.0.0 (14). **Next:**
 Phase 9, user testing (D43), which needs this phase's privacy page for TestFlight's external group. **Depends on:** Phase 0's website boards
 approved; the domain `tutorcentral.in`, which the owner has bought. **Must be live before:** the first App Store
 submission (Phase 7's release candidate), because App Store review asks for a privacy policy URL, and the app
@@ -39,4 +39,39 @@ App Store review somewhere to reach the owner.
 
 ## As built
 
-(Written when the phase ends.)
+Session 17 (2026-10-09, Opus 5.5, from `resume/016-phase-8-build.md`), the plan's 14 tasks in seven pull requests:
+
+| PR | What |
+|---|---|
+| #76 | `web/`: Next.js 16.4.0 static export (D44), the tokens as CSS with their test, the frame and parts, Home and not found; `bun web-shots` (D46); the `web` step in `bun check` and CI (D47) |
+| #77 | `/privacy`, `/terms`, `/support` with the owner's answers (GoodGround LLP, Bangalore; 30 days' notice; the AI service deletes within 30 days and never trains); D50, no internal names on the site |
+| #78 | `deploy-web.yml` (D45) and `tools/web-smoke.ts`; `web/vercel.json` (git deploys off, a trailing slash redirects) |
+| #79 | U7: Edit event keeps its fields and the note whole with the keyboard up; Delete scrolls under it |
+| #80 | U16 (D49): a toast lifts above any footer; U24: the glass under the status bar on the pushed AI and scan screens |
+| #81 | Phase 6's minors: trunk-0 phones in the API (6), lengths counted as Postgres counts (7, D48), stores that let go and one scan store per visit (1); the photos' 30-day words in the app |
+| #82 | The whole-phase review's two Important fixes: a sheet's toast ignores a covered footer; the `web` step watches Help's answers |
+
+**Production:** tutorcentral.in on Vercel `tutor-central-web` (root `web`, git deploys off), commit `f3f734d` by deploy-web run
+37929980186, the smoke green; GoDaddy: `A @ 216.198.79.1`, `www` → the apex (Vercel's 307); Resend's records and `api` untouched.
+The privacy URL and the test information are in App Store Connect (App Information, TestFlight). TestFlight 1.0.0 (14) by run
+37938735658 with PRs #79 to #82.
+
+**Where it moved from the plan, and why** (every ruling with its cost is in `plan/sessions/017/ledger.md`):
+- D50, from the owner on the legal pages: no vendor or internal technology on the site; `/privacy` describes the services by
+  role and names only the AI service (as the app's consent does). The boards' hosting sentences and the backup sentence were
+  reworded or dropped; a test refuses the internal names.
+- Supabase Free keeps no backups, so `/privacy` makes no backup claim (the claims table says so); a move to a plan with backups
+  changes the page.
+- The owner chose "within 30 days" for Anthropic's retention; the app's consent sheet, Help and the two intros now say the same.
+- Next 16 writes `next-env.d.ts` with imports of generated types: it is ignored and `next typegen` runs before `tsc`.
+- The hero's glow made a 320 px phone lay Home out 804 px wide: `main` clips it (on `body` it moved to the viewport).
+- U7's column keeps the note's size by an explicit gap above Delete, not a Spacer (which grew the editor); the sheet sets
+  interactive keyboard dismissal itself.
+- U16's footers are tracked by id, so a pop in either order leaves the right one; a sheet's toast ignores them (#82).
+- U24 covers the eleven AI and scan screens; the other pushed screens without the glass are U32 (no board yet).
+- zod 4.6.5 already counts code points; the API's limits needed no change, a test pins it.
+- Scan register's visit is counted by its pushes (like Check a paper's visit id); no `onDisappear` ending (a camera cover fires it).
+
+**What remains:** the review's nine minors (deferred, in the ledger and the session record); U31 and U32 on the polish list;
+Apple's badge artwork once the app is live; the owner's read of "deletes it within 30 days" (Anthropic keeps flagged inputs
+longer) and of the terms' "What it costs".
