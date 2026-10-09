@@ -122,9 +122,9 @@ public struct CheckResultView: View {
                 .accessibilityElement(children: .combine)
             }
             VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                HStack(alignment: .firstTextBaseline) {
+                AdaptiveRow(alignment: .firstTextBaseline, spacing: nil) {
                     Text("Questions").typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
-                    Spacer()
+                    AdaptiveSpacer()
                     Text("Tap a mark to change it").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                 }
                 .padding(.horizontal, Tokens.rowGapInner)

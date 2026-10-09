@@ -27,10 +27,13 @@ public struct HistoryRow: View {
 
     public var body: some View {
         ListRow(action: action) {
-            DayColumn(top: day, bottom: date)
-            RowLines(title: title, line: line, lineTone: lineTone)
-            if let trailing {
-                Text(trailing).typeStyle(Tokens.footnoteStrong).monospacedDigit().foregroundStyle(Tokens.overdue.color)
+            AdaptiveRow {
+                DayColumn(top: day, bottom: date)
+                RowLines(title: title, line: line, lineTone: lineTone)
+                if let trailing {
+                    Text(trailing).typeStyle(Tokens.footnoteStrong).monospacedDigit()
+                        .foregroundStyle(Tokens.overdue.color)
+                }
             }
             Chevron()
         }
@@ -87,8 +90,10 @@ public struct AbsentStudentRow<Trailing: View>: View {
     public var body: some View {
         HStack(spacing: Tokens.rowPaddingDense) {
             Avatar(name: name)
-            RowLines(title: name, line: line, lineTone: nil)
-            trailing
+            AdaptiveRow {
+                RowLines(title: name, line: line, lineTone: nil)
+                trailing
+            }
         }
         .padding(.vertical, Tokens.rowPaddingDense)
         .padding(.horizontal, Tokens.rowPaddingHorizontal)

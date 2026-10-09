@@ -65,7 +65,9 @@ public struct HelpView: View {
                         }
                     } label: {
                         // Verbatim: as a localized key the address becomes a link drawn in the button's own colour.
-                        Label { Text(verbatim: "Email hello@tutorcentral.in") } icon: { Image(systemName: "envelope") }
+                        Label { Text(verbatim: "Email hello@tutorcentral.in").singleLineTitle() } icon: {
+                            Image(systemName: "envelope")
+                        }
                     }
                     .buttonStyle(.primary(.card))
                     Text("Opens Mail with the app's version filled in, so we know what you're on.")

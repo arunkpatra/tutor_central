@@ -92,9 +92,9 @@ public struct PickerListRow: View {
 
     public var body: some View {
         Button(action: action) {
-            HStack(spacing: Tokens.rowPaddingDense) {
+            AdaptiveRow {
                 Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
-                Spacer(minLength: Tokens.inline)
+                AdaptiveSpacer(minLength: Tokens.inline)
                 PickerValue(value)
             }
             .padding(.vertical, Tokens.rowPaddingVertical)

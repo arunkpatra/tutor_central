@@ -75,16 +75,13 @@ public struct SignInView: View {
         }
     }
 
+    /// One page as drawn; when the larger text sizes make it taller than the screen, the same page scrolls instead of
+    /// squeezing its words.
     private var landing: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            logo
-            promise.padding(.top, Tokens.heroLead)
-            Spacer(minLength: Tokens.sectionGap)
-            buttons
+        ViewThatFits(in: .vertical) {
+            landingPage
+            ScrollView { landingPage }
         }
-        .padding(.top, Tokens.heroTop)
-        .padding(.horizontal, Tokens.heroInset)
-        .padding(.bottom, Tokens.pageSide)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background { HeroGlow() }
         .background(Tokens.ground.color)
@@ -94,6 +91,18 @@ public struct SignInView: View {
                 onMessage(message)
             }
         }
+    }
+
+    private var landingPage: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            logo
+            promise.padding(.top, Tokens.heroLead)
+            Spacer(minLength: Tokens.sectionGap)
+            buttons
+        }
+        .padding(.top, Tokens.heroTop)
+        .padding(.horizontal, Tokens.heroInset)
+        .padding(.bottom, Tokens.pageSide)
     }
 
     private var logo: some View {

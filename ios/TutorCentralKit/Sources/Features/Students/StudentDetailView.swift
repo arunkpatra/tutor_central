@@ -114,20 +114,12 @@ public struct StudentDetailView: View {
     }
 
     private func navigationRow(_ student: Student?) -> some View {
-        ZStack {
-            Text(student?.name ?? "")
-                .typeStyle(Tokens.headline)
-                .foregroundStyle(Tokens.text.color)
-                .lineLimit(1)
-                .padding(.horizontal, IconButton.size + Tokens.inline)
-            HStack {
-                IconButton(symbol: "chevron.left", label: "Back") { dismiss() }
-                Spacer()
-                if student != nil {
-                    Button("Edit", action: edit).buttonStyle(.quiet)
-                }
-            }
-        }
+        BackRow(title: student?.name ?? "", action: student == nil ? nil : editAction) { dismiss() }
+    }
+
+    /// A typed property: a ternary of tuples inline stalls the type checker (ios/CLAUDE.md).
+    private var editAction: (label: String, run: () -> Void) {
+        ("Edit", edit)
     }
 
     private func header(_ student: Student) -> some View {

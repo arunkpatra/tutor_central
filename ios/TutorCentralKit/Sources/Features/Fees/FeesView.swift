@@ -93,6 +93,7 @@ public struct FeesView: View {
         HStack(alignment: .lastTextBaseline) {
             Text("Fees")
                 .typeStyle(Tokens.display)
+                .singleLineTitle()
                 .foregroundStyle(Tokens.text.color)
                 .accessibilityAddTraits(.isHeader)
             Spacer(minLength: Tokens.inline)

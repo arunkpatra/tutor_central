@@ -24,6 +24,10 @@ public struct Avatar: View {
         Text(initials)
             .typeStyle(size <= 36 ? Tokens.avatarSmall : size >= 56 ? Tokens.avatarLarge : Tokens.avatar)
             .foregroundStyle(Tokens.accentText.color)
+            // The circle keeps its size; at the largest text sizes the initials shrink into it instead of "…".
+            .lineLimit(1)
+            .minimumScaleFactor(SingleLineTitle.smallest)
+            .padding(.horizontal, Tokens.rowGapInner)
             .frame(width: size, height: size)
             .background(Tokens.accentTint.color, in: .circle)
             .accessibilityHidden(true)

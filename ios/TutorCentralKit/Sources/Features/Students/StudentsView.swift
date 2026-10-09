@@ -146,6 +146,7 @@ public struct StudentsView: View {
             HStack(alignment: .bottom) {
                 Text("Students")
                     .typeStyle(Tokens.display)
+                    .singleLineTitle()
                     .foregroundStyle(Tokens.text.color)
                     .accessibilityAddTraits(.isHeader)
                 Spacer(minLength: Tokens.inline)

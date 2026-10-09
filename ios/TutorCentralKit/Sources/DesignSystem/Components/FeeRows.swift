@@ -33,7 +33,7 @@ public struct FeeButtons: View {
     }
 
     public var body: some View {
-        HStack(spacing: Tokens.tileGap) {
+        AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
             if let remind {
                 Button(action: remind) {
                     Label("Remind", systemImage: "bell")
@@ -69,13 +69,13 @@ public struct FeeRow: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: Tokens.tileGap) {
-            HStack(alignment: .top, spacing: Tokens.rowPaddingDense) {
+            AdaptiveRow(alignment: .top) {
                 VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                     Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
                     lineView
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                VStack(alignment: .trailing, spacing: Tokens.rowGapInner * 2) {
+                TrailingColumn(spacing: Tokens.rowGapInner * 2) {
                     Text(amount).typeStyle(Tokens.numberRow).monospacedDigit().foregroundStyle(Tokens.text.color)
                     Chip(chip, compact: true)
                 }

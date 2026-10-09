@@ -41,17 +41,19 @@ public struct SettingRow<Trailing: View>: View {
                     .foregroundStyle(Tokens.text2.color)
                     .frame(width: Tokens.iconButton + Tokens.fieldGap)
             }
-            VStack(alignment: .leading, spacing: SettingRowMetrics.lineGap) {
-                Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
-                if let line {
-                    Text(line)
-                        .typeStyle(Tokens.footnote)
-                        .foregroundStyle(Tokens.text2.color)
-                        .fixedSize(horizontal: false, vertical: true)
+            AdaptiveRow {
+                VStack(alignment: .leading, spacing: SettingRowMetrics.lineGap) {
+                    Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
+                    if let line {
+                        Text(line)
+                            .typeStyle(Tokens.footnote)
+                            .foregroundStyle(Tokens.text2.color)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
+                AdaptiveSpacer(minLength: Tokens.inline)
+                trailing
             }
-            Spacer(minLength: Tokens.inline)
-            trailing
             if action != nil {
                 Chevron()
             }
@@ -189,14 +191,16 @@ public struct StudentRow: View {
     public var body: some View {
         ListRow(action: action) {
             Avatar(initials: initials)
-            RowTitles(title: name, titleMatch: nameMatch, subtitle: detail)
-            if let fee {
-                VStack(alignment: .trailing, spacing: Tokens.rowGapInner) {
-                    Text(fee).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
-                    if let status {
-                        Text(status.text)
-                            .typeStyle(Tokens.captionStrong)
-                            .foregroundStyle((status.tone?.color ?? Tokens.text2).color)
+            AdaptiveRow {
+                RowTitles(title: name, titleMatch: nameMatch, subtitle: detail)
+                if let fee {
+                    TrailingColumn {
+                        Text(fee).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)
+                        if let status {
+                            Text(status.text)
+                                .typeStyle(Tokens.captionStrong)
+                                .foregroundStyle((status.tone?.color ?? Tokens.text2).color)
+                        }
                     }
                 }
             }
@@ -264,13 +268,16 @@ public struct AttendanceRow: View {
             toggle()
             Haptic.play(.selection)
         } label: {
-            HStack(spacing: Tokens.rowPaddingDense) {
+            AdaptiveRow {
                 Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(present ? "Present" : "Absent")
                     .typeStyle(Tokens.segmentActive)
                     .foregroundStyle((present ? Tokens.okInk : Tokens.overdueInk).color)
-                    .frame(width: Self.pillSize.width, height: Self.pillSize.height)
+                    .lineLimit(1)
+                    // At least the board's 96 × 40; wider and taller with the text at the larger sizes.
+                    .padding(.horizontal, Tokens.rowPaddingDense)
+                    .frame(minWidth: Self.pillSize.width, minHeight: Self.pillSize.height)
                     .background(
                         (present ? Tokens.ok : Tokens.overdue).color,
                         in: .rect(cornerRadius: Tokens.radiusSegmentTrack, style: .continuous)

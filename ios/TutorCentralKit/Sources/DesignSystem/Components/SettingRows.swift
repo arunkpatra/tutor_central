@@ -127,7 +127,8 @@ public struct AccountHero: View {
             Avatar(initials: initials, size: Self.avatarSize)
             VStack(alignment: .leading, spacing: SettingRowMetrics.lineGap) {
                 Text(name).typeStyle(Tokens.emptyTitle).foregroundStyle(Tokens.text.color)
-                Text(email).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color).lineLimit(1)
+                // One line as drawn; an address never breaks, it shrinks.
+                Text(email).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color).singleLineTitle()
             }
             Spacer(minLength: 0)
         }

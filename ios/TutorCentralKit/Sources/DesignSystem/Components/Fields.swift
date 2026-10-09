@@ -308,9 +308,9 @@ public struct PickerRow<Option: Hashable>: View {
     }
 
     public var body: some View {
-        HStack {
+        AdaptiveRow(spacing: nil) {
             Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
-            Spacer(minLength: Tokens.inline)
+            AdaptiveSpacer(minLength: Tokens.inline)
             Menu {
                 Picker(label, selection: $selection) {
                     ForEach(options, id: \.0) { option, title in
@@ -325,7 +325,8 @@ public struct PickerRow<Option: Hashable>: View {
                 .foregroundStyle(Tokens.accentText.color)
             }
         }
-        .frame(height: Well<EmptyView>.height)
+        .growsWithText()
+        .frame(minHeight: Well<EmptyView>.height)
         .padding(.horizontal, Tokens.cardPaddingCompact)
         .surface(radius: Tokens.radiusControl)
     }

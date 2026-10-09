@@ -13,6 +13,7 @@ struct MoreView: View {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 Text("More")
                     .typeStyle(Tokens.display)
+                    .singleLineTitle()
                     .foregroundStyle(Tokens.text.color)
                     .accessibilityAddTraits(.isHeader)
                 group("Organise") {
