@@ -78,7 +78,15 @@ export const STEPS: Step[] = [
   },
   {
     name: "tools",
-    inputs: ["tools/**/*.ts", "package.json", "tsconfig.json", "bun.lock"],
+    inputs: [
+      "tools/**/*.ts",
+      "package.json",
+      "tsconfig.json",
+      "bun.lock",
+      // store-shots.test reads the Store boards and the launch states they name.
+      "docs/design/mockups/Store-*.dc.html",
+      "ios/TutorCentralKit/Sources/AppShell/LaunchState.swift",
+    ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
       await run("bun test tools");
