@@ -40,4 +40,11 @@ import Testing
         toasts.footerGone(root)
         #expect(toasts.footerInset == 0)
     }
+
+    @Test func aToastOverASheetIsNotLiftedByAFooterTheSheetCovers() {
+        // A FooterButton under a presented sheet never disappears, so it stays registered; the sheet's own host ignores
+        // it (the sheet's own button is SheetToasts' aboveFooter) and the toast sits at its base.
+        #expect(ToastHost.bottom(base: Tokens.pageSide, footerInset: 98, liftsOverFooters: false) == Tokens.pageSide)
+        #expect(!SheetToasts.liftsOverFooters)
+    }
 }

@@ -33,3 +33,10 @@ test("a failing test reports at once instead of stalling ten minutes collecting 
   expect(iosTestCommand()).toContain(" test-without-building ");
   expect(iosTestCommand()).toContain(" -collect-test-diagnostics never");
 });
+
+test("the web step runs again when a file its tests read changes", () => {
+  const web = STEPS.find((s) => s.name === "web");
+  // pages.test.ts holds /support's answers to Help's in the app; tokens.test.ts reads the token document.
+  expect(web?.inputs).toContain("ios/TutorCentralKit/Sources/Features/Settings/Help/HelpView.swift");
+  expect(web?.inputs).toContain("docs/design/design-tokens.md");
+});
