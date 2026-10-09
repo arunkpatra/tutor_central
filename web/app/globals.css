@@ -184,6 +184,16 @@ ul {
   padding-top: 0;
   padding-bottom: 40px;
 }
+.sec.flush {
+  padding-top: 0;
+}
+.sec.cta {
+  padding-top: 0;
+  padding-bottom: 48px;
+}
+p.updated {
+  color: var(--text3);
+}
 .title {
   display: flex;
   flex-direction: column;

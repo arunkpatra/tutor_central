@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { LegalPage, Part } from "@/content/legal";
 import { Icon, type IconName } from "./Icon";
 import { SiteFooter } from "./SiteFooter";
 import { type Current, SiteHeader } from "./SiteHeader";
@@ -26,10 +27,18 @@ export function PageTitle({ eyebrow, title, line }: { eyebrow: string; title: st
   );
 }
 
-export function Section({ children, tight = false }: { children: ReactNode; tight?: boolean }) {
+/** A section of a page. `tight`: no top padding and 40 below (the legal pages' sections); `flush`: no top padding (a
+ *  section that follows a title); `cta`: no top padding and 48 below (Support's email). */
+export function Section({
+  children,
+  space = "normal",
+}: {
+  children: ReactNode;
+  space?: "normal" | "tight" | "flush" | "cta";
+}) {
   return (
     <section className="wrap">
-      <div className={tight ? "sec tight" : "sec"}>{children}</div>
+      <div className={space === "normal" ? "sec" : `sec ${space}`}>{children}</div>
     </section>
   );
 }
@@ -97,5 +106,40 @@ export function TextLink({ href, children }: { href: string; children: ReactNode
     <a href={href} className="textLink">
       {children}
     </a>
+  );
+}
+
+function PartView({ part }: { part: Part }) {
+  if (part.kind === "h3") return <h3 className="h3">{part.text}</h3>;
+  return (
+    <p>
+      {part.text}
+      {part.link ? (
+        <>
+          <TextLink href={part.link.href}>{part.link.label}</TextLink>
+          {part.link.after}
+        </>
+      ) : null}
+    </p>
+  );
+}
+
+/** /privacy and /terms: the title, the date, then each section's heading and parts at the column's width, 28 apart. */
+export function LegalDocument({ page, current }: { page: LegalPage; current: Current }) {
+  return (
+    <Page current={current}>
+      <PageTitle eyebrow={page.eyebrow} title={page.title} line={page.line} />
+      <Section space="tight">
+        <p className="small updated">{page.updated}</p>
+      </Section>
+      {page.sections.map((section) => (
+        <Section key={section.heading} space="tight">
+          <h2 className="h2">{section.heading}</h2>
+          {section.parts.map((part) => (
+            <PartView key={part.text} part={part} />
+          ))}
+        </Section>
+      ))}
+    </Page>
   );
 }

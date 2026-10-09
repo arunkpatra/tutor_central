@@ -80,7 +80,7 @@ export const HOME = {
     },
     {
       title: "Your records stay in India",
-      line: "Kept in a database in Mumbai. Only you, signed in, can see your centre.",
+      line: "Kept in India. Only you, signed in, can see your centre.",
     },
     {
       title: "Nothing is sent to parents on its own",
