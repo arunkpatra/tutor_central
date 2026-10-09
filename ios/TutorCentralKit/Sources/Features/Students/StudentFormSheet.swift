@@ -13,6 +13,9 @@ public struct StudentFormSheet: View {
     let onSave: (StudentDraft) async -> Bool
     let onClose: () -> Void
     let onRemove: (() -> Void)?
+    /// Makes a class from the menu's New class… (P7-NewStudent-NewClass); nil hides it (a scanned row).
+    let addClass: ((ClassroomDraft) async -> Classroom?)?
+    @State private var newClass: ClassFormStore?
     @State private var saving = false
     @State private var confirmingDiscard = false
     @State private var pickingBirthDate = false
@@ -25,7 +28,9 @@ public struct StudentFormSheet: View {
         autofocus: Bool = true,
         onSave: @escaping (StudentDraft) async -> Bool,
         onClose: @escaping () -> Void,
-        onRemove: (() -> Void)? = nil
+        onRemove: (() -> Void)? = nil,
+        addClass: ((ClassroomDraft) async -> Classroom?)? = nil,
+        boardNewClass: ClassFormStore? = nil
     ) {
         self.store = store
         self.showsFocus = showsFocus
@@ -33,6 +38,8 @@ public struct StudentFormSheet: View {
         self.onSave = onSave
         self.onClose = onClose
         self.onRemove = onRemove
+        self.addClass = addClass
+        _newClass = State(initialValue: boardNewClass)
     }
 
     public var body: some View {
@@ -60,6 +67,19 @@ public struct StudentFormSheet: View {
         .animation(.timingCurve(Tokens.easeOut, duration: Tokens.panel), value: confirmingDiscard)
         .modifier(SheetToasts())
         .interactiveDismissDisabled(store.isChanged)
+        .sheet(item: $newClass) { form in
+            // On top of this form; saved, the class is chosen here (P7-NewStudent-ClassMade).
+            ClassFormSheet(
+                store: form,
+                autofocus: true,
+                onSave: { draft in
+                    guard let made = await addClass?(draft) else { return false }
+                    store.classAdded(made)
+                    return true
+                },
+                onClose: { newClass = nil }
+            )
+        }
         .presentationDetents([.large])
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
@@ -93,15 +113,7 @@ public struct StudentFormSheet: View {
                 showsFocus: showsFocus && !isFix,
                 autofocus: autofocus && isNew
             )
-            Menu {
-                Button("No class") { store.select(classID: nil) }
-                ForEach(store.classes) { classroom in
-                    Button(classroom.name) { store.select(classID: classroom.id) }
-                }
-            } label: {
-                PickerTile(label: "Class", value: store.classLabel) {}
-            }
-            .accessibilityLabel("Class, \(store.classLabel)")
+            ClassMenu(store: store, canAdd: addClass != nil) { newClass = ClassFormStore(mode: .new) }
             TextWell(
                 label: "Monthly fee",
                 text: $store.feeText,

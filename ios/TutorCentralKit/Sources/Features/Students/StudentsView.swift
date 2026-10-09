@@ -12,6 +12,10 @@ public enum StudentsBoardState: Sendable {
     case newStudentEmpty
     case newStudentFilled
     case newStudentInvalid
+    /// New class… from the student form's menu: the class sheet on top (P7-NewStudent-NewClass).
+    case newStudentNewClass
+    /// The new class chosen on the form (P7-NewStudent-ClassMade).
+    case newStudentClassMade
 }
 
 /// Pushes on the Students tab. AppShell owns the stack; the feature asks for a screen.
@@ -112,7 +116,9 @@ public struct StudentsView: View {
                 showsFocus: boardState == .newStudentEmpty,
                 autofocus: boardState == nil,
                 onSave: { await store.addStudent($0) != nil },
-                onClose: { newStudent = nil }
+                onClose: { newStudent = nil },
+                addClass: { await store.addClass($0) },
+                boardNewClass: boardState == .newStudentNewClass ? ClassFormSheet.fixture() : nil
             )
         }
         .sheet(item: $newClass) { form in
@@ -171,7 +177,9 @@ public struct StudentsView: View {
     }
 
     private func addStudent() {
-        newStudent = StudentFormStore(mode: .new, classes: store.activeClasses, today: store.today)
+        let form = StudentFormStore(mode: .new, classes: store.activeClasses, today: store.today)
+        form.memberCounts = Dictionary(grouping: store.activeStudents.compactMap(\.classID)) { $0 }.mapValues(\.count)
+        newStudent = form
     }
 
     private func createClass() {
@@ -188,8 +196,15 @@ public struct StudentsView: View {
             store.sort = .fee
         case .addMenu:
             showsMenu = true
-        case .newStudentEmpty:
+        case .newStudentEmpty, .newStudentNewClass:
             addStudent()
+        case .newStudentClassMade:
+            addStudent()
+            let physics = Classroom(
+                id: UUID(), name: "Class 12 Physics", subject: "Physics", monthlyFee: Money(rupees: 1500),
+                meetingDays: [.tuesday, .thursday, .saturday], startTime: nil, endTime: nil, archivedAt: nil
+            )
+            newStudent?.classAdded(physics)
         case .newStudentFilled, .newStudentInvalid:
             newStudent = StudentFormSheet.fixture(
                 invalid: boardState == .newStudentInvalid,

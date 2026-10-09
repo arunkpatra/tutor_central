@@ -17,6 +17,21 @@ import Testing
         #expect(form.canSave && form.draft.trimmedName == "Riya Sharma" && form.draft.fee == nil)
     }
 
+    /// P7-NewStudent-ClassMade: a class made from the form's menu joins the menu, is chosen, and its fee is used.
+    @Test func aClassMadeFromTheFormIsChosen() {
+        let form = StudentFormStore(mode: .new, classes: [], today: today)
+        form.memberCounts = [FakeClassesRepository.maths.id: 6]
+        let physics = Classroom(
+            id: UUID(), name: "Class 12 Physics", subject: "Physics", monthlyFee: Money(rupees: 1500), meetingDays: [],
+            startTime: nil, endTime: nil, archivedAt: nil
+        )
+        form.classAdded(physics)
+        #expect(form.classes == [physics] && form.classID == physics.id && form.classLabel == "Class 12 Physics")
+        #expect(form.feeHelper == "Using the class fee, ₹1,500. Type an amount to set one for this student.")
+        #expect(form.membersLine(physics.id) == "No students yet")
+        #expect(form.membersLine(FakeClassesRepository.maths.id) == "6 students")
+    }
+
     @Test func anUntouchedFeeFollowsTheClassATypedOneStays() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
         form.name = "Riya Sharma"

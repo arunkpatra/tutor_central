@@ -11,7 +11,9 @@ import Observation
     }
 
     public let mode: Mode
-    public let classes: [Classroom]
+    public private(set) var classes: [Classroom]
+    /// How many students each class has, for the class menu's second line (P7-NewStudent-ClassMenu).
+    public var memberCounts: [UUID: Int] = [:]
     public let today: Day
     private let original: StudentDraft?
 
@@ -165,6 +167,21 @@ import Observation
 
     public func select(classID: UUID?) {
         self.classID = classID
+    }
+
+    /// New class… from the menu, saved (P7-NewStudent-ClassMade): it joins the menu and is chosen; its fee is used.
+    public func classAdded(_ classroom: Classroom) {
+        classes = (classes.filter { $0.id != classroom.id } + [classroom]).sorted { $0.name < $1.name }
+        select(classID: classroom.id)
+    }
+
+    /// "6 students", "1 student", "No students yet".
+    public func membersLine(_ classID: UUID) -> String {
+        switch memberCounts[classID] ?? 0 {
+        case 0: "No students yet"
+        case 1: "1 student"
+        case let count: "\(count) students"
+        }
     }
 
     public func commitPhone() {
