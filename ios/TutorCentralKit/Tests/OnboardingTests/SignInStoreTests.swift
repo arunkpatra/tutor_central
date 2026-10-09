@@ -25,7 +25,8 @@ import Testing
             (.offline, "You're offline. Connect and try again."),
             (.providerRefused, "Google didn't complete the sign-in. Try again, or use your email."),
             (.tooManyRequests, "Too many tries. Wait a minute and try again."),
-            (.other("boom"), "Couldn't sign in. boom"),
+            // A backend's own words never reach the screen (D41).
+            (.other("Database error saving new user"), "Couldn't sign in. Try again."),
         ]
         for (failure, words) in cases {
             let auth = FakeAuthRepository()

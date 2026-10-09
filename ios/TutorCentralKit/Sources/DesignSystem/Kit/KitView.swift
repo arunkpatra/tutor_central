@@ -11,6 +11,7 @@
             case surfaces
             case patterns
             case dialog
+            case phase7
         }
 
         let startAt: Section
@@ -25,6 +26,7 @@
                     VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                         KitControls()
                         KitSurfaces()
+                        KitPhase7()
                     }
                     .padding(.horizontal, Tokens.pageSide)
                     .padding(.top, Tokens.heroInset)

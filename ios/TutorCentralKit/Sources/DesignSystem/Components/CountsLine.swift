@@ -23,6 +23,8 @@ public struct CountsLine: View {
             Text(words.absent).typeStyle(Tokens.footnoteStrong)
                 .foregroundStyle((absent > 0 ? Tokens.overdue : Tokens.text2).color)
         }
+        // Each count stays whole ("6 present", never "presen t"); the row around it stacks when it must.
+        .fixedSize()
         .monospacedDigit()
         .contentTransition(.numericText())
         .accessibilityElement(children: .combine)

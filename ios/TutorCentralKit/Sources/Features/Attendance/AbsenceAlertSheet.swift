@@ -73,7 +73,7 @@ struct AbsenceAlertSheet: View {
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
         .modifier(SheetToasts())
-        .presentationDetents([.fraction(Self.boardFraction), .large])
+        .boardDetents(Self.boardFraction)
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
         .presentationBackground(Tokens.surface1.color)

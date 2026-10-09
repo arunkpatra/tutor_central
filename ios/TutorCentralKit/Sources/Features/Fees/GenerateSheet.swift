@@ -48,7 +48,7 @@ struct GenerateSheet: View {
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
-        .presentationDetents([.fraction(preview.canCreate ? Self.fractions.create : Self.fractions.nothing), .large])
+        .boardDetents(preview.canCreate ? Self.fractions.create : Self.fractions.nothing)
     }
 
     /// What will be made; with nothing to make, every fee the month already has.

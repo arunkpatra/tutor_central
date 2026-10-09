@@ -108,7 +108,7 @@ public struct InlineAdd: View {
         } label: {
             HStack(spacing: Tokens.fieldGap) {
                 if let symbol = due.symbol {
-                    Image(systemName: symbol).font(.system(size: Self.chipSymbol))
+                    Image(systemName: symbol).accessibilityHidden(true).font(.system(size: Self.chipSymbol))
                 }
                 Text(due.label)
             }

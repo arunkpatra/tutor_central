@@ -30,6 +30,10 @@ public struct Segmented<Option: Hashable>: View {
                     Text(title)
                         .typeStyle(active ? Tokens.segmentActive : Tokens.segment)
                         .foregroundStyle((active ? Tokens.text : Tokens.text2).color)
+                        // One line per segment: a long word shrinks at the largest sizes instead of breaking.
+                        .lineLimit(1)
+                        .minimumScaleFactor(SingleLineTitle.smallest)
+                        .padding(.horizontal, Tokens.rowGapInner)
                         .frame(maxWidth: .infinity, minHeight: Self.itemHeight)
                         .background {
                             if active {

@@ -15,10 +15,10 @@ public struct SectionHeader: View {
     }
 
     public var body: some View {
-        HStack(alignment: .firstTextBaseline) {
+        AdaptiveRow(alignment: .firstTextBaseline, spacing: nil) {
             Text(title).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
                 .accessibilityAddTraits(.isHeader)
-            Spacer()
+            AdaptiveSpacer()
             if let action {
                 Button(action.label, action: action.run).buttonStyle(.quiet).disabled(!actionEnabled)
             }

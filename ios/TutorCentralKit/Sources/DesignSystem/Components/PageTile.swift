@@ -71,7 +71,7 @@ public struct AddPageTile: View {
     public var body: some View {
         Button(action: action) {
             VStack(spacing: Tokens.inline) {
-                Image(systemName: "camera").font(.system(size: Tokens.iconTab))
+                Image(systemName: "camera").accessibilityHidden(true).font(.system(size: Tokens.iconTab))
                 Text("Add a page").typeStyle(Tokens.bodyStrong)
             }
             .foregroundStyle(Tokens.accentText.color)

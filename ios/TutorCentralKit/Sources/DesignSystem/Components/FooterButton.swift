@@ -37,7 +37,7 @@ public struct SavedMark: View {
 
     public var body: some View {
         HStack(spacing: Tokens.inline) {
-            Image(systemName: keptHere ? "clock" : "checkmark")
+            Image(systemName: keptHere ? "clock" : "checkmark").accessibilityHidden(true)
                 .font(.system(size: Tokens.iconSmall, weight: keptHere ? .semibold : .bold))
             Text(text)
         }

@@ -4,6 +4,7 @@ import SwiftUI
 /// the chosen one on surface2 in 700, the others text3. Scrolling or tapping a row chooses it, with the selection
 /// haptic.
 public struct WheelPopover<Value: Hashable>: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let eyebrow: String
     let values: [Value]
     let label: (Value) -> String
@@ -53,7 +54,9 @@ public struct WheelPopover<Value: Hashable>: View {
                         .foregroundStyle((chosen ? Tokens.text : Tokens.text3).color)
                         .frame(maxWidth: .infinity, minHeight: Self.rowHeight)
                         .contentShape(.rect)
-                        .onTapGesture { withAnimation { position = value } }
+                        .onTapGesture {
+                            withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) { position = value }
+                        }
                         .accessibilityAddTraits(chosen ? .isSelected : [])
                 }
             }
@@ -92,9 +95,9 @@ public struct PickerListRow: View {
 
     public var body: some View {
         Button(action: action) {
-            HStack(spacing: Tokens.rowPaddingDense) {
+            AdaptiveRow {
                 Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
-                Spacer(minLength: Tokens.inline)
+                AdaptiveSpacer(minLength: Tokens.inline)
                 PickerValue(value)
             }
             .padding(.vertical, Tokens.rowPaddingVertical)

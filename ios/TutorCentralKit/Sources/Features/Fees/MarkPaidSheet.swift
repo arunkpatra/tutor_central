@@ -66,7 +66,7 @@ struct MarkPaidSheet: View {
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
-        .presentationDetents([.fraction(Self.boardFraction), .large])
+        .boardDetents(Self.boardFraction)
     }
 
     private var chosenDay: Day {

@@ -56,7 +56,7 @@ public struct ChoiceCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
                 if selected {
-                    Image(systemName: "checkmark")
+                    Image(systemName: "checkmark").accessibilityHidden(true)
                         .font(.system(size: Tokens.iconSmall, weight: .bold))
                         .foregroundStyle(Tokens.accentText.color)
                         .frame(width: CheckMark.size, height: CheckMark.size)

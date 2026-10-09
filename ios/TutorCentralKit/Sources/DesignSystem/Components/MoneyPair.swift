@@ -3,6 +3,7 @@ import SwiftUI
 /// The money pair hero: Outstanding in `due` over its line, Collected in `ok` over its line, a `line` rule between
 /// (components.md, Phase 5 parts; P5-Fees-*, P5-Reports-Fees, P5-StudentFees).
 public struct MoneyPair: View {
+    @Environment(\.dynamicTypeSize) private var typeSize
     let outstanding: String
     let outstandingLine: String
     let collected: String
@@ -17,16 +18,25 @@ public struct MoneyPair: View {
 
     public var body: some View {
         Card(.hero) {
-            HStack(spacing: 0) {
-                half("Outstanding", outstanding, outstandingLine, tone: .due)
-                    .padding(.trailing, Tokens.rowPaddingHorizontal)
-                    .overlay(alignment: .trailing) {
-                        Rectangle().fill(Tokens.line.color).frame(width: Tokens.hairline)
-                    }
-                half("Collected", collected, collectedLine, tone: .ok)
-                    .padding(.leading, Tokens.rowPaddingHorizontal)
+            if TypeSizeLayout.stacks(typeSize) {
+                // The accessibility sizes: one half over the other, so neither eyebrow breaks a word.
+                VStack(spacing: Tokens.rowPaddingHorizontal) {
+                    half("Outstanding", outstanding, outstandingLine, tone: .due)
+                    Rectangle().fill(Tokens.line.color).frame(height: Tokens.hairline)
+                    half("Collected", collected, collectedLine, tone: .ok)
+                }
+            } else {
+                HStack(spacing: 0) {
+                    half("Outstanding", outstanding, outstandingLine, tone: .due)
+                        .padding(.trailing, Tokens.rowPaddingHorizontal)
+                        .overlay(alignment: .trailing) {
+                            Rectangle().fill(Tokens.line.color).frame(width: Tokens.hairline)
+                        }
+                    half("Collected", collected, collectedLine, tone: .ok)
+                        .padding(.leading, Tokens.rowPaddingHorizontal)
+                }
+                .fixedSize(horizontal: false, vertical: true)
             }
-            .fixedSize(horizontal: false, vertical: true)
         }
     }
 

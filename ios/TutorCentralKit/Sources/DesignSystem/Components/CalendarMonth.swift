@@ -110,6 +110,9 @@ public struct CalendarMonth: View {
                 Text("\(number)")
                     .typeStyle(isToday ? Tokens.dayToday : Tokens.day)
                     .foregroundStyle((isToday ? Tokens.textOnAccent : Tokens.text).color)
+                    // Two digits stay on one line in their seventh of the width (never "1 / 0").
+                    .lineLimit(1)
+                    .minimumScaleFactor(SingleLineTitle.smallest)
                     .frame(width: Self.disc, height: isToday || isSelected ? Self.disc : nil)
                     .background {
                         if isToday {

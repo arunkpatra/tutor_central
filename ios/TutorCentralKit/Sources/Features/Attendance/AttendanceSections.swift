@@ -14,13 +14,15 @@ struct PickerLine: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: Tokens.rowPaddingDense) {
+            AdaptiveRow {
                 Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
-                Spacer(minLength: Tokens.inline)
+                AdaptiveSpacer(minLength: Tokens.inline)
                 PickerValue(value)
             }
             .padding(.horizontal, Tokens.rowPaddingHorizontal)
-            .frame(height: Self.height)
+            // 50 high as drawn; taller at the accessibility sizes.
+            .growsWithText()
+            .frame(minHeight: Self.height)
             .contentShape(.rect)
         }
         .pressable()
@@ -49,7 +51,7 @@ struct ClassMenu: View {
                             .foregroundStyle(Tokens.text3.color)
                         Spacer(minLength: Tokens.inline)
                         if option.classID == chosen {
-                            Image(systemName: "checkmark")
+                            Image(systemName: "checkmark").accessibilityHidden(true)
                                 .font(.system(size: Tokens.iconSmall, weight: .semibold))
                                 .foregroundStyle(Tokens.accentText.color)
                         }
@@ -102,12 +104,12 @@ struct MembersSection: View {
     var body: some View {
         let members = store.members
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            HStack(alignment: .firstTextBaseline) {
+            AdaptiveRow(alignment: .firstTextBaseline, spacing: nil) {
                 Text(members.count == 1 ? "1 student" : "\(members.count) students")
                     .typeStyle(Tokens.headline)
                     .foregroundStyle(Tokens.text.color)
                     .accessibilityAddTraits(.isHeader)
-                Spacer(minLength: Tokens.inline)
+                AdaptiveSpacer(minLength: Tokens.inline)
                 CountsLine(present: store.draft.presentCount, absent: store.draft.absentCount)
             }
             .padding(.horizontal, Tokens.rowGapInner)

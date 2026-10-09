@@ -120,9 +120,10 @@ public struct TodayView: View {
         }
     }
 
-    /// The three tiles share a height: "Classes today" wrapping makes all three taller, never one (U4).
+    /// The three tiles share a height: "Classes today" wrapping makes all three taller, never one (U4). At the
+    /// accessibility sizes they stand one over another, full width.
     private var tiles: some View {
-        HStack(spacing: Tokens.tileGap) {
+        AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
             StatTile(value: "\(store.counts.students)", label: "Students", tone: tone(store.counts.students)) {
                 actions.openTab(.students)
             }

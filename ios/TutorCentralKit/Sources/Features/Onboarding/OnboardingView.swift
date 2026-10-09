@@ -6,6 +6,7 @@ import SwiftUI
 /// Onboarding, to P2-Onboarding-Dark and -Light: your name, centre name, WhatsApp number (optional), then "Open my
 /// centre", which makes the centre in one call.
 public struct OnboardingView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var store: OnboardingStore
     @State private var topInset: CGFloat = 0
     private static let phoneField = "phone"
@@ -49,7 +50,9 @@ public struct OnboardingView: View {
             .onChange(of: store.phoneError) { _, error in
                 // The refusal is said in words under the field; bring it above the footer and keyboard.
                 if error != nil {
-                    withAnimation { proxy.scrollTo(Self.phoneField, anchor: .center) }
+                    withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) {
+                        proxy.scrollTo(Self.phoneField, anchor: .center)
+                    }
                 }
             }
         }

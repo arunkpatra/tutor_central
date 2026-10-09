@@ -27,10 +27,13 @@ public struct HistoryRow: View {
 
     public var body: some View {
         ListRow(action: action) {
-            DayColumn(top: day, bottom: date)
-            RowLines(title: title, line: line, lineTone: lineTone)
-            if let trailing {
-                Text(trailing).typeStyle(Tokens.footnoteStrong).monospacedDigit().foregroundStyle(Tokens.overdue.color)
+            AdaptiveRow {
+                DayColumn(top: day, bottom: date)
+                RowLines(title: title, line: line, lineTone: lineTone)
+                if let trailing {
+                    Text(trailing).typeStyle(Tokens.footnoteStrong).monospacedDigit()
+                        .foregroundStyle(Tokens.overdue.color)
+                }
             }
             Chevron()
         }
@@ -87,8 +90,10 @@ public struct AbsentStudentRow<Trailing: View>: View {
     public var body: some View {
         HStack(spacing: Tokens.rowPaddingDense) {
             Avatar(name: name)
-            RowLines(title: name, line: line, lineTone: nil)
-            trailing
+            AdaptiveRow {
+                RowLines(title: name, line: line, lineTone: nil)
+                trailing
+            }
         }
         .padding(.vertical, Tokens.rowPaddingDense)
         .padding(.horizontal, Tokens.rowPaddingHorizontal)
@@ -112,7 +117,7 @@ public struct TellParentButton: View {
     public var body: some View {
         Button(action: action) {
             HStack(spacing: Tokens.fieldGap) {
-                Image(systemName: "message").font(.system(size: Tokens.iconInline))
+                Image(systemName: "message").accessibilityHidden(true).font(.system(size: Tokens.iconInline))
                 Text("Tell parent")
             }
             .typeStyle(Tokens.footnoteStrong)
@@ -146,7 +151,7 @@ public struct ToldMark: View {
 
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
-            Image(systemName: "checkmark").font(.system(size: Self.tick, weight: .bold))
+            Image(systemName: "checkmark").accessibilityHidden(true).font(.system(size: Self.tick, weight: .bold))
             Text(text)
         }
         .typeStyle(Tokens.footnoteStrong)

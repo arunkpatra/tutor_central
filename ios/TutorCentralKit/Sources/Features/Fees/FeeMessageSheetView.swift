@@ -65,6 +65,6 @@ struct FeeMessageSheetView: View {
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
-        .presentationDetents([.fraction(fraction), .large])
+        .boardDetents(fraction)
     }
 }

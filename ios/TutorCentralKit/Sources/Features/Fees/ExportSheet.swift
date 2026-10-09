@@ -55,7 +55,7 @@ struct ExportSheet: View {
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
-        .presentationDetents([.fraction(Self.boardFraction), .large])
+        .boardDetents(Self.boardFraction)
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
         .presentationBackground(Tokens.surface1.color)

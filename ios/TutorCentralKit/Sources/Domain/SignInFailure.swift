@@ -11,6 +11,7 @@ public enum SignInFailure: Error, Hashable, Sendable {
     case wrongPassword
     /// Apple or Google answered with an error that is not the user's doing.
     case providerRefused
-    /// Supabase's own message, shown as "Couldn't sign in. <message>".
+    /// Anything else, with Supabase's own message kept for diagnosis; never shown (D41: the screen says what failed and
+    /// Try again).
     case other(String)
 }

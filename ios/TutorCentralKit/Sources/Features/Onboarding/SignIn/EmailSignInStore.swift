@@ -177,7 +177,6 @@ import Observation
         switch failure {
         case .tooManyRequests: "Too many codes asked for. Wait a minute and try again."
         case .offline: "You're offline. Connect and try again."
-        case let .other(message): "Couldn't send the code. \(message)"
         default: "Couldn't send the code. Try again."
         }
     }
@@ -189,7 +188,6 @@ import Observation
         case .codeExpired: "That code has expired. Ask for a new one."
         case .tooManyRequests: "Too many tries. Wait a minute and try again."
         case .offline: "You're offline. Connect and try again."
-        case let .other(message): "Couldn't sign in. \(message)"
         default: "Couldn't sign in. Try again."
         }
     }
@@ -199,7 +197,6 @@ import Observation
         case .wrongPassword: "That password isn't right. If you never set one, sign in with a code instead."
         case .tooManyRequests: "Too many tries. Wait a minute and try again."
         case .offline: "You're offline. Connect and try again."
-        case let .other(message): "Couldn't sign in. \(message)"
         default: "Couldn't sign in. Try again."
         }
     }

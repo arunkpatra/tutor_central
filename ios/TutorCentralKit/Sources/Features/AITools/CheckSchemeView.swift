@@ -139,7 +139,7 @@ private struct PaperChoiceRow: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 if chosen {
-                    Image(systemName: "checkmark")
+                    Image(systemName: "checkmark").accessibilityHidden(true)
                         .font(.system(size: Tokens.iconButton, weight: .semibold))
                         .foregroundStyle(Tokens.accentText.color)
                         .frame(width: Self.ring, height: Self.ring)

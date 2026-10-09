@@ -16,9 +16,11 @@ public struct ReportFeeRow: View {
 
     public var body: some View {
         ListRow(action: nil) {
-            RowTitles(title: name, subtitle: className)
-            Text(amount).typeStyle(Tokens.numberRow).monospacedDigit().foregroundStyle(Tokens.text.color)
-            Chip(chip, compact: true)
+            AdaptiveRow {
+                RowTitles(title: name, subtitle: className)
+                Text(amount).typeStyle(Tokens.numberRow).monospacedDigit().foregroundStyle(Tokens.text.color)
+                Chip(chip, compact: true)
+            }
         }
     }
 }
@@ -41,15 +43,17 @@ public struct ReportAttendanceRow: View {
 
     public var body: some View {
         ListRow(action: nil) {
-            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                counts.typeStyle(Tokens.footnote).monospacedDigit()
+            AdaptiveRow {
+                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                    Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                    counts.typeStyle(Tokens.footnote).monospacedDigit()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                Text(percent ?? "–")
+                    .typeStyle(Tokens.numberRow)
+                    .monospacedDigit()
+                    .foregroundStyle((percent == nil ? Tokens.text3 : Tokens.text).color)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            Text(percent ?? "–")
-                .typeStyle(Tokens.numberRow)
-                .monospacedDigit()
-                .foregroundStyle((percent == nil ? Tokens.text3 : Tokens.text).color)
         }
     }
 

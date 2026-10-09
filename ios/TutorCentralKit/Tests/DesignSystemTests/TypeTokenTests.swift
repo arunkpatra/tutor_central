@@ -10,4 +10,12 @@ struct TypeTokenTests {
             #expect(abs(max(natural, token.line) - (natural + token.lineSpacing)) < 0.001, "\(token.name)")
         }
     }
+
+    /// The size follows the text size it is given, so a change made while the app runs redraws every text at once
+    /// (the layout and the type moved apart when the font read the app's size only once).
+    @Test func theScaledSizeFollowsTheGivenTextSize() {
+        #expect(Tokens.body.scaledSize(at: .large) == 17)
+        #expect(Tokens.body.scaledSize(at: .accessibility3) > 30)
+        #expect(Tokens.body.scaledSize(at: .xSmall) < 17)
+    }
 }

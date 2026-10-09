@@ -3,6 +3,7 @@ import SwiftUI
 /// The top of a sheet as the boards draw it: the grabber 36 × 5 in lineStrong, then Cancel (quiet) left, the title
 /// headline centred, and an optional Save (quiet, 700) right, disabled until valid.
 public struct SheetHeader: View {
+    @Environment(\.dynamicTypeSize) private var size
     let title: String
     let cancel: (label: String, run: () -> Void)
     let save: Save?
@@ -39,17 +40,33 @@ public struct SheetHeader: View {
                 .fill(Tokens.lineStrong.color)
                 .frame(width: Self.grabber.width, height: Self.grabber.height)
                 .accessibilityHidden(true)
-            ZStack {
-                Text(title).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
-                    .accessibilityAddTraits(.isHeader)
-                HStack {
-                    Button(cancel.label, action: cancel.run).buttonStyle(.quiet)
-                    Spacer()
-                    if let save {
-                        Button(save.label, action: save.run).buttonStyle(.quiet(emphasised: true))
-                            .disabled(!save.enabled)
-                    }
+            if TypeSizeLayout.stacks(size) {
+                // The accessibility sizes: the title under Cancel and Save, leading, never under either.
+                VStack(alignment: .leading, spacing: Tokens.inline) {
+                    buttons
+                    titleText.frame(maxWidth: .infinity, alignment: .leading)
                 }
+            } else {
+                ZStack {
+                    titleText
+                    buttons
+                }
+            }
+        }
+    }
+
+    private var titleText: some View {
+        Text(title).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    private var buttons: some View {
+        HStack {
+            Button(cancel.label, action: cancel.run).buttonStyle(.quiet)
+            Spacer()
+            if let save {
+                Button(save.label, action: save.run).buttonStyle(.quiet(emphasised: true))
+                    .disabled(!save.enabled)
             }
         }
     }

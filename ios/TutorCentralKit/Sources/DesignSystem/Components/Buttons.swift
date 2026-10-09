@@ -142,14 +142,18 @@ private struct ButtonFace<Label: View>: View {
     let loading: Bool
     let ink: ColorToken
     @Environment(\.buttonIconSize) private var iconSize
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         // Side padding 16 when the label has room; none when two buttons share a card's width (the Today board).
+        // At the accessibility sizes the label wraps and the button grows instead of truncating.
+        let wraps = TypeSizeLayout.stacks(typeSize)
         ViewThatFits(in: .horizontal) {
             face.padding(.horizontal, Tokens.rowPaddingHorizontal)
             face
         }
-        .frame(maxWidth: .infinity, minHeight: size.rawValue, maxHeight: size.rawValue)
+        .padding(.vertical, wraps ? Tokens.inline : 0)
+        .frame(maxWidth: .infinity, minHeight: size.rawValue, maxHeight: wraps ? nil : size.rawValue)
         .contentShape(.rect)
     }
 
@@ -163,7 +167,8 @@ private struct ButtonFace<Label: View>: View {
                 }
             }
             .foregroundStyle(ink.color)
-            .lineLimit(1)
+            .lineLimit(TypeSizeLayout.stacks(typeSize) ? nil : 1)
+            .multilineTextAlignment(.center)
     }
 }
 
@@ -221,6 +226,7 @@ public extension ButtonStyle where Self == DestructiveButtonStyle {
 public struct LandingButtonStyle: ButtonStyle {
     let loading: Bool
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     public init(loading: Bool = false) {
         self.loading = loading
@@ -239,7 +245,12 @@ public struct LandingButtonStyle: ButtonStyle {
                 ProgressView().tint(Tokens.text.color).accessibilityLabel("Working")
             }
         }
-        .frame(maxWidth: .infinity, minHeight: ButtonSize.sheet.rawValue, maxHeight: ButtonSize.sheet.rawValue)
+        .multilineTextAlignment(.center)
+        .padding(.vertical, TypeSizeLayout.stacks(typeSize) ? Tokens.inline : 0)
+        .frame(
+            maxWidth: .infinity, minHeight: ButtonSize.sheet.rawValue,
+            maxHeight: TypeSizeLayout.stacks(typeSize) ? nil : ButtonSize.sheet.rawValue
+        )
         .contentShape(.rect)
         .background(
             (configuration.isPressed ? Tokens.well : Tokens.surface1).color,

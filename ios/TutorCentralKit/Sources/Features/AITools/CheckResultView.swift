@@ -7,6 +7,7 @@ import SwiftUI
 /// (P6-Check-Result, -MarkPicker, -Result-Edited, -Saved): the hero with the total and a bar, a row per question with
 /// its mark tile (a popover of marks), Share in the nav row, and Save to the student's notes with Undo.
 public struct CheckResultView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Bindable var store: CheckStore
     let boardState: CheckBoardState?
     let backToPages: () -> Void
@@ -122,9 +123,9 @@ public struct CheckResultView: View {
                 .accessibilityElement(children: .combine)
             }
             VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                HStack(alignment: .firstTextBaseline) {
+                AdaptiveRow(alignment: .firstTextBaseline, spacing: nil) {
                     Text("Questions").typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
-                    Spacer()
+                    AdaptiveSpacer()
                     Text("Tap a mark to change it").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                 }
                 .padding(.horizontal, Tokens.rowGapInner)
@@ -154,7 +155,9 @@ public struct CheckResultView: View {
                     }
                 )) {
                     MarkPicker(number: question.number, of: question.of, selected: question.marks) { mark in
-                        withAnimation { store.set(question: question.number, to: mark) }
+                        withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) {
+                            store.set(question: question.number, to: mark)
+                        }
                         Haptic.play(.selection)
                         picking = nil
                     }

@@ -13,20 +13,21 @@ struct ParentCard: View {
     var body: some View {
         if let phone = student.parentPhone {
             VStack(spacing: Tokens.rowPaddingDense) {
-                HStack(spacing: Tokens.rowPaddingDense) {
+                AdaptiveRow {
                     VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                         Text(student.parentName ?? "Parent")
                             .typeStyle(Tokens.rowTitle)
                             .foregroundStyle(Tokens.text.color)
                         Text("Parent").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                     }
-                    Spacer(minLength: 0)
+                    AdaptiveSpacer(minLength: 0)
                     Text(phone.display)
                         .typeStyle(Tokens.subhead)
                         .monospacedDigit()
                         .foregroundStyle(Tokens.text2.color)
+                        .singleLineTitle()
                 }
-                HStack(spacing: Tokens.tileGap) {
+                AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
                     Button { call.map { openURL($0) } } label: {
                         Label("Call", systemImage: "phone").frame(maxWidth: .infinity)
                     }
@@ -87,7 +88,7 @@ struct MonthFeeCard: View {
 
     /// This month's fee: the month over its line, the amount and the compact chip (P5-StudentDetail-Fees).
     private var row: some View {
-        HStack(spacing: Tokens.rowPaddingDense) {
+        AdaptiveRow {
             VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                 Text(store.monthTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
                 Text(store.monthLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)

@@ -21,13 +21,15 @@ public struct TileRow<Trailing: View>: View {
     }
 
     public var body: some View {
-        HStack(spacing: Tokens.inline) {
+        AdaptiveRow(spacing: Tokens.inline) {
             Text(label).typeStyle(labelType).foregroundStyle(labelTone.color)
-            Spacer(minLength: Tokens.inline)
+            AdaptiveSpacer(minLength: Tokens.inline)
             trailing
         }
         .padding(.horizontal, Tokens.cardPaddingCompact)
-        .frame(height: Well<EmptyView>.height)
+        // 46 high as drawn; taller at the accessibility sizes.
+        .growsWithText()
+        .frame(minHeight: Well<EmptyView>.height)
         .background(Tokens.surface2.color, in: .rect(cornerRadius: Tokens.radiusControl, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: Tokens.radiusControl, style: .continuous)
@@ -72,7 +74,8 @@ public struct PickerValue: View {
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
             Text(value).typeStyle(Tokens.bodyStrong)
-            Image(systemName: "chevron.up.chevron.down").font(.system(size: Tokens.iconInline))
+            Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
+                .font(.system(size: Tokens.iconInline))
         }
         .foregroundStyle(Tokens.accentText.color)
     }

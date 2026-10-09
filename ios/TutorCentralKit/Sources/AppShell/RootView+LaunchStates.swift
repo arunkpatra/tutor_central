@@ -305,6 +305,7 @@ extension RootView {
             case .kitSurfaces: .surfaces
             case .kitPatterns: .patterns
             case .kitDialog: .dialog
+            case .kitPhase7: .phase7
             default: nil
             }
         }

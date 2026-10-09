@@ -31,7 +31,7 @@ struct PasswordSheet: View {
         .padding(.top, Tokens.inline)
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
-        .presentationDetents([.fraction(Self.boardFraction), .large])
+        .boardDetents(Self.boardFraction)
         .onChange(of: store.error) { _, error in
             if error != nil {
                 Haptic.play(.error)

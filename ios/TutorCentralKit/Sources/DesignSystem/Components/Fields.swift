@@ -83,7 +83,7 @@ public struct FieldMessage: View {
 
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Tokens.fieldGap) {
-            Image(systemName: "exclamationmark.circle").font(.system(size: Tokens.iconInline))
+            Image(systemName: "exclamationmark.circle").accessibilityHidden(true).font(.system(size: Tokens.iconInline))
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
         .typeStyle(Tokens.footnote)
@@ -308,9 +308,9 @@ public struct PickerRow<Option: Hashable>: View {
     }
 
     public var body: some View {
-        HStack {
+        AdaptiveRow(spacing: nil) {
             Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
-            Spacer(minLength: Tokens.inline)
+            AdaptiveSpacer(minLength: Tokens.inline)
             Menu {
                 Picker(label, selection: $selection) {
                     ForEach(options, id: \.0) { option, title in
@@ -320,12 +320,14 @@ public struct PickerRow<Option: Hashable>: View {
             } label: {
                 HStack(spacing: Tokens.rowGapInner * 2) {
                     Text(options.first { $0.0 == selection }?.1 ?? "").typeStyle(Tokens.bodyStrong)
-                    Image(systemName: "chevron.up.chevron.down").font(.system(size: Tokens.iconInline))
+                    Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
+                        .font(.system(size: Tokens.iconInline))
                 }
                 .foregroundStyle(Tokens.accentText.color)
             }
         }
-        .frame(height: Well<EmptyView>.height)
+        .growsWithText()
+        .frame(minHeight: Well<EmptyView>.height)
         .padding(.horizontal, Tokens.cardPaddingCompact)
         .surface(radius: Tokens.radiusControl)
     }

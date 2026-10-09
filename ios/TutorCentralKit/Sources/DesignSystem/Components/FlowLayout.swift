@@ -1,6 +1,8 @@
 import SwiftUI
 
-/// Lays its children in rows, left to right, wrapping when a row is full (chips).
+/// Lays its children in rows, left to right, wrapping when a row is full (chips). A child wider than a whole row (a
+/// long
+/// line at the larger text sizes) is given the row's width, so its text wraps instead of running off the edge.
 public struct FlowLayout: Layout {
     let spacing: CGFloat
 
@@ -20,7 +22,7 @@ public struct FlowLayout: Layout {
         for row in arrange(width: bounds.width, subviews: subviews) {
             var x = bounds.minX
             for index in row.indices {
-                let size = subviews[index].sizeThatFits(.unspecified)
+                let size = Self.size(of: subviews[index], within: bounds.width)
                 subviews[index].place(
                     at: CGPoint(x: x, y: y + (row.height - size.height) / 2),
                     proposal: ProposedViewSize(size)
@@ -37,10 +39,15 @@ public struct FlowLayout: Layout {
         var height: CGFloat = 0
     }
 
+    private static func size(of subview: LayoutSubview, within width: CGFloat) -> CGSize {
+        let ideal = subview.sizeThatFits(.unspecified)
+        return ideal.width > width ? subview.sizeThatFits(ProposedViewSize(width: width, height: nil)) : ideal
+    }
+
     private func arrange(width: CGFloat, subviews: Subviews) -> [Row] {
         var rows: [Row] = [Row()]
         for index in subviews.indices {
-            let size = subviews[index].sizeThatFits(.unspecified)
+            let size = Self.size(of: subviews[index], within: width)
             let needed = rows[rows.count - 1].indices.isEmpty ? size.width : rows[rows.count - 1].width + spacing + size
                 .width
             if needed > width, !rows[rows.count - 1].indices.isEmpty {
