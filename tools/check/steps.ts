@@ -104,8 +104,9 @@ export const STEPS: Step[] = [
       "web/biome.json",
       "web/vercel.json",
       "bun.lock",
-      // The token test reads the document.
+      // The token test reads the document; the pages test reads Help's answers in the app.
       "docs/design/design-tokens.md",
+      "ios/TutorCentralKit/Sources/Features/Settings/Help/HelpView.swift",
     ],
     run: () => run("bun run check", "web"),
   },
