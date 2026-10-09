@@ -685,3 +685,19 @@ approved board by string edits. The rule they settle is `feedback.md`: the toast
 | A failed save | `U33-Attendance-SaveFailed`, `-Light` | The system alert: "Attendance wasn't saved", OK and Try Again; the marks stay |
 | The camera is off | `U33-Scan-CameraOff`, `-Light` | The system alert: Not Now and Open Settings |
 | An item no longer here | `U33-Event-Gone`, `-Light` | The system alert with OK |
+
+## Store boards (approved 2026-10-09): the App Store screenshots
+
+Row 13 of the canvas (y 35800; the title note at 35500); sources `mockups/Store-*.dc.html`, 402 × 874, each the real
+simulator screen (`mockups/store/<launch state>.jpg`, dark, 9:41) in the website's phone frame under an eyebrow, a caption
+and a line. The boards are the template: `bun store-shots` renders them with fresh screens at 1206 × 2622 (D51). The order
+is the store's; search shows the first three.
+
+| Board | Launch state | Eyebrow | Caption | Line |
+|---|---|---|---|---|
+| `Store-1-Today` | `today-evening` | Today | Your day at a glance | Classes, fees due and tasks, on one screen. |
+| `Store-2-Attendance` | `attendance-exceptions` | Attendance | Attendance in a few taps | Everyone starts present. Tap who is absent, then save. |
+| `Store-3-Fees` | `fees-due` | Fees | Know who has paid | Remind a parent on WhatsApp. Mark a fee paid in one tap. |
+| `Store-4-Scan` | `scan-review` | Scan a register | Photograph your register | Your students are read from the page, ready to add. |
+| `Store-5-Check` | `check-result` | Check a paper | Check a paper in minutes | A suggested mark for every answer. You decide. |
+| `Store-6-Paper` | `ai-result-paper` | Teaching tools | A question paper, ready to share | Pick a topic and a level. Copy it or share it as a PDF. |
