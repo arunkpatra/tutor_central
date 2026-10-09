@@ -1,6 +1,6 @@
 # Phase 8: The product website, tutorcentral.in
 
-**Status:** Not started (added in session 4 at the owner's request); the boards and the plan are resume 015. **Next:**
+**Status:** Boards (step 0.9, 27 in row 11) and the plan (`phase-08-plan.md`) approved 2026-10-09 (session 16); the build is next on Opus 5.5 (resume 016). **Next:**
 Phase 9, user testing (D43), which needs this phase's privacy page for TestFlight's external group. **Depends on:** Phase 0's website boards
 approved; the domain `tutorcentral.in`, which the owner has bought. **Must be live before:** the first App Store
 submission (Phase 7's release candidate), because App Store review asks for a privacy policy URL, and the app

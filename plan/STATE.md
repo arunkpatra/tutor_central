@@ -3,19 +3,18 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-09, session 15 (the Phase 7 build, on Opus 5.5). **Session 15:** Phase 7 done in PRs #63 to #73:
-the account deletion (D37, D38), Settings, Account, Teacher reminders, offline reads and queued writes (D39, D40), no
-technical words on screen (D41), Dynamic Type, VoiceOver, reduced motion, version 1.0.0; a whole-phase review and its fixes
-(#71); the owner's build-10 findings (#72, #73). Migration 0008 and the API with the Sign in with Apple key in production;
-builds 1.0.0 (10) and (11) on the owner's phone and 1.0.0 (13) with Google's sign-in button (#74) on TestFlight; the lane now revokes the development certificate each run makes (#75). The owner added Phase 9, user testing (D43), after the website,
-which is Next.js on Vercel (D42).
-**Next:** Phase 8's boards and plan on Fable 5.1 from `resume/015-phase-8-boards-and-plan.md`.
+**Last updated:** 2026-10-09, session 16 (the Phase 8 boards and plan, on Fable 5.1). **Session 16:** Phase 0 step 0.9 done: the
+website's 27 boards in row 11 of the canvas (the five pages at 1280 and 390, dark and light, as fluid frames; U7 and U24),
+approved and mirrored (`1af47d1`); `plan/phase-08-plan.md` approved (14 tasks, 6 PRs, 6 owner steps); decisions D44 to D49.
+**Session 15:** Phase 7 done in PRs #63 to #75; build 1.0.0 (13) on TestFlight; Phases 8 and 9 set (D42, D43).
+**Next:** Phase 8's build on Opus 5.5 from `resume/016-phase-8-build.md`: PRs 1 to 3 and the owner's steps put tutorcentral.in
+live and the privacy URL into App Store Connect (what Phase 9 waits for); PRs 4 to 6 and build 14 follow.
 
 ## Where we are
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Boards complete: 0.1 to 0.8 approved (0.8 on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7 |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -23,12 +22,13 @@ which is Next.js on Vercel (D42).
 | 5 Fees, UPI settings, reminders, receipts, reports | Done, PRs #45 to #49, #51, #52 | "As built" in `phase-05-fees-and-reports.md` |
 | 6 AI tools | Done, PRs #53 to #60, #62; hand run #61 | "As built" in `phase-06-ai-tools.md`; device tests in `docs/testing/device-tests.md` |
 | 7 Settings, account, notifications, offline, hardening, release candidate | Done, PRs #63 to #73 | "As built" in `phase-07-settings-and-hardening.md`; the accessibility record in `docs/design/accessibility-pass.md`; the release checklist in `docs/release.md` |
-| 8 Website | Not started; boards and plan next (resume 015) | `phase-08-website.md`: tutorcentral.in in Next.js on Vercel in `web/` (D42); `/privacy` and `/terms` live before TestFlight's external group and the App Store; plus U7, U16, U24 and Phase 6's minors 1, 6, 7 |
+| 8 Website | Boards and plan approved 2026-10-09; the build next (resume 016) | `phase-08-plan.md`: `web/` in Next.js (static export, D44) on a second Vercel project by `deploy-web.yml` (D45), pictures by `web-shots` (D46), the `web` check step (D47); U7, U16, U24 and Phase 6's minors 1, 6, 7 as PRs 4 to 6 (D48, D49) |
 | 9 User testing | Not started | `phase-09-user-testing.md` (D43): tutors on TestFlight's external group, the tester's device tests, triage, before the App Store |
 
 ## In flight
 
-Nothing open. TestFlight 1.0.0 (13) from `d7ee9f5` (run 37913258080) is for the owner's phone. Merged `phase-7/*` branches
+Nothing open. The Phase 8 build has not started: no `web/` yet, no Vercel project `tutor-central-web`, no DNS records for the
+web root (Resend's records stand). The legal pages carry `[OWNER: …]` placeholders until the owner answers Owner step 0 of the plan. TestFlight 1.0.0 (13) from `d7ee9f5` (run 37913258080) is for the owner's phone. Merged `phase-7/*` branches
 remain on the remote; delete them when convenient. The tester's device tests (D1 to D7) wait for Phase 9's external group.
 
 ## Production
@@ -67,13 +67,15 @@ remain on the remote; delete them when convenient. The tester's device tests (D1
 - **TestFlight's external group and Beta App Review** wait for Phase 8's `tutorcentral.in/privacy`; Phase 9 runs them (D43).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
 - **UI polish:** `plan/ui-polish.md`: U5, U7, U8, U10, U11, U13 to U30 open; U1 to U4, U6, U9, U12 done. U7, U16 and U24
-  are Phase 8's (the owner, 2026-10-09).
+  are Phase 8's (the owner, 2026-10-09): boards P8-Event-Edit-Keyboard, P8-Scan-List-Scrolled, P8-Check-Marks-Scrolled; U16 needs
+  none (P6-Check-Saved already draws the toast above the footer).
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
 - **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9); D1 to D7 wait for the tester (Phase 9).
-- Vercel's production domain for the API is the generated one; the website gets tutorcentral.in (Phase 8).
+- Vercel's production domain for the API is the generated one; the website gets tutorcentral.in (Phase 8, D45: project
+  `tutor-central-web`, variables `VERCEL_WEB_PROJECT_ID` and `WEB_ORIGIN`, the owner's steps in `phase-08-plan.md`).
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.
 - Crash reporting: no decision yet (D18 leaves it open); TestFlight's crash reports cover Phase 9.
