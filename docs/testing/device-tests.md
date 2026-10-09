@@ -68,6 +68,18 @@ The tester writes results in the log at the end.
 | W1 | Fees → a due fee → Remind → Open WhatsApp. | WhatsApp opens the parent's chat with the reminder and the UPI id typed in. |
 | W2 | Mark a fee paid with receipts on → the receipt → Open WhatsApp. | The receipt message in the parent's chat. |
 
+### Phase 7: the account, reminders, offline, the release candidate
+
+| Id | Do | Expect |
+|---|---|---|
+| D1 | Settings → Accessibility → VoiceOver on. Swipe through Today, Students, one student, Fees, Attendance (mark one absent and save), Settings and Account. VoiceOver off. | Every control is read with a name that says what it does ("Mark attendance, button"); a row is read as one item with its value ("Dev Kumar, Class 8 Science, ₹1,000, Due"); the attendance pill says "Present, button" and what a tap does; nothing is read as "button" alone or skipped. |
+| D2 | Settings → Teacher reminders → Turn on reminders → Allow. Add a class (Students → Classes) that meets today, starting 16 minutes from now. Lock the phone and wait. | A banner on the lock screen within a minute: "<class> at <time> · In 15 minutes · N students. Tap to mark attendance." Tapping it unlocks into Attendance for that class and day. |
+| D3 | Airplane mode on. Open Today, Students and Fees (seen before). Mark attendance for a class with one absent, Save, Tell parent → Open WhatsApp. Mark one fee paid. Add a student. Airplane mode off; wait on the Today tab. | Each screen shows its last content with the bar "Offline. Showing what was saved at …". Attendance reads "Saved on this iPhone"; WhatsApp opens with the alert (it queues it); the fee row says it is kept here; the student is refused in words and the form kept. Back online: "Back online. Sending 3 saved changes…", then "3 saved changes sent."; the attendance, the fee and the alert's note are on their screens. |
+| D4 | On the oldest iPhone that runs iOS 26 you can borrow (an iPhone 11 or 12): cold-launch the app five times; scroll the Students list of 30 or more students and the Fees month quickly. | Today appears within about two seconds of the icon tap each time; scrolling never stutters. Note the phone model and anything slower. |
+| D5 | Sign in with Apple on a test Apple ID. Settings → Account → Delete account permanently → type the centre's name → Delete my account → confirm with Apple. Then on the phone: Settings → your name → Sign-In & Security → Sign in with Apple. | The Apple sheet appears before deletion; the sign-in landing says the account was deleted; Tutor Central is no longer in the phone's Sign in with Apple list; signing in with Apple again starts at onboarding with an empty centre. |
+| D6 | Account → Password → set one. Sign out. Continue with email → Use my password instead → the password. | Signs in without a code. |
+| D7 | Install the build from the external TestFlight group's invitation email (not the internal group). | It installs and signs in; the version on Settings reads 1.0 with the build number from the email. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |
