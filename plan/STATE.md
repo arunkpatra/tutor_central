@@ -55,7 +55,7 @@ Nothing open. TestFlight 1.0.0 (15) from `e455ba0` (run 37943689238) carries the
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (18) by run 37950611572 (a sheet's long title clear of Cancel, #87) is building; 17 by run 37948604787 (U33, #86); 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238. Each run revokes the Apple Development certificate it makes (#75): a
+  run number. 1.0.0 (18) by run 37950611572 (a sheet's long title clear of Cancel, #87) is on TestFlight; 17 by run 37948604787 (U33, #86); 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238. Each run revokes the Apple Development certificate it makes (#75): a
   fresh runner makes one per run and the account's cap stopped run 12 after eleven (the owner revoked them, 2026-10-09).
 
 ## Open items
