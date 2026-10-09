@@ -21,8 +21,13 @@ import Observation
     public var confirmingSignOut = false
     private let auth: any AuthRepository
     private let queue: any ChangeQueueing
+    private let onPasswordSet: () -> Void
 
-    public init(workspace: Workspace, auth: any AuthRepository, queue: any ChangeQueueing) {
+    /// `onPasswordSet` tells the shell, so the session's profile reads Set too.
+    public init(
+        workspace: Workspace, auth: any AuthRepository, queue: any ChangeQueueing,
+        onPasswordSet: @escaping () -> Void = {}
+    ) {
         name = workspace.profile.displayName ?? workspace.user.fullName ?? ""
         email = workspace.user.email ?? "your Apple ID"
         initials = workspace.profile.initials
@@ -30,6 +35,7 @@ import Observation
         hasPassword = workspace.profile.hasPassword
         self.auth = auth
         self.queue = queue
+        self.onPasswordSet = onPasswordSet
     }
 
     public func load() async {
@@ -63,6 +69,7 @@ import Observation
     /// After the sheet set it: the row reads Set; the toast's words are the caller's.
     public func passwordSet() -> String {
         hasPassword = true
+        onPasswordSet()
         return "Password set. Use it with your email next time you sign in."
     }
 }

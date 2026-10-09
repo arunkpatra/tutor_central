@@ -22,6 +22,7 @@ public enum Wipe {
 
     private static func belongs(_ name: String, to id: String) -> Bool {
         name == "workspace.json" || name == "register-\(id).json" || name == "queue-\(id).json"
+            || name == "queue-\(id).unreadable.json"
             || name == "upi-qr-\(id).png"
             || (name.hasPrefix("cache-\(id)-") && name.hasSuffix(".json"))
     }

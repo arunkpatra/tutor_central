@@ -29,8 +29,8 @@ import Foundation
         self.calendar = calendar
     }
 
-    /// The plan; set on this iPhone when allowed. A read that fails plans without it (no events, no fee reminder)
-    /// rather than leaving last week's reminders in place. A call made while a run is under way waits for it and plans
+    /// The plan; set on this iPhone when allowed. A read that fails keeps the reminders of its kind already set. A call
+    /// made while a run is under way waits for it and plans
     /// again, so a change made meanwhile is never answered with the older plan; calls that waited together share one.
     @discardableResult func replan(workspace: Workspace) async -> [Reminder] {
         if let previous = running {
@@ -54,20 +54,37 @@ import Foundation
         let start = now()
         let today = Day(start, calendar: calendar)
         let centre = workspace.centre.id
-        let upcoming = await (try? events.events(
+        let settings = settingsStore.load()
+        let upcoming = try? await events.events(
             centre: centre, from: today, to: today.adding(days: ReminderPlanner.days, calendar: calendar)
-        )) ?? []
+        )
         let month = Period.containing(start, in: calendar.timeZone)
-        let due = await ((try? fees.invoices(centre: centre, month: month)) ?? []).filter { $0.status == .due }
+        let invoices = try? await fees.invoices(centre: centre, month: month)
+        let due = (invoices ?? []).filter { $0.status == .due }
         let counts = Dictionary(grouping: register.activeStudents.compactMap(\.classID)) { $0 }.mapValues(\.count)
         let input = ReminderInput(
-            classes: register.activeClasses, memberCounts: counts, events: upcoming,
+            classes: register.activeClasses, memberCounts: counts, events: upcoming ?? [],
             dueFees: due.isEmpty ? nil : DueFees(count: due.count, total: due.map(\.amount).total),
-            settings: settingsStore.load()
+            settings: settings
         )
-        let plan = ReminderPlanner.plan(input, now: start, calendar: calendar)
         guard await notifications.permission() == .allowed else { return [] }
+        // A read that failed (offline) keeps what was set for that kind rather than dropping it (review I3).
+        var unread: Set<Reminder.Kind> = []
+        if upcoming == nil, settings.eventOn {
+            unread.insert(.event)
+        }
+        if invoices == nil, settings.feesOn {
+            unread.insert(.fees)
+        }
+        let plan = await keeping(unread, in: ReminderPlanner.plan(input, now: start, calendar: calendar), after: start)
         await notifications.replace(with: plan)
         return plan
+    }
+
+    /// The plan with the pending reminders of the kinds it could not read, still ahead, the soonest 60 in all.
+    private func keeping(_ kinds: Set<Reminder.Kind>, in plan: [Reminder], after start: Date) async -> [Reminder] {
+        guard !kinds.isEmpty else { return plan }
+        let kept = await notifications.pending().filter { kinds.contains($0.kind) && $0.fireAt > start }
+        return Array((plan + kept).sorted { $0.fireAt < $1.fireAt }.prefix(ReminderPlanner.limit))
     }
 }

@@ -9,7 +9,9 @@ import Testing
     func make(
         _ center: FakeNotificationCenter,
         now: Date,
-        settings: ReminderSettingsStore? = nil
+        settings: ReminderSettingsStore? = nil,
+        events: FakeEventsRepository = FakeEventsRepository(events: FakeEventsRepository.seed),
+        fees: FakeFeesRepository = FakeFeesRepository(invoices: FakeFeesRepository.seed)
     ) throws -> ReminderScheduler {
         let defaults = try #require(UserDefaults(suiteName: "sched-\(UUID().uuidString)"))
         let workspace = FakeCentreRepository.meeraWorkspace
@@ -19,8 +21,7 @@ import Testing
         )
         return ReminderScheduler(
             notifications: center, settingsStore: settings ?? ReminderSettingsStore(defaults: defaults),
-            register: register, events: FakeEventsRepository(events: FakeEventsRepository.seed),
-            fees: FakeFeesRepository(invoices: FakeFeesRepository.seed), now: { now }, calendar: DayHeading.india
+            register: register, events: events, fees: fees, now: { now }, calendar: DayHeading.india
         )
     }
 
@@ -58,5 +59,21 @@ import Testing
         #expect(await first.value.contains { $0.kind == .classMeeting })
         #expect(!second.contains { $0.kind == .classMeeting } && !second.isEmpty)
         #expect(await center.pending() == second)
+    }
+
+    /// Review I3: offline, the events and fees cannot be read; the event and fee reminders already set stay (a
+    /// parents' meeting is not forgotten because the app was opened without a connection).
+    @Test func aFailedReadKeepsTheRemindersOfThatKind() async throws {
+        let center = FakeNotificationCenter(permission: .allowed)
+        let now = DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 1, hour: 9)) ?? Date()
+        let set = try await make(center, now: now).replan(workspace: FakeCentreRepository.meeraWorkspace)
+        let events = FakeEventsRepository(events: FakeEventsRepository.seed)
+        events.nextError = URLError(.notConnectedToInternet)
+        let fees = FakeFeesRepository(invoices: FakeFeesRepository.seed)
+        fees.nextError = URLError(.notConnectedToInternet)
+        let offline = try await make(center, now: now, events: events, fees: fees)
+            .replan(workspace: FakeCentreRepository.meeraWorkspace)
+        let kept = { (plan: [Reminder]) in Set(plan.filter { $0.kind != .classMeeting }.map(\.id)) }
+        #expect(!kept(set).isEmpty && kept(offline) == kept(set))
     }
 }

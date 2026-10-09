@@ -23,6 +23,12 @@ public struct PendingChanges: Hashable, Sendable, Codable {
         changes.removeAll { $0.id == id }
     }
 
+    /// After a send: the change leaves only if it is still what was sent. A correction made meanwhile replaced it in
+    /// place under the same id, and waits to be sent in its turn.
+    public mutating func removeSent(_ sent: QueuedChange) {
+        changes.removeAll { $0.id == sent.id && $0.kind == sent.kind }
+    }
+
     public mutating func fail(id: UUID, reason: String) {
         guard let index = changes.firstIndex(where: { $0.id == id }) else { return }
         changes[index].state = .failed(reason: reason)

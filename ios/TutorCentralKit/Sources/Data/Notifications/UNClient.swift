@@ -40,6 +40,8 @@ public final class UNClient: NotificationCenterClient {
 
     public func removeAll() async {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        // The reminders already shown go too: they name classes and fee totals (review: sign-out and deletion).
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 
     static func request(for reminder: Reminder, calendar: Calendar) -> UNNotificationRequest {

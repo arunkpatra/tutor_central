@@ -128,4 +128,19 @@ import Testing
         await first.value
         #expect(store.phase == .idle && account.revoked.isEmpty && auth.deleted == 0)
     }
+
+    /// Review I4: Back once the deletion is on its way does not stop it; the wipe and the landing still run, so a
+    /// deleted tutor is never left inside the app.
+    @Test func backDuringTheDeletionLetsItFinish() async throws {
+        let store = make(apple: false)
+        await store.load()
+        store.typed = "Bright Minds Tuition"
+        auth.deleteDelay = .milliseconds(100)
+        let run = Task { await store.delete() }
+        try await Task.sleep(for: .milliseconds(20))
+        #expect(store.phase == .deleting)
+        store.cancel()
+        await run.value
+        #expect(auth.deleted == 1 && followUps.count == 1 && store.phase == .done)
+    }
 }
