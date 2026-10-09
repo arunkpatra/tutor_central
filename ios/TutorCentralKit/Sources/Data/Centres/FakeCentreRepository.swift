@@ -67,6 +67,7 @@ import Foundation
     public private(set) var receiptUpdates: [Bool] = []
     public private(set) var confirmations: [Date] = []
     public private(set) var consents: [Date] = []
+    public private(set) var hasPasswordSet = 0
 
     public init(workspace: Workspace? = nil) {
         self.workspace = workspace
@@ -140,6 +141,11 @@ import Foundation
         try takeError()
         consents.append(at)
         workspace?.centre.aiConsentAt = at
+    }
+
+    public func setHasPassword() async throws {
+        try takeError()
+        hasPasswordSet += 1
     }
 
     private nonisolated static func with(payments: PaymentSettings) -> Workspace {

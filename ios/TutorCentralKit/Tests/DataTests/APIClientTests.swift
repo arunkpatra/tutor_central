@@ -97,6 +97,20 @@ import Testing
         #expect(APIFailure.offline.message == "Couldn't reach the AI service. Check your connection and try again.")
     }
 
+    @Test func revokeApplePostsTheCodeAndMapsEveryAnswer() async throws {
+        let (client, recorder) = Self.client(status: 204, body: "")
+        try await client.revokeApple(code: "c.abc")
+        #expect(recorder.requests.first?.url?.path == "/account/revoke-apple")
+        #expect(try Self.sent(recorder)["code"] as? String == "c.abc")
+        let answers: [(Int, AccountFailure)] = [
+            (400, .appleRefused), (401, .signedOut), (502, .appleUnreachable), (500, .server("Boom.")),
+        ]
+        for (status, failure) in answers {
+            let (failing, _) = Self.client(status: status, body: #"{"error":"Boom."}"#)
+            await #expect(throws: failure) { try await failing.revokeApple(code: "c") }
+        }
+    }
+
     @Test func aTimeoutIsNotOfflineAndDoesNotPromiseNothingWasUsed() {
         #expect(APIClient.failure(transport: URLError(.timedOut)) == .timedOut)
         #expect(APIClient.failure(transport: URLError(.notConnectedToInternet)) == .offline)

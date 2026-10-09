@@ -37,7 +37,8 @@ public struct PendingChanges: Hashable, Sendable, Codable {
 
     /// The waiting changes by the time they were made: the replay's order.
     public var inOrder: [QueuedChange] {
-        changes.filter { $0.state == .waiting }.sorted { $0.madeAt < $1.madeAt }
+        changes.enumerated().filter { $0.element.state == .waiting }
+            .sorted { ($0.element.madeAt, $0.offset) < ($1.element.madeAt, $1.offset) }.map(\.element)
     }
 
     public var waitingCount: Int {

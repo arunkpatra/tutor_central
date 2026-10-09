@@ -5,9 +5,11 @@ import Supabase
 /// supabase-swift's AuthClient behind the protocol: the keychain session, Apple by id token, Google through its own
 /// ASWebAuthenticationSession (the inventory row), the email code and the password.
 public final class SupabaseAuthRepository: AuthRepository {
+    private let client: SupabaseClient
     private let auth: AuthClient
 
     public init(client: SupabaseClient) {
+        self.client = client
         auth = client.auth
     }
 
@@ -64,6 +66,30 @@ public final class SupabaseAuthRepository: AuthRepository {
     }
 
     public func signOut() async {
+        try? await auth.signOut(scope: .local)
+    }
+
+    /// Supabase names the providers `apple`, `google` and `email`; in that order, each once.
+    public func signInMethods() async -> [SignInProvider] {
+        let names = Set(auth.currentSession?.user.identities?.map(\.provider) ?? [])
+        return SignInProvider.allCases.filter { names.contains($0.rawValue) }
+    }
+
+    public func setPassword(_ password: String) async throws(AccountFailure) {
+        do {
+            _ = try await auth.update(user: UserAttributes(password: password))
+        } catch {
+            throw AccountFailure(error)
+        }
+    }
+
+    public func deleteAccount() async throws(AccountFailure) {
+        do {
+            try await client.rpc("delete_account").execute()
+        } catch {
+            throw AccountFailure(error)
+        }
+        // The user is gone: end the session on this iPhone. A failure here is no failure of the deletion.
         try? await auth.signOut(scope: .local)
     }
 

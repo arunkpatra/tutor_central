@@ -1,5 +1,6 @@
 import Domain
 import Foundation
+import Supabase
 
 /// The in-memory ledger for tests, previews and `bun shots`: October's ten fees of `supabase/seed.sql` (six paid on
 /// 4 October by UPI), September's ten (all paid on 3 September but Nikhil's), Hemanth's August (cash) and July
@@ -56,6 +57,11 @@ import Foundation
 
     /// October's ten alone, for states without a past.
     public nonisolated static let octoberOnly = Array(seed.prefix(10))
+
+    /// What PostgREST's `single()` answers when the update found no row (the invoice is gone).
+    public nonisolated static let noSuchRow = PostgrestError(
+        code: "PGRST116", message: "JSON object requested, multiple (or no) rows returned"
+    )
 
     public var invoices: [FeeInvoice]
     public var nextError: (any Error)?
@@ -135,7 +141,7 @@ import Foundation
     }
 
     private func rewrite(_ id: UUID, _ change: (FeeInvoice) -> FeeInvoice) throws -> FeeInvoice {
-        guard let index = invoices.firstIndex(where: { $0.id == id }) else { throw URLError(.fileDoesNotExist) }
+        guard let index = invoices.firstIndex(where: { $0.id == id }) else { throw Self.noSuchRow }
         invoices[index] = change(invoices[index])
         return invoices[index]
     }

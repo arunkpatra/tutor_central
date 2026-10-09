@@ -18,10 +18,14 @@ public struct JSONCache<Value: Codable & Sendable>: Sendable {
         return try? Self.decoder.decode(Value.self, from: data)
     }
 
-    /// Creates the directory and writes atomically.
+    /// Creates the directory and writes atomically, readable only once the iPhone has been unlocked since it started
+    /// (D40).
     public func save(_ value: Value) throws {
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try Self.encoder.encode(value).write(to: url, options: .atomic)
+        try Self.encoder.encode(value).write(
+            to: url,
+            options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
+        )
     }
 
     public func remove() {
