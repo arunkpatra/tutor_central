@@ -5,7 +5,8 @@
 import { mkdir } from "node:fs/promises";
 import { must, sh } from "./lib/sh";
 
-export type ShotsArgs = { state: string; appearances: string[]; out: string; device: string };
+/** `mask`: how the display's cutouts are drawn; unset, as the simulator draws them (the island only now and then). */
+export type ShotsArgs = { state: string; appearances: string[]; out: string; device: string; mask?: "black" };
 
 const USAGE = "usage: bun shots <state> [--appearance dark|light|both] [--out dir] [--device 'iPhone 17']";
 const BUNDLE = "in.tutorcentral.app"; // D27
@@ -35,7 +36,11 @@ export function launchArguments(state: string, appearance: string): string[] {
   return ["--state", state, "--appearance", appearance];
 }
 
-async function shoot(a: ShotsArgs): Promise<void> {
+export function screenshotCommand(device: string, file: string, mask?: "black"): string[] {
+  return ["xcrun", "simctl", "io", device, "screenshot", ...(mask ? [`--mask=${mask}`] : []), file];
+}
+
+export async function shoot(a: ShotsArgs): Promise<void> {
   await mkdir(a.out, { recursive: true });
   await sh(["xcrun", "simctl", "boot", a.device]); // already booted is fine
   await must(["xcrun", "simctl", "bootstatus", a.device, "-b"]);
@@ -53,7 +58,7 @@ async function shoot(a: ShotsArgs): Promise<void> {
     await must(["xcrun", "simctl", "launch", a.device, BUNDLE, ...launchArguments(a.state, appearance)]);
     await Bun.sleep(1500);
     const file = `${a.out}/${a.state}-${appearance}.png`;
-    await must(["xcrun", "simctl", "io", a.device, "screenshot", file]);
+    await must(screenshotCommand(a.device, file, a.mask));
     console.log(file);
   }
 }

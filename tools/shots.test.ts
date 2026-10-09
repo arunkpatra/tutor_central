@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { launchArguments, parseShotsArgs } from "./shots";
+import { launchArguments, parseShotsArgs, screenshotCommand } from "./shots";
 
 test("defaults: both appearances, iPhone 17, .shots/<state>", () => {
   expect(parseShotsArgs(["placeholder"])).toEqual({
@@ -27,4 +27,17 @@ test("refuses no state, an unknown appearance or a flag without a value", () => 
 
 test("the app is launched into the state and the appearance being photographed", () => {
   expect(launchArguments("placeholder", "light")).toEqual(["--state", "placeholder", "--appearance", "light"]);
+});
+
+test("a store shot draws the display's cutouts in black, so the island shows in every picture", () => {
+  expect(screenshotCommand("iPhone 17", "a.png")).toEqual(["xcrun", "simctl", "io", "iPhone 17", "screenshot", "a.png"]);
+  expect(screenshotCommand("iPhone 17", "a.png", "black")).toEqual([
+    "xcrun",
+    "simctl",
+    "io",
+    "iPhone 17",
+    "screenshot",
+    "--mask=black",
+    "a.png",
+  ]);
 });
