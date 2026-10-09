@@ -23,6 +23,7 @@ public struct PaymentsView: View {
     @State private var picked: PhotosPickerItem?
     @State private var scanning = false
     @State private var topInset: CGFloat = 0
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
     @Environment(\.dismiss) private var dismiss
 
     public init(
@@ -169,10 +170,11 @@ public struct PaymentsView: View {
                 if await AVCaptureDevice.requestAccess(for: .video) {
                     scanning = true
                 } else {
-                    onMessage(CameraAccess.deniedMessage)
+                    notices?.cameraOff(to: "scan your UPI QR", otherwise: "You can also choose a picture of it.")
                 }
             }
-        case .denied: onMessage(CameraAccess.deniedMessage)
+        case .denied:
+            notices?.cameraOff(to: "scan your UPI QR", otherwise: "You can also choose a picture of it.")
         case .noCamera: onMessage(CameraAccess.noCameraMessage)
         }
     }
@@ -182,7 +184,7 @@ public struct PaymentsView: View {
         defer { picked = nil }
         guard let data = try? await item.loadTransferable(type: Data.self),
               let image = UIImage(data: data)?.cgImage else {
-            onMessage("Couldn't read that picture.")
+            onMessage("Couldn't read that picture. Try another photo.")
             return
         }
         guard let payload = QRDecoder.payload(in: image) else {

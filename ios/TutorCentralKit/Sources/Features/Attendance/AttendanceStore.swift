@@ -265,7 +265,7 @@ import Observation
                 return true
             }
             phase = before
-            message = "Couldn't save attendance. Check your connection and try again."
+            message = "Attendance wasn't saved. Check your connection and try again. Your marks are still here."
             canRetry = true
             lastFailed = { [weak self] in await self?.save() }
             return false

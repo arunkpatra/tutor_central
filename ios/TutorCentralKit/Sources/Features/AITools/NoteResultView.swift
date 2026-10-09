@@ -113,13 +113,7 @@ struct NoteResultView: View {
                     .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: Tokens.tileGap) {
-                    Button {
-                        UIPasteboard.general.string = text
-                        onMessage("Copied.")
-                    } label: {
-                        Label("Copy", systemImage: "doc.on.doc")
-                    }
-                    .buttonStyle(.secondary(.form))
+                    CopyButton { text }
                     Button {
                         writeAgain()
                     } label: {

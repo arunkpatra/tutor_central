@@ -10,6 +10,8 @@ struct ResultFooter: View {
     let store: AIStore
     let generation: Generation
     let regenerating: Bool
+    /// The board's done state of Copy (U33-Result-Copied).
+    let copied: Bool
     let onMessage: (String) -> Void
     @State private var pdf: URL?
 
@@ -29,13 +31,7 @@ struct ResultFooter: View {
                         .disabled(generation.request == nil)
                 }
                 HStack(spacing: Tokens.tileGap) {
-                    Button {
-                        UIPasteboard.general.string = PaperText.plain(generation.result, key: generation.printsKey)
-                        onMessage("Copied.")
-                    } label: {
-                        Label("Copy", systemImage: "doc.on.doc")
-                    }
-                    .buttonStyle(.secondary(.form))
+                    CopyButton(copied: copied) { PaperText.plain(generation.result, key: generation.printsKey) }
                     share
                 }
                 .disabled(regenerating)

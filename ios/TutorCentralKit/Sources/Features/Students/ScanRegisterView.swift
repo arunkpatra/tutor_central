@@ -28,6 +28,7 @@ public struct ScanRegisterView: View {
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
     @Environment(ToastCenter.self) private var toasts: ToastCenter?
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
     /// `sample` is the fixtures' photo for a board state (the simulator has no camera); `onLeave` ends the visit when
     /// the tutor goes back (its store is let go).
@@ -55,7 +56,7 @@ public struct ScanRegisterView: View {
             if let removed = store.removed, message == "\(removed.row.name) removed." {
                 toasts?.show(message, action: ("Undo", { store.undoRemove() }))
             } else {
-                toasts?.show(message)
+                notices?.show(message)
             }
             store.message = nil
         }
@@ -203,22 +204,18 @@ public struct ScanRegisterView: View {
                 }
             }
         case .denied: showRefused()
-        case .noCamera: toasts?.show(CameraAccess.noCameraMessage)
+        case .noCamera: notices?.show(CameraAccess.noCameraMessage)
         }
     }
 
     private func showRefused() {
-        toasts?.show(CameraAccess.deniedMessage, action: ("Open Settings", {
-            if let url = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.open(url)
-            }
-        }))
+        notices?.cameraOff(to: "photograph a register", otherwise: "You can also choose a photo you already have.")
     }
 
     private func readPicked(_ item: PhotosPickerItem) async {
         guard let data = try? await item.loadTransferable(type: Data.self),
               let upload = PhotoReducer.reduce(data) else {
-            toasts?.show("Couldn't read that picture.")
+            notices?.show("Couldn't read that picture. Try another photo.")
             return
         }
         start(upload)

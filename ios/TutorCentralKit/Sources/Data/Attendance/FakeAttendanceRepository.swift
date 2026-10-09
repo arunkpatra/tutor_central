@@ -59,6 +59,8 @@ import Supabase
 
     public var sessions: [AttendanceSession]
     public var nextError: (any Error)?
+    /// A failure for the next save only (reads go through): a board's refused save.
+    public var saveError: (any Error)?
     /// Every call waits this long first: lets a store show its loading state.
     public var delay: Duration?
     public private(set) var saves: [Save] = []
@@ -78,6 +80,10 @@ import Supabase
         centre _: UUID, classID: UUID?, date: Day, marks: [UUID: AttendanceStatus]
     ) async throws -> AttendanceSession {
         try await begin()
+        if let error = saveError {
+            saveError = nil
+            throw error
+        }
         saves.append(Save(classID: classID, date: date, marks: marks))
         if let index = sessions.firstIndex(where: { $0.date == date && $0.classID == classID }) {
             sessions[index].marks = marks

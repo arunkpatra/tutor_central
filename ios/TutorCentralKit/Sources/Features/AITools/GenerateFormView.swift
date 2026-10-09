@@ -6,6 +6,8 @@ import SwiftUI
 /// Create again tapped (P6-Result-Regenerating), the student picker or the Send sheet open.
 public enum AIBoardState: Hashable, Sendable {
     case generating, failed, regenerating, noteSend, studentPicker
+    /// The result with Copy in its done state (U33-Result-Copied).
+    case copied
 }
 
 /// A form (P6-Form-Paper, -Homework, -Worksheet, -ProgressNote), pushed: one card of fields, a footnote, and Create in

@@ -66,10 +66,9 @@ import Observation
         )
     }
 
-    /// After the sheet set it: the row reads Set; the toast's words are the caller's.
-    public func passwordSet() -> String {
+    /// After the sheet set it: the row reads Set, which says so in place (U33).
+    public func passwordSet() {
         hasPassword = true
         onPasswordSet()
-        return "Password set. Use it with your email next time you sign in."
     }
 }

@@ -14,8 +14,22 @@ import Observation
         case saved
     }
 
-    public var displayName: String
-    public var centreName: String
+    public var displayName: String {
+        didSet {
+            if displayName != oldValue {
+                nameError = nil
+            }
+        }
+    }
+
+    public var centreName: String {
+        didSet {
+            if centreName != oldValue {
+                centreError = nil
+            }
+        }
+    }
+
     public var digits: String {
         didSet {
             if digits != oldValue {
@@ -25,9 +39,10 @@ import Observation
     }
 
     public private(set) var phoneError: String?
+    /// U33: a field that did not save, or is empty, says so under itself (U33-Settings-NotSaved).
+    public private(set) var nameError: String?
+    public private(set) var centreError: String?
     public internal(set) var saveState: SaveState = .idle
-    /// One line for the toast.
-    public var message: String?
     public let email: String
     public let version: String
     /// The Teacher reminders row's value.
@@ -72,10 +87,10 @@ import Observation
         guard name != (workspace.profile.displayName ?? "") else { return }
         guard !name.isEmpty else {
             displayName = workspace.profile.displayName ?? ""
-            message = "Your name can't be empty."
+            nameError = "Your name can't be empty."
             return
         }
-        await save("your name") { [centres] in try await centres.updateProfile(displayName: name) } apply: {
+        nameError = await save("your name") { [centres] in try await centres.updateProfile(displayName: name) } apply: {
             $0.profile.displayName = name
         }
     }
@@ -85,11 +100,14 @@ import Observation
         guard name != workspace.centre.name else { return }
         guard !name.isEmpty else {
             centreName = workspace.centre.name
-            message = "A centre needs a name."
+            centreError = "A centre needs a name."
             return
         }
         let id = workspace.centre.id
-        await save("the centre's name") { [centres] in try await centres.updateCentreName(id: id, name: name) } apply: {
+        centreError = await save("the centre's name") { [centres] in try await centres.updateCentreName(
+            id: id,
+            name: name
+        ) } apply: {
             $0.centre.name = name
         }
     }
@@ -105,7 +123,7 @@ import Observation
         }
         guard e164 != workspace.centre.whatsappNumber else { return }
         let id = workspace.centre.id
-        await save("your WhatsApp number") { [centres] in
+        phoneError = await save("your WhatsApp number") { [centres] in
             try await centres.updateWhatsAppNumber(id: id, number: e164)
         } apply: {
             $0.centre.whatsappNumber = e164
@@ -117,16 +135,20 @@ import Observation
         count == 0 ? "None" : "\(count)"
     }
 
-    private func save(_ field: String, _ write: () async throws -> Void, apply: (inout Workspace) -> Void) async {
+    /// The field's line: nil when it saved, else the words for under it.
+    private func save(
+        _ field: String, _ write: () async throws -> Void, apply: (inout Workspace) -> Void
+    ) async -> String? {
         saveState = .saving
         do {
             try await write()
             apply(&workspace)
             onWorkspaceChanged(workspace)
             saveState = .saved
+            return nil
         } catch {
             saveState = .idle
-            message = "Couldn't save \(field). Check your connection and try again."
+            return "Couldn't save \(field). Check your connection and try again."
         }
     }
 }

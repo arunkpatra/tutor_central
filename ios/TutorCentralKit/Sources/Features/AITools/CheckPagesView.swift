@@ -15,7 +15,7 @@ public struct CheckPagesView: View {
     @State private var scanning = false
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
-    @Environment(ToastCenter.self) private var toasts: ToastCenter?
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
     public init(store: CheckStore, openScheme: @escaping () -> Void) {
         self.store = store
@@ -88,7 +88,7 @@ public struct CheckPagesView: View {
         }
         .onChange(of: store.message) { _, message in
             guard let message else { return }
-            toasts?.show(message)
+            notices?.show(message)
             store.message = nil
         }
         .fullScreenCover(isPresented: $scanning) {

@@ -69,7 +69,7 @@ extension RootView {
         Task {
             await store.open(month: month)
             guard let invoice = store.invoices.first(where: { $0.studentID == studentID }) else {
-                toasts.show("No fee for \(month.monthName) yet. Generate it first.")
+                notices.show("No fee for \(month.monthName) yet. Generate it first.")
                 return
             }
             store.sheet = switch action {
@@ -100,7 +100,7 @@ extension RootView {
                 store: PaymentsStore(workspace: workspace, centres: deps.centres, qrImages: deps.qrImages),
                 boardState: launch.flatMap(Self.paymentsBoardState),
                 onWorkspaceChanged: { changed in applyWorkspace { $0.takingPayments(from: changed) } },
-                onMessage: { toasts.show($0) }
+                onMessage: { notices.show($0) }
             )
         }
     }
@@ -114,7 +114,7 @@ extension RootView {
                     attendance: deps.attendance, messages: deps.messages, now: deps.now
                 ),
                 boardState: launch.flatMap(Self.reportsBoardState),
-                onMessage: { toasts.show($0) }
+                onMessage: { notices.show($0) }
             )
         }
     }
@@ -144,8 +144,8 @@ extension RootView {
             }
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
-                Haptic.play(store.canRetry ? .error : .success)
-                toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
+                Haptic.play(.error)
+                notices.show(message, retry: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
             }
             .onChange(of: store.lastSavedAt) { Haptic.play(.success) }

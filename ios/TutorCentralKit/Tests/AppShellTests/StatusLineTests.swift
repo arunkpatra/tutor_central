@@ -58,14 +58,10 @@ import Testing
 }
 
 struct RunStateTests {
-    @Test func theOutcomeBecomesTheStateAndTheToast() {
+    @Test func theOutcomeBecomesTheState() {
         #expect(RunState.after(.done(sent: 3, failed: 0)) == .idle)
         #expect(RunState.after(.done(sent: 1, failed: 2)) == .failed(2))
         #expect(RunState.after(.offline(sent: 1)) == .idle)
         #expect(RunState.after(.signedOut(sent: 0)) == .signedOut)
-        #expect(RunState.toast(for: .done(sent: 3, failed: 0)) == "3 saved changes sent.")
-        #expect(RunState.toast(for: .done(sent: 1, failed: 1)) == "1 saved change sent.")
-        #expect(RunState.toast(for: .done(sent: 0, failed: 1)) == nil)
-        #expect(RunState.toast(for: .offline(sent: 2)) == "2 saved changes sent.")
     }
 }

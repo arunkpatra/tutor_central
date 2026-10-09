@@ -32,7 +32,7 @@ public struct ScheduleView: View {
     let status: StatusFor
     @State private var deletingNow = false
     @Environment(\.dismiss) private var dismiss
-    @Environment(ToastCenter.self) private var toasts: ToastCenter?
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
     public init(
         store: ScheduleStore, actions: ScheduleActions, boardState: ScheduleBoardState? = nil, openEvent: UUID? = nil,
@@ -105,11 +105,11 @@ public struct ScheduleView: View {
             openLinkedEvent()
         }
         .onChange(of: store.lastSavedAt) { Haptic.play(.success) }
-        // A failed write says so where the tutor is, with Retry (the sheets draw the toast over themselves).
+        // A failed write is the system alert, with Try Again (U33); a sheet that is up shows it.
         .onChange(of: store.message) { _, message in
             guard let message else { return }
             Haptic.play(.error)
-            toasts?.show(message, action: store.canRetry ? retry : nil)
+            notices?.show(message, retry: store.canRetry ? retry : nil)
             store.message = nil
         }
     }
@@ -222,10 +222,9 @@ public struct ScheduleView: View {
         .transition(.opacity)
     }
 
-    /// The toast's Retry for the last failed write.
-    private var retry: (label: String, run: @MainActor () -> Void) {
-        let run: @MainActor () -> Void = { Task { await store.retryLast() } }
-        return ("Retry", run)
+    /// The alert's Try Again for the last failed write.
+    private var retry: @MainActor () -> Void {
+        { Task { await store.retryLast() } }
     }
 
     private func add() {

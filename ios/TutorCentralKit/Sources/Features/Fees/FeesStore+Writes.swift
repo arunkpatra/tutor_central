@@ -13,7 +13,6 @@ public extension FeesStore {
             let count = try await fees.generate(centre: workspace.centre.id, month: month)
             sheet = nil
             succeeded()
-            message = "\(count) \(count == 1 ? "fee" : "fees") created for \(month.monthName)."
             await reload()
             onFeesChanged()
             return count
@@ -104,7 +103,6 @@ public extension FeesStore {
             replace(waived)
             succeeded()
             sheet = nil
-            message = "\(firstName(of: waived))'s fee waived."
             onFeesChanged()
             return true
         } catch {

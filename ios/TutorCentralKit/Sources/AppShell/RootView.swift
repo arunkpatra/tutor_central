@@ -15,6 +15,8 @@ public struct RootView: View {
     @AppStorage(Appearance.storageKey) private var storedAppearance: String?
     @State var session: SessionStore
     @State var toasts = ToastCenter()
+    /// Failed or refused writes, a camera that is off, an item no longer here: the system alert (U33).
+    @State var notices = NoticeCenter()
     @State var shell: ShellState
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.openURL) var systemOpenURL
@@ -119,7 +121,7 @@ public struct RootView: View {
             // launch state, whose screen is ready at once.
             .opening(ready: session.state != .loading, shown: launch == nil)
             .environment(session)
-            .environment(toasts)
+            .tellsTheTutor(toasts: toasts, notices: notices)
             .preferredColorScheme(appearance.colorScheme)
             .task {
                 if launch == nil {
@@ -133,7 +135,7 @@ public struct RootView: View {
     func openLink(_ url: URL) {
         guard let link = DeepLink(url: url), session.isReady else { return }
         if !shell.tabs.open(link) {
-            toasts.show("That opens in a later build.")
+            notices.show("That opens in a later build.")
         }
         if case let .attendance(date, classID) = link, case let .ready(workspace) = session.state {
             openAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
@@ -166,7 +168,7 @@ public struct RootView: View {
                 fixture: launch.flatMap(Self.signInFixture),
                 deletedCentre: launch == .signinDeleted ? Fixtures.meeraWorkspace.centre.name : session.deletedCentre,
                 onSignedIn: { await session.signedIn($0) },
-                onMessage: { toasts.show($0) }
+                onMessage: { notices.show($0) }
             )
         case let .needsOnboarding(user):
             OnboardingView(
@@ -175,7 +177,7 @@ public struct RootView: View {
                 centres: deps.centres,
                 boardState: launch == .onboarding,
                 onCreated: { session.centreCreated($0) },
-                onMessage: { toasts.show($0) }
+                onMessage: { notices.show($0) }
             )
             // A newer answer about the same sign-in (Apple's name arriving) makes a fresh form.
             .id(user)
@@ -239,19 +241,10 @@ public struct RootView: View {
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
                 Haptic.play(.error)
-                toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
+                notices.show(message, retry: store.canRetry ? Self.retry(store) : nil)
                 store.message = nil
             }
-            .onAppear {
-                // P6-Scan-Saved: the list after Add, with its toast.
-                if launch == .scanSaved {
-                    toasts.show(ScanReview.addedToast(count: 7), action: ("Undo", {}), stay: .seconds(3600))
-                }
-                // P7-Offline-WriteRefused: Save on the filled sheet, offline.
-                if launch == .offlineWriteRefused {
-                    toasts.show(OfflineRefusal.words(for: .addStudent), stay: .seconds(3600))
-                }
-            }
+            .onAppear { studentsBoardEffects() }
         }
     }
 
@@ -293,7 +286,7 @@ public struct RootView: View {
                 boardState: launch.flatMap(Self.studentDetailBoardState),
                 onMissing: {
                     shell.tabs.remove(.student(id))
-                    toasts.show(StudentDetailStore.missingMessage)
+                    notices.show(StudentDetailStore.missingMessage)
                 }
             )
         }

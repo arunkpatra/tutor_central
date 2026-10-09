@@ -47,11 +47,11 @@ import Testing
         let store = make(centres)
         store.centreName = " "
         await store.commitCentre()
-        #expect(centres.nameUpdates.isEmpty && store.message == "A centre needs a name.")
+        #expect(centres.nameUpdates.isEmpty && store.centreError == "A centre needs a name.")
         #expect(store.centreName == "Bright Minds Tuition")
         store.displayName = ""
         await store.commitName()
-        #expect(centres.profileUpdates.isEmpty && store.message == "Your name can't be empty.")
+        #expect(centres.profileUpdates.isEmpty && store.nameError == "Your name can't be empty.")
         #expect(store.displayName == "Meera Nair")
     }
 
@@ -73,7 +73,19 @@ import Testing
         store.centreName = "Bright Minds"
         await store.commitCentre()
         #expect(store.centreName == "Bright Minds" && store.saveState == .idle)
-        #expect(store.message == "Couldn't save the centre's name. Check your connection and try again.")
+        #expect(store.centreError == "Couldn't save the centre's name. Check your connection and try again.")
+    }
+
+    /// U33: a field's failure is said under the field and goes when the field saves.
+    @Test func aFieldsLineGoesWhenItSaves() async {
+        let centres = FakeCentreRepository()
+        let store = make(centres)
+        centres.nextError = URLError(.notConnectedToInternet)
+        store.centreName = "Bright Minds"
+        await store.commitCentre()
+        #expect(store.centreError != nil && store.nameError == nil)
+        await store.commitCentre()
+        #expect(store.centreError == nil && store.saveState == .saved)
     }
 
     /// Review, Important 5: each field writes only its own column, so two quick edits cannot undo each other.

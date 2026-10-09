@@ -48,7 +48,6 @@ public struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     private let boardState: SettingsBoardState?
     private let actions: SettingsActions
-    private let onMessage: (String) -> Void
     private let reminders: () async -> ReminderSummary
     private static let endID = "settings-end"
 
@@ -58,8 +57,7 @@ public struct SettingsView: View {
         reminders: @escaping () async -> ReminderSummary,
         actions: SettingsActions,
         boardState: SettingsBoardState? = nil,
-        onWorkspaceChanged: @escaping (Workspace) -> Void,
-        onMessage: @escaping (String) -> Void
+        onWorkspaceChanged: @escaping (Workspace) -> Void
     ) {
         store.onWorkspaceChanged = onWorkspaceChanged
         if boardState == .saved {
@@ -71,7 +69,6 @@ public struct SettingsView: View {
         _store = State(initialValue: store)
         self.actions = actions
         self.boardState = boardState
-        self.onMessage = onMessage
         self.reminders = reminders
     }
 
@@ -119,12 +116,10 @@ public struct SettingsView: View {
                 Haptic.play(.success)
             }
         }
-        .onChange(of: store.message) { _, message in
-            if let message {
-                // Every Settings message is a failure: the error haptic with its toast.
+        .onChange(of: [store.nameError, store.centreError, store.phoneError]) { _, errors in
+            // A field's line arrives with the error haptic (U33: the line, not a toast).
+            if errors.contains(where: { $0 != nil }) {
                 Haptic.play(.error)
-                onMessage(message)
-                store.message = nil
             }
         }
     }
@@ -138,10 +133,13 @@ public struct SettingsView: View {
             }
             Card {
                 VStack(spacing: Tokens.cardPaddingCompact) {
-                    TextWell(label: "Your name", text: $store.displayName, content: .name) {
+                    TextWell(label: "Your name", text: $store.displayName, error: store.nameError, content: .name) {
                         Task { await store.commitName() }
                     }
-                    TextWell(label: "Centre name", text: $store.centreName, content: .organizationName) {
+                    TextWell(
+                        label: "Centre name", text: $store.centreName, error: store.centreError,
+                        content: .organizationName
+                    ) {
                         Task { await store.commitCentre() }
                     }
                     PhoneWell(label: "Your WhatsApp number", digits: $store.digits, error: store.phoneError) {

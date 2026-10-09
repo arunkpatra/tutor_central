@@ -17,6 +17,7 @@ public struct CheckResultView: View {
     @State private var boardApplied = false
     @Environment(\.dismiss) private var dismiss
     @Environment(ToastCenter.self) private var toasts: ToastCenter?
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
     public init(store: CheckStore, boardState: CheckBoardState? = nil, backToPages: @escaping () -> Void) {
         self.store = store
@@ -63,7 +64,7 @@ public struct CheckResultView: View {
         .sheet(isPresented: $sharing) { ActivitySheet(text: store.shareText).presentationDetents([.medium, .large]) }
         .onChange(of: store.message) { _, message in
             guard let message else { return }
-            toasts?.show(message)
+            notices?.show(message)
             store.message = nil
         }
         .onChange(of: store.stage) { applyBoard() }

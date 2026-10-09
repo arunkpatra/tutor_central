@@ -13,7 +13,7 @@ extension RootView {
                 actions: ScheduleActions(openClass: { shell.tabs.push(.classroom($0)) }),
                 boardState: launch.flatMap(Self.scheduleBoardState),
                 openEvent: openEvent,
-                onMissingEvent: { toasts.show("That event is no longer here.") },
+                onMissingEvent: { notices.show("This event was deleted. The schedule shows what is still on it.") },
                 status: { rootStatus(savedAt: $0, offlineRead: $1) }
             )
         }
@@ -47,7 +47,7 @@ extension RootView {
                 .onChange(of: store.message) { _, message in
                     guard let message else { return }
                     Haptic.play(.error)
-                    toasts.show(message, action: store.canRetry ? Self.retry(store) : nil)
+                    notices.show(message, retry: store.canRetry ? Self.retry(store) : nil)
                     store.message = nil
                 }
         }

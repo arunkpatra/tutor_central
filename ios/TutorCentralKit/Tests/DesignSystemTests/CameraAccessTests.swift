@@ -11,7 +11,6 @@ struct CameraAccessTests {
         #expect(CameraAccess.decide(supported: true, status: .denied) == .denied)
         #expect(CameraAccess.decide(supported: true, status: .restricted) == .denied)
         #expect(CameraAccess.decide(supported: false, status: .authorized) == .noCamera)
-        #expect(CameraAccess.deniedMessage == "Allow the camera for Tutor Central in Settings.")
         #expect(CameraAccess.noCameraMessage == "No camera on this device.")
     }
 }

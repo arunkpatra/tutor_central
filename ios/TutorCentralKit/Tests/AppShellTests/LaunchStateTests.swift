@@ -103,7 +103,8 @@ struct LaunchStateTests {
 
     @MainActor @Test func theAttendanceStatesOpenTheTab() async throws {
         let states: [LaunchState] = [
-            .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaved, .attendanceAlert,
+            .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaveFailed, .attendanceSaved,
+            .attendanceAlert,
             .attendancePast, .attendanceEmpty,
         ]
         for state in states {
@@ -177,7 +178,8 @@ struct LaunchStateTests {
 
     @MainActor @Test func theFeesStatesOpenTheTab() async throws {
         let states: [LaunchState] = [
-            .feesEmpty, .fees, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate, .feesGenerateNothing,
+            .feesEmpty, .fees, .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
+            .feesGenerateNothing,
             .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive,
         ]
         for state in states {
@@ -254,5 +256,18 @@ struct LaunchStateTests {
         #expect(RootView.scanBoardState(.scanReviewScrolled) == .scrolled)
         #expect(RootView.checkStates.contains(.checkResultScrolled) && RootView.scanStates
             .contains(.scanReviewScrolled))
+    }
+
+    /// U33's boards: each opens where its board draws it.
+    @MainActor @Test func theU33StatesOpenWhereTheirBoardsDo() {
+        #expect(RootView.tab(for: .attendanceSaveFailed) == .attendance)
+        #expect(RootView.attendanceBoardState(.attendanceSaveFailed) == .saveFailed)
+        #expect(RootView.tab(for: .eventGone) == .more && RootView
+            .initialRoutes(for: .eventGone) == [.event(Fixtures.goneEvent)])
+        #expect(RootView.tab(for: .feesLoadFailed) == .fees)
+        #expect(RootView.aiBoardState(.aiResultCopied) == .copied)
+        for state in [LaunchState.attendanceSaveFailed, .eventGone, .feesLoadFailed, .aiResultCopied] {
+            #expect(Fixtures.initialState(for: state) != .signedOut)
+        }
     }
 }

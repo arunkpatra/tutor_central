@@ -11,6 +11,8 @@ public enum AttendanceBoardState: Sendable {
     case saved
     case alert
     case past
+    /// One absent, then Save refused: the system alert with Try Again (U33-Attendance-SaveFailed).
+    case saveFailed
 }
 
 /// The Attendance tab's root, to P4-Attendance-Mark-Fresh (dark and light), -ClassMenu, -Exceptions, -Saved,
@@ -176,6 +178,9 @@ public struct AttendanceView: View {
             picksClass = true
         case .oneAbsent:
             store.toggle(hemanth)
+        case .saveFailed:
+            store.toggle(hemanth)
+            await store.save()
         case .saved, .alert:
             store.toggle(hemanth)
             await store.save()

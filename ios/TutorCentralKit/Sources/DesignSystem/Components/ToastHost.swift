@@ -49,7 +49,9 @@ public struct ToastHost: View {
     }
 }
 
-/// A toast over an open sheet: the app's toasts draw under sheets, so a failed save is said where the tutor is.
+/// A toast and the alerts over an open sheet: the app's toasts draw under sheets, so an Undo or a failed save is said
+/// where
+/// the tutor is.
 public struct SheetToasts: ViewModifier {
     let aboveFooter: Bool
     /// A sheet carries no FooterButton, and the screen's footer under it is hidden: its toast never lifts for one.
@@ -74,5 +76,7 @@ public struct SheetToasts: ViewModifier {
                 )
             }
         }
+        // A failed write on a sheet is the system alert, shown by the sheet (U33).
+        .modifier(SheetNotices())
     }
 }

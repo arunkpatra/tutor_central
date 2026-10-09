@@ -215,6 +215,7 @@ sheets and the tab pill (iOS defaults).
 | `breathe` | 1600 ms | Skeleton opacity 1 to 0.55, ease-in-out, repeating |
 | `opening` | 500 ms | The launch screen's book fading into the first screen once the app is ready (P7-Launch-Fade); ease-in-out, since `easeOut` would end it in a tenth of a second |
 | `toastStay` | 5 s | A toast stays; 8 s when it carries an undo |
+| `doneStay` | 2000 ms | A button's done state ("✓ Copied") stays, then the button is itself again (U33) |
 
 Reduced motion: every transition is removed; numbers change at once.
 
