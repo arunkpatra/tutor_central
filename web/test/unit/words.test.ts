@@ -3,8 +3,11 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import NotFound from "../../app/not-found";
 import Home from "../../app/page";
+import Privacy from "../../app/privacy/page";
+import Support from "../../app/support/page";
+import Terms from "../../app/terms/page";
 
-/** The app's banned words (ErrorWordsTests) less "database", which the privacy page uses in its plain sense (D41). */
+/** The app's banned words (ErrorWordsTests, D41); "database" is in INTERNAL below. */
 const BANNED = [
   "server",
   "servers",
@@ -35,7 +38,14 @@ const BANNED = [
 const PAGES: Record<string, () => string> = {
   home: () => renderToStaticMarkup(createElement(Home)),
   notFound: () => renderToStaticMarkup(createElement(NotFound)),
+  privacy: () => renderToStaticMarkup(createElement(Privacy)),
+  terms: () => renderToStaticMarkup(createElement(Terms)),
+  support: () => renderToStaticMarkup(createElement(Support)),
 };
+
+/** Nothing internal on a public page (D50, the owner): no company that runs a part of the app other than the AI service the
+ *  app's consent names, no place a machine sits, no description of how records are stored. */
+const INTERNAL = ["supabase", "vercel", "resend", "mumbai", "database", "backup", "backups", "postgres", "hono"];
 
 /** The words a reader sees: tags (and so attributes such as href) removed. */
 function visibleText(html: string): string {
@@ -53,6 +63,17 @@ test("no technical words on any page", () => {
       if (banned.includes(" ")) expect(text.includes(banned), `${name}: ${banned}`).toBe(false);
       else expect(found.has(banned), `${name}: ${banned}`).toBe(false);
     }
+  }
+});
+
+test("nothing internal on any page (D50)", () => {
+  for (const [name, render] of Object.entries(PAGES)) {
+    const found = new Set(
+      visibleText(render())
+        .split(/[^a-z0-9]+/)
+        .filter(Boolean),
+    );
+    for (const word of INTERNAL) expect(found.has(word), `${name}: ${word}`).toBe(false);
   }
 });
 
