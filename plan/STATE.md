@@ -3,14 +3,18 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-10, session 22 (Phase 10 Part B, on Opus 5.5). **Session 22:** Phase 10 done. Part B, the plumbing,
+**Last updated:** 2026-10-10, session 23 (Phase 11's plan, on Fable 5.1). **Session 23:** `plan/phase-11-plan.md` written
+(24 tasks, ten pull requests, tests first, the launch states, the hand runs, the review focus, twenty decisions it takes) and
+`resume/022-phase-11-build.md` for the build on Opus; documents only, to `main`. One question is the owner's: Today's way into
+the close (the 10.3 batch hero with Start class over V1's content, without the plan cards) — asked at the end of the session,
+unanswered when this was written. **Session 22:** Phase 10 done. Part B, the plumbing,
 merged as PRs #90 to #96: migrations 0009 to 0016 (the V2 tables, `close_session`, `copy_textbook_chapters`, the `photos`
 bucket, the monthly allowance, the syllabus data for CBSE and Karnataka state, classes 8 to 10), the API's four V2 routes
 answering 501, the iOS Domain types and Phase 11's repositories, the share extension (embedded) and background refresh;
 a fresh review on Fable 5.1, its three Important findings fixed in #96. Both deploys done, nothing pending; TestFlight 1.0.0 (19), run 38047105651, the first with the share extension: archived, cloud-signed and uploaded (it shows no new screen; the share sheet gains the "Tutor Central" entry, which saves and does nothing visible until Phase 13).
 **The owner, 2026-10-10 (D66):** V2 is the product; V1 was the proof of concept. Phase 9's tester run on V1 is cancelled;
-the tutor round is Phase 15's, on V2. **Next:** Phase 11's plan on Fable from `resume/021-phase-11-boards-and-plan.md`
-(its boards are Phase 10's, approved), then its build on Opus.
+the tutor round is Phase 15's, on V2. **Next:** the owner's answer on the hero, then Phase 11's build on Opus from
+`resume/022-phase-11-build.md`.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -30,7 +34,8 @@ the tutor round is Phase 15's, on V2. **Next:** Phase 11's plan on Fable from `r
 | 8 Website | Done, PRs #76 to #82 | "As built" in `phase-08-website.md`; then #83 to #89 after the close (the 30-day words, the crash fix, the minors, U33, the sheet title, store-shots, seed-review) |
 | 9 User testing | Cancelled by the owner, 2026-10-10 (D66) | V1 was the proof of concept; the tutor round is Phase 15's, on V2, by Phase 9's method (D52 to D55); `phase-09-plan.md` kept as that method |
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
-| 11 to 16 V2 (`docs/spec-v2.md`) | Phase 11 next | Scope files `phase-11-record-and-close.md` to `phase-16-release.md`; Phase 11's plan from `resume/021-phase-11-boards-and-plan.md` |
+| 11 The record and the close | Plan written (session 23, 2026-10-10): `phase-11-plan.md`; the build next on Opus from `resume/022-phase-11-build.md` | Scope `phase-11-record-and-close.md`; boards 10.1, 10.2 and the close of 10.3 |
+| 12 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-12-class-plan.md` to `phase-16-release.md` |
 
 ## In flight
 
