@@ -7,6 +7,8 @@ import SwiftUI
 public struct MessageSheet: View {
     let title: String
     let name: String
+    /// The line beside the avatar, when it is not the name (the consent ask: "Before Riya's work goes to the AI").
+    let heading: String?
     let parentLine: String
     let text: String
     let note: String
@@ -14,7 +16,7 @@ public struct MessageSheet: View {
     let open: () async -> Void
     let close: () -> Void
     @State private var opening = false
-    static var avatarSize: CGFloat {
+    public static var avatarSize: CGFloat {
         56
     }
 
@@ -24,11 +26,12 @@ public struct MessageSheet: View {
     }
 
     public init(
-        title: String, name: String, parentLine: String, text: String, note: String, canOpen: Bool,
-        open: @escaping () async -> Void, close: @escaping () -> Void
+        title: String, name: String, heading: String? = nil, parentLine: String, text: String, note: String,
+        canOpen: Bool, open: @escaping () async -> Void, close: @escaping () -> Void
     ) {
         self.title = title
         self.name = name
+        self.heading = heading
         self.parentLine = parentLine
         self.text = text
         self.note = note
@@ -45,7 +48,7 @@ public struct MessageSheet: View {
                     HStack(spacing: Tokens.cardPaddingCompact) {
                         Avatar(name: name, size: Self.avatarSize)
                         VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                            Text(name).typeStyle(Tokens.emptyTitle).foregroundStyle(Tokens.text.color)
+                            Text(heading ?? name).typeStyle(Tokens.emptyTitle).foregroundStyle(Tokens.text.color)
                             Text(parentLine).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
                         }
                     }

@@ -146,3 +146,32 @@ struct AttendanceCard: View {
         .task { await store.load() }
     }
 }
+
+/// Notes on the page (P3-StudentDetail): the text, or the empty row; Edit opens the student form.
+struct NotesSection: View {
+    let notes: String?
+    let firstName: String
+    let edit: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+            SectionHeader("Notes", action: ("Edit", edit))
+            Card {
+                if let notes {
+                    Text(notes)
+                        .typeStyle(Tokens.body)
+                        .foregroundStyle(Tokens.text.color)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, Tokens.rowPaddingVertical)
+                        .padding(.horizontal, Tokens.rowPaddingHorizontal)
+                } else {
+                    EmptyRow(
+                        symbol: "doc.text",
+                        title: "No notes yet",
+                        line: "School, board, pickup: anything to remember about \(firstName)."
+                    )
+                }
+            }
+        }
+    }
+}

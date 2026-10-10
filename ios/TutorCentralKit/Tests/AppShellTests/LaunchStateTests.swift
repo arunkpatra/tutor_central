@@ -64,7 +64,6 @@ struct LaunchStateTests {
 
     @MainActor @Test func theStudentDetailStatesOpenAkshitaOnTheStudentsTab() async throws {
         let states: [LaunchState] = [
-            .student,
             .studentArchived,
             .studentArchiveConfirm,
             .studentDeleteConfirm,
@@ -75,6 +74,10 @@ struct LaunchStateTests {
             #expect(RootView.tab(for: state) == .students)
             #expect(RootView.initialRoutes(for: state) == [.student(FakeStudentsRepository.akshita)])
         }
+        // V2's page (P10-Student): Hemanth, Riya not known yet, Sahil on the ladder.
+        #expect(RootView.initialRoutes(for: .student) == [.student(FakeStudentsRepository.hemanth)])
+        #expect(RootView.initialRoutes(for: .studentNotKnown) == [.student(FakeStudentsRepository.riya)])
+        #expect(RootView.initialRoutes(for: .studentLadder) == [.student(FakeStudentsRepository.sahil)])
         #expect(RootView.initialRoutes(for: .settings) == [.settings] && RootView.initialRoutes(for: .students).isEmpty)
         let archived = try await Fixtures.dependencies(for: .studentArchived).students
             .students(centre: Fixtures.meeraWorkspace.centre.id, period: Period(year: 2026, month: 10))

@@ -66,28 +66,6 @@ public enum Fixtures {
         )
     }
 
-    /// P10-NewStudent-School's three schools.
-    static let boardSchools = [
-        FakeSchoolsRepository.vidya,
-        School(
-            id: UUID(uuidString: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60732") ?? UUID(),
-            name: "National Public School",
-            board: nil
-        ),
-        School(
-            id: UUID(uuidString: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60733") ?? UUID(),
-            name: "St Mary's School",
-            board: .icse
-        ),
-    ]
-
-    /// The message log: Hemanth's absence alert and the fee reminders the boards show.
-    @MainActor static func messages(for state: LaunchState) -> FakeMessageLogRepository {
-        FakeMessageLogRepository(
-            logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed, now: { clock(for: state) }
-        )
-    }
-
     /// The signed-in tutor and her centre for a state, with the failures a board draws.
     @MainActor static func session(for state: LaunchState) -> (FakeAuthRepository, FakeCentreRepository) {
         let auth = FakeAuthRepository()
@@ -179,7 +157,10 @@ public enum Fixtures {
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
              .studentNewInvalid, .studentNewNewClass, .studentNewClassMade, .studentNewClass9, .studentNewClassPicker,
-             .studentNewSchool, .studentNewEnd, .student, .studentArchived,
+             .studentNewSchool, .studentNewEnd, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder,
+             .studentConsentAsk,
+             .studentConsentRecord, .studentConsentWaiting, .student,
+             .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm,
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,

@@ -7,6 +7,12 @@ public enum StudentDetailBoardState: Sendable {
     case archiveConfirm
     case deleteConfirm
     case edit
+    /// Scrolled to the record with the current chapter open (P10-Student-Record); to the end (P10-Student-End).
+    case record
+    case end
+    /// The consent ask's sheet (P10-Consent-Ask); the Parent agreed sheet (P10-Consent-Record).
+    case consentAsk
+    case consentRecord
 }
 
 /// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent with
@@ -21,9 +27,13 @@ public struct StudentDetailView: View {
     let navigation: StudentsNavigation
     let boardState: StudentDetailBoardState?
     let onMissing: () -> Void
+    /// A refused write's words, for AppShell's system alert (U33).
+    let onMessage: (String) -> Void
     @State private var confirming: Confirmation?
     @State private var deleting = false
     @State private var editing: StudentFormStore?
+    @State private var asking = false
+    @State private var recordingConsent = false
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
@@ -33,8 +43,10 @@ public struct StudentDetailView: View {
         actions: StudentsActions,
         navigation: StudentsNavigation,
         boardState: StudentDetailBoardState? = nil,
-        onMissing: @escaping () -> Void
+        onMissing: @escaping () -> Void,
+        onMessage: @escaping (String) -> Void = { _ in }
     ) {
+        self.onMessage = onMessage
         _store = State(initialValue: store)
         self.register = register
         self.actions = actions
@@ -44,6 +56,12 @@ public struct StudentDetailView: View {
     }
 
     public var body: some View {
+        ScrollViewReader { reader in
+            page.task(id: store.recordLoaded) { await scrollForBoard(reader) }
+        }
+    }
+
+    private var page: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 // Outside the student: a screen whose student has gone still has its way back.
@@ -53,14 +71,31 @@ public struct StudentDetailView: View {
                     if let line = store.archivedLine {
                         Banner(symbol: "archivebox", text: line)
                     }
+                    if let tracking = store.tracking {
+                        TrackingSection(lines: tracking, firstName: student.firstName, place: nil)
+                    }
                     ParentCard(student: student, call: store.callURL, whatsApp: store.whatsAppURL, addContact: edit)
+                    if !consentAgreed {
+                        consentSection
+                    }
+                    ThisWeekSection(rows: store.thisWeek)
+                    RecordSection(store: store, addTextbook: nil, addChapter: nil).id(Anchor.record)
+                    if let checks = store.checks {
+                        ChecksSection(lines: checks)
+                    }
+                    HomeworkSection(rows: store.homework) { id, status in Task { await store.setHomework(id, status) } }
+                    SchoolSection(line: store.schoolEmptyLine)
+                    MessagesSection(rows: store.messages).id(Anchor.end)
+                    if consentAgreed {
+                        consentSection
+                    }
                     MonthFeeCard(
                         store: store,
                         seeAll: { actions.openStudentFees(student.id) },
                         act: actions.openFeeAction
                     )
                     attendance
-                    notes(student)
+                    NotesSection(notes: store.notesLine, firstName: student.firstName, edit: edit)
                     buttons(student)
                 }
             }
@@ -106,11 +141,42 @@ public struct StudentDetailView: View {
         }
         // A student who goes while the screen is open (deleted elsewhere, a refresh): the route leaves, with a word.
         // A deletion made here dismisses on its own.
+        .sheet(isPresented: $asking) {
+            ConsentAskSheet(store: store.consent) { asking = false }
+                .boardDetents(MessageSheet.boardFraction)
+        }
+        .sheet(isPresented: $recordingConsent) {
+            ConsentRecordSheet(store: store.consent) { recordingConsent = false }
+        }
+        .onChange(of: store.consent.failure) { _, failure in
+            guard let failure else { return }
+            onMessage(failure)
+            store.consent.failure = nil
+        }
+        .onChange(of: store.message) { _, message in
+            guard let message else { return }
+            onMessage(message)
+            store.message = nil
+        }
         .onChange(of: store.student == nil) { _, missing in
             if missing, !deleting {
                 onMissing()
             }
         }
+    }
+
+    /// Consent waits under the parent while it asks something of the tutor (P10-Student-NotKnown, -Consent-Waiting);
+    /// agreed, it sits after the messages (P10-Student-End).
+    private var consentAgreed: Bool {
+        if case .agreed = store.consent.state {
+            true
+        } else {
+            false
+        }
+    }
+
+    private var consentSection: some View {
+        ConsentSection(store: store.consent, ask: { asking = true }, agreed: { recordingConsent = true })
     }
 
     private func navigationRow(_ student: Student?) -> some View {
@@ -134,43 +200,24 @@ public struct StudentDetailView: View {
                     if let chip = store.archivedChip {
                         Chip(.neutral(chip, symbol: "archivebox"))
                     }
+                    if let classChip = store.classChip {
+                        Chip(.neutral(classChip))
+                    }
                     if let classroom = store.classroom {
                         Button { navigation.openClass(classroom.id) } label: { Chip(.neutral(classroom.name)) }
                             .pressable()
                     }
-                    Text(store.feeLine)
-                        .typeStyle(Tokens.footnote)
-                        .foregroundStyle(Tokens.text2.color)
-                        .frame(minHeight: Chip.height)
                 }
+                if let school = store.schoolLine {
+                    Text(school).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                }
+                Text(store.feeLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
         }
     }
 
     private var attendance: some View {
         AttendanceCard(store: store) { actions.openStudentAttendance(store.id) }
-    }
-
-    private func notes(_ student: Student) -> some View {
-        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Notes", action: ("Edit", edit))
-            Card {
-                if let notes = store.notesLine {
-                    Text(notes)
-                        .typeStyle(Tokens.body)
-                        .foregroundStyle(Tokens.text.color)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.vertical, Tokens.rowPaddingVertical)
-                        .padding(.horizontal, Tokens.rowPaddingHorizontal)
-                } else {
-                    EmptyRow(
-                        symbol: "doc.text",
-                        title: "No notes yet",
-                        line: "School, board, pickup: anything to remember about \(student.firstName)."
-                    )
-                }
-            }
-        }
     }
 
     private func buttons(_ student: Student) -> some View {
@@ -224,12 +271,28 @@ public struct StudentDetailView: View {
         }
     }
 
+    private enum Anchor: Hashable {
+        case record, end
+    }
+
+    /// The scrolled boards: the record (its current chapter open) or the end.
+    private func scrollForBoard(_ reader: ScrollViewProxy) async {
+        guard boardState == .record || boardState == .end, store.recordLoaded else { return }
+        if boardState == .record {
+            store.openCurrentChapter()
+        }
+        try? await Task.sleep(for: .seconds(Tokens.panel))
+        reader.scrollTo(boardState == .record ? Anchor.record : Anchor.end, anchor: .top)
+    }
+
     private func setUpBoardState() {
         switch boardState {
         case .archiveConfirm: confirming = .archive
         case .deleteConfirm: confirming = .delete
         case .edit: edit()
-        case nil: break
+        case .consentAsk: asking = true
+        case .consentRecord: recordingConsent = true
+        case .record, .end, nil: break
         }
     }
 }

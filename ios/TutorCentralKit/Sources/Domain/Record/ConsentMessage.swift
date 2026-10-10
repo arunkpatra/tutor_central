@@ -15,7 +15,7 @@ public enum ConsentMessage {
             "marks and work may be read by an AI service (Claude, by Anthropic). It keeps nothing for training and",
             "deletes what it reads within 30 days. Please reply YES if you agree. Thank you.",
         ].joined(separator: " ")
-        let signature = [tutorName, centreName].compactMap(\.self).joined(separator: "\n")
+        let signature = [tutorName, centreName].compactMap(\.self).filter { !$0.isEmpty }.joined(separator: "\n")
         return "\(body)\n\n\(signature)"
     }
 }

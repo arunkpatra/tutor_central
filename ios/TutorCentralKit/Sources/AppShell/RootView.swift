@@ -284,10 +284,9 @@ public struct RootView: View {
             let register = register(for: workspace)
             StudentDetailView(
                 store: StudentDetailStore(
-                    id: id,
-                    register: register,
-                    attendance: deps.attendance,
-                    messages: deps.messages
+                    id: id, register: register, attendance: deps.attendance, messages: deps.messages,
+                    textbooks: deps.textbooks, record: deps.record, now: deps.now,
+                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
                 ),
                 register: register,
                 actions: studentsActions,
@@ -296,7 +295,8 @@ public struct RootView: View {
                 onMissing: {
                     shell.tabs.remove(.student(id))
                     notices.show(StudentDetailStore.missingMessage)
-                }
+                },
+                onMessage: { notices.show($0) }
             )
         }
     }
