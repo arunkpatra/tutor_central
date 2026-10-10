@@ -11,7 +11,7 @@ import { request as paperRequest } from "../prompts/paper.js";
 import { request as noteRequest } from "../prompts/progress-note.js";
 import { normalisePhone, request as scanRequest } from "../prompts/scan-register.js";
 import { request as worksheetRequest } from "../prompts/worksheet.js";
-import { CheckPaperInput, GenerateInput, ParseSchoolInput, PlanInput, type ScanOutput, ScanRegisterInput } from "../schemas.js";
+import { CheckPaperInput, GenerateInput, ParseSchoolInput, type ScanOutput, ScanRegisterInput } from "../schemas.js";
 import { answer, isParsed, notYet, parse, run, safeJSON } from "./common.js";
 import { v2Routes } from "./v2.js";
 
@@ -67,7 +67,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     return run(c, deps, body.centre, { kind: "check_paper", input, request: checkRequest(pages, text ?? "", studentName) });
   });
 
-  // V2 (docs/spec-v2.md section 9): the contract is validated now; each route is built in its phase (12 to 14). The live
+  // V2 (docs/spec-v2.md section 9): the contract is validated now; each route is built in its phase (13 and 14). The live
   // ones are routes/v2.ts's.
   const skeleton = <T>(path: string, schema: ZodType<T>) =>
     routes.post(path, async (c) => {
@@ -75,7 +75,6 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
       if (!isParsed(body)) return body;
       return notYet(c, `/ai${path}`);
     });
-  skeleton("/plan", PlanInput);
   skeleton("/parse-school", ParseSchoolInput);
   routes.route("/", v2Routes(deps));
 

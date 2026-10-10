@@ -31,8 +31,7 @@ test("an unknown route → 404 in words", async () => {
 test("the V2 routes validate, then answer 501 until their phase", async () => {
   const centreId = "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718";
   for (const [path, body] of [
-    ["/ai/plan", { centreId, classId: null, date: "2026-10-12" }],
-    ["/ai/make", { centreId, kind: "brief", classLevel: "9", subject: "Science", chapter: "Motion" }],
+    ["/ai/make", { centreId, kind: "mock", classLevel: "9", subject: "Science", portions: ["Motion"], pattern: { marks: 25, durationMinutes: 40 } }],
     ["/ai/parse-school", { centreId, text: "FA2 on Monday" }],
   ] as const) {
     const r = await post(path, JSON.stringify(body));

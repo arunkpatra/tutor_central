@@ -4,6 +4,11 @@ import { request as paper, sectionPlan } from "../src/prompts/paper.js";
 import { request as textbookRequest } from "../src/prompts/parse-textbook.js";
 import { request as note } from "../src/prompts/progress-note.js";
 import { normalisePhone, request as scan } from "../src/prompts/scan-register.js";
+import { request as brief } from "../src/prompts/brief.js";
+import { request as figure } from "../src/prompts/figure.js";
+import { request as plan } from "../src/prompts/plan.js";
+import { request as sheet } from "../src/prompts/sheet.js";
+import { request as workedExample } from "../src/prompts/worked-example.js";
 import { GenerateInput } from "../src/schemas.js";
 
 test("a paper asks Sonnet at medium effort for sections, marks and answers that add up", () => {
@@ -90,4 +95,50 @@ test("the textbook prompt asks for chapter names and short skills, never the boo
   expect(r.system).toContain("chapter names as printed");
   expect(r.system).toContain("never copy");
   expect(r.text).toContain("class 5");
+});
+
+// ---- Phase 12: the plan's topics and the four artefacts ----
+const centreId = "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718";
+
+test("a sheet asks Haiku up to class 5 and Sonnet from class 6, names the skills and the count, and carries a reason when given", () => {
+  const young = sheet({ kind: "sheet", centreId, classLevel: "5", subject: "Mathematics", skills: ["Compare simple fractions"], questions: 5, forHomework: true });
+  expect(young.model).toBe("claude-haiku-5-5");
+  expect(young.text).toContain("Exactly 5 questions");
+  expect(young.text).toContain("homework");
+  const older = sheet({ kind: "sheet", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation", "Name the reactants"], questions: 10, forHomework: false, reason: "easier" });
+  expect(older.model).toBe("claude-sonnet-5-5");
+  expect(older.text).toContain('"Balance a chemical equation"');
+  expect(older.text).toContain("Make it easier");
+  expect(older.system).not.toContain("student's name");
+});
+
+test("a worked example asks Sonnet for steps the tutor says aloud and the common slip", () => {
+  const r = workedExample("8", "Science", "Balance a chemical equation");
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.system).toContain("one step at a time");
+  expect(r.text).toContain("Balance a chemical equation");
+});
+
+test("a figure asks Sonnet for one named template and says the rule the app checks", () => {
+  const r = figure("fraction_bar", "5", "Mathematics", "Compare simple fractions");
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.text).toContain("fraction_bar");
+  expect(r.system).toContain("parts");
+  const chain = figure("food_chain", "7", "Science", "Explain a food chain");
+  expect(chain.system).toContain("plant");
+});
+
+test("a brief asks Sonnet to write as a colleague, five minutes, for the chapter", () => {
+  const r = brief("8", "Science", "Chemical reactions");
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.system).toContain("colleague");
+  expect(r.text).toContain("Chemical reactions");
+});
+
+test("the plan's topics ask Sonnet for a first chapter and skill per group for the month of the school year", () => {
+  const r = plan({ centreId, classId: null, date: "2026-10-07", month: 10, groups: [{ groupNo: 1, classLevel: "8", subject: "Science" }, { groupNo: 2, classLevel: "2", subject: "Mathematics" }] });
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.text).toContain("October");
+  expect(r.text).toContain("Group 1: class 8 Science");
+  expect(r.system).toContain("textbook");
 });

@@ -11,6 +11,10 @@ import {
   ScanOutput,
   ScanRegisterInput,
   Scheme,
+  BriefOutput,
+  FigureOutput,
+  PlanOutput,
+  WorkedExampleOutput,
 } from "../src/schemas.js";
 
 test("GenerateInput accepts each kind and rejects an unknown one", () => {
@@ -97,10 +101,11 @@ test("lengths count code points, as the app and Postgres do (D48)", () => {
 const centre = { centreId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718" };
 const studentId = "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60719";
 
-test("PlanInput takes a batch and a day", () => {
-  expect(PlanInput.safeParse({ ...centre, classId: null, date: "2026-10-12" }).success).toBe(true);
-  expect(PlanInput.safeParse({ ...centre, classId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60730", date: "2026-10-12" }).success).toBe(true);
-  expect(PlanInput.safeParse({ ...centre, classId: null, date: "12/10/2026" }).success).toBe(false);
+test("PlanInput takes a batch or none, a day, the month and the groups", () => {
+  const groups = [{ groupNo: 1, classLevel: "8", subject: "Science" }];
+  expect(PlanInput.safeParse({ ...centre, classId: null, date: "2026-10-12", month: 10, groups }).success).toBe(true);
+  expect(PlanInput.safeParse({ ...centre, classId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60730", date: "2026-10-12", month: 10, groups }).success).toBe(true);
+  expect(PlanInput.safeParse({ ...centre, classId: null, date: "12/10/2026", month: 10, groups }).success).toBe(false);
 });
 
 test("MakeInput accepts each kind with its fields and nothing else", () => {
@@ -150,4 +155,54 @@ test("a mock takes the board's blueprint as the syllabus data writes it", async 
     const parsed = MakeInput.safeParse({ ...centre, kind: "mock", classLevel: "10", subject: "Science", portions: ["All"], pattern: blueprint });
     expect({ file, ok: parsed.success }).toEqual({ file, ok: true });
   }
+});
+
+// ---- Phase 12: the plan's topics and the four artefacts ----
+const centreId = "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718";
+
+test("PlanInput names the month and up to three groups by class and subject, no student", () => {
+  const ok = PlanInput.safeParse({ centreId, classId: null, date: "2026-10-07", month: 10, groups: [{ groupNo: 1, classLevel: "8", subject: "Science" }] });
+  expect(ok.success).toBe(true);
+  expect(PlanInput.safeParse({ centreId, classId: null, date: "2026-10-07", month: 13, groups: [{ groupNo: 1, classLevel: "8", subject: "Science" }] }).success).toBe(false);
+  expect(PlanInput.safeParse({ centreId, classId: null, date: "2026-10-07", month: 10, groups: [] }).success).toBe(false);
+  expect(PlanInput.safeParse({ centreId, classId: null, date: "2026-10-07", month: 10, groups: [{ groupNo: 1, classLevel: "8", subject: "Science", studentId: "x" }] }).success).toBe(false);
+});
+
+test("a sheet takes a reason to make it again, up to 200 characters", () => {
+  expect(MakeInput.safeParse({ kind: "sheet", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation"], reason: "easier" }).success).toBe(true);
+  expect(MakeInput.safeParse({ kind: "sheet", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation"], reason: "x".repeat(201) }).success).toBe(false);
+});
+
+test("the figure's spec is one of seven kinds and each kind's rule holds", () => {
+  const ok = (figure: unknown) => FigureOutput.safeParse({ figure, caption: "Drawn from the skill." }).success;
+  expect(ok({ kind: "number_line", from: 0, to: 20, step: 2, start: 4, jumps: [6, 6] })).toBe(true);
+  expect(ok({ kind: "number_line", from: 0, to: 10, step: 1, start: 8, jumps: [5] })).toBe(false); // lands past the end
+  expect(ok({ kind: "fraction_bar", parts: 4, shaded: 3, label: "3/4" })).toBe(true);
+  expect(ok({ kind: "fraction_bar", parts: 4, shaded: 5, label: "5/4" })).toBe(false);
+  expect(ok({ kind: "place_value", number: 4507 })).toBe(true);
+  expect(ok({ kind: "place_value", number: 10_000_000 })).toBe(false);
+  expect(ok({ kind: "unit_circle", angleDegrees: 30 })).toBe(true);
+  expect(ok({ kind: "unit_circle", angleDegrees: 400 })).toBe(false);
+  expect(ok({ kind: "triangle", angles: [90, 60, 30], labels: ["AB", "BC", "CA"] })).toBe(true);
+  expect(ok({ kind: "triangle", angles: [90, 60, 40], labels: ["AB", "BC", "CA"] })).toBe(false);
+  expect(ok({ kind: "labelled_cell", cell: "plant", labels: ["Cell wall", "Nucleus", "Chloroplast", "Vacuole", "Cytoplasm"] })).toBe(true);
+  expect(ok({ kind: "labelled_cell", cell: "plant", labels: ["a", "b", "c", "d", "e", "f"] })).toBe(false);
+  expect(ok({ kind: "food_chain", links: ["Grass", "Grasshopper", "Frog", "Snake"] })).toBe(true);
+  expect(ok({ kind: "food_chain", links: ["Grass"] })).toBe(false);
+  expect(ok({ kind: "pie_chart", slices: [1, 2] })).toBe(false);
+});
+
+test("the worked example has two to six steps and a slip; the brief has three mistakes and three lines to say", () => {
+  const steps = [{ title: "Count the atoms", working: "H: 2 left, 2 right" }, { title: "Balance O", working: "Put 2 before H2O" }];
+  expect(WorkedExampleOutput.safeParse({ problem: "Balance H2 + O2 → H2O", steps, slip: "Changing the small numbers." }).success).toBe(true);
+  expect(WorkedExampleOutput.safeParse({ problem: "x", steps: steps.slice(0, 1), slip: "y" }).success).toBe(false);
+  const brief = { about: "What happens in a reaction.", mistakes: [{ title: "Changing subscripts", howToCatch: "Ask what H2O becomes." }, { title: "Reactants and products swapped", howToCatch: "Point at the arrow." }, { title: "Ice melting called chemical", howToCatch: "Ask what new substance formed." }], workedExample: { problem: "Balance H2 + O2 → H2O", steps, slip: "Changing the small numbers." }, words: ["Only the numbers in front change.", "Count each atom on both sides.", "A new substance means a chemical change."] };
+  expect(BriefOutput.safeParse(brief).success).toBe(true);
+  expect(BriefOutput.safeParse({ ...brief, mistakes: brief.mistakes.slice(0, 2) }).success).toBe(false);
+  expect(BriefOutput.safeParse({ ...brief, words: brief.words.slice(0, 2) }).success).toBe(false);
+});
+
+test("PlanOutput names a chapter and a skill per group", () => {
+  expect(PlanOutput.safeParse({ groups: [{ groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" }] }).success).toBe(true);
+  expect(PlanOutput.safeParse({ groups: [{ groupNo: 1, chapter: "" }] }).success).toBe(false);
 });
