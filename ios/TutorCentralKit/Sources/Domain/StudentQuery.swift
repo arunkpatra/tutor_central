@@ -1,10 +1,11 @@
 import Foundation
 
 public enum StudentSort: String, CaseIterable, Hashable, Sendable {
-    case name, fee
+    case status, name, fee
 
     public var label: String {
         switch self {
+        case .status: "Status"
         case .name: "Name"
         case .fee: "Fee"
         }
@@ -39,6 +40,9 @@ public enum StudentQuery {
         }
         return kept.sorted { lhs, rhs in
             switch sort {
+            case .status:
+                return lhs.trackStatus != rhs.trackStatus ? lhs.trackStatus < rhs.trackStatus : lhs.name
+                    .localizedStandardCompare(rhs.name) == .orderedAscending
             case .name: return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
             case .fee:
                 let lhsFee = lhs.fee(in: lhs.classID.flatMap { byID[$0] }) ?? .zero

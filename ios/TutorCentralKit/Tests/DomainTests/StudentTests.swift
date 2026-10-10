@@ -49,4 +49,21 @@ struct StudentTests {
             .firstName == "Bir")
         #expect(Self.student("Dev").firstName == "Dev" && Self.student("Akshita Rao").isArchived == false)
     }
+
+    @Test func aStudentCachedBeforeV2ReadsWithV2Defaults() throws {
+        let old = #"{"id":"6A7B1C2D-3E4F-5061-7283-94A5B6C7D8E9","name":"Bir Bikram Singh"}"#
+        let student = try JSONDecoder().decode(Student.self, from: Data(old.utf8))
+        #expect(student.classLevel == nil && student.messageLanguage == .english && student.trackStatus == .notKnown)
+        #expect(student.trackReasons.isEmpty && student.consent == nil && student.classTitle == nil && !student
+            .showsBoard)
+        var hemanth = Self.student("Hemanth Reddy")
+        hemanth.classLevel = .ten
+        hemanth.consent = try ConsentRecord(
+            at: Date(timeIntervalSince1970: 0),
+            phone: #require(PhoneNumber(e164: "+919380260871")),
+            how: .whatsapp
+        )
+        let back = try JSONDecoder().decode(Student.self, from: JSONEncoder().encode(hemanth))
+        #expect(back == hemanth)
+    }
 }
