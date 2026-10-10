@@ -6,9 +6,13 @@ Every claim carries its source; "thin" at the end of each section says what coul
 `docs/spec.md` (V1) and `docs/reference/functional-inventory.md` (the V1 contract).
 
 The customer V2 is for, in the owner's words (2026-10-10): one person who teaches, 10 to 15 school children, often from
-different classes (1 to 7, sometimes 8 to 10) in the same evening slot, all subjects for the younger ones. Not a centre.
-The product must take the least possible of the tutor's time and headspace, tell them what to do, give them the tools,
-and do the hard work with AI under the covers.
+different classes (LKG to class 7, sometimes 8 to 10) in the same evening slot, all subjects for the younger ones, in
+English-medium schools. Not a centre. The product must take the least possible of the tutor's time and headspace, tell
+them what to do, give them the tools, and do the hard work with AI under the covers. The owner's account of their pains
+(material across grades, weak in a higher-grade subject, not knowing the school's exams, parents not forwarding what the
+school sends, explaining hard concepts) comes from tutors he has spoken to who run LKG through class 7 in one class. It
+is primary evidence; the web has no written version of it, which is itself a sign nobody has built for them.
+Android is planned for later (the owner, 2026-10-10); it is not an open question.
 
 ## 1. The customer
 
@@ -33,12 +37,9 @@ and do the hard work with AI under the covers.
 - **How they get students.** Word of mouth, neighbours, apartment and school WhatsApp groups, a free demo; UrbanPro's
   paid leads are resented ([UrbanPro Q&A](https://www.urbanpro.com/class-ix-x-tuition/how-to-get-students),
   [Coimbatore Junction](https://coimbatorejunction.in/tuition/guides/how-to-get-tuition-students-coimbatore/)).
-- **Pains documented in their words:** endless WhatsApp groups ([Hashnode 2025](https://hashnode.com/tag/tuition-centre-parent-app)),
+- **Pains written down elsewhere,** beside the owner's list above: endless WhatsApp groups ([Hashnode 2025](https://hashnode.com/tag/tuition-centre-parent-app)),
   chasing parents for payment screenshots ([Simtrain](https://blog.simtrainsystem.com/)), parents judging by marks
-  ([Yale Globalist](https://globalist.yale.edu/?p=1020)), fees rising before exams. The owner's list (material across
-  grades, weak in a higher-grade subject, not knowing the school's exams, parents not forwarding, explaining hard
-  concepts) found no written source: Reddit and Quora blocked fetching. It stands on the owner's observation and
-  should be confirmed with the Phase 9 tutors.
+  ([Yale Globalist](https://globalist.yale.edu/?p=1020)), fees rising before exams.
 
 Thin: tutor headcount, Bengaluru tuition incidence, mixed-grade practice, churn, iPhone share among tutors.
 
@@ -69,7 +70,8 @@ Thin: tutor headcount, Bengaluru tuition incidence, mixed-grade practice, churn,
 - **Languages.** Hinglish dominates Hindi speakers online; 58% prefer Hindi in Latin script, 13% Devanagari
   ([Milestone survey](https://www.milestoneloc.com/hinglish-report-pr/)). Karnataka is adding English-medium sections to
   4,134 government primaries because parents leave for lack of English ([Careers360](https://news.careers360.com/karnataka-decides-start-english-medium-classes-in-4134-government-primary-schools/amp)).
-  Safe defaults for parent messages: English and Hinglish, Kannada offered in Karnataka.
+  V2 assumes English-medium schools (the owner, 2026-10-10): lessons and material in English; Kannada, Hindi and
+  Hinglish only for messages to parents.
 
 Thin: the exact NCERT notice text, Karnataka Textbook Society terms, FA/SA weights, school-app market share, direct
 evidence of parents forwarding timetables to tutors.
@@ -168,9 +170,9 @@ Thin: Classplus's current price, Winuall's status, the paid chart.
   iOS is 6 to 7% of mobile web traffic ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/india)).
   No survey of teachers' or tutors' phones exists. iPhones are 65% of refurbished sales and iPhone 11 and later run iOS 26
   ([Business Today](https://www.businesstoday.in/technology/news/story/indians-are-buying-pricier-refurbished-phones-iphones-are-leading-the-trend-552697-2026-09-02)),
-  so the reachable tutor is urban, English-comfortable, and able to pay. That fits a sharp wedge and pricing power; it
-  does not fit "many solo tutors". Android is a when. Every parent-facing surface should be a WhatsApp message, a link or
-  a PDF, which is platform-neutral already.
+  so the reachable tutor is urban, English-comfortable, and able to pay. That fits a sharp wedge and pricing power.
+  Android follows later by the owner's plan. Every parent-facing surface should be a WhatsApp message, a link or a PDF,
+  which is platform-neutral already.
 - **How tutor apps grew.** Teachmint reached 120,000 tutors in five months on negligible marketing: teachers heard from
   friends and shared classroom links on WhatsApp ([YourStory](https://yourstory.com/2020/10/teachmint-funding-lightspeed-ventures-better-capital-titan-edtech/amp)).
   Classplus's outbound sales model did not survive at tutor price points ([Inc42](https://inc42.com/features/classplus-flips-its-edtech-playbook/)).
@@ -208,11 +210,15 @@ Thin: Apple's INR tiers, Teachmint's current tutor price, token estimates per ar
    templates and computed SVG with checks; PhET sims with attribution; nothing free-form, nothing that can mislabel a
    diagram.
 6. **The parent hears child-specific facts, at most three times a week, in their language, after the tutor reads it.**
-   Hinglish and English first, Kannada in Karnataka. Every message is forwardable and carries the tutor's name.
+   English, Hinglish, Hindi or Kannada for the message only; the teaching is in English. Every message is forwardable
+   and carries the tutor's name.
 7. **Measure with taps.** Placement on joining, exit checks, marks from photos. "On track" or "not on track" with the
    reason and the next move. Claim measurable progress and a tenth of the preparation time, never ten-times marks.
-8. **Own the syllabus facts, not the books.** Chapter lists per board, class, subject and edition, built by hand from
-   the PDFs: Karnataka state first for Bengaluru, then CBSE, then ICSE by publisher. No textbook text stored.
+8. **Own the syllabus facts, not the books.** The board matters from about class 8 (the owner, 2026-10-10); LKG to
+   class 7 in an English-medium school runs on the school's own books and what the school sends, so the record is keyed by
+   school and class, and the child's own textbook (a photo of its contents page) gives the chapter list. From class 8 the
+   board's chapter list per subject and edition is kept by hand from the PDFs: CBSE, Karnataka state, ICSE by publisher.
+   No textbook text stored.
 9. **Exam prep runs from the school's own dates.** Two target dates for class 10. A revision plan, daily sets, a mock in
    the school's pattern, marking from a photo, a gap report.
 10. **V1 stays as the spine:** students, attendance (now the session's trigger), fees (the sharpest documented admin
@@ -222,10 +228,12 @@ Thin: Apple's INR tiers, Teachmint's current tutor price, token estimates per ar
 12. **iPhone first is a wedge, not the market.** Decide Android at a number of paying tutors; keep every parent surface
     platform-neutral until then.
 13. **Consent per child from the first version,** ahead of May 2027.
+14. **LKG to class 3 is its own stage.** No board, no exams that matter; the record is letters, numbers, reading and
+    writing on a ladder (ASER and NIPUN levels), the material is tracing, reading and counting sheets, the homework is
+    light, and the parent note is about what the child can now do.
 
-## 8. To confirm with the Phase 9 tutors
+## 8. To learn from the Phase 9 tutors
 
-The owner's list of pains (material across grades, weak subjects, school exam visibility, parents not forwarding,
-explaining hard concepts) found no written source. Six questions to ask them, on WhatsApp, before the spec is final:
-how many classes and boards are in one batch; how they learn a school test is coming; how long they spend preparing a
-week; which chapter they dread; what they send parents today and in which language; what they would pay a month.
+The pains are known from the owner's tutors. Six facts would still sharpen the spec, asked on WhatsApp: how many classes
+are in one batch and which schools; how they learn a school test is coming; how long they spend preparing a week; which
+chapter they dread; what they send parents today and in which language; what they would pay a month.
