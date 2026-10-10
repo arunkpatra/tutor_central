@@ -2285,6 +2285,83 @@
    "w": 393,
    "h": 852,
    "title": "Phase 10 · 10.5 Exam preparation two days before: the mock ready for the class, marking from a photo, who is marked with their gap report, the last two days from what the mocks showed"
+  },
+  "P10-Note.dc.html": {
+   "x": 0,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 The weekly note: the student and parent, the note in the parent's language in an editable well, English beside it for the tutor, what it says (taught, got right, to practise, coming), Write again, Copy, Send on WhatsApp · dark"
+  },
+  "P10-Note-Light.dc.html": {
+   "x": 473,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 The weekly note · light"
+  },
+  "P10-Note-Send.dc.html": {
+   "x": 946,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 Send the note: the two-language message sheet with the signature, Open WhatsApp; the send is logged with the language"
+  },
+  "P10-CanNowDo.dc.html": {
+   "x": 1419,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 Can now do, for a LKG to class 3 parent: the ladder step moved up, the note in Kannada with English beside, what it says, Send on WhatsApp"
+  },
+  "P10-Student-Messages.dc.html": {
+   "x": 1892,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 The sent log on the student's page (See all): every message by month with its kind, day, language and whether WhatsApp was opened; a held one with Send now"
+  },
+  "P10-Held.dc.html": {
+   "x": 2365,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 A held suggestion opened from the note day: why it waits (three messages this week), Send it now or Keep it for next week; messages the tutor sends by hand are never held"
+  },
+  "P10-Student-NotOnTrack.dc.html": {
+   "x": 2838,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 Not on track on the student's page: the reasons, the next step (tell the parent, then teach again), Call or Tell the parent; the plan takes the step unless the tutor changes it"
+  },
+  "P10-NextStep.dc.html": {
+   "x": 3311,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 Change the next step: tell the parent then teach again, teach again with the worked example, step back to the prerequisite, add it to the checks, leave it for now"
+  },
+  "P10-NotOnTrack-Message.dc.html": {
+   "x": 3784,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 Tell the parent: the message in Hindi with English beside, what is hard, what we are doing, what helps at home, a five-minute talk; Open WhatsApp"
+  },
+  "P10-Today-NotOnTrack.dc.html": {
+   "x": 4257,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 Not on track on Today's line: the status word in overdue, a line with since when and the step for the parent, the teach line already the next step"
+  },
+  "P10-NoteDay-Change.dc.html": {
+   "x": 4730,
+   "y": 44200,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.6 The note day changed where it appears: a wheel on the note day's hero (the weekday and time; Sunday evening by default, after the week's last batch); kept per batch"
   }
  },
  "createdOnFiles": {
@@ -2447,6 +2524,14 @@
    "w": 240,
    "x": 0,
    "y": 42500
+  },
+  "p10_6": {
+   "kind": "title1",
+   "maxW": 8000,
+   "text": "Step 10.6 · Phase 10, Parents — the weekly note in the parent's language with English beside, sending it, can-now-do for LKG to 3, the sent log, a held note (three a week), not on track with the next step on the student's page and Today's line, the message to the parent, the note day's setting",
+   "w": 240,
+   "x": 0,
+   "y": 43900
   }
  },
  "order": [
@@ -2772,7 +2857,18 @@
   "P10-School-Item-Delete.dc.html",
   "P10-School-Ask.dc.html",
   "P10-TestTomorrow.dc.html",
-  "P10-School-Exam-LastDays.dc.html"
+  "P10-School-Exam-LastDays.dc.html",
+  "P10-Note.dc.html",
+  "P10-Note-Light.dc.html",
+  "P10-Note-Send.dc.html",
+  "P10-CanNowDo.dc.html",
+  "P10-Student-Messages.dc.html",
+  "P10-Held.dc.html",
+  "P10-Student-NotOnTrack.dc.html",
+  "P10-NextStep.dc.html",
+  "P10-NotOnTrack-Message.dc.html",
+  "P10-Today-NotOnTrack.dc.html",
+  "P10-NoteDay-Change.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

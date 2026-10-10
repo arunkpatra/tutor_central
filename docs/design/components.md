@@ -821,3 +821,44 @@ The texts:
 | Ask parents to forward | "One message, sent once to each parent on WhatsApp. Edit it first if you like; what they forward lands on this tab." · "Hello, this is Meera from Bright Minds Tuition. Please forward me whatever the school sends about tests, portions, homework and holidays, as soon as it comes. It helps me prepare your child for exactly what is coming. Thank you." then the signature · "2 of 7 sent" |
 | Test tomorrow | "Dev's test is tomorrow" · "Ramesh Kumar · +91 98848 43831 · Hindi" · "Message · Hindi" · "In English, for you" · "Hello Ramesh, Dev's science unit test is tomorrow (Thursday 8 October), from chapters 1 and 2. This evening, let him go over balancing equations once. Thank you." · "Opens WhatsApp with the Hindi message ready to send. We note it on Dev's page. The text is copied too, in case WhatsApp can't open." |
 | The last days | "Today, Wednesday" · "The mock, for Dev, Meher and Nikhil" "In the school's pattern · 25 marks · 40 minutes" · Ready · "Mark from a photo" "Each paper photographed after the class; the marks are suggested, you decide" · Marked · "14 of 25 · Balancing equations 3 of 10" · Gap report · "Not marked yet" · The last two days · "Test tomorrow goes to parents on Thursday evening" |
+
+## Phase 10 parts (step 10.6, approved 2026-10-10): Parents
+
+**Note well:** the Phase 6 note well (min 200 high, `body` 16/24) labelled "The note · <language>" with the counter "212 of 600"
+on the right and the helper "Edit anything before it goes. Tap Write again for a fresh draft." under it.
+
+**English block:** "In English, for you" over a `surface2` block with a `line` border, radius 15, `rowLine` `text2`.
+
+**Facts card ("What it says"):** a list card of rows with an icon tile and a label as the title (Taught `book.closed`, Got right
+`checkmark.circle`, To practise `pencil.line`, Coming `calendar`; Can now do, At home, Next) over the fact in `footnote` `text2`.
+
+**Message log row:** an icon tile by kind (`text.bubble` a note, `exclamationmark.circle` not on track, `doc.text` test tomorrow,
+`bell` a reminder, `checkmark.circle` a receipt, `clock` in `text3` a held one), the kind as the title, the line "<day> · <language>
+· opened <day>" or "not opened yet", a chevron; a held row has the quiet Send now instead.
+
+**Held sheet:** the message sheet's head ("Held for this week", the parent), an on-sheet card of the week's three messages, a
+`footnote` with the reason, two buttons 52: Send it now (secondary), Keep it for next week (primary).
+
+**Tell-the-parent card:** a list card with one row ("<parent> has not been told yet", the line) and two 44 pt buttons: Call
+(secondary, `phone`) and Tell the parent (primary, the `whatsapp` glyph).
+
+**Next-step sheet:** the student picker's sheet with five choice rows (an icon tile, the step, what it means), the plan's choice
+ticked; Use this in the footer.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The note's hero | "Ramesh Kumar · Hindi · the week of 5 October" |
+| What it says | Taught "Chemical reactions: balancing equations, types of reactions" · Got right "8 of 12 checks · all of Section A on the mock" · To practise "The numbers in front of a formula · 5 a day" · Coming "Acids, bases and salts · the unit test on Fri 16 Oct" |
+| The note (the English the tutor sees; the parent gets the language) | "Hello Ramesh, this week Dev learnt to balance chemical equations. He got 8 of 12 questions right. Changing the numbers in front is still being practised. At home, have him do 5 equations a day. Next week we start acids and bases. Thank you." then the signature |
+| Sending | "Dev's week, for Ramesh" · "Opens WhatsApp with the note ready to send. We note the day and the language on Dev's page. The text is copied too, in case WhatsApp can't open." |
+| The AI line | "AI can make mistakes. Read the note as the parent will; the facts are from Dev's record." ("from Sahil's ladder") |
+| Can now do | "Moved up" · "Sentences · moved up this week" · Can now do "Read short sentences · count to 99" · At home "One page a day from the picture book" · Next "Writing words · adding to 20" · "Hello Deepak, this week Sahil learnt to read short sentences. He counts from 1 to 99. At home, have him read one page a day. Thank you." |
+| The sent log | "Messages · Dev" · "What went to Ramesh Kumar from here, newest first. Opened means WhatsApp was opened with it; what he read is his." · "Held since Thu 8 Oct · Ramesh had three messages that week" · Send now |
+| Held | "Held for this week" · "Three messages this week already. The app suggests at most three a week per parent, so this weekly note waits for Sunday the 18th unless you send it now. Messages you send yourself are never held." · Send it now · Keep it for next week |
+| Not on track | the reasons: "Balancing equations: 3 of 10 on the mock and 1 of 6 checks right over three weeks. Absent twice in four weeks. Homework not done three times running." · Next: "Tell the parent, then teach again with the worked example." · "Ramesh Kumar has not been told yet" "A message in Hindi that says what is hard, what we are doing and what helps at home. You read it first." · Call · Tell the parent |
+| The next step | "What next for Dev" · "The plan takes the first line unless you choose another. Nothing is sent until you send it." · Tell the parent, then teach again · Teach again with the worked example · Step back to what comes before · Add it to the checks · Leave it for now · Use this |
+| The message to the parent | "Dev needs a hand this month" · "Hello Ramesh, Dev is finding balancing equations hard and was absent twice this month. We will teach it again with a worked example in the next class. Ten minutes of practice each evening at home will make a big difference. Could we talk for five minutes this week? Thank you." |
+| Today's line | "Since Fri 9 Oct · tell Ramesh after the class" |
+| The note day | "Note day · Sunday 18:00" · Change day · the wheel: Friday 18:00, Saturday 18:00, Sunday 18:00, Sunday 20:00, Monday 08:00 |

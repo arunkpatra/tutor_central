@@ -1041,3 +1041,59 @@ What the boards settle:
   English, for you" under it on `surface2`, Edit in the header, Open WhatsApp (logs `test_tomorrow`). It is offered on Today's
   "To parents" the evening before and from the item.
 - **Delete** asks with the dialog: the item leaves the tab and its preparation lines leave the plan; what was taught stays.
+
+## Phase 10 boards: step 10.6, Parents (approved 2026-10-10)
+
+Row 19 of the canvas (y 44200; the title note at 43900); sources `mockups/P10-Note*`, `P10-CanNowDo`, `P10-Student-Messages`,
+`P10-Held`, `P10-Student-NotOnTrack`, `P10-NextStep`, `P10-NotOnTrack-Message`, `P10-Today-NotOnTrack`, `P10-NoteDay-Change`. Dark
+for every state; light for the note. Content is illustrative: Dev's week for his father in Hindi, Sahil's ladder for his father in
+Kannada. The note day's list is drawn in step 10.3 (P10-Today-NoteDay).
+
+| Board | Source |
+|---|---|
+| The weekly note (dark and light); sending it | `P10-Note`, `-Light`, `-Send` |
+| Can now do | `P10-CanNowDo` |
+| The sent log; a held note | `P10-Student-Messages`, `P10-Held` |
+| Not on track: the student's page, the next step, the message to the parent, Today's line | `P10-Student-NotOnTrack`, `P10-NextStep`, `P10-NotOnTrack-Message`, `P10-Today-NotOnTrack` |
+| The note day's setting | `P10-NoteDay-Change` |
+
+Phase 14 builds these states (the light twins from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `note` | Dev's weekly note in Hindi with English beside |
+| `note-send` | The two-language sheet over it |
+| `note-can-do` | Sahil's can-now-do in Kannada |
+| `student-messages` | Dev's sent log with a held row |
+| `today-note-held` | A held note's sheet over the note day |
+| `student-not-on-track` | Dev's page with the next step and Tell the parent |
+| `student-next-step` | The next-step sheet |
+| `student-tell-parent` | The message to the parent |
+| `today-not-on-track` | Today's plan with Dev's line not on track |
+| `today-note-day-change` | The note day's wheel |
+
+What the boards settle:
+
+- **The note** is pushed from the note day's Read (and from a student's page, Write a note): the hero (avatar, the student, the
+  parent, the language, the week); the note in the parent's language in an editable well (600 characters, the counter), "In
+  English, for you" on `surface2` under it (the tutor reads what the parent will get; the English is never sent); "What it
+  says", four rows from the record (Taught, Got right, To practise, Coming; for LKG to 3: Can now do, At home, Next); the
+  footer: the AI line, Write again, Copy and Send on WhatsApp (the two-language message sheet with the signature; Open WhatsApp
+  logs a `note` row with the language). Can now do is the same screen with "Moved up" (the ladder) above the note.
+- **The parent's language** is the student's (English, Hinglish, Hindi, Kannada); English is always beside it for the tutor; a
+  note in English shows no second block.
+- **The cadence (D61)**: at most three suggested messages a week per parent (the note, can-now-do, test tomorrow, not on track,
+  a homework share); the fourth is held and shows on the note day and the sent log as Held with the reason; the held sheet
+  lists the week's three and offers Send it now or Keep it for next week. The tutor's own sends (a reminder, a receipt, the
+  absence alert, Call) are never held and do not count.
+- **The sent log** (See all under Messages on the student's page) lists every message by month, newest first: the kind, the
+  day, the language, "opened <day>" when WhatsApp was opened (`message_log.opened_at`), "not opened yet" otherwise; a Held
+  section between the months with Send now.
+- **Not on track** on the student's page: the tracking card in `overdue` with the reasons and "Next" ("Tell the parent, then
+  teach again with the worked example"); a card under it says the parent has not been told, with Call and Tell the parent
+  (the two-language message sheet: what is hard, what we are doing, what helps at home, a five-minute talk; logs a `note`
+  row of kind not on track). Change on the card opens the next-step sheet: the five choices with the plan's choice ticked;
+  Use this. On Today, the student's line carries a `caption` in `overdue` ("Since Fri 9 Oct · tell Ramesh after the class") and
+  the teach line is already the step.
+- **The note day** is Sunday 18:00 unless the batch says another: Change day on the note day's hero opens a wheel of weekday
+  and time; the choice is kept on the batch (the weekly pattern's row), so a tutor with a Saturday batch moves it once.

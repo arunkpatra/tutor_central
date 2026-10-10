@@ -133,7 +133,7 @@ figures are illustrative (`docs/design/README.md`).
       each with student or class of a school, subject, date, portions), the list by date, an item's page, edit and
       delete, "Ask parents to forward" (the text, Send), test tomorrow (the message), exam preparation (the countdown,
       the split, today's set, the mock two days before, marking, the gap report).
-- [ ] **10.6 Parents** (row 19). The note (the parent's language with English beside, Edit, Send on WhatsApp), the
+- [x] **10.6 Parents** (row 19, approved 2026-10-10; 11 boards). The note (the parent's language with English beside, Edit, Send on WhatsApp), the
       note day's list (sent, waiting, held), can-now-do, the sent log on the student's page, a held suggestion, not on
       track with the next step on the student's page and on Today's line.
 - [ ] **10.7 Make and the Kit** (row 20). Make something (the kinds as a list, a kind's form from a student, a group, a

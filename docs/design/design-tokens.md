@@ -278,4 +278,7 @@ landing equals start plus jumps, a food chain starts with a plant) and a kind wi
 question is 44/52; a regenerated artefact keeps its predecessor in the record; a mock is made two days before the school's test
 and the gap report's plan covers the last two days. Phase 10 (step 10.5): an exam's preparation window is 14 days unless the tutor sets another; the mock is two days before; an item's
 portions are at most 500 characters; an item read from a message is kept only when ticked and added; an item for a school's class
-applies to every student of that school and class; Ask parents to forward is one message, one chat at a time.
+applies to every student of that school and class; Ask parents to forward is one message, one chat at a time. Phase 10 (step 10.6): a note is at most 600 characters; a parent gets at most three suggested messages a week and the fourth is
+held until the next note day; the tutor's own sends never count; the English beside a note is never sent; the note day is Sunday
+18:00 unless the batch sets another; tracking status is computed when the record changes and the next step is taken by the next
+plan unless changed.
