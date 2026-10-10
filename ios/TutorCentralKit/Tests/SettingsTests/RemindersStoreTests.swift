@@ -42,7 +42,7 @@ import Testing
         await store.load()
         #expect(store.permission == .notAsked && store.banner == nil)
         #expect(store.classesLine == "Class 10 Maths and Class 8 Science on their days")
-        #expect(store.rowLines == ["15 min before", "1 hour before", "On the 5th at 09:00"])
+        #expect(store.rowLines == ["1 hour before", "1 hour before", "On the 5th at 09:00"])
         await store.turnOn()
         #expect(center.asked == 1 && store.permission == .allowed && center.replacements == 1)
         #expect(store.banner == .on(next: "Class 10 Maths, today at 16:45"))

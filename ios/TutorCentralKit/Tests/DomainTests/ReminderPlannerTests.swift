@@ -25,12 +25,11 @@ struct ReminderPlannerTests {
     @Test func aClassRemindsBeforeEachMeetingOfTheNextFourteenDays() {
         let plan = ReminderPlanner.plan(input(), now: at(7, 16, 35), calendar: calendar) // Wed 7 Oct
         let classes = plan.filter { $0.kind == .classMeeting }
-        #expect(classes.first?.fireAt == at(7, 16, 45))
+        #expect(classes.first?.fireAt == at(9, 16)) // Wed 7 at 16:00 has passed at 16:35
         #expect(classes.first?.title == "Class 10 Maths at 17:00" && classes.first?.subject == "Class 10 Maths")
-        #expect(classes.first?.body == "In 15 minutes · 6 students. Tap to mark attendance.")
-        let link = "tutorcentral://attendance?date=2026-10-07&class=\(maths.id.uuidString.lowercased())"
-        #expect(classes.first?.link == link)
-        #expect(classes.count == 6) // Wed 7, Fri 9, Mon 12, Wed 14, Fri 16, Mon 19 (Wed 21 is day 15)
+        #expect(classes.first?.body == "In 1 hour · 6 students. Open for today's plan.")
+        #expect(classes.first?.link == "tutorcentral://today")
+        #expect(classes.count == 5) // Fri 9, Mon 12, Wed 14, Fri 16, Mon 19 (Wed 21 is day 15)
     }
 
     @Test func anHourLeadAndOneStudentReadAsTheyShould() {
@@ -40,12 +39,12 @@ struct ReminderPlannerTests {
             classes: [maths], memberCounts: [maths.id: 1], events: [], dueFees: nil, settings: settings
         )
         let first = ReminderPlanner.plan(one, now: at(7, 9), calendar: calendar).first
-        #expect(first?.body == "In 1 hour · 1 student. Tap to mark attendance." && first?.fireAt == at(7, 16))
+        #expect(first?.body == "In 1 hour · 1 student. Open for today's plan." && first?.fireAt == at(7, 16))
     }
 
     @Test func pastAndUntimedMeetingsAreSkipped() {
         let late = ReminderPlanner.plan(input(), now: at(7, 16, 50), calendar: calendar)
-        #expect(late.first { $0.kind == .classMeeting }?.fireAt == at(9, 16, 45))
+        #expect(late.first { $0.kind == .classMeeting }?.fireAt == at(9, 16))
         var untimed = maths
         untimed.startTime = nil
         let none = ReminderInput(
@@ -133,8 +132,22 @@ struct ReminderPlannerTests {
 
     @Test func theSettingsRoundTripWithTheirDefaults() throws {
         let defaults = ReminderSettings()
-        #expect(defaults.classMinutesBefore == 15 && defaults.eventLead == .hour1 && defaults.feesDay == 5)
+        #expect(defaults.classMinutesBefore == 60 && defaults.eventLead == .hour1 && defaults.feesDay == 5)
         let data = try JSONEncoder().encode(defaults)
         #expect(try JSONDecoder().decode(ReminderSettings.self, from: data) == defaults)
+    }
+
+    @Test func aClassReminderSaysOpenForTodaysPlanAnHourBefore() throws {
+        let plan = ReminderPlanner.plan(input(), now: at(7, 9), calendar: calendar)
+        let first = try #require(plan.first { $0.kind == .classMeeting })
+        #expect(first.title == "Class 10 Maths at 17:00")
+        #expect(first.body == "In 1 hour · 6 students. Open for today's plan.")
+        #expect(first.link == "tutorcentral://today")
+        #expect(first.fireAt == at(7, 16))
+    }
+
+    @Test func theDefaultClassLeadIsAnHour() {
+        #expect(ReminderSettings().classMinutesBefore == 60)
+        #expect(ReminderSettings.classLeads.contains(60))
     }
 }

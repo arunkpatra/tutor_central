@@ -9,11 +9,11 @@ struct FigureSpecTests {
         #expect(FigureSpec.fractionBar(parts: 0, shaded: 0, label: "").validate() == .noParts)
     }
 
-    @Test func aNumberLineNeedsMarksInsideItsRange() {
-        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 2, marks: [4, 8]).validate() == nil)
-        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 2, marks: [12]).validate() == .markOutOfRange)
-        #expect(FigureSpec.numberLine(from: 5, to: 5, step: 1, marks: []).validate() == .emptyRange)
-        #expect(FigureSpec.numberLine(from: 0, to: 100, step: 1, marks: []).validate() == .badStep)
+    @Test func aNumberLineStartsAndLandsInsideItsRange() {
+        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 2, start: 4, jumps: [2, 2]).validate() == nil)
+        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 2, start: 12, jumps: [1]).validate() == .markOutOfRange)
+        #expect(FigureSpec.numberLine(from: 5, to: 5, step: 1, start: 5, jumps: [1]).validate() == .emptyRange)
+        #expect(FigureSpec.numberLine(from: 0, to: 100, step: 1, start: 0, jumps: [1]).validate() == .badStep)
     }
 
     @Test func aTriangleNeedsAnglesThatAddTo180() {
@@ -47,5 +47,44 @@ struct FigureSpecTests {
         ])
         #expect(FigureSpec.fractionBar(parts: 2, shaded: 1, label: "1/2").kind == .fractionBar)
         #expect(FigureSpec.foodChain(links: ["Grass", "Deer"]).kind == .foodChain)
+    }
+
+    @Test func theWireFormatRoundTrips() throws {
+        let line = FigureSpec.numberLine(from: 0, to: 20, step: 2, start: 4, jumps: [6, 6])
+        let data = try JSONEncoder().encode(line)
+        #expect(String(bytes: data, encoding: .utf8)?.contains("\"kind\":\"number_line\"") == true)
+        #expect(try JSONDecoder().decode(FigureSpec.self, from: data) == line)
+        let cell = try JSONDecoder().decode(
+            FigureSpec.self,
+            from: Data(#"{"kind":"labelled_cell","cell":"plant","labels":["Cell wall","Nucleus"]}"#.utf8)
+        )
+        #expect(cell == .labelledCell(kind: .plant, labels: ["Cell wall", "Nucleus"]))
+        #expect(throws: (any Error).self) {
+            try JSONDecoder().decode(FigureSpec.self, from: Data(#"{"kind":"pie_chart"}"#.utf8))
+        }
+    }
+
+    @Test func aLandingOutsideTheLineIsRefused() {
+        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 1, start: 8, jumps: [5]).validate() == .landingOffTheLine)
+        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 1, start: 2, jumps: [3, 3]).validate() == nil)
+        #expect(FigureSpec.numberLine(from: 0, to: 10, step: 1, start: 2, jumps: [0]).validate() == .badStep)
+    }
+
+    @Test func aCellHasAtMostFiveLabelsAndAChainTwoToSixLinks() {
+        #expect(FigureSpec.labelledCell(kind: .animal, labels: ["a", "b", "c", "d", "e", "f"])
+            .validate() == .tooManyLabels)
+        #expect(FigureSpec.foodChain(links: ["Grass"]).validate() == .tooFewLinks)
+        #expect(FigureSpec.foodChain(links: Array(repeating: "x", count: 7)).validate() == .tooManyLinks)
+    }
+
+    @Test func aSkillNamesItsTemplateOrNone() {
+        #expect(FigureSpec.Kind.matching(skill: "Compare simple fractions") == .fractionBar)
+        #expect(FigureSpec.Kind.matching(skill: "Count on a number line") == .numberLine)
+        #expect(FigureSpec.Kind.matching(skill: "Read large numbers") == .placeValue)
+        #expect(FigureSpec.Kind.matching(skill: "Find the sine of an angle") == .unitCircle)
+        #expect(FigureSpec.Kind.matching(skill: "Use Pythagoras' theorem") == .triangle)
+        #expect(FigureSpec.Kind.matching(skill: "Label the parts of a plant cell") == .labelledCell)
+        #expect(FigureSpec.Kind.matching(skill: "Explain a food chain") == .foodChain)
+        #expect(FigureSpec.Kind.matching(skill: "Balance a chemical equation") == nil)
     }
 }
