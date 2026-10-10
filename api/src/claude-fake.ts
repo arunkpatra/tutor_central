@@ -1,5 +1,5 @@
 import type { ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
-import type { CheckOutput, NoteOutput, PaperOutput, QuestionSetOutput, ScanOutput } from "./schemas.js";
+import type { CheckOutput, NoteOutput, PaperOutput, QuestionSetOutput, ScanOutput, TextbookOutput } from "./schemas.js";
 
 export type FakeScript = { answer?: unknown; refuse?: boolean; fail?: string; delayMs?: number };
 
@@ -136,12 +136,28 @@ const check: CheckOutput = {
   summary: "Sign errors in Q4 and Q6; Q7 not attempted.",
 };
 
-/** The boards' results (P6-Result-Paper, P6-Result-ProgressNote, P6-Scan-Review, P6-Check-Result), one per kind. */
-export const SAMPLE = { paper, homework, worksheet, progress_note: note, scan_register: scan, check_paper: check };
+/** The CBSE class 5 Mathematics contents page read (P10-Textbook-Chapters): five chapters, three skills each. */
+const textbook: TextbookOutput = {
+  title: "Math-Magic 5",
+  chapters: [
+    { name: "The Fish Tale", skills: ["Compare lengths and weights", "Read large numbers", "Use units of measure"] },
+    { name: "Shapes and Angles", skills: ["Name angles in shapes", "Tell right, acute and obtuse angles", "Measure turns"] },
+    { name: "How Many Squares?", skills: ["Count squares in a shape", "Find the area on squared paper", "Draw shapes of equal area"] },
+    { name: "Parts and Wholes", skills: ["Name a fraction of a whole", "Find equivalent fractions", "Compare simple fractions"] },
+    { name: "Does it Look the Same?", skills: ["Spot mirror symmetry", "Find a shape's lines of symmetry", "Complete a symmetric figure"] },
+  ],
+};
+
+/** The boards' results (P6-Result-Paper, P6-Result-ProgressNote, P6-Scan-Review, P6-Check-Result,
+ *  P10-Textbook-Chapters), one per kind. */
+export const SAMPLE = { paper, homework, worksheet, progress_note: note, scan_register: scan, check_paper: check, parse_textbook: textbook };
 
 /** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
 export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
-  if (request.images?.length) return request.text.includes("register") ? "scan_register" : "check_paper";
+  if (request.images?.length) {
+    if (request.text.includes("contents page")) return "parse_textbook";
+    return request.text.includes("register") ? "scan_register" : "check_paper";
+  }
   if (request.text.includes("progress note")) return "progress_note";
   if (request.text.includes("homework")) return "homework";
   if (request.text.includes("worksheet")) return "worksheet";

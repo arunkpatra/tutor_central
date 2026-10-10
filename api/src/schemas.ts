@@ -210,5 +210,16 @@ export type ParseSchoolInput = z.infer<typeof ParseSchoolInput>;
 export const ParseTextbookInput = z.object({ ...V2, image: Image, classLevel: ClassLevel, subject: Subject });
 export type ParseTextbookInput = z.infer<typeof ParseTextbookInput>;
 
+/** What a contents page reads into (POST /ai/parse-textbook): the chapter names as printed and one to eight short skills
+ *  under each, from the section headings; nothing from inside the book (D58). The position is the order. */
+export const TextbookOutput = z.object({
+  title: z.string().max(200).nullable(),
+  chapters: z
+    .array(z.object({ name: z.string().min(1).max(200), skills: z.array(z.string().min(1).max(200)).min(1).max(8) }))
+    .min(1)
+    .max(40),
+});
+export type TextbookOutput = z.infer<typeof TextbookOutput>;
+
 /** POST /account/revoke-apple (D38): the fresh authorization code the app got from Apple at deletion. */
 export const RevokeAppleInput = z.object({ code: z.string().min(1).max(2000) });

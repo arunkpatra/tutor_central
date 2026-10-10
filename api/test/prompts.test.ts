@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { request as check, schemeText } from "../src/prompts/check-paper.js";
 import { request as paper, sectionPlan } from "../src/prompts/paper.js";
+import { request as textbookRequest } from "../src/prompts/parse-textbook.js";
 import { request as note } from "../src/prompts/progress-note.js";
 import { normalisePhone, request as scan } from "../src/prompts/scan-register.js";
 import { GenerateInput } from "../src/schemas.js";
@@ -81,4 +82,12 @@ test("a paper's sections are planned by the API so the marks always add up", () 
   const input = GenerateInput.parse({ kind: "paper", subject: "Mathematics", classLevel: "Class 10 Maths", topic: "Quadratic equations" });
   if (input.kind !== "paper") throw new Error("kind");
   expect(paper(input).text).toContain("Section C: 2 questions of 4 marks each");
+});
+
+test("the textbook prompt asks for chapter names and short skills, never the book's text", () => {
+  const r = textbookRequest({ mediaType: "image/jpeg", base64: "AAAA", bytes: 3 }, "5", "Mathematics");
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.system).toContain("chapter names as printed");
+  expect(r.system).toContain("never copy");
+  expect(r.text).toContain("class 5");
 });
