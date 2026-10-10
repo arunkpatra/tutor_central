@@ -699,10 +699,16 @@ isOneToOne: false
 { Args: { "p_class": string }; Returns: undefined
                            },
 "close_session":
-{ Args: { "p_centre": string,"p_checks": Json,"p_class": string,"p_date": string,"p_homework": Json,"p_marks": Json,"p_track": Json }; Returns: string
+{ Args: { "p_centre": string,"p_checks": Json,"p_class": string,"p_date": string,"p_homework": Json,"p_marks": Json,"p_states"?: Json,"p_track": Json }; Returns: string
                            },
 "copy_textbook_chapters":
 { Args: { "p_centre": string,"p_student": string,"p_textbook": string }; Returns: undefined
+                           },
+"copy_textbook_to_class":
+{ Args: { "p_centre": string,"p_textbook": string }; Returns: number
+                           },
+"copy_textbooks_to_student":
+{ Args: { "p_centre": string,"p_student": string }; Returns: number
                            },
 "create_centre":
 { Args: { "p_display_name"?: string,"p_name": string,"p_whatsapp"?: string }; Returns: string
@@ -721,6 +727,9 @@ isOneToOne: false
                            },
 "photo_centre":
 { Args: { "p_name": string }; Returns: string
+                           },
+"record_placement":
+{ Args: { "p_centre": string,"p_checks": Json,"p_states": Json,"p_student": string,"p_track": Json }; Returns: undefined
                            },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
