@@ -81,6 +81,18 @@ import Foundation
         return changed
     }
 
+    public func setPlanGroups(_ count: Int?, classID: UUID) async throws {
+        try await takeError()
+        guard let index = classes.firstIndex(where: { $0.id == classID }) else { throw URLError(.fileDoesNotExist) }
+        classes[index].planGroups = count
+    }
+
+    public func setPlanPattern(_ pattern: PlanPattern?, weekday: Weekday, classID: UUID) async throws {
+        try await takeError()
+        guard let index = classes.firstIndex(where: { $0.id == classID }) else { throw URLError(.fileDoesNotExist) }
+        classes[index].planPattern[weekday] = pattern
+    }
+
     private func takeError() async throws {
         if let delay {
             try? await Task.sleep(for: delay)

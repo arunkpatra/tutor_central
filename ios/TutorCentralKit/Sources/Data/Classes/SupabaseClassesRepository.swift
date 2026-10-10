@@ -5,7 +5,8 @@ import Supabase
 public final class SupabaseClassesRepository: ClassesRepository {
     private let client: SupabaseClient
     static let decoder = PostgRESTDecoder.make()
-    private static let columns = "id, name, subject, monthly_fee, meeting_days, start_time, end_time, archived_at"
+    private static let columns =
+        "id, name, subject, monthly_fee, meeting_days, start_time, end_time, archived_at, plan_groups, plan_pattern"
 
     public init(client: SupabaseClient) {
         self.client = client
@@ -32,6 +33,24 @@ public final class SupabaseClassesRepository: ClassesRepository {
 
     public func archive(id: UUID) async throws {
         try await client.rpc("archive_class", params: ["p_class": AnyJSON.string(id.uuidString)]).execute()
+    }
+
+    public func setPlanGroups(_ count: Int?, classID: UUID) async throws {
+        try await client.from("classes").update(["plan_groups": count.map(AnyJSON.integer) ?? .null])
+            .eq("id", value: classID).execute()
+    }
+
+    /// Read, change the weekday's key, write back: one tutor per centre, so no other write races it.
+    public func setPlanPattern(_ pattern: PlanPattern?, weekday: Weekday, classID: UUID) async throws {
+        let response = try await client.from("classes").select("plan_pattern").eq("id", value: classID).single()
+            .execute()
+        struct Row: Decodable {
+            let planPattern: [String: PlanPattern]?
+        }
+        var patterns = try Self.decoder.decode(Row.self, from: response.data).planPattern ?? [:]
+        patterns[String(weekday.rawValue)] = pattern
+        let value = try AnyJSON.encoding(patterns)
+        try await client.from("classes").update(["plan_pattern": value]).eq("id", value: classID).execute()
     }
 
     static func values(_ draft: ClassroomDraft) -> [String: AnyJSON] {
