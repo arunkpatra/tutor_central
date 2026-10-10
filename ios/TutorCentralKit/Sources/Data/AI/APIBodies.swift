@@ -102,6 +102,15 @@ struct ErrorBody: Decodable {
     let error: String
     let reason: String?
     let limit: Int?
+    /// The kind a 429 was for: a V2 kind is the monthly allowance.
+    let kind: String?
+
+    init(error: String, reason: String?, limit: Int?, kind: String? = nil) {
+        self.error = error
+        self.reason = reason
+        self.limit = limit
+        self.kind = kind
+    }
 }
 
 /// `{ id, result }` with the result kept as raw JSON until its kind is known.
@@ -121,4 +130,67 @@ struct ScanEnvelope: Decodable {
 struct CheckEnvelope: Decodable {
     let id: UUID
     let result: CheckResultDTO
+}
+
+/// POST /ai/parse-textbook (api/src/schemas.ts `ParseTextbookInput`).
+struct TextbookBody: Encodable {
+    let centreId: String
+    let image: ImageBody
+    let classLevel: String
+    let subject: String
+}
+
+/// POST /ai/make with kind `check`.
+struct MakeCheckBody: Encodable {
+    let kind = "check"
+    let centreId: String
+    let classLevel: String
+    let subject: String
+    let skills: [String]
+}
+
+/// POST /ai/make with kind `placement`.
+struct MakePlacementBody: Encodable {
+    let kind = "placement"
+    let centreId: String
+    let classLevel: String
+    let subject: String
+    let chapters: [String]
+}
+
+/// `{ id, result: { title, chapters } }`.
+struct TextbookEnvelope: Decodable {
+    struct Result: Decodable {
+        let title: String?
+        let chapters: [ReadChapter]
+    }
+
+    let id: UUID
+    let result: Result
+}
+
+/// A chapter as the contents page read it, before it is numbered.
+struct ReadChapter: Decodable {
+    let name: String
+    let skills: [String]
+}
+
+/// `{ id, result: { questions } }` for a check.
+struct ChecksEnvelope: Decodable {
+    struct Result: Decodable {
+        let questions: [CheckQuestion]
+    }
+
+    let id: UUID
+    let result: Result
+}
+
+/// `{ id, result: { questions } }` for a placement.
+struct PlacementEnvelope: Decodable {
+    struct Result: Decodable {
+        let questions: [PlacementQuestion]
+    }
+
+    let id: UUID
+    let result: Result
 }

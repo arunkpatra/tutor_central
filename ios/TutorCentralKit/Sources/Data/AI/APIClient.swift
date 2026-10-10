@@ -63,7 +63,7 @@ public struct APIClient: AIRepository, AccountRepository {
         return CheckAnswer(id: answer.id, result: answer.result.result)
     }
 
-    private func post(_ path: String, body: some Encodable) async throws(APIFailure) -> Data {
+    func post(_ path: String, body: some Encodable) async throws(APIFailure) -> Data {
         let answer = try await exchange(path, body: body)
         guard !(200 ..< 300).contains(answer.status) else { return answer.data }
         throw Self.failure(status: answer.status, body: try? JSONDecoder().decode(ErrorBody.self, from: answer.data))
@@ -108,12 +108,19 @@ public struct APIClient: AIRepository, AccountRepository {
         switch status {
         case 401: .signedOut
         case 403: body?.reason == "consent" ? .consent : .signedOut
+        case 429 where body?.kind.map { v2Kinds.contains($0) } == true: .allowance(body?.limit ?? 0)
         case 429: .limit(body?.limit ?? 0)
         case 422: .refused(body?.error ?? APIFailure.service.message)
         case 502, 503, 504: .service
         default: body.map { .server($0.error) } ?? .service
         }
     }
+
+    /// The kinds that share the centre's monthly allowance (api/src/db.ts `V2Kind`, migration 0012).
+    static let v2Kinds: Set<String> = [
+        "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do",
+        "test_tomorrow", "gap_report", "parse_school", "parse_textbook",
+    ]
 
     /// The `result` object of `{ id, result }` as JSON text, for `GenerationResult.decode`.
     private static func result(in data: Data) -> String? {

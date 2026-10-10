@@ -38,4 +38,32 @@ import Testing
         }
         #expect(FakeAIHistoryRepository.seed.count == 6 && FakeAIHistoryRepository.seed.first?.kind == .paper)
     }
+
+    @Test func theV2CallsAnswerTheSamplesAndAreRecorded() async throws {
+        let ai = FakeAIRepository()
+        let page = ImageUpload(data: Data([0xFF, 0xD8, 0xFF]), mediaType: "image/jpeg")
+        let reading = try await ai.parseTextbook(page, classLevel: .five, subject: "Mathematics", centre: UUID())
+        #expect(reading.title == "Math-Magic 5" && reading.chapters.count == 5 && reading.chapters[4].position == 5)
+        let checks = try await ai.makeChecks(
+            classLevel: .eight,
+            subject: "Science",
+            skills: ["Name the reactants", "X"],
+            centre: UUID()
+        )
+        #expect(checks.map(\.skill) == ["Name the reactants", "X"] && checks[1]
+            .question == "Which is bigger, 1/2 or 1/3?")
+        let placement = try await ai.makePlacement(
+            classLevel: .five,
+            subject: "Mathematics",
+            chapters: ["The Fish Tale"],
+            centre: UUID()
+        )
+        #expect(placement.map(\.chapter) == ["The Fish Tale"])
+        #expect(ai.textbooks == ["Mathematics"] && ai.checkCalls == [["Name the reactants", "X"]])
+        #expect(ai.placementCalls == [["The Fish Tale"]])
+        ai.scriptBySubject = ["Science": .failure(.service)]
+        await #expect(throws: APIFailure.service) {
+            try await ai.makeChecks(classLevel: .eight, subject: "Science", skills: ["A"], centre: UUID())
+        }
+    }
 }
