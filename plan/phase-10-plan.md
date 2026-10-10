@@ -136,7 +136,7 @@ figures are illustrative (`docs/design/README.md`).
 - [x] **10.6 Parents** (row 19, approved 2026-10-10; 11 boards). The note (the parent's language with English beside, Edit, Send on WhatsApp), the
       note day's list (sent, waiting, held), can-now-do, the sent log on the student's page, a held suggestion, not on
       track with the next step on the student's page and on Today's line.
-- [ ] **10.7 Make and the Kit** (row 20). Make something (the kinds as a list, a kind's form from a student, a group, a
+- [x] **10.7 Make and the Kit** (row 20, approved 2026-10-10; 9 boards). Part A complete: 96 boards, rows 14 to 20. Make something (the kinds as a list, a kind's form from a student, a group, a
       class level or a topic), Check a paper under Make, Reports extended (progress per student, per term), the Kit's
       new rows (tracking marks, skill state marks, the figure templates, the sheet's board view type).
 

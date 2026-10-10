@@ -1097,3 +1097,48 @@ What the boards settle:
   the teach line is already the step.
 - **The note day** is Sunday 18:00 unless the batch says another: Change day on the note day's hero opens a wheel of weekday
   and time; the choice is kept on the batch (the weekly pattern's row), so a tutor with a Saturday batch moves it once.
+
+## Phase 10 boards: step 10.7, Make and the Kit (approved 2026-10-10)
+
+Row 20 of the canvas (y 45600; the title note at 45300); sources `mockups/P10-Make*`, `P10-Reports-Progress*`, `P10-Kit-Dark`,
+`P10-Kit-Light` (the Kit boards are 393 × 2020). Dark for every state; light for Make and the Kit. With this row Part A of Phase 10
+is complete: 96 boards in rows 14 to 20, every V2 screen and state of spec sections 4 to 8.
+
+| Board | Source |
+|---|---|
+| Make something (dark and light); a kind's form; for whom | `P10-Make`, `-Light`, `P10-Make-Form`, `P10-Make-For` |
+| Check a paper under Make | `P10-Make-Check` |
+| Reports: Progress by month, by term | `P10-Reports-Progress`, `-Term` |
+| The Kit's new rows (dark and light) | `P10-Kit-Dark`, `P10-Kit-Light` |
+
+Phase 15 builds these states (the light twins from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `make` | Make something (supersedes `ai-assistant`; `ai-assistant-empty` becomes `make-empty`) |
+| `make-sheet` | The sheet's form for Group 1 |
+| `make-for` | The For sheet at Group |
+| `check-intro` | Check a paper under Make with the mock's key offered (supersedes P6-Check-Intro's way in) |
+| `reports-progress` | Reports, October, Progress |
+| `reports-progress-term` | Reports, Term 1, Progress |
+| `kit-phase10` | The Kit's Phase 10 rows |
+
+What the boards settle:
+
+- **Make something** replaces AI Assistant's home under More's Make (Phase 15): an intro line, "For a student or a group" (Sheet,
+  Worked example, Figure, Note to a parent, Mock test), "For you" (Brief, Question paper, Homework, Worksheet: V1's kinds, their
+  forms unchanged), Recent (three, See all), the AI line; History in the nav row. Each row opens the kind's form.
+- **A kind's form** is the Phase 6 form screen: For (a tile that opens the For sheet: Student | Group | Batch | Class, with choice
+  rows; a sheet for a class level alone carries no student's data and needs no consent), Subject, Skill or topic (from the record,
+  or typed), Length (Short, Medium, Long), Level (Easier, As the record says, Harder), Key at the end; Make in the footer. The
+  note's form asks for the student and what to say; the mock's for the student and the exam; the brief's for the chapter.
+- **Check a paper** keeps V1's screens under Make; its scheme tile offers a mock or paper made here (with its key) or a typed scheme.
+- **Reports** gains Progress beside Fees and Attendance, with Month | Term under it (a term is the school's: Term 1 June to
+  September, Term 2 October to March; the Karnataka state calendar's where the school is state board): the hero with skills made
+  secure, checks right and the not-on-track count; one row per student with the status word, skills secure, checks right and
+  absences, the percentage on the right, Lowest first as the sort; Share gives the CSV (student, class, status, skills secure,
+  checks, right, absences). A LKG to 3 row names the ladder steps instead of skills.
+- **The Kit** gains the Phase 10 parts in both appearances, as `kit-phase10` shows them: tracking status (chip and word), skill
+  states, item kinds, the material's marks, a chapter row open with skill rows, the plan line, the check row with the line
+  checklist and the right-or-wrong pair in both states, the ladder, the trend, the seven figure templates (the validators'
+  previews), the board view type.

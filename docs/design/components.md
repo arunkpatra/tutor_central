@@ -862,3 +862,31 @@ The texts:
 | The message to the parent | "Dev needs a hand this month" · "Hello Ramesh, Dev is finding balancing equations hard and was absent twice this month. We will teach it again with a worked example in the next class. Ten minutes of practice each evening at home will make a big difference. Could we talk for five minutes this week? Thank you." |
 | Today's line | "Since Fri 9 Oct · tell Ramesh after the class" |
 | The note day | "Note day · Sunday 18:00" · Change day · the wheel: Friday 18:00, Saturday 18:00, Sunday 18:00, Sunday 20:00, Monday 08:00 |
+
+## Phase 10 parts (step 10.7, approved 2026-10-10): Make and the Kit
+
+**Kind row (Make):** the Phase 6 tool row with the kind's symbol: Sheet `doc.text`, Worked example `book.closed`, Figure
+`square.grid.2x2`, Note to a parent `text.bubble`, Mock test `doc.text.magnifyingglass`, Brief `book.closed`, Question paper
+`text.alignleft`, Homework `checklist`, Worksheet `pencil.line`.
+
+**For sheet:** a floating sheet with a four-segment control (Student, Group, Batch, Class) over the student picker's rows (an icon
+tile, the name, the line) and a footnote.
+
+**Progress row:** avatar 40, the name, the line led by the status word, the percentage `numberRow` on the right, a chevron.
+
+**Progress hero:** the Kit's hero card with three columns: a `numberTile` value in `ok`, `text` and `overdue` over a `footnote`
+`text2` label.
+
+**Kit sections (Phase 10):** each under an eyebrow: Tracking status · chip and word; Skill states; School item kinds · the
+material's marks; Chapter row, open, with skill rows; Plan line; Check row · line checklist · right or wrong; Ladder · check trend;
+Figure templates; Board view type.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| Make something | "Anything the plan makes, made on its own: for a student, a group, a class or just a topic. You check it before it reaches anyone." · the kinds' lines on the board · Recent · See all · History |
+| The sheet's form | For "A student, a group, a batch, or a class on its own." · Skill or topic "From the record, or type a topic." · Length Short, Medium, Long · Level Easier, As the record says, Harder · "Key at the end" "For you; left out of what you share" · "Made against Group 1's record. A sheet made for a class alone follows the class's chapters." · Make the sheet · "Usually under a minute. You can wait here or come back from History." |
+| For whom | "Today's groups. A sheet for a group is made at the group's level; for a class alone, at the class's." |
+| Check a paper | Scheme "A mock or paper made here, with its key; or type a scheme." |
+| Progress | "skills made secure" · "checks right" · "not on track" ("not on track at the end" for a term) · "3 skills secure · 41% right · 2 absences" · "Reading: Sentences · Numbers: To 99" · "Placed Wed 7 Oct · 2 checks so far" · Lowest first · "Term 1 · June to September" |

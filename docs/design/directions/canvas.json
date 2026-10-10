@@ -2362,6 +2362,69 @@
    "w": 393,
    "h": 852,
    "title": "Phase 10 · 10.6 The note day changed where it appears: a wheel on the note day's hero (the weekday and time; Sunday evening by default, after the week's last batch); kept per batch"
+  },
+  "P10-Make.dc.html": {
+   "x": 0,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 Make something (from More): the kinds for a student or a group and the kinds for the tutor (V1's four among them), the recent ones, History · dark"
+  },
+  "P10-Make-Light.dc.html": {
+   "x": 473,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 Make something · light"
+  },
+  "P10-Make-Form.dc.html": {
+   "x": 946,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 A kind's form (a sheet): for whom (a student, a group, a batch or a class), the subject, the skill or topic from the record, the length, the level, the key; Make"
+  },
+  "P10-Make-For.dc.html": {
+   "x": 1419,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 For whom: a student, today's groups, a batch, or a class level alone (no student's data goes with a class)"
+  },
+  "P10-Make-Check.dc.html": {
+   "x": 1892,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 Check a paper under Make (V1's screen, moved): the student, the marking scheme now offers a mock's key, the photo; the marks screen is V1's"
+  },
+  "P10-Reports-Progress.dc.html": {
+   "x": 2365,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 Reports gains Progress: the month's skills made secure, checks right and who is not on track; one row per student with the status, skills secure, checks right and absences; Share as CSV"
+  },
+  "P10-Reports-Progress-Term.dc.html": {
+   "x": 2838,
+   "y": 45600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.7 Progress for a term (the school's: Term 1 June to September), the same rows over the term"
+  },
+  "P10-Kit-Dark.dc.html": {
+   "x": 3311,
+   "y": 45600,
+   "w": 393,
+   "h": 2020,
+   "title": "Phase 10 · 10.7 The Kit's new rows: tracking status, skill states, item kinds, the material's marks, the chapter and skill rows, the plan line, the check row, the ladder, the trend, the figure templates, the board view type · dark"
+  },
+  "P10-Kit-Light.dc.html": {
+   "x": 3784,
+   "y": 45600,
+   "w": 393,
+   "h": 2020,
+   "title": "Phase 10 · 10.7 The Kit's new rows · light"
   }
  },
  "createdOnFiles": {
@@ -2532,6 +2595,14 @@
    "w": 240,
    "x": 0,
    "y": 43900
+  },
+  "p10_7": {
+   "kind": "title1",
+   "maxW": 8000,
+   "text": "Step 10.7 · Phase 10, Make and the Kit — Make something (the kinds for a student or a group, and for the tutor), a kind's form and for whom, Check a paper under Make, Reports with Progress by month and by term, the Kit's new rows",
+   "w": 240,
+   "x": 0,
+   "y": 45300
   }
  },
  "order": [
@@ -2868,7 +2939,16 @@
   "P10-NextStep.dc.html",
   "P10-NotOnTrack-Message.dc.html",
   "P10-Today-NotOnTrack.dc.html",
-  "P10-NoteDay-Change.dc.html"
+  "P10-NoteDay-Change.dc.html",
+  "P10-Make.dc.html",
+  "P10-Make-Light.dc.html",
+  "P10-Make-Form.dc.html",
+  "P10-Make-For.dc.html",
+  "P10-Make-Check.dc.html",
+  "P10-Reports-Progress.dc.html",
+  "P10-Reports-Progress-Term.dc.html",
+  "P10-Kit-Dark.dc.html",
+  "P10-Kit-Light.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

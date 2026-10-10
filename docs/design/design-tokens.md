@@ -281,4 +281,5 @@ portions are at most 500 characters; an item read from a message is kept only wh
 applies to every student of that school and class; Ask parents to forward is one message, one chat at a time. Phase 10 (step 10.6): a note is at most 600 characters; a parent gets at most three suggested messages a week and the fourth is
 held until the next note day; the tutor's own sends never count; the English beside a note is never sent; the note day is Sunday
 18:00 unless the batch sets another; tracking status is computed when the record changes and the next step is taken by the next
-plan unless changed.
+plan unless changed. Phase 10 (step 10.7): a term follows the school's calendar (June to September, October to March; the state calendar for a state-board
+school); material made for a class level alone carries no student's data and needs no consent; the Kit's Phase 10 board is 2020 high.
