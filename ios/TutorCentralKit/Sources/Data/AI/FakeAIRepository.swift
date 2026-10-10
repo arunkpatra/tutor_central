@@ -16,6 +16,12 @@ import Foundation
     public private(set) var requests: [GenerateRequest] = []
     public private(set) var scans = 0
     public private(set) var checks: [SchemeSource] = []
+    /// V2: the subjects of each contents page read, the skills of each check call, the chapters of each placement.
+    public private(set) var textbooks: [String] = []
+    public private(set) var checkCalls: [[String]] = []
+    public private(set) var placementCalls: [[String]] = []
+    /// One subject's answer scripted apart (a close or placement where one subject fails).
+    public var scriptBySubject: [String: Script] = [:]
     private let now: @Sendable () -> Date
 
     public init(now: @escaping @Sendable () -> Date = Date.init) {
@@ -49,6 +55,37 @@ import Foundation
         checks.append(scheme)
         try await answer()
         return CheckAnswer(id: UUID(), result: AISamples.check)
+    }
+
+    public func parseTextbook(
+        _: ImageUpload, classLevel _: ClassLevel, subject: String, centre _: UUID
+    ) async throws(APIFailure) -> TextbookReading {
+        textbooks.append(subject)
+        try await answer(subject: subject)
+        return AISamples.textbook
+    }
+
+    public func makeChecks(
+        classLevel _: ClassLevel, subject: String, skills: [String], centre _: UUID
+    ) async throws(APIFailure) -> [CheckQuestion] {
+        checkCalls.append(skills)
+        try await answer(subject: subject)
+        return AISamples.checks(for: skills)
+    }
+
+    public func makePlacement(
+        classLevel _: ClassLevel, subject: String, chapters: [String], centre _: UUID
+    ) async throws(APIFailure) -> [PlacementQuestion] {
+        placementCalls.append(chapters)
+        try await answer(subject: subject)
+        return AISamples.placement(for: chapters)
+    }
+
+    private func answer(subject: String) async throws(APIFailure) {
+        if case let .failure(failure)? = scriptBySubject[subject] {
+            throw failure
+        }
+        try await answer()
     }
 
     private func answer() async throws(APIFailure) {

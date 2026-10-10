@@ -78,7 +78,18 @@ public final class SupabaseAttendanceRepository: AttendanceRepository {
             "p_checks": .array(checks),
             "p_homework": .array(homework),
             "p_track": .object(track),
+            "p_states": statesJSON(close.states),
         ]
+    }
+
+    /// The skill states the app worked out: `[{"skill_id", "state"}]` (migration 0017).
+    static func statesJSON(_ states: [SkillStateChange]) -> AnyJSON {
+        .array(states.map { change in
+            .object([
+                "skill_id": .string(change.skillID.uuidString.lowercased()),
+                "state": .string(change.state.rawValue),
+            ])
+        })
     }
 
     static func marksJSON(_ marks: [UUID: AttendanceStatus]) -> AnyJSON {

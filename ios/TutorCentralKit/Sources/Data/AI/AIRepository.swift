@@ -102,7 +102,46 @@ public struct CheckAnswer: Hashable, Sendable {
     }
 }
 
-/// Our API's three AI routes (api/src/routes/ai.ts). Never Anthropic directly: the app holds no AI key (D11).
+/// A contents page read (POST /ai/parse-textbook): the chapters numbered in the book's order. Nothing of the photo.
+public struct TextbookReading: Hashable, Sendable {
+    public let id: UUID
+    public let title: String?
+    public let chapters: [TextbookChapter]
+
+    public init(id: UUID, title: String?, chapters: [TextbookChapter]) {
+        self.id = id
+        self.title = title
+        self.chapters = chapters
+    }
+}
+
+/// One of the close's questions: the skill as asked for, the question, the answer for the tutor's eye.
+public struct CheckQuestion: Hashable, Sendable, Codable {
+    public let skill: String
+    public let question: String
+    public let answer: String
+
+    public init(skill: String, question: String, answer: String) {
+        self.skill = skill
+        self.question = question
+        self.answer = answer
+    }
+}
+
+/// One of the placement's questions: the chapter (or ladder step) as asked for.
+public struct PlacementQuestion: Hashable, Sendable, Codable {
+    public let chapter: String
+    public let question: String
+    public let answer: String
+
+    public init(chapter: String, question: String, answer: String) {
+        self.chapter = chapter
+        self.question = question
+        self.answer = answer
+    }
+}
+
+/// Our API's AI routes (api/src/routes/ai.ts, v2.ts). Never Anthropic directly: the app holds no AI key (D11).
 public protocol AIRepository: Sendable {
     /// POST /ai/generate: the kind's result and the generation's id.
     func generate(_ request: GenerateRequest, context: GenerateContext) async throws(APIFailure) -> Generation
@@ -112,4 +151,16 @@ public protocol AIRepository: Sendable {
     func checkPaper(
         pages: [ImageUpload], scheme: SchemeSource, studentName: String, centre: UUID
     ) async throws(APIFailure) -> CheckAnswer
+    /// POST /ai/parse-textbook: one contents page read into chapters and skills (the photo is not kept anywhere).
+    func parseTextbook(
+        _ image: ImageUpload, classLevel: ClassLevel, subject: String, centre: UUID
+    ) async throws(APIFailure) -> TextbookReading
+    /// POST /ai/make, kind `check`: one question per skill (one to three), for the close.
+    func makeChecks(
+        classLevel: ClassLevel, subject: String, skills: [String], centre: UUID
+    ) async throws(APIFailure) -> [CheckQuestion]
+    /// POST /ai/make, kind `placement`: one question per chapter or ladder step.
+    func makePlacement(
+        classLevel: ClassLevel, subject: String, chapters: [String], centre: UUID
+    ) async throws(APIFailure) -> [PlacementQuestion]
 }

@@ -27,6 +27,12 @@ import Foundation
         return school
     }
 
+    public func setBoard(id: UUID, _ board: Board) async throws {
+        try begin()
+        guard let index = schools.firstIndex(where: { $0.id == id }) else { return }
+        schools[index].board = board
+    }
+
     private func begin() throws {
         guard let error = nextError else { return }
         nextError = nil

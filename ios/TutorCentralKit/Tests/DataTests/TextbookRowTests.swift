@@ -62,4 +62,20 @@ struct TextbookRowTests {
         """#.utf8))
         #expect(skills[0].skill.state == .secure && skills[0].skill.lastCheckedAt == nil)
     }
+
+    @Test func theWrittenRowHasNoPhotoPath() {
+        let book = Textbook(
+            id: UUID(), schoolID: UUID(), classLevel: .five, subject: "Mathematics", title: "Maths 5", publisher: nil,
+            edition: nil, chapters: []
+        )
+        #expect(SupabaseTextbooksRepository.values(book, centre: UUID())["photo_path"] == nil)
+    }
+
+    @Test func theLadderRowsAreOnePerAreaWithTheirSteps() {
+        let student = UUID()
+        let rows = SupabaseTextbooksRepository.ladderChapters(student: student, centre: FakeSchoolsRepository.centre)
+        #expect(rows.count == 3)
+        #expect(rows[0]["ladder"] == .string("reading") && rows[0]["subject"] == .string("Reading"))
+        #expect(rows[2]["name"] == .string("Numbers") && rows[2]["position"] == .integer(1))
+    }
 }

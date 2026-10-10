@@ -26,4 +26,8 @@ public final class SupabaseSchoolsRepository: SchoolsRepository {
         let response = try await client.from("schools").insert(values).select(Self.columns).single().execute()
         return try Self.decoder.decode(SchoolRow.self, from: response.data).school
     }
+
+    public func setBoard(id: UUID, _ board: Board) async throws {
+        try await client.from("schools").update(["board": AnyJSON.string(board.rawValue)]).eq("id", value: id).execute()
+    }
 }

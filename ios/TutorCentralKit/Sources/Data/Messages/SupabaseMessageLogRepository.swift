@@ -83,6 +83,24 @@ public final class SupabaseMessageLogRepository: MessageLogRepository {
         return try Self.decoder.decode(ProgressLogRow.self, from: response.data).openedAt
     }
 
+    public func logConsent(centre: UUID, studentID: UUID) async throws -> Date {
+        let response = try await client.from("message_log")
+            .insert([
+                "centre_id": AnyJSON.string(centre.uuidString),
+                "student_id": .string(studentID.uuidString),
+                "kind": .string("consent"),
+            ])
+            .select(Self.feeColumns).single().execute()
+        return try Self.decoder.decode(ProgressLogRow.self, from: response.data).openedAt
+    }
+
+    public func messages(centre: UUID, student: UUID) async throws -> [MessageEntry] {
+        let response = try await client.from("message_log").select("id, kind, opened_at, language")
+            .eq("centre_id", value: centre).eq("student_id", value: student)
+            .order("opened_at", ascending: false).execute()
+        return try Self.decoder.decode([MessageEntryRow].self, from: response.data).compactMap(\.entry)
+    }
+
     private static let feeColumns = "student_id, kind, opened_at, about_date"
     private static let feeKinds = [FeeLog.Kind.reminder, .receipt].map(\.rawValue)
 }

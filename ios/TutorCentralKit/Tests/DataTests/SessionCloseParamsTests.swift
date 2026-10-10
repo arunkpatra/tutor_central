@@ -49,4 +49,14 @@ struct SessionCloseParamsTests {
         )
         #expect(sessions.first { $0.id == id }?.marks == [student: .absent])
     }
+
+    @Test func closeParamsCarryTheStates() throws {
+        let close = try SessionClose(
+            classID: UUID(), date: #require(Day(year: 2026, month: 10, day: 7)), marks: [:], checks: [], homework: [],
+            track: [:], states: [SkillStateChange(skillID: skill, state: .secure)]
+        )
+        let params = SupabaseAttendanceRepository.closeParams(close, centre: UUID())
+        let state: AnyJSON = .object(["skill_id": .string(skill.uuidString.lowercased()), "state": .string("secure")])
+        #expect(params["p_states"] == .array([state]))
+    }
 }

@@ -8,8 +8,9 @@ public final class SupabaseStudentsRepository: StudentsRepository {
     private let client: SupabaseClient
     private let calendar: Calendar
     static let decoder = PostgRESTDecoder.make()
-    private static let columns =
-        "id, name, class_id, monthly_fee, parent_name, parent_phone, date_of_birth, gender, notes, archived_at"
+    private static let columns = "id, name, class_id, monthly_fee, parent_name, parent_phone, date_of_birth, gender, "
+        + "notes, archived_at, class_level, school_id, board, message_language, consent_at, consent_phone, "
+        + "consent_how, track_status, track_reasons, track_since, created_at"
 
     public init(client: SupabaseClient, calendar: Calendar = DayHeading.india) {
         self.client = client
@@ -83,9 +84,26 @@ public final class SupabaseStudentsRepository: StudentsRepository {
         return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
     }
 
-    /// Every column the form owns, nulls included, so an edit clears what the tutor cleared.
-    static func values(_ draft: StudentDraft) -> [String: AnyJSON] {
+    public func setConsent(id: UUID, _ consent: ConsentRecord?) async throws -> Student {
+        let response = try await client.from("students").update(Self.consentValues(consent)).eq("id", value: id)
+            .select(Self.columns).single().execute()
+        return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
+    }
+
+    /// The three consent columns, or three nulls to clear them (plan decision 13).
+    static func consentValues(_ consent: ConsentRecord?) -> [String: AnyJSON] {
         [
+            "consent_at": consent.map { .string(ISO8601DateFormatter().string(from: $0.at)) } ?? .null,
+            "consent_phone": consent.map { .string($0.phone.e164) } ?? .null,
+            "consent_how": consent.map { .string($0.how.rawValue) } ?? .null,
+        ]
+    }
+
+    /// Every column the form owns, nulls included, so an edit clears what the tutor cleared. The board is kept from
+    /// class 8 only.
+    static func values(_ draft: StudentDraft) -> [String: AnyJSON] {
+        let board = draft.classLevel?.expectsBoard == true ? draft.board : nil
+        return [
             "name": .string(draft.trimmedName),
             "class_id": draft.classID.map { .string($0.uuidString) } ?? .null,
             "monthly_fee": draft.fee.map { .integer($0.rupees) } ?? .null,
@@ -94,6 +112,10 @@ public final class SupabaseStudentsRepository: StudentsRepository {
             "date_of_birth": draft.dateOfBirth.map { .string($0.iso) } ?? .null,
             "gender": draft.gender.map { .string($0.rawValue) } ?? .null,
             "notes": draft.trimmedNotes.map(AnyJSON.string) ?? .null,
+            "class_level": draft.classLevel.map { .string($0.rawValue) } ?? .null,
+            "school_id": draft.schoolID.map { .string($0.uuidString.lowercased()) } ?? .null,
+            "board": board.map { .string($0.rawValue) } ?? .null,
+            "message_language": .string(draft.messageLanguage.rawValue),
         ]
     }
 }

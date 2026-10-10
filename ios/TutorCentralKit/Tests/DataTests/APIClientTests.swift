@@ -136,6 +136,75 @@ import Testing
     }
 }
 
+extension APIClientTests {
+    @Test func theThreeV2BodiesMatchTheSchemas() throws {
+        let image = ImageBody(ImageUpload(data: Data([1, 2]), mediaType: "image/jpeg"))
+        let textbook = try JSONSerialization.jsonObject(with: JSONEncoder().encode(TextbookBody(
+            centreId: "c", image: image, classLevel: "5", subject: "Mathematics"
+        ))) as? [String: Any]
+        #expect(textbook?["classLevel"] as? String == "5")
+        #expect((textbook?["image"] as? [String: Any])?["mediaType"] as? String == "image/jpeg")
+        let check = try JSONSerialization.jsonObject(with: JSONEncoder().encode(MakeCheckBody(
+            centreId: "c", classLevel: "8", subject: "Science", skills: ["A", "B"]
+        ))) as? [String: Any]
+        #expect(check?["kind"] as? String == "check" && (check?["skills"] as? [String])?.count == 2)
+        let placement = try JSONSerialization.jsonObject(with: JSONEncoder().encode(MakePlacementBody(
+            centreId: "c", classLevel: "5", subject: "Mathematics", chapters: ["X"]
+        ))) as? [String: Any]
+        #expect(placement?["kind"] as? String == "placement" && (placement?["chapters"] as? [String]) == ["X"])
+    }
+
+    @Test func a429OnAV2KindIsTheMonthlyAllowance() {
+        #expect(APIClient.failure(status: 429, body: ErrorBody(error: "x", reason: nil, limit: 600, kind: "check"))
+            == .allowance(600))
+        #expect(APIClient.failure(status: 429, body: ErrorBody(error: "x", reason: nil, limit: 40, kind: "paper"))
+            == .limit(40))
+        #expect(APIFailure.allowance(600).message == "You've made this month's 600. More next month.")
+    }
+
+    @Test func theTextbookIsReadIntoNumberedChapters() async throws {
+        let body = #"{"id":"6b2d0f3e-1c2d-4e8f-a1b2-c3d4e5f60901","result":{"title":"Math-Magic 5","chapters":"#
+            + #"[{"name":"The Fish Tale","skills":["Compare lengths"]},{"name":"Shapes","skills":["Angles"]}]}}"#
+        let (client, recorder) = Self.client(status: 200, body: body)
+        let reading = try await client.parseTextbook(
+            ImageUpload(data: Data([0xFF, 0xD8, 0xFF]), mediaType: "image/jpeg"), classLevel: .five,
+            subject: "Mathematics", centre: Self.centre
+        )
+        #expect(reading.title == "Math-Magic 5")
+        #expect(reading.chapters == [
+            TextbookChapter(position: 1, name: "The Fish Tale", skills: ["Compare lengths"]),
+            TextbookChapter(position: 2, name: "Shapes", skills: ["Angles"]),
+        ])
+        #expect(recorder.requests.first?.url?.path == "/ai/parse-textbook")
+        #expect(try Self.sent(recorder)["subject"] as? String == "Mathematics")
+    }
+
+    @Test func theChecksAndThePlacementDecode() async throws {
+        let checks = #"{"id":"6b2d0f3e-1c2d-4e8f-a1b2-c3d4e5f60902","result":{"questions":"#
+            + #"[{"skill":"A","question":"Q","answer":"R"}]}}"#
+        let (client, recorder) = Self.client(status: 200, body: checks)
+        let made = try await client.makeChecks(
+            classLevel: .eight,
+            subject: "Science",
+            skills: ["A"],
+            centre: Self.centre
+        )
+        #expect(made == [CheckQuestion(skill: "A", question: "Q", answer: "R")])
+        #expect(recorder.requests.first?.url?.path == "/ai/make")
+        #expect(try Self.sent(recorder)["kind"] as? String == "check")
+        let placement = #"{"id":"6b2d0f3e-1c2d-4e8f-a1b2-c3d4e5f60903","result":{"questions":"#
+            + #"[{"chapter":"X","question":"Q","answer":"R"}]}}"#
+        let (other, _) = Self.client(status: 200, body: placement)
+        let asked = try await other.makePlacement(
+            classLevel: .five,
+            subject: "Mathematics",
+            chapters: ["X"],
+            centre: Self.centre
+        )
+        #expect(asked == [PlacementQuestion(chapter: "X", question: "Q", answer: "R")])
+    }
+}
+
 /// Answers every request with one status and body, recording what was sent. URLSession calls it off the main actor,
 /// so the recorder lives behind a lock.
 final class StubProtocol: URLProtocol {
