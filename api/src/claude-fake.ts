@@ -222,7 +222,7 @@ const FIGURES: Record<FigureKind, { figure: Figure; caption: string }> = {
   fraction_bar: { figure: { kind: "fraction_bar", parts: 4, shaded: 3, label: "3/4" }, caption: "3 of 4 parts shaded: three quarters of the whole." },
   place_value: { figure: { kind: "place_value", number: 347 }, caption: "Each digit in its place, with what it is worth." },
   unit_circle: { figure: { kind: "unit_circle", angleDegrees: 60 }, caption: "The angle, the point, the two ratios read off the axes." },
-  triangle: { figure: { kind: "triangle", angles: [90, 53, 37], labels: ["3", "4", "5"] }, caption: "A right angle marked, the sides named, the rule beside it." },
+  triangle: { figure: { kind: "triangle", angles: [90, 53, 37], labels: ["5", "4", "3"] }, caption: "A right angle marked, the sides named, the rule beside it." },
   labelled_cell: {
     figure: { kind: "labelled_cell", cell: "plant", labels: ["Cell wall", "Nucleus", "Vacuole", "Chloroplast", "Cell membrane"] },
     caption: "Five parts labelled, nothing more than the chapter names.",
