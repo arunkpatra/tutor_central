@@ -101,6 +101,11 @@ import Foundation
         }
     }
 
+    public func link(items: [UUID], to artefact: UUID?, centre _: UUID) async throws {
+        try await begin()
+        update { items.contains($0.id) } with: { $0.artefactID = artefact }
+    }
+
     /// Marks the close's done lines, as `close_session`'s `p_done` does.
     public func markDone(_ items: Set<UUID>, session: UUID?) {
         update { items.contains($0.id) && $0.doneAt == nil } with: { $0.doneAt = now }

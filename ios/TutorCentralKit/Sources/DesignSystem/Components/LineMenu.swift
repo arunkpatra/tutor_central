@@ -10,10 +10,10 @@ public enum LineMenu {
 
     /// What each row does.
     public struct Actions {
-        let move: (Int) -> Void
-        let skipCheck: () -> Void
-        let skipHomework: () -> Void
-        let leaveOut: () -> Void
+        public let move: (Int) -> Void
+        public let skipCheck: () -> Void
+        public let skipHomework: () -> Void
+        public let leaveOut: () -> Void
 
         public init(
             move: @escaping (Int) -> Void, skipCheck: @escaping () -> Void, skipHomework: @escaping () -> Void,

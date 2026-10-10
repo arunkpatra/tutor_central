@@ -120,6 +120,30 @@ extension PlanMaker {
 }
 
 extension PlanRecord {
+    /// An artefact another copy of this plan kept, linked here as the database linked it: one student's lines of
+    /// its kind, or the lines of its kind in the group as each line stands now.
+    func merging(_ artefact: Artefact, from other: PlanRecord) -> PlanRecord {
+        var record = self
+        if !record.artefacts.contains(where: { $0.id == artefact.id }) {
+            record.artefacts.append(artefact)
+        }
+        let places = other.items.filter { $0.artefactID == artefact.id }
+        for place in places {
+            for index in record.items.indices where record.items[index].kind == place.kind {
+                let item = record.items[index]
+                let matches = artefact.studentID.map { item.studentID == $0 }
+                    ?? (place.studentID == nil ? item.groupNo == place.groupNo && item.studentID == nil
+                        : item.groupNo == place.groupNo)
+                if matches {
+                    record.items[index].artefactID = artefact.id
+                }
+            }
+        }
+        let linked = Set(record.items.compactMap(\.artefactID))
+        record.artefacts = record.artefacts.filter { linked.contains($0.id) }
+        return record
+    }
+
     /// The plan as a draft again (the rules' lines from its items), for the budget of what it still misses. A check
     /// line is personal where the rules made it so: a placement, a teach again, a catch-up.
     var asDraft: PlanDraft {

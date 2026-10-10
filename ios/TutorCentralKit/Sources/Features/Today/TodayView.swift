@@ -3,10 +3,16 @@ import Domain
 import SwiftUI
 
 /// What a launch state sets up on Today: the add field open with a due date, scrolled to Tasks (P4-Today-AddingTask).
-public enum TodayBoardState: Sendable {
+public enum TodayBoardState: Hashable, Sendable {
     case addingTask
     /// Scrolled to the end: Coming up, Tasks and the Create with AI row (P6-Today-AITools).
     case aiRow
+    /// Scrolled to the smaller groups, the brief and V1's sections (P10-Today-Plan-Scrolled).
+    case scrolledToPlan
+    /// Dev's line pressed: its menu (P10-Today-Plan-StudentMenu).
+    case lineMenu(UUID)
+    /// The Change sheet up (P10-Today-Plan-Change).
+    case changeSheet
 }
 
 /// Today live, to P4-Today-Soon (dark and light), -Evening, -NoClass and -AddingTask; P2-Today-Empty for a centre with
@@ -20,6 +26,8 @@ public struct TodayView: View {
     let boardState: TodayBoardState?
     let status: RootStatus
     @State private var topInset: CGFloat = 0
+    /// The batch whose Change sheet is up.
+    @State private var changing: ChangingBatch?
 
     /// `ticks` runs the minute clock (live); the fixtures hold their moment. `status` is AppShell's: the offline or
     /// sync line under the greeting, and whether the AI row is live.
@@ -54,6 +62,22 @@ public struct TodayView: View {
                     if let hero = store.hero {
                         BatchHeroCard(hero: hero, openClose: actions.openClose)
                     }
+                    ForEach(store.planBatches) { batch in
+                        if let plan = store.plans[batch.id] {
+                            PlanSection(
+                                store: plan,
+                                title: store.planBatches.count > 1 ? "Today's plan · \(batch.name)" : "Today's plan",
+                                open: { opened in
+                                    if case let .artefact(id) = opened {
+                                        actions.openArtefact(id)
+                                    }
+                                },
+                                change: { changing = ChangingBatch(id: batch.id) },
+                                menuFor: lineMenuStudent
+                            )
+                            .id(Self.planID(batch.id))
+                        }
+                    }
                     TodaySection(store: store, actions: actions)
                     if !store.comingUp.isEmpty {
                         ComingUpSection(rows: store.comingUp, open: actions.openEvent).id(Self.comingUpID)
@@ -80,6 +104,11 @@ public struct TodayView: View {
             .scrollDismissesKeyboard(.interactively)
             .background(Tokens.ground.color)
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(item: $changing) { batch in
+                if let plan = store.plans[batch.id] {
+                    PlanChangeSheet(store: plan, weekday: store.today.weekday(in: store.calendar)) { changing = nil }
+                }
+            }
             .refreshable {
                 await store.load()
                 Haptic.play(.impactLight)
@@ -90,9 +119,16 @@ public struct TodayView: View {
                 if boardState == .addingTask {
                     setUpAddingTask()
                 }
-                if boardState != nil {
+                await setUpPlanBoard(proxy)
+                if boardState == .addingTask || boardState == .aiRow {
                     try? await Task.sleep(for: .seconds(Tokens.panel))
                     proxy.scrollTo(Self.comingUpID, anchor: .top)
+                }
+            }
+            .onChange(of: store.focusBatch) { _, batch in
+                guard let batch else { return }
+                withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) {
+                    proxy.scrollTo(Self.planID(batch), anchor: .top)
                 }
             }
             .onChange(of: store.tasks.adding) { _, adding in
@@ -118,6 +154,36 @@ public struct TodayView: View {
     }
 
     private static let comingUpID = "coming-up"
+
+    static func planID(_ batch: UUID) -> String {
+        "plan-\(batch.uuidString)"
+    }
+
+    private var lineMenuStudent: UUID? {
+        if case let .lineMenu(student) = boardState {
+            return student
+        }
+        return nil
+    }
+
+    /// The plan's board states once the plan is in: scrolled to the second group, the Change sheet up; a link from a
+    /// student's page scrolls to its batch's plan.
+    private func setUpPlanBoard(_ proxy: ScrollViewProxy) async {
+        guard let first = store.planBatches.first(where: { store.plans[$0.id]?.record != nil }) else { return }
+        switch boardState {
+        case .scrolledToPlan:
+            try? await Task.sleep(for: .seconds(Tokens.panel))
+            proxy.scrollTo(PlanSection.groupID(first.id, 2), anchor: .top)
+        case .changeSheet:
+            changing = ChangingBatch(id: first.id)
+        default:
+            if let batch = store.focusBatch {
+                try? await Task.sleep(for: .seconds(Tokens.panel))
+                proxy.scrollTo(Self.planID(batch), anchor: .top)
+            }
+        }
+    }
+
     private static let tasksID = "tasks"
     private static let tickSeconds: Double = 60
 
@@ -182,4 +248,9 @@ public struct TodayView: View {
         store.tasks.newTitle = "Print worksheets for Class 8"
         store.tasks.newDue = Day(year: 2026, month: 10, day: 9)
     }
+}
+
+/// The batch whose Change sheet is up.
+struct ChangingBatch: Identifiable, Hashable {
+    let id: UUID
 }

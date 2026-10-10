@@ -69,7 +69,7 @@ import Observation
     private let attendance: any AttendanceRepository
     private let eventsRepository: any EventsRepository
     private let now: @Sendable () -> Date
-    let calendar: Calendar
+    public let calendar: Calendar
     private let cache: CachedRead<TodaySnapshot>?
     private var loaded = false
     let record: (any RecordRepository)?
@@ -77,6 +77,12 @@ import Observation
     public var queue: (any ChangeQueueing)?
     /// Today's closed sessions' checks and homework, by session, for the closed hero's line.
     var closeCounts: [UUID: CloseCounts] = [:]
+    /// Builds a batch's plan store (AppShell's: the maker, the copy, the connectivity); nil shows no plan.
+    @ObservationIgnored public var makePlanStore: ((UUID) -> PlanStore)?
+    /// The plan of each batch meeting today, by batch.
+    public private(set) var plans: [UUID: PlanStore] = [:]
+    /// The batch whose plan card Today scrolls to (a student page's "Today", U35).
+    public var focusBatch: UUID?
 
     public init(
         workspace: Workspace, counts: any CountsRepository, register: any Register,
@@ -109,7 +115,7 @@ import Observation
         workspace.profile.initials
     }
 
-    var today: Day {
+    public var today: Day {
         Day(clock, calendar: calendar)
     }
 
@@ -221,6 +227,21 @@ import Observation
             cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
         }
         tick(clock)
+        await loadPlans()
+    }
+
+    /// Today's batches in time order, each with its plan store: made (or read) one after another (plan decision 14).
+    public var planBatches: [Classroom] {
+        NextClass.classesToday(in: register.activeClasses, on: today, calendar: calendar)
+    }
+
+    func loadPlans() async {
+        guard let makePlanStore else { return }
+        for batch in planBatches {
+            let store = plans[batch.id] ?? makePlanStore(batch.id)
+            plans[batch.id] = store
+            await store.load()
+        }
     }
 
     static func students(_ count: Int) -> String {
@@ -243,6 +264,8 @@ public struct TodayActions {
     let openAI: () -> Void
     /// The Start here card's Scan register: the scan on Today's stack.
     let openScanRegister: () -> Void
+    /// A plan line's artefact: the sheet, the checks, the brief (the Artefacts feature, through AppShell's route).
+    let openArtefact: (UUID) -> Void
 
     public init(
         openSettings: @escaping () -> Void,
@@ -253,7 +276,8 @@ public struct TodayActions {
         openEvent: @escaping (UUID) -> Void,
         openFeesDue: @escaping () -> Void,
         openAI: @escaping () -> Void,
-        openScanRegister: @escaping () -> Void
+        openScanRegister: @escaping () -> Void,
+        openArtefact: @escaping (UUID) -> Void = { _ in }
     ) {
         self.openSettings = openSettings
         self.openTab = openTab
@@ -264,6 +288,7 @@ public struct TodayActions {
         self.openFeesDue = openFeesDue
         self.openAI = openAI
         self.openScanRegister = openScanRegister
+        self.openArtefact = openArtefact
     }
 }
 

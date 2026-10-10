@@ -11,14 +11,14 @@ import Testing
         plans: FakePlansRepository = FakePlansRepository(), ai: FakeAIRepository = FakeAIRepository(),
         online: Bool = true, cache: PlanCache? = nil, now: Date = PlanTest.at1635,
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
+        classes: FakeClassesRepository = FakeClassesRepository(classes: FakeClassesRepository.withEvening),
         load: Bool = true
     ) async -> PlanStore {
         let maker = PlanTest.maker(plans: plans, ai: ai, attendance: attendance, cache: cache, now: now)
         let store = await PlanStore(
             classID: PlanTest.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
-            register: PlanTest.register(now: now), plans: plans, classes: FakeClassesRepository(
-                classes: FakeClassesRepository.withEvening
-            ), maker: maker, cache: cache, now: { now }, calendar: DayHeading.india
+            register: PlanTest.register(now: now), plans: plans, classes: classes, maker: maker, cache: cache,
+            now: { now }, calendar: DayHeading.india
         )
         store.online = { online }
         if load {

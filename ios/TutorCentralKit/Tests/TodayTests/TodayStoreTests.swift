@@ -18,7 +18,8 @@ import Testing
         sessions: [AttendanceSession] = FakeAttendanceRepository.seed,
         events: [CalendarEvent] = FakeEventsRepository.seed,
         tasks: [TaskItem] = FakeTasksRepository.seed,
-        record: FakeRecordRepository? = nil
+        record: FakeRecordRepository? = nil,
+        plans: FakePlansRepository? = nil
     ) async -> TodayStore {
         let register = RegisterStore(
             workspace: FakeCentreRepository.meeraWorkspace, students: FakeStudentsRepository(students: students),
@@ -27,11 +28,23 @@ import Testing
         let taskStore = TasksStore(
             workspace: FakeCentreRepository.meeraWorkspace, tasks: FakeTasksRepository(tasks: tasks), now: { now }
         )
-        return TodayStore(
+        let attendance = FakeAttendanceRepository(sessions: sessions)
+        let store = TodayStore(
             workspace: FakeCentreRepository.meeraWorkspace, counts: counts, register: register,
-            attendance: FakeAttendanceRepository(sessions: sessions), events: FakeEventsRepository(events: events),
+            attendance: attendance, events: FakeEventsRepository(events: events),
             tasks: taskStore, now: { now }, record: record
         )
+        if let plans {
+            let maker = PlanTest.maker(plans: plans, attendance: attendance, now: now)
+            store.makePlanStore = { classID in
+                PlanStore(
+                    classID: classID, workspace: FakeCentreRepository.meeraWorkspace, register: register,
+                    plans: plans, classes: FakeClassesRepository(classes: classes), maker: maker, cache: nil,
+                    now: { now }, calendar: DayHeading.india
+                )
+            }
+        }
+        return store
     }
 
     func makeLive(
@@ -151,5 +164,36 @@ import Testing
         let store = await make(students: [], classes: [], sessions: [], events: [], tasks: [])
         await store.load()
         #expect(store.showsStartHere && store.hero == nil && store.todayRows.isEmpty)
+    }
+
+    @Test func todayHoldsAPlanStorePerBatchMeetingToday() async {
+        let store = await make(
+            now: PlanTest.at1635, students: FakeStudentsRepository.eveningSeed,
+            classes: FakeClassesRepository.withEvening, plans: FakePlansRepository()
+        )
+        await store.load()
+        #expect(Set(store.plans.keys) == [FakeClassesRepository.maths.id, FakeClassesRepository.evening.id])
+        #expect(store.planBatches.map(\.id) == [FakeClassesRepository.maths.id, FakeClassesRepository.evening.id])
+    }
+
+    @Test func twoBatchesGetTwoPlans() async throws {
+        let plans = FakePlansRepository()
+        let store = await make(
+            now: PlanTest.at1635, students: FakeStudentsRepository.eveningSeed,
+            classes: FakeClassesRepository.withEvening, plans: plans
+        )
+        await store.load()
+        for batch in [FakeClassesRepository.maths.id, FakeClassesRepository.evening.id] {
+            #expect(try await plans.plan(centre: PlanTest.centre, classID: batch, date: PlanTest.wednesday) != nil)
+        }
+    }
+
+    @Test func theHeroCountsThePlansGroups() async {
+        let store = await make(
+            now: PlanTest.at1635, students: FakeStudentsRepository.eveningSeed,
+            classes: [FakeClassesRepository.evening], plans: FakePlansRepository()
+        )
+        await store.load()
+        #expect(store.hero?.line == "17:00–18:30 · 5 students · 3 groups")
     }
 }

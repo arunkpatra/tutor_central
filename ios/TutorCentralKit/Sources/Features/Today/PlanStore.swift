@@ -74,6 +74,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     let cache: PlanCache?
     let now: @Sendable () -> Date
     let calendar: Calendar
+    /// Each member's subjects (their chapters'), for the Change sheet's menus; read when it opens.
+    @ObservationIgnored var subjects: [UUID: [String]] = [:]
     @ObservationIgnored var generation = 0
     @ObservationIgnored var run: Task<Void, Never>?
 
@@ -195,13 +197,19 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         await task.value
     }
 
+    /// A run's news on screen. A kept artefact is linked into the plan as shown (a student moved meanwhile follows the
+    /// new group, as `keep_artefact` linked them), so a change made while the material lands is kept.
     private func apply(_ progress: PlanMaker.Progress, _ mine: Int) {
         guard mine == generation else { return }
         switch progress {
-        case let .written(plan), let .kept(_, plan):
+        case let .written(plan):
             show(.planning(plan))
+        case let .kept(artefact, plan):
+            let merged = record.map { $0.id == plan.id ? $0.merging(artefact, from: plan) : plan } ?? plan
+            show(.planning(merged))
+            cache?.keep(merged, at: now())
         case let .finished(plan):
-            show(.made(plan))
+            show(.made(record.map { $0.id == plan.id ? $0 : plan } ?? plan))
         case let .failed(words):
             if record == nil {
                 show(.failed(words))
@@ -220,6 +228,11 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         case .teach, .catchUp: nil
         }
         return id.map(PlanOpen.artefact)
+    }
+
+    /// The members' subjects for the Change sheet.
+    public func readSubjects() async {
+        subjects = await maker.subjects(of: register.members(of: classID))
     }
 
     func show(_ state: State) {

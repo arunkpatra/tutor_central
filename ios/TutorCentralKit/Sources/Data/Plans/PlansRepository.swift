@@ -19,6 +19,8 @@ public protocol PlansRepository: Sendable {
     func move(items: [UUID], to group: Int, from: Int, centre: UUID) async throws
     /// The student's lines skipped for today: they close with attendance alone.
     func leaveOut(student: UUID, plan: UUID, centre: UUID) async throws
+    /// Lines pointed at an artefact already kept (a moved student's set, checks and sheet: the new group's).
+    func link(items: [UUID], to artefact: UUID?, centre: UUID) async throws
 }
 
 /// Where a kept artefact is linked: the plan's items of a kind in a group (student nil), or one student's.

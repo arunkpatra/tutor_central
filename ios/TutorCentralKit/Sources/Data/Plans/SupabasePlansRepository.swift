@@ -64,6 +64,13 @@ public final class SupabasePlansRepository: PlansRepository {
             .eq("centre_id", value: centre).eq("plan_id", value: plan).eq("student_id", value: student).execute()
     }
 
+    public func link(items: [UUID], to artefact: UUID?, centre: UUID) async throws {
+        guard !items.isEmpty else { return }
+        try await client.from("plan_items")
+            .update(["artefact_id": artefact.map { AnyJSON.string($0.uuidString.lowercased()) } ?? .null])
+            .eq("centre_id", value: centre).in("id", values: items.map { $0.uuidString.lowercased() }).execute()
+    }
+
     // MARK: - Params
 
     /// `make_plan(p_centre, p_class, p_date, p_groups, p_subjects, p_items)`: the groups as the cards read them, the

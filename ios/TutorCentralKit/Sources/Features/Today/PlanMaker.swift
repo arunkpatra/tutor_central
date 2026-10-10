@@ -165,6 +165,23 @@ public final class PlanMaker: Sendable {
         return PlanRules.plan(input(batch, record, choices))
     }
 
+    /// Each member's subjects, from their chapters (the Change sheet's menus); a member whose read fails has none.
+    public func subjects(of members: [Student]) async -> [UUID: [String]] {
+        await withTaskGroup(of: (UUID, [String]).self) { group in
+            for member in members {
+                group.addTask { [textbooks] in
+                    let chapters = await (try? textbooks.chapters(student: member.id)) ?? []
+                    return (member.id, Array(Set(chapters.map(\.subject))).sorted())
+                }
+            }
+            var all: [UUID: [String]] = [:]
+            for await (id, subjects) in group {
+                all[id] = subjects
+            }
+            return all
+        }
+    }
+
     /// The batch's session of the day was closed: no plan is made for it.
     public func closed(classID: UUID, date: Day, centre: UUID) async -> Bool {
         let sessions = await (try? attendance.sessions(centre: centre, month: date.period)) ?? []
