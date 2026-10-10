@@ -115,6 +115,34 @@ import Testing
         #expect(store.loaded && store.canFinish)
     }
 
+    @Test func offlineTheCopyShowsTheChecksBeforeTheReadsGiveUp() async throws {
+        let cache = PlanCache(
+            centre: Self.centre, directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        )
+        let evening = FakePlansRepository.evening()
+        try cache.keep(#require(try await evening.plan(id: FakePlansRepository.planID, centre: Self.centre)), at: .now)
+        let plans = FakePlansRepository()
+        plans.delay = .seconds(1)
+        plans.nextError = URLError(.timedOut)
+        let store = await CloseStore(
+            classID: FakeClassesRepository.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
+            register: tests.register(), textbooks: FakeTextbooksRepository.evening(), record: FakeRecordRepository(),
+            attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed), ai: FakeAIRepository(),
+            now: { CloseStoreTests.fivepast }
+        )
+        store.plans = plans
+        store.planCache = cache
+        let loading = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(!store.checklist.isEmpty)
+        guard case .rows? = student(store, FakeStudentsRepository.meher)?.checks else {
+            Issue.record("the copy's checks were not shown at once")
+            return
+        }
+        await loading.value
+        #expect(store.loaded && store.canFinish && !store.checklist.isEmpty)
+    }
+
     @Test func aStudentTheRulesAddedAfterThePlanGoesPhaseElevensWay() async {
         let ai = FakeAIRepository()
         var plan = FakePlansRepository.boardPlan(changed: false, done: false)
