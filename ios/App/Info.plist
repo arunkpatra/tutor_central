@@ -26,6 +26,8 @@
     <key>CFBundleURLSchemes</key><array><string>tutorcentral</string></array>
   </dict></array>
   <key>NSCameraUsageDescription</key><string>To photograph your paper register and answer sheets so they can be read, and the QR of your UPI app.</string>
+  <key>BGTaskSchedulerPermittedIdentifiers</key><array><string>in.tutorcentral.app.refresh</string></array>
+  <key>UIBackgroundModes</key><array><string>fetch</string></array>
   <key>SUPABASE_URL</key><string>$(SUPABASE_URL)</string>
   <key>SUPABASE_ANON_KEY</key><string>$(SUPABASE_ANON_KEY)</string>
   <key>API_ORIGIN</key><string>$(API_ORIGIN)</string>

@@ -48,6 +48,8 @@ const IOS_INPUTS = [
   "ios/**/*.swift",
   "ios/project.yml",
   "ios/App/Info.plist",
+  "ios/Share/Info.plist",
+  "ios/**/*.entitlements",
   "ios/Config/*.xcconfig",
   "ios/TutorCentralKit/Package.resolved",
   // The token test reads the document (D25).

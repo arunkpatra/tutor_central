@@ -103,6 +103,9 @@ public struct RootView: View {
                         await shell.refreshScreens()
                     }
                 }
+                if phase == .background, launch == nil {
+                    BackgroundRefresh.schedule()
+                }
             }
             .onChange(of: session.state) { _, state in
                 Self.follow(state, shell: shell, deps: deps)
