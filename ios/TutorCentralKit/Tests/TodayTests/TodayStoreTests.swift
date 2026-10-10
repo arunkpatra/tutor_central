@@ -196,4 +196,22 @@ import Testing
         await store.load()
         #expect(store.hero?.line == "17:00–18:30 · 5 students · 3 groups")
     }
+
+    @Test func afterACloseFromAPlanTodaysHeroCountsItsChecksAndTheLinesAreDone() async throws {
+        let session = FakeAttendanceRepository.seedWithEveningClosed[0]
+        let record = FakeRecordRepository(
+            checks: FakeRecordRepository.checks(of: session), homework: FakeRecordRepository.homework(of: session)
+        )
+        let store = await make(
+            now: PlanTest.at1840, students: FakeStudentsRepository.eveningSeed,
+            classes: [FakeClassesRepository.science, FakeClassesRepository.evening],
+            sessions: FakeAttendanceRepository.seedWithEveningClosed, record: record,
+            plans: .evening(done: true)
+        )
+        await store.load()
+        let hero = try #require(store.hero)
+        #expect(hero.kind == .closed && hero.line.contains("checks right"))
+        let plan = try #require(store.plans[FakeClassesRepository.evening.id]?.record)
+        #expect(plan.items.filter { $0.studentID != nil }.allSatisfy { $0.doneAt != nil })
+    }
 }

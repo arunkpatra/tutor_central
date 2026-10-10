@@ -36,14 +36,16 @@ extension CloseStore {
         })
         let present = students.filter(\.present)
         let checks = present.flatMap(checks(of:))
-        let homework = present.filter(\.homeworkGiven).map { SessionClose.Homework(studentID: $0.id, artefactID: nil) }
+        let homework = present.filter(\.homeworkGiven).map {
+            SessionClose.Homework(studentID: $0.id, artefactID: homeworkItem($0.id)?.artefactID)
+        }
         let states = present.flatMap(states(of:))
         let track = Dictionary(uniqueKeysWithValues: students.map { student in
             (student.id, tracking(student, checks: checks, states: states))
         })
         return SessionClose(
             classID: classID, date: day, marks: marks, checks: checks, homework: homework, track: track,
-            states: states
+            states: states, done: doneItems
         )
     }
 
@@ -51,12 +53,12 @@ extension CloseStore {
         switch student.checks {
         case let .rows(rows):
             rows.compactMap { row in
-                row.tap.map {
-                    SessionClose.Check(
-                        studentID: student.id, skillID: row.skillID, question: row.question, correct: $0,
-                        isPlacement: row.isPlacement
-                    )
-                }
+                guard let tap = row.tap,
+                      let skill = ownSkill(row.skillID, named: row.skill, student: student.id) else { return nil }
+                return SessionClose.Check(
+                    studentID: student.id, skillID: skill.id, question: row.question, correct: tap,
+                    isPlacement: row.isPlacement
+                )
             }
         case let .placement(subjects):
             subjects.flatMap(\.rows).compactMap { row in
@@ -80,8 +82,8 @@ extension CloseStore {
         case let .rows(rows):
             return rows.compactMap { row in
                 guard let correct = row.tap, correct != row.recorded,
-                      let skill = skills.first(where: { $0.id == row.skillID }) else { return nil }
-                let previous = history.filter { $0.skillID == row.skillID }.max { $0.at < $1.at }?.correct
+                      let skill = ownSkill(row.skillID, named: row.skill, student: student.id) else { return nil }
+                let previous = history.filter { $0.skillID == skill.id }.max { $0.at < $1.at }?.correct
                 guard let state = SkillProgress.after(skill.state, correct: correct, previousCorrect: previous),
                       state != skill.state else { return nil }
                 return SkillStateChange(skillID: skill.id, state: state)

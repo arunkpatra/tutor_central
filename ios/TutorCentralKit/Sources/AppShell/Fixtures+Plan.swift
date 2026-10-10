@@ -79,7 +79,9 @@ extension Fixtures {
             return FakePlansRepository.evening(ownSheet: ownSheet, photoPath: ownPhotoPath)
         case _ where figureStates[state] != nil:
             return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
-        case _ where planStates.contains(state):
+        case .closeCards:
+            return FakePlansRepository()
+        case _ where planStates.contains(state) || closeStates.contains(state):
             return FakePlansRepository.evening(changed: state == .todayPlanChanged, done: state == .todayAfterClose)
         default:
             return FakePlansRepository()

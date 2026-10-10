@@ -25,6 +25,8 @@ public enum CloseChecks: Hashable, Sendable {
     case rows([CheckLine])
     case placement([PlacementSubject])
     case none
+    /// Left out of today's plan, or the check skipped today: no checks on the card.
+    case skipped
     case failed(String)
 }
 
@@ -63,6 +65,13 @@ public enum ClosePhase: Hashable, Sendable {
     /// The centre's queue (AppShell's): a close made offline waits in it (D39).
     public var queue: (any ChangeQueueing)?
     public var online: @Sendable () async -> Bool = { true }
+    /// Today's plan of the batch (AppShell's): its checks, its checklist and the lines done; the copy on this iPhone
+    /// answers at once and when the read fails.
+    public var plans: (any PlansRepository)?
+    public var planCache: PlanCache?
+    public internal(set) var plan: PlanRecord?
+    /// One card per group of the plan's lines (P10-Close), ticked as they are done.
+    public internal(set) var checklist: [ChecklistCard] = []
 
     let classID: UUID
     let workspace: Workspace
@@ -161,9 +170,14 @@ public enum ClosePhase: Hashable, Sendable {
                 present: true, checks: .loading, homeworkGiven: true, catchUp: nil
             )
         }
+        if let copy = planCache?.load(classID: classID, date: day)?.value {
+            show(copy)
+        }
+        async let planRead: Void = readPlan()
         async let sessionsRead: Void = readSessions()
         async let recordsRead: Void = readRecords(members.map(\.id))
-        _ = await (sessionsRead, recordsRead)
+        _ = await (planRead, sessionsRead, recordsRead)
+        refreshPlanChecks()
         closedSession = sessions.first { $0.date == day && $0.classID == classID && $0.closedAt != nil }
         var kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []
         var given = closedSession.map { session in homeworkHistory.filter { $0.sessionID == session.id } } ?? []

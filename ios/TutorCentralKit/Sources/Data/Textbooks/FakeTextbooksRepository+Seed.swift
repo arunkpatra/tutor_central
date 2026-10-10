@@ -173,31 +173,35 @@ public extension FakeTextbooksRepository {
     static func seeded(riyasMaths: Bool) -> FakeTextbooksRepository {
         guard riyasMaths else { return seeded() }
         var chapters = seedChapters, skills = seedSkills
-        let riya = FakeStudentsRepository.riya
-        let read = AISamples.textbook.chapters
-        chapters[riya] = read.map { chapter in
-            Chapter(
-                id: riyaID(chapter.position, 0),
-                subject: "Mathematics",
-                position: chapter.position,
-                name: chapter.name
-            )
-        }
-        skills[riya] = read.flatMap { chapter in
-            chapter.skills.enumerated().map { index, name in
-                Skill(
-                    id: riyaID(chapter.position, index + 1), chapterID: riyaID(chapter.position, 0),
-                    position: index + 1,
-                    name: name, state: .notStarted, stateAt: FakeCountsRepository.fixedNow, lastCheckedAt: nil
-                )
-            }
-        }
+        chapters[FakeStudentsRepository.riya] = riyaChapters
+        skills[FakeStudentsRepository.riya] = riyaSkills
         let repo = FakeTextbooksRepository(textbooks: [mathsTen], chapters: chapters, skills: skills)
         repo.students = FakeStudentsRepository.seed
         return repo
     }
 
-    private static func riyaID(_ chapter: Int, _ skill: Int) -> UUID {
+    /// Riya's Math-Magic 5, read from its contents page (the textbook sample), nothing taught yet.
+    nonisolated static var riyaChapters: [Chapter] {
+        AISamples.textbook.chapters.map { chapter in
+            Chapter(
+                id: riyaID(chapter.position, 0), subject: "Mathematics", position: chapter.position, name: chapter.name
+            )
+        }
+    }
+
+    nonisolated static var riyaSkills: [Skill] {
+        AISamples.textbook.chapters.flatMap { chapter in
+            chapter.skills.enumerated().map { index, name in
+                Skill(
+                    id: riyaID(chapter.position, index + 1), chapterID: riyaID(chapter.position, 0),
+                    position: index + 1, name: name, state: .notStarted, stateAt: FakeCountsRepository.fixedNow,
+                    lastCheckedAt: nil
+                )
+            }
+        }
+    }
+
+    private nonisolated static func riyaID(_ chapter: Int, _ skill: Int) -> UUID {
         UUID(uuidString: String(format: "cccccccc-0009-%04d-%04d-000000000000", chapter, skill))!
     }
 }

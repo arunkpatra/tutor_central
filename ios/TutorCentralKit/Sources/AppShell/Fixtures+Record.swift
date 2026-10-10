@@ -38,7 +38,21 @@ extension Fixtures {
 
 extension Fixtures {
     /// The close's states (P10-Close, -Scrolled, -Placement): the Evening batch at 17:05.
-    static let closeStates: Set<LaunchState> = [.close, .closeScrolled, .closePlacement]
+    static let closeStates: Set<LaunchState> = [.close, .closeScrolled, .closePlacement, .closeCards]
+
+    /// P12-Close-Cards' three: Dev, whose checks are being made; Bir Bikram Singh, moved into the Evening batch, with
+    /// no book; Riya, whose placement needs the connection.
+    static var cardStudents: [Student] {
+        let evening = FakeStudentsRepository.eveningSeed.filter {
+            [FakeStudentsRepository.dev, FakeStudentsRepository.riya].contains($0.id)
+        }
+        let bir = FakeStudentsRepository.seed.filter { $0.name.hasPrefix("Bir") }.map { student in
+            var moved = student
+            moved.classID = FakeClassesRepository.evening.id
+            return moved
+        }
+        return evening + bir
+    }
 
     /// The record each state reads: Hemanth's checks and homework; after the close, also the close's own.
     @MainActor static func record(for state: LaunchState) -> FakeRecordRepository {

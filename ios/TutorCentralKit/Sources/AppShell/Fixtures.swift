@@ -177,7 +177,7 @@ public enum Fixtures {
              .workedExample, .brief, .figureNumberLine, .figureFractionBar, .figurePlaceValue, .figureUnitCircle,
              .figureTriangle, .figureCell, .figureFoodChain,
              .todayAfterClose,
-             .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
+             .close, .closeScrolled, .closePlacement, .closeCards, .more, .feesEmpty, .fees,
              .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
              .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
@@ -223,24 +223,6 @@ public enum Fixtures {
         switch state {
         case .todayEmpty, .studentsEmpty, .attendanceEmpty, .classesEmpty, .feesEmpty, .feesGenerate: []
         default: FakeFeesRepository.seed
-        }
-    }
-
-    /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
-    static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
-        switch state {
-        case .studentsEmpty, .classesEmpty, .attendanceEmpty, .todayEmpty: ([], [])
-        case .studentsFew: (FakeStudentsRepository.few, [])
-        case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
-        case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
-        case _ where planStates.contains(state) || state == .todayNoBatch: (
-                planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
-            )
-        case _ where closeStates.contains(state): (
-                FakeStudentsRepository.eveningSeed,
-                FakeClassesRepository.withEvening
-            )
-        default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
     }
 
@@ -310,6 +292,27 @@ extension Fixtures {
         case .todayNoBatch: india(day: 10, hour: 9, minute: 30)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         default: nil
+        }
+    }
+}
+
+extension Fixtures {
+    /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
+    static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
+        switch state {
+        case .studentsEmpty, .classesEmpty, .attendanceEmpty, .todayEmpty: ([], [])
+        case .studentsFew: (FakeStudentsRepository.few, [])
+        case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
+        case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
+        case _ where planStates.contains(state) || state == .todayNoBatch: (
+                planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
+            )
+        case .closeCards: (cardStudents, FakeClassesRepository.withEvening)
+        case _ where closeStates.contains(state): (
+                FakeStudentsRepository.eveningSeed,
+                FakeClassesRepository.withEvening
+            )
+        default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
     }
 }

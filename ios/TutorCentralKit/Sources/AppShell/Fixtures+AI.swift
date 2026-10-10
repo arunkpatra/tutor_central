@@ -15,6 +15,10 @@ extension Fixtures {
         case .scanReading, .checkChecking, .textbookReading: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
         case .sheetRegenerating: ai.delayByKind[.sheet] = .seconds(3600)
+        case .closeCards:
+            // Dev's science checks still being made; Riya's mathematics placement offline.
+            ai.delay = .seconds(3600)
+            ai.scriptBySubject["Mathematics"] = .failure(.offline)
         default: break
         }
         return ai

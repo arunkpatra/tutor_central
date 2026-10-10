@@ -102,7 +102,7 @@ public struct PendingChangesView: View {
         case .attendance: "checkmark.circle"
         case .markPaid: "indianrupeesign"
         case .absenceLog: "text.bubble"
-        case .close: "checkmark.circle"
+        case .close: "checklist"
         }
     }
 

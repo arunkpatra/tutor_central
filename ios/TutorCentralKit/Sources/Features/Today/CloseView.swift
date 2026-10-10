@@ -7,9 +7,12 @@ import SwiftUI
 public enum CloseBoardState: Sendable {
     case scrolled
     case placement
+    /// P12-Close-Cards: scrolled to the students.
+    case cards
 }
 
-/// The close (P10-Close, -Scrolled, -Placement): the batch and its day, the students' cards, Done in the footer band.
+/// The close (P10-Close, -Scrolled, -Placement): the batch and its day, the plan's checklist per group (the quiet Plan
+/// goes back to Today's plan), the students' cards, Done in the footer band.
 /// Done pops to Today, whose hero reads the close.
 public struct CloseView: View {
     @State var store: CloseStore
@@ -18,6 +21,8 @@ public struct CloseView: View {
     let onMessage: (String) -> Void
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
+
+    static let studentsID = "students"
 
     public init(store: CloseStore, boardState: CloseBoardState? = nil, onMessage: @escaping (String) -> Void) {
         _store = State(initialValue: store)
@@ -29,10 +34,35 @@ public struct CloseView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                    BackRow(title: store.title) { dismiss() }
+                    BackRow(title: store.title, action: store.hasPlan ? ("Plan", { dismiss() }) : nil) { dismiss() }
                     heading
+                    ForEach(store.checklist) { card in
+                        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(card.title).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
+                                    .accessibilityAddTraits(.isHeader)
+                                Spacer()
+                                Text(store.countText(for: card.id)).typeStyle(Tokens.footnote)
+                                    .monospacedDigit().foregroundStyle(Tokens.text2.color)
+                            }
+                            .padding(.horizontal, Tokens.rowGapInner)
+                            Card {
+                                VStack(spacing: 0) {
+                                    ForEach(card.rows) { row in
+                                        PlanChecklistRow(
+                                            isOn: Binding(
+                                                get: { row.done }, set: { _ in store.toggle(line: row.id, in: card.id) }
+                                            ),
+                                            text: row.text
+                                        )
+                                        .rowDivider(row.id != card.rows.last?.id)
+                                    }
+                                }
+                            }
+                        }
+                    }
                     VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                        SectionHeader("Students")
+                        SectionHeader("Students").id(Self.studentsID)
                         ForEach(store.students.indices, id: \.self) { index in
                             CloseStudentCard(store: store, index: index).id(store.students[index].id)
                         }
@@ -53,6 +83,12 @@ public struct CloseView: View {
                     await store.load()
                 }
                 await setUpBoard(proxy)
+            }
+            .task {
+                // P12-Close-Cards: its checks are still being made, so the load never ends; scroll on our own.
+                guard boardState == .cards else { return }
+                try? await Task.sleep(for: .seconds(Tokens.panel))
+                proxy.scrollTo(Self.studentsID, anchor: .top)
             }
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
@@ -109,6 +145,8 @@ public struct CloseView: View {
             store.tap(dev, 2, right: true)
             try? await Task.sleep(for: .seconds(Tokens.panel))
             proxy.scrollTo(store.students[dev].id, anchor: .top)
+        case .cards:
+            break
         case .placement:
             guard let riya = store.students.firstIndex(where: { $0.firstName == "Riya" }) else { return }
             store.tapPlacement(riya, subject: 0, row: 0, right: true)
