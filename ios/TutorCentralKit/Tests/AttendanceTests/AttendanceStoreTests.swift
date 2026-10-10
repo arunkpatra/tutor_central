@@ -321,4 +321,8 @@ extension AttendanceStoreTests {
     ) async throws -> AttendanceSession {
         try await fake.save(centre: centre, classID: classID, date: date, marks: marks)
     }
+
+    func close(_ close: SessionClose, centre: UUID) async throws -> UUID {
+        try await fake.close(close, centre: centre)
+    }
 }

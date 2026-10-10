@@ -64,6 +64,7 @@ import Supabase
     /// Every call waits this long first: lets a store show its loading state.
     public var delay: Duration?
     public private(set) var saves: [Save] = []
+    public private(set) var closes: [SessionClose] = []
     private let now: () -> Date
 
     public init(sessions: [AttendanceSession] = [], now: @escaping () -> Date = { FakeCountsRepository.fixedNow }) {
@@ -93,6 +94,13 @@ import Supabase
         let made = AttendanceSession(id: UUID(), classID: classID, date: date, savedAt: now(), marks: marks)
         sessions.append(made)
         return made
+    }
+
+    /// The close keeps its attendance as `save` does; the checks, homework and status are only recorded.
+    public func close(_ close: SessionClose, centre: UUID) async throws -> UUID {
+        let session = try await save(centre: centre, classID: close.classID, date: close.date, marks: close.marks)
+        closes.append(close)
+        return session.id
     }
 
     private func begin() async throws {
