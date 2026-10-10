@@ -9,7 +9,7 @@ import SwiftUI
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
     Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
-    Payments: View, Reports: View, Tools: View, School: View
+    Payments: View, Reports: View, Tools: View, School: View, Textbook: View
 >: View {
     @Bindable var state: TabsState
     let toasts: ToastCenter
@@ -33,6 +33,8 @@ struct TabsView<
     let tools: (Route) -> Tools
     /// The School tab's root: the Later card until Phase 13.
     let school: () -> School
+    /// Add a textbook (V2).
+    let textbook: (UUID, String?) -> Textbook
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -50,7 +52,7 @@ struct TabsView<
     /// A pushed screen, by the tab it belongs to.
     @ViewBuilder private func destination(_ route: Route) -> some View {
         switch route {
-        case .student, .classes, .classroom, .studentFees: studentsDestination(route)
+        case .student, .classes, .classroom, .studentFees, .textbook: studentsDestination(route)
         case .attendance, .history, .historyStudent: attendanceDestination(route)
         case .settings, .account, .deleteAccount, .help, .pendingChanges, .reminders: settings(route)
         case .payments, .reports: moreDestination(route)
@@ -68,6 +70,7 @@ struct TabsView<
         case let .student(id): studentDetail(id)
         case let .classroom(id): classDetail(id)
         case let .studentFees(id): studentFees(id)
+        case let .textbook(student, subject): textbook(student, subject)
         default: classes()
         }
     }

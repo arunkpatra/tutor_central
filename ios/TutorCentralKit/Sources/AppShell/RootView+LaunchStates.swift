@@ -19,7 +19,8 @@ extension RootView {
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
              .student, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder, .studentConsentAsk,
-             .studentConsentRecord, .studentConsentWaiting, .studentArchived,
+             .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
+             .textbookChapterEdit, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
@@ -160,6 +161,11 @@ extension RootView {
         case .studentNotKnown, .studentConsentAsk, .studentConsentRecord, .studentConsentWaiting:
             [.student(FakeStudentsRepository.riya)]
         case .studentLadder: [.student(FakeStudentsRepository.sahil)]
+        case .textbookIntro, .textbookReading, .textbookChapters, .textbookChapterEdit:
+            [
+                .student(FakeStudentsRepository.riya),
+                .textbook(student: FakeStudentsRepository.riya, subject: "Mathematics"),
+            ]
         default: nil
         }
     }
@@ -296,6 +302,15 @@ extension RootView {
         switch state {
         case .todayAddingTask: .addingTask
         case .todayAI: .aiRow
+        default: nil
+        }
+    }
+
+    static func textbookBoardState(_ state: LaunchState) -> TextbookBoardState? {
+        switch state {
+        case .textbookReading: .reading
+        case .textbookChapters: .chapters
+        case .textbookChapterEdit: .chapterEdit
         default: nil
         }
     }

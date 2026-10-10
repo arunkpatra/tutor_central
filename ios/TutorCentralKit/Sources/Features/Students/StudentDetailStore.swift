@@ -27,6 +27,7 @@ public enum FeeActionKind: Sendable {
     let textbooks: (any TextbooksRepository)?
     let record: (any RecordRepository)?
     let now: @Sendable () -> Date
+    let online: @Sendable () async -> Bool
     var sessions: [AttendanceSession] = []
     private var feeLogs: [FeeLog] = []
     // V2's record (P10-Student): the student's chapters and skills, checks and homework, every message sent.
@@ -59,6 +60,7 @@ public enum FeeActionKind: Sendable {
         self.textbooks = textbooks
         self.record = record
         self.now = now
+        self.online = online
     }
 
     /// Nil while nothing is marked this month: the empty row says so, never 0%.

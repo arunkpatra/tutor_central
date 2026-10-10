@@ -217,6 +217,29 @@ public extension StudentDetailStore {
         openChapterID = openChapterID == chapterID ? nil : chapterID
     }
 
+    /// The next position in a subject: a chapter of the tutor's own goes after the last.
+    func nextPosition(_ subject: String) -> Int {
+        (chapters.filter { $0.subject == subject }.map(\.position).max() ?? 0) + 1
+    }
+
+    /// A chapter of the tutor's own, after the subject's last; read again once written.
+    func addChapter(subject: String, name: String, skills: [String]) async {
+        guard let textbooks else { return }
+        guard await online() else {
+            message = OfflineRefusal.words(for: .addChapter)
+            return
+        }
+        do {
+            _ = try await textbooks.addChapter(
+                student: id, subject: subject, name: name, skills: skills, centre: register.workspace.centre.id
+            )
+            await loadRecord()
+        } catch {
+            message = TransportError.isOffline(error) ? OfflineRefusal.words(for: .addChapter)
+                : "Couldn't add the chapter. Check your connection and try again."
+        }
+    }
+
     /// Done, Partial or Not done on a homework row, written at once (plan decision 15); put back when refused.
     func setHomework(_ homeworkID: UUID, _ status: HomeworkStatus) async {
         guard let record, let index = homeworkRecords.firstIndex(where: { $0.id == homeworkID }) else { return }
@@ -333,61 +356,5 @@ extension StudentDetailStore {
             line: "\(name)\(moved)",
             steps: zip(area.steps, kinds).map { LadderStep(name: $0, step: $1) }
         )
-    }
-
-    /// "4 of 4 secure", "2 of 3 secure · 1 practising", "1 secure · 1 revisit · 2 to come", "Not started".
-    nonisolated static func statesLine(_ states: [SkillState]) -> String {
-        let count = { (state: SkillState) in states.count { $0 == state } }
-        let toCome = count(.notStarted)
-        guard toCome < states.count else { return "Not started" }
-        let others = [(SkillState.practising, "practising"), (.taught, "taught"), (.revisit, "revisit")]
-            .compactMap { count($0.0) > 0 ? "\(count($0.0)) \($0.1)" : nil }
-        let secure = toCome == 0 ? "\(count(.secure)) of \(states.count) secure"
-            : count(.secure) > 0 ? "\(count(.secure)) secure" : nil
-        let rest = toCome > 0 ? "\(toCome) to come" : nil
-        return ([secure] + others.map(Optional.some) + [rest]).compactMap(\.self).joined(separator: " · ")
-    }
-
-    nonisolated static func mark(_ state: SkillState) -> SkillMark {
-        switch state {
-        case .secure: .secure
-        case .practising: .practising
-        case .taught: .taught
-        case .revisit: .revisit
-        case .notStarted: .notStarted
-        }
-    }
-
-    nonisolated static func symbol(_ kind: MessageKind) -> String {
-        switch kind {
-        case .reminder: "bell"
-        case .receipt: "doc.text"
-        case .absence: "person.crop.circle.badge.exclamationmark"
-        case .consent: "checkmark.shield"
-        default: "text.bubble"
-        }
-    }
-
-    nonisolated static func daysSinceMonday(_ weekday: Weekday) -> Int {
-        weekday.rawValue - Weekday.monday.rawValue
-    }
-
-    /// "she stands", "he stands", "they stand", and her, his, their.
-    struct Pronouns {
-        let subject: String
-        let possessive: String
-        let verb: String
-    }
-
-    nonisolated static func pronouns(_ gender: Gender?) -> Pronouns {
-        switch gender {
-        case .female: Pronouns(subject: "she", possessive: "her", verb: "stands")
-        case .male: Pronouns(subject: "he", possessive: "his", verb: "stands")
-        case .other, nil: Pronouns(subject: "they", possessive: "their", verb: "stand")
-        }
-    }
-
-    nonisolated static func possessive(_ gender: Gender?) -> String {
-        pronouns(gender).possessive
     }
 }

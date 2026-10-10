@@ -49,6 +49,11 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case studentConsentAsk = "student-consent-ask"
     case studentConsentRecord = "student-consent-record"
     case studentConsentWaiting = "student-consent-waiting"
+    /// Add a textbook for Riya's Mathematics (P10-Textbook-Intro, -Reading, -Chapters, -Chapter-Edit).
+    case textbookIntro = "textbook-intro"
+    case textbookReading = "textbook-reading"
+    case textbookChapters = "textbook-chapters"
+    case textbookChapterEdit = "textbook-chapter-edit"
     case student
     case studentArchived = "student-archived"
     case studentArchiveConfirm = "student-archive-confirm"

@@ -11,6 +11,10 @@ public struct CreatingCard: View {
     let thumbnail: UIImage?
     let working: Bool
     let cancel: (() -> Void)?
+    /// The 10.2 variant (components.md "Creating card with a photo", P10-Textbook-Reading): a 56 × 72 photo on the
+    /// left,
+    /// the title with Cancel, the bars and the line beside it.
+    let portrait: Bool
     @State private var dimmed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The bars' widths as fractions of the card: the board's 70, 90, 55 and 80 per cent; 65, 85 and 50 beside a photo.
@@ -38,17 +42,34 @@ public struct CreatingCard: View {
         4
     }
 
+    static var portraitSize: CGSize {
+        CGSize(width: 56, height: 72)
+    }
+
     public init(title: String, line: String, thumbnail: UIImage? = nil, working: Bool = true, cancel: (() -> Void)?) {
         self.title = title
         self.line = line
         self.thumbnail = thumbnail
+        portrait = false
         self.working = working
         self.cancel = cancel
     }
 
+    /// A reading with its photo beside it, as P10-Textbook-Reading draws it.
+    public init(title: String, line: String, portrait thumbnail: UIImage?, cancel: @escaping () -> Void) {
+        self.title = title
+        self.line = line
+        self.thumbnail = thumbnail
+        working = true
+        self.cancel = cancel
+        portrait = true
+    }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: Tokens.tileGap) {
-            if let thumbnail {
+            if portrait {
+                portraitLayout
+            } else if let thumbnail {
                 HStack(spacing: Tokens.cardPaddingCompact) {
                     Image(uiImage: thumbnail)
                         .resizable()
@@ -127,4 +148,37 @@ public struct CreatingCard: View {
     }
     .padding(Tokens.pageSide)
     .background(Tokens.ground.color)
+}
+
+extension CreatingCard {
+    var portraitLayout: some View {
+        HStack(alignment: .top, spacing: Tokens.cardPaddingCompact) {
+            Group {
+                if let thumbnail {
+                    Image(uiImage: thumbnail).resizable().scaledToFill()
+                } else {
+                    Tokens.surface2.color
+                }
+            }
+            .frame(width: Self.portraitSize.width, height: Self.portraitSize.height)
+            .clipShape(.rect(cornerRadius: Self.thumbnailRadius, style: .continuous))
+            .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: Tokens.tileGap) {
+                HStack(alignment: .firstTextBaseline, spacing: Tokens.rowPaddingDense) {
+                    Text(title)
+                        .typeStyle(Tokens.rowHeading)
+                        .foregroundStyle(Tokens.text.color)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if let cancel {
+                        Button("Cancel", action: cancel).buttonStyle(.quiet)
+                    }
+                }
+                bars(Self.photoBars)
+                Text(line)
+                    .typeStyle(Tokens.footnote)
+                    .foregroundStyle(Tokens.text3.color)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
 }
