@@ -4,7 +4,7 @@ import Supabase
 import Testing
 @testable import Data
 
-struct SessionCloseTests {
+struct SessionCloseParamsTests {
     let student = UUID(uuidString: "94e00eca-e875-4131-b0bd-91568ee90b40")!
     let skill = UUID(uuidString: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60751")!
 
