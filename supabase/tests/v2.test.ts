@@ -259,3 +259,47 @@ test("photos bucket: a member reads their centre's folder and not another's", as
   expect((await a.storage.from("photos").upload(`not-a-centre/one.jpg`, bytes)).error).not.toBeNull();
   expect((await a.storage.from("photos").remove([`${centre}/textbooks/one.jpg`])).error).toBeNull();
 });
+
+test("the V2 kinds share a monthly allowance; a personal kind needs the student's consent; V1 kinds keep their daily rule", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Allowed" }).select("id").single()).data!;
+  const start = (kind: string, student?: string) =>
+    a.rpc("start_ai_generation", { p_centre: centre, p_kind: kind, p_input: {}, p_model: "claude-haiku-5-5", ...(student ? { p_student: student } : {}) });
+  expect((await start("sheet")).error).toBeNull();
+  for (const kind of ["note", "can_do", "test_tomorrow", "gap_report"]) {
+    expect({ kind, message: (await start(kind, st.id)).error?.message }).toEqual({ kind, message: "ai_consent_missing" });
+  }
+  expect((await start("note")).error?.message).toContain("ai_consent_missing");
+  await a.from("students").update({ consent_at: new Date().toISOString(), consent_phone: "+919999999902", consent_how: "call" }).eq("id", st.id);
+  expect((await start("note", st.id)).error).toBeNull();
+  const sql = new (await import("bun")).SQL(l.db);
+  try {
+    await sql`insert into public.ai_generations (centre_id, kind, input, model, status)
+              select ${centre}::uuid, 'sheet', '{}', 'claude-haiku-5-5', 'ok' from generate_series(1, 598)`;
+    // Last month's calls do not count against this month.
+    await sql`insert into public.ai_generations (centre_id, kind, input, model, status, created_at)
+              values (${centre}::uuid, 'sheet', '{}', 'm', 'ok', now() - interval '40 days')`;
+  } finally {
+    await sql.close();
+  }
+  const last = await start("check");
+  expect(last.error?.message).toContain("ai_limit_reached");
+  expect(last.error?.details).toBe("600");
+  const paper = await a.rpc("start_ai_generation", { p_centre: centre, p_kind: "paper", p_input: {}, p_model: "claude-sonnet-5-5" });
+  expect(paper.error).toBeNull();
+});
+
+test("the V2 allowance has a hard cap on calls started, failed ones included", async () => {
+  const c = await userClient(l, `v2-cap-${stamp}@example.com`);
+  const centreC = (await c.rpc("create_centre", { p_name: "Cap", p_whatsapp: null })).data as string;
+  const sql = new (await import("bun")).SQL(l.db);
+  try {
+    await sql`insert into public.ai_generations (centre_id, kind, input, status)
+              select ${centreC}::uuid, 'brief', '{}', 'failed' from generate_series(1, 899)`;
+  } finally {
+    await sql.close();
+  }
+  expect((await c.rpc("start_ai_generation", { p_centre: centreC, p_kind: "brief", p_input: {}, p_model: "m" })).error).toBeNull();
+  const capped = await c.rpc("start_ai_generation", { p_centre: centreC, p_kind: "parse_school", p_input: {}, p_model: "m" });
+  expect(capped.error?.message).toContain("ai_limit_reached");
+  expect(capped.error?.details).toBe("600");
+});
