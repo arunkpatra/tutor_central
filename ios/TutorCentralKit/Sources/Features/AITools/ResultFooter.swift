@@ -38,10 +38,8 @@ struct ResultFooter: View {
             }
         }
         .task(id: generation.id) {
-            pdf = try? PDFMaker.pdf(
-                for: generation.result, title: generation.title(studentName: store.studentName),
-                key: generation.printsKey
-            )
+            let title = generation.title(studentName: store.studentName)
+            pdf = try? PDFMaker.pdf(for: generation.result.pdfSheet(title: title, key: generation.printsKey))
         }
     }
 
