@@ -20,7 +20,7 @@ extension RootView {
                     openSettings: { shell.tabs.push(.settings) },
                     openTab: { shell.tabs.select($0) },
                     openSchedule: { shell.tabs.push(.schedule) },
-                    openClose: { openAttendance(classID: $0, date: nil, in: workspace) },
+                    openClose: { shell.tabs.push(.close($0)) },
                     openClass: { shell.tabs.push(.classroom($0)) },
                     openEvent: { shell.tabs.push(.event($0)) },
                     openFeesDue: { openFeesDue(in: workspace) },

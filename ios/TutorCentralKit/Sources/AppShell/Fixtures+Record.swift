@@ -35,3 +35,17 @@ extension Fixtures {
         MessageEntry(id: UUID(), kind: .consent, openedAt: date, language: nil)
     }
 }
+
+extension Fixtures {
+    /// The close's states (P10-Close, -Scrolled, -Placement): the Evening batch at 17:05.
+    static let closeStates: Set<LaunchState> = [.close, .closeScrolled, .closePlacement]
+
+    /// The record each state reads: Hemanth's checks and homework; after the close, also the close's own.
+    @MainActor static func record(for state: LaunchState) -> FakeRecordRepository {
+        guard state == .todayAfterClose else { return FakeRecordRepository() }
+        return FakeRecordRepository(
+            checks: FakeRecordRepository.seedChecks + FakeRecordRepository.todaysChecks,
+            homework: FakeRecordRepository.seedHomework + FakeRecordRepository.todaysHomework
+        )
+    }
+}

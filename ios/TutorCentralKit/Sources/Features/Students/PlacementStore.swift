@@ -8,34 +8,8 @@ import Observation
 /// or wrong, untapped skipped. Done keeps the taps as placement checks, makes the chapters before the first wrong
 /// secure (`SkillProgress.placementChanges`) and stores the status worked out with them, in one write.
 @MainActor @Observable public final class PlacementStore {
-    public struct Row: Identifiable, Hashable, Sendable {
-        public var id: UUID {
-            skillID
-        }
-
-        public let chapterID: UUID
-        public let skillID: UUID
-        public let chapter: String
-        public let skill: String
-        public let question: String
-        public let answer: String
-        public var tap: Bool?
-    }
-
-    public struct SubjectRows: Identifiable, Hashable, Sendable {
-        public var id: String {
-            title
-        }
-
-        public let title: String
-        public var rows: [Row]
-        /// The in-place words when this subject's questions could not be made.
-        public var failure: String?
-
-        public var countLine: String {
-            "\(rows.count { $0.tap == true }) of \(rows.count) right"
-        }
-    }
+    public typealias Row = PlacementRow
+    public typealias SubjectRows = PlacementSubject
 
     public let studentID: UUID
     public var subjects: [SubjectRows] = []
@@ -100,7 +74,7 @@ import Observation
         await register.loadIfNeeded()
         chapters = await (try? textbooks.chapters(student: studentID)) ?? []
         skills = await (try? textbooks.skills(student: studentID)) ?? []
-        let groups = Self.groups(chapters: chapters, skills: skills)
+        let groups = Placement.groups(chapters: chapters, skills: skills)
         subjects = groups.map { SubjectRows(title: $0.title, rows: [], failure: nil) }
         await withTaskGroup(of: (Int, Result<[Row], APIFailure>).self) { group in
             for (index, item) in groups.enumerated() {
@@ -115,7 +89,7 @@ import Observation
     /// Try again for one subject.
     public func retry(_ subjectID: String) async {
         guard let index = subjects.firstIndex(where: { $0.id == subjectID }),
-              let item = Self.groups(chapters: chapters, skills: skills).first(where: { $0.title == subjectID })
+              let item = Placement.groups(chapters: chapters, skills: skills).first(where: { $0.title == subjectID })
         else { return }
         subjects[index].failure = nil
         await apply(ask(item), at: index)
@@ -159,11 +133,7 @@ import Observation
                 isPlacement: true
             )
         }
-        let states = subjects.flatMap { subject in
-            SkillProgress.placementChanges(subject.rows.enumerated().compactMap { index, row in
-                answer(for: row, index: index)
-            })
-        }
+        let states = subjects.flatMap { Placement.changes($0, chapters: chapters, skills: skills) }
         let records = checks.map {
             CheckRecord(
                 id: UUID(), studentID: studentID, skillID: $0.skillID, sessionID: nil, question: $0.question,
@@ -188,16 +158,6 @@ import Observation
         )
     }
 
-    /// A row as one chapter of the placement: a book's chapter with all its skills, or a ladder step as its own.
-    private func answer(for row: Row, index: Int) -> SkillProgress.Answer? {
-        guard let chapter = chapters.first(where: { $0.id == row.chapterID }) else { return nil }
-        if chapter.ladder != nil {
-            let step = Chapter(id: row.skillID, subject: chapter.subject, position: index + 1, name: row.skill)
-            return SkillProgress.Answer(step, skills.filter { $0.id == row.skillID }, row.tap)
-        }
-        return SkillProgress.Answer(chapter, skills.filter { $0.chapterID == chapter.id }, row.tap)
-    }
-
     private func absences() async -> Int {
         let calendar = DayHeading.india
         let from = calendar.date(byAdding: .day, value: -TrackingRules.absenceWindowDays, to: now()) ?? now()
@@ -213,20 +173,14 @@ import Observation
         return sessions.count { $0.date >= since && $0.marks[studentID] == .absent }
     }
 
-    private func ask(_ group: Group) async -> Result<[Row], APIFailure> {
+    private func ask(_ group: Placement.Group) async -> Result<[Row], APIFailure> {
         guard let level = student?.classLevel else { return .success([]) }
         do {
             let questions = try await ai.makePlacement(
                 classLevel: level, subject: group.title, chapters: group.items.map(\.name),
                 centre: register.workspace.centre.id
             )
-            let rows = zip(group.items, questions).map { item, question in
-                Row(
-                    chapterID: item.chapterID, skillID: item.skillID, chapter: item.name, skill: item.skill,
-                    question: question.question, answer: question.answer, tap: nil
-                )
-            }
-            return .success(rows)
+            return .success(Placement.rows(group, questions: questions.map { ($0.question, $0.answer) }))
         } catch {
             return .failure(error)
         }
@@ -237,41 +191,6 @@ import Observation
         switch result {
         case let .success(rows): subjects[index].rows = rows
         case let .failure(error): subjects[index].failure = error.message
-        }
-    }
-
-    /// What one subject asks about: a book's chapters (the chapter's first skill as the eyebrow), or a ladder's steps.
-    struct Group: Sendable {
-        let title: String
-        let items: [GroupItem]
-    }
-
-    struct GroupItem: Sendable {
-        let chapterID: UUID
-        let skillID: UUID
-        let name: String
-        let skill: String
-    }
-
-    nonisolated static func groups(chapters: [Chapter], skills: [Skill]) -> [Group] {
-        let bySubject = Dictionary(grouping: chapters, by: \.subject)
-        let rank = { (subject: String) -> Int in
-            bySubject[subject]?.first?.ladder.flatMap { Ladder.Area.allCases.firstIndex(of: $0) } ?? Int.max
-        }
-        return bySubject.keys.sorted { rank($0) != rank($1) ? rank($0) < rank($1) : $0 < $1 }.compactMap { subject in
-            let list = (bySubject[subject] ?? []).sorted { $0.position < $1.position }
-            let items: [GroupItem] = if let ladder = list.first, ladder.ladder != nil {
-                skills.filter { $0.chapterID == ladder.id }.sorted { $0.position < $1.position }.map {
-                    GroupItem(chapterID: ladder.id, skillID: $0.id, name: $0.name, skill: $0.name)
-                }
-            } else {
-                list.compactMap { chapter in
-                    skills.filter { $0.chapterID == chapter.id }.min { $0.position < $1.position }.map {
-                        GroupItem(chapterID: chapter.id, skillID: $0.id, name: chapter.name, skill: $0.name)
-                    }
-                }
-            }
-            return items.isEmpty ? nil : Group(title: list.first?.ladder?.title ?? subject, items: items)
         }
     }
 }

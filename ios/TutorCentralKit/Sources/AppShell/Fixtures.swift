@@ -42,8 +42,9 @@ public enum Fixtures {
             attendance: attendance,
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
-            textbooks: FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
-            record: FakeRecordRepository(),
+            textbooks: closeStates.contains(state) ? FakeTextbooksRepository.evening()
+                : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
+            record: record(for: state),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
@@ -170,7 +171,8 @@ public enum Fixtures {
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
              .eventGone,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
-             .todayAddingTask, .more, .feesEmpty, .fees, .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
+             .todayAddingTask, .todayAfterClose, .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
+             .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
              .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
              .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
@@ -225,6 +227,10 @@ public enum Fixtures {
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
+        case _ where closeStates.contains(state): (
+                FakeStudentsRepository.eveningSeed,
+                FakeClassesRepository.withEvening
+            )
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
     }
@@ -240,6 +246,7 @@ public enum Fixtures {
              .reportsAttendance,
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
+        case .todayAfterClose: FakeAttendanceRepository.seedWithTodayClosed
         default: FakeAttendanceRepository.seed
         }
     }
@@ -255,6 +262,8 @@ public enum Fixtures {
         case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         case .todayNoClass: india(day: 10, hour: 9, minute: 30)
+        case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
+        case _ where closeStates.contains(state): india(day: 7, hour: 17, minute: 5)
         default: now
         }
     }
@@ -262,7 +271,7 @@ public enum Fixtures {
     /// Today's tiles on the boards: ten students, ₹4,000 due (the seed's four unpaid), the classes meeting that day.
     static func counts(for state: LaunchState) -> TodayCounts {
         switch state {
-        case .today, .todayEvening, .todayAddingTask, .todayAI, .syncSending, .syncSent, .syncFailed:
+        case .today, .todayEvening, .todayAddingTask, .todayAI, .todayAfterClose, .syncSending, .syncSent, .syncFailed:
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoClass: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero

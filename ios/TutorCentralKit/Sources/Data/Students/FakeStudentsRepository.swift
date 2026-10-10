@@ -5,7 +5,10 @@ import Foundation
 /// ids and this month's invoices (six paid on 4 October 2026), a scripted error, a delay, a record of every write.
 @MainActor public final class FakeStudentsRepository: StudentsRepository {
     public nonisolated static let akshita = id(1)
+    public nonisolated static let dev = id(4)
     public nonisolated static let hemanth = id(5)
+    public nonisolated static let meher = id(7)
+    public nonisolated static let nikhil = id(8)
     public nonisolated static let riya = id(9)
     public nonisolated static let sahil = id(10)
 
@@ -90,6 +93,15 @@ import Foundation
     }()
 
     /// Dev, Riya and Sahil with their own fees, before any class or invoice exists (`students-few`).
+    /// The seed with the Evening batch's five in it (the 10.3 boards): Dev, Meher, Nikhil, Riya and Sahil.
+    public nonisolated static let eveningSeed: [Student] = seed.map { student in
+        var moved = student
+        if [dev, meher, nikhil, riya, sahil].contains(student.id) {
+            moved.classID = FakeClassesRepository.evening.id
+        }
+        return moved
+    }
+
     public nonisolated static let few: [Student] = seed.filter { [4, 9, 10].map(id).contains($0.id) }.map {
         var student = $0
         student.classID = nil

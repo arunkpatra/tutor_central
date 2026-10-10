@@ -269,9 +269,6 @@ public struct AttendanceRow: View {
     let name: String
     let present: Bool
     let toggle: () -> Void
-    static var pillSize: CGSize {
-        CGSize(width: 96, height: 40)
-    }
 
     public init(name: String, present: Bool, toggle: @escaping () -> Void) {
         self.name = name
@@ -287,17 +284,7 @@ public struct AttendanceRow: View {
             AdaptiveRow {
                 Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(present ? "Present" : "Absent")
-                    .typeStyle(Tokens.segmentActive)
-                    .foregroundStyle((present ? Tokens.okInk : Tokens.overdueInk).color)
-                    .lineLimit(1)
-                    // At least the board's 96 × 40; wider and taller with the text at the larger sizes.
-                    .padding(.horizontal, Tokens.rowPaddingDense)
-                    .frame(minWidth: Self.pillSize.width, minHeight: Self.pillSize.height)
-                    .background(
-                        (present ? Tokens.ok : Tokens.overdue).color,
-                        in: .rect(cornerRadius: Tokens.radiusSegmentTrack, style: .continuous)
-                    )
+                AttendancePill(present: present)
             }
             .padding(.vertical, Tokens.rowPaddingDense)
             .padding(.horizontal, Tokens.rowPaddingHorizontal)
@@ -309,5 +296,32 @@ public struct AttendanceRow: View {
         .accessibilityValue(present ? "Present" : "Absent")
         .accessibilityHint(present ? "Marks absent" : "Marks present")
         .accessibilityAddTraits(.isToggle)
+    }
+}
+
+/// The attendance pill: Present (ok fill, okInk) or Absent (overdue fill, overdueInk), at least 96 × 40, radius 13,
+/// segmentActive. Attendance's row and the close's student card (10.3) both wear it.
+public struct AttendancePill: View {
+    let present: Bool
+    static var size: CGSize {
+        CGSize(width: 96, height: 40)
+    }
+
+    public init(present: Bool) {
+        self.present = present
+    }
+
+    public var body: some View {
+        Text(present ? "Present" : "Absent")
+            .typeStyle(Tokens.segmentActive)
+            .foregroundStyle((present ? Tokens.okInk : Tokens.overdueInk).color)
+            .lineLimit(1)
+            // At least the board's 96 × 40; wider and taller with the text at the larger sizes.
+            .padding(.horizontal, Tokens.rowPaddingDense)
+            .frame(minWidth: Self.size.width, minHeight: Self.size.height)
+            .background(
+                (present ? Tokens.ok : Tokens.overdue).color,
+                in: .rect(cornerRadius: Tokens.radiusSegmentTrack, style: .continuous)
+            )
     }
 }

@@ -51,6 +51,12 @@ public extension AISamples {
         "Tell a physical from a chemical change": (
             "Is ice melting a physical or a chemical change?", "Physical: no new substance forms"
         ),
+        "Balancing equations": ("Balance: Fe + O₂ → Fe₂O₃", "4Fe + 3O₂ → 2Fe₂O₃"),
+        "Types of reactions": ("What kind of reaction is 2H₂O → 2H₂ + O₂?", "Decomposition"),
+        "Chemical change": ("Name one sign that a reaction has happened.", "Gas, colour change, heat"),
+        "Sentences": ("Read: The sun is hot.", "Reads it without help"),
+        "Words": ("Write: cat, sun, hat.", "Three words spelt right"),
+        "To 99": ("What comes after 39?", "40"),
     ]
 
     private static let placementTable: [String: (String, String)] = [
