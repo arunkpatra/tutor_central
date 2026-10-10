@@ -304,6 +304,10 @@ extension RootView {
         switch state {
         case .todayAddingTask: .addingTask
         case .todayAI: .aiRow
+        case .todayScrolled: .scrolledToPlan
+        case .todayLineMenu: .lineMenu(FakeStudentsRepository.dev)
+        case .todayPlanChange: .changeSheet
+        case .todayPlanChanged: .planChanged
         default: nil
         }
     }

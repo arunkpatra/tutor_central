@@ -42,10 +42,10 @@ public enum Fixtures {
             attendance: attendance,
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
-            textbooks: closeStates.contains(state) ? FakeTextbooksRepository.evening()
+            textbooks: closeStates.contains(state) || planStates.contains(state) ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),
-            plans: FakePlansRepository(), photos: FakePhotoStore(),
+            plans: plans(for: state), photos: FakePhotoStore(),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
@@ -171,8 +171,10 @@ public enum Fixtures {
              .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
              .eventGone,
-             .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayEvening, .todayNoClass,
-             .todayAddingTask, .todayAfterClose, .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
+             .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayScrolled, .todayPlanning,
+             .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayEvening, .todayAddingTask,
+             .todayAfterClose,
+             .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
              .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
              .feesGenerate,
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
@@ -228,6 +230,9 @@ public enum Fixtures {
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
+        case _ where planStates.contains(state) || state == .todayNoBatch: (
+                planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
+            )
         case _ where closeStates.contains(state): (
                 FakeStudentsRepository.eveningSeed,
                 FakeClassesRepository.withEvening
@@ -247,7 +252,7 @@ public enum Fixtures {
              .reportsAttendance,
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
-        case .todayAfterClose: FakeAttendanceRepository.seedWithTodayClosed
+        case .todayAfterClose: FakeAttendanceRepository.seedWithEveningClosed
         default: FakeAttendanceRepository.seed
         }
     }
@@ -255,15 +260,14 @@ public enum Fixtures {
     /// Each state's clock: the boards' Wednesday at 18:30, or the minute a board names (P4-Attendance-Mark-Saved and
     /// P4-Absence-Alert are saved at 18:32).
     static func clock(for state: LaunchState) -> Date {
-        switch state {
+        if let today = todayClock(state) {
+            return today
+        }
+        return switch state {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
-        case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
         case _ where offlineStates.contains(state): offlineClock(state)
         case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
-        case .todayEvening: india(day: 7, hour: 19, minute: 30)
-        case .todayNoClass: india(day: 10, hour: 9, minute: 30)
-        case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
         case _ where closeStates.contains(state): india(day: 7, hour: 17, minute: 5)
         default: now
         }
@@ -274,13 +278,10 @@ public enum Fixtures {
         switch state {
         case .today, .todayEvening, .todayAddingTask, .todayAI, .todayAfterClose, .syncSending, .syncSent, .syncFailed:
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
-        case .todayNoClass: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
+        case _ where planStates.contains(state): TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
+        case .todayNoBatch: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero
         }
-    }
-
-    static func india(day: Int, hour: Int, minute: Int) -> Date {
-        DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? now
     }
 
     /// P3-StudentDetail-Archived: Akshita archived on the boards' day.
@@ -289,5 +290,23 @@ public enum Fixtures {
         var archived = student
         archived.archivedAt = now
         return archived
+    }
+}
+
+extension Fixtures {
+    static func india(day: Int, hour: Int, minute: Int) -> Date {
+        DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? now
+    }
+
+    /// Today's states' clocks: the plan's at 16:35, after the close at 18:40, the evening at 19:30, Saturday's 09:30.
+    static func todayClock(_ state: LaunchState) -> Date? {
+        switch state {
+        case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
+        case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
+        case _ where planStates.contains(state): india(day: 7, hour: 16, minute: 35)
+        case .todayNoBatch: india(day: 10, hour: 9, minute: 30)
+        case .todayEvening: india(day: 7, hour: 19, minute: 30)
+        default: nil
+        }
     }
 }

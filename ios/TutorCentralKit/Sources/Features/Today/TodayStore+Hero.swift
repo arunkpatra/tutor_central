@@ -57,10 +57,14 @@ extension TodayStore {
         }
     }
 
+    /// "17:00–18:30 · 5 students · 3 groups" once the batch's plan has its groups.
     private func startHero(_ next: NextClass) -> Hero {
-        Hero(
+        let groups = plans[next.classroom.id]?.record?.groups.count ?? 0
+        let line = groups > 0 ? "\(timeAndMembers(next.classroom)) · \(groups) \(groups == 1 ? "group" : "groups")"
+            : timeAndMembers(next.classroom)
+        return Hero(
             kind: .start, eyebrow: next.eyebrow, accent: true, title: next.classroom.name, titleMark: false,
-            line: timeAndMembers(next.classroom), classID: next.classroom.id
+            line: line, classID: next.classroom.id
         )
     }
 

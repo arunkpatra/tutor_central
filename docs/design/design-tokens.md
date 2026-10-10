@@ -124,6 +124,7 @@ scales. Weights 400, 600, 700 only. Numbers always `monospacedDigit`. No other t
 | `avatarSmall` | footnote | 13 / 18 | 700 | 0 | Initials in a 36 pt avatar |
 | `avatarLarge` | title3 | 20 / 25 | 700 | 0 | Initials in a 56 pt avatar |
 | `bannerAction` | footnote | 13 / 18 | 700 | 0 | A banner's action word, in accentText (Open Settings) |
+| `groupTitle` | subheadline | 15 / 20 | 700 | 0 | A plan group's head ("Group 1 · Chemical reactions", P10-Today-Plan) |
 
 Rules: numbers and their unit are one run (`₹1,200`, `8 of 9`); a unit that follows a number is `footnote` in
 `text2`. Sentence case everywhere. No exclamation marks. No emoji.

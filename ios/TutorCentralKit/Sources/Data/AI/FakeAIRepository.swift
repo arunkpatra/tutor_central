@@ -34,6 +34,8 @@ import Foundation
     public private(set) var figures: [FigureSpec.Kind] = []
     public private(set) var briefs: [String] = []
     public private(set) var topics: [[PlanTopicGroup]] = []
+    /// A figure answered in place of the template's sample (a spec the app refuses).
+    public var figureOverride: FigureContent?
     private let now: @Sendable () -> Date
 
     public init(now: @escaping @Sendable () -> Date = Date.init) {
@@ -123,7 +125,7 @@ import Foundation
     ) async throws(APIFailure) -> MadeFigure {
         figures.append(kind)
         try await answer(.figure)
-        return MadeFigure(generationID: UUID(), figure: AISamples.figure(kind))
+        return MadeFigure(generationID: UUID(), figure: figureOverride ?? AISamples.figure(kind))
     }
 
     public func makeBrief(

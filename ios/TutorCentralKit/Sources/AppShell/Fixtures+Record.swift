@@ -43,9 +43,10 @@ extension Fixtures {
     /// The record each state reads: Hemanth's checks and homework; after the close, also the close's own.
     @MainActor static func record(for state: LaunchState) -> FakeRecordRepository {
         guard state == .todayAfterClose else { return FakeRecordRepository() }
+        let session = FakeAttendanceRepository.seedWithEveningClosed[0]
         return FakeRecordRepository(
-            checks: FakeRecordRepository.seedChecks + FakeRecordRepository.todaysChecks,
-            homework: FakeRecordRepository.seedHomework + FakeRecordRepository.todaysHomework
+            checks: FakeRecordRepository.seedChecks + FakeRecordRepository.checks(of: session),
+            homework: FakeRecordRepository.seedHomework + FakeRecordRepository.homework(of: session)
         )
     }
 }

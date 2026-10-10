@@ -10,7 +10,7 @@ public final class AppDelegate: NSObject, UIApplicationDelegate {
         _: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
-        BackgroundRefresh.register {}
+        BackgroundRefresh.register { await RefreshHandler.runLive() }
         return true
     }
 }

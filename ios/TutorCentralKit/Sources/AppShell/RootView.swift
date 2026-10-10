@@ -60,7 +60,7 @@ public struct RootView: View {
 
     /// One Supabase client for the life of the process. SwiftUI makes a new RootView whenever the scene re-evaluates;
     /// a client per RootView would sign in on one and read on another that never saw the session.
-    private static let live: Dependencies? = try? Dependencies.live()
+    static let live: Dependencies? = try? Dependencies.live()
 
     /// A debug build without Supabase values (previews, a fresh clone) opens on the fakes. A release build without
     /// them is a broken build: it stops at launch with the reason, never pretending to sign in (the TestFlight lane
@@ -104,7 +104,10 @@ public struct RootView: View {
                     }
                 }
                 if phase == .background, launch == nil {
-                    BackgroundRefresh.schedule()
+                    BackgroundRefresh.schedule(at: BackgroundRefresh.nextMorning(
+                        after: deps.now(),
+                        calendar: DayHeading.india
+                    ))
                 }
             }
             .onChange(of: session.state) { _, state in

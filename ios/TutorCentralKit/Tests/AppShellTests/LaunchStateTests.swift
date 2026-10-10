@@ -171,12 +171,12 @@ struct LaunchStateTests {
     }
 
     @MainActor @Test func theMoreAndTodayStatesStartReady() {
-        for state in [LaunchState.more, .today, .todayEvening, .todayNoClass, .todayAddingTask, .tasks, .tasksEmpty] {
+        for state in [LaunchState.more, .today, .todayNoBatch, .todayAddingTask, .tasks, .tasksEmpty] {
             #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
         }
         #expect(RootView.tab(for: .more) == .more && RootView.initialRoutes(for: .tasks) == [.tasks])
         #expect(RootView.tab(for: .tasks) == .more && RootView.tab(for: .today) == nil, "Today is the default tab")
-        #expect(Fixtures.clock(for: .todayNoClass) == DayHeading.india.date(from: DateComponents(
+        #expect(Fixtures.clock(for: .todayNoBatch) == DayHeading.india.date(from: DateComponents(
             year: 2026, month: 10, day: 10, hour: 9, minute: 30
         )))
     }

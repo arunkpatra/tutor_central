@@ -89,11 +89,25 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case eventDeleteConfirm = "event-delete-confirm"
     case tasks
     case tasksEmpty = "tasks-empty"
+    /// Today with the Evening batch's plan (P10-Today-Plan, dark and light).
     case today
+    /// Scrolled to the smaller groups, the brief and V1's sections (P10-Today-Plan-Scrolled).
+    case todayScrolled = "today-scrolled"
+    /// The plan being made (P10-Today-Planning).
+    case todayPlanning = "today-planning"
+    /// Dev's line pressed (P10-Today-Plan-StudentMenu).
+    case todayLineMenu = "today-line-menu"
+    /// Riya moved to Group 1, Nikhil's homework skipped (P10-Today-Plan-Changed).
+    case todayPlanChanged = "today-plan-changed"
+    /// The Change sheet (P10-Today-Plan-Change).
+    case todayPlanChange = "today-plan-change"
+    /// Saturday 10 October: no batch, the next on Monday (P10-Today-NoBatch).
+    case todayNoBatch = "today-no-batch"
+    /// Today at 19:30 (V1's store page, Store-1-Today, until Phase 16 redoes the store boards).
     case todayEvening = "today-evening"
-    case todayNoClass = "today-no-class"
     case todayAddingTask = "today-adding-task"
-    /// The hero after the close (P10-Today-AfterClose): Class 10 Maths closed at 18:32.
+    /// The hero after the close over the plan's cards (P10-Today-AfterClose, without To parents): the Evening batch
+    /// closed at 18:32.
     case todayAfterClose = "today-after-close"
     /// The close of the Evening batch (P10-Close, -Scrolled, -Placement).
     case close

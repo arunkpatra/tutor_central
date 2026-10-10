@@ -14,6 +14,8 @@ import Foundation
     public var nextError: (any Error)?
     /// Every call waits this long first: lets a store's writes overlap, as a real network can.
     public var delay: Duration?
+    /// A make waits this long more (the plan still being written: P10-Today-Planning).
+    public var makeDelay: Duration?
     /// The time a make or keep is stamped with.
     public var now: Date
 
@@ -31,6 +33,9 @@ import Foundation
 
     public func make(_ draft: PlanDraft, centre _: UUID) async throws -> PlanRecord {
         try await begin()
+        if let makeDelay {
+            try? await Task.sleep(for: makeDelay)
+        }
         made.append(draft)
         let existing = plans.firstIndex { $0.classID == draft.classID && $0.date == draft.date }
         let items = draft.lines.map { line in
@@ -99,6 +104,11 @@ import Foundation
         for item in plans[index].items.indices where plans[index].items[item].studentID == student {
             plans[index].items[item].skippedAt = now
         }
+    }
+
+    public func link(items: [UUID], to artefact: UUID?, centre _: UUID) async throws {
+        try await begin()
+        update { items.contains($0.id) } with: { $0.artefactID = artefact }
     }
 
     /// Marks the close's done lines, as `close_session`'s `p_done` does.

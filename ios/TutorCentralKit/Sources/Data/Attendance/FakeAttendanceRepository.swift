@@ -61,6 +61,20 @@ import Supabase
         return sessions
     }()
 
+    /// Wednesday 7 October's Evening batch closed at 18:32, Nikhil absent (P10-Today-AfterClose).
+    public nonisolated static let seedWithEveningClosed: [AttendanceSession] = {
+        let today = Day(year: 2026, month: 10, day: 7)!
+        let evening = FakeClassesRepository.evening
+        let marks = Dictionary(uniqueKeysWithValues: FakeStudentsRepository.eveningSeed
+            .filter { $0.classID == evening.id }
+            .map { ($0.id, $0.id == FakeStudentsRepository.nikhil ? AttendanceStatus.absent : .present) })
+        let closed = AttendanceSession(
+            id: sessionID(today, evening), classID: evening.id, date: today, savedAt: closedAt, marks: marks,
+            closedAt: closedAt
+        )
+        return [closed] + seed
+    }()
+
     /// The seed and two Evening batch sessions, Monday 28 September and Friday 2 October, Nikhil absent at both (the
     /// close's catch-up line).
     public nonisolated static let seedWithNikhilAbsentTwice: [AttendanceSession] = {
