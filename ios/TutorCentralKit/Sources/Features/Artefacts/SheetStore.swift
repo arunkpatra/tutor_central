@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import Foundation
 import Observation
+import UIKit
 
 /// A sheet's screen (P10-Sheet, -Key, -Board): the artefact read by id, the names of who it is for from the plan and
 /// the
@@ -16,6 +17,12 @@ import Observation
     public var boardIndex = 0
     public var boardShowsKey = false
     public private(set) var loadFailed: String?
+    /// Make it again, as it goes (P10-Sheet-Regenerating).
+    public enum Again: Hashable, Sendable { case idle, making(RegenerateReason) }
+
+    public internal(set) var again: Again = .idle
+    /// The tutor's own photo, loaded for the screen.
+    public internal(set) var ownImage: Data?
     /// The system alert's words for a refused or failed write (U33).
     public var message: String?
     @ObservationIgnored public var online: () async -> Bool = { true }
@@ -66,6 +73,7 @@ import Observation
                 plan = try await plans.plan(id: planID, centre: centre)
             }
             loadFailed = nil
+            await loadOwnImage()
         } catch {
             loadFailed = "Couldn't load the sheet. Check your connection and try again."
         }
@@ -74,6 +82,22 @@ import Observation
     // MARK: - The hero
 
     /// The lines this sheet serves in the plan: its own, or the group's of its kind.
+    func reload(_ artefact: Artefact) async {
+        self.artefact = artefact
+        if let planID = artefact.planID {
+            plan = await (try? plans.plan(id: planID, centre: centre)) ?? plan
+        }
+        await loadOwnImage()
+    }
+
+    private func loadOwnImage() async {
+        guard let path = artefact?.photoPath, let url = try? await photos.url(for: path) else {
+            ownImage = nil
+            return
+        }
+        ownImage = try? await URLSession.shared.data(from: url).0
+    }
+
     var items: [PlanItem] {
         guard let artefact, let plan else { return [] }
         return plan.items.filter { $0.artefactID == artefact.id }
@@ -98,14 +122,16 @@ import Observation
         artefact?.title ?? ""
     }
 
-    /// "8 questions · for Dev, Meher and Nikhil · made today, 16:40".
+    /// "8 questions · for Dev, Meher and Nikhil · made today, 16:40"; the tutor's own "A photo · added today, 16:52 ·
+    /// for Dev, Meher and Nikhil".
     public var line: String {
         guard let artefact else { return "" }
         let names = ArtefactWords.names(forWhom.compactMap { register.student($0)?.firstName })
-        return [
-            artefact.countLine, names.isEmpty ? nil : "for \(names)",
-            "made \(ArtefactWords.made(artefact.madeAt, now: now(), calendar: calendar))",
-        ].compactMap(\.self).joined(separator: " · ")
+        let when = ArtefactWords.made(artefact.madeAt, now: now(), calendar: calendar)
+        let parts: [String?] = artefact.source == .own
+            ? [artefact.photoPath == nil ? "Typed" : "A photo", "added \(when)", names.isEmpty ? nil : "for \(names)"]
+            : [artefact.countLine, names.isEmpty ? nil : "for \(names)", "made \(when)"]
+        return parts.compactMap(\.self).joined(separator: " · ")
     }
 
     /// Who the sheet is for: its student, else the students whose lines it serves, by name.
@@ -121,6 +147,11 @@ import Observation
 
     /// The PDF as shown: the questions, the key only when Key is chosen.
     public var pdfSheet: PDFSheet {
+        if let own = ownContent {
+            let image = ownImage.flatMap(UIImage.init(data:))
+            let blocks: [PDFBlock] = image.map { [.image($0)] } ?? own.text.map { [.text($0)] } ?? []
+            return PDFSheet(title: title, instructions: nil, blocks: blocks)
+        }
         guard let sheet else { return PDFSheet(title: title, instructions: nil, blocks: []) }
         let questions = sheet.questions.map { PDFLine(number: $0.number, text: $0.text, marks: "1") }
         let answers = sheet.questions.map { PDFLine(number: $0.number, text: $0.answer, marks: nil) }

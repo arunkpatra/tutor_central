@@ -9,7 +9,22 @@ public extension FakePlansRepository {
     /// the
     /// students' lines at 18:32.
     static func evening(changed: Bool = false, done: Bool = false) -> FakePlansRepository {
-        FakePlansRepository(plans: [boardPlan(changed: changed, done: done)], artefacts: boardArtefacts)
+        FakePlansRepository(plans: [boardPlan(changed: changed, done: done)], artefacts: boardArtefacts, now: madeAt)
+    }
+
+    /// The boards' plan with the tutor's own sheet (a photo) in place of Group 1's homework sheet (P10-Sheet-Own).
+    static func evening(ownSheet: UUID, photoPath: String) -> FakePlansRepository {
+        let made = artefactID(12)
+        let own = Artefact(
+            id: ownSheet, kind: .sheet, source: .own, title: "Your sheet · balancing equations",
+            content: .own(OwnContent(text: nil, inPlaceOf: "sheet 1")), photoPath: photoPath, studentID: nil,
+            planID: planID, regeneratedFrom: made, madeAt: india(7, 16, minute: 52)
+        )
+        var plan = boardPlan(changed: false, done: false)
+        for index in plan.items.indices where plan.items[index].artefactID == made {
+            plan.items[index].artefactID = ownSheet
+        }
+        return FakePlansRepository(plans: [plan], artefacts: boardArtefacts + [own], now: madeAt)
     }
 
     nonisolated static let planID = UUID(uuidString: "abababab-0000-0000-0000-000000000001")!

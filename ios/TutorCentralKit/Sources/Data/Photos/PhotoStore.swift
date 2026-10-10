@@ -55,23 +55,31 @@ public final class SupabasePhotoStore: PhotoStore {
 /// The in-memory bucket for tests, previews and `bun shots`: the paths added, a scripted failure.
 @MainActor public final class FakePhotoStore: PhotoStore {
     public private(set) var paths: [String] = []
+    /// The size of the last photo added.
+    public private(set) var lastBytes = 0
+    /// Photos by path, for the board states (the tutor's own sheet).
+    public var images: [String: Data] = [:]
     public var failure: (any Error)?
 
     public init(paths: [String] = []) {
         self.paths = paths
     }
 
-    public func add(_: Data, centre: UUID, kind: String) async throws -> String {
+    public func add(_ data: Data, centre: UUID, kind: String) async throws -> String {
         try fail()
         let path = SupabasePhotoStore.path(centre: centre, kind: kind)
         paths.append(path)
+        lastBytes = data.count
+        images[path] = data
         return path
     }
 
-    /// A file URL for the board states: the fixtures' photo.
+    /// The photo written to a temporary file, as a signed URL would serve it.
     public func url(for path: String) async throws -> URL {
         try fail()
-        return URL(fileURLWithPath: "/fixtures/\(path)")
+        let url = FileManager.default.temporaryDirectory.appending(path: path.replacingOccurrences(of: "/", with: "-"))
+        try (images[path] ?? Data()).write(to: url)
+        return url
     }
 
     public func removeAll(centre: UUID) async throws {

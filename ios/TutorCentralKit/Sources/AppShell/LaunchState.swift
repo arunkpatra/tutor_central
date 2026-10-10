@@ -113,6 +113,12 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case sheet
     case sheetKey = "sheet-key"
     case sheetBoard = "sheet-board"
+    /// Make it again: the reasons; being made easier (P10-Sheet-Regenerate, -Regenerating).
+    case sheetRegenerate = "sheet-regenerate"
+    case sheetRegenerating = "sheet-regenerating"
+    /// Use my own: the three ways; the tutor's photo in the sheet's place (P10-Sheet-OwnMenu, -Own).
+    case sheetOwnMenu = "sheet-own-menu"
+    case sheetOwn = "sheet-own"
     /// The close of the Evening batch (P10-Close, -Scrolled, -Placement).
     case close
     case closeScrolled = "close-scrolled"

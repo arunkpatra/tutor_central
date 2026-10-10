@@ -23,13 +23,17 @@ extension RootView {
 
     /// The sheet's launch states on Today's stack: Group 1's homework sheet.
     static func artefactRoutes(for state: LaunchState) -> [Route]? {
-        Fixtures.sheetStates.contains(state) ? [.artefact(Fixtures.groupOneSheet)] : nil
+        guard Fixtures.sheetStates.contains(state) else { return nil }
+        return [.artefact(state == .sheetOwn ? Fixtures.ownSheet : Fixtures.groupOneSheet)]
     }
 
     static func sheetBoardState(_ state: LaunchState) -> SheetBoardState? {
         switch state {
         case .sheetKey: .key
         case .sheetBoard: .board
+        case .sheetRegenerate: .reasons
+        case .sheetRegenerating: .regenerating
+        case .sheetOwnMenu: .ownMenu
         default: nil
         }
     }

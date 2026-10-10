@@ -14,6 +14,7 @@ extension Fixtures {
         case .aiGenerateFailed, .scanFailed, .checkFailed: ai.script = .failure(.offline)
         case .scanReading, .checkChecking, .textbookReading: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
+        case .sheetRegenerating: ai.delayByKind[.sheet] = .seconds(3600)
         default: break
         }
         return ai

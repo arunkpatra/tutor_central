@@ -11,8 +11,17 @@ struct SheetBody: View {
         if let sheet = store.sheet {
             let key = store.form == .key
             VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                Text(key ? "Key" : "Sheet").typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
-                    .padding(.horizontal, Tokens.rowGapInner)
+                HStack {
+                    Text(key ? "Key" : "Sheet").typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
+                    Spacer()
+                    if case let .making(reason) = store.again {
+                        HStack(spacing: Tokens.inline) {
+                            RefreshSpinner()
+                            Text(reason.title).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+                        }
+                    }
+                }
+                .padding(.horizontal, Tokens.rowGapInner)
                 Card {
                     VStack(spacing: 0) {
                         SectionRow(
@@ -34,6 +43,7 @@ struct SheetBody: View {
                         }
                     }
                 }
+                .opacity(store.again == .idle ? 1 : Tokens.opacityStale)
             }
         }
     }
@@ -55,20 +65,34 @@ struct SheetBoard: View {
     }
 }
 
-/// The footer band (components.md "Result footer, V2"): the AI line, the quiet Make it again, Share as PDF and Print.
+/// The footer band (components.md "Result footer, V2"): the AI line, the quiet Make it again, Share as PDF and Print;
+/// while a new one is made, its line and the buttons waiting; for the tutor's own, Use the made sheet instead.
 struct SheetFooter: View {
     let store: SheetStore
     let pdf: URL?
+    let makeAgain: () -> Void
+
+    private var making: Bool {
+        store.again != .idle
+    }
 
     var body: some View {
         FooterButton {
             VStack(spacing: Tokens.rowPaddingDense) {
-                Text(ArtefactWords.aiLine)
-                    .typeStyle(Tokens.footnote)
-                    .foregroundStyle(Tokens.text3.color)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Button("Make it again") {}
-                    .buttonStyle(.quiet(emphasised: true))
+                if store.artefact?.source == .own {
+                    Button("Use the made sheet instead") { Task { await store.useMadeInstead() } }
+                        .buttonStyle(.quiet(emphasised: true))
+                } else if making {
+                    Text(store.regeneratingLine)
+                        .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
+                    Text(ArtefactWords.aiLine)
+                        .typeStyle(Tokens.footnote)
+                        .foregroundStyle(Tokens.text3.color)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Button("Make it again", action: makeAgain).buttonStyle(.quiet(emphasised: true))
+                }
                 HStack(spacing: Tokens.tileGap) {
                     if let pdf {
                         ShareLink(item: pdf) { Label("Share as PDF", systemImage: "square.and.arrow.up") }
@@ -85,6 +109,7 @@ struct SheetFooter: View {
                         .buttonStyle(.secondary(.form))
                         .disabled(pdf == nil)
                 }
+                .disabled(making)
             }
         }
     }
