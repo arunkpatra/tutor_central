@@ -3,11 +3,11 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-10, session 20 (the V2 track opens, on Fable 5.1). **Session 20:** the V2 brainstorm; the research
-note `docs/v2/research.md`; the spec `docs/spec-v2.md` approved by the owner (D56 to D65); the scope files for Phases 10 to 16
-written; `plan/phase-10-plan.md` written (Part A: boards in seven steps; Part B: migrations 0009 to 0015, syllabus data, API
-skeletons, Domain types, Phase 11's repositories, the share extension). **Next:** the owner reviews the Phase 10 plan; then
-the boards on Fable from `resume/019-phase-10-boards.md`; Part B on Opus after step 10.2 is approved. **Session 19:** the Phase 9 run began (on Opus 5.5).
+**Last updated:** 2026-10-10, session 21 (the Phase 10 boards, on Fable 5.1). **Session 21:** steps 10.1 (the shell, row 14, seven
+boards) and 10.2 (Students, row 15, 23 boards) approved and mirrored; the owner's ruling "Batch everywhere" for V1's class on
+screen (the table stays `classes`); `resume/020-phase-10-build.md` written. **Next:** Part B (the plumbing) may start on Opus from
+`resume/020-phase-10-build.md` now; Part A continues with step 10.3 (Today: the plan and the close) in this session, then 10.4 to
+10.7. **Session 19:** the Phase 9 run began (on Opus 5.5).
 **Phase 9's next:** each later session opens from `plan/resume/018-phase-9-run.md` with what the owner brings: Apple's answer on build 18
 (approved, or a message to answer), the tester's lines for D1 to D6 and D8 (Task 4, sent to the tester on 2026-10-09), then
 D7 and the invitations (Task 5, where the testers' facts T1 to T6 are filled and checked against D52 first), then the readings
@@ -21,7 +21,7 @@ every parent +919611385678). Left for Phase 9's end (Owner step 6): attach the f
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -31,7 +31,7 @@ every parent +919611385678). Left for Phase 9's end (Owner step 6): attach the f
 | 7 Settings, account, notifications, offline, hardening, release candidate | Done, PRs #63 to #73 | "As built" in `phase-07-settings-and-hardening.md`; the accessibility record in `docs/design/accessibility-pass.md`; the release checklist in `docs/release.md` |
 | 8 Website | Done, PRs #76 to #82 | "As built" in `phase-08-website.md`; then #83 to #89 after the close (the 30-day words, the crash fix, the minors, U33, the sheet title, store-shots, seed-review) |
 | 9 User testing | Running since session 19 (2026-10-09) | `phase-09-plan.md` (D52 to D55): Tasks 1 to 3 done, build 18 in Beta App Review; Task 4 (the tester) next; the run by `resume/018-phase-9-run.md`; findings in `phase-09-findings.md` |
-| 10 to 16 V2 (`docs/spec-v2.md`) | Phase 10 next | Scope files `phase-10-v2-design-and-foundation.md` to `phase-16-release.md`; `phase-10-plan.md` written, for the owner's review; `resume/019-phase-10-boards.md` opens the boards |
+| 10 to 16 V2 (`docs/spec-v2.md`) | Phase 10 running (session 21) | Scope files `phase-10-v2-design-and-foundation.md` to `phase-16-release.md`; `phase-10-plan.md`: Part A steps 10.1 and 10.2 approved (rows 14 and 15 of the canvas), 10.3 to 10.7 to come; Part B on Opus from `resume/020-phase-10-build.md` |
 
 ## In flight
 
