@@ -214,4 +214,17 @@ import Testing
         let plan = try #require(store.plans[FakeClassesRepository.evening.id]?.record)
         #expect(plan.items.filter { $0.studentID != nil }.allSatisfy { $0.doneAt != nil })
     }
+
+    @Test func thePlanShowsWhileTheCountsReadStillWaits() async throws {
+        let counts = FakeCountsRepository()
+        counts.delay = .seconds(2)
+        let store = await make(
+            counts, now: PlanTest.at1635, students: FakeStudentsRepository.eveningSeed,
+            classes: [FakeClassesRepository.science, FakeClassesRepository.evening], plans: .evening()
+        )
+        let loading = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(500))
+        #expect(store.plans[FakeClassesRepository.evening.id]?.record != nil)
+        loading.cancel()
+    }
 }

@@ -73,6 +73,8 @@ public extension StudentDetailStore {
         public let title: String
         public let line: String
         public let status: HomeworkStatus
+        /// The sheet given, opened by the row.
+        public let artefactID: UUID?
     }
 
     struct MessageLine: Identifiable, Hashable, Sendable {
@@ -112,6 +114,13 @@ public extension StudentDetailStore {
             next: TrackingRules.nextStep(student.trackStatus, current: current),
             placeAction: student.trackStatus == .notKnown && !chapters.isEmpty
         )
+    }
+
+    /// The student's batch when it meets today: This week's quiet Today opens its plan (U35).
+    var todaysBatch: UUID? {
+        guard let classroom else { return nil }
+        let today = Day(now(), calendar: DayHeading.india)
+        return NextClass.classesToday(in: [classroom], on: today, calendar: DayHeading.india).first?.id
     }
 
     /// The sessions of this week (Monday on) the student was marked in, oldest first.
@@ -188,7 +197,8 @@ public extension StudentDetailStore {
             let batch = session.flatMap { register.classroom($0.classID)?.name } ?? classroom?.name ?? "Homework"
             return HomeworkLine(
                 id: item.id, title: batch,
-                line: "Given \(Day(item.givenAt, calendar: DayHeading.india).shortWeekdayText)", status: item.status
+                line: "Given \(Day(item.givenAt, calendar: DayHeading.india).shortWeekdayText)", status: item.status,
+                artefactID: item.artefactID
             )
         }
     }

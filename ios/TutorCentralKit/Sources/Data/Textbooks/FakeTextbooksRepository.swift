@@ -14,6 +14,8 @@ import Supabase
     /// The register the class-wide copies read (the database reads `students`).
     public var students: [Student] = []
     public var nextError: (any Error)?
+    /// Every read fails with this, as through a stopped gateway.
+    public var failure: (any Error)?
     public private(set) var copyToClassCalls: [UUID] = []
     public private(set) var copyAllCalls: [UUID] = []
     public private(set) var ladderCalls: [UUID] = []
@@ -213,6 +215,9 @@ import Supabase
     }
 
     private func begin() throws {
+        if let failure {
+            throw failure
+        }
         guard let error = nextError else { return }
         nextError = nil
         throw error

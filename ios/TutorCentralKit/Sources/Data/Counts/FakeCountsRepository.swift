@@ -10,12 +10,17 @@ import Foundation
 
     public var counts: TodayCounts
     public var nextError: (any Error)?
+    /// Every read waits this long first, as a read through a stopped gateway does.
+    public var delay: Duration?
 
     public init(counts: TodayCounts = .zero) {
         self.counts = counts
     }
 
     public func todayCounts(centre _: UUID, on _: Date) async throws -> TodayCounts {
+        if let delay {
+            try await Task.sleep(for: delay)
+        }
         if let error = nextError {
             nextError = nil
             throw error

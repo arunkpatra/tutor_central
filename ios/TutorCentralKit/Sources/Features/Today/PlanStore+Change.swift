@@ -30,7 +30,7 @@ public extension PlanStore {
                 changed.items[index].groupNo = group
                 changed.items[index].movedFrom = from
             }
-            changed = try await relink(student, in: changed, to: group)
+            changed = try await relink(student, in: changed, to: group, before: plan)
             keepShown(changed)
         } catch {
             message = Self.changeFailed
@@ -59,11 +59,15 @@ public extension PlanStore {
         }
     }
 
-    /// "Keep this for Wednesdays": the weekday's group count and subjects on the batch.
+    /// "Keep this for Wednesdays": the weekday's group count and the subjects the sheet shows: the tutor's choice,
+    /// else the group's as the preview made it (a new count numbers its groups afresh).
     func keep(choices: PlanChoices, for weekday: Weekday) async {
         guard await allowed() else { return }
-        let count = choices.groups ?? groups.count
-        let subjects = (1 ... max(count, 1)).map { choices.subjects[$0] ?? changeChoices.subjects[$0] ?? "" }
+        let rows = await preview(choices)
+        let count = choices.groups ?? (rows.isEmpty ? groups.count : rows.count)
+        let shown = Dictionary(uniqueKeysWithValues: rows.map { ($0.number, $0.subject) })
+        let subjects = (1 ... max(count, 1))
+            .map { choices.subjects[$0] ?? shown[$0] ?? changeChoices.subjects[$0] ?? "" }
         do {
             try await classes.setPlanPattern(
                 PlanPattern(groups: count, subjects: subjects), weekday: weekday, classID: classID
@@ -145,14 +149,18 @@ public extension PlanStore {
         }
     }
 
-    /// A moved student's set, checks (unless their own) and sheet follow the new group's, where those are made.
-    private func relink(_ student: UUID, in plan: PlanRecord, to group: Int) async throws -> PlanRecord {
+    /// A moved student's set, checks (unless their own) and sheet follow the new group's, where those are made. The
+    /// new group's material is read from the plan before the move: the student's own lines, renumbered, still link
+    /// their old group's.
+    private func relink(
+        _ student: UUID, in plan: PlanRecord, to group: Int, before: PlanRecord
+    ) async throws -> PlanRecord {
         var plan = plan
         let own = plan.artefacts.contains { $0.studentID == student }
         let targets: [(PlanLineKind, Artefact?)] = [
-            (.practise, plan.artefact(group: group, kind: .sheet, homework: false)),
-            (.homework, plan.artefact(group: group, kind: .sheet, homework: true)),
-            (.check, own ? nil : plan.artefact(group: group, kind: .check)),
+            (.practise, before.artefact(group: group, kind: .sheet, homework: false)),
+            (.homework, before.artefact(group: group, kind: .sheet, homework: true)),
+            (.check, own ? nil : before.artefact(group: group, kind: .check)),
         ]
         for (kind, artefact) in targets {
             guard let artefact,
