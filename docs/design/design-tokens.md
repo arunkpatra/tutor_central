@@ -268,4 +268,9 @@ Other, asked from class 8 only; the parent's message language is English unless 
 shows the last three weeks of sessions, three questions a session; the ladder has five steps per area; the placement asks a few
 questions per subject and the student's chapters start from the first skill got wrong; consent is recorded per student as the day
 and the parent's number, and only the student's own notes, marking and messages wait for it; the check row's pair is 150 × 34 on a
-track 40 high and the trend's bars 36 high.
+track 40 high and the trend's bars 36 high. Phase 10 (step 10.3): the plan is made for a batch when the app opens on its day (or in a background refresh) and a plan already made
+opens at once; Start class shows while the batch is within 90 minutes or running, as Mark attendance did; a group is one to three per
+batch; a student absent twice running gets a catch-up line; the close writes attendance, checks and homework in one call, with
+present and homework given as the defaults and an untapped check skipped; a change to a plan line or the groups holds for that day
+only unless kept for the weekday; the note day is Sunday evening after the week's last batch unless the batch says another; a parent
+gets at most three suggested messages a week, the rest held (D61).

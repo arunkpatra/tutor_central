@@ -843,3 +843,74 @@ What the boards settle:
   a Right | Wrong pair; untapped is skipped), the count beside the subject's title, Done in the footer. Done keeps the taps;
   each subject's chapters start from the first skill got wrong.
 - **The check row** (`components.md`) is the one control for a right-or-wrong answer here and in the close (step 10.3).
+
+## Phase 10 boards: step 10.3, Today (approved 2026-10-10)
+
+Row 16 of the canvas (y 40000; the title note at 39700); sources `mockups/P10-Today-*`, `P10-Close*`. Dark for every state; light
+for the plan and the close. Content is the seed's on Wednesday 7 October 2026 at 16:35 with an illustrative mixed batch (the
+Evening batch, 17:00–18:30: Dev, Meher and Nikhil in class 8, Riya in class 5, Sahil in class 2, in three groups); the note day
+is Sunday 11 October, the day with no batch Saturday 10 October. The figures are illustrative.
+
+| Board | Source |
+|---|---|
+| Today with the plan (dark and light); scrolled to the smaller groups, the brief and V1's sections | `P10-Today-Plan`, `-Light`, `-Scrolled` |
+| Planning today's class | `P10-Today-Planning` |
+| A line's menu; the plan changed; the Change sheet | `P10-Today-Plan-StudentMenu`, `P10-Today-Plan-Changed`, `P10-Today-Plan-Change` |
+| The close (dark and light); scrolled (checks tapped, a student absent); the placement inside it | `P10-Close`, `-Light`, `-Scrolled`, `-Placement` |
+| After the close; the note day; a day with no batch | `P10-Today-AfterClose`, `P10-Today-NoteDay`, `P10-Today-NoBatch` |
+
+Phase 12 builds the plan's states and Phase 11 the close's (the light twins from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `today` | Today with the plan for the day's batch (supersedes P4-Today-Soon and P7-Today-Header's content; `today-evening` becomes `today-after-close`) |
+| `today-scrolled` | Today scrolled to the smaller groups, the brief, V1's sections |
+| `today-planning` | The plan being made |
+| `today-line-menu` | A student's line pressed |
+| `today-plan-changed` | A student moved, a homework skipped |
+| `today-plan-change` | The Change sheet |
+| `close` | The close for the day's batch, nothing tapped yet (Phase 11; it works without a plan: the lines card is absent and each student has the three checks from the spaced queue, or the placement) |
+| `close-scrolled` | Two students' checks tapped, one absent |
+| `close-placement` | A student with no checks yet |
+| `today-after-close` | Today after the close |
+| `today-note-day` | Sunday evening: the notes |
+| `today-no-batch` | Saturday: no batch |
+
+What the boards settle:
+
+- **Today's order:** the header, the tiles (Students, Due, Batches today), the batch hero, "Today's plan", then V1's sections
+  (Today, Coming up, Tasks) and the Make something row (Phase 15; the Create with AI row until then). The hero is the next batch
+  with Start class while one is within 90 minutes or running (Start class replaces Mark attendance on Today: the close writes
+  attendance; Mark attendance stays under More for any day and batch); after the last batch the hero reads what happened
+  (closed at, N of M came, the checks right, the homework given, who was absent) with Open the class; on a day with no batch it
+  names the next batch and says its plan is made when the app is opened that day.
+- **The plan** is a card per level group under "Today's plan" with the quiet Change: the group's head (Group n · its chapter;
+  the class and subject and the count; the material's marks: each artefact with a tick in `ok` when made, a spinner while it is
+  on its way), then one line per student: avatar 36, the name, the status word, the teach line in `text` (Teach, Teach again with
+  the worked example, Catch up for a student absent twice), then practise, check and homework in `text2`. The brief row (the
+  Phase 6 tool row: Your brief · the chapter; five minutes, three common mistakes, the worked example) sits between the groups
+  after the group whose chapter is above class 7 or one the tutor asked about. A group of one is still a group.
+- **Planning** holds the hero's button disabled and the creating card in the plan's place; the lines fill in as they come and the
+  class can start meanwhile. A plan already made opens at once (D60).
+- **Changing** is where it appears (spec section 2): a long press on a line gives Move to Group n, Skip the check today, Skip
+  homework today, Leave out today (the system's context menu; the board draws the Phase 3 menu); a moved student's line says
+  "Moved here from Group n", a skipped line is struck through with "skipped today". Change on the section header opens a
+  floating sheet: Groups (one to three; one puts everyone together), each group's subject today, "Keep this for <weekday>s" (the
+  weekly pattern on the batch), Make the plan again, Use this plan. Nothing changed here is carried to another day unless kept.
+- **The close** is pushed from Start class (and from a batch's row on Today once the batch has begun): the title "Close the
+  class" with the quiet Plan (back to Today's plan); the batch, the day, the time and the count; a footnote on how it works; per
+  group a checklist card of the plan's lines (24 pt checkboxes, a count beside the title); then "Students": a card per student
+  with the name and the attendance pill (Present by default; the whole head toggles), the eyebrow "Check · 3 questions", three
+  check rows (the skill, the question, the expected answer, Right | Wrong; untapped is skipped), and "Homework given · sheet n"
+  with a switch on by default. A student marked absent folds to one line (the checks wait, a catch-up line joins the next plan).
+  A student with no checks yet shows the placement's rows under "Placement · a few questions per subject". Done in the footer
+  writes the attendance session, the checks and the homework in one call (`close_session`) and pops to Today; nothing is asked
+  first; Done with attendance alone is a close. Offline the close queues as V1's attendance does (D39 extended): the footer
+  becomes "Saved on this iPhone" in the due tone.
+- **After the close**, "To parents" lists what goes now, one row each with its kind as the title (Test tomorrow, Absent today),
+  the parent, the language and the detail, and Send (primary for the first); the last row counts the notes waiting for the note
+  day and names any held for consent. Each Send opens the Phase 4 message sheet.
+- **The note day** (Sunday evening by default; changed where it appears, on the batch) puts a hero on Today ("7 notes for
+  parents") and a Notes card: one row per student with the language, the week's topic and the fact that leads the note; Read
+  (primary, 36 high) opens the note (step 10.6); a sent row reads Sent in `ok`; a held row (no consent, or the parent's three
+  messages this week are spent) reads Held in `text3`. The count sits beside the title.

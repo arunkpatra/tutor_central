@@ -679,3 +679,53 @@ The texts:
 | The placement | "A few questions per subject, so the plan starts at the right place. Ask them in your words and tap what <child> answers. Skip any you don't ask." · "<n> of <m> right" beside each subject · Done · "Done keeps what you tapped. <child>'s chapters start from the first skill she got wrong in each subject." |
 | The school sheet | "One textbook photo per school and class serves everyone there. From class 8 the board is asked on the form." |
 | The form's helpers | Class: "LKG to class 10. The plan and the sheets follow it." · Board: "Shown from class 8. The chapters follow the board's list." · Fee: "Leave empty to use the batch fee once a batch is chosen." / "The batch fee is ₹1,200. This student pays this amount instead." · Language: "Notes to <parent> are written in this language, with English beside them for you." |
+
+## Phase 10 parts (step 10.3, approved 2026-10-10): Today and the close
+
+**Batch hero:** the Kit's next-class hero with the accent eyebrow (Next batch · in 25 min), the batch name `title2`, the line
+(time, students, groups), the primary Start class 50 with `play`. Closed: the eyebrow names the time it closed, the title carries
+`checkmark.circle` in `ok` and "4 of 5 came", the line the checks and homework, a secondary Open the class 46.
+
+**Group card:** a list card whose first row is the group head (the title 15/700, the class and count `footnote` `text2`, the ready
+marks), then plan lines.
+
+**Ready marks:** a row of the group's artefacts, each `caption` 600: made, `ok` with a 12 pt tick; on its way, `text3` with a 12 pt
+spinner; not made, `text3` alone.
+
+**Plan line:** avatar 36, the name `rowTitle`, an optional note line (`caption` 600 in `accentText` for "Moved here from Group n", in
+`text3` for "Homework skipped today"), the teach line `footnote` in `text` led by the status word, the rest `footnote` `text2`
+(a skipped item struck through in `text3`), `chevron.right` 18. The whole line presses; a long press opens its menu.
+
+**Line checklist:** rows of a 24 pt checkbox (`ok` fill with the tick when done; `lineStrong` ring when not) and the line's text
+`subhead` (`text2` once done); a count ("2 of 5") beside the section title.
+
+**Close student card:** a list card: the head (avatar 36, the name, an optional `caption` line in `due` for a catch-up, the
+attendance pill 96 × 40 on the right), the eyebrow, three check rows, a `line` rule, the homework switch row ("Homework given ·
+sheet n", the switch on). Absent: the head and one `footnote` `text2` line.
+
+**Planning card:** the Phase 6 creating card without a thumbnail: "Planning today's class", three bars, the line.
+
+**Line menu:** the Phase 3 menu (260 wide, the glass) with four rows and their symbols: Move to Group n `arrow.right`, Skip the
+check today `minus`, Skip homework today `minus`, Leave out today `xmark`.
+
+**Parent message row (after the close):** avatar 36, the kind as the title, the parent, language and detail as the line, Send
+36 high on the right (primary with the `whatsapp` glyph for the first, secondary for the rest).
+
+**Note row (the note day):** avatar 36, the name, the line (language, topic, the leading fact); Read (primary 36 high, radius 12)
+or "Sent" in `ok` with a tick or "Held" in `text3`.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The hero | "Next batch · in 25 min" · "17:00–18:30 · 5 students · 3 groups" · Start class · closed: "Evening batch · closed at 18:32" "4 of 5 came" "8 of 12 checks right · homework given to 4 · Nikhil absent" · Open the class · no batch: "No batch today" "Next: Evening batch on Monday" "17:00–18:30 · 5 students · its plan is made when you open the app on Monday" |
+| Planning | "Planning today's class" · "A few seconds. The groups first, then each group's set, sheet and checks. You can start the class meanwhile; the lines fill in as they come." |
+| The lines | "Teach: <skill>" · "Teach again: <skill>, with the worked example" · "Catch up: missed Mon and Fri · then <skill>" · "Practise set 1 · Check 3 · Homework sheet 1" · "Placement, her first checks" · "Homework sheet 1, light" |
+| The brief row | "Your brief · <chapter>" · "Five minutes · three common mistakes · the worked example to use" |
+| The menu | Move to Group n · Skip the check today · Skip homework today · Leave out today |
+| Changed | "Moved here from Group n" · "Homework skipped today" |
+| Change the plan | Groups "One to three, by level. One group puts everyone together." · "Group n · Class k" with its subject · "Keep this for Wednesdays" "The same subjects next Wednesday; the groups still follow the record" · Make the plan again · Use this plan |
+| The close | "Close the class" · "Everyone starts present and homework given. Tap what changed, tap each check as the student answers, then Done. Done with attendance alone is a close too." · "Check · 3 questions" · "Placement · a few questions per subject" · "Homework given · sheet 1" · absent: "Marked absent. The checks and homework wait; a catch-up line joins the next plan." · "Catch up · missed Mon and Fri" · Done · "Writes attendance for today, the checks and the homework in one go. The next plan follows from it." |
+| To parents | "Test tomorrow" "Dev's father · Hindi · Science unit test on Thu 8 Oct, chapters 1 and 2" · "Absent today" "Nikhil's mother · English · the absence alert" · "Weekly notes · Sunday" "4 notes wait for the note day. Riya's waits for consent." |
+| The note day | "Note day" "7 notes for parents" "Each one is about the week: what was taught, what went right, what to practise. Read it as the parent will, then send." · "2 of 7 sent" · a row: "Hindi · Chemical reactions · 2 absences" · Read · Sent · Held · "Hindi · waits for Neha's consent" |
+| Tomorrow | "Its plan is made when you open the app tomorrow" |

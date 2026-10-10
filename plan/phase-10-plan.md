@@ -120,7 +120,7 @@ figures are illustrative (`docs/design/README.md`).
       close's form, the student's page with the record (this week; skills by subject with state marks; check trend;
       marks; attendance; homework; school items; messages; consent; fees; notes), the list sorted by tracking status
       with its marks (on track, watch, not on track, not known yet), the empty list.
-- [ ] **10.3 Today** (row 16). The plan for a batch (groups with their level, one line per student: teach, practise,
+- [x] **10.3 Today** (row 16, approved 2026-10-10; 14 boards, the Change sheet added). The plan for a batch (groups with their level, one line per student: teach, practise,
       check, homework; the material's marks; the brief row), "Planning today's class", a plan with a student moved and
       a line skipped, Start class, the close (the checklist, per student: came, three checks right or wrong, homework
       given), Done, after the close (what goes to parents), the note day, a day with no batch, V1's Today sections

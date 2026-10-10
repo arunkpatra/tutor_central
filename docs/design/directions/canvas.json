@@ -1899,7 +1899,7 @@
    "y": 38600,
    "w": 393,
    "h": 852,
-   "title": "Phase 10 · 10.2 A new student's page: not known yet with what will tell, Place Riya, consent not recorded (Ask on WhatsApp, or Parent agreed straight away), the record waiting for a book"
+   "title": "Phase 10 · 10.2 A new student's page: not known yet with what will tell, Place Riya, consent not asked, the record waiting for a book"
   },
   "P10-Student-Ladder.dc.html": {
    "x": 6622,
@@ -1913,14 +1913,14 @@
    "y": 38600,
    "w": 393,
    "h": 852,
-   "title": "Phase 10 · 10.2 Ask on WhatsApp (optional): the message to the parent in a well, Open WhatsApp; the day of the ask is noted on the page"
+   "title": "Phase 10 · 10.2 Ask for consent: the message to the parent in a well, Open WhatsApp; the date of the ask is noted on the page"
   },
   "P10-Consent-Record.dc.html": {
    "x": 7568,
    "y": 38600,
    "w": 393,
    "h": 852,
-   "title": "Phase 10 · 10.2 Record the parent's agreement: how (in person, on a call, on WhatsApp), the day and the number, kept with the student; the WhatsApp ask is optional"
+   "title": "Phase 10 · 10.2 Record the parent's reply: the day and the number, kept with the student"
   },
   "P10-Student-Consent-Waiting.dc.html": {
    "x": 8041,
@@ -1963,6 +1963,104 @@
    "w": 393,
    "h": 852,
    "title": "Phase 10 · 10.2 The placement: a few questions per subject, right or wrong as the student answers, Done; the same form sits in the close for a student with no checks yet"
+  },
+  "P10-Today-Plan.dc.html": {
+   "x": 0,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Today with the plan: the next batch with Start class; the groups by level with their material ready; one line per student (teach, then practise, check, homework); the brief · dark"
+  },
+  "P10-Today-Plan-Light.dc.html": {
+   "x": 473,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Today with the plan · light"
+  },
+  "P10-Today-Plan-Scrolled.dc.html": {
+   "x": 946,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Today scrolled: the smaller groups, the brief, then V1's sections (today's batches, coming up, tasks) and the Make something row"
+  },
+  "P10-Today-Planning.dc.html": {
+   "x": 1419,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Planning today's class: the hero waits, the card names what is being made; a plan already made opens at once"
+  },
+  "P10-Today-Plan-StudentMenu.dc.html": {
+   "x": 1892,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 A student's line pressed: move to another group, skip the check or the homework today, leave the student out today"
+  },
+  "P10-Today-Plan-Changed.dc.html": {
+   "x": 2365,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 The plan changed by the tutor: Riya moved into Group 1 (the line says so), Nikhil's homework skipped today (struck through); the record learns, nothing is carried over"
+  },
+  "P10-Close.dc.html": {
+   "x": 2838,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Start class, the close: the batch and day, the group's lines as a checklist, then each student: came (present by default), the three checks right or wrong, homework given; Done in the footer · dark"
+  },
+  "P10-Close-Light.dc.html": {
+   "x": 3311,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 The close · light"
+  },
+  "P10-Close-Scrolled.dc.html": {
+   "x": 3784,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 The close scrolled: Dev's checks tapped (2 of 3 right), Meher's untapped, Nikhil marked absent (his checks wait, a catch-up line joins the next plan)"
+  },
+  "P10-Close-Placement.dc.html": {
+   "x": 4257,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 In the close, a student with no checks yet gets the placement's questions in place of the three checks"
+  },
+  "P10-Today-AfterClose.dc.html": {
+   "x": 4730,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Today after the close: what happened in the hero, what goes to parents now (each one read, then sent on WhatsApp) and what waits for the note day; tomorrow's batch below"
+  },
+  "P10-Today-NoteDay.dc.html": {
+   "x": 5203,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 The note day (Sunday evening): the notes waiting to be read and sent, one tap each; two sent; one held for consent; the week's next batch below"
+  },
+  "P10-Today-NoBatch.dc.html": {
+   "x": 5676,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 A day with no batch (Saturday): the next batch and when its plan is made; the day's event and the tasks as V1"
+  },
+  "P10-Today-Plan-Change.dc.html": {
+   "x": 6149,
+   "y": 40000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.3 Change on the plan: how many groups, each group's subject today, keep it for this weekday (the weekly pattern), make the plan again"
   }
  },
  "createdOnFiles": {
@@ -2101,6 +2199,14 @@
    "w": 240,
    "x": 0,
    "y": 38300
+  },
+  "p10_3": {
+   "kind": "title1",
+   "maxW": 8000,
+   "text": "Step 10.3 · Phase 10, Today — the plan for the batch (level groups, the material ready, one line per student, the brief), planning, a line's menu and the plan changed, the Change sheet, the close (came, three checks, homework, Done; the placement inside it), after the close, the note day, a day with no batch",
+   "w": 240,
+   "x": 0,
+   "y": 39700
   }
  },
  "order": [
@@ -2380,7 +2486,21 @@
   "P10-Textbook-Reading.dc.html",
   "P10-Textbook-Chapters.dc.html",
   "P10-Textbook-Chapter-Edit.dc.html",
-  "P10-Placement.dc.html"
+  "P10-Placement.dc.html",
+  "P10-Today-Plan.dc.html",
+  "P10-Today-Plan-Light.dc.html",
+  "P10-Today-Plan-Scrolled.dc.html",
+  "P10-Today-Planning.dc.html",
+  "P10-Today-Plan-StudentMenu.dc.html",
+  "P10-Today-Plan-Changed.dc.html",
+  "P10-Close.dc.html",
+  "P10-Close-Light.dc.html",
+  "P10-Close-Scrolled.dc.html",
+  "P10-Close-Placement.dc.html",
+  "P10-Today-AfterClose.dc.html",
+  "P10-Today-NoteDay.dc.html",
+  "P10-Today-NoBatch.dc.html",
+  "P10-Today-Plan-Change.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
