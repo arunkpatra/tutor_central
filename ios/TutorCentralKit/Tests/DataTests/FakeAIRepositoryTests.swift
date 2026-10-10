@@ -66,4 +66,42 @@ import Testing
             try await ai.makeChecks(classLevel: .eight, subject: "Science", skills: ["A"], centre: UUID())
         }
     }
+
+    @MainActor @Test func theFakeAnswersEachKindAndCountsItsCalls() async throws {
+        let fake = FakeAIRepository()
+        let sheet = try await fake.makeSheet(
+            SheetRequest(
+                classLevel: .five, subject: "Mathematics", skills: ["Compare simple fractions"], questions: 5,
+                forHomework: true
+            ), centre: UUID()
+        )
+        #expect(sheet.content.questions.count == 5)
+        #expect(sheet.content.light)
+        let figure = try await fake.makeFigure(
+            .foodChain,
+            classLevel: .seven,
+            subject: "Science",
+            skill: "x",
+            centre: UUID()
+        )
+        #expect(figure.figure.figure.kind == .foodChain)
+        fake.scriptByKind[.brief] = .failure(.service)
+        await #expect(throws: APIFailure.service) {
+            try await fake.makeBrief(classLevel: .eight, subject: "Science", chapter: "x", centre: UUID())
+        }
+        #expect(fake.sheets.count == 1 && fake.figures.count == 1 && fake.briefs.count == 1)
+    }
+
+    @MainActor @Test func theFakeNamesATopicPerGroup() async throws {
+        let fake = FakeAIRepository()
+        let topics = try await fake.planTopics(
+            classID: nil, date: #require(Day(iso: "2026-10-07")), month: 10,
+            groups: [
+                PlanTopicGroup(groupNo: 1, classLevel: .eight, subject: "Science"),
+                PlanTopicGroup(groupNo: 2, classLevel: .two, subject: "Mathematics"),
+            ], centre: UUID()
+        )
+        #expect(topics.map(\.chapter) == ["Chemical reactions", "Numbers"])
+        #expect(fake.topics.count == 1)
+    }
 }

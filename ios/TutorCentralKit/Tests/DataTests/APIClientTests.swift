@@ -203,6 +203,50 @@ extension APIClientTests {
         )
         #expect(asked == [PlacementQuestion(chapter: "X", question: "Q", answer: "R")])
     }
+
+    @Test func makeFigureDecodesTheSpecByKindAndRefusesInWords() async throws {
+        let body = #"{"id":"7a1f0000-0000-0000-0000-000000000010","result":{"figure":{"kind":"fraction_bar","parts":4,"#
+            + #""shaded":3,"label":"3/4"},"caption":"Three of four."}}"#
+        let (client, _) = Self.client(status: 200, body: body)
+        let made = try await client.makeFigure(
+            .fractionBar, classLevel: .five, subject: "Mathematics", skill: "Compare simple fractions",
+            centre: Self.centre
+        )
+        #expect(made.figure.figure == .fractionBar(parts: 4, shaded: 3, label: "3/4"))
+        let words = "Couldn't draw a figure for this skill. The plan goes on without it."
+        let (refused, _) = Self.client(status: 422, body: #"{"error":"\#(words)"}"#)
+        await #expect(throws: APIFailure.refused(words)) {
+            try await refused.makeFigure(
+                .fractionBar, classLevel: .five, subject: "Mathematics", skill: "x", centre: Self.centre
+            )
+        }
+    }
+
+    @Test func planTopicsDecodeTheGroups() async throws {
+        let body = #"{"id":"7a1f0000-0000-0000-0000-000000000011","result":{"groups":[{"groupNo":1,"#
+            + #""chapter":"Chemical reactions","skill":"Balance a chemical equation"}]}}"#
+        let (client, recorder) = Self.client(status: 200, body: body)
+        let topics = try await client.planTopics(
+            classID: nil, date: #require(Day(iso: "2026-10-07")), month: 10,
+            groups: [PlanTopicGroup(groupNo: 1, classLevel: .eight, subject: "Science")], centre: Self.centre
+        )
+        #expect(topics == [PlanTopic(groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation")])
+        #expect(try Self.sent(recorder)["month"] as? Int == 10)
+    }
+
+    @Test func aSheetIsLightForAYoungClassAndCarriesItsUse() async throws {
+        let body = #"{"id":"7a1f0000-0000-0000-0000-000000000012","result":{"title":"Fractions","instructions":null,"#
+            + #""questions":[{"number":1,"text":"Shade half","answer":"Two of four"}]}}"#
+        let (client, recorder) = Self.client(status: 200, body: body)
+        let made = try await client.makeSheet(
+            SheetRequest(
+                classLevel: .five, subject: "Mathematics", skills: ["Compare simple fractions"], questions: 5,
+                forHomework: true
+            ), centre: Self.centre
+        )
+        #expect(made.content.forHomework && made.content.light && made.content.questions.count == 1)
+        #expect(try Self.sent(recorder)["kind"] as? String == "sheet")
+    }
 }
 
 /// Answers every request with one status and body, recording what was sent. URLSession calls it off the main actor,
