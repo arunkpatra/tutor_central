@@ -9,7 +9,8 @@ public enum CloseBoardState: Sendable {
     case placement
 }
 
-/// The close (P10-Close, -Scrolled, -Placement): the batch and its day, the students' cards, Done in the footer band.
+/// The close (P10-Close, -Scrolled, -Placement): the batch and its day, the plan's checklist per group (the quiet Plan
+/// goes back to Today's plan), the students' cards, Done in the footer band.
 /// Done pops to Today, whose hero reads the close.
 public struct CloseView: View {
     @State var store: CloseStore
@@ -29,8 +30,33 @@ public struct CloseView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                    BackRow(title: store.title) { dismiss() }
+                    BackRow(title: store.title, action: store.hasPlan ? ("Plan", { dismiss() }) : nil) { dismiss() }
                     heading
+                    ForEach(store.checklist) { card in
+                        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(card.title).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
+                                    .accessibilityAddTraits(.isHeader)
+                                Spacer()
+                                Text(store.countText(for: card.id)).typeStyle(Tokens.footnote)
+                                    .monospacedDigit().foregroundStyle(Tokens.text2.color)
+                            }
+                            .padding(.horizontal, Tokens.rowGapInner)
+                            Card {
+                                VStack(spacing: 0) {
+                                    ForEach(card.rows) { row in
+                                        PlanChecklistRow(
+                                            isOn: Binding(
+                                                get: { row.done }, set: { _ in store.toggle(line: row.id, in: card.id) }
+                                            ),
+                                            text: row.text
+                                        )
+                                        .rowDivider(row.id != card.rows.last?.id)
+                                    }
+                                }
+                            }
+                        }
+                    }
                     VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
                         SectionHeader("Students")
                         ForEach(store.students.indices, id: \.self) { index in

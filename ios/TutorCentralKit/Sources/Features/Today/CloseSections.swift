@@ -83,6 +83,8 @@ struct CloseStudentCard: View {
             }
         case .none:
             line("No book yet, so no checks. Add one from \(student.firstName)'s page.")
+        case .skipped:
+            EmptyView()
         case let .failed(words):
             failed(words)
         }
@@ -108,11 +110,11 @@ struct CloseStudentCard: View {
 
     private var homework: some View {
         HStack(spacing: Tokens.inline) {
-            Text("Homework given").typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
+            Text(store.homeworkLabel(student)).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Switch(
                 isOn: Binding(get: { student.homeworkGiven }, set: { store.setHomework(index, given: $0) }),
-                label: "Homework given"
+                label: store.homeworkLabel(student)
             )
         }
         .padding(.vertical, Tokens.rowPaddingDense)

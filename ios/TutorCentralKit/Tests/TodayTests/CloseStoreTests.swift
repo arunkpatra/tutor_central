@@ -32,6 +32,8 @@ import Testing
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
         record: FakeRecordRepository = FakeRecordRepository(),
         textbooks: FakeTextbooksRepository = .evening(),
+        plans: FakePlansRepository? = nil,
+        cache: PlanCache? = nil,
         now: Date = fivepast
     ) async -> CloseStore {
         let register = await register(evening: classID == FakeClassesRepository.evening.id)
@@ -39,6 +41,8 @@ import Testing
             classID: classID, workspace: FakeCentreRepository.meeraWorkspace, register: register,
             textbooks: textbooks, record: record, attendance: attendance, ai: ai, now: { now }
         )
+        store.plans = plans
+        store.planCache = cache
         await store.load()
         return store
     }

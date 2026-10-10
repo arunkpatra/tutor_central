@@ -3,7 +3,7 @@ import Domain
 import SwiftUI
 import Today
 
-/// The close's wiring: its store made for the visit with the register, the record, attendance and AI.
+/// The close's wiring: its store made for the visit with the register, the record, attendance, AI and today's plan.
 extension RootView {
     @ViewBuilder func closeView(_ classID: UUID) -> some View {
         if case let .ready(workspace) = session.state {
@@ -22,6 +22,9 @@ extension RootView {
             record: deps.record, attendance: deps.attendance, ai: deps.ai, now: deps.now
         )
         store.queue = centreQueue()
+        store.plans = deps.plans
+        store.planCache = deps.cachesLists
+            ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil
         store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         return store
     }

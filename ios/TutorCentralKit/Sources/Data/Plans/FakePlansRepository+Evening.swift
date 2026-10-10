@@ -73,23 +73,30 @@ public extension FakePlansRepository {
             ]
         }
         all.append(made(5, .brief, "Your brief · Chemical reactions", .brief(AISamples.brief)))
-        all.append(made(
-            6,
-            .check,
-            "Checks · Balancing equations",
-            checks(["Balancing equations"]),
-            for: FakeStudentsRepository.dev
-        ))
-        all.append(made(
-            7,
-            .check,
-            "Checks · Balancing equations",
-            checks(["Balancing equations"]),
-            for: FakeStudentsRepository.nikhil
-        ))
-        all.append(made(8, .placement, "Placement", checks(["The Fish Tale"]), for: FakeStudentsRepository.riya))
+        let three = ["Balancing equations", "Types of reactions", "Chemical change"]
+        all.append(made(6, .check, "Checks · Balancing equations", checks(three), for: FakeStudentsRepository.dev))
+        all.append(made(7, .check, "Checks · Balancing equations", checks(three), for: FakeStudentsRepository.nikhil))
+        all.append(made(8, .placement, "Placement", riyasPlacement, for: FakeStudentsRepository.riya))
         return all
     }()
+
+    /// Riya's placement: a question on the first skill of each of her book's chapters, as the plan makes it.
+    private nonisolated static var riyasPlacement: ArtefactContent {
+        let groups = Placement.groups(
+            chapters: FakeTextbooksRepository.riyaChapters, skills: FakeTextbooksRepository.riyaSkills
+        )
+        let questions = groups.flatMap { group in
+            zip(group.items, AISamples.placement(for: group.items.map(\.name))).map { item, made in
+                CheckContent.Question(
+                    skillID: item.skillID,
+                    skill: item.skill,
+                    question: made.question,
+                    answer: made.answer
+                )
+            }
+        }
+        return .check(CheckContent(questions: questions, placement: true))
+    }
 
     /// One student's lines on the boards: the teach, check and homework words, their own checks.
     private struct BoardLine {
