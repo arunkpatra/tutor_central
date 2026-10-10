@@ -28,7 +28,8 @@ extension RootView {
                 shell.tabs.paths[.students] = []
                 shell.register?.filter = .unassigned
             },
-            openTextbook: { shell.tabs.push(.textbook(student: $0, subject: $1)) }
+            openTextbook: { shell.tabs.push(.textbook(student: $0, subject: $1)) },
+            openPlacement: { shell.tabs.push(.placement($0)) }
         )
     }
 }
@@ -101,6 +102,22 @@ extension RootView {
                     notices.show(StudentDetailStore.missingMessage)
                 },
                 onMessage: { notices.show($0) }
+            )
+        }
+    }
+}
+
+extension RootView {
+    /// The placement, its store made for the visit (the page's store is AppShell's to keep).
+    @ViewBuilder func placementView(_ id: UUID) -> some View {
+        if case let .ready(workspace) = session.state {
+            PlacementView(
+                store: PlacementStore(
+                    studentID: id, register: register(for: workspace), ai: deps.ai, textbooks: deps.textbooks,
+                    record: deps.record, attendance: deps.attendance, now: deps.now,
+                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+                ),
+                boardTaps: launch == .placement ? [true, true, false] : []
             )
         }
     }

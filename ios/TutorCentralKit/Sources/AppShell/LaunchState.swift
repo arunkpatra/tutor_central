@@ -54,6 +54,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case textbookReading = "textbook-reading"
     case textbookChapters = "textbook-chapters"
     case textbookChapterEdit = "textbook-chapter-edit"
+    /// The placement for Riya (P10-Placement), the first three answers tapped.
+    case placement
     case student
     case studentArchived = "student-archived"
     case studentArchiveConfirm = "student-archive-confirm"
