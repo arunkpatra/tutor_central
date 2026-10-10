@@ -34,7 +34,8 @@ public struct ReminderSettings: Hashable, Sendable, Codable {
     public static let feeDays = Array(1 ... 28)
 
     public var classOn = true
-    public var classMinutesBefore = 15
+    /// An hour before the batch (the plan's reminder, Phase 12); a tutor who set a lead keeps it.
+    public var classMinutesBefore = 60
     public var eventOn = true
     public var eventLead: EventLead = .hour1
     public var feesOn = true

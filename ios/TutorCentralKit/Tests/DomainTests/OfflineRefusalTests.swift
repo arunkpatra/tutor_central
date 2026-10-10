@@ -28,4 +28,13 @@ struct OfflineRefusalTests {
         #expect(OfflineRefusal.words(for: .addChapter) ==
             "You're offline. Adding a chapter needs a connection; nothing was saved.")
     }
+
+    @Test func thePlansRefusalsNameWhatWasNotChanged() {
+        #expect(OfflineRefusal.words(for: .regenerate)
+            == "You're offline. Making it again needs a connection; the sheet you have is still here.")
+        #expect(OfflineRefusal.words(for: .changePlan)
+            == "You're offline. Changing the plan needs a connection; nothing was changed.")
+        #expect(OfflineRefusal.words(for: .ownSheet)
+            == "You're offline. Using your own sheet needs a connection; nothing was changed.")
+    }
 }

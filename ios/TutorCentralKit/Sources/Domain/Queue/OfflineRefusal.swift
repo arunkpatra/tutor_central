@@ -7,6 +7,7 @@ public enum OfflineRefusal {
         case addStudent, editStudent, addClass, editClass, addEvent, editEvent, addTask, editTask, editPayments
         case generateFees, waiveFee, remind, note
         case consent, textbook, placement, homeworkStatus, addChapter
+        case regenerate, changePlan, ownSheet
     }
 
     public static func words(for write: Write) -> String {
@@ -15,6 +16,9 @@ public enum OfflineRefusal {
         case .generateFees: "You're offline. Creating the month's fees needs a connection; nothing was created."
         case .placement: "You're offline. The placement's questions need a connection."
         case .homeworkStatus: "You're offline. Marking homework needs a connection; nothing was changed."
+        case .regenerate: "You're offline. Making it again needs a connection; the sheet you have is still here."
+        case .changePlan: "You're offline. Changing the plan needs a connection; nothing was changed."
+        case .ownSheet: "You're offline. Using your own sheet needs a connection; nothing was changed."
         default: "You're offline. \(action(write)) needs a connection; nothing was saved."
         }
     }

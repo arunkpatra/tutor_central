@@ -1,7 +1,9 @@
 import Foundation
 
-/// Plans the tutor's reminders (P7-Reminders): before each class meeting, before each event, and once for the
-/// month's unpaid fees. Pure: the scheduler (AppShell) hands the plan to the notification centre.
+/// Plans the tutor's reminders (P7-Reminders): before each class meeting (a reminder to open the app for the day's
+/// plan,
+/// D60), before each event, and once for the month's unpaid fees. Pure: the scheduler (AppShell) hands the plan to the
+/// notification centre.
 public enum ReminderPlanner {
     /// How far ahead meetings and events are planned.
     public static let days = 14
@@ -43,9 +45,9 @@ public enum ReminderPlanner {
         return Reminder(
             id: "class-\(id)-\(day.iso)", kind: .classMeeting,
             title: "\(room.name) at \(start.text)",
-            body: "In \(minutesText(lead)) · \(studentsText). Tap to mark attendance.",
+            body: "In \(minutesText(lead)) · \(studentsText). Open for today's plan.",
             fireAt: starts.addingTimeInterval(-Double(lead) * 60),
-            link: "tutorcentral://attendance?date=\(day.iso)&class=\(id)", subject: room.name
+            link: "tutorcentral://today", subject: room.name
         )
     }
 

@@ -120,7 +120,7 @@ import Observation
         return "\(names) on their days"
     }
 
-    /// The three rows' lines before the ask: "15 min before", "1 hour before", "On the 5th at 09:00".
+    /// The three rows' lines before the ask: "1 hour before", "1 hour before", "On the 5th at 09:00".
     public var rowLines: [String] {
         [
             "\(ReminderSettings.leadLabel(minutes: settings.classMinutesBefore)) before",

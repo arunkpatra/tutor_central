@@ -1,7 +1,8 @@
 import Foundation
 
-/// A class the tutor teaches (`classes`): its name, subject, fee, and when it meets. "Class" is the word on screen;
-/// the type is `Classroom` so it never reads as the keyword.
+/// A class the tutor teaches (`classes`): its name, subject, fee, when it meets, and the plan's kept choices. "Batch"
+/// is
+/// the word on screen; the type is `Classroom` so it never reads as the keyword.
 public struct Classroom: Hashable, Sendable, Identifiable, Codable {
     public let id: UUID
     public var name: String
@@ -11,10 +12,15 @@ public struct Classroom: Hashable, Sendable, Identifiable, Codable {
     public var startTime: TimeOfDay?
     public var endTime: TimeOfDay?
     public var archivedAt: Date?
+    /// The batch's kept group count (`classes.plan_groups`, 1 to 3); nil: the plan's rules decide.
+    public var planGroups: Int?
+    /// The kept choices per weekday (`classes.plan_pattern`, "Keep this for Wednesdays").
+    public var planPattern: [Weekday: PlanPattern]
 
     public init(
         id: UUID, name: String, subject: String?, monthlyFee: Money?, meetingDays: Set<Weekday>,
-        startTime: TimeOfDay?, endTime: TimeOfDay?, archivedAt: Date?
+        startTime: TimeOfDay?, endTime: TimeOfDay?, archivedAt: Date?, planGroups: Int? = nil,
+        planPattern: [Weekday: PlanPattern] = [:]
     ) {
         self.id = id
         self.name = name
@@ -24,6 +30,25 @@ public struct Classroom: Hashable, Sendable, Identifiable, Codable {
         self.startTime = startTime
         self.endTime = endTime
         self.archivedAt = archivedAt
+        self.planGroups = planGroups
+        self.planPattern = planPattern
+    }
+
+    /// A batch cached by build 20 has no plan keys: it reads with no count and no pattern.
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        try self.init(
+            id: c.decode(UUID.self, forKey: .id),
+            name: c.decode(String.self, forKey: .name),
+            subject: c.decodeIfPresent(String.self, forKey: .subject),
+            monthlyFee: c.decodeIfPresent(Money.self, forKey: .monthlyFee),
+            meetingDays: c.decode(Set<Weekday>.self, forKey: .meetingDays),
+            startTime: c.decodeIfPresent(TimeOfDay.self, forKey: .startTime),
+            endTime: c.decodeIfPresent(TimeOfDay.self, forKey: .endTime),
+            archivedAt: c.decodeIfPresent(Date.self, forKey: .archivedAt),
+            planGroups: c.decodeIfPresent(Int.self, forKey: .planGroups),
+            planPattern: c.decodeIfPresent([Weekday: PlanPattern].self, forKey: .planPattern) ?? [:]
+        )
     }
 
     public var isArchived: Bool {
