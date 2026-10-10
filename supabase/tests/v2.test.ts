@@ -632,3 +632,18 @@ test("a skipped or moved line keeps its marks", async () => {
   const moved = await a.from("plan_items").select("group_no, moved_from").eq("plan_id", plan.plan_id).eq("student_id", s1.id);
   expect(moved.data!.every((r) => r.group_no === 2 && r.moved_from === 1)).toBe(true);
 });
+
+test("a group's worked example and figure link to their own lines, beside the teach lines", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const lines = [...items(s1.id, s2.id), { student_id: null, group_no: 1, kind: "worked_example", words: "Worked example" }, { student_id: null, group_no: 1, kind: "figure", words: "Figure" }];
+  const plan = (await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-14", p_groups: [], p_subjects: {}, p_items: lines })).data as { plan_id: string };
+  expect(plan.plan_id).toBeDefined();
+  const example = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "worked_example", title: "Balancing equations", content: { problem: "p", steps: [], slip: "s" } }, p_plan: plan.plan_id, p_group_no: 1, p_student: null, p_item_kind: "worked_example" });
+  const figure = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "figure", title: "Fraction bar", content: { figure: { kind: "fraction_bar", parts: 4, shaded: 3, label: "3/4" }, caption: "c" } }, p_plan: plan.plan_id, p_group_no: 1, p_student: null, p_item_kind: "figure" });
+  expect(example.error).toBeNull();
+  expect(figure.error).toBeNull();
+  const linked = await a.from("plan_items").select("kind, artefact_id").eq("plan_id", plan.plan_id).in("kind", ["worked_example", "figure", "teach"]);
+  expect(linked.data!.find((r) => r.kind === "worked_example")?.artefact_id).toBe(example.data as string);
+  expect(linked.data!.find((r) => r.kind === "figure")?.artefact_id).toBe(figure.data as string);
+  expect(linked.data!.filter((r) => r.kind === "teach").every((r) => r.artefact_id === null)).toBe(true);
+});
