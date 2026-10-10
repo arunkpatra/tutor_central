@@ -25,7 +25,7 @@ public final class SupabaseRecordRepository: RecordRepository {
     public func homework(centre: UUID, students: [UUID], since: Date) async throws -> [HomeworkRecord] {
         guard !students.isEmpty else { return [] }
         let response = try await client.from("homework")
-            .select("id, student_id, session_id, given_at, status")
+            .select("id, student_id, session_id, given_at, status, artefact_id")
             .eq("centre_id", value: centre)
             .in("student_id", values: students.map { $0.uuidString.lowercased() })
             .gte("given_at", value: ISO8601DateFormatter().string(from: since))

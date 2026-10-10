@@ -48,13 +48,18 @@ public struct HomeworkRecord: Identifiable, Hashable, Sendable, Codable {
     public let sessionID: UUID
     public let givenAt: Date
     public var status: HomeworkStatus
+    /// The sheet given (V2's close from the plan); none for a close without one.
+    public var artefactID: UUID?
 
-    public init(id: UUID, studentID: UUID, sessionID: UUID, givenAt: Date, status: HomeworkStatus) {
+    public init(
+        id: UUID, studentID: UUID, sessionID: UUID, givenAt: Date, status: HomeworkStatus, artefactID: UUID? = nil
+    ) {
         self.id = id
         self.studentID = studentID
         self.sessionID = sessionID
         self.givenAt = givenAt
         self.status = status
+        self.artefactID = artefactID
     }
 }
 

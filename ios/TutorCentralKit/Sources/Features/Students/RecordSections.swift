@@ -27,11 +27,13 @@ struct TrackingSection: View {
 /// and the homework.
 struct ThisWeekSection: View {
     let rows: [StudentDetailStore.WeekRow]
+    /// The quiet Today when the batch meets today (U35).
+    let openToday: (() -> Void)?
 
     var body: some View {
-        if !rows.isEmpty {
+        if !rows.isEmpty || openToday != nil {
             VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                SectionHeader("This week")
+                SectionHeader("This week", action: openToday.map { ("Today", $0) })
                 Card {
                     VStack(spacing: 0) {
                         ForEach(rows) { row in
@@ -139,6 +141,8 @@ struct ChecksSection: View {
 /// Homework (P10-Student-End): one row per homework given, its status as a chip that opens Done, Partial, Not done.
 struct HomeworkSection: View {
     let rows: [StudentDetailStore.HomeworkLine]
+    /// A row with its sheet opens it.
+    let open: (UUID) -> Void
     let set: (UUID, HomeworkStatus) -> Void
 
     var body: some View {
@@ -149,11 +153,13 @@ struct HomeworkSection: View {
                     VStack(spacing: 0) {
                         ForEach(rows) { row in
                             HStack(spacing: Tokens.rowPaddingDense) {
-                                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                                    Text(row.title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                                    Text(row.line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                                if let sheet = row.artefactID {
+                                    Button { open(sheet) } label: { titles(row) }
+                                        .buttonStyle(.plain)
+                                        .accessibilityHint("Opens the sheet")
+                                } else {
+                                    titles(row)
                                 }
-                                .frame(maxWidth: .infinity, alignment: .leading)
                                 Menu {
                                     ForEach([HomeworkStatus.done, .partial, .notDone], id: \.self) { status in
                                         Button(status.title) { set(row.id, status) }
@@ -171,6 +177,15 @@ struct HomeworkSection: View {
                 }
             }
         }
+    }
+
+    private func titles(_ row: StudentDetailStore.HomeworkLine) -> some View {
+        VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+            Text(row.title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+            Text(row.line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.rect)
     }
 
     nonisolated static func chip(_ status: HomeworkStatus) -> Chip.Kind {
