@@ -43,6 +43,50 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"artefacts": {
+                  Row: {
+                    "centre_id": string,"content": NonNullable<Json>,"created_at": string,"generation_id": string | null,"id": string,"kind": Database["public"]['Enums']["artefact_kind"],"photo_path": string | null,"plan_id": string | null,"regenerated_from": string | null,"school_item_id": string | null,"source": Database["public"]['Enums']["artefact_source"],"student_id": string | null,"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"content"?: NonNullable<Json>,"created_at"?: string,"generation_id"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["artefact_kind"],"photo_path"?: string | null,"plan_id"?: string | null,"regenerated_from"?: string | null,"school_item_id"?: string | null,"source"?: Database["public"]['Enums']["artefact_source"],"student_id"?: string | null,"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"content"?: NonNullable<Json>,"created_at"?: string,"generation_id"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["artefact_kind"],"photo_path"?: string | null,"plan_id"?: string | null,"regenerated_from"?: string | null,"school_item_id"?: string | null,"source"?: Database["public"]['Enums']["artefact_source"],"student_id"?: string | null,"title"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "artefacts_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "artefacts_centre_id_generation_id_fkey"
+      columns: ["centre_id","generation_id"]
+isOneToOne: false
+      referencedRelation: "ai_generations"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "artefacts_centre_id_plan_id_fkey"
+      columns: ["centre_id","plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "artefacts_centre_id_regenerated_from_fkey"
+      columns: ["centre_id","regenerated_from"]
+isOneToOne: false
+      referencedRelation: "artefacts"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "artefacts_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
                 },"attendance_marks": {
                   Row: {
                     "centre_id": string,"created_at": string,"id": string,"session_id": string,"status": Database["public"]['Enums']["attendance_status"],"student_id": string,"updated_at": string
@@ -77,14 +121,14 @@ isOneToOne: false
                   ]
                 },"attendance_sessions": {
                   Row: {
-                    "centre_id": string,"class_id": string | null,"created_at": string,"date": string,"id": string,"saved_at": string,"updated_at": string
+                    "centre_id": string,"class_id": string | null,"closed_at": string | null,"created_at": string,"date": string,"id": string,"plan_id": string | null,"saved_at": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"class_id"?: string | null,"created_at"?: string,"date": string,"id"?: string,"saved_at"?: string,"updated_at"?: string
+                    "centre_id": string,"class_id"?: string | null,"closed_at"?: string | null,"created_at"?: string,"date": string,"id"?: string,"plan_id"?: string | null,"saved_at"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "centre_id"?: string,"class_id"?: string | null,"created_at"?: string,"date"?: string,"id"?: string,"saved_at"?: string,"updated_at"?: string
+                    "centre_id"?: string,"class_id"?: string | null,"closed_at"?: string | null,"created_at"?: string,"date"?: string,"id"?: string,"plan_id"?: string | null,"saved_at"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -99,6 +143,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "centres"
       referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_sessions_centre_id_plan_id_fkey"
+      columns: ["centre_id","plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["centre_id","id"]
     }
                   ]
                 },"calendar_events": {
@@ -155,6 +205,76 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"chapters": {
+                  Row: {
+                    "centre_id": string,"created_at": string,"id": string,"ladder": string | null,"name": string,"position": number,"student_id": string,"subject": string,"syllabus_id": string | null,"textbook_id": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"created_at"?: string,"id"?: string,"ladder"?: string | null,"name": string,"position": number,"student_id": string,"subject": string,"syllabus_id"?: string | null,"textbook_id"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"created_at"?: string,"id"?: string,"ladder"?: string | null,"name"?: string,"position"?: number,"student_id"?: string,"subject"?: string,"syllabus_id"?: string | null,"textbook_id"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "chapters_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "chapters_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "chapters_centre_id_textbook_id_fkey"
+      columns: ["centre_id","textbook_id"]
+isOneToOne: false
+      referencedRelation: "textbooks"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
+                },"checks": {
+                  Row: {
+                    "centre_id": string,"correct": boolean,"created_at": string,"id": string,"kind": string,"question": NonNullable<Json>,"session_id": string | null,"skill_id": string,"student_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"correct": boolean,"created_at"?: string,"id"?: string,"kind"?: string,"question"?: NonNullable<Json>,"session_id"?: string | null,"skill_id": string,"student_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"correct"?: boolean,"created_at"?: string,"id"?: string,"kind"?: string,"question"?: NonNullable<Json>,"session_id"?: string | null,"skill_id"?: string,"student_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "checks_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "checks_centre_id_session_id_fkey"
+      columns: ["centre_id","session_id"]
+isOneToOne: false
+      referencedRelation: "attendance_sessions"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "checks_centre_id_skill_id_fkey"
+      columns: ["centre_id","skill_id"]
+isOneToOne: false
+      referencedRelation: "skills"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "checks_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
                 },"classes": {
                   Row: {
                     "archived_at": string | null,"centre_id": string,"created_at": string,"end_time": string | null,"id": string,"meeting_days": (number)[],"monthly_fee": number | null,"name": string,"start_time": string | null,"subject": string | null,"updated_at": string
@@ -201,6 +321,44 @@ isOneToOne: false
       referencedColumns: ["centre_id","id"]
     }
                   ]
+                },"homework": {
+                  Row: {
+                    "artefact_id": string | null,"centre_id": string,"created_at": string,"given_at": string,"id": string,"session_id": string,"status": Database["public"]['Enums']["homework_status"],"student_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "artefact_id"?: string | null,"centre_id": string,"created_at"?: string,"given_at"?: string,"id"?: string,"session_id": string,"status"?: Database["public"]['Enums']["homework_status"],"student_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "artefact_id"?: string | null,"centre_id"?: string,"created_at"?: string,"given_at"?: string,"id"?: string,"session_id"?: string,"status"?: Database["public"]['Enums']["homework_status"],"student_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "homework_centre_id_artefact_id_fkey"
+      columns: ["centre_id","artefact_id"]
+isOneToOne: false
+      referencedRelation: "artefacts"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "homework_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "homework_centre_id_session_id_fkey"
+      columns: ["centre_id","session_id"]
+isOneToOne: false
+      referencedRelation: "attendance_sessions"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "homework_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
                 },"message_log": {
                   Row: {
                     "about_date": string | null,"centre_id": string,"channel": Database["public"]['Enums']["message_channel"],"created_at": string,"id": string,"kind": Database["public"]['Enums']["message_kind"],"opened_at": string,"student_id": string | null,"updated_at": string
@@ -227,6 +385,82 @@ isOneToOne: false
       referencedColumns: ["centre_id","id"]
     }
                   ]
+                },"plan_items": {
+                  Row: {
+                    "artefact_id": string | null,"centre_id": string,"created_at": string,"done_at": string | null,"group_no": number | null,"id": string,"kind": Database["public"]['Enums']["plan_item_kind"],"plan_id": string,"skill_id": string | null,"student_id": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "artefact_id"?: string | null,"centre_id": string,"created_at"?: string,"done_at"?: string | null,"group_no"?: number | null,"id"?: string,"kind": Database["public"]['Enums']["plan_item_kind"],"plan_id": string,"skill_id"?: string | null,"student_id"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "artefact_id"?: string | null,"centre_id"?: string,"created_at"?: string,"done_at"?: string | null,"group_no"?: number | null,"id"?: string,"kind"?: Database["public"]['Enums']["plan_item_kind"],"plan_id"?: string,"skill_id"?: string | null,"student_id"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "plan_items_centre_id_artefact_id_fkey"
+      columns: ["centre_id","artefact_id"]
+isOneToOne: false
+      referencedRelation: "artefacts"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "plan_items_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "plan_items_centre_id_plan_id_fkey"
+      columns: ["centre_id","plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "plan_items_centre_id_skill_id_fkey"
+      columns: ["centre_id","skill_id"]
+isOneToOne: false
+      referencedRelation: "skills"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "plan_items_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
+                },"plans": {
+                  Row: {
+                    "centre_id": string,"class_id": string | null,"created_at": string,"date": string,"groups": NonNullable<Json>,"id": string,"made_at": string,"session_id": string | null,"subjects": NonNullable<Json>,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"class_id"?: string | null,"created_at"?: string,"date": string,"groups"?: NonNullable<Json>,"id"?: string,"made_at"?: string,"session_id"?: string | null,"subjects"?: NonNullable<Json>,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"class_id"?: string | null,"created_at"?: string,"date"?: string,"groups"?: NonNullable<Json>,"id"?: string,"made_at"?: string,"session_id"?: string | null,"subjects"?: NonNullable<Json>,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "plans_centre_id_class_id_fkey"
+      columns: ["centre_id","class_id"]
+isOneToOne: false
+      referencedRelation: "classes"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "plans_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "plans_centre_id_session_id_fkey"
+      columns: ["centre_id","session_id"]
+isOneToOne: false
+      referencedRelation: "attendance_sessions"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"display_name": string | null,"has_password": boolean,"updated_at": string,"user_id": string
@@ -241,16 +475,68 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
-                },"students": {
+                },"schools": {
                   Row: {
-                    "archived_at": string | null,"centre_id": string,"class_id": string | null,"created_at": string,"date_of_birth": string | null,"gender": string | null,"id": string,"monthly_fee": number | null,"name": string,"notes": string | null,"parent_name": string | null,"parent_phone": string | null,"updated_at": string
+                    "board": string | null,"centre_id": string,"created_at": string,"id": string,"name": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"centre_id": string,"class_id"?: string | null,"created_at"?: string,"date_of_birth"?: string | null,"gender"?: string | null,"id"?: string,"monthly_fee"?: number | null,"name": string,"notes"?: string | null,"parent_name"?: string | null,"parent_phone"?: string | null,"updated_at"?: string
+                    "board"?: string | null,"centre_id": string,"created_at"?: string,"id"?: string,"name": string,"updated_at"?: string
                   }
                   Update: {
-                    "archived_at"?: string | null,"centre_id"?: string,"class_id"?: string | null,"created_at"?: string,"date_of_birth"?: string | null,"gender"?: string | null,"id"?: string,"monthly_fee"?: number | null,"name"?: string,"notes"?: string | null,"parent_name"?: string | null,"parent_phone"?: string | null,"updated_at"?: string
+                    "board"?: string | null,"centre_id"?: string,"created_at"?: string,"id"?: string,"name"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "schools_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"skills": {
+                  Row: {
+                    "centre_id": string,"chapter_id": string,"created_at": string,"id": string,"last_checked_at": string | null,"name": string,"position": number,"state": Database["public"]['Enums']["skill_state"],"state_at": string,"student_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"chapter_id": string,"created_at"?: string,"id"?: string,"last_checked_at"?: string | null,"name": string,"position": number,"state"?: Database["public"]['Enums']["skill_state"],"state_at"?: string,"student_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"chapter_id"?: string,"created_at"?: string,"id"?: string,"last_checked_at"?: string | null,"name"?: string,"position"?: number,"state"?: Database["public"]['Enums']["skill_state"],"state_at"?: string,"student_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "skills_centre_id_chapter_id_fkey"
+      columns: ["centre_id","chapter_id"]
+isOneToOne: false
+      referencedRelation: "chapters"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "skills_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "skills_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
+                },"students": {
+                  Row: {
+                    "archived_at": string | null,"board": string | null,"centre_id": string,"class_id": string | null,"class_level": string | null,"consent_at": string | null,"consent_how": string | null,"consent_phone": string | null,"created_at": string,"date_of_birth": string | null,"gender": string | null,"id": string,"message_language": string,"monthly_fee": number | null,"name": string,"notes": string | null,"parent_name": string | null,"parent_phone": string | null,"school_id": string | null,"track_reasons": NonNullable<Json>,"track_since": string | null,"track_status": string,"tracked_at": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"board"?: string | null,"centre_id": string,"class_id"?: string | null,"class_level"?: string | null,"consent_at"?: string | null,"consent_how"?: string | null,"consent_phone"?: string | null,"created_at"?: string,"date_of_birth"?: string | null,"gender"?: string | null,"id"?: string,"message_language"?: string,"monthly_fee"?: number | null,"name": string,"notes"?: string | null,"parent_name"?: string | null,"parent_phone"?: string | null,"school_id"?: string | null,"track_reasons"?: NonNullable<Json>,"track_since"?: string | null,"track_status"?: string,"tracked_at"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"board"?: string | null,"centre_id"?: string,"class_id"?: string | null,"class_level"?: string | null,"consent_at"?: string | null,"consent_how"?: string | null,"consent_phone"?: string | null,"created_at"?: string,"date_of_birth"?: string | null,"gender"?: string | null,"id"?: string,"message_language"?: string,"monthly_fee"?: number | null,"name"?: string,"notes"?: string | null,"parent_name"?: string | null,"parent_phone"?: string | null,"school_id"?: string | null,"track_reasons"?: NonNullable<Json>,"track_since"?: string | null,"track_status"?: string,"tracked_at"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -265,6 +551,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "centres"
       referencedColumns: ["id"]
+    },{
+      foreignKeyName: "students_centre_id_school_id_fkey"
+      columns: ["centre_id","school_id"]
+isOneToOne: false
+      referencedRelation: "schools"
+      referencedColumns: ["centre_id","id"]
     }
                   ]
                 },"tasks": {
@@ -287,6 +579,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"textbooks": {
+                  Row: {
+                    "centre_id": string,"chapters": NonNullable<Json>,"class_level": string,"created_at": string,"edition": string | null,"id": string,"photo_path": string | null,"publisher": string | null,"school_id": string,"subject": string,"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"chapters"?: NonNullable<Json>,"class_level": string,"created_at"?: string,"edition"?: string | null,"id"?: string,"photo_path"?: string | null,"publisher"?: string | null,"school_id": string,"subject": string,"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"chapters"?: NonNullable<Json>,"class_level"?: string,"created_at"?: string,"edition"?: string | null,"id"?: string,"photo_path"?: string | null,"publisher"?: string | null,"school_id"?: string,"subject"?: string,"title"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "textbooks_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "textbooks_centre_id_school_id_fkey"
+      columns: ["centre_id","school_id"]
+isOneToOne: false
+      referencedRelation: "schools"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -295,6 +613,12 @@ isOneToOne: false
           Functions: {
             "archive_class":
 { Args: { "p_class": string }; Returns: undefined
+                           },
+"close_session":
+{ Args: { "p_centre": string,"p_checks": Json,"p_class": string,"p_date": string,"p_homework": Json,"p_marks": Json,"p_track": Json }; Returns: string
+                           },
+"copy_textbook_chapters":
+{ Args: { "p_centre": string,"p_student": string,"p_textbook": string }; Returns: undefined
                            },
 "create_centre":
 { Args: { "p_display_name"?: string,"p_name": string,"p_whatsapp"?: string }; Returns: string
@@ -319,7 +643,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper","ai_status": "ok"|"failed"|"pending","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","message_channel": "whatsapp_link","message_kind": "reminder"|"receipt"|"absence"|"progress","paid_method": "upi"|"cash"|"other"
+            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","message_channel": "whatsapp_link","message_kind": "reminder"|"receipt"|"absence"|"progress","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -439,7 +763,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"],"ai_status": ["ok", "failed", "pending"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"message_channel": ["whatsapp_link"],"message_kind": ["reminder", "receipt", "absence", "progress"],"paid_method": ["upi", "cash", "other"]
+            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"message_channel": ["whatsapp_link"],"message_kind": ["reminder", "receipt", "absence", "progress"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
           }
         }
 } as const

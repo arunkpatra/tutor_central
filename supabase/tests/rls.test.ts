@@ -20,6 +20,15 @@ const CENTRE_TABLES = [
   "tasks",
   "ai_generations",
   "message_log",
+  "schools",
+  "textbooks",
+  "chapters",
+  "skills",
+  "plans",
+  "plan_items",
+  "artefacts",
+  "checks",
+  "homework",
 ] as const;
 
 beforeAll(async () => {
@@ -69,6 +78,24 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
   expect(student.error).toBeNull();
   const session = await a.from("attendance_sessions").insert({ centre_id: centreA, date: "2026-10-05" }).select("id").single();
   expect(session.error).toBeNull();
+  const school = await a.from("schools").insert({ centre_id: centreA, name: "Isolation School" }).select("id").single();
+  expect(school.error).toBeNull();
+  const chapter = await a
+    .from("chapters")
+    .insert({ centre_id: centreA, student_id: student.data!.id, subject: "English", position: 1, name: "Chapter one" })
+    .select("id")
+    .single();
+  expect(chapter.error).toBeNull();
+  const skill = await a
+    .from("skills")
+    .insert({ centre_id: centreA, chapter_id: chapter.data!.id, student_id: student.data!.id, position: 1, name: "A skill" })
+    .select("id")
+    .single();
+  expect(skill.error).toBeNull();
+  const plan = await a.from("plans").insert({ centre_id: centreA, date: "2026-10-12", groups: [], subjects: {} }).select("id").single();
+  expect(plan.error).toBeNull();
+  const artefact = await a.from("artefacts").insert({ centre_id: centreA, kind: "sheet", source: "own", title: "Own sheet" }).select("id").single();
+  expect(artefact.error).toBeNull();
   const inserts: Record<(typeof CENTRE_TABLES)[number], Record<string, unknown> | null> = {
     classes: { name: "Class A" },
     students: null,
@@ -79,6 +106,15 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     tasks: { title: "Buy chalk" },
     ai_generations: { kind: "homework", input: { topic: "Fractions" } },
     message_log: { student_id: student.data!.id, kind: "reminder" },
+    schools: null,
+    textbooks: { school_id: school.data!.id, class_level: "3", subject: "English", title: "English 3" },
+    chapters: null,
+    skills: null,
+    plans: null,
+    plan_items: { plan_id: plan.data!.id, kind: "brief" },
+    artefacts: null,
+    checks: { session_id: session.data!.id, student_id: student.data!.id, skill_id: skill.data!.id, question: {}, correct: true },
+    homework: { student_id: student.data!.id, session_id: session.data!.id, artefact_id: artefact.data!.id, status: "given" },
   };
   for (const [table, row] of Object.entries(inserts)) {
     if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
