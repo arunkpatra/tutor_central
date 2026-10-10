@@ -2425,6 +2425,27 @@
    "w": 393,
    "h": 2020,
    "title": "Phase 10 · 10.7 The Kit's new rows · light"
+  },
+  "P12-Close-Cards.dc.html": {
+   "x": 0,
+   "y": 47000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 · The close without a plan, the card states no earlier board drew (U37, U38): the checks being made (the eyebrow over a spinner line), no book yet (one line, attendance and homework only), offline (the line and Try again) · dark"
+  },
+  "P12-Close-Cards-Light.dc.html": {
+   "x": 473,
+   "y": 47000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 · The close's card states · light"
+  },
+  "P12-Pending-Close.dc.html": {
+   "x": 946,
+   "y": 47000,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 · Pending changes with a waiting close (U39): the close wears its own symbol, a checklist, so it is told from an attendance save; its line reads who came, the checks and when it was made here"
   }
  },
  "createdOnFiles": {
@@ -2603,6 +2624,14 @@
    "w": 240,
    "x": 0,
    "y": 45300
+  },
+  "p12_1": {
+   "kind": "title1",
+   "maxW": 1400,
+   "text": "Phase 12 · The plan — the two boards no earlier step drew: the close card's three states (U37, U38) and the waiting close on Pending changes (U39)",
+   "w": 240,
+   "x": 0,
+   "y": 46700
   }
  },
  "order": [
@@ -2948,7 +2977,10 @@
   "P10-Reports-Progress.dc.html",
   "P10-Reports-Progress-Term.dc.html",
   "P10-Kit-Dark.dc.html",
-  "P10-Kit-Light.dc.html"
+  "P10-Kit-Light.dc.html",
+  "P12-Close-Cards.dc.html",
+  "P12-Close-Cards-Light.dc.html",
+  "P12-Pending-Close.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

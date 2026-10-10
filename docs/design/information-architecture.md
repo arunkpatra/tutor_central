@@ -165,6 +165,15 @@ Wednesday 7 October): `later-school` (the School tab's Later card); `student-new
 closed at 18:32, 18:40); `close`, `close-scrolled`, `close-placement` (the Evening batch at 17:05: Dev, Meher, Nikhil, Riya,
 Sahil). `today` at 16:35 draws the batch hero with Start class over Class 10 Maths.
 
+Phase 12's launch states (`plan/phase-12-plan.md`; the boards are 10.3, 10.4 and the two Phase 12 boards; the clock is
+Wednesday 7 October 16:35 unless the state says another): `today` (the batch hero over the plan's cards, both),
+`today-scrolled`, `today-planning`, `today-line-menu`, `today-plan-changed`, `today-plan-change`, `today-after-close`
+(18:40), `today-no-batch` (Saturday 10 October 09:30; `today-evening` and `today-no-class` retired); `sheet` (both),
+`sheet-key`, `sheet-board`, `sheet-regenerate`, `sheet-regenerating`, `sheet-own-menu`, `sheet-own`; `worked-example`;
+`figure-number-line`, `-fraction-bar`, `-place-value`, `-unit-circle`, `-triangle`, `-cell`, `-food-chain`; `brief`;
+`close` (from the plan, both), `close-scrolled`, `close-placement`, `close-cards` (17:05, no plan, both); `pending` (a
+waiting close); `student-record` (This week with the quiet Today).
+
 ## Phase 2 boards (step 0.3)
 
 | Board | Canvas | Source |
@@ -991,6 +1000,40 @@ What the boards settle:
 - **The gap report** follows a marked mock: the score with a bar and the days left; By skill, one row each with a bar in `ok`, `due`
   or `overdue` by its fraction and the line that says what went wrong; The last two days, a row per day with the lines the plan
   will take, Change; Use this plan replaces those days' lines; leaving it keeps the plan as it was.
+
+## Phase 12 boards (drawn 2026-10-10, session 25; awaiting the owner's approval)
+
+Row 21 of the canvas (y 47000; the title note at 46700); sources `mockups/P12-Close-Cards`, `-Light`, `P12-Pending-Close`.
+Two boards for the polish rows the owner took into Phase 12 (U37, U38, U39): the close card's states no earlier board drew,
+and the waiting close on Pending changes. Content is the fixtures' Evening batch on Wednesday 7 October 2026, with no plan
+made (the states only arise on the no-plan path once the plan makes the checks ahead). The figures are illustrative.
+
+| Board | Source |
+|---|---|
+| The close without a plan, scrolled to Students: the checks being made, no book yet, offline (dark and light) | `P12-Close-Cards`, `-Light` |
+| Pending changes with a waiting close | `P12-Pending-Close` |
+
+Phase 12 builds them (`plan/phase-12-plan.md`, PR 8; the light twin from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `close-cards` | The close at 17:05 with no plan: Dev's checks being made, Bir with no book, Riya offline |
+| `pending` | Pending changes with a waiting close first (its own symbol), an attendance save under it (supersedes Phase 7's content for the row's symbol) |
+
+What the boards settle:
+
+- **The checks being made (U38):** the card keeps its eyebrow ("Check · 3 questions") and shows one line under it with a
+  16 pt spinner: "Making the three questions. A second or two." in `footnote` `text3`; the homework row is live
+  meanwhile. The wait is only on the no-plan path: a plan makes the checks ahead, so the close from a plan never shows it.
+- **No book yet (U37):** no eyebrow; one `text2` line, "No book yet, so no checks. Add one from Bir's page." (the first
+  name), then the homework row. Attendance and homework still close.
+- **Offline without a plan (U37):** the eyebrow, then the line "You're offline. The checks need a connection; mark
+  attendance and homework, and Done still closes." in `text2` with the quiet Try again on the right (the in-place failure
+  pattern of `feedback.md`); a plan's copy on the iPhone carries the questions, so this card shows only when no plan was
+  made.
+- **The waiting close (U39):** the Pending changes row wears the checklist symbol (three ticked lines) in its 40 pt tile
+  where an attendance save wears the circled tick; the title "Class closed · Evening batch", the line "Waiting · Wed 7
+  Oct · 4 of 5 came · 9 checks · 18:34". Nothing else on the screen changes.
 
 ## Phase 10 boards: step 10.5, School (approved 2026-10-10)
 

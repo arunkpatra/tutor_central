@@ -3,15 +3,14 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-10, session 24 (Phase 11's build, on Opus 5.5). **Session 24:** Phase 11 done. Ten pull
-requests from `phase-11-plan.md` (#97 to #106): migration 0017, the API's `/parse-textbook` and `/make` (check, placement),
-Domain's rules, Data, the five tabs, the list and New student V2, the student's page and consent, Add a textbook, the
-placement, the batch hero and the close (online, offline, reopened). Ten hand runs (D32) with each write confirmed in the
-database (#107); runs 8 to 10 found seven faults, fixed test first in #106. A fresh review on Fable 5.1: one Critical and
-three Important findings fixed (#106, migration 0018 in #108, #109), six minors deferred. The owner approved the batch hero
-(2026-10-10). Deploy run 38062264863 (0018; the API at `5bbe667`); TestFlight 1.0.0 (20) by run 38062450111. The owner
-checked build 20 on his iPhone: "Build 20 is fine on my phone" (2026-10-10). **Next:** Phase 12's plan on Fable from
-`resume/023-phase-12-plan.md`.
+**Last updated:** 2026-10-10, session 25 (Phase 12's plan, on Fable 5.1). **Session 25:** `plan/phase-12-plan.md` written
+(25 tasks, nine pull requests, tests first, the launch states, the hand runs, the cost run, 24 decisions, the review focus):
+the plan made on the phone by Domain rules with `/ai/plan` naming a first topic only for a group with no record; the checks
+per group from the plan; a new `Artefacts` feature for the sheet, the worked example, the figures and the brief; the close
+from the plan online and offline; the budget tested against the price sheet; the cost run on the real API. The two boards
+the owner's polish rows need (P12-Close-Cards dark and light for U37 and U38, P12-Pending-Close for U39) are on row 21 of
+the canvas and mirrored, awaiting his approval. `resume/024-phase-12-build.md` written and indexed. **Next:** the owner reads
+the plan and approves the boards; then Phase 12's build on Opus 5.5 from `resume/024-phase-12-build.md`.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -20,7 +19,7 @@ checked build 20 on his iPhone: "Build 20 is fine on my phone" (2026-10-10). **N
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -32,7 +31,7 @@ checked build 20 on his iPhone: "Build 20 is fine on my phone" (2026-10-10). **N
 | 9 User testing | Cancelled by the owner, 2026-10-10 (D66) | V1 was the proof of concept; the tutor round is Phase 15's, on V2, by Phase 9's method (D52 to D55); `phase-09-plan.md` kept as that method |
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
-| 12 The plan | Next: the plan on Fable from `resume/023-phase-12-plan.md` | Scope `phase-12-class-plan.md`; boards 10.3 and 10.4 |
+| 12 The plan | Planned (session 25, 2026-10-10): `phase-12-plan.md`; the two Phase 12 boards await the owner's approval; the build next from `resume/024-phase-12-build.md` | Scope `phase-12-class-plan.md`; boards 10.3, 10.4 and row 21 (`P12-*`) |
 | 13 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-12-class-plan.md` to `phase-16-release.md` |
 
 ## In flight

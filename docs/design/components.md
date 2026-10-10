@@ -789,6 +789,27 @@ The texts:
 | The mock | "Mock in the school's pattern" · "25 marks · 40 minutes · chapters 1 and 2 · made today, 16:40" · "as Vidya Niketan sets them" · Mark from a photo · "AI can make mistakes. Check every question before you give it. Marking from a photo uses this paper's key." |
 | The gap report | "After the mock" · "The test is on Thursday. Two days left." · By skill · The last two days · Use this plan · "Replaces the two days' lines in the plan. Leave it and the plan carries on as it was." |
 
+## Phase 12 parts (drawn 2026-10-10, session 25; awaiting the owner's approval): the close's card states, the waiting close
+
+**Close student card, the wait:** the head, the eyebrow "Check · 3 questions", one row of a 16 pt spinner (`lineStrong` ring,
+`text3` arc) and a `footnote` `text3` line, the `line` rule, the homework switch row.
+
+**Close student card, no book:** the head, one `body` `text2` line (padding 12 16), the rule, the homework switch row; no eyebrow.
+
+**Close student card, offline:** the head, the eyebrow, a row of the `body` `text2` line and the quiet Try again (`accentText`,
+600) on the right, the rule, the homework switch row.
+
+**Pending row, a close:** the Phase 7 pending row with the checklist symbol (three lines, each ticked) in the 40 pt tile.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The wait | "Making the three questions. A second or two." |
+| No book | "No book yet, so no checks. Add one from <first name>'s page." |
+| Offline | "You're offline. The checks need a connection; mark attendance and homework, and Done still closes." · Try again |
+| The waiting close | "Class closed · Evening batch" · "Waiting · Wed 7 Oct · 4 of 5 came · 9 checks · 18:34" |
+
 ## Phase 10 parts (step 10.5, approved 2026-10-10): School
 
 **Kind chip:** the compact chip with the item's kind: Exam `overdue` `exclamationmark.circle`, Homework `due` `doc.text`, Notice

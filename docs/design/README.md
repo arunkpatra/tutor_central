@@ -13,7 +13,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Approved 2026-10-07 (step 0.2) |
 | Telling the tutor what happened (U33): undo, in place, alert, inline | `feedback.md` | Choosing how any message reaches the tutor; the toast is for Undo only |
 | Information architecture | `information-architecture.md` | Entry flow, tabs and stacks, deep links, launch states, the Phase 2 board list |
-| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames), `P10-*` (Phase 10, the V2 screens, rows 14 to 20) |
+| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames), `P10-*` (Phase 10, the V2 screens, rows 14 to 20), `P12-*` (Phase 12, row 21) |
 
 ## Status
 
@@ -35,6 +35,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | 10.5 Phase 10, School | Approved by the owner 2026-10-10: 13 boards in row 18 of the canvas (`mockups/P10-School-*`, `P10-TestTomorrow`); the list, the launch states and what the boards settle in `information-architecture.md`; the parts and the texts in `components.md`; the numbers in `design-tokens.md` |
 | 10.6 Phase 10, Parents | Approved by the owner 2026-10-10: 11 boards in row 19 of the canvas (`mockups/P10-Note*`, `P10-CanNowDo`, `P10-Student-Messages`, `P10-Held`, `P10-Student-NotOnTrack`, `P10-NextStep`, `P10-NotOnTrack-Message`, `P10-Today-NotOnTrack`, `P10-NoteDay-Change`); the list, the launch states and what the boards settle in `information-architecture.md`; the parts and the texts in `components.md`; the numbers in `design-tokens.md` |
 | 10.7 Phase 10, Make and the Kit | Approved by the owner 2026-10-10: 9 boards in row 20 of the canvas (`mockups/P10-Make*`, `P10-Reports-Progress*`, `P10-Kit-Dark`, `P10-Kit-Light`); the list, the launch states and what the boards settle in `information-architecture.md`; the parts and the texts in `components.md`; the numbers in `design-tokens.md`. Part A of Phase 10 complete: 96 boards in rows 14 to 20 |
+| 12 Phase 12, the close's card states and the waiting close (U37, U38, U39) | Drawn 2026-10-10 (session 25), awaiting the owner's approval: 3 boards in row 21 of the canvas (`mockups/P12-Close-Cards`, `-Light`, `P12-Pending-Close`); the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 12 boards"); the parts and the texts in `components.md` |
 
 ## The three directions (step 0.1, decided: A)
 
