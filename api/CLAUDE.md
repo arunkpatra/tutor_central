@@ -37,7 +37,10 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
 - Photos are checked before any cost: magic bytes, round-trip base64, 3 MB decoded, six pages.
 - `test/entry.test.ts` spawns the entry with `--no-env-file`, so `.env.local` does not leak into it.
 
-- The V2 routes live in `routes/v2.ts` (`/parse-textbook`, `/make` for `check` and `placement`; the rest answer 501);
+- The V2 routes live in `routes/v2.ts` (`/parse-textbook`; `/plan`, a first topic per group with no record; `/make` for
+  `sheet`, `worked_example`, `figure`, `brief`, `check` and `placement`; `mock` and the personal kinds answer 501). The
+  plan's group kinds are `.strict()`, so a body naming a student is a 400 (D62). A figure whose spec breaks its rule is an
+  unfit answer, refused in words (422), as the fake reports any answer its schema refuses;
   what both route files share (run, parse, answer, the not-yet answer) is `routes/common.ts`. The fake answers by the
   call's kind (`kindOf`), so a check is never answered with a paper. The textbook photo is read and dropped:
   `textbooks.photo_path` stays null (Phase 11).

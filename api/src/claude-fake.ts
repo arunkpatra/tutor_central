@@ -1,5 +1,21 @@
 import type { ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
-import type { CheckOutput, ChecksOutput, NoteOutput, PaperOutput, PlacementOutput, QuestionSetOutput, ScanOutput, TextbookOutput } from "./schemas.js";
+import type {
+  BriefOutput,
+  CheckOutput,
+  ChecksOutput,
+  Figure,
+  FigureKind,
+  FigureOutput,
+  NoteOutput,
+  PaperOutput,
+  PlacementOutput,
+  PlanOutput,
+  QuestionSetOutput,
+  ScanOutput,
+  SheetOutput,
+  TextbookOutput,
+  WorkedExampleOutput,
+} from "./schemas.js";
 
 export type FakeScript = { answer?: unknown; refuse?: boolean; fail?: string; delayMs?: number };
 
@@ -17,7 +33,10 @@ export function fakeClaude(
       if (step.delayMs) await new Promise((resolve) => setTimeout(resolve, step.delayMs));
       if (step.fail) return { kind: "failed", reason: step.fail };
       if (step.refuse) return { kind: "refused", model: request.model, tokensIn: 100, tokensOut: 0 };
-      return { kind: "ok", parsed: request.schema.parse(step.answer), model: request.model, tokensIn: 812, tokensOut: 1460 };
+      // An answer the schema refuses (a figure that does not add up) is refused, as the real client reports an unfit one.
+      const parsed = request.schema.safeParse(step.answer);
+      if (!parsed.success) return { kind: "refused", model: request.model, tokensIn: null, tokensOut: null };
+      return { kind: "ok", parsed: parsed.data, model: request.model, tokensIn: 812, tokensOut: 1460 };
     },
   };
 }
@@ -166,9 +185,90 @@ const placement: PlacementOutput = {
   ],
 };
 
+/** Group 1's sheet (P10-Sheet, P10-Sheet-Key): eight equations to balance, with the key. */
+const sheet: SheetOutput = {
+  title: "Balancing equations",
+  instructions: "Balance each equation",
+  questions: [
+    ["Mg + O2 → MgO", "2Mg + O2 → 2MgO"],
+    ["H2 + Cl2 → HCl", "H2 + Cl2 → 2HCl"],
+    ["Na + Cl2 → NaCl", "2Na + Cl2 → 2NaCl"],
+    ["Fe + O2 → Fe2O3", "4Fe + 3O2 → 2Fe2O3"],
+    ["Al + O2 → Al2O3", "4Al + 3O2 → 2Al2O3"],
+    ["CH4 + O2 → CO2 + H2O", "CH4 + 2O2 → CO2 + 2H2O"],
+    ["Zn + HCl → ZnCl2 + H2", "Zn + 2HCl → ZnCl2 + H2"],
+    ["KClO3 → KCl + O2", "2KClO3 → 2KCl + 3O2"],
+  ].map(([text, answer], i) => ({ number: i + 1, text: `Balance: ${text}`, answer: answer ?? "" })),
+};
+
+/** The worked example (P10-WorkedExample): four steps and the slip. */
+const workedExample: WorkedExampleOutput = {
+  problem: "Balance: Fe + O₂ → Fe₂O₃",
+  steps: [
+    { title: "Count each element on both sides", working: "Left: 1 Fe, 2 O. Right: 2 Fe, 3 O. Nothing matches yet." },
+    {
+      title: "Fix the element that appears in one place on each side first: oxygen",
+      working: "O is 2 on the left and 3 on the right. The smallest number both go into is 6: put 3 before O₂ and 2 before Fe₂O₃.",
+    },
+    { title: "Now count iron again", working: "Right: 2 × 2 = 4 Fe. Put 4 before Fe on the left: 4Fe + 3O₂ → 2Fe₂O₃." },
+    { title: "Check every element once more", working: "Fe: 4 and 4. O: 6 and 6. Balanced." },
+  ],
+  slip: "A common slip here: changing the small numbers inside a formula. Only the numbers in front change.",
+};
+
+/** One spec per template, the figure boards' (P10-Figure-*). */
+const FIGURES: Record<FigureKind, { figure: Figure; caption: string }> = {
+  number_line: { figure: { kind: "number_line", from: 0, to: 10, step: 1, start: 3, jumps: [1, 1, 1, 1] }, caption: "Start at 3, jump 4 times, land on 7." },
+  fraction_bar: { figure: { kind: "fraction_bar", parts: 4, shaded: 3, label: "3/4" }, caption: "3 of 4 parts shaded: three quarters of the whole." },
+  place_value: { figure: { kind: "place_value", number: 347 }, caption: "Each digit in its place, with what it is worth." },
+  unit_circle: { figure: { kind: "unit_circle", angleDegrees: 60 }, caption: "The angle, the point, the two ratios read off the axes." },
+  triangle: { figure: { kind: "triangle", angles: [90, 53, 37], labels: ["3", "4", "5"] }, caption: "A right angle marked, the sides named, the rule beside it." },
+  labelled_cell: {
+    figure: { kind: "labelled_cell", cell: "plant", labels: ["Cell wall", "Nucleus", "Vacuole", "Chloroplast", "Cell membrane"] },
+    caption: "Five parts labelled, nothing more than the chapter names.",
+  },
+  food_chain: { figure: { kind: "food_chain", links: ["Grass", "Grasshopper", "Frog", "Snake", "Eagle"] }, caption: "The arrow points to the eater; the first link is always a plant." },
+};
+const figure: FigureOutput = FIGURES.fraction_bar;
+
+/** The brief for Chemical reactions (P10-Brief). */
+const brief: BriefOutput = {
+  about:
+    "A chemical reaction makes a new substance; a physical change does not. Students learn to spot one (gas, colour, heat, a precipitate), to write it as a word equation and then a formula equation, and to balance it so each element counts the same on both sides. Then the kinds: combination, decomposition, displacement, double displacement, and oxidation.",
+  mistakes: [
+    { title: "Changing the small numbers inside a formula", howToCatch: 'H₂O becomes H₂O₂ to "balance" oxygen. Only the numbers in front may change: the formula is the substance.' },
+    { title: "Counting atoms once, not per molecule", howToCatch: "In 2Fe₂O₃ there are 4 Fe and 6 O. Multiply the front number into every element." },
+    { title: "Calling melting or dissolving a reaction", howToCatch: "Ask: is there a new substance? Ice to water is not; iron to rust is." },
+  ],
+  workedExample,
+  words: [
+    "Reactants on the left, products on the right.",
+    "A number in front multiplies the whole formula.",
+    "Balanced means the same count of each element on both sides.",
+  ],
+};
+
+/** A first topic for a group with no record (Group 1, class 8 Science, in October). */
+const plan: PlanOutput = { groups: [{ groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" }] };
+
 /** The boards' results (P6-Result-Paper, P6-Result-ProgressNote, P6-Scan-Review, P6-Check-Result,
- *  P10-Textbook-Chapters), one per kind. */
-export const SAMPLE = { paper, homework, worksheet, progress_note: note, scan_register: scan, check_paper: check, parse_textbook: textbook, check: checks, placement };
+ *  P10-Textbook-Chapters, P10-Sheet, P10-WorkedExample, P10-Figure-FractionBar, P10-Brief), one per kind. */
+export const SAMPLE = {
+  paper,
+  homework,
+  worksheet,
+  progress_note: note,
+  scan_register: scan,
+  check_paper: check,
+  parse_textbook: textbook,
+  check: checks,
+  placement,
+  sheet,
+  worked_example: workedExample,
+  figure,
+  brief,
+  plan,
+};
 
 /** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
 export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
@@ -176,6 +276,11 @@ export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
     if (request.text.includes("contents page")) return "parse_textbook";
     return request.text.includes("register") ? "scan_register" : "check_paper";
   }
+  if (request.text.includes("Fill the template")) return "figure";
+  if (request.text.includes("worked example")) return "worked_example";
+  if (request.system.includes("colleague's note")) return "brief";
+  if (request.text.includes("Group 1:")) return "plan";
+  if (request.text.includes("a practice set on:") || request.text.includes("homework on:")) return "sheet";
   if (request.text.includes("placement")) return "placement";
   if (request.text.includes("for each skill")) return "check";
   if (request.text.includes("progress note")) return "progress_note";
@@ -191,6 +296,9 @@ export function localScript(request: ClaudeRequest<unknown>): FakeScript {
   const kind = kindOf(request);
   const blank = kind === "scan_register" && (request.images?.[0]?.base64.length ?? 0) < 1400;
   if (kind === "check" || kind === "placement") return { answer: fitted(kind, quoted(request.text)), delayMs: 1500 };
+  if (kind === "figure") return { answer: FIGURES[templateOf(request.text)], delayMs: 1500 };
+  if (kind === "sheet") return { answer: counted(Number(request.text.match(/Exactly (\d+) questions/)?.[1] ?? 8)), delayMs: 1500 };
+  if (kind === "plan") return { answer: topics(request.text), delayMs: 1500 };
   return { answer: blank ? { rows: [] } : SAMPLE[kind], delayMs: 1500 };
 }
 
@@ -215,4 +323,29 @@ function fitted(kind: "check" | "placement", names: string[]): ChecksOutput | Pl
         SAMPLE.placement.questions.find((q) => q.chapter === chapter) ?? { chapter, question: `What is the main idea of ${chapter}?`, answer: "The chapter's first idea" },
     ),
   };
+}
+
+/** The template a figure prompt names ("Fill the template fraction_bar."). */
+function templateOf(text: string): FigureKind {
+  const named = text.match(/Fill the template (\w+)/)?.[1];
+  return named && named in FIGURES ? (named as FigureKind) : "fraction_bar";
+}
+
+/** The sample sheet at the asked count: cut, or its questions repeated and numbered on, so a homework of five reads five. */
+function counted(count: number): SheetOutput {
+  const questions = Array.from({ length: count }, (_, i) => {
+    const q = SAMPLE.sheet.questions[i % SAMPLE.sheet.questions.length] ?? { number: 1, text: "", answer: "" };
+    return { ...q, number: i + 1 };
+  });
+  return { ...SAMPLE.sheet, questions };
+}
+
+/** A first topic per group the prompt lists ("Group 2: class 5 Mathematics."). */
+function topics(text: string): PlanOutput {
+  const groups = [...text.matchAll(/Group (\d): class (\w+) ([^.]+)\./g)].map((m) => ({
+    groupNo: Number(m[1]),
+    chapter: `${m[3]} for class ${m[2]}`,
+    skill: `The first idea of ${m[3]}`,
+  }));
+  return groups.length > 0 ? { groups } : SAMPLE.plan;
 }

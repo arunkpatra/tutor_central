@@ -79,10 +79,75 @@ test("make placement asks one question per chapter in the book's order", async (
   expect(claude.requests[0]?.model).toBe("claude-haiku-5-5");
 });
 
-test("a check and a placement need no student's consent; the other kinds still answer 501", async () => {
+test("a check and a placement need no student's consent; the mock still answers 501", async () => {
   const db = fakeDb({ consent: false });
   expect((await post(app(undefined, db), "/ai/make", check)).status).toBe(200);
-  const sheet = await post(app(undefined, db), "/ai/make", { kind: "sheet", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation"] });
-  expect(sheet.status).toBe(501);
+  const mock = await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } });
+  expect(mock.status).toBe(501);
   expect(db.started).toHaveLength(1);
+});
+
+// ---- Phase 12: /ai/plan and the four artefacts ----
+const sheet = { kind: "sheet", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation", "Name the reactants"], questions: 8 };
+
+test("make sheet answers a question set on Sonnet for class 8 and Haiku for class 5, recording the skills and no student", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.sheet });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", sheet);
+  expect(r.status).toBe(200);
+  const body = (await r.json()) as { id: string; result: { title: string; questions: { number: number; text: string; answer: string }[] } };
+  expect(body.result.questions).toHaveLength(8);
+  expect(db.started[0]).toMatchObject({ kind: "sheet", model: "claude-sonnet-5-5", input: { skills: sheet.skills, forHomework: false } });
+  expect(JSON.stringify(db.started[0])).not.toContain("studentId");
+  const young = await post(app(fakeClaude({ answer: SAMPLE.sheet }), db), "/ai/make", { ...sheet, classLevel: "5", forHomework: true, questions: 5 });
+  expect(young.status).toBe(200);
+  expect(db.started[1]).toMatchObject({ model: "claude-haiku-5-5" });
+});
+
+test("make sheet with a reason passes it to the prompt and records it", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.sheet });
+  const db = fakeDb();
+  await post(app(claude, db), "/ai/make", { ...sheet, reason: "easier" });
+  expect(claude.requests[0]?.text).toContain("Make it easier");
+  expect(db.started[0]).toMatchObject({ input: { reason: "easier" } });
+});
+
+test("make worked_example, figure and brief answer their shapes on Sonnet", async () => {
+  const db = fakeDb();
+  const example = await post(app(fakeClaude({ answer: SAMPLE.worked_example }), db), "/ai/make", { kind: "worked_example", centreId, classLevel: "8", subject: "Science", skill: "Balance a chemical equation" });
+  expect(example.status).toBe(200);
+  expect(((await example.json()) as { result: { steps: unknown[] } }).result.steps).toHaveLength(4);
+  const figure = await post(app(fakeClaude({ answer: SAMPLE.figure }), db), "/ai/make", { kind: "figure", centreId, figure: "fraction_bar", classLevel: "5", subject: "Mathematics", skill: "Compare simple fractions" });
+  expect(figure.status).toBe(200);
+  expect(((await figure.json()) as { result: { figure: { kind: string } } }).result.figure.kind).toBe("fraction_bar");
+  const brief = await post(app(fakeClaude({ answer: SAMPLE.brief }), db), "/ai/make", { kind: "brief", centreId, classLevel: "8", subject: "Science", chapter: "Chemical reactions" });
+  expect(brief.status).toBe(200);
+  expect(((await brief.json()) as { result: { mistakes: unknown[] } }).result.mistakes).toHaveLength(3);
+  expect(db.started.map((s) => (s as { model: string }).model)).toEqual(["claude-sonnet-5-5", "claude-sonnet-5-5", "claude-sonnet-5-5"]);
+});
+
+test("a figure that fails its rule is refused in words and recorded as failed", async () => {
+  const db = fakeDb();
+  const r = await post(app(fakeClaude({ answer: { figure: { kind: "fraction_bar", parts: 4, shaded: 5, label: "5/4" }, caption: "x" } }), db), "/ai/make", { kind: "figure", centreId, figure: "fraction_bar", classLevel: "5", subject: "Mathematics", skill: "Compare simple fractions" });
+  expect(r.status).toBe(422);
+  expect(await r.json()).toEqual({ error: "Couldn't draw a figure for this skill. The plan goes on without it." });
+  expect(db.finished[0]).toMatchObject({ status: "failed" });
+});
+
+test("plan names a first topic per group on Sonnet, with no student in the record", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.plan });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/plan", { centreId, classId: null, date: "2026-10-07", month: 10, groups: [{ groupNo: 1, classLevel: "8", subject: "Science" }] });
+  expect(r.status).toBe(200);
+  expect(((await r.json()) as { result: { groups: { groupNo: number; chapter: string; skill: string }[] } }).result.groups[0]?.groupNo).toBe(1);
+  expect(db.started[0]).toMatchObject({ kind: "plan", model: "claude-sonnet-5-5" });
+  expect(JSON.stringify(db.started[0])).not.toContain("studentId");
+});
+
+test("no make kind of this phase takes a student; the mock and the personal kinds still answer 501", async () => {
+  const db = fakeDb({ consent: false });
+  expect((await post(app(undefined, db), "/ai/make", sheet)).status).toBe(200);
+  expect((await post(app(undefined, db), "/ai/make", { ...sheet, studentId: "11111111-1111-1111-1111-111111111111" })).status).toBe(400);
+  expect((await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } })).status).toBe(501);
+  expect((await post(app(undefined, db), "/ai/make", { kind: "note", centreId, studentId: "11111111-1111-1111-1111-111111111111", studentName: "Dev", tutorName: "Meera", language: "en", week: { taught: [], right: [], practise: [], coming: [] } })).status).toBe(501);
 });

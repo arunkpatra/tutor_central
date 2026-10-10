@@ -175,10 +175,11 @@ export const MakeInput = z.discriminatedUnion("kind", [
     groupNo: z.number().int().min(1).max(9).optional(),
     /** Make it again: one of the menu's words or the tutor's own, in the prompt (P10-Sheet-Regenerate). */
     reason: z.string().min(1).max(200).optional(),
-  }),
-  z.object({ ...V2, kind: z.literal("worked_example"), classLevel: ClassLevel, subject: Subject, skill: Name }),
-  z.object({ ...V2, kind: z.literal("figure"), figure: FigureKind, classLevel: ClassLevel, subject: Subject, skill: Name }),
-  z.object({ ...V2, kind: z.literal("brief"), classLevel: ClassLevel, subject: Subject, chapter: Name }),
+  }).strict(),
+  // The plan's group material is strict: a body that names a student is a 400 (D62; nothing personal is made here).
+  z.object({ ...V2, kind: z.literal("worked_example"), classLevel: ClassLevel, subject: Subject, skill: Name }).strict(),
+  z.object({ ...V2, kind: z.literal("figure"), figure: FigureKind, classLevel: ClassLevel, subject: Subject, skill: Name }).strict(),
+  z.object({ ...V2, kind: z.literal("brief"), classLevel: ClassLevel, subject: Subject, chapter: Name }).strict(),
   z.object({ ...V2, kind: z.literal("check"), classLevel: ClassLevel, subject: Subject, skills: Skills.min(1).max(3) }),
   z.object({ ...V2, kind: z.literal("placement"), classLevel: ClassLevel, subject: Subject, chapters: z.array(Name).min(1).max(30) }),
   z.object({
