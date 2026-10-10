@@ -173,4 +173,13 @@ struct PendingChangesTests {
         let back = try JSONDecoder().decode(QueuedChange.self, from: JSONEncoder().encode(change))
         #expect(back == change)
     }
+
+    @Test func aCloseWithNoChecksLeavesTheCountOut() throws {
+        let close = try SessionClose(classID: UUID(), date: day(7), marks: [:], checks: [], homework: [], track: [:])
+        let change = QueuedChange(
+            kind: .close(close: close, className: "Class 8 Science", present: 2, total: 3),
+            madeAt: FakeClock.oct7at1832
+        )
+        #expect(change.line(calendar: calendar) == "Wed 7 Oct · 2 of 3 came · 18:32")
+    }
 }

@@ -111,8 +111,14 @@ extension TodayStore {
         return Hero(
             kind: .closed, eyebrow: "\(classroom.name) · \(when)",
             accent: false, title: "\(session.presentCount) of \(session.marks.count) came", titleMark: true,
-            line: parts.isEmpty ? timeAndMembers(classroom) : parts.joined(separator: " · "), classID: classroom.id
+            line: parts.isEmpty ? timeAndMembers(classroom) : Self.sentence(parts.joined(separator: " · ")),
+            classID: classroom.id
         )
+    }
+
+    /// The line as a sentence: its first letter capital ("Homework given to 2 · Dev absent").
+    static func sentence(_ text: String) -> String {
+        text.prefix(1).uppercased() + text.dropFirst()
     }
 
     /// "Nikhil absent", "Nikhil and Dev absent", "3 absent".

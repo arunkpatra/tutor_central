@@ -71,8 +71,13 @@ public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
         case let .absenceLog(_, _, about):
             return "\(about.shortWeekdayText) · WhatsApp opened at \(made)"
         case let .close(close, _, present, total):
-            let checks = close.checks.count == 1 ? "1 check" : "\(close.checks.count) checks"
-            return "\(close.date.shortWeekdayText) · \(present) of \(total) came · \(checks) · \(made)"
+            let checks: String? = switch close.checks.count {
+            case 0: nil
+            case 1: "1 check"
+            default: "\(close.checks.count) checks"
+            }
+            return [close.date.shortWeekdayText, "\(present) of \(total) came", checks, made].compactMap(\.self)
+                .joined(separator: " · ")
         }
     }
 

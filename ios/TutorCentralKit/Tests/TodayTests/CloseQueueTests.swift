@@ -95,6 +95,7 @@ import Testing
         await today.load()
         let hero = try #require(today.hero)
         #expect(hero.kind == .closed && hero.eyebrow == "Evening batch · saved on this iPhone")
+        #expect(hero.line == "Homework given to 5")
     }
 
     @Test func theStudentsShowAtOnceWhileTheReadsWait() async throws {
