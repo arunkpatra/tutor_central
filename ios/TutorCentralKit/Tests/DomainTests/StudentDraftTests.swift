@@ -55,4 +55,58 @@ struct StudentDraftTests {
         #expect(draft.parentName == "Parent" && draft.parentDigits == "9799113211" && draft.gender == .female && draft
             .notes == "Board exam in March.")
     }
+
+    @Test func aNewStudentNeedsAClassAndAnEditDoesNot() {
+        var draft = StudentDraft()
+        draft.name = "Riya Sharma"
+        #expect(draft.problems(today: today, requiresClass: true) == [.classMissing])
+        #expect(StudentDraft.Problem.classMissing.message == "Choose the student's class.")
+        #expect(draft.problems(today: today) == [])
+        draft.classLevel = .five
+        #expect(draft.problems(today: today, requiresClass: true) == [])
+    }
+
+    @Test func editingAStudentWithoutAClassSaves() {
+        let v1 = Student(
+            id: UUID(),
+            name: "Bir Bikram Singh",
+            classID: nil,
+            monthlyFee: nil,
+            parentName: nil,
+            parentPhone: nil,
+            dateOfBirth: nil,
+            gender: nil,
+            notes: nil,
+            archivedAt: nil,
+            thisMonth: nil
+        )
+        let draft = StudentDraft(v1)
+        #expect(draft.classLevel == nil && draft.messageLanguage == .english)
+        #expect(draft.isValid(today: today))
+    }
+
+    @Test func theDraftCarriesTheV2Fields() {
+        var student = Student(
+            id: UUID(),
+            name: "Hemanth Reddy",
+            classID: nil,
+            monthlyFee: nil,
+            parentName: nil,
+            parentPhone: nil,
+            dateOfBirth: nil,
+            gender: nil,
+            notes: nil,
+            archivedAt: nil,
+            thisMonth: nil,
+            classLevel: .ten,
+            schoolID: UUID(),
+            board: .cbse,
+            messageLanguage: .kannada
+        )
+        student.trackStatus = .watch
+        let draft = StudentDraft(student)
+        #expect(draft.classLevel == .ten && draft.board == .cbse && draft.messageLanguage == .kannada && draft
+            .schoolID == student.schoolID)
+        #expect(student.classTitle == "Class 10" && student.showsBoard)
+    }
 }

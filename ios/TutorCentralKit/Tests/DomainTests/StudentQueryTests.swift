@@ -87,4 +87,24 @@ struct StudentQueryTests {
         let none = StudentQuery.apply(students, classes: [maths, science], search: "", filter: .all, sort: .name)
         #expect(!names(none).contains("Old Student"))
     }
+
+    @Test func theStatusSortPutsThoseWhoNeedTheTutorFirstThenByName() {
+        func make(_ name: String, _ status: TrackStatus) -> Student {
+            var student = StudentTests.student(name)
+            student.trackStatus = status
+            return student
+        }
+        let sorted = StudentQuery.apply(
+            [
+                make("Zoya", .onTrack),
+                make("Riya", .notKnown),
+                make("Hemanth", .watch),
+                make("Dev", .notOnTrack),
+                make("Ananya", .watch),
+            ],
+            classes: [], search: "", filter: .all, sort: .status
+        )
+        #expect(sorted.map(\.name) == ["Dev", "Ananya", "Hemanth", "Zoya", "Riya"])
+        #expect(StudentSort.status.label == "Status" && StudentSort.allCases.first == .status)
+    }
 }

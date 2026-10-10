@@ -11,6 +11,11 @@ public struct StudentDraft: Hashable, Sendable {
     public var dateOfBirth: Day?
     public var gender: Gender?
     public var notes = ""
+    // V2: the class, school, board (from class 8) and the parent's message language.
+    public var classLevel: ClassLevel?
+    public var schoolID: UUID?
+    public var board: Board?
+    public var messageLanguage: MessageLanguage = .default
 
     public static let nameLimit = 80
     public static let notesLimit = 2000
@@ -19,6 +24,7 @@ public struct StudentDraft: Hashable, Sendable {
 
     public enum Problem: Hashable, Sendable {
         case nameMissing, nameTooLong, parentNameTooLong, feeTooHigh, phoneInvalid, notesTooLong, birthDateOut
+        case classMissing
 
         public var message: String {
             switch self {
@@ -29,6 +35,7 @@ public struct StudentDraft: Hashable, Sendable {
             case .phoneInvalid: PhoneNumber.invalidMessage
             case .notesTooLong: "Keep the notes under 2,000 characters."
             case .birthDateOut: "Check the date of birth."
+            case .classMissing: "Choose the student's class."
             }
         }
     }
@@ -44,6 +51,10 @@ public struct StudentDraft: Hashable, Sendable {
         dateOfBirth = student.dateOfBirth
         gender = student.gender
         notes = student.notes ?? ""
+        classLevel = student.classLevel
+        schoolID = student.schoolID
+        board = student.board
+        messageLanguage = student.messageLanguage
     }
 
     public var trimmedName: String {
@@ -62,8 +73,13 @@ public struct StudentDraft: Hashable, Sendable {
         PhoneNumber(indianDigits: parentDigits)
     }
 
-    public func problems(today: Day) -> Set<Problem> {
+    /// `requiresClass` is New student's rule (plan decision 5): a student edited from V1, or fixed from a scanned
+    /// register, saves without a class.
+    public func problems(today: Day, requiresClass: Bool = false) -> Set<Problem> {
         var found = Set<Problem>()
+        if requiresClass, classLevel == nil {
+            found.insert(.classMissing)
+        }
         if trimmedName.isEmpty {
             found.insert(.nameMissing)
         }
@@ -90,8 +106,8 @@ public struct StudentDraft: Hashable, Sendable {
         return found
     }
 
-    public func isValid(today: Day) -> Bool {
-        problems(today: today).isEmpty
+    public func isValid(today: Day, requiresClass: Bool = false) -> Bool {
+        problems(today: today, requiresClass: requiresClass).isEmpty
     }
 
     private static func nilIfEmpty(_ text: String) -> String? {

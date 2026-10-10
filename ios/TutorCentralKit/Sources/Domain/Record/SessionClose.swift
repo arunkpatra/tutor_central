@@ -1,10 +1,10 @@
-import Domain
 import Foundation
 
 /// The close of a class (docs/spec-v2.md section 6): who came, the checks tapped, the homework given and each student's
-/// tracking status, written in one call by `close_session` (migration 0010). Attendance alone is a close.
-public struct SessionClose: Hashable, Sendable {
-    public struct Check: Hashable, Sendable {
+/// tracking status and the skill states that moved, written in one call by `close_session` (migrations 0010, 0017).
+/// Attendance alone is a close. `Codable`, so a close made offline waits in the queue (plan decision 18).
+public struct SessionClose: Hashable, Sendable, Codable {
+    public struct Check: Hashable, Sendable, Codable {
         public let studentID: UUID
         public let skillID: UUID
         public let question: String
@@ -21,7 +21,7 @@ public struct SessionClose: Hashable, Sendable {
         }
     }
 
-    public struct Homework: Hashable, Sendable {
+    public struct Homework: Hashable, Sendable, Codable {
         public let studentID: UUID
         /// The sheet given; none when the close runs without a plan.
         public let artefactID: UUID?
@@ -32,7 +32,7 @@ public struct SessionClose: Hashable, Sendable {
         }
     }
 
-    public struct Track: Hashable, Sendable {
+    public struct Track: Hashable, Sendable, Codable {
         public let status: TrackStatus
         public let reasons: [String]
 
@@ -48,6 +48,7 @@ public struct SessionClose: Hashable, Sendable {
     public let checks: [Check]
     public let homework: [Homework]
     public let track: [UUID: Track]
+    public let states: [SkillStateChange]
 
     public init(
         classID: UUID?,
@@ -55,7 +56,8 @@ public struct SessionClose: Hashable, Sendable {
         marks: [UUID: AttendanceStatus],
         checks: [Check],
         homework: [Homework],
-        track: [UUID: Track]
+        track: [UUID: Track],
+        states: [SkillStateChange] = []
     ) {
         self.classID = classID
         self.date = date
@@ -63,5 +65,6 @@ public struct SessionClose: Hashable, Sendable {
         self.checks = checks
         self.homework = homework
         self.track = track
+        self.states = states
     }
 }

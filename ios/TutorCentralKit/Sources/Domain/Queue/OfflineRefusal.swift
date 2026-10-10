@@ -6,12 +6,15 @@ public enum OfflineRefusal {
     public enum Write: CaseIterable, Sendable {
         case addStudent, editStudent, addClass, editClass, addEvent, editEvent, addTask, editTask, editPayments
         case generateFees, waiveFee, remind, note
+        case consent, textbook, placement, homeworkStatus, addChapter
     }
 
     public static func words(for write: Write) -> String {
         switch write {
         case .remind: "You're offline. Reminders need a connection to be noted on the fee."
         case .generateFees: "You're offline. Creating the month's fees needs a connection; nothing was created."
+        case .placement: "You're offline. The placement's questions need a connection."
+        case .homeworkStatus: "You're offline. Marking homework needs a connection; nothing was changed."
         default: "You're offline. \(action(write)) needs a connection; nothing was saved."
         }
     }
@@ -20,7 +23,8 @@ public enum OfflineRefusal {
         .addStudent: "Adding a student", .editStudent: "Editing a student", .addClass: "Adding a class",
         .editClass: "Editing a class", .addEvent: "Adding an event", .editEvent: "Editing an event",
         .addTask: "Adding a task", .editTask: "Changing a task", .editPayments: "Changing payment details",
-        .waiveFee: "Waiving a fee", .note: "Adding a note",
+        .waiveFee: "Waiving a fee", .note: "Adding a note", .consent: "Recording consent",
+        .textbook: "Reading a contents page", .addChapter: "Adding a chapter",
     ]
 
     private static func action(_ write: Write) -> String {

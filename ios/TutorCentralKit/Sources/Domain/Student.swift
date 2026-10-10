@@ -14,10 +14,24 @@ public struct Student: Hashable, Sendable, Identifiable, Codable {
     public var notes: String?
     public var archivedAt: Date?
     public var thisMonth: MonthFee?
+    // V2 (migration 0009): the record. A V1 student has none of these set.
+    public var classLevel: ClassLevel?
+    public var schoolID: UUID?
+    /// Kept from class 8 (`ClassLevel.expectsBoard`).
+    public var board: Board?
+    public var messageLanguage: MessageLanguage
+    public var consent: ConsentRecord?
+    public var trackStatus: TrackStatus
+    /// The fired rules' sentences, stored at the close (`TrackingRules`).
+    public var trackReasons: [String]
+    public var trackSince: Date?
 
     public init(
         id: UUID, name: String, classID: UUID?, monthlyFee: Money?, parentName: String?, parentPhone: PhoneNumber?,
-        dateOfBirth: Day?, gender: Gender?, notes: String?, archivedAt: Date?, thisMonth: MonthFee?
+        dateOfBirth: Day?, gender: Gender?, notes: String?, archivedAt: Date?, thisMonth: MonthFee?,
+        classLevel: ClassLevel? = nil, schoolID: UUID? = nil, board: Board? = nil,
+        messageLanguage: MessageLanguage = .default, consent: ConsentRecord? = nil,
+        trackStatus: TrackStatus = .notKnown, trackReasons: [String] = [], trackSince: Date? = nil
     ) {
         self.id = id
         self.name = name
@@ -30,6 +44,55 @@ public struct Student: Hashable, Sendable, Identifiable, Codable {
         self.notes = notes
         self.archivedAt = archivedAt
         self.thisMonth = thisMonth
+        self.classLevel = classLevel
+        self.schoolID = schoolID
+        self.board = board
+        self.messageLanguage = messageLanguage
+        self.consent = consent
+        self.trackStatus = trackStatus
+        self.trackReasons = trackReasons
+        self.trackSince = trackSince
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, classID, monthlyFee, parentName, parentPhone, dateOfBirth, gender, notes, archivedAt, thisMonth
+        case classLevel, schoolID, board, messageLanguage, consent, trackStatus, trackReasons, trackSince
+    }
+
+    /// A register cached by a build before V2 has none of the V2 keys: they read as a V1 student's.
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        try self.init(
+            id: c.decode(UUID.self, forKey: .id),
+            name: c.decode(String.self, forKey: .name),
+            classID: c.decodeIfPresent(UUID.self, forKey: .classID),
+            monthlyFee: c.decodeIfPresent(Money.self, forKey: .monthlyFee),
+            parentName: c.decodeIfPresent(String.self, forKey: .parentName),
+            parentPhone: c.decodeIfPresent(PhoneNumber.self, forKey: .parentPhone),
+            dateOfBirth: c.decodeIfPresent(Day.self, forKey: .dateOfBirth),
+            gender: c.decodeIfPresent(Gender.self, forKey: .gender),
+            notes: c.decodeIfPresent(String.self, forKey: .notes),
+            archivedAt: c.decodeIfPresent(Date.self, forKey: .archivedAt),
+            thisMonth: c.decodeIfPresent(MonthFee.self, forKey: .thisMonth),
+            classLevel: c.decodeIfPresent(ClassLevel.self, forKey: .classLevel),
+            schoolID: c.decodeIfPresent(UUID.self, forKey: .schoolID),
+            board: c.decodeIfPresent(Board.self, forKey: .board),
+            messageLanguage: c.decodeIfPresent(MessageLanguage.self, forKey: .messageLanguage) ?? .default,
+            consent: c.decodeIfPresent(ConsentRecord.self, forKey: .consent),
+            trackStatus: c.decodeIfPresent(TrackStatus.self, forKey: .trackStatus) ?? .notKnown,
+            trackReasons: c.decodeIfPresent([String].self, forKey: .trackReasons) ?? [],
+            trackSince: c.decodeIfPresent(Date.self, forKey: .trackSince)
+        )
+    }
+
+    /// "Class 10", "LKG"; nil for a student without a class level.
+    public var classTitle: String? {
+        classLevel?.title
+    }
+
+    /// The Board row and chip show from class 8.
+    public var showsBoard: Bool {
+        classLevel?.expectsBoard == true
     }
 
     public var isArchived: Bool {

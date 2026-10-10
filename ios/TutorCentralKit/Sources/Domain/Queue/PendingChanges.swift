@@ -1,8 +1,8 @@
 import Foundation
 
 /// The changes waiting on this iPhone, in the order they were made (D39). Last write wins on the phone too: a second
-/// attendance save of the same class and day, or a second Mark paid of the same invoice, replaces the first in its
-/// place.
+/// attendance save of the same class and day, a second close of the same class and day, or a second Mark paid of the
+/// same invoice, replaces the first in its place. A close and an attendance save of the same day keep their own rows.
 public struct PendingChanges: Hashable, Sendable, Codable {
     public private(set) var changes: [QueuedChange] = []
 
@@ -80,6 +80,8 @@ public struct PendingChanges: Hashable, Sendable, Codable {
         switch (lhs, rhs) {
         case let (.attendance(leftClass, _, leftDate, _, _, _), .attendance(rightClass, _, rightDate, _, _, _)):
             leftClass == rightClass && leftDate == rightDate
+        case let (.close(left, _, _, _), .close(right, _, _, _)):
+            left.classID == right.classID && left.date == right.date
         case let (.markPaid(leftInvoice, _, _, _, _, _), .markPaid(rightInvoice, _, _, _, _, _)):
             leftInvoice == rightInvoice
         default:

@@ -64,4 +64,18 @@ import Testing
             .waitingCount == 0)
         #expect(store.canSend && !store.sending)
     }
+
+    @Test func aWaitingCloseReadsAsTheBoardsRowAndSaysWhatDiscardLoses() throws {
+        let (queue, store) = try make()
+        let day = try #require(Day(year: 2026, month: 10, day: 7))
+        let close = SessionClose(classID: UUID(), date: day, marks: [:], checks: [], homework: [], track: [:])
+        queue.add(QueuedChange(
+            kind: .close(close: close, className: "Evening batch", present: 4, total: 5),
+            madeAt: Date()
+        ))
+        let row = try #require(store.rows.last)
+        #expect(row.title == "Class closed · Evening batch")
+        let words = "Attendance for Evening batch on Wed 7 Oct stays as it was."
+        #expect(store.discardWords(for: row.id) == "\(words) The checks and homework you marked here are lost.")
+    }
 }

@@ -2,11 +2,12 @@ import Foundation
 
 /// A queued change's kind without its values: whether a new write of that kind must join the queue.
 public enum QueuedChangeCase: Hashable, Sendable {
-    case attendance, markPaid, absenceLog
+    case attendance, markPaid, absenceLog, close
 }
 
-/// A write made on this iPhone while offline (D39), waiting to reach the server: an attendance save, a Mark paid, or
-/// the absence alert's log. It carries what the write needs and the names its row on Pending changes reads.
+/// A write made on this iPhone while offline (D39), waiting to reach the server: an attendance save, a Mark paid, the
+/// absence alert's log, or a class's close (plan decision 18). It carries what the write needs and the names its row on
+/// Pending changes reads.
 public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
     public enum Kind: Hashable, Sendable, Codable {
         case attendance(
@@ -17,6 +18,7 @@ public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
             paidAt: Date
         )
         case absenceLog(studentID: UUID, studentName: String, about: Day)
+        case close(close: SessionClose, className: String, present: Int, total: Int)
 
         /// The kind without its values.
         public var `case`: QueuedChangeCase {
@@ -24,6 +26,7 @@ public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
             case .attendance: .attendance
             case .markPaid: .markPaid
             case .absenceLog: .absenceLog
+            case .close: .close
             }
         }
     }
@@ -45,12 +48,14 @@ public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
         self.state = state
     }
 
-    /// "Attendance · Class 10 Maths" / "Fee · Dev Kumar" / "Absence alert · Hemanth Reddy".
+    /// "Attendance · Class 10 Maths" / "Fee · Dev Kumar" / "Absence alert · Hemanth Reddy" / "Class closed · Evening
+    /// batch".
     public var title: String {
         switch kind {
         case let .attendance(_, className, _, _, _, _): "Attendance · \(className)"
         case let .markPaid(_, studentName, _, _, _, _): "Fee · \(studentName)"
         case let .absenceLog(_, studentName, _): "Absence alert · \(studentName)"
+        case let .close(_, className, _, _): "Class closed · \(className)"
         }
     }
 
@@ -65,15 +70,20 @@ public struct QueuedChange: Hashable, Sendable, Codable, Identifiable {
             return "\(amount.formatted) by \(method.label) on \(Day(paidAt, calendar: calendar).shortText) · \(made)"
         case let .absenceLog(_, _, about):
             return "\(about.shortWeekdayText) · WhatsApp opened at \(made)"
+        case let .close(close, _, present, total):
+            let checks = close.checks.count == 1 ? "1 check" : "\(close.checks.count) checks"
+            return "\(close.date.shortWeekdayText) · \(present) of \(total) came · \(checks) · \(made)"
         }
     }
 
-    /// For the sign-out dialog: "attendance for Class 10 Maths", "Dev's fee", "Hemanth's absence alert".
+    /// For the sign-out dialog: "attendance for Class 10 Maths", "Dev's fee", "Hemanth's absence alert", "the close of
+    /// Evening batch".
     public var shortName: String {
         switch kind {
         case let .attendance(_, className, _, _, _, _): "attendance for \(className)"
         case let .markPaid(_, studentName, _, _, _, _): "\(Self.firstName(studentName))'s fee"
         case let .absenceLog(_, studentName, _): "\(Self.firstName(studentName))'s absence alert"
+        case let .close(_, className, _, _): "the close of \(className)"
         }
     }
 
