@@ -64,9 +64,14 @@ struct CloseStudentCard: View {
         switch student.checks {
         case .loading:
             eyebrow("Check · 3 questions")
-            ProgressView()
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, Tokens.rowPaddingDense)
+            HStack(spacing: Tokens.inline) {
+                RingSpinner()
+                Text(CloseStore.makingWords).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.horizontal, Tokens.rowPaddingHorizontal)
+            .padding(.vertical, Tokens.rowPaddingDense)
         case let .rows(rows):
             eyebrow(rows.count == 1 ? "Check · 1 question" : "Check · \(rows.count) questions")
             ForEach(rows.indices, id: \.self) { row in
@@ -82,7 +87,7 @@ struct CloseStudentCard: View {
                 placementRows(subjects[subject], at: subject)
             }
         case .none:
-            line("No book yet, so no checks. Add one from \(student.firstName)'s page.")
+            line(CloseStore.noBookWords(firstName: student.firstName))
         case .skipped:
             EmptyView()
         case let .failed(words):
@@ -92,7 +97,7 @@ struct CloseStudentCard: View {
 
     @ViewBuilder private func placementRows(_ subject: PlacementSubject, at position: Int) -> some View {
         if let failure = subject.failure {
-            failed("\(subject.title): \(failure)")
+            failed("\(subject.title): \(failure)", eyebrowed: false)
         } else {
             ForEach(subject.rows.indices, id: \.self) { row in
                 CheckRow(
@@ -128,28 +133,35 @@ struct CloseStudentCard: View {
             .padding(.top, Tokens.rowGapInner)
     }
 
+    /// No book (P12-Close-Cards): one `body` `text2` line, no eyebrow.
     private func line(_ text: String) -> some View {
         Text(text)
-            .typeStyle(Tokens.footnote)
+            .typeStyle(Tokens.body)
             .foregroundStyle(Tokens.text2.color)
             .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Tokens.rowPaddingHorizontal)
-            .padding(.bottom, Tokens.rowPaddingDense)
+            .padding(.vertical, Tokens.rowPaddingDense)
     }
 
-    /// The checks could not be made: the words in place with Try again; attendance and homework still close.
-    private func failed(_ words: String) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: Tokens.inline) {
-            Label(words, systemImage: "exclamationmark.circle")
-                .labelStyle(InlineLabelStyle())
-                .typeStyle(Tokens.footnote)
-                .foregroundStyle(Tokens.text2.color)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Button("Try again") { Task { await store.retryChecks(for: index) } }
-                .buttonStyle(.quiet(emphasised: true))
+    /// The checks could not be made (P12-Close-Cards): the eyebrow, the words in place with the quiet Try again;
+    /// attendance and homework still close.
+    private func failed(_ words: String, eyebrowed: Bool = true) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if eyebrowed {
+                eyebrow("Check · 3 questions")
+            }
+            HStack(alignment: .firstTextBaseline, spacing: Tokens.inline) {
+                Text(words)
+                    .typeStyle(Tokens.body)
+                    .foregroundStyle(Tokens.text2.color)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Button("Try again") { Task { await store.retryChecks(for: index) } }
+                    .buttonStyle(.quiet)
+            }
+            .padding(.horizontal, Tokens.rowPaddingHorizontal)
+            .padding(.vertical, Tokens.rowPaddingDense)
         }
-        .padding(.horizontal, Tokens.rowPaddingHorizontal)
-        .padding(.bottom, Tokens.rowPaddingDense)
     }
 }

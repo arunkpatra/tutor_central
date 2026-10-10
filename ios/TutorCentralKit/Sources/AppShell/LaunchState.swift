@@ -134,6 +134,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case close
     case closeScrolled = "close-scrolled"
     case closePlacement = "close-placement"
+    /// The close card's three states (P12-Close-Cards): Dev's checks being made, Bir with no book, Riya offline.
+    case closeCards = "close-cards"
     case more
     case feesEmpty = "fees-empty"
     case fees

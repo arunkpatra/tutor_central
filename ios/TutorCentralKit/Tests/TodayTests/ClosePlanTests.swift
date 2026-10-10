@@ -153,3 +153,23 @@ import Testing
         #expect(close.done.count == 3)
     }
 }
+
+/// The approved board's sentences (components.md "Phase 12 parts"), copied here so the build is held to them.
+enum P12Words {
+    static let closeMaking = "Making the three questions. A second or two."
+    static let closeOffline = "You're offline. The checks need a connection; mark attendance and homework, and Done "
+        + "still closes."
+
+    static func closeNoBook(_ firstName: String) -> String {
+        "No book yet, so no checks. Add one from \(firstName)'s page."
+    }
+}
+
+/// The close card's three states (P12-Close-Cards; U37, U38).
+struct CloseCardWordsTests {
+    @Test func theCardStatesWordsAreTheBoards() {
+        #expect(CloseStore.offlineWords == P12Words.closeOffline)
+        #expect(CloseStore.noBookWords(firstName: "Bir") == P12Words.closeNoBook("Bir"))
+        #expect(CloseStore.makingWords == P12Words.closeMaking)
+    }
+}

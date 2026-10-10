@@ -6,8 +6,15 @@ import Foundation
 /// student with nothing taught yet, made for every student at once.
 extension CloseStore {
     /// The words in place when the checks need the network (plan Task 22): attendance and homework still close.
-    static let offlineWords = "You're offline. The checks need a connection; mark attendance and homework, and Done "
-        + "still closes."
+    nonisolated static let offlineWords = "You're offline. The checks need a connection; mark attendance and "
+        + "homework, and Done still closes."
+    /// While the checks are made (P12-Close-Cards, U38).
+    nonisolated static let makingWords = "Making the three questions. A second or two."
+
+    /// A student with no book (P12-Close-Cards, U37).
+    nonisolated static func noBookWords(firstName: String) -> String {
+        "No book yet, so no checks. Add one from \(firstName)'s page."
+    }
 
     func makeChecks(_ indices: [Int]) async {
         let ids = indices.compactMap { students.indices.contains($0) ? students[$0].id : nil }

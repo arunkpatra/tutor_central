@@ -78,4 +78,14 @@ import Testing
         let words = "Attendance for Evening batch on Wed 7 Oct stays as it was."
         #expect(store.discardWords(for: row.id) == "\(words) The checks and homework you marked here are lost.")
     }
+
+    @Test func aWaitingCloseWearsItsOwnSymbol() throws {
+        let day = try #require(Day(year: 2026, month: 10, day: 7))
+        let close = SessionClose(classID: UUID(), date: day, marks: [:], checks: [], homework: [], track: [:])
+        #expect(PendingChangesView.symbol(.close(close: close, className: "Evening batch", present: 4, total: 5))
+            == "checklist")
+        #expect(PendingChangesView.symbol(.attendance(
+            classID: nil, className: "x", date: day, marks: [:], present: 0, total: 0
+        )) == "checkmark.circle")
+    }
 }

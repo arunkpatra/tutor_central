@@ -59,3 +59,27 @@ public struct RefreshSpinner: View {
             .accessibilityLabel("Refreshing")
     }
 }
+
+/// The close card's wait (P12-Close-Cards): a 16 pt ring in `lineStrong` with a quarter arc in `text3` turning once a
+/// `breathe`; still under Reduce Motion.
+public struct RingSpinner: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var turning = false
+
+    public init() {}
+
+    public var body: some View {
+        ZStack {
+            Circle().stroke(Tokens.lineStrong.color, lineWidth: Tokens.hairline * 2)
+            Circle().trim(from: 0, to: 0.25)
+                .stroke(Tokens.text3.color, style: StrokeStyle(lineWidth: Tokens.hairline * 2, lineCap: .round))
+                .rotationEffect(.degrees(turning ? 360 : 0))
+        }
+        .frame(width: Tokens.iconInline, height: Tokens.iconInline)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.linear(duration: Tokens.breathe / 2).repeatForever(autoreverses: false)) { turning = true }
+        }
+        .accessibilityHidden(true)
+    }
+}

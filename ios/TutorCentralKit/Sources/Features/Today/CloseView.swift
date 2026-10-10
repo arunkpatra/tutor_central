@@ -7,6 +7,8 @@ import SwiftUI
 public enum CloseBoardState: Sendable {
     case scrolled
     case placement
+    /// P12-Close-Cards: scrolled to the students.
+    case cards
 }
 
 /// The close (P10-Close, -Scrolled, -Placement): the batch and its day, the plan's checklist per group (the quiet Plan
@@ -19,6 +21,8 @@ public struct CloseView: View {
     let onMessage: (String) -> Void
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
+
+    static let studentsID = "students"
 
     public init(store: CloseStore, boardState: CloseBoardState? = nil, onMessage: @escaping (String) -> Void) {
         _store = State(initialValue: store)
@@ -58,7 +62,7 @@ public struct CloseView: View {
                         }
                     }
                     VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                        SectionHeader("Students")
+                        SectionHeader("Students").id(Self.studentsID)
                         ForEach(store.students.indices, id: \.self) { index in
                             CloseStudentCard(store: store, index: index).id(store.students[index].id)
                         }
@@ -79,6 +83,12 @@ public struct CloseView: View {
                     await store.load()
                 }
                 await setUpBoard(proxy)
+            }
+            .task {
+                // P12-Close-Cards: its checks are still being made, so the load never ends; scroll on our own.
+                guard boardState == .cards else { return }
+                try? await Task.sleep(for: .seconds(Tokens.panel))
+                proxy.scrollTo(Self.studentsID, anchor: .top)
             }
             .onChange(of: store.message) { _, message in
                 guard let message else { return }
@@ -135,6 +145,8 @@ public struct CloseView: View {
             store.tap(dev, 2, right: true)
             try? await Task.sleep(for: .seconds(Tokens.panel))
             proxy.scrollTo(store.students[dev].id, anchor: .top)
+        case .cards:
+            break
         case .placement:
             guard let riya = store.students.firstIndex(where: { $0.firstName == "Riya" }) else { return }
             store.tapPlacement(riya, subject: 0, row: 0, right: true)

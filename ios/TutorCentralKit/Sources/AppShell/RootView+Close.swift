@@ -38,6 +38,7 @@ extension RootView {
         switch state {
         case .closeScrolled: .scrolled
         case .closePlacement: .placement
+        case .closeCards: .cards
         default: nil
         }
     }
