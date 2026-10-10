@@ -352,3 +352,154 @@ test("photo paths with the centre's id in capitals reach the centre's folder, an
   expect((await a.storage.from("photos").upload(path, bytes, { upsert: true })).error).not.toBeNull();
   expect((await a.storage.from("photos").remove([path])).error).toBeNull();
 });
+
+async function bookFor(school: string, classLevel: string, subject: string, chapters: unknown[]) {
+  return (
+    await a
+      .from("textbooks")
+      .insert({ centre_id: centre, school_id: school, class_level: classLevel, subject, title: `${subject} ${classLevel}`, chapters })
+      .select("id")
+      .single()
+  ).data!.id as string;
+}
+async function studentIn(school: string | null, classLevel: string | null, name: string) {
+  return (await a.from("students").insert({ centre_id: centre, name, class_level: classLevel, school_id: school }).select("id").single()).data!.id as string;
+}
+const two = [
+  { position: 1, name: "Fractions", skills: ["Compare fractions", "Add like fractions"] },
+  { position: 2, name: "Decimals", skills: ["Read decimals"] },
+];
+
+test("copy_textbook_to_class copies the book to every student of that school and class and to no one else", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Copy School" }).select("id").single()).data!.id;
+  const book = await bookFor(school, "6", "Mathematics", two);
+  const s1 = await studentIn(school, "6", "C1");
+  const s2 = await studentIn(school, "6", "C2");
+  const other = await studentIn(school, "7", "C3");
+  const { data, error } = await a.rpc("copy_textbook_to_class", { p_centre: centre, p_textbook: book });
+  expect(error).toBeNull();
+  expect(data).toBe(2);
+  for (const s of [s1, s2]) expect((await a.from("chapters").select("id").eq("student_id", s)).data).toHaveLength(2);
+  expect((await a.from("chapters").select("id").eq("student_id", other)).data).toHaveLength(0);
+  const twice = await a.rpc("copy_textbook_to_class", { p_centre: centre, p_textbook: book });
+  expect(twice.data).toBe(2);
+  expect((await a.from("skills").select("id").eq("student_id", s1)).data).toHaveLength(3);
+});
+
+test("copy_textbooks_to_student gives a student who joins later every book of their school and class", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Later School" }).select("id").single()).data!.id;
+  await bookFor(school, "6", "Mathematics", two);
+  await bookFor(school, "6", "Science", [{ position: 1, name: "Food", skills: ["Sources of food"] }]);
+  await bookFor(school, "7", "Mathematics", two);
+  const late = await studentIn(school, "6", "Late Joiner");
+  const { data, error } = await a.rpc("copy_textbooks_to_student", { p_centre: centre, p_student: late });
+  expect(error).toBeNull();
+  expect(data).toBe(2);
+  const subjects = (await a.from("chapters").select("subject").eq("student_id", late)).data!.map((c) => c.subject).sort();
+  expect(subjects).toEqual(["Mathematics", "Mathematics", "Science"]);
+  const none = await a.rpc("copy_textbooks_to_student", { p_centre: centre, p_student: await studentIn(null, "6", "No School") });
+  expect(none.data).toBe(0);
+});
+
+test("a recapture keeps a tutor's own chapter after the book's chapters", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Own School" }).select("id").single()).data!.id;
+  const book = await bookFor(school, "6", "Mathematics", two);
+  const s = await studentIn(school, "6", "Own Chapter");
+  await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  await a.from("chapters").insert({ centre_id: centre, student_id: s, subject: "Mathematics", position: 3, name: "Tutor's extra" });
+  const three = [...two, { position: 3, name: "Integers", skills: ["Order integers"] }];
+  await a.from("textbooks").update({ chapters: three }).eq("id", book);
+  const { error } = await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  expect(error).toBeNull();
+  const rows = (await a.from("chapters").select("position, name").eq("student_id", s).order("position")).data!;
+  expect(rows.map((r) => r.name)).toEqual(["Fractions", "Decimals", "Integers", "Tutor's extra"]);
+});
+
+test("close_session moves the skill states it is given and leaves the others", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "States School" }).select("id").single()).data!.id;
+  const book = await bookFor(school, "6", "Mathematics", two);
+  const s = await studentIn(school, "6", "States");
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "States batch" }).select("id").single()).data!.id;
+  await a.from("students").update({ class_id: cls }).eq("id", s);
+  await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  const skills = (await a.from("skills").select("id, name").eq("student_id", s).order("position")).data!;
+  const first = skills.find((k) => k.name === "Compare fractions")!.id;
+  const { data: sid, error } = await a.rpc("close_session", {
+    p_centre: centre, p_class: cls, p_date: "2026-10-07",
+    p_marks: { [s]: "present" },
+    p_checks: [{ student_id: s, skill_id: first, question: { text: "Which is bigger, 1/2 or 1/3?" }, correct: true }],
+    p_homework: [{ student_id: s }],
+    p_track: { [s]: { status: "on_track", reasons: [] } },
+    p_states: [{ skill_id: first, state: "practising" }],
+  });
+  expect(error).toBeNull();
+  expect(sid).toBeTruthy();
+  const after = (await a.from("skills").select("name, state, state_at").eq("student_id", s)).data!;
+  expect(after.find((k) => k.name === "Compare fractions")?.state).toBe("practising");
+  expect(after.find((k) => k.name === "Read decimals")?.state).toBe("not_started");
+  // The seven-argument call still works (the app's build 19 sends none).
+  const seven = await a.rpc("close_session", {
+    p_centre: centre, p_class: cls, p_date: "2026-10-08", p_marks: { [s]: "present" }, p_checks: [], p_homework: [], p_track: {},
+  });
+  expect(seven.error).toBeNull();
+});
+
+test("record_placement writes placement checks without a session, the states and the status; a non-member is refused", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Place School" }).select("id").single()).data!.id;
+  const book = await bookFor(school, "6", "Mathematics", two);
+  const s = await studentIn(school, "6", "Placed");
+  await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  const skills = (await a.from("skills").select("id, name").eq("student_id", s)).data!;
+  const id = (name: string) => skills.find((k) => k.name === name)!.id;
+  const { error } = await a.rpc("record_placement", {
+    p_centre: centre, p_student: s,
+    p_checks: [
+      { student_id: s, skill_id: id("Compare fractions"), question: { text: "Which is bigger?" }, correct: true, kind: "check" },
+      { student_id: s, skill_id: id("Read decimals"), question: { text: "Read 0.5" }, correct: false },
+    ],
+    p_states: [{ skill_id: id("Compare fractions"), state: "secure" }, { skill_id: id("Add like fractions"), state: "secure" }],
+    p_track: { status: "not_known", reasons: [] },
+  });
+  expect(error).toBeNull();
+  const checks = (await a.from("checks").select("kind, session_id, correct").eq("student_id", s)).data!;
+  expect(checks).toHaveLength(2);
+  expect(checks.every((c) => c.kind === "placement" && c.session_id === null)).toBe(true);
+  const states = (await a.from("skills").select("name, state").eq("student_id", s)).data!;
+  expect(states.filter((k) => k.state === "secure").map((k) => k.name).sort()).toEqual(["Add like fractions", "Compare fractions"]);
+  const row = (await a.from("students").select("track_status, tracked_at").eq("id", s).single()).data!;
+  expect(row.track_status).toBe("not_known");
+  expect(row.tracked_at).not.toBeNull();
+  const b = await userClient(l, `v2-placement-${stamp}@example.com`);
+  const refused = await b.rpc("record_placement", { p_centre: centre, p_student: s, p_checks: [], p_states: [], p_track: {} });
+  expect(refused.error?.code).toBe("42501");
+});
+
+test("deleting a student takes their chapters, skills, checks and homework with them", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Gone School" }).select("id").single()).data!.id;
+  const book = await bookFor(school, "6", "Mathematics", two);
+  const s = await studentIn(school, "6", "Gone");
+  await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  const skill = (await a.from("skills").select("id").eq("student_id", s).limit(1).single()).data!.id;
+  await a.rpc("record_placement", {
+    p_centre: centre, p_student: s, p_checks: [{ student_id: s, skill_id: skill, question: {}, correct: true }], p_states: [], p_track: {},
+  });
+  expect((await a.from("students").delete().eq("id", s)).error).toBeNull();
+  for (const table of ["chapters", "skills", "checks", "homework"]) {
+    expect((await a.from(table).select("id").eq("student_id", s)).data).toHaveLength(0);
+  }
+  expect((await a.from("textbooks").select("id").eq("id", book)).data).toHaveLength(1);
+});
+
+test("a recapture with fewer chapters moves a tutor's own chapter up behind the book's", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Shrink School" }).select("id").single()).data!.id;
+  const three = [...two, { position: 3, name: "Integers", skills: ["Order integers"] }];
+  const book = await bookFor(school, "6", "Mathematics", three);
+  const s = await studentIn(school, "6", "Shrink");
+  await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  await a.from("chapters").insert({ centre_id: centre, student_id: s, subject: "Mathematics", position: 4, name: "Tutor's extra" });
+  await a.from("textbooks").update({ chapters: [two[0]] }).eq("id", book);
+  const { error } = await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book, p_student: s });
+  expect(error).toBeNull();
+  const rows = (await a.from("chapters").select("position, name").eq("student_id", s).order("position")).data!;
+  expect(rows).toEqual([{ position: 1, name: "Fractions" }, { position: 2, name: "Tutor's extra" }]);
+});

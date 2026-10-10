@@ -38,6 +38,18 @@ insert into public.students (centre_id, class_id, name, monthly_fee, parent_name
   ('22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333331', 'Riya Sharma', 1500, 'Neha Sharma', '+919811122233'),
   ('22222222-2222-2222-2222-222222222222', null, 'Sahil Verma', 800, 'Deepak Verma', '+919900011122');
 
+-- V2 (Phase 11): one school and class levels for eight of the ten; Bir Bikram Singh and Lakshmi Menon stay as V1 made
+-- them, so a hand run always meets a student with no class level.
+insert into public.schools (id, centre_id, name, board) values
+  ('44444444-4444-4444-4444-444444444441', '22222222-2222-2222-2222-222222222222', 'Vidya Niketan', 'cbse');
+update public.students set class_level = '10', school_id = '44444444-4444-4444-4444-444444444441', board = 'cbse'
+ where centre_id = '22222222-2222-2222-2222-222222222222' and name in ('Hemanth Reddy', 'Akshita Rao', 'Ananya Iyer');
+update public.students set class_level = '8' where centre_id = '22222222-2222-2222-2222-222222222222'
+   and name in ('Dev Kumar', 'Meher Shah', 'Nikhil Das');
+update public.students set class_level = '5', school_id = '44444444-4444-4444-4444-444444444441'
+ where centre_id = '22222222-2222-2222-2222-222222222222' and name = 'Riya Sharma';
+update public.students set class_level = '2' where centre_id = '22222222-2222-2222-2222-222222222222' and name = 'Sahil Verma';
+
 -- This month's fees for everyone (what generate_fees would make), then six of them paid.
 insert into public.fee_invoices (centre_id, student_id, period, amount)
 select s.centre_id, s.id, date_trunc('month', current_date)::date, coalesce(s.monthly_fee, c.monthly_fee, 0)
