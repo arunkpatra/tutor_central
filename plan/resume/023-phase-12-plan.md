@@ -41,7 +41,7 @@ pull requests (one change each, screenshots per D7 for each board state), the la
 runs (the plan made on open, a regenerate, the close from a plan online and offline), the cost measurement for D64 (a
 twelve-student batch across three groups), the review focus (what a person meets that no happy path exercises: a batch with
 new students and no record, a student without consent, a plan made offline, a plan for a day with no batch, a regenerate
-that fails, a sheet with a figure). Decide small things in the plan and list them; ask the owner one question at a time
+that fails, a sheet with a figure). The phase also takes four polish rows (scope item 6: U35, U37, U38, U39); name the boards U37 and U39 need and get them approved on the canvas before their tasks, as Phase 0's steps did. Decide small things in the plan and list them; ask the owner one question at a time
 only for what is his. Then write `plan/resume/024-phase-12-build.md` for the build on Opus 5.5 and index both in
 `plan/resume/README.md`. Show the owner the plan before any build starts. Documents only, to `main` (D12).
 

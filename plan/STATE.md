@@ -96,7 +96,7 @@ the owner's iPhone from the internal group, fine (2026-10-10). The remote holds 
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
-- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34 to U39 open; U1 to U4, U6, U7, U9,
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34 open (U35, U37 to U39 taken into Phase 12 and U36 moved to Phase 13 by the owner, 2026-10-10); U1 to U4, U6, U7, U9,
   U12, U16, U24, U31, U33 done. Rows for screens V2 rebuilds are taken or closed as Phase 11 on touch those screens.
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
