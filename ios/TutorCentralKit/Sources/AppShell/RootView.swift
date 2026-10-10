@@ -285,7 +285,8 @@ public struct RootView: View {
             StudentDetailView(
                 store: StudentDetailStore(
                     id: id, register: register, attendance: deps.attendance, messages: deps.messages,
-                    textbooks: deps.textbooks, record: deps.record, now: deps.now
+                    textbooks: deps.textbooks, record: deps.record, now: deps.now,
+                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
                 ),
                 register: register,
                 actions: studentsActions,

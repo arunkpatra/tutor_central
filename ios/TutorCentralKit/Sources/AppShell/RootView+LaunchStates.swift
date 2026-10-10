@@ -18,7 +18,8 @@ extension RootView {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
-             .student, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder, .studentArchived,
+             .student, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder, .studentConsentAsk,
+             .studentConsentRecord, .studentConsentWaiting, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
@@ -156,7 +157,8 @@ extension RootView {
     private static func studentPageRoutes(for state: LaunchState) -> [Route]? {
         switch state {
         case .student, .studentRecord, .studentEnd: [.student(FakeStudentsRepository.hemanth)]
-        case .studentNotKnown: [.student(FakeStudentsRepository.riya)]
+        case .studentNotKnown, .studentConsentAsk, .studentConsentRecord, .studentConsentWaiting:
+            [.student(FakeStudentsRepository.riya)]
         case .studentLadder: [.student(FakeStudentsRepository.sahil)]
         default: nil
         }
@@ -202,6 +204,8 @@ extension RootView {
         case .studentEdit: .edit
         case .studentRecord: .record
         case .studentEnd: .end
+        case .studentConsentAsk: .consentAsk
+        case .studentConsentRecord: .consentRecord
         default: nil
         }
     }

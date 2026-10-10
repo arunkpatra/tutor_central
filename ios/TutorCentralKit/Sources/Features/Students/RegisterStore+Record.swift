@@ -71,3 +71,25 @@ extension RegisterStore {
         }
     }
 }
+
+public extension RegisterStore {
+    /// The parent's consent recorded or cleared (D62), shown at once and put back when refused; the failure's words, or
+    /// nil when it saved.
+    func setConsent(_ id: UUID, _ consent: ConsentRecord?) async -> String? {
+        guard let before = student(id) else { return "That student is no longer here." }
+        var optimistic = before
+        optimistic.consent = consent
+        replace(id, with: optimistic)
+        do {
+            var saved = try await studentsRepository.setConsent(id: id, consent)
+            saved.thisMonth = before.thisMonth
+            replace(id, with: saved)
+            succeeded()
+            return nil
+        } catch {
+            replace(id, with: before)
+            return TransportError.isOffline(error) ? OfflineRefusal.words(for: .consent)
+                : "Couldn't save \(before.firstName)'s consent. Check your connection and try again."
+        }
+    }
+}

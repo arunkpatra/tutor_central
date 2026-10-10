@@ -21,7 +21,7 @@ import Observation
     public internal(set) var schools: [School] = []
 
     let workspace: Workspace
-    private let studentsRepository: any StudentsRepository
+    let studentsRepository: any StudentsRepository
     let classesRepository: any ClassesRepository
     private let cache: RegisterCache?
     /// Where the parent's message language last chosen is kept (the form starts from it); nil keeps it in memory.

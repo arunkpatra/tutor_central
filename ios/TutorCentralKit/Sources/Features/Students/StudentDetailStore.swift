@@ -40,12 +40,18 @@ public enum FeeActionKind: Sendable {
     public internal(set) var recordLoaded = false
     /// A refused write's words for the system alert (U33); the view clears it.
     public var message: String?
+    /// Consent's section (D62).
+    public let consent: ConsentStore
 
     public init(
         id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository,
         textbooks: (any TextbooksRepository)? = nil, record: (any RecordRepository)? = nil,
-        now: @escaping @Sendable () -> Date = Date.init
+        now: @escaping @Sendable () -> Date = Date.init, online: @escaping @Sendable () async -> Bool = { true }
     ) {
+        consent = ConsentStore(
+            studentID: id, register: register, messages: messages, tutorName: register.workspace.profile.displayName,
+            centreName: register.workspace.centre.name, now: now, online: online
+        )
         self.id = id
         self.register = register
         self.attendance = attendance
@@ -79,6 +85,7 @@ public enum FeeActionKind: Sendable {
         async let sessionsRead = try? attendance.sessions(centre: centre, month: register.period)
         async let logsRead = try? messageLog.feeLogs(centre: centre, student: id)
         async let recordRead: Void = loadRecord()
+        async let consentRead: Void = consent.load()
         if let read = await sessionsRead {
             sessions = read
         }
@@ -86,6 +93,7 @@ public enum FeeActionKind: Sendable {
             feeLogs = read
         }
         await recordRead
+        await consentRead
     }
 
     /// "Reminded Tue 6 Oct" once a reminder about this month's fee was opened (the latest).
