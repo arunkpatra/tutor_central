@@ -37,6 +37,11 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
 - Photos are checked before any cost: magic bytes, round-trip base64, 3 MB decoded, six pages.
 - `test/entry.test.ts` spawns the entry with `--no-env-file`, so `.env.local` does not leak into it.
 
+- The V2 routes live in `routes/v2.ts` (`/parse-textbook`, `/make` for `check` and `placement`; the rest answer 501);
+  what both route files share (run, parse, answer, the not-yet answer) is `routes/common.ts`. The fake answers by the
+  call's kind (`kindOf`), so a check is never answered with a paper. The textbook photo is read and dropped:
+  `textbooks.photo_path` stays null (Phase 11).
+
 Commands: `bun run dev` (local on :3000, needs `api/.env.local`, and `SUPABASE_URL=… SUPABASE_ANON_KEY=…` from `supabase
 status -o env` on the command line); `bun run check` (tsc and tests);
 `bun check --only=api`; `gh workflow run deploy`.

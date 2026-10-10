@@ -3,18 +3,14 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-10, session 23 (Phase 11's plan, on Fable 5.1). **Session 23:** `plan/phase-11-plan.md` written
-(24 tasks, ten pull requests, tests first, the launch states, the hand runs, the review focus, twenty decisions it takes) and
-`resume/022-phase-11-build.md` for the build on Opus; documents only, to `main`. One question is the owner's: Today's way into
-the close (the 10.3 batch hero with Start class over V1's content, without the plan cards) — asked at the end of the session,
-unanswered when this was written. **Session 22:** Phase 10 done. Part B, the plumbing,
-merged as PRs #90 to #96: migrations 0009 to 0016 (the V2 tables, `close_session`, `copy_textbook_chapters`, the `photos`
-bucket, the monthly allowance, the syllabus data for CBSE and Karnataka state, classes 8 to 10), the API's four V2 routes
-answering 501, the iOS Domain types and Phase 11's repositories, the share extension (embedded) and background refresh;
-a fresh review on Fable 5.1, its three Important findings fixed in #96. Both deploys done, nothing pending; TestFlight 1.0.0 (19), run 38047105651, the first with the share extension: archived, cloud-signed and uploaded (it shows no new screen; the share sheet gains the "Tutor Central" entry, which saves and does nothing visible until Phase 13).
-**The owner, 2026-10-10 (D66):** V2 is the product; V1 was the proof of concept. Phase 9's tester run on V1 is cancelled;
-the tutor round is Phase 15's, on V2. **Next:** the owner's answer on the hero, then Phase 11's build on Opus from
-`resume/022-phase-11-build.md`.
+**Last updated:** 2026-10-10, session 24 (Phase 11's build, on Opus 5.5). **Session 24:** Phase 11 done. Ten pull
+requests from `phase-11-plan.md` (#97 to #106): migration 0017, the API's `/parse-textbook` and `/make` (check, placement),
+Domain's rules, Data, the five tabs, the list and New student V2, the student's page and consent, Add a textbook, the
+placement, the batch hero and the close (online, offline, reopened). Ten hand runs (D32) with each write confirmed in the
+database (#107); runs 8 to 10 found seven faults, fixed test first in #106. A fresh review on Fable 5.1: one Critical and
+three Important findings fixed (#106, migration 0018 in #108, #109), six minors deferred. The owner approved the batch hero
+(2026-10-10). Deploy run 38062264863 (0018; the API at `5bbe667`); TestFlight 1.0.0 (20) by run 38062450111. **Next:** the
+owner checks build 20 on his iPhone (the V2 screens); then Phase 12's plan on Fable from `resume/023-phase-12-plan.md`.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -34,13 +30,15 @@ the tutor round is Phase 15's, on V2. **Next:** the owner's answer on the hero, 
 | 8 Website | Done, PRs #76 to #82 | "As built" in `phase-08-website.md`; then #83 to #89 after the close (the 30-day words, the crash fix, the minors, U33, the sheet title, store-shots, seed-review) |
 | 9 User testing | Cancelled by the owner, 2026-10-10 (D66) | V1 was the proof of concept; the tutor round is Phase 15's, on V2, by Phase 9's method (D52 to D55); `phase-09-plan.md` kept as that method |
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
-| 11 The record and the close | Plan written (session 23, 2026-10-10): `phase-11-plan.md`; the build next on Opus from `resume/022-phase-11-build.md` | Scope `phase-11-record-and-close.md`; boards 10.1, 10.2 and the close of 10.3 |
-| 12 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-12-class-plan.md` to `phase-16-release.md` |
+| 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
+| 12 The plan | Next: the plan on Fable from `resume/023-phase-12-plan.md` | Scope `phase-12-class-plan.md`; boards 10.3 and 10.4 |
+| 13 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-12-class-plan.md` to `phase-16-release.md` |
 
 ## In flight
 
-Nothing open on GitHub after #96. Build 19 is on the owner's iPhone from the internal group, the V1 screens fine (the owner, 2026-10-10). The remote holds `main`, `pr-shots`, and the merged branches
-`tools/review-seed`, `tools/store-shots` and `phase-10/*` (seven), the owner's to delete. Build 18's Beta App Review for the "Tutors" group was withdrawn by the owner (2026-10-10, D66).
+Nothing open on GitHub after #109 but the hand-run record #107 (an issue, kept open as earlier phases' are). Build 20 goes to
+the owner's iPhone from the internal group. The remote holds `main`, `pr-shots`, and the merged `phase-10/*` and
+`phase-11/*` branches, the owner's to delete.
 
 ## Production
 
@@ -49,8 +47,9 @@ Nothing open on GitHub after #96. Build 19 is on the owner's iPhone from the int
   `A @ 216.198.79.1`, `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and
   `api.tutorcentral.in` (a CNAME to Vercel, attached to `tutor-central-api`) untouched. `APP_STORE_URL` unset (Home shows the
   email call to action) until the app is in the App Store.
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0016: 0009 to 0013 by deploy run
-  38042680418 (after #90, #91, #92), 0014 to 0016 by deploy run 38046925061 (after #93 to #96); nothing pending after. The
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0018: 0009 to 0013 by deploy run
+  38042680418, 0014 to 0016 by run 38046925061, 0017 by run 38052646487 (after #97), 0018 by run 38062264863 (after #108);
+  nothing pending after. The
   `photos` bucket (private, JPEG, 3 MB, add-only) is made by 0011. Migrations go up only through `deploy.yml`'s migrate job,
   before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
 - **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
@@ -58,8 +57,9 @@ Nothing open on GitHub after #96. Build 19 is on the owner's iPhone from the int
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `d98e8e5` (deploy run 38046925061,
-  2026-10-10: the four V2 routes answer 401 without a token and 501 after validation); nothing pending in the database.
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `5bbe667` (deploy run 38062264863,
+  2026-10-10: `/parse-textbook` and `/make` for check and placement live; the other V2 routes answer 501); nothing pending in
+  the database.
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
   `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.
@@ -69,13 +69,17 @@ Nothing open on GitHub after #96. Build 19 is on the owner's iPhone from the int
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group (the owner's iPhone: V1 screens fine); 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
+  run number. 1.0.0 (20) by run 38062450111 (Phase 11: the five tabs, the V2 student, consent, the textbook, the placement,
+  the batch hero and the close) for the owner's check; 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group (the owner's iPhone: V1 screens fine); 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
   (U33, #86); 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238 (the crash fix #84, the minors
   #85, "normally within 30 days" #83). `ITSAppUsesNonExemptEncryption` is false in `Info.plist`, so no build waits on a
   compliance question. Each run revokes the Apple Development certificate it makes (#75).
 
 ## Open items
 
+- **Phase 11 review minors (deferred):** the `Final: minor (deferred)` lines of `plan/sessions/024/ledger.md` (six), and its
+  two noted minors (the page's Messages not refreshing after a consent ask; offline, Today's hero worked out again only after
+  the counts' read gives up).
 - **Phase 10 review minors (deferred):** the `Final: minor (deferred)` lines of `plan/sessions/022/ledger.md` (eight), and
   the contracts later phases build to in the phase file's "As built, Part B" (photos add-only and not yet deleted with a
   student; "today's" in the limit's words; `FigureSpec`'s wire format; shared images named `.jpg`).
@@ -91,7 +95,7 @@ Nothing open on GitHub after #96. Build 19 is on the owner's iPhone from the int
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
-- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32 open; U1 to U4, U6, U7, U9,
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34 to U39 open; U1 to U4, U6, U7, U9,
   U12, U16, U24, U31, U33 done. Rows for screens V2 rebuilds are taken or closed as Phase 11 on touch those screens.
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest

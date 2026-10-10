@@ -29,5 +29,11 @@
   centre with a sample centre (`tools/review-seed.ts`, tested by `tests/review-seed.test.ts`); it refuses a centre that
   already has students. The account itself is made by the owner (Supabase dashboard), never by a script.
 
+- `close_session` (0017) takes an eighth argument, `p_states`, with a default, so build 19's seven-argument call still
+  resolves. A second close of the same class and day replaces that session's checks and homework; the app moves a skill's
+  state again only for a tap that changed. `record_placement` writes the placement's checks with no session.
+- `copy_textbook_chapters` deletes the book chapters a recapture dropped before it moves the student's own chapters
+  behind the book's (the unique position would refuse them otherwise).
+
 Commands: `bun check --only=db` (resets the local database, runs the tests, re-seeds);
 `cd supabase && bun test tests`.

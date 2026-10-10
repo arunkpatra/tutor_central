@@ -44,6 +44,12 @@ screen, several as a polish slice, or not at all.
 | U29 | 2026-10-09 | Students, the "+" menu at the largest text sizes | The system menu cuts "Scan paper register" to "Scan paper regis…" | Session 15's Dynamic Type check |
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
+| U34 | 2026-10-10 | Students, the empty list (P10-Students-Empty) | Add a student and Scan paper register sit side by side (the Kit's empty state); the board stacks them at full width | Session 24 (Task 13) |
+| U35 | 2026-10-10 | A student's page, This week (P10-Student) | The section's quiet "Today" action is not built; Students cannot open Today's tab yet | Session 24 (Task 14) |
+| U36 | 2026-10-10 | A student's page, Marks | The record has no Marks section (the plan's decision 16 deferred it); it needs its board | Session 24 (Task 24) |
+| U37 | 2026-10-10 | The close, a student's card | The words "No book yet, so no checks. Add one from Bir's page." and the offline line "You're offline. The checks need a connection; mark attendance and homework, and Done still closes." are new sentences no board draws | Session 24 (Task 21, 22) |
+| U38 | 2026-10-10 | The close, a student's card while the checks are made | The eyebrow "Check · 3 questions" over a spinner; no board draws the wait (the checks take a second or two, longer on a slow line) | Session 24 (Task 21) |
+| U39 | 2026-10-10 | Pending changes, a waiting close | The row wears the attendance tick; a symbol of its own would tell a close from a save | Session 24 (run 9) |
 
 ## Done
 

@@ -156,6 +156,15 @@ October 2026 at 18:30; the fees are the seed's October, six paid on 4 October by
 | `more` | The More root with Reports live (P5-More supersedes P4-More) |
 | `settings` | Settings with the Parent payments row live (P5-Settings supersedes P2-Settings' later card) |
 
+Phase 11's launch states (`plan/phase-11-plan.md`; the boards are 10.1, 10.2 and the close of 10.3; the clock is
+Wednesday 7 October): `later-school` (the School tab's Later card); `student-new-class9`, `student-new-class-picker`,
+`student-new-school`, `student-new-end` (New student V2); `student-record`, `student-end`, `student-not-known`,
+`student-ladder` (the student's page: Hemanth's record, its end, Riya not known yet, Sahil's ladder);
+`student-consent-ask`, `student-consent-record`, `student-consent-waiting`; `textbook-intro`, `textbook-reading`,
+`textbook-chapters`, `textbook-chapter-edit`; `placement` (Riya, three answers tapped); `today-after-close` (Class 10 Maths
+closed at 18:32, 18:40); `close`, `close-scrolled`, `close-placement` (the Evening batch at 17:05: Dev, Meher, Nikhil, Riya,
+Sahil). `today` at 16:35 draws the batch hero with Start class over Class 10 Maths.
+
 ## Phase 2 boards (step 0.3)
 
 | Board | Canvas | Source |

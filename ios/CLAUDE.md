@@ -124,5 +124,15 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - The launch screen is carried on by `OpeningCover` until the session is read, then fades over `opening` (500 ms,
   ease-in-out): never in a launch state. Prove a motion by recording (`simctl io booted recordVideo`) and reading frames.
 
+- A rule two features need goes to Domain, never across features: the placement's groups, rows and state changes are
+  `Domain/Record/Placement.swift`, used by Students' placement and Today's close. Today closes a batch through `Register`
+  (`applyTracking`), never through `RegisterStore`.
+- A screen that must work offline lists what it can at once (the close's students from the register) and runs its reads
+  together: with the gateway down and `NWPath` satisfied, each read takes about 20 s to fail, so reads in turn left the
+  close empty for minutes (run 9). Its Done waits for the reads, so the statuses it writes see the record.
+- A store a launch state or a link opens before the register is read is built after `register.loadIfNeeded()` in a small
+  screen (`TextbookScreen`), then kept in `@State`.
+- Hand runs: an iOS 26 switch in a card needs `tap` with `duration` 0.15 (the runbook's note); the instant tap can miss.
+
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

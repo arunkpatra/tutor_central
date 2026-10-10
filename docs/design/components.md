@@ -730,6 +730,14 @@ The texts:
 | The note day | "Note day" "7 notes for parents" "Each one is about the week: what was taught, what went right, what to practise. Read it as the parent will, then send." · "2 of 7 sent" · a row: "Hindi · Chemical reactions · 2 absences" · Read · Sent · Held · "Hindi · waits for Neha's consent" |
 | Tomorrow | "Its plan is made when you open the app tomorrow" |
 
+**As built in Phase 11** (the boards stand; these are the words the build uses where Phase 11 has no plan or export yet):
+the close's top row has no "Plan" link (the back chevron returns to Today); its homework row reads "Homework given" (no
+sheet until Phase 12); the close's batch line follows P10-Close (the batch as the title, "Wednesday 7 October · 17:00–18:30 ·
+5 students" under it); the hero's V1 eyebrows read "Next batch" and "No batch today"; a closed hero kept offline reads
+"<batch> · saved on this iPhone"; the agreed consent footnote ends after "…only for his own material and notes." (export
+waits for Phase 14, and Delete is at the page's foot); two sentences no board draws are on `plan/ui-polish.md` (U37): the
+close's no-book line and its offline line.
+
 ## Phase 10 parts (step 10.4, approved 2026-10-10): the artefacts
 
 **Result footer, V2:** the Phase 6 result footer with the quiet "Make it again" and two secondary 46 buttons: Share as PDF

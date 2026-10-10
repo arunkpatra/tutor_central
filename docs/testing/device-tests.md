@@ -87,6 +87,14 @@ The simulator proved the reminder fires on time and that its link opens Attendan
 tap on the lock screen itself is D2's. The simulator has no Mail app, so Help's email (D8) was never seen there; the links to
 the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner's to judge on build 11.
 
+### Phase 11: the record and the close (no camera, no WhatsApp, no real network drop in the simulator)
+
+| Id | Do | Expect |
+|---|---|---|
+| T1 | A student of class 5 to 10 with a school → their page → Add a textbook → a subject → Take a photo → the contents page of the real book, flat and lit. | "Reading the contents page" for a few seconds, then the chapters in the book's order with two or three skills each; a chapter opens and its skills can be changed; Keep N chapters puts them on the page, and on the page of every other student of that class at that school. Note any chapter missed or misread. |
+| T2 | A student whose parent has WhatsApp → their page → Consent → Ask on WhatsApp → Open WhatsApp. | WhatsApp opens that parent's chat with the whole message typed in (what is kept, why, how to say no), signed with your name and centre. Back in the app the section reads "Asked", the parent's name and today. |
+| T3 | On mobile data, at a batch's time: Today → Start class; mark one absent; turn on Airplane mode before Done; Done. Turn Airplane mode off. | Done closes at once; Today's hero reads the batch's name with "saved on this iPhone"; Pending changes lists "Class closed" with the batch. Back online: "Sending 1 saved change…", then the hero reads "closed at" and the time. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |
