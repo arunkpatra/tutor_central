@@ -132,6 +132,21 @@ import Testing
         #expect(hero.kind == .closed && hero.line == "Hemanth absent")
     }
 
+    @Test func aClosedBatchStillRunningGivesTheHeroToTheNextBatchSoon() async throws {
+        var science = FakeClassesRepository.science
+        science.meetingDays = [.wednesday]
+        science.startTime = TimeOfDay(hour: 17, minute: 30)
+        science.endTime = TimeOfDay(hour: 18, minute: 30)
+        let counts = FakeCountsRepository(counts: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 2))
+        let store = await make(
+            counts, now: Self.clock(7, 17, 10), classes: [FakeClassesRepository.maths, science],
+            sessions: FakeAttendanceRepository.seedWithTodayClosed
+        )
+        await store.load()
+        let hero = try #require(store.hero)
+        #expect(hero.kind == .start && hero.title == "Class 8 Science" && hero.eyebrow == "Next batch · in 20 min")
+    }
+
     @Test func anEmptyRegisterKeepsStartHere() async {
         let store = await make(students: [], classes: [], sessions: [], events: [], tasks: [])
         await store.load()

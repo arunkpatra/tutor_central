@@ -20,6 +20,12 @@ extension TodayStore {
         let closedToday = closedBatches
         if let nextClass, nextClass.canMark {
             if let closed = closedToday.first(where: { $0.session.classID == nextClass.classroom.id }) {
+                // Closed before its end: a batch not yet closed that is soon or running takes the hero.
+                let closedIDs = Set(closedToday.compactMap(\.session.classID))
+                let open = register.activeClasses.filter { !closedIDs.contains($0.id) }
+                if let after = NextClass.find(in: open, now: clock, calendar: calendar), after.canMark {
+                    return startHero(after)
+                }
                 return closedHero(closed)
             }
             return startHero(nextClass)

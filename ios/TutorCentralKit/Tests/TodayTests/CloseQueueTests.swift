@@ -69,6 +69,22 @@ import Testing
         ))
     }
 
+    @Test func theStudentsShowAtOnceWhileTheReadsWait() async throws {
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        attendance.delay = .seconds(2)
+        let register = await tests.register()
+        let store = CloseStore(
+            classID: FakeClassesRepository.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
+            register: register, textbooks: FakeTextbooksRepository.evening(), record: FakeRecordRepository(),
+            attendance: attendance, ai: FakeAIRepository(), now: { CloseStoreTests.fivepast }
+        )
+        let loading = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(store.students.count == 5 && store.students.allSatisfy { $0.checks == .loading && $0.present })
+        await loading.value
+        #expect(store.loaded)
+    }
+
     @Test func aCloseKeptHereMakesTodaysHeroReadClosed() async throws {
         let queue = queue()
         let store = await tests.store()

@@ -38,7 +38,7 @@ public struct CloseStudent: Identifiable, Hashable, Sendable {
     public var checks: CloseChecks
     public var homeworkGiven: Bool
     /// "Catch up · missed Mon and Fri": absent at the batch's last two sessions.
-    public let catchUp: String?
+    public var catchUp: String?
 }
 
 public enum ClosePhase: Hashable, Sendable {
@@ -143,24 +143,31 @@ public enum ClosePhase: Hashable, Sendable {
         phase == .closing
     }
 
-    /// The members, the month's sessions, each student's chapters, skills and record, then the checks at once.
+    /// The members at once (attendance and homework can be marked while the reads wait), then the month's sessions,
+    /// the record and each student's chapters and skills together, then the checks.
     public func load() async {
         await register.loadIfNeeded()
-        await readSessions()
         let members = register.members(of: classID).sorted { $0.name < $1.name }
-        let ids = members.map(\.id)
-        await readRecords(ids)
-        closedSession = sessions.first { $0.date == day && $0.classID == classID && $0.closedAt != nil }
-        let kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []
-        let given = closedSession.map { session in homeworkHistory.filter { $0.sessionID == session.id } } ?? []
         students = members.map { student in
             CloseStudent(
                 id: student.id, name: student.name, firstName: student.firstName, initials: student.initials,
-                present: closedSession?.marks[student.id] != .absent,
-                checks: keptChecks(kept.filter { $0.studentID == student.id }, student: student.id) ?? .loading,
-                homeworkGiven: closedSession == nil || given.contains { $0.studentID == student.id },
-                catchUp: catchUp(student.id)
+                present: true, checks: .loading, homeworkGiven: true, catchUp: nil
             )
+        }
+        async let sessionsRead: Void = readSessions()
+        async let recordsRead: Void = readRecords(members.map(\.id))
+        _ = await (sessionsRead, recordsRead)
+        closedSession = sessions.first { $0.date == day && $0.classID == classID && $0.closedAt != nil }
+        let kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []
+        let given = closedSession.map { session in homeworkHistory.filter { $0.sessionID == session.id } } ?? []
+        for index in students.indices {
+            let id = students[index].id
+            students[index].catchUp = catchUp(id)
+            if let closedSession {
+                students[index].present = closedSession.marks[id] != .absent
+                students[index].homeworkGiven = given.contains { $0.studentID == id }
+                students[index].checks = keptChecks(kept.filter { $0.studentID == id }, student: id) ?? .loading
+            }
         }
         if let closedSession, let at = closedSession.closedAt {
             phase = .closed(at: at)
@@ -174,7 +181,7 @@ public enum ClosePhase: Hashable, Sendable {
     public func toggle(_ index: Int) {
         guard students.indices.contains(index) else { return }
         students[index].present.toggle()
-        if students[index].present, students[index].checks == .loading {
+        if loaded, students[index].present, students[index].checks == .loading {
             Task { await makeChecks([index]) }
         }
     }
@@ -225,22 +232,41 @@ public enum ClosePhase: Hashable, Sendable {
         let months = Set([
             Period.containing(from, in: calendar.timeZone), Period.containing(now(), in: calendar.timeZone),
         ])
-        var read: [AttendanceSession] = []
-        for month in months {
-            read += await (try? attendance.sessions(centre: workspace.centre.id, month: month)) ?? []
+        let centre = workspace.centre.id
+        sessions = await withTaskGroup(of: [AttendanceSession].self) { group in
+            for month in months {
+                group.addTask { await (try? self.attendance.sessions(centre: centre, month: month)) ?? [] }
+            }
+            var read: [AttendanceSession] = []
+            for await month in group {
+                read += month
+            }
+            return read
         }
-        sessions = read
     }
 
     private func readRecords(_ ids: [UUID]) async {
         let since = calendar.date(byAdding: .day, value: -TrackingRules.absenceWindowDays, to: now()) ?? now()
         let centre = workspace.centre.id
-        history = await (try? record.checks(centre: centre, students: ids, since: since)) ?? []
-        homeworkHistory = await (try? record.homework(centre: centre, students: ids, since: since)) ?? []
-        for id in ids {
-            chapters[id] = await (try? textbooks.chapters(student: id)) ?? []
-            skills[id] = await (try? textbooks.skills(student: id)) ?? []
+        async let checks = try? record.checks(centre: centre, students: ids, since: since)
+        async let homework = try? record.homework(centre: centre, students: ids, since: since)
+        await withTaskGroup(of: StudentBook.self) { group in
+            for id in ids {
+                group.addTask { await self.readBook(id) }
+            }
+            for await book in group {
+                chapters[book.id] = book.chapters
+                skills[book.id] = book.skills
+            }
         }
+        history = await checks ?? []
+        homeworkHistory = await homework ?? []
+    }
+
+    private func readBook(_ id: UUID) async -> StudentBook {
+        async let read = try? textbooks.chapters(student: id)
+        async let list = try? textbooks.skills(student: id)
+        return await StudentBook(id: id, chapters: read ?? [], skills: list ?? [])
     }
 
     /// Opened again: the checks kept today, tapped as they were answered.
@@ -262,6 +288,13 @@ public enum ClosePhase: Hashable, Sendable {
         let days = last.reversed().map { $0.date.weekday(in: calendar).short }
         return "Catch up · missed \(days[0]) and \(days[1])"
     }
+}
+
+/// One student's chapters and skills as read.
+struct StudentBook: Sendable {
+    let id: UUID
+    let chapters: [Chapter]
+    let skills: [Skill]
 }
 
 private extension Array {
