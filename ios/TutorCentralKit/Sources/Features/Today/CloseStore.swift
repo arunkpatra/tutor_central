@@ -145,6 +145,11 @@ public enum ClosePhase: Hashable, Sendable {
         phase == .closing
     }
 
+    /// Done waits for the reads and for the checks being made: a tap meanwhile would close a student without them.
+    public var canFinish: Bool {
+        loaded && !closing && !students.contains { $0.present && $0.checks == .loading }
+    }
+
     /// The members at once (attendance and homework can be marked while the reads wait), then the month's sessions,
     /// the record and each student's chapters and skills together, then the checks.
     public func load() async {
@@ -160,8 +165,15 @@ public enum ClosePhase: Hashable, Sendable {
         async let recordsRead: Void = readRecords(members.map(\.id))
         _ = await (sessionsRead, recordsRead)
         closedSession = sessions.first { $0.date == day && $0.classID == classID && $0.closedAt != nil }
-        let kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []
-        let given = closedSession.map { session in homeworkHistory.filter { $0.sessionID == session.id } } ?? []
+        var kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []
+        var given = closedSession.map { session in homeworkHistory.filter { $0.sessionID == session.id } } ?? []
+        // A close still waiting on this iPhone is the newer one: its taps, not the server's, are what was kept.
+        let here = keptHere()
+        if let here {
+            closedSession = here.session
+            kept = here.checks
+            given = here.homework
+        }
         for index in students.indices {
             let id = students[index].id
             students[index].catchUp = catchUp(id)
@@ -169,10 +181,14 @@ public enum ClosePhase: Hashable, Sendable {
             if let closedSession, closedSession.marks[id] != nil {
                 students[index].present = closedSession.marks[id] != .absent
                 students[index].homeworkGiven = given.contains { $0.studentID == id }
-                students[index].checks = keptChecks(kept.filter { $0.studentID == id }, student: id) ?? .loading
+                students[index].checks = keptChecks(
+                    kept.filter { $0.studentID == id }, student: id, sent: here == nil
+                ) ?? .loading
             }
         }
-        if let closedSession, let at = closedSession.closedAt {
+        if let here {
+            phase = .savedHere(at: here.session.savedAt)
+        } else if let closedSession, let at = closedSession.closedAt {
             phase = .closed(at: at)
             history.removeAll { $0.sessionID == closedSession.id }
             homeworkHistory.removeAll { $0.sessionID == closedSession.id }
@@ -282,13 +298,15 @@ public enum ClosePhase: Hashable, Sendable {
     }
 
     /// Opened again: the checks kept today, tapped as they were answered.
-    private func keptChecks(_ kept: [CheckRecord], student: UUID) -> CloseChecks? {
+    /// `sent`: the server has moved the skills for these taps already, so an unchanged tap moves nothing again; a close
+    /// still waiting here has moved nothing yet.
+    private func keptChecks(_ kept: [CheckRecord], student: UUID, sent: Bool) -> CloseChecks? {
         guard !kept.isEmpty else { return nil }
         let names = Dictionary((skills[student] ?? []).map { ($0.id, $0.name) }) { first, _ in first }
         return .rows(kept.map { check in
             CheckLine(
                 skillID: check.skillID, skill: names[check.skillID] ?? "", question: check.question, answer: "",
-                tap: check.correct, recorded: check.correct, isPlacement: check.isPlacement
+                tap: check.correct, recorded: sent ? check.correct : nil, isPlacement: check.isPlacement
             )
         })
     }

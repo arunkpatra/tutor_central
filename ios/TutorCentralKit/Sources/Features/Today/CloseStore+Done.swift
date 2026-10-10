@@ -6,7 +6,7 @@ import Foundation
 /// status, in one write (`close_session`).
 extension CloseStore {
     public func done() async -> Bool {
-        guard phase != .closing else { return false }
+        guard canFinish else { return false }
         let before = phase
         let close = makeClose()
         phase = .closing

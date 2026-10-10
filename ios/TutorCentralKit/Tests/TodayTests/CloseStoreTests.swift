@@ -191,6 +191,27 @@ import Testing
         #expect(dev.present && dev.homeworkGiven)
     }
 
+    @Test func doneWaitsForTheChecksBeingMade() async throws {
+        let ai = FakeAIRepository()
+        ai.delay = .seconds(2)
+        let register = await register()
+        let store = CloseStore(
+            classID: FakeClassesRepository.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
+            register: register, textbooks: FakeTextbooksRepository.evening(), record: FakeRecordRepository(),
+            attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed), ai: ai,
+            now: { Self.fivepast }
+        )
+        let loading = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(500))
+        #expect(store.loaded && !store.canFinish)
+        #expect(await store.done() == false)
+        await loading.value
+        #expect(store.canFinish)
+        let absent = store.students.firstIndex { $0.checks == .none } ?? 0
+        store.toggle(absent)
+        #expect(store.canFinish)
+    }
+
     @Test func theCatchUpLineNamesTheMissedDays() async {
         let store = await store(
             attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithNikhilAbsentTwice)

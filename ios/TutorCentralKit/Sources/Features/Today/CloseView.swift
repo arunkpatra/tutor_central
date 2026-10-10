@@ -89,7 +89,7 @@ public struct CloseView: View {
                     }
                 }
                 .buttonStyle(.primary(.card, loading: store.closing))
-                .disabled(!store.loaded)
+                .disabled(!store.canFinish && !store.closing)
                 Text(store.footnote)
                     .typeStyle(Tokens.footnote)
                     .foregroundStyle(Tokens.text3.color)

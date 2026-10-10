@@ -26,4 +26,38 @@ extension CloseStore {
         register.applyTracking(close.track, at: at)
         phase = .savedHere(at: at)
     }
+
+    /// This batch's close for today still waiting in the queue, as a session with its checks and homework.
+    func keptHere() -> KeptClose? {
+        guard let change = queue?.pending.changes.last(where: { change in
+            if case let .close(close, _, _, _) = change.kind {
+                close.classID == classID && close.date == day
+            } else {
+                false
+            }
+        }), case let .close(close, _, _, _) = change.kind else { return nil }
+        let session = AttendanceSession(
+            id: change.id, classID: classID, date: day, savedAt: change.madeAt, marks: close.marks,
+            closedAt: change.madeAt
+        )
+        let checks = close.checks.map { check in
+            CheckRecord(
+                id: UUID(), studentID: check.studentID, skillID: check.skillID, sessionID: change.id,
+                question: check.question, correct: check.correct, at: change.madeAt, isPlacement: check.isPlacement
+            )
+        }
+        let homework = close.homework.map { item in
+            HomeworkRecord(
+                id: UUID(), studentID: item.studentID, sessionID: change.id, givenAt: change.madeAt, status: .given
+            )
+        }
+        return KeptClose(session: session, checks: checks, homework: homework)
+    }
+}
+
+/// A close kept on this iPhone, read back as the server would answer it.
+struct KeptClose {
+    let session: AttendanceSession
+    let checks: [CheckRecord]
+    let homework: [HomeworkRecord]
 }

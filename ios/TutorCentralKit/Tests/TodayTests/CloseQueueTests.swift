@@ -69,6 +69,38 @@ import Testing
         ))
     }
 
+    @Test func reopeningACloseKeptHereShowsItsTaps() async throws {
+        let queue = queue()
+        let first = await tests.store()
+        first.queue = queue
+        first.online = { false }
+        let dev = tests.index(first, "Dev Kumar"), nikhil = tests.index(first, "Nikhil Das")
+        first.tap(dev, 0, right: true)
+        first.toggle(nikhil)
+        first.setHomework(dev, given: false)
+        _ = await first.done()
+        let ai = FakeAIRepository()
+        let register = await tests.register()
+        let again = CloseStore(
+            classID: FakeClassesRepository.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
+            register: register, textbooks: FakeTextbooksRepository.evening(), record: FakeRecordRepository(),
+            attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed), ai: ai,
+            now: { CloseStoreTests.at(7, 17, 20) }
+        )
+        again.queue = queue
+        again.online = { false }
+        await again.load()
+        #expect(again.phase == .savedHere(at: CloseStoreTests.fivepast))
+        let reopenedDev = try #require(again.students.first { $0.name == "Dev Kumar" })
+        #expect(!reopenedDev.homeworkGiven && again.students.first { $0.name == "Nikhil Das" }?.present == false)
+        guard case let .rows(rows) = reopenedDev.checks else {
+            Issue.record("Dev's kept tap")
+            return
+        }
+        #expect(rows.map(\.tap) == [true] && rows[0].skill == "Types of reactions")
+        #expect(ai.checkCalls.allSatisfy { !$0.contains("Types of reactions") || $0.count == 3 })
+    }
+
     @Test func aBookThatCouldNotBeReadSaysTheChecksNeedAConnection() async {
         let textbooks = FakeTextbooksRepository.evening()
         textbooks.nextError = URLError(.notConnectedToInternet)
