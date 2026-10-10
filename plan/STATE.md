@@ -9,8 +9,9 @@ Domain's rules, Data, the five tabs, the list and New student V2, the student's 
 placement, the batch hero and the close (online, offline, reopened). Ten hand runs (D32) with each write confirmed in the
 database (#107); runs 8 to 10 found seven faults, fixed test first in #106. A fresh review on Fable 5.1: one Critical and
 three Important findings fixed (#106, migration 0018 in #108, #109), six minors deferred. The owner approved the batch hero
-(2026-10-10). Deploy run 38062264863 (0018; the API at `5bbe667`); TestFlight 1.0.0 (20) by run 38062450111. **Next:** the
-owner checks build 20 on his iPhone (the V2 screens); then Phase 12's plan on Fable from `resume/023-phase-12-plan.md`.
+(2026-10-10). Deploy run 38062264863 (0018; the API at `5bbe667`); TestFlight 1.0.0 (20) by run 38062450111. The owner
+checked build 20 on his iPhone: "Build 20 is fine on my phone" (2026-10-10). **Next:** Phase 12's plan on Fable from
+`resume/023-phase-12-plan.md`.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -36,8 +37,8 @@ owner checks build 20 on his iPhone (the V2 screens); then Phase 12's plan on Fa
 
 ## In flight
 
-Nothing open on GitHub after #109 but the hand-run record #107 (an issue, kept open as earlier phases' are). Build 20 goes to
-the owner's iPhone from the internal group. The remote holds `main`, `pr-shots`, and the merged `phase-10/*` and
+Nothing open on GitHub after #109 but the hand-run record #107 (an issue, kept open as earlier phases' are). Build 20 is on
+the owner's iPhone from the internal group, fine (2026-10-10). The remote holds `main`, `pr-shots`, and the merged `phase-10/*` and
 `phase-11/*` branches, the owner's to delete.
 
 ## Production
@@ -70,7 +71,7 @@ the owner's iPhone from the internal group. The remote holds `main`, `pr-shots`,
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
   run number. 1.0.0 (20) by run 38062450111 (Phase 11: the five tabs, the V2 student, consent, the textbook, the placement,
-  the batch hero and the close) for the owner's check; 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group (the owner's iPhone: V1 screens fine); 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
+  the batch hero and the close) on the owner's iPhone, fine; 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group (the owner's iPhone: V1 screens fine); 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
   (U33, #86); 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238 (the crash fix #84, the minors
   #85, "normally within 30 days" #83). `ITSAppUsesNonExemptEncryption` is false in `Info.plist`, so no build waits on a
   compliance question. Each run revokes the Apple Development certificate it makes (#75).

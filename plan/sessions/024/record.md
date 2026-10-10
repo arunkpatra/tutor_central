@@ -57,5 +57,5 @@ placed in run 7, carried the checks); the batches' times moved for the runs by p
 
 ## Next
 
-The owner checks the build on his iPhone and rules on the batch hero; then Phase 12's plan on Fable from
+The owner approved the batch hero and found build 20 fine on his iPhone. Phase 12's plan on Fable from
 `resume/023-phase-12-plan.md`.

@@ -3,4 +3,5 @@
 1. The resume prompt `plan/resume/022-phase-11-build.md`, pasted whole (its text is that file).
 
 2. "The hero is approved; go ahead"
+3. "Build 20 is fine on my phone"
 
