@@ -13,4 +13,6 @@ import Foundation
     var showsEmptyRegister: Bool { get }
     /// Reads only when nothing has been read or cached yet.
     func loadIfNeeded() async
+    /// The close's statuses on the register's students at once (the write sets them on the server).
+    func applyTracking(_ track: [UUID: SessionClose.Track], at date: Date)
 }

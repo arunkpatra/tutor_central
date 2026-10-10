@@ -374,4 +374,17 @@ public extension RegisterStore {
     }
 }
 
-extension RegisterStore: Register {}
+extension RegisterStore: Register {
+    public func applyTracking(_ track: [UUID: SessionClose.Track], at date: Date) {
+        for (id, item) in track {
+            guard var student = student(id) else { continue }
+            if student.trackStatus != item.status {
+                student.trackSince = date
+            }
+            student.trackStatus = item.status
+            student.trackReasons = item.reasons
+            replace(id, with: student)
+        }
+        persist()
+    }
+}

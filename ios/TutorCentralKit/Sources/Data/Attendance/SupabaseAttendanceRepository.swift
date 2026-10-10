@@ -5,7 +5,7 @@ import Supabase
 public final class SupabaseAttendanceRepository: AttendanceRepository {
     private let client: SupabaseClient
     static let decoder = PostgRESTDecoder.make()
-    private static let columns = "id, class_id, date, saved_at, attendance_marks(student_id, status)"
+    private static let columns = "id, class_id, date, saved_at, closed_at, attendance_marks(student_id, status)"
 
     public init(client: SupabaseClient) {
         self.client = client

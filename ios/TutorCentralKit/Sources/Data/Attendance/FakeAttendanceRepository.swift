@@ -54,6 +54,35 @@ import Supabase
         return [saved] + seed
     }()
 
+    /// Wednesday 7 October's Class 10 Maths closed at 18:32, Hemanth absent (P10-Today-AfterClose's moment).
+    public nonisolated static let seedWithTodayClosed: [AttendanceSession] = {
+        var sessions = seedWithToday
+        sessions[0].closedAt = closedAt
+        return sessions
+    }()
+
+    /// The seed and two Evening batch sessions, Monday 28 September and Friday 2 October, Nikhil absent at both (the
+    /// close's catch-up line).
+    public nonisolated static let seedWithNikhilAbsentTwice: [AttendanceSession] = {
+        let evening = FakeClassesRepository.evening
+        let members = FakeStudentsRepository.eveningSeed.filter { $0.classID == evening.id }
+        let days = [Day(year: 2026, month: 9, day: 28)!, Day(year: 2026, month: 10, day: 2)!]
+        let sessions = days.map { day in
+            AttendanceSession(
+                id: sessionID(day, evening), classID: evening.id, date: day, savedAt: savedAt(day),
+                marks: Dictionary(uniqueKeysWithValues: members.map {
+                    ($0.id, $0.id == FakeStudentsRepository.nikhil ? AttendanceStatus.absent : .present)
+                })
+            )
+        }
+        return sessions + seed
+    }()
+
+    /// 18:32 on Wednesday 7 October, India: the fixtures' close.
+    public nonisolated static let closedAt = DayHeading.india.date(from: DateComponents(
+        year: 2026, month: 10, day: 7, hour: 18, minute: 32
+    ))!
+
     /// What PostgREST answers for an expired token.
     public nonisolated static let signedOutError = PostgrestError(code: "PGRST301", message: "JWT expired")
 
@@ -100,6 +129,9 @@ import Supabase
     public func close(_ close: SessionClose, centre: UUID) async throws -> UUID {
         let session = try await save(centre: centre, classID: close.classID, date: close.date, marks: close.marks)
         closes.append(close)
+        if let index = sessions.firstIndex(where: { $0.id == session.id }) {
+            sessions[index].closedAt = now()
+        }
         return session.id
     }
 

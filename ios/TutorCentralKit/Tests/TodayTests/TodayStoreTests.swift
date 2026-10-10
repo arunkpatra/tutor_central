@@ -17,7 +17,8 @@ import Testing
         classes: [Classroom] = FakeClassesRepository.seed,
         sessions: [AttendanceSession] = FakeAttendanceRepository.seed,
         events: [CalendarEvent] = FakeEventsRepository.seed,
-        tasks: [TaskItem] = FakeTasksRepository.seed
+        tasks: [TaskItem] = FakeTasksRepository.seed,
+        record: FakeRecordRepository? = nil
     ) async -> TodayStore {
         let register = RegisterStore(
             workspace: FakeCentreRepository.meeraWorkspace, students: FakeStudentsRepository(students: students),
@@ -29,13 +30,15 @@ import Testing
         return TodayStore(
             workspace: FakeCentreRepository.meeraWorkspace, counts: counts, register: register,
             attendance: FakeAttendanceRepository(sessions: sessions), events: FakeEventsRepository(events: events),
-            tasks: taskStore, now: { now }
+            tasks: taskStore, now: { now }, record: record
         )
     }
 
-    func makeLive(now: Date, sessions: [AttendanceSession] = FakeAttendanceRepository.seed) async -> TodayStore {
+    func makeLive(
+        now: Date, sessions: [AttendanceSession] = FakeAttendanceRepository.seed, record: FakeRecordRepository? = nil
+    ) async -> TodayStore {
         let counts = FakeCountsRepository(counts: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1))
-        let store = await make(counts, now: now, sessions: sessions)
+        let store = await make(counts, now: now, sessions: sessions, record: record)
         await store.load()
         return store
     }
@@ -70,9 +73,9 @@ import Testing
         let store = await makeLive(now: Self.clock(7, 16, 35))
         #expect(store.greeting == "Good afternoon, Meera" && store.heading == "Wednesday 7 October")
         let hero = try #require(store.hero)
-        #expect(hero.eyebrow == "Next class · in 25 min" && hero.accent && hero.title == "Class 10 Maths")
-        #expect(hero.line == "17:00–18:00 · 6 students" && hero.canMark && hero.classID == FakeClassesRepository.maths
-            .id)
+        #expect(hero.eyebrow == "Next batch · in 25 min" && hero.accent && hero.title == "Class 10 Maths")
+        #expect(hero.line == "17:00–18:00 · 6 students" && hero.kind == .start && hero.classID == FakeClassesRepository
+            .maths.id && !hero.titleMark)
         #expect(store.todayRows.map(\.title) == ["Class 10 Maths"] && store.todayRows[0]
             .line == "Mon, Wed, Fri · 6 students")
         #expect(!store.todayRows[0].marked)
@@ -83,8 +86,9 @@ import Testing
     @Test func theEveningAfterTheClass() async throws {
         let store = await makeLive(now: Self.clock(7, 19, 30), sessions: FakeAttendanceRepository.seedWithToday)
         let hero = try #require(store.hero)
-        #expect(store.greeting == "Good evening, Meera" && hero.eyebrow == "Next class · tomorrow" && !hero.accent)
-        #expect(hero.title == "Class 8 Science" && hero.line == "Thu 8 Oct · 16:30–17:30 · 3 students" && !hero.canMark)
+        #expect(store.greeting == "Good evening, Meera" && hero.eyebrow == "Next batch · tomorrow" && !hero.accent)
+        #expect(hero.title == "Class 8 Science" && hero.line == "Thu 8 Oct · 16:30–17:30 · 3 students" && hero
+            .kind == .upcoming)
         #expect(store.todayRows[0].line == "5 of 6 present" && store.todayRows[0].lineTone == .ok && store.todayRows[0]
             .marked)
     }
@@ -92,8 +96,9 @@ import Testing
     @Test func aSaturdayWithNoClass() async throws {
         let store = await makeLive(now: Self.clock(10, 9, 30))
         let hero = try #require(store.hero)
-        #expect(store.greeting == "Good morning, Meera" && hero.eyebrow == "No classes today")
-        #expect(hero.title == "Next class on Monday" && hero.line == "Class 10 Maths · Mon 12 Oct · 17:00–18:00")
+        #expect(store.greeting == "Good morning, Meera" && hero.eyebrow == "No batch today" && hero.accent)
+        #expect(hero.title == "Next: Class 10 Maths on Monday" && hero.kind == .upcoming)
+        #expect(hero.line == "17:00–18:00 · 6 students · its plan is made when you open the app on Monday")
         #expect(store.todayRows.map(\.title) == ["Parents' meeting"] && store.todayRows[0].start == "11:00")
         #expect(store.todayRows[0].end == "12:00" && store.todayRows[0]
             .line == "Class 10 parents. Bring the September test papers.")
@@ -103,9 +108,43 @@ import Testing
     @Test func theClockTicksTheCountdown() async {
         let store = await makeLive(now: Self.clock(7, 16, 35))
         store.tick(Self.clock(7, 16, 50))
-        #expect(store.hero?.eyebrow == "Next class · in 10 min")
+        #expect(store.hero?.eyebrow == "Next batch · in 10 min")
         store.tick(Self.clock(7, 17, 0))
         #expect(store.hero?.eyebrow == "Now · until 18:00")
+    }
+
+    @Test func afterTheCloseTheHeroReadsWhatHappened() async throws {
+        let record = FakeRecordRepository(
+            checks: FakeRecordRepository.todaysChecks, homework: FakeRecordRepository.todaysHomework
+        )
+        let store = await makeLive(
+            now: Self.clock(7, 18, 40), sessions: FakeAttendanceRepository.seedWithTodayClosed, record: record
+        )
+        let hero = try #require(store.hero)
+        #expect(hero.eyebrow == "Class 10 Maths · closed at 18:32" && !hero.accent)
+        #expect(hero.title == "5 of 6 came" && hero.titleMark && hero.kind == .closed)
+        #expect(hero.line == "8 of 12 checks right · homework given to 5 · Hemanth absent")
+    }
+
+    @Test func aBatchClosedBeforeItsEndReadsClosed() async throws {
+        let store = await makeLive(now: Self.clock(7, 17, 50), sessions: FakeAttendanceRepository.seedWithTodayClosed)
+        let hero = try #require(store.hero)
+        #expect(hero.kind == .closed && hero.line == "Hemanth absent")
+    }
+
+    @Test func aClosedBatchStillRunningGivesTheHeroToTheNextBatchSoon() async throws {
+        var science = FakeClassesRepository.science
+        science.meetingDays = [.wednesday]
+        science.startTime = TimeOfDay(hour: 17, minute: 30)
+        science.endTime = TimeOfDay(hour: 18, minute: 30)
+        let counts = FakeCountsRepository(counts: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 2))
+        let store = await make(
+            counts, now: Self.clock(7, 17, 10), classes: [FakeClassesRepository.maths, science],
+            sessions: FakeAttendanceRepository.seedWithTodayClosed
+        )
+        await store.load()
+        let hero = try #require(store.hero)
+        #expect(hero.kind == .start && hero.title == "Class 8 Science" && hero.eyebrow == "Next batch · in 20 min")
     }
 
     @Test func anEmptyRegisterKeepsStartHere() async {

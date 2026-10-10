@@ -28,11 +28,11 @@ public enum NextClass: Hashable, Sendable {
 
     public var eyebrow: String {
         switch self {
-        case let .soon(_, minutes): "Next class · \(TimeUntil.text(minutes: minutes))"
+        case let .soon(_, minutes): "Next batch · \(TimeUntil.text(minutes: minutes))"
         case let .running(_, end): end.map { "Now · until \($0.text)" } ?? "Now"
-        case let .laterToday(_, at): "Next class · \(at?.text ?? "today")"
-        case .tomorrow: "Next class · tomorrow"
-        case .onDay: "No classes today"
+        case let .laterToday(_, at): "Next batch · \(at?.text ?? "today")"
+        case .tomorrow: "Next batch · tomorrow"
+        case .onDay: "No batch today"
         }
     }
 

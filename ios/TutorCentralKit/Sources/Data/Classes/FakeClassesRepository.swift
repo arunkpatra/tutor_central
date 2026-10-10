@@ -16,6 +16,15 @@ import Foundation
     )
     public nonisolated static let seed = [maths, science]
 
+    /// The 10.3 boards' batch: Monday to Friday, 17:00–18:30, Dev, Meher and Nikhil (class 8), Riya (5), Sahil (2).
+    public nonisolated static let evening = Classroom(
+        id: UUID(uuidString: "33333333-3333-3333-3333-333333333333")!, name: "Evening batch", subject: nil,
+        monthlyFee: Money(rupees: 1500), meetingDays: [.monday, .tuesday, .wednesday, .thursday, .friday],
+        startTime: TimeOfDay(hour: 17, minute: 0), endTime: TimeOfDay(hour: 18, minute: 30), archivedAt: nil
+    )
+
+    public nonisolated static let withEvening = [maths, science, evening]
+
     public var classes: [Classroom]
     public var nextError: (any Error)?
     /// Every call waits this long first: lets a store's writes overlap, as a real network can.

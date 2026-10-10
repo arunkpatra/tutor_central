@@ -93,6 +93,12 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case todayEvening = "today-evening"
     case todayNoClass = "today-no-class"
     case todayAddingTask = "today-adding-task"
+    /// The hero after the close (P10-Today-AfterClose): Class 10 Maths closed at 18:32.
+    case todayAfterClose = "today-after-close"
+    /// The close of the Evening batch (P10-Close, -Scrolled, -Placement).
+    case close
+    case closeScrolled = "close-scrolled"
+    case closePlacement = "close-placement"
     case more
     case feesEmpty = "fees-empty"
     case fees

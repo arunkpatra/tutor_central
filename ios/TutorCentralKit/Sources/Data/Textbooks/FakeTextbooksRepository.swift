@@ -9,8 +9,8 @@ import Supabase
 /// student of the school and class in `students`.
 @MainActor public final class FakeTextbooksRepository: TextbooksRepository {
     public private(set) var textbooks: [Textbook]
-    public private(set) var chaptersByStudent: [UUID: [Chapter]]
-    public private(set) var skillsByStudent: [UUID: [Skill]]
+    public internal(set) var chaptersByStudent: [UUID: [Chapter]]
+    public internal(set) var skillsByStudent: [UUID: [Skill]]
     /// The register the class-wide copies read (the database reads `students`).
     public var students: [Student] = []
     public var nextError: (any Error)?
