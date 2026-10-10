@@ -79,6 +79,7 @@ public final class SupabaseAttendanceRepository: AttendanceRepository {
             "p_homework": .array(homework),
             "p_track": .object(track),
             "p_states": statesJSON(close.states),
+            "p_done": .array(close.done.map(id)),
         ]
     }
 
