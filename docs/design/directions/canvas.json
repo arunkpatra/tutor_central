@@ -2194,6 +2194,97 @@
    "w": 393,
    "h": 852,
    "title": "Phase 10 · 10.4 The gap report after a marked mock: the score, each skill with its bar and what went wrong, the last two days' lines, Use this plan"
+  },
+  "P10-School-Share.dc.html": {
+   "x": 0,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 The hand-off: a school's message shared from WhatsApp (or a photo from Photos) to Tutor Central through the system's share sheet; the app opens on the items to check"
+  },
+  "P10-School-Confirm.dc.html": {
+   "x": 473,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 The items read from the message: an exam, a homework, a holiday, each for a school's class or a student, with subject, date and portions; open one to change it; Add keeps them"
+  },
+  "P10-School-Confirm-Edit.dc.html": {
+   "x": 946,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 An item opened from the list to check: the kind, title, who it is for, subject, date, portions; Remove this item"
+  },
+  "P10-School-List.dc.html": {
+   "x": 1419,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 The School tab: items by date (this week, next week, later), each with its kind, who it is for and the subject; exams count down · dark"
+  },
+  "P10-School-List-Light.dc.html": {
+   "x": 1892,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 The School tab · light"
+  },
+  "P10-School-AddMenu.dc.html": {
+   "x": 2365,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 The \"+\" menu on School: from a photo, paste a message, add by hand, ask parents to forward (sharing from WhatsApp or Photos is the other way in)"
+  },
+  "P10-School-Calendar.dc.html": {
+   "x": 2838,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 The exam calendar: the month with a dot under each day that has an item (exams in overdue, homework in the accent, holidays in ok), the chosen day's items under it"
+  },
+  "P10-School-Item.dc.html": {
+   "x": 3311,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 An exam's page: the school, class and subject, the date with the countdown, the portions, who sits it with their status, the preparation split by day (done, today, the mock two days before, the last set), what the school sent; Edit, Delete"
+  },
+  "P10-School-Item-Edit.dc.html": {
+   "x": 3784,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 Edit an item: the same sheet as the check, with Remove"
+  },
+  "P10-School-Item-Delete.dc.html": {
+   "x": 4257,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 Delete an item: the dialog; the preparation lines leave the plan, nothing else changes"
+  },
+  "P10-School-Ask.dc.html": {
+   "x": 4730,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 Ask parents to forward: the message once, a Send per parent on WhatsApp (a link opens one chat at a time), Sent marks"
+  },
+  "P10-TestTomorrow.dc.html": {
+   "x": 5203,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 Test tomorrow: the message in the parent's language with English beside it for the tutor, Edit, Open WhatsApp; offered on Today after the close and from the item"
+  },
+  "P10-School-Exam-LastDays.dc.html": {
+   "x": 5676,
+   "y": 42800,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.5 Exam preparation two days before: the mock ready for the class, marking from a photo, who is marked with their gap report, the last two days from what the mocks showed"
   }
  },
  "createdOnFiles": {
@@ -2348,6 +2439,14 @@
    "w": 240,
    "x": 0,
    "y": 41100
+  },
+  "p10_5": {
+   "kind": "title1",
+   "maxW": 8000,
+   "text": "Step 10.5 · Phase 10, School — the share hand-off, the items read for checking (exam, homework, notice, holiday), the list by date and the calendar, an exam's page with its preparation, edit and delete, Ask parents to forward, Test tomorrow in the parent's language, the last days before an exam",
+   "w": 240,
+   "x": 0,
+   "y": 42500
   }
  },
  "order": [
@@ -2660,7 +2759,20 @@
   "P10-Figure-FoodChain.dc.html",
   "P10-Brief.dc.html",
   "P10-Mock.dc.html",
-  "P10-GapReport.dc.html"
+  "P10-GapReport.dc.html",
+  "P10-School-Share.dc.html",
+  "P10-School-Confirm.dc.html",
+  "P10-School-Confirm-Edit.dc.html",
+  "P10-School-List.dc.html",
+  "P10-School-List-Light.dc.html",
+  "P10-School-AddMenu.dc.html",
+  "P10-School-Calendar.dc.html",
+  "P10-School-Item.dc.html",
+  "P10-School-Item-Edit.dc.html",
+  "P10-School-Item-Delete.dc.html",
+  "P10-School-Ask.dc.html",
+  "P10-TestTomorrow.dc.html",
+  "P10-School-Exam-LastDays.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

@@ -129,7 +129,7 @@ figures are illustrative (`docs/design/README.md`).
       (easier, shorter, more sums), the worked example one step at a time, each figure template (number line, fraction
       bar, place value, unit circle, triangle, labelled cell, food chain), the brief, the check in the close, the
       placement, the mock, the gap report, Own (a photo in a plan line).
-- [ ] **10.5 School** (row 18). The share sheet's hand-off, items for confirmation (exam, homework, notice, holiday,
+- [x] **10.5 School** (row 18, approved 2026-10-10; 13 boards). The share sheet's hand-off, items for confirmation (exam, homework, notice, holiday,
       each with student or class of a school, subject, date, portions), the list by date, an item's page, edit and
       delete, "Ask parents to forward" (the text, Send), test tomorrow (the message), exam preparation (the countdown,
       the split, today's set, the mock two days before, marking, the gap report).

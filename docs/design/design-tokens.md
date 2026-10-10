@@ -276,4 +276,6 @@ only unless kept for the weekday; the note day is Sunday evening after the week'
 gets at most three suggested messages a week, the rest held (D61). Phase 10 (step 10.4): a figure's spec is validated before it is drawn (a fraction bar's parts sum to the whole, a number line's
 landing equals start plus jumps, a food chain starts with a plant) and a kind without a template has no figure; the board view's
 question is 44/52; a regenerated artefact keeps its predecessor in the record; a mock is made two days before the school's test
-and the gap report's plan covers the last two days.
+and the gap report's plan covers the last two days. Phase 10 (step 10.5): an exam's preparation window is 14 days unless the tutor sets another; the mock is two days before; an item's
+portions are at most 500 characters; an item read from a message is kept only when ticked and added; an item for a school's class
+applies to every student of that school and class; Ask parents to forward is one message, one chat at a time.

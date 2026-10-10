@@ -780,3 +780,44 @@ The texts:
 | The brief | "Your brief" · "Five minutes to read before the class · made today, 16:40" · What the chapter is about · Three common mistakes · The worked example to use · Words to say · "AI can make mistakes. Read it as a colleague's note, not a textbook." |
 | The mock | "Mock in the school's pattern" · "25 marks · 40 minutes · chapters 1 and 2 · made today, 16:40" · "as Vidya Niketan sets them" · Mark from a photo · "AI can make mistakes. Check every question before you give it. Marking from a photo uses this paper's key." |
 | The gap report | "After the mock" · "The test is on Thursday. Two days left." · By skill · The last two days · Use this plan · "Replaces the two days' lines in the plan. Leave it and the plan carries on as it was." |
+
+## Phase 10 parts (step 10.5, approved 2026-10-10): School
+
+**Kind chip:** the compact chip with the item's kind: Exam `overdue` `exclamationmark.circle`, Homework `due` `doc.text`, Notice
+neutral `flag`, Holiday `ok` `calendar`.
+
+**School row:** the day column (`time` over `caption`), the title `rowTitle`, the line `footnote` `text2` (who, the school, the
+subject, the countdown), the kind chip, a chevron.
+
+**Item card (to check):** a list card: the head (a 24 pt checkbox, the title, the kind chip, a chevron), then two-column fact lines
+(the label 64 wide `footnote` `text3`, the value `rowLine` `text`) indented under the title.
+
+**Source well:** the message as it came, in a well at most 96 high (`rowLine` `text2`), under the label "What the school sent"; on
+the item's page the full text in a card with when it came.
+
+**Preparation row:** the School row's shape for a day of the split: the day column, the portion, the line with what is made, and
+on the right a tick in `ok` (done), the Today chip (`due`, `clock`), the Mock chip (neutral), or nothing.
+
+**Two-language message sheet:** the Phase 4 message sheet with Edit in the header, the message well labelled with the language,
+and a second block "In English, for you" on `surface2` in `rowLine` `text2`.
+
+**Parent send row:** avatar 36, the parent's name, "Dev's father", Send (secondary 36 high with the `whatsapp` glyph) or Sent in
+`ok` with a tick.
+
+**Calendar dots:** the Phase 4 calendar's 4 pt dot takes the kind's colour (an exam `overdue`, homework `accentText`, a holiday `ok`).
+
+**The share sheet (the system's, not drawn by the app):** the board shows iOS's sheet with Tutor Central among the targets for
+reference; the extension accepts one text or one image (plan Part B, Task 9).
+
+The texts:
+
+| Text | Words |
+|---|---|
+| Check what was read | "What the school sent" · "3 items read" · Add an item · "Add 3 items" · "Open an item to change who it is for, the date or the portions. Nothing is kept until you tap Add." |
+| The item's sheet | Kind · Title · For ("Dev, Meher and Nikhil are in class 8 there. Or one student.") · Subject · Date · Portions · Remove this item |
+| The list | This week · Next week · Later · "in 9 days" · "to Wed 21 Oct" · "the timetable is not out yet" |
+| The exam's page | "Friday 16 October · in 9 days" · "Portions: …" · Who · Preparation · "A set of 6 each · done in today's class" · "The mock" "In the school's pattern · 25 marks · mark it from a photo" · "What the mock showed" "The last set from the gap report" · What the school sent · "Shared from WhatsApp on Wed 7 Oct, 15:04" · Delete this item |
+| Delete | "Delete this item?" · "Science unit test 3 goes from the School tab and its preparation lines leave the plan. What was already taught stays in the record." · Delete |
+| Ask parents to forward | "One message, sent once to each parent on WhatsApp. Edit it first if you like; what they forward lands on this tab." · "Hello, this is Meera from Bright Minds Tuition. Please forward me whatever the school sends about tests, portions, homework and holidays, as soon as it comes. It helps me prepare your child for exactly what is coming. Thank you." then the signature · "2 of 7 sent" |
+| Test tomorrow | "Dev's test is tomorrow" · "Ramesh Kumar · +91 98848 43831 · Hindi" · "Message · Hindi" · "In English, for you" · "Hello Ramesh, Dev's science unit test is tomorrow (Thursday 8 October), from chapters 1 and 2. This evening, let him go over balancing equations once. Thank you." · "Opens WhatsApp with the Hindi message ready to send. We note it on Dev's page. The text is copied too, in case WhatsApp can't open." |
+| The last days | "Today, Wednesday" · "The mock, for Dev, Meher and Nikhil" "In the school's pattern · 25 marks · 40 minutes" · Ready · "Mark from a photo" "Each paper photographed after the class; the marks are suggested, you decide" · Marked · "14 of 25 · Balancing equations 3 of 10" · Gap report · "Not marked yet" · The last two days · "Test tomorrow goes to parents on Thursday evening" |

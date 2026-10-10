@@ -982,3 +982,62 @@ What the boards settle:
 - **The gap report** follows a marked mock: the score with a bar and the days left; By skill, one row each with a bar in `ok`, `due`
   or `overdue` by its fraction and the line that says what went wrong; The last two days, a row per day with the lines the plan
   will take, Change; Use this plan replaces those days' lines; leaving it keeps the plan as it was.
+
+## Phase 10 boards: step 10.5, School (approved 2026-10-10)
+
+Row 18 of the canvas (y 42800; the title note at 42500); sources `mockups/P10-School-*`, `P10-TestTomorrow`. Dark for every
+state; light for the list. Content is illustrative: a Class VIII B message from Vidya Niketan read into an exam, a homework and a
+holiday; Dev's test on Thursday 8 October for Test tomorrow.
+
+| Board | Source |
+|---|---|
+| The share hand-off (the system's sheet, for reference); the items read for checking; an item's sheet | `P10-School-Share`, `P10-School-Confirm`, `-Confirm-Edit` |
+| The list (dark and light); the "+" menu; the calendar | `P10-School-List`, `-Light`, `P10-School-AddMenu`, `P10-School-Calendar` |
+| An exam's page; edit; delete | `P10-School-Item`, `-Item-Edit`, `-Item-Delete` |
+| Ask parents to forward; Test tomorrow; the last days before an exam | `P10-School-Ask`, `P10-TestTomorrow`, `P10-School-Exam-LastDays` |
+
+Phase 13 builds these states (the light twins from `--appearance light`; the share sheet has none, it is the system's):
+
+| State | Shows |
+|---|---|
+| `school` | The School tab's list (supersedes `school-empty` once an item exists) |
+| `school-calendar` | The calendar with Friday 16 October chosen |
+| `school-add-menu` | The "+" menu |
+| `school-confirm` | The items read from a message |
+| `school-confirm-edit` | An item's sheet over the list to check |
+| `school-item` | An exam's page with its preparation |
+| `school-item-edit` | The item's sheet over the page |
+| `school-item-delete` | The delete dialog |
+| `school-ask` | Ask parents to forward |
+| `school-test-tomorrow` | The Test tomorrow sheet over the exam |
+| `school-last-days` | The exam two days before |
+
+What the boards settle:
+
+- **The way in** is the share extension (a message from WhatsApp, a photo from Photos) and the "+" menu (From a photo, Paste a
+  message, Add by hand, Ask parents to forward). A share opens the app on "Check what was read" with the source in a well
+  (`school_items.source_text` or the photo) and one card per item read: a 24 pt checkbox, the title, the kind chip (Exam `overdue`,
+  Homework `due`, Notice neutral, Holiday `ok`), and its facts in two columns (For, Subject, Date or Due, Portions). Add keeps the
+  ticked items (`confirmed_at`); nothing is kept before. An item read for a class ("Class 8 at Vidya Niketan") is for every student
+  of that school and class; a message about one student makes that student's item.
+- **The item's sheet** (from the list to check, and Edit on the page) holds the kind as chips, the title, For (a tile: a school's
+  class or one student), Subject, Date, Portions (500), Remove this item.
+- **The School tab** is List | Calendar. The list groups by date (This week, Next week, Later): the day column, the title, the
+  line (who, the school, the subject, the countdown for an exam), the kind chip, a chevron. The calendar is the Phase 4 month
+  card with a dot per day in the kind's colour and the chosen day's items under it.
+- **An exam's page**: the hero (the school, class and subject, the kind chip, the title, the date with the countdown, the portions);
+  Who (the students with their status); Preparation (one row per day from today to the test: the portion and what is made for it,
+  a tick when done, Today as a chip, the mock two days before, the last set from the gap report; Change opens the day's lines);
+  What the school sent (the source and when it came); Delete this item. A homework's page has no Preparation; a holiday's page
+  says the batch days it covers.
+- **Preparation (spec section 6)** starts when an exam is within the window (14 days unless changed): the portions split across
+  the days, a daily set, the mock two days before in the school's pattern (from its earlier papers, or the board's blueprint),
+  marking from a photo (V1's Check a paper with the mock's key), and the gap report that sets the last days. Two days before,
+  the page leads with Today (the mock ready, Mark from a photo), Marked (each student's score and the quiet Gap report) and The
+  last two days.
+- **Ask parents to forward** is a pushed screen: the message once (the tutor edits it), then one row per parent with Send
+  (opens WhatsApp to that parent) and Sent marks; "2 of 7 sent" beside the title. Each Send logs a `message_log` row.
+- **Test tomorrow** is the Phase 4 message sheet in two languages: the message in the parent's language with the signature, "In
+  English, for you" under it on `surface2`, Edit in the header, Open WhatsApp (logs `test_tomorrow`). It is offered on Today's
+  "To parents" the evening before and from the item.
+- **Delete** asks with the dialog: the item leaves the tab and its preparation lines leave the plan; what was taught stays.
