@@ -138,7 +138,7 @@ extension RootView {
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.
     static func initialRoutes(for state: LaunchState) -> [Route] {
         if let routes = settingsRoutes(for: state) ?? attendanceRoutes(for: state) ?? studentPageRoutes(for: state)
-            ?? closeRoutes(for: state) {
+            ?? closeRoutes(for: state) ?? artefactRoutes(for: state) {
             return routes
         }
         return switch state {

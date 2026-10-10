@@ -31,6 +31,11 @@ import Foundation
         return withArtefacts(plan)
     }
 
+    public func plan(id: UUID, centre _: UUID) async throws -> PlanRecord? {
+        try await begin()
+        return plans.first { $0.id == id }.map(withArtefacts)
+    }
+
     public func make(_ draft: PlanDraft, centre _: UUID) async throws -> PlanRecord {
         try await begin()
         if let makeDelay {

@@ -6,6 +6,8 @@ import Foundation
 public protocol PlansRepository: Sendable {
     /// The day's plan for a batch with its items and the artefacts its items link; nil when none was made.
     func plan(centre: UUID, classID: UUID, date: Day) async throws -> PlanRecord?
+    /// A plan by its id (an artefact's screen reads the plan it belongs to); nil when gone.
+    func plan(id: UUID, centre: UUID) async throws -> PlanRecord?
     /// `make_plan`: the draft written (a second call replaces the day's plan); the record with its item ids, no
     /// artefacts.
     func make(_ draft: PlanDraft, centre: UUID) async throws -> PlanRecord

@@ -9,7 +9,8 @@ import SwiftUI
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
     Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
-    Payments: View, Reports: View, Tools: View, School: View, Textbook: View, Placement: View, Close: View
+    Payments: View, Reports: View, Tools: View, School: View, Textbook: View, Placement: View, Close: View,
+    Artefact: View
 >: View {
     @Bindable var state: TabsState
     let toasts: ToastCenter
@@ -39,6 +40,8 @@ struct TabsView<
     let placement: (UUID) -> Placement
     /// The close of a batch (V2).
     let close: (UUID) -> Close
+    /// A plan's artefact (V2).
+    let artefact: (UUID) -> Artefact
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -65,6 +68,7 @@ struct TabsView<
         case let .event(id): schedule(id).id(id)
         case .tasks: tasks()
         case let .close(id): close(id)
+        case let .artefact(id): artefact(id).id(id)
         case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
              .checkResult: tools(route)
         }

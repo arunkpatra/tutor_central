@@ -45,7 +45,7 @@ public enum Fixtures {
             textbooks: closeStates.contains(state) || planStates.contains(state) ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),
-            plans: plans(for: state), photos: FakePhotoStore(),
+            plans: plans(for: state), photos: photos(for: state),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
@@ -173,6 +173,7 @@ public enum Fixtures {
              .eventGone,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayScrolled, .todayPlanning,
              .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayEvening, .todayAddingTask,
+             .sheet, .sheetKey, .sheetBoard, .sheetRegenerate, .sheetRegenerating, .sheetOwnMenu, .sheetOwn,
              .todayAfterClose,
              .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
              .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
