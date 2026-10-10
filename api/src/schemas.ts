@@ -139,6 +139,7 @@ export type ClassLevel = z.infer<typeof ClassLevel>;
 export const Language = z.enum(["en", "hinglish", "hi", "kn"]);
 /** The figure templates the app draws from a typed spec (D59); a kind without a template has no figure. */
 export const FigureKind = z.enum(["number_line", "fraction_bar", "place_value", "unit_circle", "triangle", "labelled_cell", "food_chain"]);
+export type FigureKind = z.infer<typeof FigureKind>;
 const Day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const Subject = z.string().min(1).max(80);
 const Name = z.string().min(1).max(200);
@@ -146,9 +147,19 @@ const Skills = z.array(Name);
 const Student = { studentId: z.guid(), studentName: z.string().min(1).max(80), tutorName: z.string().min(1).max(80) };
 const V2 = { ...CentreInput.shape };
 
-/** POST /ai/plan: the batch (null: the session for all students) and the day; the API reads the record as the user. */
-export const PlanInput = z.object({ ...V2, classId: z.guid().nullable(), date: Day });
+/** POST /ai/plan: the groups whose record names no skill yet (new students, no book). The API names a first chapter and
+ *  skill per group for the class, subject and month of the school year. No student. */
+export const PlanInput = z.object({
+  ...V2,
+  classId: z.guid().nullable(),
+  date: Day,
+  month: z.number().int().min(1).max(12),
+  groups: z.array(z.object({ groupNo: z.number().int().min(1).max(3), classLevel: ClassLevel, subject: Subject }).strict()).min(1).max(3),
+});
 export type PlanInput = z.infer<typeof PlanInput>;
+export const PlanOutput = z.object({ groups: z.array(z.object({ groupNo: z.number().int().min(1).max(3), chapter: Name, skill: Name })).min(1) });
+export type PlanOutput = z.infer<typeof PlanOutput>;
+
 
 /** POST /ai/make: one artefact of a kind. Group material names skills and a level and no student; the personal kinds
  *  name the student and need their consent (start_ai_generation). */
@@ -162,6 +173,8 @@ export const MakeInput = z.discriminatedUnion("kind", [
     questions: z.number().int().min(3).max(30).default(10),
     forHomework: z.boolean().default(false),
     groupNo: z.number().int().min(1).max(9).optional(),
+    /** Make it again: one of the menu's words or the tutor's own, in the prompt (P10-Sheet-Regenerate). */
+    reason: z.string().min(1).max(200).optional(),
   }),
   z.object({ ...V2, kind: z.literal("worked_example"), classLevel: ClassLevel, subject: Subject, skill: Name }),
   z.object({ ...V2, kind: z.literal("figure"), figure: FigureKind, classLevel: ClassLevel, subject: Subject, skill: Name }),
@@ -199,6 +212,45 @@ export const MakeInput = z.discriminatedUnion("kind", [
   }),
 ]);
 export type MakeInput = z.infer<typeof MakeInput>;
+export type SheetInput = Extract<MakeInput, { kind: "sheet" }>;
+
+/** A sheet is a question set (V1's homework and worksheet shape): the app's `SheetContent` decodes it. */
+export const SheetOutput = QuestionSetOutput;
+export type SheetOutput = z.infer<typeof SheetOutput>;
+
+export const WorkedExampleOutput = z.object({
+  problem: z.string().min(1).max(300),
+  steps: z.array(z.object({ title: z.string().min(1).max(80), working: z.string().min(1).max(400) })).min(2).max(6),
+  slip: z.string().min(1).max(300),
+});
+export type WorkedExampleOutput = z.infer<typeof WorkedExampleOutput>;
+
+/** The seven figure templates (D59), each with the rule the app checks again before drawing (Domain's FigureSpec). */
+const Label = z.string().min(1).max(40);
+export const Figure = z.discriminatedUnion("kind", [
+  z
+    .object({ kind: z.literal("number_line"), from: z.number().int(), to: z.number().int(), step: z.number().int().min(1), start: z.number().int(), jumps: z.array(z.number().int()).min(1).max(8) })
+    .refine((f) => f.from < f.to && (f.to - f.from) / f.step <= 40, { message: "the line has 1 to 40 steps" })
+    .refine((f) => f.start >= f.from && f.start <= f.to, { message: "start is on the line" })
+    .refine((f) => f.jumps.every((j) => j !== 0) && f.start + f.jumps.reduce((a, b) => a + b, 0) >= f.from && f.start + f.jumps.reduce((a, b) => a + b, 0) <= f.to, { message: "the landing is on the line" }),
+  z.object({ kind: z.literal("fraction_bar"), parts: z.number().int().min(1).max(24), shaded: z.number().int().min(0), label: Label }).refine((f) => f.shaded <= f.parts, { message: "shaded parts fit the whole" }),
+  z.object({ kind: z.literal("place_value"), number: z.number().int().min(0).max(9_999_999) }),
+  z.object({ kind: z.literal("unit_circle"), angleDegrees: z.number().int().min(0).max(360) }),
+  z.object({ kind: z.literal("triangle"), angles: z.array(z.number().int().min(1).max(178)).length(3), labels: z.array(Label).length(3) }).refine((f) => f.angles.reduce((a, b) => a + b, 0) === 180, { message: "the angles sum to 180" }),
+  z.object({ kind: z.literal("labelled_cell"), cell: z.enum(["plant", "animal"]), labels: z.array(Label).min(1).max(5) }),
+  z.object({ kind: z.literal("food_chain"), links: z.array(Label).min(2).max(6) }),
+]);
+export type Figure = z.infer<typeof Figure>;
+export const FigureOutput = z.object({ figure: Figure, caption: z.string().min(1).max(200) });
+export type FigureOutput = z.infer<typeof FigureOutput>;
+
+export const BriefOutput = z.object({
+  about: z.string().min(1).max(1200),
+  mistakes: z.array(z.object({ title: z.string().min(1).max(80), howToCatch: z.string().min(1).max(300) })).length(3),
+  workedExample: WorkedExampleOutput,
+  words: z.array(z.string().min(1).max(160)).length(3),
+});
+export type BriefOutput = z.infer<typeof BriefOutput>;
 
 /** POST /ai/parse-school: what the school sent, as text or one photo. */
 export const ParseSchoolInput = z

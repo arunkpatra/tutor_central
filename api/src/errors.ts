@@ -7,6 +7,7 @@ const REFUSED: Partial<Record<AIKind, string>> = {
   scan_register: "Couldn't read this photo. Try another.",
   check_paper: "Couldn't check these pages. Try clearer photos.",
   parse_textbook: "Couldn't read the chapters from this photo. Try a flatter, brighter one.",
+  figure: "Couldn't draw a figure for this skill. The plan goes on without it.",
 };
 const V1_KINDS: readonly AIKind[] = ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"] satisfies V1Kind[];
 
