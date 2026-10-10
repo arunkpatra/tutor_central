@@ -9,7 +9,7 @@ import UIKit
 extension Fixtures {
     static let planStates: Set<LaunchState> = .init([
         .today, .todayScrolled, .todayPlanning, .todayLineMenu, .todayPlanChanged, .todayPlanChange,
-        .todayAfterClose,
+        .todayAfterClose, .workedExample, .brief,
     ]).union(sheetStates)
 
     /// The sheet's states (P10-Sheet and its forms), over the boards' plan.
@@ -43,8 +43,10 @@ extension Fixtures {
         return image.jpegData(compressionQuality: 0.8) ?? Data()
     }
 
-    /// Group 1's homework sheet in the boards' plan.
+    /// Group 1's homework sheet, its worked example and the brief in the boards' plan.
     static let groupOneSheet = UUID(uuidString: "abababab-0000-0000-0001-000000000012")!
+    static let groupOneExample = UUID(uuidString: "abababab-0000-0000-0001-000000000014")!
+    static let brief = UUID(uuidString: "abababab-0000-0000-0001-000000000005")!
 
     /// The Evening batch's five with the boards' statuses: Dev not on track, Meher on track, Nikhil to watch, Riya not
     /// known yet, Sahil on track.

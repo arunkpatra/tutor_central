@@ -5,13 +5,15 @@ import Domain
 import PhotosUI
 import SwiftUI
 
-/// What a launch state sets up on a sheet (P10-Sheet-Key, -Board, -Regenerate, -Regenerating, -OwnMenu, -Own).
-public enum SheetBoardState: Hashable, Sendable {
+/// What a launch state sets up on an artefact: a sheet's (P10-Sheet-Key, -Board, -Regenerate, -Regenerating, -OwnMenu)
+/// or the worked example's second step shown (P10-WorkedExample).
+public enum ArtefactBoardState: Hashable, Sendable {
     case key
     case board
     case reasons
     case regenerating
     case ownMenu
+    case secondStep
 }
 
 /// A sheet (P10-Sheet, dark and light; -Key; -Board), made again (-Regenerate, -Regenerating), or the tutor's own in
@@ -25,7 +27,7 @@ struct SheetView: View {
     @Environment(NoticeCenter.self) private var notices: NoticeCenter?
     @State private var store: SheetStore
     let actions: ArtefactsActions
-    let boardState: SheetBoardState?
+    let boardState: ArtefactBoardState?
     @State private var topInset: CGFloat = 0
     @State private var pdf: URL?
     @State private var menu: Menu?
@@ -35,7 +37,7 @@ struct SheetView: View {
     @State private var picking = false
     @State private var picked: PhotosPickerItem?
 
-    init(store: SheetStore, actions: ArtefactsActions, boardState: SheetBoardState?) {
+    init(store: SheetStore, actions: ArtefactsActions, boardState: ArtefactBoardState?) {
         _store = State(initialValue: store)
         self.actions = actions
         self.boardState = boardState
@@ -203,7 +205,7 @@ struct SheetView: View {
         case .reasons: menu = .reasons
         case .regenerating: Task { await store.makeAgain(.easier) }
         case .ownMenu: menu = .own
-        case nil: break
+        case .secondStep, nil: break
         }
     }
 }

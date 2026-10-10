@@ -111,11 +111,8 @@ import UIKit
     /// "Group 1 · Class 8 Science · Chemical reactions".
     public var eyebrow: String {
         guard let group else { return "Sheet" }
-        let levels = Array(Set(group.memberIDs.compactMap { register.student($0)?.classLevel })).sorted()
-        let classes = levels.map(\.title).joined(separator: " and ")
-        let subject = [classes.isEmpty ? nil : classes, group.subject == group.chapter ? nil : group.subject]
-            .compactMap(\.self).joined(separator: " ")
-        return ["Group \(group.number)", subject, group.chapter].filter { !$0.isEmpty }.joined(separator: " · ")
+        return ["Group \(group.number)", ArtefactWords.classSubject(group, register: register), group.chapter]
+            .compactMap(\.self).filter { !$0.isEmpty }.joined(separator: " · ")
     }
 
     public var title: String {

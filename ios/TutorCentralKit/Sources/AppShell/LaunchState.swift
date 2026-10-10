@@ -119,6 +119,9 @@ public enum LaunchState: String, CaseIterable, Sendable {
     /// Use my own: the three ways; the tutor's photo in the sheet's place (P10-Sheet-OwnMenu, -Own).
     case sheetOwnMenu = "sheet-own-menu"
     case sheetOwn = "sheet-own"
+    /// Group 1's worked example at its second step (P10-WorkedExample); the Chemical reactions brief (P10-Brief).
+    case workedExample = "worked-example"
+    case brief
     /// The close of the Evening batch (P10-Close, -Scrolled, -Placement).
     case close
     case closeScrolled = "close-scrolled"

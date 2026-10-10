@@ -4,7 +4,7 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// The artefacts' wiring (V2): a sheet pushed from a plan line or a student's page.
+/// The artefacts' wiring (V2): a sheet, a worked example or a brief pushed from a plan line or a student's page.
 extension RootView {
     @ViewBuilder func artefactView(_ id: UUID) -> some View {
         if case let .ready(workspace) = session.state {
@@ -16,24 +16,31 @@ extension RootView {
                     online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
                 ),
                 actions: ArtefactsActions(openArtefact: { shell.tabs.push(.artefact($0)) }),
-                boardState: launch.flatMap(Self.sheetBoardState)
+                boardState: launch.flatMap(Self.artefactBoardState)
             )
         }
     }
 
-    /// The sheet's launch states on Today's stack: Group 1's homework sheet.
+    /// The artefacts' launch states on Today's stack: Group 1's homework sheet, the tutor's own, Group 1's worked
+    /// example, the brief.
     static func artefactRoutes(for state: LaunchState) -> [Route]? {
-        guard Fixtures.sheetStates.contains(state) else { return nil }
-        return [.artefact(state == .sheetOwn ? Fixtures.ownSheet : Fixtures.groupOneSheet)]
+        switch state {
+        case .sheetOwn: [.artefact(Fixtures.ownSheet)]
+        case .workedExample: [.artefact(Fixtures.groupOneExample)]
+        case .brief: [.artefact(Fixtures.brief)]
+        case _ where Fixtures.sheetStates.contains(state): [.artefact(Fixtures.groupOneSheet)]
+        default: nil
+        }
     }
 
-    static func sheetBoardState(_ state: LaunchState) -> SheetBoardState? {
+    static func artefactBoardState(_ state: LaunchState) -> ArtefactBoardState? {
         switch state {
         case .sheetKey: .key
         case .sheetBoard: .board
         case .sheetRegenerate: .reasons
         case .sheetRegenerating: .regenerating
         case .sheetOwnMenu: .ownMenu
+        case .workedExample: .secondStep
         default: nil
         }
     }

@@ -174,6 +174,7 @@ public enum Fixtures {
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayScrolled, .todayPlanning,
              .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayEvening, .todayAddingTask,
              .sheet, .sheetKey, .sheetBoard, .sheetRegenerate, .sheetRegenerating, .sheetOwnMenu, .sheetOwn,
+             .workedExample, .brief,
              .todayAfterClose,
              .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
              .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
