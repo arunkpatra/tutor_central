@@ -89,6 +89,8 @@ enum Route: Hashable {
     case student(UUID)
     /// Add a textbook for a student (V2), for a subject or to choose one.
     case textbook(student: UUID, subject: String?)
+    /// A student's placement (V2).
+    case placement(UUID)
     /// Attendance's mark root (D65: under More, and pushed from Today and a batch).
     case attendance
     case classes

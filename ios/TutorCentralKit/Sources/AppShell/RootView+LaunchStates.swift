@@ -20,7 +20,7 @@ extension RootView {
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
              .student, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder, .studentConsentAsk,
              .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
-             .textbookChapterEdit, .studentArchived,
+             .textbookChapterEdit, .placement, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
@@ -161,6 +161,7 @@ extension RootView {
         case .studentNotKnown, .studentConsentAsk, .studentConsentRecord, .studentConsentWaiting:
             [.student(FakeStudentsRepository.riya)]
         case .studentLadder: [.student(FakeStudentsRepository.sahil)]
+        case .placement: [.student(FakeStudentsRepository.riya), .placement(FakeStudentsRepository.riya)]
         case .textbookIntro, .textbookReading, .textbookChapters, .textbookChapterEdit:
             [
                 .student(FakeStudentsRepository.riya),

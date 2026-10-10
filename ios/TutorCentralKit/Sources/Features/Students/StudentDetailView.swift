@@ -73,7 +73,9 @@ public struct StudentDetailView: View {
                         Banner(symbol: "archivebox", text: line)
                     }
                     if let tracking = store.tracking {
-                        TrackingSection(lines: tracking, firstName: student.firstName, place: nil)
+                        TrackingSection(lines: tracking, firstName: student.firstName) {
+                            navigation.openPlacement(student.id)
+                        }
                     }
                     ParentCard(student: student, call: store.callURL, whatsApp: store.whatsAppURL, addContact: edit)
                     if !consentAgreed {

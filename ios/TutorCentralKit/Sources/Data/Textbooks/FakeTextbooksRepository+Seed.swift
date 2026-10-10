@@ -152,3 +152,52 @@ private extension Array {
         indices.contains(index) ? self[index] : nil
     }
 }
+
+public extension FakeTextbooksRepository {
+    /// The seed plus Riya's class 5 Mathematics read from the contents page and kept (P10-Placement's chapters).
+    static func seededWithRiyasMaths() async throws -> FakeTextbooksRepository {
+        let repo = seeded()
+        let book = Textbook(
+            id: UUID(uuidString: "bbbbbbbb-0000-0000-0000-000000000005")!, schoolID: FakeSchoolsRepository.vidya.id,
+            classLevel: .five, subject: "Mathematics", title: AISamples.textbook.title ?? "Math-Magic 5",
+            publisher: nil, edition: nil, chapters: AISamples.textbook.chapters
+        )
+        let saved = try await repo.save(book, centre: FakeSchoolsRepository.centre)
+        _ = try await repo.copyToClass(textbookID: saved.id, centre: FakeSchoolsRepository.centre)
+        return repo
+    }
+}
+
+public extension FakeTextbooksRepository {
+    /// The seed with Riya's class 5 Mathematics already kept (the `placement` state), built at once.
+    static func seeded(riyasMaths: Bool) -> FakeTextbooksRepository {
+        guard riyasMaths else { return seeded() }
+        var chapters = seedChapters, skills = seedSkills
+        let riya = FakeStudentsRepository.riya
+        let read = AISamples.textbook.chapters
+        chapters[riya] = read.map { chapter in
+            Chapter(
+                id: riyaID(chapter.position, 0),
+                subject: "Mathematics",
+                position: chapter.position,
+                name: chapter.name
+            )
+        }
+        skills[riya] = read.flatMap { chapter in
+            chapter.skills.enumerated().map { index, name in
+                Skill(
+                    id: riyaID(chapter.position, index + 1), chapterID: riyaID(chapter.position, 0),
+                    position: index + 1,
+                    name: name, state: .notStarted, stateAt: FakeCountsRepository.fixedNow, lastCheckedAt: nil
+                )
+            }
+        }
+        let repo = FakeTextbooksRepository(textbooks: [mathsTen], chapters: chapters, skills: skills)
+        repo.students = FakeStudentsRepository.seed
+        return repo
+    }
+
+    private static func riyaID(_ chapter: Int, _ skill: Int) -> UUID {
+        UUID(uuidString: String(format: "cccccccc-0009-%04d-%04d-000000000000", chapter, skill))!
+    }
+}

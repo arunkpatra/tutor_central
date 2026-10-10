@@ -205,7 +205,8 @@ public struct RootView: View {
                 reports: { reportsView },
                 tools: { toolsView($0) },
                 school: { SchoolLaterView(build: deps.bundleVersion) },
-                textbook: { textbookView(student: $0, subject: $1) }
+                textbook: { textbookView(student: $0, subject: $1) },
+                placement: { placementView($0) }
             )
         }
     }

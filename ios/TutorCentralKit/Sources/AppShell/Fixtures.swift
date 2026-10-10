@@ -42,7 +42,7 @@ public enum Fixtures {
             attendance: attendance,
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
-            textbooks: FakeTextbooksRepository.seeded(),
+            textbooks: FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: FakeRecordRepository(),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
@@ -160,7 +160,7 @@ public enum Fixtures {
              .studentNewSchool, .studentNewEnd, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder,
              .studentConsentAsk,
              .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
-             .textbookChapterEdit, .student,
+             .textbookChapterEdit, .placement, .student,
              .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm,
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
