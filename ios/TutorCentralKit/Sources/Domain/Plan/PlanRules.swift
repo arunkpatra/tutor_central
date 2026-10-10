@@ -85,6 +85,13 @@ public enum PlanRules {
             let group = group(number, members: members, subject: subject, input: input)
             planned.append(group)
             lines += members.flatMap { studentLines($0, group: group, input: input) }
+            lines.append(PlanLine(
+                studentID: nil, groupNo: number, kind: .workedExample, skillID: group.skillID,
+                words: groupLineWords(.workedExample, group)
+            ))
+            if let figure = figureLine(group) {
+                lines.append(figure)
+            }
             if group.classLevels.contains(where: { $0 > .seven }) {
                 lines.append(briefLine(group))
             }
@@ -92,9 +99,31 @@ public enum PlanRules {
         return PlanDraft(classID: input.classroom.id, date: input.date, groups: planned, lines: lines, leftOut: [])
     }
 
+    /// The brief's title and line before its chapter ("Your brief · Chemical reactions").
+    public static let briefPrefix = "Your brief · "
+
+    /// A teach line while /ai/plan has not named the group's skill.
+    public static let withTheGroup = "Teach: with the group"
+
+    /// The words of a group's worked example and figure lines ("Worked example · Balancing equations"): kept in the
+    /// record, not shown as lines.
+    static func groupLineWords(_ kind: PlanLineKind, _ group: PlanGroup) -> String {
+        let name = kind == .figure ? "Figure" : "Worked example"
+        return group.skill.isEmpty ? name : "\(name) · \(group.skill)"
+    }
+
+    /// The group's figure line when its skill names a template (plan decision 7).
+    static func figureLine(_ group: PlanGroup) -> PlanLine? {
+        guard !group.skill.isEmpty, FigureSpec.Kind.matching(skill: group.skill) != nil else { return nil }
+        return PlanLine(
+            studentID: nil, groupNo: group.number, kind: .figure, skillID: group.skillID,
+            words: groupLineWords(.figure, group)
+        )
+    }
+
     /// The group's brief line ("Your brief · Chemical reactions"; "Your brief" until the chapter is named).
     public static func briefLine(_ group: PlanGroup) -> PlanLine {
-        let words = group.chapter.isEmpty ? "Your brief" : "Your brief · \(group.chapter)"
+        let words = group.chapter.isEmpty ? "Your brief" : briefPrefix + group.chapter
         return PlanLine(studentID: nil, groupNo: group.number, kind: .brief, skillID: nil, words: words)
     }
 
@@ -236,7 +265,7 @@ public enum PlanRules {
             lines.append(line(.catchUp, missed + then, false))
         }
         let teach = skillName.isEmpty
-            ? "Teach: with the group"
+            ? withTheGroup
             : again ? "Teach again: \(skillName), with the worked example" : "Teach: \(skillName)"
         lines.append(line(.teach, teach, false))
         lines.append(line(.practise, "Practise set 1", false))

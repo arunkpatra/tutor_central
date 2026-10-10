@@ -50,9 +50,10 @@ public struct PlanGroup: Hashable, Sendable, Codable, Identifiable {
     }
 }
 
-/// A line's kind (`plan_item_kind`, migration 0010).
+/// A line's kind (`plan_item_kind`, migrations 0010 and 0020). The brief, the worked example and the figure are a
+/// group's lines (no student): each links its group's artefact.
 public enum PlanLineKind: String, Hashable, Sendable, Codable, CaseIterable {
-    case teach, practise, check, homework, brief, catchUp = "catch_up"
+    case teach, practise, check, homework, brief, catchUp = "catch_up", workedExample = "worked_example", figure
 }
 
 /// One line as the rules made it, before it is written.
@@ -77,10 +78,63 @@ public struct PlanLine: Hashable, Sendable, Codable {
         self.words = words
         self.personalChecks = personalChecks
     }
+
+    func with(words: String) -> PlanLine {
+        PlanLine(
+            studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
+            personalChecks: personalChecks
+        )
+    }
 }
 
 /// The day's plan for a batch as the rules made it.
 public struct PlanDraft: Hashable, Sendable {
+    /// The groups /ai/plan named (by number): their chapter and skill, the teach lines that followed the group, the
+    /// brief's words and the figure's line when the skill has a template.
+    public func naming(_ topics: [Int: (chapter: String, skill: String)]) -> PlanDraft {
+        let renamed = groups.map { group in
+            topics[group.number].map { group.named(chapter: $0.chapter, skill: $0.skill) } ?? group
+        }
+        var lines: [PlanLine] = []
+        for line in self.lines {
+            guard let topic = topics[line.groupNo], let group = renamed.first(where: { $0.number == line.groupNo })
+            else {
+                lines.append(line)
+                continue
+            }
+            switch line.kind {
+            case .teach where line.words == PlanRules.withTheGroup:
+                lines.append(line.with(words: "Teach: \(topic.skill)"))
+            case .catchUp where !line.words.contains(" · then "):
+                lines.append(line.with(words: "\(line.words) · then \(topic.skill)"))
+            case .brief:
+                lines.append(PlanRules.briefLine(group))
+            case .workedExample:
+                lines.append(line.with(words: PlanRules.groupLineWords(.workedExample, group)))
+                if let figure = PlanRules.figureLine(group) {
+                    lines.append(figure)
+                }
+            case .figure:
+                continue
+            default:
+                lines.append(line)
+            }
+        }
+        return PlanDraft(classID: classID, date: date, groups: renamed, lines: lines, leftOut: leftOut)
+    }
+
+    /// A brief line for each group whose chapter the tutor had a brief made for before, when it has none.
+    public func addingBriefs(for chapters: Set<String>) -> PlanDraft {
+        let missing = groups.filter { group in
+            chapters.contains(group.chapter) && !lines.contains { $0.kind == .brief && $0.groupNo == group.number }
+        }
+        guard !missing.isEmpty else { return self }
+        return PlanDraft(
+            classID: classID, date: date, groups: groups, lines: lines + missing.map(PlanRules.briefLine),
+            leftOut: leftOut
+        )
+    }
+
     public let classID: UUID
     public let date: Day
     public let groups: [PlanGroup]

@@ -151,10 +151,8 @@ public final class SupabasePlansRepository: PlansRepository {
 
     /// "Your brief · Chemical reactions" names "Chemical reactions".
     static func chapter(ofBrief title: String) -> String {
-        title.hasPrefix(briefPrefix) ? String(title.dropFirst(briefPrefix.count)) : title
+        title.hasPrefix(PlanRules.briefPrefix) ? String(title.dropFirst(PlanRules.briefPrefix.count)) : title
     }
-
-    static let briefPrefix = "Your brief · "
 
     private static func id(_ uuid: UUID) -> AnyJSON {
         .string(uuid.uuidString.lowercased())
