@@ -2061,6 +2061,139 @@
    "w": 393,
    "h": 852,
    "title": "Phase 10 · 10.3 Change on the plan: how many groups, each group's subject today, keep it for this weekday (the weekly pattern), make the plan again"
+  },
+  "P10-Sheet.dc.html": {
+   "x": 0,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 A sheet from the plan: who it is for, Paper | Board | Key, the questions; Share as PDF, Print, Make it again, Use my own · dark"
+  },
+  "P10-Sheet-Light.dc.html": {
+   "x": 473,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 A sheet · light"
+  },
+  "P10-Sheet-Key.dc.html": {
+   "x": 946,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The sheet's key: each answer under its question, for the tutor; left out of the PDF unless chosen"
+  },
+  "P10-Sheet-Board.dc.html": {
+   "x": 1419,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The board view: one question at a time in large type for the class to copy; Previous and Next, the count, Done; Key shows the answer under it"
+  },
+  "P10-Sheet-Regenerate.dc.html": {
+   "x": 1892,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Make it again: one tap and a reason (easier, harder, shorter, more sums, different numbers, or your own words)"
+  },
+  "P10-Sheet-Regenerating.dc.html": {
+   "x": 2365,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The sheet being made again: the old one stays dimmed until the new one arrives (the Phase 6 pattern)"
+  },
+  "P10-Sheet-OwnMenu.dc.html": {
+   "x": 2838,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Use my own: the tutor's own sheet in place of the made one, by a photo, from Photos or typed"
+  },
+  "P10-Sheet-Own.dc.html": {
+   "x": 3311,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The tutor's own sheet in the plan's place: the photo, when it was added, the same place in the record; the made sheet is kept behind a quiet action"
+  },
+  "P10-WorkedExample.dc.html": {
+   "x": 3784,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The worked example, one step at a time: the problem, the steps shown so far, Show the next step; the slip to watch for under the button"
+  },
+  "P10-Figure-NumberLine.dc.html": {
+   "x": 4257,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: number line, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Figure-FractionBar.dc.html": {
+   "x": 4730,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: fraction bar, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Figure-PlaceValue.dc.html": {
+   "x": 5203,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: place value, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Figure-UnitCircle.dc.html": {
+   "x": 5676,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: unit circle, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Figure-Triangle.dc.html": {
+   "x": 6149,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: triangle, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Figure-Cell.dc.html": {
+   "x": 6622,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: labelled cell, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Figure-FoodChain.dc.html": {
+   "x": 7095,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 Figure template: food chain, drawn by the app from a typed spec with the tokens (D59); shown with the worked example and printed with the sheet"
+  },
+  "P10-Brief.dc.html": {
+   "x": 7568,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The tutor's brief for a chapter above class 7 or one asked about: what it is about, three common mistakes, the worked example to use, words to say"
+  },
+  "P10-Mock.dc.html": {
+   "x": 8041,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The mock two days before the school's test: in the school's pattern from its last papers (or the board's blueprint), the key, Mark from a photo (V1's Check a paper with this key)"
+  },
+  "P10-GapReport.dc.html": {
+   "x": 8514,
+   "y": 41400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.4 The gap report after a marked mock: the score, each skill with its bar and what went wrong, the last two days' lines, Use this plan"
   }
  },
  "createdOnFiles": {
@@ -2207,6 +2340,14 @@
    "w": 240,
    "x": 0,
    "y": 39700
+  },
+  "p10_4": {
+   "kind": "title1",
+   "maxW": 8000,
+   "text": "Step 10.4 · Phase 10, the artefacts — the sheet in three forms (paper, board view, key), make it again with a reason, the tutor's own in its place, the worked example one step at a time, the seven figure templates drawn by the app (D59), the brief, the mock, the gap report",
+   "w": 240,
+   "x": 0,
+   "y": 41100
   }
  },
  "order": [
@@ -2500,7 +2641,26 @@
   "P10-Today-AfterClose.dc.html",
   "P10-Today-NoteDay.dc.html",
   "P10-Today-NoBatch.dc.html",
-  "P10-Today-Plan-Change.dc.html"
+  "P10-Today-Plan-Change.dc.html",
+  "P10-Sheet.dc.html",
+  "P10-Sheet-Light.dc.html",
+  "P10-Sheet-Key.dc.html",
+  "P10-Sheet-Board.dc.html",
+  "P10-Sheet-Regenerate.dc.html",
+  "P10-Sheet-Regenerating.dc.html",
+  "P10-Sheet-OwnMenu.dc.html",
+  "P10-Sheet-Own.dc.html",
+  "P10-WorkedExample.dc.html",
+  "P10-Figure-NumberLine.dc.html",
+  "P10-Figure-FractionBar.dc.html",
+  "P10-Figure-PlaceValue.dc.html",
+  "P10-Figure-UnitCircle.dc.html",
+  "P10-Figure-Triangle.dc.html",
+  "P10-Figure-Cell.dc.html",
+  "P10-Figure-FoodChain.dc.html",
+  "P10-Brief.dc.html",
+  "P10-Mock.dc.html",
+  "P10-GapReport.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

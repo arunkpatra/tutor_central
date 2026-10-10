@@ -729,3 +729,54 @@ The texts:
 | To parents | "Test tomorrow" "Dev's father · Hindi · Science unit test on Thu 8 Oct, chapters 1 and 2" · "Absent today" "Nikhil's mother · English · the absence alert" · "Weekly notes · Sunday" "4 notes wait for the note day. Riya's waits for consent." |
 | The note day | "Note day" "7 notes for parents" "Each one is about the week: what was taught, what went right, what to practise. Read it as the parent will, then send." · "2 of 7 sent" · a row: "Hindi · Chemical reactions · 2 absences" · Read · Sent · Held · "Hindi · waits for Neha's consent" |
 | Tomorrow | "Its plan is made when you open the app tomorrow" |
+
+## Phase 10 parts (step 10.4, approved 2026-10-10): the artefacts
+
+**Result footer, V2:** the Phase 6 result footer with the quiet "Make it again" and two secondary 46 buttons: Share as PDF
+(`square.and.arrow.up`) and Print (`printer`); Copy (`doc.on.doc`) replaces Print on the brief; the mock's second button is the
+primary Mark from a photo (`camera`).
+
+**Three-form segmented control:** Paper | Board | Key over a sheet's content; the Kit's segmented control.
+
+**Board view:** `ground` full screen: a top row with the quiet Done, the count `footnote` `text2` and the quiet Key; the question's
+eyebrow, the question at 44/52 700 (`displayHero`'s size), "Question n" `title2` `text2`; a bottom row of Previous (secondary 52,
+`chevron.left`) and Next (primary 52, `arrow.right`), equal widths.
+
+**Key row:** the question row with its answer under it in `rowLine` `ok` 600.
+
+**Reasons menu:** the Phase 3 menu, 260 wide, with the eyebrow "Make it again" and six rows 44 high: Easier, Harder, Shorter, More
+sums, Different numbers, Say what to change…
+
+**Own menu:** the Phase 3 menu with three rows and their symbols: Take a photo `camera`, Choose from Photos `photo.on.rectangle`,
+Type it `pencil.line`.
+
+**Photo card:** a tutor's own sheet shown as its photo in a card of `surface2` with the raised shadow, radius 18, as tall as the
+photo's aspect allows.
+
+**Step row (the worked example, the brief's mistakes):** a 28 pt disc with the step's number (`accentTint` and `accentText` when
+shown; `surface2` and `text2` when to come, the row at 0.45 with its title only), the title `rowTitle`, the working `subhead` `text2`.
+
+**Figure card:** a list card (padding 16) holding the figure on `surface2` (radius 12, padding 12, centred) and a `footnote` `text2`
+caption centred. The figure's own colours: strokes `text2`, axes `lineStrong`, the thing to see in `accent` (jumps, shaded parts,
+the angle's arm, the triangle's fill as `accentTint`), a second thing in `ok`, labels `caption` `text2`, values 600 in `text` or
+`accentText`.
+
+**Score hero (the gap report):** the eyebrow, the score in `numberHero` with "of 25" `subhead` `text2`, a 4 pt bar in `accentText`,
+a `footnote` line.
+
+**Skill bar row:** the skill `rowTitle`, a 4 pt bar (`ok` at 4 of 4 or 3 of 4, `due` in between, `overdue` below half), the line
+`footnote` `text2`, "n of m" `numberRow` in the bar's colour on the right.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The sheet's hero | "Group 1 · Class 8 Science · Chemical reactions" · "Balancing equations · sheet 1" · "8 questions · for Dev, Meher and Nikhil · made today, 16:40" |
+| The key | "Answers" · "for you" |
+| Making it again | "Making it easier" by the section title · "An easier sheet is on its way. This one stays until it arrives." |
+| Own | "Your sheet · balancing equations" · "A photo · added today, 16:52 · for Dev, Meher and Nikhil" · "Used in place of sheet 1. The plan and the record treat it as sheet 1: homework given, done, not done." · Use the made sheet instead · Replace |
+| The worked example | "One step at a time. Say each step aloud before you show the next." · Show the next step · Show all · the slip: "A common slip here: changing the small numbers inside a formula. Only the numbers in front change." |
+| A figure | "Drawn by the app from the skill. Tap to show it large." · Show large · Print · "Figures are drawn by the app, never pictures made up by the AI, so every label is right." · the captions on the boards |
+| The brief | "Your brief" · "Five minutes to read before the class · made today, 16:40" · What the chapter is about · Three common mistakes · The worked example to use · Words to say · "AI can make mistakes. Read it as a colleague's note, not a textbook." |
+| The mock | "Mock in the school's pattern" · "25 marks · 40 minutes · chapters 1 and 2 · made today, 16:40" · "as Vidya Niketan sets them" · Mark from a photo · "AI can make mistakes. Check every question before you give it. Marking from a photo uses this paper's key." |
+| The gap report | "After the mock" · "The test is on Thursday. Two days left." · By skill · The last two days · Use this plan · "Replaces the two days' lines in the plan. Leave it and the plan carries on as it was." |

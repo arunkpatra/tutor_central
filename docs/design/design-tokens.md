@@ -273,4 +273,7 @@ opens at once; Start class shows while the batch is within 90 minutes or running
 batch; a student absent twice running gets a catch-up line; the close writes attendance, checks and homework in one call, with
 present and homework given as the defaults and an untapped check skipped; a change to a plan line or the groups holds for that day
 only unless kept for the weekday; the note day is Sunday evening after the week's last batch unless the batch says another; a parent
-gets at most three suggested messages a week, the rest held (D61).
+gets at most three suggested messages a week, the rest held (D61). Phase 10 (step 10.4): a figure's spec is validated before it is drawn (a fraction bar's parts sum to the whole, a number line's
+landing equals start plus jumps, a food chain starts with a plant) and a kind without a template has no figure; the board view's
+question is 44/52; a regenerated artefact keeps its predecessor in the record; a mock is made two days before the school's test
+and the gap report's plan covers the last two days.

@@ -125,7 +125,7 @@ figures are illustrative (`docs/design/README.md`).
       a line skipped, Start class, the close (the checklist, per student: came, three checks right or wrong, homework
       given), Done, after the close (what goes to parents), the note day, a day with no batch, V1's Today sections
       around the plan (tiles, events, tasks).
-- [ ] **10.4 Artefacts** (row 17). The sheet in three forms (PDF preview, board view, key), regenerate with a reason
+- [x] **10.4 Artefacts** (row 17, approved 2026-10-10; 19 boards). The sheet in three forms (PDF preview, board view, key), regenerate with a reason
       (easier, shorter, more sums), the worked example one step at a time, each figure template (number line, fraction
       bar, place value, unit circle, triangle, labelled cell, food chain), the brief, the check in the close, the
       placement, the mock, the gap report, Own (a photo in a plan line).

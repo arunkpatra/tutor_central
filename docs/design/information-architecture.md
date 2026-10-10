@@ -914,3 +914,71 @@ What the boards settle:
   parents") and a Notes card: one row per student with the language, the week's topic and the fact that leads the note; Read
   (primary, 36 high) opens the note (step 10.6); a sent row reads Sent in `ok`; a held row (no consent, or the parent's three
   messages this week are spent) reads Held in `text3`. The count sits beside the title.
+
+## Phase 10 boards: step 10.4, the artefacts (approved 2026-10-10)
+
+Row 17 of the canvas (y 41400; the title note at 41100); sources `mockups/P10-Sheet*`, `P10-WorkedExample`, `P10-Figure-*`,
+`P10-Brief`, `P10-Mock`, `P10-GapReport`. Dark for every state; light for the sheet. Content is illustrative (Group 1's balancing
+equations sheet, Dev's science mock). The check in the close and the placement are drawn in steps 10.3 and 10.2.
+
+| Board | Source |
+|---|---|
+| The sheet: paper (dark and light), the key, the board view; make it again (the reasons, being made); use my own (the menu, the tutor's sheet in place) | `P10-Sheet`, `-Light`, `-Key`, `-Board`, `-Regenerate`, `-Regenerating`, `-OwnMenu`, `-Own` |
+| The worked example | `P10-WorkedExample` |
+| The figure templates: number line, fraction bar, place value, unit circle, triangle, labelled cell, food chain | `P10-Figure-NumberLine`, `-FractionBar`, `-PlaceValue`, `-UnitCircle`, `-Triangle`, `-Cell`, `-FoodChain` |
+| The brief; the mock; the gap report | `P10-Brief`, `P10-Mock`, `P10-GapReport` |
+
+Phase 12 builds the sheet, the worked example, the figures and the brief; Phase 13 the mock and the gap report (the light twins
+from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `sheet` | A sheet from the plan, Paper |
+| `sheet-key` | The key |
+| `sheet-board` | The board view at question 3 |
+| `sheet-regenerate` | The reasons menu |
+| `sheet-regenerating` | Being made again |
+| `sheet-own-menu` | Use my own: the three ways |
+| `sheet-own` | The tutor's own sheet in place |
+| `worked-example` | Two of four steps shown |
+| `figure-number-line`, `-fraction-bar`, `-place-value`, `-unit-circle`, `-triangle`, `-cell`, `-food-chain` | One figure each (the Kit's figure previews cover the validators) |
+| `brief` | The brief for a chapter |
+| `mock` | The mock with its sections |
+| `gap-report` | After a marked mock |
+
+What the boards settle:
+
+- **An artefact's screen** is pushed from its plan line, the student's page or Make: the nav row (Back, the kind, one quiet
+  action), the result hero (the eyebrow names the group or student, the class, subject and chapter; the title; the line with the
+  counts, who it is for and when it was made), the content, and the footer band: the AI line, a centred quiet Make it again, two
+  buttons 46 (Share as PDF and Print for anything printable; Copy and Share as PDF for the brief; Share as PDF and Mark from a
+  photo for the mock). PDFs are rendered on the phone when shared or printed (spec section 7).
+- **The sheet** has three forms under a segmented control: Paper (the Phase 6 paper card: a section row with "1 mark each", numbered
+  question rows), Board (full screen, one question at a time in `display` type, the count, Previous and Next, Done, and Key to show
+  the answer under the question), Key (each answer under its question in `ok` 600, "for you"; left out of a shared or printed
+  sheet unless chosen).
+- **Make it again** is one tap and a reason: Easier, Harder, Shorter, More sums, Different numbers, or "Say what to change…" (a
+  field in a sheet). The old artefact stays at 0.55 with a spinner and the reason by the section title ("Making it easier") until
+  the new one lands; the buttons wait (Phase 6's pattern). The new one replaces the old in the plan; the old stays in the record
+  (`artefacts.regenerated_from`).
+- **Use my own** (spec section 2, hand-made material) is the nav row's action on any sheet: Take a photo, Choose from Photos, Type it.
+  The tutor's own takes the made artefact's place in the plan and the record ("Used in place of sheet 1"), with Replace in the
+  nav row and a quiet Use the made sheet instead; it can be shared and printed like any other.
+- **The worked example** is one step at a time: the problem as the hero's title, a Steps card (shown steps with their number in
+  the accent disc, the title and the working; steps to come dimmed with their title only), "2 of 4" beside the section title, Show
+  the next step in the footer with the common slip under it, Show all in the nav row.
+- **A figure** is drawn by the app from a typed spec with tokens (D59), never a picture from the model: the hero names the skill,
+  the figure sits on `surface2` inside a card with a caption that says what the app checked, Show large opens it full screen,
+  Print adds it to the sheet. The seven templates and their rules: number line (start, jumps, landing; the jumps in the accent),
+  fraction bar (equal parts, the shaded ones in the accent; the parts must sum to the whole), place value (a column per place
+  with the digit in `accentText` and its worth), unit circle (the angle, the point, the two ratios; the sine as a dashed `ok`
+  drop), triangle (the right angle marked, the sides named, the rule), labelled cell (five parts with leader lines, the chapter's
+  names only), food chain (boxes joined by accent arrows pointing at the eater; the first link a plant).
+- **The brief** reads in five minutes: What the chapter is about (one paragraph), Three common mistakes (numbered, each with how
+  to catch it), The worked example to use (a row that opens it), Words to say (three lines to use in class). Its AI line reads it as
+  a colleague's note, not a textbook.
+- **The mock** is in the school's pattern from its last papers (or the board's blueprint for class 10): sections with their marks
+  each, the questions; Key in the nav row; Mark from a photo opens V1's Check a paper with this paper's key.
+- **The gap report** follows a marked mock: the score with a bar and the days left; By skill, one row each with a bar in `ok`, `due`
+  or `overdue` by its fraction and the line that says what went wrong; The last two days, a row per day with the lines the plan
+  will take, Change; Use this plan replaces those days' lines; leaving it keeps the plan as it was.
