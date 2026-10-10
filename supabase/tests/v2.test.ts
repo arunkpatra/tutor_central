@@ -503,3 +503,29 @@ test("a recapture with fewer chapters moves a tutor's own chapter up behind the 
   const rows = (await a.from("chapters").select("position, name").eq("student_id", s).order("position")).data!;
   expect(rows).toEqual([{ position: 1, name: "Fractions" }, { position: 2, name: "Tutor's extra" }]);
 });
+
+test("a student moved up a class gets the new class's book, last year's chapters behind it, and Keep reaches the class", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Promotion School" }).select("id").single()).data!.id;
+  const five = await bookFor(school, "5", "Mathematics", two);
+  const s = await studentIn(school, "5", "Moved Up");
+  await a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: five, p_student: s });
+  const kept = (await a.from("skills").select("id").eq("student_id", s).eq("name", "Compare fractions").single()).data!;
+  await a.from("skills").update({ state: "secure" }).eq("id", kept.id);
+  await a.from("students").update({ class_level: "6" }).eq("id", s);
+  const six = await bookFor(school, "6", "Mathematics", [
+    { position: 1, name: "Knowing our numbers", skills: ["Compare large numbers"] },
+    { position: 2, name: "Whole numbers", skills: ["The number line"] },
+    { position: 3, name: "Integers", skills: ["Order integers"] },
+  ]);
+  const classmate = await studentIn(school, "6", "Already Six");
+  const keep = await a.rpc("copy_textbook_to_class", { p_centre: centre, p_textbook: six });
+  expect(keep.error).toBeNull();
+  expect(keep.data).toBe(2);
+  const rows = (await a.from("chapters").select("position, name").eq("student_id", s).order("position")).data!;
+  expect(rows.map((r) => r.name)).toEqual(["Knowing our numbers", "Whole numbers", "Integers", "Fractions", "Decimals"]);
+  expect((await a.from("skills").select("state").eq("id", kept.id).single()).data!.state).toBe("secure");
+  expect((await a.from("chapters").select("id").eq("student_id", classmate)).data).toHaveLength(3);
+  const again = await a.rpc("copy_textbooks_to_student", { p_centre: centre, p_student: s });
+  expect(again.error).toBeNull();
+  expect((await a.from("chapters").select("id").eq("student_id", s)).data).toHaveLength(5);
+});
