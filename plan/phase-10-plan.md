@@ -3,6 +3,9 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
 > superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+Part B executed in session 22 (Opus 5.5, 2026-10-10): PRs #90 to #96; what moved from this plan is in the phase file's
+"As built, Part B" and the ledger `plan/sessions/022/ledger.md`.
+
 Written 2026-10-10 (session 20, Fable 5.1) from `phase-10-v2-design-and-foundation.md` and `docs/spec-v2.md`. Ticked as
 it goes. Part A (the boards) runs on Fable (D17) and ends with the owner's approval of each step; Part B (the
 plumbing) runs on Opus 5.5 from a resume prompt once Part A's steps 10.1 and 10.2 are approved (the tables do not
@@ -211,7 +214,7 @@ Branch names: `phase-10/tables-a`, `phase-10/tables-b`, `phase-10/syllabi`, `pha
   `board`, `message_language`, `consent_at`, `consent_phone`, `track_status`, `track_reasons`, `tracked_at`; enum
   `skill_state`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `supabase/tests/v2.test.ts`:
 
@@ -279,12 +282,12 @@ skills: { chapter_id: chapterId, student_id: studentId, position: 1, name: "A sk
 where `schoolId`, `studentId` and `chapterId` are made in `beforeAll` as centre A's rows (insert a school, a student and
 a chapter after `create_centre`, the way the test already makes a class for `students`).
 
-- [ ] **Step 2: Run the tests to see them fail**
+- [x] **Step 2: Run the tests to see them fail**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests/v2.test.ts`
 Expected: FAIL, the columns and tables do not exist.
 
-- [ ] **Step 3: Write the migration**
+- [x] **Step 3: Write the migration**
 
 ```sql
 -- V2 (docs/spec-v2.md section 9): the student's class, school, board, language and consent; schools; textbooks
@@ -385,17 +388,17 @@ begin
 end $$;
 ```
 
-- [ ] **Step 4: Run the tests to see them pass**
+- [x] **Step 4: Run the tests to see them pass**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests`
 Expected: PASS, including the catalogue test (every table has RLS and a policy) and the isolation test.
 
-- [ ] **Step 5: Regenerate types and check**
+- [x] **Step 5: Regenerate types and check**
 
 Run: `cd supabase && supabase gen types typescript --local > types.ts && cd .. && bun check --only=db`
 Expected: green.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add supabase/migrations/20261015000009_v2_students_schools_textbooks.sql supabase/tests supabase/types.ts
@@ -418,7 +421,7 @@ git commit -m "db: V2 students, schools, textbooks, chapters, skills (0009)"
   - `p_homework`: `[{"student_id", "artefact_id", "status": "given"}]`.
   - `p_track`: `{"<student id>": {"status": "on_track", "reasons": [...]}}`; may be `{}`.
 
-- [ ] **Step 1: Write the failing tests** (append to `supabase/tests/v2.test.ts`)
+- [x] **Step 1: Write the failing tests** (append to `supabase/tests/v2.test.ts`)
 
 ```ts
 test("close_session writes the session, the checks, the homework and the tracking status, and a second close replaces them", async () => {
@@ -468,12 +471,12 @@ homework: { student_id: studentId, session_id: sessionId, artefact_id: artefactI
 
 with `planId`, `sessionId` (from `save_attendance`), `skillId` and `artefactId` made in `beforeAll`.
 
-- [ ] **Step 2: Run the tests to see them fail**
+- [x] **Step 2: Run the tests to see them fail**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests/v2.test.ts`
 Expected: FAIL, `close_session` and the tables do not exist.
 
-- [ ] **Step 3: Write the migration**
+- [x] **Step 3: Write the migration**
 
 ```sql
 -- V2 (docs/spec-v2.md sections 6 and 9): plans and their lines, artefacts, the checks and homework of a session, and
@@ -636,12 +639,12 @@ revoke all on function public.close_session(uuid, uuid, date, jsonb, jsonb, json
 grant execute on function public.close_session(uuid, uuid, date, jsonb, jsonb, jsonb, jsonb) to authenticated;
 ```
 
-- [ ] **Step 4: Run the tests to see them pass**
+- [x] **Step 4: Run the tests to see them pass**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests`
 Expected: PASS.
 
-- [ ] **Step 5: Regenerate types, check, commit**
+- [x] **Step 5: Regenerate types, check, commit**
 
 ```bash
 cd supabase && supabase gen types typescript --local > types.ts && cd .. && bun check --only=db
@@ -661,7 +664,7 @@ Open PR 1 from `phase-10/tables-a` (no screenshots: nothing seen changes).
   `homework`, `consent`; columns `message_log.language`, `message_log.body`; `artefacts.school_item_id` reference;
   bucket `photos`; enum `school_item_kind`.
 
-- [ ] **Step 1: Write the failing tests** (append to `supabase/tests/v2.test.ts`)
+- [x] **Step 1: Write the failing tests** (append to `supabase/tests/v2.test.ts`)
 
 ```ts
 import { anonClient } from "./client";
@@ -709,12 +712,12 @@ and `marks: { student_id: studentId, subject: "Maths", test: "FA1", date: "2026-
 catalogue test's expected list gains `"syllabi"` beside `centre_members`, `centres` and `profiles` (it is not a centre
 table).
 
-- [ ] **Step 2: Run the tests to see them fail**
+- [x] **Step 2: Run the tests to see them fail**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests/v2.test.ts`
 Expected: FAIL.
 
-- [ ] **Step 3: Write the migration**
+- [x] **Step 3: Write the migration**
 
 ```sql
 -- V2 (docs/spec-v2.md sections 5, 8 and 9): what the school sent, school marks, the reference syllabi, the V2 message
@@ -816,14 +819,14 @@ create policy photos_member_delete on storage.objects for delete to authenticate
   using (bucket_id = 'photos' and public.is_member(((storage.foldername(name))[1])::uuid));
 ```
 
-- [ ] **Step 4: Run the tests to see them pass**
+- [x] **Step 4: Run the tests to see them pass**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests`
 Expected: PASS. If `alter type … add value` fails inside the migration's transaction, split the five `add value`
 lines into their own migration file `20261017000011a_v2_message_kinds.sql` placed before this one (Supabase runs files
 in name order), and say so in the PR.
 
-- [ ] **Step 5: Regenerate types, check, commit**
+- [x] **Step 5: Regenerate types, check, commit**
 
 ```bash
 cd supabase && supabase gen types typescript --local > types.ts && cd .. && bun check --only=db
@@ -841,7 +844,7 @@ git add supabase && git commit -m "db: V2 school items, marks, syllabi, message 
   p_model text, p_student uuid default null) returns uuid` with the monthly allowance and the per-student consent for
   the personal kinds; errors `ai_consent_missing` (as V1), `ai_limit_reached` with the limit in `detail`.
 
-- [ ] **Step 1: Write the failing tests** (append to `supabase/tests/v2.test.ts`)
+- [x] **Step 1: Write the failing tests** (append to `supabase/tests/v2.test.ts`)
 
 ```ts
 test("the V2 kinds share a monthly allowance; a personal kind needs the student's consent; V1 kinds keep their daily rule", async () => {
@@ -864,12 +867,12 @@ test("the V2 kinds share a monthly allowance; a personal kind needs the student'
 });
 ```
 
-- [ ] **Step 2: Run the test to see it fail**
+- [x] **Step 2: Run the test to see it fail**
 
 Run: `cd supabase && supabase db reset --no-seed > /dev/null && bun test tests/v2.test.ts`
 Expected: FAIL, `sheet` is not an `ai_kind`.
 
-- [ ] **Step 3: Write the migration**
+- [x] **Step 3: Write the migration**
 
 ```sql
 -- V2 (docs/spec-v2.md section 9, D62, D63): the V2 kinds; one monthly allowance for them per centre (600 made, 900
@@ -955,7 +958,7 @@ revoke all on function public.start_ai_generation(uuid, public.ai_kind, jsonb, t
 grant execute on function public.start_ai_generation(uuid, public.ai_kind, jsonb, text, uuid) to authenticated;
 ```
 
-- [ ] **Step 4: Run the tests to see them pass; regenerate types; check; commit**
+- [x] **Step 4: Run the tests to see them pass; regenerate types; check; commit**
 
 ```bash
 cd supabase && supabase db reset --no-seed > /dev/null && bun test tests && supabase gen types typescript --local > types.ts && cd .. && bun check --only=db
@@ -999,7 +1002,7 @@ leads the app; confirm in the run's summary that nothing is pending.
   blueprint = excluded.blueprint;` with the JSON as `$json$…$json$::jsonb`. Usage: `bun syllabi cbse
   20261019000013_syllabi_cbse` and `bun syllabi karnataka 20261020000014_syllabi_karnataka`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tools/syllabi.test.ts`:
 
@@ -1060,11 +1063,11 @@ test("every board, class and subject has a syllabus with at least eight chapters
 });
 ```
 
-- [ ] **Step 2: Run the tests to see them fail**
+- [x] **Step 2: Run the tests to see them fail**
 
 Run: `bun test tools/syllabi.test.ts` → FAIL (no module). `cd supabase && bun test tests/syllabi.test.ts` → FAIL (no rows).
 
-- [ ] **Step 3: Write `tools/syllabi.ts`**
+- [x] **Step 3: Write `tools/syllabi.ts`**
 
 ```ts
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -1128,7 +1131,7 @@ if (import.meta.main) {
 }
 ```
 
-- [ ] **Step 4: Transcribe the chapter lists**
+- [x] **Step 4: Transcribe the chapter lists**
 
 For each of the 24 files: open the board's published contents page (CBSE: the NCERT textbook portal
 `https://ncert.nic.in/textbook.php`, the 2026-27 book for the class, new for 8 and 9, old for 10; Karnataka:
@@ -1139,7 +1142,7 @@ pattern (CBSE: the sample paper's marks and sections at `cbseacademic.nic.in`; K
 sentence from the book is copied; headings only (D58). Where a class 9 Karnataka or CBSE book is not yet published in
 2026-27, use the 2025-26 edition and say so in `edition` ("2025-26 (2026-27 book not published)").
 
-- [ ] **Step 5: Generate, run the tests, check, commit**
+- [x] **Step 5: Generate, run the tests, check, commit**
 
 ```bash
 bun syllabi cbse 20261019000013_syllabi_cbse && bun syllabi karnataka 20261020000014_syllabi_karnataka
@@ -1163,7 +1166,7 @@ Open PR 3 from `phase-10/syllabi`; after merge, `gh workflow run deploy`.
   `/ai/make`, `/ai/parse-school`, `/ai/parse-textbook`, each: 401 without a user (the existing middleware), 400 with
   the issue list on a bad body, else 501 `{ error: "not yet", route }`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `api/test/schemas.test.ts`:
 
@@ -1229,12 +1232,12 @@ test("the V2 routes validate, then answer 501 until their phase", async () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests to see them fail**
+- [x] **Step 2: Run the tests to see them fail**
 
 Run: `cd api && bun test`
 Expected: FAIL, the schemas and routes do not exist.
 
-- [ ] **Step 3: Write the schemas** (append to `api/src/schemas.ts`)
+- [x] **Step 3: Write the schemas** (append to `api/src/schemas.ts`)
 
 ```ts
 export const ClassLevel = z.enum(["lkg", "ukg", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
@@ -1289,7 +1292,7 @@ export type AIKind =
   | "note" | "can_do" | "test_tomorrow" | "gap_report" | "parse_school" | "parse_textbook";
 ```
 
-- [ ] **Step 4: Write the routes** (in `api/src/routes/ai.ts`, inside `aiRoutes`, after the V1 routes)
+- [x] **Step 4: Write the routes** (in `api/src/routes/ai.ts`, inside `aiRoutes`, after the V1 routes)
 
 ```ts
   // V2 (docs/spec-v2.md section 9): validated now, built in Phases 11 to 14.
@@ -1309,7 +1312,7 @@ with `PlanInput`, `MakeInput`, `ParseSchoolInput`, `ParseTextbookInput` added to
 `parse` and `isParsed` are the file's existing helpers (they validate the body against the schema and pull the centre
 id); if `parse` requires `centreId` in the schema, every V2 schema carries it through `CentreInput.shape`.
 
-- [ ] **Step 5: Run the tests to see them pass; check; commit**
+- [x] **Step 5: Run the tests to see them pass; check; commit**
 
 ```bash
 cd api && bun run check && cd .. && bun check --only=api
@@ -1330,7 +1333,7 @@ in the smoke.
 - Produces: `ClassLevel` (raw values as the database's), `Stage`, `Ladder` with `Ladder.Domain` and levels, `Skill`,
   `SkillState`, `FigureSpec` with `validate()`, `School`, `Textbook`, `Chapter`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `ClassLevelTests.swift`:
 
@@ -1395,12 +1398,12 @@ struct FigureSpecTests {
 }
 ```
 
-- [ ] **Step 2: Run the tests to see them fail**
+- [x] **Step 2: Run the tests to see them fail**
 
 Run: `bun check --only=ios` (or `xcodebuild test -scheme TutorCentral -destination 'platform=iOS Simulator,name=iPhone 17' -only-testing:DomainTests -collect-test-diagnostics never` after `bun gen`)
 Expected: FAIL to build, the types do not exist.
 
-- [ ] **Step 3: Write the types**
+- [x] **Step 3: Write the types**
 
 `ClassLevel.swift`:
 
@@ -1613,7 +1616,7 @@ public enum FigureSpec: Hashable, Sendable, Codable {
 }
 ```
 
-- [ ] **Step 4: Run the tests to see them pass; format; commit**
+- [x] **Step 4: Run the tests to see them pass; format; commit**
 
 ```bash
 cd ios && swiftformat . && swiftlint --strict && cd .. && bun check --only=format,lint,ios
@@ -1664,7 +1667,7 @@ public struct SessionClose: Sendable {
 func close(_ close: SessionClose, centre: UUID) async throws -> UUID   // close_session
 ```
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `TextbookRowTests.swift`:
 
@@ -1694,11 +1697,11 @@ struct TextbookRowTests {
 }
 ```
 
-- [ ] **Step 2: Run it to see it fail**
+- [x] **Step 2: Run it to see it fail**
 
 Run: `bun check --only=ios` → FAIL to build.
 
-- [ ] **Step 3: Write the row, the protocols, the fakes and the Supabase implementations**
+- [x] **Step 3: Write the row, the protocols, the fakes and the Supabase implementations**
 
 `TextbookRow.swift`:
 
@@ -1958,7 +1961,7 @@ UUID` to the protocol; the fake records the call and returns a fixed id; the Sup
 `close_session` with `p_marks` as `[String: String]` (student id to `present` or `absent`), `p_checks`, `p_homework` and
 `p_track` encoded through `AnyJSON`, and decodes the returned uuid.
 
-- [ ] **Step 4: Run the tests to see them pass; format; check; commit**
+- [x] **Step 4: Run the tests to see them pass; format; check; commit**
 
 ```bash
 cd ios && swiftformat . && swiftlint --strict && cd .. && bun check
@@ -1980,7 +1983,7 @@ Open PR 5 from `phase-10/domain-data`; after merge, `gh workflow run deploy` for
   `{ "kind": "text" | "image", "text"?: String, "file"?: String, "receivedAt": ISO date }`), `BackgroundRefresh`
   (registers `in.tutorcentral.app.refresh`, schedules on background, runs a handler that returns at once in this phase).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```swift
 import Foundation
@@ -2007,11 +2010,11 @@ struct SharedInboxTests {
 }
 ```
 
-- [ ] **Step 2: Run it to see it fail**
+- [x] **Step 2: Run it to see it fail**
 
 Run: `bun check --only=ios` → FAIL to build.
 
-- [ ] **Step 3: Write the code and the project changes**
+- [x] **Step 3: Write the code and the project changes**
 
 `SharedInbox.swift`:
 
@@ -2159,7 +2162,7 @@ Owner step 2 of the phase file: the App ID `in.tutorcentral.app.share` and the a
 the developer account (the TestFlight lane's cloud signing needs them before the first V2 build; `-allowProvisioningUpdates`
 makes the profiles).
 
-- [ ] **Step 4: Generate, build, run the tests; the smoke; commit**
+- [x] **Step 4: Generate, build, run the tests; the smoke; commit**
 
 ```bash
 bun gen && bun check
@@ -2171,13 +2174,13 @@ Open PR 6 from `phase-10/share-refresh`. The smoke test still launches; `bun sho
 
 ### Task 10: As built, state, resume (documents, to `main`)
 
-- [ ] Write "As built" in `plan/phase-10-v2-design-and-foundation.md`: the PRs, the migrations deployed (the run ids),
+- [x] Write "As built" in `plan/phase-10-v2-design-and-foundation.md`: the PRs, the migrations deployed (the run ids),
       what moved from this plan and why.
-- [ ] Update `plan/README.md`'s phase row, `plan/STATE.md` (production's migration list, the API commit, the next phase),
+- [x] Update `plan/README.md`'s phase row, `plan/STATE.md` (production's migration list, the API commit, the next phase),
       and `docs/design/README.md`'s status table (from Part A).
-- [ ] Write `plan/resume/021-phase-11-boards-and-plan.md`: Phase 11 reads the approved 10.2 and 10.3 boards and writes
+- [x] Write `plan/resume/021-phase-11-boards-and-plan.md`: Phase 11 reads the approved 10.2 and 10.3 boards and writes
       its plan (Fable), then its build resume (Opus).
-- [ ] Commit the documents directly to `main` (D12) and push.
+- [x] Commit the documents directly to `main` (D12) and push.
 
 ---
 

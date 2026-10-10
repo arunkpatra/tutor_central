@@ -12,7 +12,7 @@ The ad hoc path exists for tutors who want it, Reports show progress, the polish
 2. **Check a paper** moved from AITools to Make; Scan register stays in Students (D36).
 3. **Reports** extended: progress per student and per term (skills secure, check trend, marks, attendance).
 4. **Polish.** The open rows of `plan/ui-polish.md` the owner picks, by its "How it works".
-5. **Tutor testing.** A second round on TestFlight by Phase 9's method (D52 to D55), with V2's guide; findings into
+5. **Tutor testing.** The first tutor round, on V2 (D66), on TestFlight by Phase 9's method (D52 to D55), with V2's guide; findings into
    fixes, the polish list or Phase 16.
 
 ## Acceptance

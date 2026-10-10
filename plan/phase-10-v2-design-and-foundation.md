@@ -1,6 +1,6 @@
 # Phase 10: V2 design and foundation
 
-**Status:** Running (session 21, 2026-10-10): Part A, the boards, approved in full; Part B, the plumbing, on Opus from `resume/020-phase-10-build.md`. **Depends on:** `docs/spec-v2.md`; V1 done through Phase 8;
+**Status:** Done (2026-10-10): Part A, the boards, approved in full (session 21); Part B, the plumbing, PRs #90 to #96 (session 22). **Depends on:** `docs/spec-v2.md`; V1 done through Phase 8;
 Phase 9 running alongside. **Builds:** boards (design) and plumbing (D6); no new screen reaches a build.
 
 ## Goal
@@ -100,4 +100,63 @@ Where the boards moved from the scope's list, and why:
 - **Make something replaces AI Assistant's home** in Phase 15 with V1's four kinds kept; Progress is a third segment of Reports
   with Month | Term.
 
-Part B's "As built" follows from the Opus session (Task 10 of the plan).
+## As built, Part B (the plumbing, session 22, 2026-10-10, Opus 5.5)
+
+Seven pull requests, each with `bun check` green; nothing on screen changed (D6). Executed inline from `phase-10-plan.md`
+with a ledger (`plan/sessions/022/ledger.md`: every ruling with its cost if wrong) and a final review by a fresh reviewer
+on Fable 5.1.
+
+| PR | What |
+|---|---|
+| #90 | Migrations 0009 (students extended, schools, textbooks, chapters, skills, `copy_textbook_chapters`) and 0010 (plans, plan items, artefacts, checks, homework, `close_session`) |
+| #91 | 0011 (school items, marks, syllabi, the V2 message kinds, the `photos` bucket), 0012 (the V2 `ai_kind` values), 0013 (the monthly allowance and per-student consent in `start_ai_generation`); CI starts Storage for the database tests |
+| #92 | The API: `/ai/plan`, `/ai/make`, `/ai/parse-school`, `/ai/parse-textbook` validate and answer 501; check-paper takes a mock's key (501); the model for each V2 kind (`api/src/models.ts`) |
+| #93 | iOS Domain (`Sources/Domain/Record/`): class levels, boards, message languages, how consent was given, tracking status, the ladder, skills and chapters, schools, textbooks, figure specs with validators; Data: the schools and textbooks repositories with fakes, the close (`AttendanceRepository.close`, `SessionClose`) |
+| #94 | The share extension `TutorCentralShare` (`in.tutorcentral.app.share`), embedded, with the app group `group.in.tutorcentral`; `SharedInbox`; the background refresh `in.tutorcentral.app.refresh` |
+| #95 | The syllabus data: 24 files under `supabase/syllabi/` (CBSE and Karnataka state, classes 8 to 10, the four subjects, 2026-27 books, class 10 blueprints), `bun syllabi`, migrations 0014 and 0015 |
+| #96 | The review's three Important findings: 0016 (a second capture of a book keeps the students' progress; photo paths read the centre's id in any case; photos are add-only) and the mock's blueprint names |
+
+**Production.** Deploy run 38042680418 applied 0009 to 0013 and put the API at `ea25689` (`/ai/plan` answers 401 without a
+token); deploy run 38046925061 applied 0014 to 0016 with nothing pending after and the API at `d98e8e5`. TestFlight 1.0.0 (19), run
+38047105651, carries the share extension (cloud-signed under its new App ID and the app group) and shows no new screen.
+
+**Where the build moved from the plan, and why** (the full list with costs is the ledger):
+
+- **What the approved boards show is in the tables.** `students.consent_how` (in person, on a call, on WhatsApp) and
+  `track_since` (the tracking card's "since"); the ladder as one chapter per area (`chapters.ladder`) whose skills are the
+  boards' five steps, so the close's checks and the states work the same for LKG to 3; `checks.kind` with a nullable session
+  (the placement taken from the student's page); `homework.artefact_id` nullable (Phase 11's close runs without a plan);
+  the close links the day's plan both ways.
+- **The ladder's steps are the boards'** (Letters, Words, Sentences, Paragraph, Story; Traces, Letters, Words, Sentences,
+  Short text; To 9, To 99, Add, Subtract, Multiply), not the plan's enums.
+- **Migration numbers:** the enum values and the allowance are 0012 and 0013 (a version is digits; "0012b" is not one), so
+  the syllabi are 0014 and 0015; `textbooks.chapters` and `copy_textbook_chapters` went into 0009 (PR 1 had not merged),
+  so there is no plan-0015; 0016 is the review's.
+- **`ai_generations` gained `unique (centre_id, id)`** so artefacts reference it compositely.
+- **The photos policies go through `photo_centre(name)`,** which reads the first folder as a centre id or nothing; a cast
+  in the policy would throw on any other bucket's paths.
+- **The model per kind** (`api/src/models.ts`, the scope's table): the plan and the gap report, which the spec does not
+  name, on Sonnet; marking stays check-paper's Opus. A mock's key on check-paper answers 501 until Phase 13.
+- **The share extension** was first kept out of the app (Phase 9's testers would have seen a share entry that does
+  nothing); when the owner cancelled Phase 9's tester run it was embedded, as planned, and the owner registered the app
+  group, the extension's App ID and the group on the app's App ID. The extension writes JSON with an encoder (the plan's
+  hand-escaped string broke on control characters); `SharedInbox` skips a file it cannot read.
+- **The background refresh registers in `AppDelegate`** (iOS refuses a registration after launch ends) and is asked for
+  when the app goes to the background; its handler does nothing until Phase 12.
+- **The syllabus lists were transcribed by two research agents** from the publishers' 2026-27 PDFs and checked here
+  (schema, blueprint sums, spot checks; no book text). Soft spots to correct in the JSON: English skills are short names
+  for each lesson's task headings; a few chapters with fewer than three headings took the chapter's own key topics; some
+  Karnataka headings were read by OCR.
+
+**What later phases build to** (contracts this phase settled):
+
+- Photos: `photos/<centre id>/<kind>/<uuid>.jpg`, JPEG up to 3 MB, add-only (a new photo takes a new path; no overwrite,
+  move or copy). Nothing deletes a photo with its student or the account yet: the first phase that writes one (Phase 11,
+  the textbook) deletes it through Storage.
+- A textbook captured again is copied to the class again with `copy_textbook_chapters`; chapters match by position, skills
+  by position; progress stays. A copy collides with a chapter of the same subject and position from another source.
+- `errors.limit` says "today's"; the first V2 route that reaches the monthly allowance (Phase 12) words it for a month.
+- `FigureSpec`'s JSON is Swift's synthesized shape; Phase 12 sets the wire format with the API's snake_case kinds.
+- `SharedInbox` names every shared image `.jpg`; Phase 13 reads it by content (Photos may give HEIC).
+
+Deferred minors from the review: the ledger's `Final: minor (deferred)` lines.

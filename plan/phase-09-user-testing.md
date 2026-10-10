@@ -1,6 +1,6 @@
 # Phase 9: Extensive user testing
 
-**Status:** Running since session 19 (2026-10-09; build 18 in Beta App Review); planned in session 18: `phase-09-plan.md`, decisions D52 to D55; added in session 15 at the owner's request (D43). **Depends on:** Phase 7's release candidate
+**Status:** Cancelled by the owner on 2026-10-10 (D66: V2 is the product; V1 was the proof of concept; the tutor round moves to Phase 15). Was running since session 19 (2026-10-09; build 18 in Beta App Review); planned in session 18: `phase-09-plan.md`, decisions D52 to D55; added in session 15 at the owner's request (D43). **Depends on:** Phase 7's release candidate
 (build 1.0.0 on TestFlight); Phase 8's `/privacy` page live (TestFlight's external group and Beta App Review need its
 URL). **Must end before:** the first App Store submission.
 
