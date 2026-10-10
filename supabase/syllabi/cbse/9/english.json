@@ -1,0 +1,206 @@
+{
+  "board": "cbse",
+  "classLevel": "9",
+  "subject": "English",
+  "edition": "2026-27",
+  "source": "NCERT, Kaveri: Textbook of English for Grade 9 (First Edition January 2026), contents page and lesson task headings (Vocabulary and Structures in Context, Listen and Respond, Speaking Activity, Writing Task); https://ncert.nic.in/textbook/pdf/iebe1ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "How I Taught My Grandmother to Read",
+      "skills": [
+        "Reading: understanding the story",
+        "Binomials",
+        "Prefixes",
+        "Idioms about learning",
+        "Past perfect tense",
+        "Listening: a talk on digital literacy",
+        "Speaking: turncoat debate",
+        "Writing a letter to the editor"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Bharat Our Land",
+      "skills": [
+        "Reading the poem",
+        "Suffixes",
+        "Listening: people talk about places",
+        "Speaking about your village, town or city",
+        "Writing a paragraph about a place"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "The Pot Maker",
+      "skills": [
+        "Reading: understanding the story",
+        "Noun clauses",
+        "Relative clauses",
+        "Determiners",
+        "Speaking as a character from the story",
+        "Reflective writing: identifying skills and passion"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Gifts of Grace: Honouring Our Vocations",
+      "skills": [
+        "Reading the poem",
+        "Words for vocations",
+        "Synonyms",
+        "Listening: a conversation about occupations",
+        "Speaking: role-play of vocations",
+        "Designing a poster"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Winds of Change",
+      "skills": [
+        "Reading: understanding the text",
+        "Word pairs and fixed expressions",
+        "Collocations",
+        "Present perfect tense",
+        "Listening: a dialogue",
+        "Speaking: describing yourself as an object",
+        "Writing a description of an artefact"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Canvas of Soil",
+      "skills": [
+        "Reading the poem",
+        "Names of shades of colours",
+        "Painting-related words",
+        "Listening: a description of a garden",
+        "Speaking: flower and vegetable gardens",
+        "Writing a descriptive piece"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Vitamin-M",
+      "skills": [
+        "Reading: understanding the story",
+        "Movement words and sound words",
+        "Synonyms",
+        "Words for emotions and expressions",
+        "Prepositions",
+        "Reported speech",
+        "Speaking: intonation in question tags",
+        "Writing an article"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "I Cannot Remember My Mother",
+      "skills": [
+        "Reading the poem",
+        "Sensory words",
+        "Listening: childhood memories",
+        "Speaking about a memorable object, song or place",
+        "Writing a diary entry"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "The World of Limitless Possibilities",
+      "skills": [
+        "Reading: understanding the interview",
+        "Phrases and their meanings",
+        "Words related to movement",
+        "Modal auxiliaries",
+        "Reported speech",
+        "Speaking: conducting an interview",
+        "Writing a notice"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Nine Gold Medals",
+      "skills": [
+        "Reading the poem",
+        "Adjective-noun collocations",
+        "Adjectives",
+        "Speaking: expressing a point of view",
+        "Writing slogans"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Twin Melodies",
+      "skills": [
+        "Reading a play",
+        "Stage directions: the aside",
+        "Non-lexical fillers",
+        "Music-related words",
+        "Exclamatory and declarative sentences",
+        "Reported speech",
+        "Speaking: stress and intonation",
+        "Writing a story"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "A Friend Found in Music",
+      "skills": [
+        "Reading the poem",
+        "Words for emotions",
+        "Phrasal verbs",
+        "Speaking: role-play",
+        "Writing a letter of invitation"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Carrier of Words",
+      "skills": [
+        "Reading: understanding the text",
+        "Phrases and their meanings",
+        "Alliteration and metaphor",
+        "Present perfect tense",
+        "Active and passive voice",
+        "Speaking: role-play discussion",
+        "Writing a condolence message"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Words",
+      "skills": [
+        "Reading the poem",
+        "Figurative phrases",
+        "Building vocabulary: word maps",
+        "Speaking: explaining a quotation",
+        "Writing an essay"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Follow That Dream",
+      "skills": [
+        "Reading: understanding the text",
+        "Compound words",
+        "Expressions and their meanings",
+        "Conditional sentences",
+        "Uses of ‘could’",
+        "Speaking: role-play",
+        "Writing an email"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "Believe in Yourself",
+      "skills": [
+        "Reading the poem",
+        "Latin expressions",
+        "Rhetorical questions",
+        "Speaking: proverbs in real-life situations",
+        "Writing a speech"
+      ]
+    }
+  ],
+  "blueprint": null
+}

@@ -1,0 +1,174 @@
+{
+  "board": "karnataka",
+  "classLevel": "9",
+  "subject": "Science",
+  "edition": "2026-27",
+  "source": "KTBS, Science Textbook for Class IX, Part 1 and Part 2 (chapters in the KTBS book order I–XII), English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/9th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/9th%20English%20Science%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/9th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/9th%20English%20Science%20Part%20-%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Matter in Our Surroundings",
+      "skills": [
+        "Physical Nature of Matter",
+        "Characteristics of Particles of Matter",
+        "States of Matter",
+        "Can Matter Change its State?",
+        "Effect of change of temperature",
+        "Effect of change of pressure",
+        "Evaporation",
+        "Factors affecting evaporation"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Is Matter Around Us Pure?",
+      "skills": [
+        "What is a Mixture?",
+        "Types of mixtures",
+        "What is a Solution?",
+        "Concentration of a solution",
+        "What is a suspension?",
+        "What is a colloidal solution?",
+        "Physical and Chemical Changes",
+        "What are the Types of Pure Substances?"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "The Fundamental Unit of Life",
+      "skills": [
+        "What are Living Organisms Made Up of?",
+        "What is a Cell Made Up of?",
+        "Plasma membrane or cell membrane",
+        "Cell wall",
+        "Nucleus",
+        "Cytoplasm",
+        "Cell organelles"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Tissues",
+      "skills": [
+        "Are Plants and Animals Made of Same Types of Tissues?",
+        "Plant Tissues",
+        "Meristematic tissue",
+        "Permanent tissue",
+        "Animal Tissues",
+        "Epithelial tissue",
+        "Connective tissue",
+        "Muscular and nervous tissue"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Motion",
+      "skills": [
+        "Describing Motion",
+        "Motion along a straight line",
+        "Uniform motion and non-uniform motion",
+        "Measuring the Rate of Motion",
+        "Rate of Change of Velocity",
+        "Graphical Representation of Motion",
+        "Equations of Motion",
+        "Uniform Circular Motion"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Force and Laws of Motion",
+      "skills": [
+        "Balanced and Unbalanced Forces",
+        "First Law of Motion",
+        "Inertia and Mass",
+        "Second Law of Motion",
+        "Mathematical formulation of second law of motion",
+        "Third Law of Motion"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Atoms and Molecules",
+      "skills": [
+        "Laws of Chemical Combination",
+        "Law of conservation of mass",
+        "Law of constant proportions",
+        "What is an Atom?",
+        "Atomic mass",
+        "What is a Molecule?",
+        "Writing Chemical Formulae",
+        "Molecular Mass"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Structure of the Atom",
+      "skills": [
+        "Charged Particles in Matter",
+        "The Structure of an Atom",
+        "Thomson's, Rutherford's and Bohr's models of an atom",
+        "Neutrons",
+        "How are Electrons Distributed in Different Orbits (Shells)?",
+        "Valency",
+        "Atomic Number and Mass Number",
+        "Isotopes and isobars"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Gravitation",
+      "skills": [
+        "Gravitation",
+        "Universal law of gravitation",
+        "Free Fall",
+        "Mass",
+        "Weight",
+        "Thrust and Pressure",
+        "Buoyancy",
+        "Archimedes' Principle"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Work and Energy",
+      "skills": [
+        "Work",
+        "Scientific conception of work",
+        "Work done by a constant force",
+        "Energy",
+        "Kinetic energy and potential energy",
+        "Law of conservation of energy",
+        "Rate of Doing Work"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Sound",
+      "skills": [
+        "Production of Sound",
+        "Propagation of Sound",
+        "Characteristics of a sound wave",
+        "Speed of sound in different media",
+        "Reflection of Sound",
+        "Echo and reverberation",
+        "Range of Hearing",
+        "Applications of Ultrasound"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Improvement in Food Resources",
+      "skills": [
+        "Improvement in Crop Yields",
+        "Crop variety improvement",
+        "Crop production management",
+        "Crop protection management",
+        "Animal Husbandry",
+        "Cattle farming",
+        "Poultry farming",
+        "Fish production and bee-keeping"
+      ]
+    }
+  ],
+  "blueprint": null
+}

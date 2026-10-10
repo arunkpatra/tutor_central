@@ -1,0 +1,187 @@
+{
+  "board": "cbse",
+  "classLevel": "9",
+  "subject": "Science",
+  "edition": "2026-27",
+  "source": "NCERT, Exploration: Textbook of Science for Grade 9 (First Edition April 2026), contents page and chapter headings; https://ncert.nic.in/textbook/pdf/iesc1ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Exploration: Entering the World of Secondary Science",
+      "skills": [
+        "Models in science",
+        "Symbols, equations and standard units",
+        "Laws, theories and predictions",
+        "Estimation"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Cell: The Building Block of Life",
+      "skills": [
+        "How to study cells?",
+        "Structure of a cell",
+        "Cell membrane — the universal feature of a cell",
+        "Cell wall — the outer covering of cells",
+        "The cell interior — a coordinated working system",
+        "How do normal cells grow and divide?",
+        "Cell division",
+        "Cell theory — the unifying principle of biology"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Tissues in Action",
+      "skills": [
+        "Why are plant and animal tissues different?",
+        "Tissues for growth in plants",
+        "Permanent tissues",
+        "Animal tissues",
+        "Epithelial tissues — structure and functions",
+        "The musculoskeletal system",
+        "Types of joints",
+        "Skeletal system"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Describing Motion Around Us",
+      "skills": [
+        "Motion in a straight line",
+        "Distance travelled and displacement",
+        "Average speed and average velocity",
+        "Average acceleration",
+        "Position-time graphs",
+        "Velocity-time graphs",
+        "Kinematic equations for motion in a straight line with constant acceleration",
+        "Uniform circular motion"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Exploring Mixtures and their Separation",
+      "skills": [
+        "How can we classify mixtures?",
+        "Solutions",
+        "Concentration of a solution",
+        "Solubility of substances",
+        "Methods of separation of homogeneous mixtures",
+        "How can we separate the components of heterogeneous mixtures?",
+        "Colloids",
+        "Tyndall effect"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "How Forces Affect Motion",
+      "skills": [
+        "The concept of force",
+        "Balanced and unbalanced forces",
+        "The force of friction: often overlooked but always present",
+        "Newton’s first law of motion",
+        "Newton’s second law of motion",
+        "Newton’s third law of motion",
+        "Forces acting on a system of objects"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Work, Energy, and Simple Machines",
+      "skills": [
+        "Work done by a constant force",
+        "The work-energy theorem",
+        "Forms of energy",
+        "Kinetic energy",
+        "Potential energy",
+        "Conservation of mechanical energy",
+        "Power",
+        "Simple machines"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Journey Inside the Atom",
+      "skills": [
+        "A short historical journey through atomic models",
+        "Testing Thomson’s model: the gold foil experiment",
+        "Bohr’s model of the atom",
+        "Atomic number",
+        "Mass number",
+        "How are electrons distributed in different energy levels?",
+        "Combining capacity of an atom: valency",
+        "Isotopes"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Atomic Foundations of Matter",
+      "skills": [
+        "Law of conservation of mass",
+        "Law of constant proportions",
+        "Dalton’s atomic theory",
+        "How atoms combine?",
+        "Writing chemical formulae",
+        "Properties of the ionic and the covalent compounds",
+        "Molecular mass of covalent compounds",
+        "Formula unit mass of ionic compounds"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Sound Waves: Characteristics and Applications",
+      "skills": [
+        "Production of sound",
+        "Propagation of sound",
+        "Sound waves",
+        "Graphical representation of a sound wave",
+        "Characteristics of a sound wave",
+        "Human perception of sound",
+        "Reflection of sound",
+        "Ultrasonic and infrasonic waves, and their applications"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Reproduction: How Life Continues",
+      "skills": [
+        "Asexual reproduction",
+        "How is vegetative propagation in plants helpful in agriculture?",
+        "Sexual reproduction",
+        "Sexual reproduction in flowering plants",
+        "Fertilisation and seed formation",
+        "Sexual reproduction in animals",
+        "Variations in reproduction in animals",
+        "Reproduction in human beings"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Patterns in Life: Diversity and Classification",
+      "skills": [
+        "India as a biodiversity hotspot",
+        "How has the biodiversity evolved?",
+        "How to classify organisms?",
+        "Biological classification systems over time",
+        "Five kingdom classification",
+        "Scientific naming — the binomial system",
+        "Fossils as evidence",
+        "Biodiversity under threat"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Earth as a System: Energy, Matter, and Life",
+      "skills": [
+        "Uneven heating of the Earth",
+        "Uneven heating causes wind and ocean currents",
+        "Planetary winds",
+        "Ocean currents",
+        "Biogeochemical cycles",
+        "Water cycle",
+        "Carbon cycle",
+        "Human impact on Earth’s processes"
+      ]
+    }
+  ],
+  "blueprint": null
+}

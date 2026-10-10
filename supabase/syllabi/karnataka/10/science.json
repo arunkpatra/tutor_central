@@ -1,0 +1,268 @@
+{
+  "board": "karnataka",
+  "classLevel": "10",
+  "subject": "Science",
+  "edition": "2026-27",
+  "source": "KTBS, Science Textbook for Class X, Part 1 and Part 2 (chapters in the KTBS book order I–XIII), English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20Science%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20Science%20Part%20-2%202026-27.pdf ; blueprint from KSEAB SSLC Model Question Papers 1 and 2 2026-27, Science 83-E (Part A Physics I–V, Part B Chemistry VI–X, Part C Biology XI–XVI), https://kseeb.karnataka.gov.in/QP2026/SSLC2025-26MODEL_QP",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Chemical Reactions and Equations",
+      "skills": [
+        "Chemical Equations",
+        "Balanced Chemical Equations",
+        "Combination Reaction",
+        "Decomposition Reaction",
+        "Displacement Reaction",
+        "Double Displacement Reaction",
+        "Oxidation and Reduction",
+        "Corrosion and Rancidity"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Acids, Bases and Salts",
+      "skills": [
+        "Understanding the Chemical Properties of Acids and Bases",
+        "Acids and Bases in the Laboratory",
+        "Reactions of acids and bases with metals, metal carbonates and each other",
+        "What do All Acids and All Bases have in Common?",
+        "How Strong are Acid or Base Solutions?",
+        "Importance of pH in Everyday Life",
+        "More about Salts",
+        "Chemicals from Common Salt"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Life Processes",
+      "skills": [
+        "What are Life Processes?",
+        "Nutrition",
+        "Autotrophic Nutrition",
+        "Heterotrophic Nutrition",
+        "Nutrition in Human Beings",
+        "Respiration",
+        "Transportation",
+        "Excretion"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Control and Coordination",
+      "skills": [
+        "Animals – Nervous System",
+        "What happens in Reflex Actions?",
+        "Human Brain",
+        "Coordination in Plants",
+        "Immediate Response to Stimulus",
+        "Movement Due to Growth",
+        "Hormones in Animals"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Electricity",
+      "skills": [
+        "Electric Current and Circuit",
+        "Electric Potential and Potential Difference",
+        "Circuit Diagram",
+        "Ohm's Law",
+        "Factors on which the Resistance of a Conductor Depends",
+        "Resistance of a System of Resistors",
+        "Heating Effect of Electric Current",
+        "Electric Power"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Magnetic Effects of Electric Current",
+      "skills": [
+        "Magnetic Field and Field Lines",
+        "Magnetic Field due to a Current-carrying Conductor",
+        "Right-Hand Thumb Rule",
+        "Magnetic Field due to a Current in a Solenoid",
+        "Force on a Current-carrying Conductor in a Magnetic Field",
+        "Domestic Electric Circuits"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Metals and Non-metals",
+      "skills": [
+        "Physical Properties",
+        "Chemical Properties of Metals",
+        "The Reactivity Series",
+        "How do Metals and Non-metals React?",
+        "Properties of Ionic Compounds",
+        "Occurrence of Metals",
+        "Extraction of Metals",
+        "Corrosion"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Carbon and its Compounds",
+      "skills": [
+        "Bonding in Carbon – The Covalent Bond",
+        "Versatile Nature of Carbon",
+        "Saturated and Unsaturated Carbon Compounds",
+        "Homologous Series",
+        "Nomenclature of Carbon Compounds",
+        "Chemical Properties of Carbon Compounds",
+        "Some Important Carbon Compounds – Ethanol and Ethanoic Acid",
+        "Soaps and Detergents"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "How do Organisms Reproduce?",
+      "skills": [
+        "Do Organisms Create Exact Copies of Themselves?",
+        "Modes of Reproduction used by Single Organisms",
+        "Fission, Fragmentation, Regeneration and Budding",
+        "Vegetative Propagation",
+        "Spore Formation",
+        "Sexual Reproduction",
+        "Sexual Reproduction in Flowering Plants",
+        "Reproduction in Human Beings"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Heredity",
+      "skills": [
+        "Accumulation of Variation during Reproduction",
+        "Heredity",
+        "Inherited Traits",
+        "Rules for the Inheritance of Traits – Mendel's Contributions",
+        "How do these Traits get Expressed?",
+        "Sex Determination"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Light – Reflection and Refraction",
+      "skills": [
+        "Reflection of Light",
+        "Spherical Mirrors",
+        "Image Formation by Spherical Mirrors",
+        "Mirror Formula and Magnification",
+        "Refraction of Light",
+        "The Refractive Index",
+        "Refraction by Spherical Lenses",
+        "Power of a Lens"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "The Human Eye and the Colourful World",
+      "skills": [
+        "The Human Eye",
+        "Power of Accommodation",
+        "Defects of Vision and their Correction",
+        "Refraction of Light through a Prism",
+        "Dispersion of White Light by a Glass Prism",
+        "Atmospheric Refraction",
+        "Scattering of Light"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Our Environment",
+      "skills": [
+        "Eco-system — What are its Components?",
+        "Food Chains and Webs",
+        "How do our Activities affect the Environment?",
+        "Ozone Layer and How it is Getting Depleted",
+        "Managing the Garbage we Produce"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 195,
+    "sections": [
+      {
+        "name": "I",
+        "questions": 2,
+        "marksEach": 1
+      },
+      {
+        "name": "II",
+        "questions": 2,
+        "marksEach": 1
+      },
+      {
+        "name": "III",
+        "questions": 3,
+        "marksEach": 2
+      },
+      {
+        "name": "IV",
+        "questions": 3,
+        "marksEach": 3
+      },
+      {
+        "name": "V",
+        "questions": 2,
+        "marksEach": 4
+      },
+      {
+        "name": "VI",
+        "questions": 3,
+        "marksEach": 1
+      },
+      {
+        "name": "VII",
+        "questions": 3,
+        "marksEach": 1
+      },
+      {
+        "name": "VIII",
+        "questions": 3,
+        "marksEach": 2
+      },
+      {
+        "name": "IX",
+        "questions": 3,
+        "marksEach": 3
+      },
+      {
+        "name": "X",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "XI",
+        "questions": 3,
+        "marksEach": 1
+      },
+      {
+        "name": "XII",
+        "questions": 3,
+        "marksEach": 1
+      },
+      {
+        "name": "XIII",
+        "questions": 2,
+        "marksEach": 2
+      },
+      {
+        "name": "XIV",
+        "questions": 3,
+        "marksEach": 3
+      },
+      {
+        "name": "XV",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "XVI",
+        "questions": 1,
+        "marksEach": 5
+      }
+    ]
+  }
+}

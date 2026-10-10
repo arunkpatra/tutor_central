@@ -1,0 +1,224 @@
+{
+  "board": "karnataka",
+  "classLevel": "8",
+  "subject": "English",
+  "edition": "2026-27",
+  "source": "KTBS, English First Language, Class 8, Part 1 and Part 2 (state English First Language reader: Prose 1–8, Poetry 9–16, Supplementary Reading 17–19, in the book's numbering), English medium, contents page and the book's table of skills and language activities; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/LANGUAGE%20TEXTBOOKS/8th%20English%20FL%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/LANGUAGE%20TEXTBOOKS/8th%20English%20FL%20Part%20-%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Prose: The Heavenly Parasol",
+      "skills": [
+        "Reading: answering questions on the passage",
+        "Dictionary activity",
+        "Prepositions",
+        "Adjectives",
+        "Listening to minimal pairs",
+        "Speaking: narrating a short story"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Prose: The Boy who Sold Wisdom",
+      "skills": [
+        "Reading: re-arranging jumbled sentences",
+        "Usage of 'since' and 'for'",
+        "Dictionary use",
+        "Adverbs",
+        "Listening to a conversation",
+        "Speaking: narrating a story",
+        "Letter writing"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Prose: Before the Match",
+      "skills": [
+        "Reading: the story and answering questions",
+        "Speaking: role play",
+        "Short paragraph writing"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Prose: Anandi Gopal – An Autobiography",
+      "skills": [
+        "Matching words with meanings",
+        "Phrasal verbs",
+        "Articles",
+        "Pronouns",
+        "Tense forms of verbs",
+        "Reading: rearranging sentences in sequence",
+        "Paragraph writing",
+        "Letter writing"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Prose: A Lesson for Nakul",
+      "skills": [
+        "Idioms",
+        "Verbs and tenses",
+        "Dictionary activity",
+        "Listening to motivating and demotivating words",
+        "Speaking on good qualities",
+        "Pronunciation",
+        "Reading: answering questions on an extract",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Prose: The Model Millionaire",
+      "skills": [
+        "Compound words",
+        "Affixes: prefixes and suffixes",
+        "Homonyms and puns",
+        "Listening to dialogues",
+        "Speaking: dialogue delivery"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Prose: The Great Sacrifice",
+      "skills": [
+        "Present and past time expressions",
+        "Antonyms",
+        "Verb forms and tense forms",
+        "Listening to riddles",
+        "Speaking: practising dialogues and role play",
+        "Play reading",
+        "Expanding a paragraph"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Prose: The Woman on Platform 8",
+      "skills": [
+        "Syllables",
+        "Direct and indirect speech",
+        "Reporting verbs",
+        "Listening for descriptive words",
+        "Group discussion",
+        "Pronunciation",
+        "Reading conversations",
+        "Diary entry"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Poem: Benjamin Jones Goes Swimming",
+      "skills": [
+        "Reading the poem",
+        "Glossary: word meanings",
+        "Comprehension questions",
+        "Rhyming words"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Poem: Leisure",
+      "skills": [
+        "Rhyming words",
+        "Listening to a poem and answering questions",
+        "Discussion about our busy life",
+        "Reading nature poems",
+        "Poem writing"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Poem: After Apple-Picking",
+      "skills": [
+        "Reading the poem",
+        "Poetic devices",
+        "Group discussion",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Poem: Palanquin Bearers",
+      "skills": [
+        "Rhyme scheme",
+        "Alliteration",
+        "Simile",
+        "Reading small poems",
+        "Writing a short paragraph"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Poem: Modern Machinery",
+      "skills": [
+        "Personification",
+        "Listening to the /ʃ/ and /s/ sounds",
+        "Speaking on a topic",
+        "Reading: answering questions",
+        "Writing a short paragraph"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Poem: Imagination",
+      "skills": [
+        "Completing a web chart",
+        "Group discussion and speech on a topic",
+        "Reading: the adventures of Huckleberry Finn",
+        "Writing a short essay",
+        "Picture composition"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Poem: The Bees",
+      "skills": [
+        "Re-arranging sentences",
+        "Dictionary use",
+        "Listening to an advertisement",
+        "Presentation of an advertisement",
+        "Reading short paragraphs",
+        "Preparing an advertisement"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "Poem: The Cloud",
+      "skills": [
+        "Reading the poem: answering questions",
+        "Appreciation questions",
+        "Annotation: explaining lines"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "Supplementary: King Sindbad and his Falcon",
+      "skills": [
+        "Listening to a story",
+        "Reading moral stories",
+        "Writing a story with a different ending",
+        "Matching proverbs",
+        "Narrating an incident"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "Supplementary: The Broken Gate",
+      "skills": [
+        "Listening to a story",
+        "Speaking: role play",
+        "Writing a short essay"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "Supplementary: The Miser",
+      "skills": [
+        "Synonyms",
+        "Note-taking and note-making",
+        "Crossword puzzle"
+      ]
+    }
+  ],
+  "blueprint": null
+}

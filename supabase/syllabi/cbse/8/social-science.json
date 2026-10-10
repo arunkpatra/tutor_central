@@ -1,0 +1,213 @@
+{
+  "board": "cbse",
+  "classLevel": "8",
+  "subject": "Social Science",
+  "edition": "2026-27",
+  "source": "NCERT, Exploring Society: India and Beyond, Social Science Textbook for Grade 8, Part 1 (Reprint 2026-27) and Part 2 (First Edition June 2026), contents pages and chapter headings; https://ncert.nic.in/textbook/pdf/hees1ps.pdf, https://ncert.nic.in/textbook/pdf/hees2ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Part I: Natural Resources and Their Use",
+      "skills": [
+        "When does nature become a resource?",
+        "Categories of natural resources",
+        "Renewable and non-renewable resources",
+        "Distribution of natural resources and its implications",
+        "The ‘paradox of plenty’",
+        "Responsible and wise use of natural resources: stewardship",
+        "Restoration and regeneration of renewable resources"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Part I: Reshaping India’s Political Map",
+      "skills": [
+        "Rise and fall of the Delhi Sultanate",
+        "Resistance to the Delhi Sultanate",
+        "The Vijayanagara Empire",
+        "The Mughals",
+        "Resistance to the Mughals",
+        "The rise of the Sikhs",
+        "Administering India",
+        "People’s lives"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Part I: The Rise of the Marathas",
+      "skills": [
+        "Who are the Marathas?",
+        "Foundation of Maratha power and the rise of Chhatrapati Shivaji",
+        "The Marathas after Chhatrapati Shivaji",
+        "Maratha administration",
+        "Maritime supremacy",
+        "Cultural revival",
+        "The mighty Maratha women",
+        "The Maratha legacy"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Part I: The Colonial Era in India",
+      "skills": [
+        "The age of colonialism",
+        "Europeans in India",
+        "Enter the British",
+        "From paradise to hell?",
+        "Changing landscapes",
+        "Early resistance movements: challenging colonial authority",
+        "The Great Rebellion of 1857",
+        "The legacy of European colonialism in India"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Part I: Universal Franchise and India’s Electoral System",
+      "skills": [
+        "Universal adult franchise",
+        "Bridging barriers, enabling participation: ensuring universal franchise",
+        "The role of the Election Commission of India (ECI)",
+        "Model Code of Conduct (MCC)",
+        "Understanding elections in India — a very brief overview",
+        "Election to the Lok Sabha and State Legislative Assemblies",
+        "Election of the President of India",
+        "Challenges and the road ahead"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Part I: The Parliamentary System: Legislature and Executive",
+      "skills": [
+        "Composition of the Parliament of India",
+        "Legislative functions of the Parliament",
+        "Lawmaking",
+        "Executive accountability",
+        "Executive functions of Parliament",
+        "The judiciary — role of checks and balances",
+        "Legislative and executive functions at the state level",
+        "Challenges to the effective functioning of the legislatures"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Part I: Factors of Production",
+      "skills": [
+        "Factors of production",
+        "Land (natural resources)",
+        "Labour (human resources)",
+        "Capital",
+        "Entrepreneurship",
+        "Technology: an enabler of production",
+        "How are the factors connected?",
+        "Responsibilities towards factors of production"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Part II: World Geography: Some Glimpses",
+      "skills": [
+        "The complexity of mapping the Earth",
+        "The blue of the blue planet, the oceans",
+        "Ocean currents",
+        "Ocean trenches",
+        "Smaller water bodies and waterways",
+        "The continents: variety on land"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Part II: India’s Long Road to Independence",
+      "skills": [
+        "Reform movements",
+        "The rise of the Indian National Congress",
+        "The 1905 Partition of Bengal and national awakening",
+        "The revolutionaries",
+        "Gandhi and the Non-Cooperation Movement",
+        "Purna Swaraj and Civil Disobedience",
+        "The Quit India Movement",
+        "Partition, turmoil, and independence"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Part II: A Journey Through Indian Architecture",
+      "skills": [
+        "Structural stupa architecture",
+        "Rock-cut architecture",
+        "Water structures",
+        "Classical temple architecture",
+        "The architecture of mosques",
+        "Forts and palaces",
+        "Tombs and mausoleums",
+        "Colonial architecture"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Part II: The Role of the Judiciary in Our Society",
+      "skills": [
+        "The connection between law and justice",
+        "The judicial system in India",
+        "The Supreme Court of India",
+        "Writ jurisdiction of the Supreme Court and High Court",
+        "High Court",
+        "Subordinate courts",
+        "Tribunals",
+        "Alternate modes of dispute resolution"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Part II: Citizenship: Rights and Duties",
+      "skills": [
+        "Who is a citizen?",
+        "Rights",
+        "Duties",
+        "Rights and duties: two sides of the same coin",
+        "Discrimination",
+        "Inclusion"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Part II: Dynamics of Population",
+      "skills": [
+        "What is demography?",
+        "Population at a glance",
+        "What determines the population of a country?",
+        "Birth and fertility rates",
+        "Migration",
+        "How do countries experience population change?",
+        "India’s population: composition and trends",
+        "India’s demographic dividend — a limited window of opportunity"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Part II: India’s Urban Landscape",
+      "skills": [
+        "Population density in cities",
+        "How do cities become centres of economic activities?",
+        "What leads to urbanisation?",
+        "Cities as cultural hubs",
+        "Challenges faced by cities",
+        "Planning our cities"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Part II: Cultural Currents: 13th to 17th Centuries",
+      "skills": [
+        "Belief systems",
+        "Musical traditions — continuation and evolution",
+        "From walls to paper — miniature paintings",
+        "Women in society — contextual variations in their role and status",
+        "Education and knowledge traditions",
+        "Growth of literature and language",
+        "Developments in science and technology",
+        "Regional architectural developments"
+      ]
+    }
+  ],
+  "blueprint": null
+}

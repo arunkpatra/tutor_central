@@ -1,0 +1,187 @@
+{
+  "board": "karnataka",
+  "classLevel": "8",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "source": "KTBS, Ganita Prakash, Textbook of Mathematics for Grade 8, Part I and Part II, English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/8th%20English%20Maths%20Part%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/8th%20English%20Maths%20Part%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "A Square and A Cube",
+      "skills": [
+        "Square Numbers",
+        "Patterns and Properties of Perfect Squares",
+        "Perfect Squares and Odd Numbers",
+        "Perfect Squares and Triangular Numbers",
+        "Square Roots",
+        "Cubic Numbers",
+        "Perfect Cubes and Consecutive Odd Numbers",
+        "Cube Roots"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Power Play",
+      "skills": [
+        "Experiencing the Power Play",
+        "Exponential Notation and Operations",
+        "The Other Side of Powers",
+        "Powers of 10",
+        "Did You Ever Wonder?",
+        "Getting a Sense for Large Numbers",
+        "A Pinch of History"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "A Story of Numbers",
+      "skills": [
+        "Reema's Curiosity",
+        "The Mechanism of Counting",
+        "Some Early Number Systems",
+        "The Idea of a Base",
+        "Advantages of a Base-n System",
+        "Place Value Representation"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Quadrilaterals",
+      "skills": [
+        "Rectangles and Squares",
+        "Properties of a Square",
+        "Angles in a Quadrilateral",
+        "More Quadrilaterals with Parallel Opposite Sides",
+        "Quadrilaterals with Equal Sidelengths",
+        "Playing with Quadrilaterals",
+        "Kite and Trapezium"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Number Play",
+      "skills": [
+        "Is This a Multiple Of?",
+        "Pairs to Make Fours",
+        "What Remains?",
+        "Checking Divisibility Quickly",
+        "Divisibility Shortcuts for Other Numbers",
+        "Digital Roots",
+        "Digits in Disguise"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "We Distribute, Yet Things Multiply",
+      "skills": [
+        "Some Properties of Multiplication",
+        "Special Cases of the Distributive Property",
+        "Investigating Patterns",
+        "Mind the Mistake, Mend the Mistake",
+        "This Way or That Way, All Ways Lead to the Bay"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Proportional Reasoning-1",
+      "skills": [
+        "Observing Similarity in Change",
+        "Ratios",
+        "Ratios in their Simplest Form",
+        "Problem Solving with Proportional Reasoning",
+        "Sharing, but Not Equally!",
+        "Unit Conversions"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Fractions in Disguise",
+      "skills": [
+        "Fractions as Percentages",
+        "Percentage of Some Quantity",
+        "Using Percentages",
+        "Percentage Increase or Decrease",
+        "Profit and Loss",
+        "Growth and Compounding",
+        "Tricky Percentages"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "The Baudhāyana-Pythagoras Theorem",
+      "skills": [
+        "Doubling a Square",
+        "Halving a Square",
+        "Hypotenuse of an Isosceles Right Triangle",
+        "Combining Two Different Squares",
+        "Right-Triangles Having Integer Sidelengths",
+        "A Long-Standing Open Problem",
+        "Further Applications of the Baudhāyana-Pythagoras Theorem"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Proportional Reasoning-2",
+      "skills": [
+        "Proportionality — A Quick Recap",
+        "Ratios in Maps",
+        "Ratios with More than 2 Terms",
+        "Dividing a Whole in a Given Ratio",
+        "A Slice of the Pie",
+        "Inverse Proportions"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Exploring Some Geometric Themes",
+      "skills": [
+        "Fractals",
+        "Sierpinski Carpet, Gasket and Triangle",
+        "Koch Snowflake",
+        "Visualising Solids",
+        "Making Solids",
+        "Shortest Paths on a Cube",
+        "Representation of Solids on a Plane Surface",
+        "Isometric Projections"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Tales by Dots, Bars, and Lines",
+      "skills": [
+        "The Balancing Act",
+        "Tinkering with Median",
+        "Finding the Unknown",
+        "Mean and Median with Frequencies",
+        "Visualising and Interpreting Data",
+        "Line Graphs"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Algebra Play",
+      "skills": [
+        "Thinking about 'Think of a Number' Tricks",
+        "Number Pyramids",
+        "Fun with Grids",
+        "The Largest Product",
+        "Decoding Divisibility Tricks"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Area",
+      "skills": [
+        "Rectangle and Squares",
+        "Triangles",
+        "Triangles between Parallel Lines with a Common Base",
+        "Area of any Polygon",
+        "Parallelogram",
+        "Rhombus",
+        "Trapezium",
+        "Areas in Real Life"
+      ]
+    }
+  ],
+  "blueprint": null
+}

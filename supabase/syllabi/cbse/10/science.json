@@ -1,0 +1,266 @@
+{
+  "board": "cbse",
+  "classLevel": "10",
+  "subject": "Science",
+  "edition": "2026-27",
+  "source": "NCERT, Science: Textbook for Class X (Reprint 2026-27), contents page and chapter headings; https://ncert.nic.in/textbook/pdf/jesc1ps.pdf. Blueprint: CBSE Science (086) SQP 2026-27, https://cbseacademic.nic.in/web_material/SQP/ClassX_2026_27/Science-SQP.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Chemical Reactions and Equations",
+      "skills": [
+        "Chemical equations",
+        "Balanced chemical equations",
+        "Combination reaction",
+        "Decomposition reaction",
+        "Displacement and double displacement reactions",
+        "Oxidation and reduction",
+        "Corrosion",
+        "Rancidity"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Acids, Bases and Salts",
+      "skills": [
+        "Acids and bases in the laboratory",
+        "How do acids and bases react with metals?",
+        "How do metal carbonates and metal hydrogencarbonates react with acids?",
+        "How do acids and bases react with each other?",
+        "What do all acids and all bases have in common?",
+        "How strong are acid or base solutions?",
+        "Importance of pH in everyday life",
+        "More about salts"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Metals and Non-metals",
+      "skills": [
+        "Physical properties",
+        "Chemical properties of metals",
+        "The reactivity series",
+        "How do metals and non-metals react?",
+        "Properties of ionic compounds",
+        "Occurrence of metals",
+        "Extraction of metals",
+        "Corrosion"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Carbon and its Compounds",
+      "skills": [
+        "Bonding in carbon – the covalent bond",
+        "Versatile nature of carbon",
+        "Saturated and unsaturated carbon compounds",
+        "Homologous series",
+        "Nomenclature of carbon compounds",
+        "Chemical properties of carbon compounds",
+        "Some important carbon compounds – ethanol and ethanoic acid",
+        "Soaps and detergents"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Life Processes",
+      "skills": [
+        "What are life processes?",
+        "Nutrition",
+        "Nutrition in human beings",
+        "Respiration",
+        "Transportation",
+        "Transportation in human beings",
+        "Transportation in plants",
+        "Excretion"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Control and Coordination",
+      "skills": [
+        "Animals – nervous system",
+        "What happens in reflex actions?",
+        "Human brain",
+        "How does the nervous tissue cause action?",
+        "Coordination in plants",
+        "Immediate response to stimulus",
+        "Movement due to growth",
+        "Hormones in animals"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "How do Organisms Reproduce?",
+      "skills": [
+        "Do organisms create exact copies of themselves?",
+        "Modes of reproduction used by single organisms",
+        "Fission",
+        "Budding",
+        "Vegetative propagation",
+        "Sexual reproduction in flowering plants",
+        "Reproduction in human beings",
+        "Reproductive health"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Heredity",
+      "skills": [
+        "Accumulation of variation during reproduction",
+        "Heredity",
+        "Inherited traits",
+        "Rules for the inheritance of traits – Mendel’s contributions",
+        "How do these traits get expressed?",
+        "Sex determination"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Light – Reflection and Refraction",
+      "skills": [
+        "Reflection of light",
+        "Spherical mirrors",
+        "Mirror formula and magnification",
+        "Refraction of light",
+        "The refractive index",
+        "Refraction by spherical lenses",
+        "Lens formula and magnification",
+        "Power of a lens"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "The Human Eye and the Colourful World",
+      "skills": [
+        "The human eye",
+        "Power of accommodation",
+        "Defects of vision and their correction",
+        "Refraction of light through a prism",
+        "Dispersion of white light by a glass prism",
+        "Atmospheric refraction",
+        "Scattering of light",
+        "Tyndall effect"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Electricity",
+      "skills": [
+        "Electric current and circuit",
+        "Electric potential and potential difference",
+        "Circuit diagram",
+        "Ohm’s law",
+        "Factors on which the resistance of a conductor depends",
+        "Resistance of a system of resistors",
+        "Heating effect of electric current",
+        "Electric power"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Magnetic Effects of Electric Current",
+      "skills": [
+        "Magnetic field and field lines",
+        "Magnetic field due to a current-carrying conductor",
+        "Right-hand thumb rule",
+        "Magnetic field due to a current through a circular loop",
+        "Magnetic field due to a current in a solenoid",
+        "Force on a current-carrying conductor in a magnetic field",
+        "Domestic electric circuits"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Our Environment",
+      "skills": [
+        "Eco-system — what are its components?",
+        "Food chains and webs",
+        "How do our activities affect the environment?",
+        "Ozone layer and how it is getting depleted",
+        "Managing the garbage we produce"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 180,
+    "sections": [
+      {
+        "name": "A (Biology)",
+        "questions": 9,
+        "marksEach": 1
+      },
+      {
+        "name": "A (Biology, 2 marks)",
+        "questions": 3,
+        "marksEach": 2
+      },
+      {
+        "name": "A (Biology, 3 marks)",
+        "questions": 2,
+        "marksEach": 3
+      },
+      {
+        "name": "A (Biology, case)",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "A (Biology, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      },
+      {
+        "name": "B (Chemistry)",
+        "questions": 8,
+        "marksEach": 1
+      },
+      {
+        "name": "B (Chemistry, 2 marks)",
+        "questions": 1,
+        "marksEach": 2
+      },
+      {
+        "name": "B (Chemistry, 3 marks)",
+        "questions": 2,
+        "marksEach": 3
+      },
+      {
+        "name": "B (Chemistry, case)",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "B (Chemistry, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      },
+      {
+        "name": "C (Physics)",
+        "questions": 3,
+        "marksEach": 1
+      },
+      {
+        "name": "C (Physics, 2 marks)",
+        "questions": 2,
+        "marksEach": 2
+      },
+      {
+        "name": "C (Physics, 3 marks)",
+        "questions": 3,
+        "marksEach": 3
+      },
+      {
+        "name": "C (Physics, case)",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "C (Physics, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      }
+    ]
+  }
+}

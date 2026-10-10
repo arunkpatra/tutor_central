@@ -1,0 +1,203 @@
+{
+  "board": "cbse",
+  "classLevel": "9",
+  "subject": "Social Science",
+  "edition": "2026-27",
+  "source": "NCERT, Understanding Society: India and Beyond, Social Science Textbook for Grade 9, Part 1 (First Edition June 2026) and Part 2 (First Edition September 2026), contents pages and chapter headings; https://ncert.nic.in/textbook/pdf/iest1ps.pdf, https://ncert.nic.in/textbook/pdf/iest2ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Part I: Understanding Social Science",
+      "skills": [
+        "Social science in everyday life",
+        "Understanding society through time and traditions",
+        "Social science as a study of disciplines",
+        "Why should we study social science?",
+        "The future of social science"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Part I: Shaping of the Earth’s Surface",
+      "skills": [
+        "Plate tectonics",
+        "Process of weathering and erosion",
+        "Agents of gradation",
+        "Running water",
+        "Waves and currents",
+        "Glaciers",
+        "Wind",
+        "Landforms and disasters"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Part I: Atmosphere and Climate",
+      "skills": [
+        "Composition of the atmosphere",
+        "Structure of the atmosphere",
+        "Weather and climate",
+        "Elements of weather and climate",
+        "Seasons in India",
+        "Monsoon",
+        "Climate change",
+        "Punjab Floods 2025: a case study"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Part I: Early Humans and Beginning of Civilisation",
+      "skills": [
+        "Why should we study early human history?",
+        "Who were our human ancestors?",
+        "Palaeolithic hunter–gatherers",
+        "Mesolithic hunter–gatherers",
+        "The Neolithic Revolution",
+        "Neolithic period in Indian subcontinent",
+        "Sindhu–Sarasvatī Civilisation",
+        "Bronze Age civilisations outside India"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Part I: State and Society up to 1000 CE",
+      "skills": [
+        "Political institutions in the Vedic period",
+        "Early kingdoms and republics",
+        "Duties and ideals of the king",
+        "How were empires administered?",
+        "Ethics: the foundation of law and life",
+        "Social structures and everyday life",
+        "Literary heritage of early India",
+        "Economy"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Part I: Democracy",
+      "skills": [
+        "Tracing democratic traditions from early times",
+        "Principles of democracy",
+        "Popular sovereignty",
+        "Rule of law",
+        "Separation of powers",
+        "Types of democracy",
+        "Democracy in practice: India’s living democracy",
+        "Challenges to democratic practices in India"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Part I: Elections",
+      "skills": [
+        "Why do elections matter?",
+        "Inside India’s election machinery",
+        "The electoral system",
+        "Delimitation Commission",
+        "Election Commission of India (ECI)",
+        "Political parties",
+        "Challenges to free and fair elections"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Part I: Building Blocks in Economics: The Problem of Choice",
+      "skills": [
+        "Choices and limited resources",
+        "What does economics deal with?",
+        "Key questions in economics",
+        "Economic systems and how choices are made"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Part I: The Price Puzzle: What Drives the Market",
+      "skills": [
+        "Demand",
+        "Supply",
+        "Market equilibrium",
+        "Role of government in the economy"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Part II: Oceans and Life",
+      "skills": [
+        "Ocean relief",
+        "Movement of ocean water—waves, tides, and currents",
+        "Cyclones and tsunamis—early warning systems",
+        "Marine resources and their significance",
+        "Maritime zones",
+        "International maritime rules and regulations"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Part II: Life on Earth",
+      "skills": [
+        "Types of biomes",
+        "Terrestrial biomes",
+        "Aquatic biomes",
+        "Biome pyramid",
+        "Interconnectedness between biomes and living beings",
+        "Maintaining ecological balance and biodiversity"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Part II: Resistance and Resilience (1000–1700 CE)",
+      "skills": [
+        "Safeguarding sovereignty: resistance, alliances, and confederacies",
+        "Rajput dynasties: confederacies and resistance (1200–1500 CE)",
+        "The Ahom kingdom: centuries of endurance",
+        "Vijayanagara Empire: resilience against expansion",
+        "Marathas: the quest for Swarājya",
+        "The Sikhs: a story of spiritual and political resilience",
+        "Bhakti tradition: affirmation of the spirit of resilience",
+        "The world of the Indian Ocean: continuity and change"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Part II: Governance and Public Policy",
+      "skills": [
+        "Understanding government and governance",
+        "Evolution of governance in India",
+        "Good governance",
+        "E-governance: technology for better governance",
+        "Public policy",
+        "Participants in the public policy process",
+        "The making of a public policy",
+        "Policy coordination: key to good governance"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Part II: Managing Your Personal Finances",
+      "skills": [
+        "Pillars of personal finance",
+        "Income (earnings)",
+        "Budgeting (planning expenses)",
+        "Saving",
+        "Investing (growing wealth)",
+        "Borrowing and credit",
+        "Risk and return",
+        "Taxes"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Part II: From Ideas to Startups",
+      "skills": [
+        "Business plan—a road map for the business",
+        "Functional areas of a business",
+        "Management and operations",
+        "Finance and accounting",
+        "Human resources",
+        "Marketing and sales",
+        "Startups and their contribution to the nation"
+      ]
+    }
+  ],
+  "blueprint": null
+}

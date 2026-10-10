@@ -1,0 +1,178 @@
+{
+  "board": "cbse",
+  "classLevel": "9",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "source": "NCERT, Ganita Manjari: Textbook of Mathematics for Grade 9, Part I (First Edition April 2026) and Part II (First Edition August 2026), contents pages and chapter headings; https://ncert.nic.in/textbook/pdf/iemh1ps.pdf, https://ncert.nic.in/textbook/pdf/iemh2ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Part I: Orienting Yourself: The Use of Coordinates",
+      "skills": [
+        "Settling in",
+        "The 2-D Cartesian coordinate system",
+        "Distance between two points in the 2-D plane"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Part I: Introduction to Linear Polynomials",
+      "skills": [
+        "Linear polynomials",
+        "Exploring linear patterns",
+        "Linear growth and linear decay",
+        "Linear relationships",
+        "Visualising linear relationships"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Part I: The World of Numbers",
+      "skills": [
+        "The dawn of mathematics: the human need to count",
+        "The revolution of Śhūnya: when nothing became something",
+        "Integers: expanding the horizon",
+        "Filling the spaces: fractions and rational numbers",
+        "Irrational numbers",
+        "Real numbers: decimals and cyclic patterns"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Part I: Exploring Algebraic Identities",
+      "skills": [
+        "Visualising identities",
+        "Factorisation of algebraic expressions using identities",
+        "More identities",
+        "Factorisation using algebra tiles",
+        "Factorisation without using algebra tiles",
+        "Finding new identities",
+        "Simplifying rational expressions"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Part I: I’m Up and Down, and Round and Round",
+      "skills": [
+        "Symmetries of a circle",
+        "How many circles?",
+        "Chords and the angles they subtend",
+        "Midpoints and perpendicular bisectors of chords",
+        "Distance of chords from the centre",
+        "Angles subtended by an arc",
+        "Concyclicity of points"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Part I: Measuring Space: Perimeter and Area",
+      "skills": [
+        "Perimeter of a shape",
+        "Perimeter of a circle — the C/D ratio",
+        "π is irrational",
+        "Length of an arc of a circle",
+        "Area of a rectangle",
+        "Area of a parallelogram",
+        "Area of a triangle",
+        "Area of a circle"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Part I: The Mathematics of Maybe: Introduction to Probability",
+      "skills": [
+        "What is probability?",
+        "What is randomness?",
+        "The probability scale",
+        "Experimental probability: performing observations or experiments",
+        "Theoretical probability",
+        "Sample space",
+        "Events",
+        "Tree diagrams"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Part I: Predicting What Comes Next: Exploring Sequences and Progressions",
+      "skills": [
+        "Introduction to sequences",
+        "Explicit rule for a sequence",
+        "Recursive rule for a sequence",
+        "Arithmetic progressions",
+        "Sum of the first n natural numbers",
+        "Geometric progressions"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Part II: Propositions and their Converses",
+      "skills": [
+        "Propositions and implication",
+        "Converses of propositions",
+        "Counterexamples"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Part II: How Quantities Combine: Understanding Data",
+      "skills": [
+        "Combining things",
+        "Average of averages",
+        "Mixtures",
+        "Custom weights",
+        "Visualising and interpreting data",
+        "Stacking columns",
+        "An alternative to pie chart"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Part II: The World of Algorithms",
+      "skills": [
+        "Adding numbers digit by digit",
+        "Greatest common divisor",
+        "Computing the divisors of a number",
+        "First algorithm for gcd",
+        "Data structures",
+        "Analysing these algorithms",
+        "Euclid’s subtraction algorithm",
+        "Āryabhaṭa’s division algorithm"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Part II: Quadrilaterals",
+      "skills": [
+        "What exactly is a quadrilateral?",
+        "Parallelograms",
+        "Applications of parallelograms",
+        "Tiling the plane using any 4-gon"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Part II: Two Variables, One Line",
+      "skills": [
+        "Linear equations in two variables",
+        "Solution of linear equation in two variables",
+        "Slope-intercept form of a linear equation in two variables",
+        "Pair of linear equations in two variables",
+        "Finding solutions to a pair of linear equations",
+        "Graphical method for solving a pair of linear equations in two variables"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Part II: Math of Space: Surface Area and Volume",
+      "skills": [
+        "Cuboids and cubes",
+        "Right circular cylinder",
+        "Cones",
+        "Pyramidal shapes",
+        "Spheres and hemispheres",
+        "Areas and volumes around us"
+      ]
+    }
+  ],
+  "blueprint": null
+}

@@ -1,0 +1,364 @@
+{
+  "board": "karnataka",
+  "classLevel": "8",
+  "subject": "Social Science",
+  "edition": "2026-27",
+  "source": "KTBS, Social Science Class 8 Part 1 and Part 2 (History, Political Science, Sociology, Geography, Economics, Business Studies), English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/8th%20English%20SS%20Part%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/8th%20English%20SS%20Part%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "History: Sources",
+      "skills": [
+        "Importance of sources in studying history",
+        "Types of sources",
+        "Literary sources",
+        "Archaeological sources",
+        "Oral sources and legends"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "History: Bharathavarsha: Geographical Features and Prehistoric Period",
+      "skills": [
+        "India: a subcontinent and peninsula",
+        "Physical features of India",
+        "Neighbouring countries of India",
+        "The pre-historic age",
+        "Classification of history",
+        "Stone ages of the pre-historic period in India"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "History: Ancient Indian Civilizations: Sindhu-Saraswati Civilization and Vedic Civilization",
+      "skills": [
+        "Sindhu-Saraswati Civilization",
+        "Discovery of the Indus Valley Civilization",
+        "Town planning",
+        "Lifestyle and decline of the towns",
+        "Vedic culture",
+        "Social, religious, political and economic system during the Vedic period"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "History: Prominent Civilizations of the World",
+      "skills": [
+        "The Egyptian Civilization",
+        "The Mesopotamian Civilization",
+        "The Chinese Civilization",
+        "Greek Civilization",
+        "Roman Civilization",
+        "The American Civilizations: Maya, Aztecs and Inca"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "History: Sanatana Dharma",
+      "skills": [
+        "Meaning and scope of Sanatana Dharma",
+        "Sources of Sanatana Dharma",
+        "Upanishads",
+        "Itihasa and Puranas",
+        "Darshanas",
+        "Unity in diversity"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "History: Jainism and Buddhism",
+      "skills": [
+        "Background to the rise of Jainism and Buddhism",
+        "Jainism",
+        "Vardhamana Mahaveera",
+        "Buddhism",
+        "Gautama Buddha",
+        "The Four Noble Truths and the Eightfold Path",
+        "Spread of Jainism and Buddhism"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Political Science: Meaning and Importance of Political Science",
+      "skills": [
+        "Meaning of political science",
+        "Development of political science",
+        "Political thinkers and their contributions",
+        "Importance of political science"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Political Science: Citizen and Citizenship",
+      "skills": [
+        "Meaning of citizen and citizenship",
+        "Facilities provided by the country to the citizen",
+        "Citizen and alien",
+        "Methods of acquiring citizenship",
+        "Reasons for losing citizenship"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Sociology: Man and Society",
+      "skills": [
+        "Importance of studying sociology",
+        "Man is a social being",
+        "Socialization",
+        "The necessity of the social environment",
+        "Human beings and language",
+        "Early sociologists"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Sociology: Man and Culture",
+      "skills": [
+        "Concept of culture",
+        "Development of culture",
+        "Cultural diversity",
+        "Customs and traditions"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Geography: The Earth – Our Living Planet",
+      "skills": [
+        "Other names of the Earth",
+        "Size of the Earth and distribution of water",
+        "Continents and oceans of the world",
+        "Parallels of latitude and meridians of longitude",
+        "Local time and standard time",
+        "International Date Line"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Geography: Lithosphere",
+      "skills": [
+        "Meaning and importance of the lithosphere",
+        "Earth's interior and composition",
+        "Rocks",
+        "Volcanoes",
+        "Earthquakes",
+        "Denudation",
+        "Underground water",
+        "Wind"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Geography: Atmosphere",
+      "skills": [
+        "Meaning and importance of the atmosphere",
+        "Composition of the atmosphere",
+        "Elements of weather",
+        "Temperature",
+        "Atmospheric pressure and winds",
+        "Humidity",
+        "Rainfall",
+        "Weather and climate"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Economics: Meaning and Importance of Economics",
+      "skills": [
+        "Meaning of economics",
+        "The importance of the study of economics",
+        "Economic activities",
+        "Production and factors of production"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Business Studies: Meaning and Importance of Business Studies",
+      "skills": [
+        "Objectives of business",
+        "Trade, industry and services",
+        "Home trade, foreign trade and entrepot trade",
+        "Primary and secondary industries",
+        "Cottage and small scale industries",
+        "Business ethics"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "History: Mauryas and Kushans",
+      "skills": [
+        "The Mauryan Empire",
+        "Emperor Ashoka",
+        "Ashoka's administration and contribution to art and architecture",
+        "The Kushans",
+        "Kanishka: administration and contributions",
+        "Buddhist councils"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "History: The Guptas and Vardhanas",
+      "skills": [
+        "Rulers of the Gupta empire and their political achievements",
+        "Gupta contribution to literature and science",
+        "Scientists of the Gupta period",
+        "Mehrauli Iron Pillar",
+        "The Vardhana empire",
+        "Nalanda University"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "History: South Indian Dynasties: Shathavahanas, Kadambas, Gangas",
+      "skills": [
+        "The Shatavahanas",
+        "Gautamiputra Shatakarni",
+        "The Kadambas",
+        "Mayuravarma",
+        "The Gangas",
+        "The contributions of the Gangas",
+        "Bahubali-Gommateshwara of Sravanabelagola"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "History: The Chalukyas of Badami and the Pallavas of Kanchi",
+      "skills": [
+        "The Chalukyas of Badami (540–753)",
+        "Pulakeshi II",
+        "The contributions of the Chalukyas",
+        "The Pallavas of Kanchi",
+        "The contributions of the Pallavas"
+      ]
+    },
+    {
+      "position": 20,
+      "name": "History: The Rashtrakutas of Manyakheta and the Chalukyas of Kalyana",
+      "skills": [
+        "The Rashtrakutas",
+        "Dantidurga and Amoghavarsha",
+        "The contributions of the Rashtrakutas",
+        "The Chalukyas of Kalyana",
+        "The contribution of the Kalyana Chalukyas"
+      ]
+    },
+    {
+      "position": 21,
+      "name": "History: The Cholas and Hoysalas of Dwarasamudra",
+      "skills": [
+        "The Cholas (850–1279)",
+        "The contribution of the Cholas",
+        "The Hoysalas",
+        "The contributions of the Hoysalas"
+      ]
+    },
+    {
+      "position": 22,
+      "name": "Political Science: Democracy",
+      "skills": [
+        "Meaning of democracy",
+        "Definitions of democracy",
+        "Types of democracy",
+        "Features and success factors of democracy",
+        "Merits and demerits of democracy",
+        "Universal adult franchise and elections",
+        "Political parties in a democracy",
+        "Mass media in democracy"
+      ]
+    },
+    {
+      "position": 23,
+      "name": "Political Science: Local Self Government",
+      "skills": [
+        "Background of local self government",
+        "Objectives and functions of local self government",
+        "Panchayat Raj in Karnataka",
+        "Urban local bodies",
+        "Municipalities – towns and cities",
+        "City Corporation or Mahanagara Palike",
+        "Sources of income"
+      ]
+    },
+    {
+      "position": 24,
+      "name": "Sociology: Sociology in Daily Life",
+      "skills": [
+        "Social interaction in daily life",
+        "Role consciousness",
+        "Body language and conversation"
+      ]
+    },
+    {
+      "position": 25,
+      "name": "Sociology: Kinds of Societies",
+      "skills": [
+        "Hunting and food-gathering society",
+        "Cattle-rearing society",
+        "Farming society",
+        "Industrial society",
+        "Features of different types of societies"
+      ]
+    },
+    {
+      "position": 26,
+      "name": "Geography: Hydrosphere",
+      "skills": [
+        "Distribution of water bodies",
+        "Kinds of water bodies",
+        "Relief of the ocean floor",
+        "Ocean currents",
+        "Conservation of oceans"
+      ]
+    },
+    {
+      "position": 27,
+      "name": "Geography: Biosphere",
+      "skills": [
+        "Meaning and importance of the biosphere",
+        "Ecology and environment",
+        "Environmental pollution",
+        "Air pollution",
+        "Water pollution",
+        "Soil pollution",
+        "Noise pollution",
+        "Global warming, greenhouse effect, ozone depletion and acid rain"
+      ]
+    },
+    {
+      "position": 28,
+      "name": "Economics: Basic Concepts of Economics",
+      "skills": [
+        "Demand and supply",
+        "Production and distribution",
+        "Consumption",
+        "Utility",
+        "Price and profit",
+        "National income and per capita income",
+        "Labour"
+      ]
+    },
+    {
+      "position": 29,
+      "name": "Business Studies: Emergence of Different Business Organisations",
+      "skills": [
+        "Types of business organisations",
+        "Sole trading concerns",
+        "Partnership firms",
+        "Registration of partnership firms",
+        "Hindu undivided family business"
+      ]
+    },
+    {
+      "position": 30,
+      "name": "Business Studies: Large Scale Business Organisations",
+      "skills": [
+        "Features of large scale business organisations",
+        "Co-operative societies",
+        "Co-operative movement in India",
+        "Joint stock companies",
+        "Multinational corporations",
+        "Stock exchanges"
+      ]
+    }
+  ],
+  "blueprint": null
+}

@@ -221,6 +221,10 @@ test("syllabi: a member reads, cannot write; anonymous reads nothing; a chapter 
   expect(ch.error).toBeNull();
   const nowhere = await a.from("chapters").insert({ centre_id: centre, student_id: st.id, subject: "Test subject", position: 2, name: "Two", syllabus_id: crypto.randomUUID() });
   expect(nowhere.error).not.toBeNull();
+  // Reference data: leave only the boards' rows for the syllabus count test.
+  const cleanup = new (await import("bun")).SQL(l.db);
+  await cleanup`delete from public.syllabi where subject = 'Test subject'`;
+  await cleanup.close();
 });
 
 test("school items and marks are checked and belong to the centre", async () => {

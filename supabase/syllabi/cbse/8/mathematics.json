@@ -1,0 +1,198 @@
+{
+  "board": "cbse",
+  "classLevel": "8",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "source": "NCERT, Ganita Prakash: Textbook of Mathematics for Grade 8, Part-I and Part-II (Reprint 2026-27 / First Edition December 2025), contents pages and chapter headings; https://ncert.nic.in/textbook/pdf/hegp1ps.pdf, https://ncert.nic.in/textbook/pdf/hegp2ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Part I: A Square and A Cube",
+      "skills": [
+        "Square numbers",
+        "Patterns and properties of perfect squares",
+        "Perfect squares and odd numbers",
+        "Square roots",
+        "Cubic numbers",
+        "Taxicab numbers",
+        "Perfect cubes and consecutive odd numbers",
+        "Cube roots"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Part I: Power Play",
+      "skills": [
+        "Experiencing the power play",
+        "Exponential notation and operations",
+        "The other side of powers",
+        "Powers of 10",
+        "Scientific notation",
+        "Linear growth vs. exponential growth",
+        "Getting a sense for large numbers"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Part I: A Story of Numbers",
+      "skills": [
+        "The mechanism of counting",
+        "Some early number systems",
+        "The Roman numerals",
+        "The idea of a base",
+        "The Egyptian number system",
+        "Place value representation",
+        "The Mesopotamian number system",
+        "The Hindu number system"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Part I: Quadrilaterals",
+      "skills": [
+        "Rectangles and squares",
+        "Properties of a square",
+        "Angles in a quadrilateral",
+        "More quadrilaterals with parallel opposite sides",
+        "Quadrilaterals with equal sidelengths",
+        "Playing with quadrilaterals",
+        "Kite and trapezium"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Part I: Number Play",
+      "skills": [
+        "Is this a multiple of?",
+        "Sum of consecutive numbers",
+        "Breaking even",
+        "Always, sometimes, or never",
+        "What remains?",
+        "Checking divisibility quickly",
+        "Digital roots",
+        "Digits in disguise"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Part I: We Distribute, Yet Things Multiply",
+      "skills": [
+        "Some properties of multiplication",
+        "Increments in products",
+        "Fast multiplications using the distributive property",
+        "Special cases of the distributive property",
+        "Square of the sum/difference of two numbers",
+        "Investigating patterns",
+        "Mind the mistake, mend the mistake",
+        "This way or that way, all ways lead to the bay"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Part I: Proportional Reasoning-1",
+      "skills": [
+        "Observing similarity in change",
+        "Ratios",
+        "Ratios in their simplest form",
+        "Problem solving with proportional reasoning",
+        "Trairasika — the rule of three",
+        "Sharing, but not equally!",
+        "Unit conversions"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Part II: Fractions in Disguise",
+      "skills": [
+        "Fractions as percentages",
+        "Percentage of some quantity",
+        "The FDP trio — fractions, decimals, and percentages",
+        "Percentages greater than 100",
+        "Percentage increase or decrease",
+        "Taxes",
+        "Growth and compounding",
+        "Tricky percentages"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Part II: The Baudhayana-Pythagoras Theorem",
+      "skills": [
+        "Doubling a square",
+        "Halving a square",
+        "Hypotenuse of an isosceles right triangle",
+        "Combining two different squares",
+        "Right-triangles having integer sidelengths",
+        "A long-standing open problem",
+        "Further applications of the Baudhāyana-Pythagoras theorem"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Part II: Proportional Reasoning-2",
+      "skills": [
+        "Proportionality — a quick recap",
+        "Ratios in maps",
+        "Ratios with more than 2 terms",
+        "Dividing a whole in a given ratio",
+        "A slice of the pie",
+        "Inverse proportions"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Part II: Exploring Some Geometric Themes",
+      "skills": [
+        "Fractals",
+        "Sierpinski carpet",
+        "Sierpinski gasket",
+        "Koch snowflake",
+        "Visualising solids",
+        "Shortest paths on a cube",
+        "Representation of solids on a plane surface",
+        "Isometric projections"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Part II: Tales by Dots and Lines",
+      "skills": [
+        "The balancing act",
+        "Tinkering with median",
+        "Mean and median with frequencies",
+        "Spreadsheets",
+        "Visualising and interpreting data",
+        "Line graphs",
+        "Infographics",
+        "Data story: Sleepy-Deepy"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Part II: Algebra Play",
+      "skills": [
+        "Algebra play",
+        "Thinking about ‘think of a number’ tricks",
+        "Number pyramids",
+        "Fun with grids",
+        "The largest product",
+        "Decoding divisibility tricks"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Part II: Area",
+      "skills": [
+        "Rectangle and squares",
+        "Why can’t perimeter be a measure of area?",
+        "Triangles",
+        "Area of any polygon",
+        "Parallelogram",
+        "Rhombus",
+        "Trapezium",
+        "Areas in real life"
+      ]
+    }
+  ],
+  "blueprint": null
+}

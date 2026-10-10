@@ -1,0 +1,126 @@
+{
+  "board": "karnataka",
+  "classLevel": "9",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "source": "KTBS, Mathematics Textbook for Class IX, Part I and Part II, English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/9th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/9th%20English%20Maths%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/9th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/9th%20English%20Maths%20Part%20-%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Number Systems",
+      "skills": [
+        "Irrational Numbers",
+        "Real Numbers and their Decimal Expansions",
+        "Operations on Real Numbers",
+        "Laws of Exponents for Real Numbers"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Polynomials",
+      "skills": [
+        "Polynomials in One Variable",
+        "Zeroes of a Polynomial",
+        "Factorisation of Polynomials",
+        "Algebraic Identities"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Coordinate Geometry",
+      "skills": [
+        "Cartesian System",
+        "Coordinate axes, origin and quadrants",
+        "Coordinates of a point: abscissa and ordinate"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Linear Equations in Two Variables",
+      "skills": [
+        "Linear Equations",
+        "Writing a linear equation in the form ax + by + c = 0",
+        "Solution of a Linear Equation"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Introduction to Euclid's Geometry",
+      "skills": [
+        "Euclid's Definitions, Axioms and Postulates",
+        "Euclid's axioms",
+        "Euclid's five postulates"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Lines and Angles",
+      "skills": [
+        "Basic Terms and Definitions",
+        "Intersecting Lines and Non-intersecting Lines",
+        "Pairs of Angles",
+        "Lines Parallel to the Same Line"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Triangles",
+      "skills": [
+        "Congruence of Triangles",
+        "Criteria for Congruence of Triangles",
+        "Some Properties of a Triangle",
+        "Some More Criteria for Congruence of Triangles"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Quadrilaterals",
+      "skills": [
+        "Properties of a Parallelogram",
+        "Conditions for a quadrilateral to be a parallelogram",
+        "The Mid-point Theorem"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Circles",
+      "skills": [
+        "Angle Subtended by a Chord at a Point",
+        "Perpendicular from the Centre to a Chord",
+        "Equal Chords and their Distances from the Centre",
+        "Angle Subtended by an Arc of a Circle",
+        "Cyclic Quadrilaterals"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Heron's Formula",
+      "skills": [
+        "Area of a triangle from its base and height",
+        "Area of a Triangle — by Heron's Formula",
+        "Areas of equilateral, isosceles and scalene triangles by Heron's formula"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Surface Areas and Volumes",
+      "skills": [
+        "Surface Area of a Right Circular Cone",
+        "Surface Area of a Sphere",
+        "Volume of a Right Circular Cone",
+        "Volume of a Sphere"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Statistics",
+      "skills": [
+        "Graphical Representation of Data",
+        "Bar Graphs",
+        "Histograms of uniform and varying widths",
+        "Frequency Polygons"
+      ]
+    }
+  ],
+  "blueprint": null
+}
