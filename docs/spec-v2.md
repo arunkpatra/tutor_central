@@ -100,7 +100,7 @@ Sign-in and onboarding as V1. Five tabs.
 | **Students** | V1's Students grown: the list, sorted by on track status; add a student (name, class level LKG to 10, school, parent, language); the student's page: this week, the record (skills by subject, checks trend, marks, attendance, homework), the school's items, messages sent, consent, fees (V1), notes, edit, archive; the "+" menu (add student, scan register, create batch) |
 | **School** | What the schools sent, as items per student or per class of a school: exams with dates and portions, homework, notices, holidays; the exam calendar; "Ask parents to forward" (the message that starts the flow); exam prep for each coming test |
 | **Fees** | As V1: month, ledger, remind, mark paid, receipt, generate month, UPI |
-| **More** | Organise: Schedule (batches: V1's classes, their days and times; events), Attendance (mark any day, class or all students, and history: V1's screens), Reports. Make: Make something (every kind, for ad hoc use), Check a paper, Scan register (Students's screen, D36). App: Settings, Account, Help |
+| **More** | Organise: Schedule (batches: V1's classes, their days and times; events), Attendance (mark any day, class or all students, and history: V1's screens), Reports. Make: Make something (every kind, for ad hoc use), Check a paper, Scan register (the Students tab's screen, D36). App: Settings, Account, Help |
 
 "Batch" is V1's class (`classes`): a named group with meeting days and times. The Attendance tab's two screens move
 under More unchanged; the close is the fast path for tonight's batch. V1's deep links keep working; new ones:
