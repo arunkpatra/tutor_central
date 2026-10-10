@@ -28,6 +28,7 @@ targets:
     dependencies:
       - package: TutorCentralKit
         product: AppShell
+      - target: TutorCentralShare
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: in.tutorcentral.app
@@ -36,6 +37,20 @@ targets:
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/TutorCentral.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+  # "Share to Tutor Central" (docs/spec-v2.md section 9): its own App ID, the app group shared with the app. No package
+  # dependency: it writes one file the app reads, from Phase 13. Embedded from Phase 10 so cloud signing is proven early
+  # (the owner, 2026-10-10).
+  TutorCentralShare:
+    type: app-extension
+    platform: iOS
+    sources: [Share]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: in.tutorcentral.app.share
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_FILE: Share/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Share/TutorCentralShare.entitlements
         GENERATE_INFOPLIST_FILE: NO
   TutorCentralSmokeTests:
     type: bundle.unit-test
