@@ -126,6 +126,7 @@ export const STEPS: Step[] = [
       "supabase/tests/**",
       "supabase/package.json",
       "supabase/tsconfig.json",
+      "supabase/syllabi/**",
       // review-seed.test runs the review centre's SQL on the local database.
       "tools/review-seed.ts",
     ],
