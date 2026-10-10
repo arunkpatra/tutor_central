@@ -34,6 +34,18 @@ public struct PlanCache: Sendable {
         }
     }
 
+    /// A student's chapters and skills as last read online: the close offline records the plan's checks on the
+    /// student's own skills and moves them (D39).
+    public func keepBook(_ book: BookCopy, student: UUID, at: Date) {
+        CachedRead<BookCopy>(centre: centre, key: "book-\(student.uuidString.lowercased())", directory: directory)
+            .keep(book, at: at)
+    }
+
+    public func book(student: UUID) -> BookCopy? {
+        CachedRead<BookCopy>(centre: centre, key: "book-\(student.uuidString.lowercased())", directory: directory)
+            .load()?.value
+    }
+
     private var prefix: String {
         "cache-\(centre.uuidString.lowercased())-plan-"
     }
@@ -45,5 +57,16 @@ public struct PlanCache: Sendable {
 
     private func read(classID: UUID, date: Day) -> CachedRead<PlanRecord> {
         CachedRead(centre: centre, key: "plan-\(classID.uuidString.lowercased())-\(date.iso)", directory: directory)
+    }
+}
+
+/// A student's book as read: the chapters and their skills.
+public struct BookCopy: Codable, Sendable, Hashable {
+    public let chapters: [Chapter]
+    public let skills: [Skill]
+
+    public init(chapters: [Chapter], skills: [Skill]) {
+        self.chapters = chapters
+        self.skills = skills
     }
 }

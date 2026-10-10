@@ -194,6 +194,9 @@ import Observation
         // The register and the tasks show their saved copies at once, beside the counts' read (D39).
         let registerRead = Task { await register.loadIfNeeded() }
         let tasksRead = Task { await tasks.loadIfNeeded() }
+        // The plans start once the register is in, beside the counts: each shows its copy at once offline, where
+        // the counts' read takes its timeout to fail.
+        async let plansRead: Void = startPlans(after: registerRead)
         async let weekEvents = try? eventsRepository.events(
             centre: workspace.centre.id, from: today, to: today.adding(days: 7, calendar: calendar)
         )
@@ -229,6 +232,11 @@ import Observation
         tick(clock)
         // The counts are in; the plans fill their section as they are made.
         loading = false
+        await plansRead
+    }
+
+    private func startPlans(after registerRead: Task<Void, Never>) async {
+        await registerRead.value
         await loadPlans()
     }
 

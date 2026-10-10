@@ -295,12 +295,18 @@ public enum ClosePhase: Hashable, Sendable {
         homeworkHistory = await homework ?? []
     }
 
+    /// The student's chapters and skills; offline, the copy the plan or the last close kept.
     func readBook(_ id: UUID) async -> StudentBook {
         do {
             async let read = textbooks.chapters(student: id)
             async let list = textbooks.skills(student: id)
-            return try await StudentBook(id: id, chapters: read, skills: list, failure: nil)
+            let book = try await StudentBook(id: id, chapters: read, skills: list, failure: nil)
+            planCache?.keepBook(BookCopy(chapters: book.chapters, skills: book.skills), student: id, at: now())
+            return book
         } catch {
+            if TransportError.isOffline(error), let copy = planCache?.book(student: id) {
+                return StudentBook(id: id, chapters: copy.chapters, skills: copy.skills, failure: nil)
+            }
             return StudentBook(id: id, chapters: [], skills: [], failure: error)
         }
     }
