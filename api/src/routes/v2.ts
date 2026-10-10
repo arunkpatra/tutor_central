@@ -4,7 +4,9 @@ import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
 import { decodeImage } from "../images.js";
+import { request as checkRequest } from "../prompts/check.js";
 import { request as textbookRequest } from "../prompts/parse-textbook.js";
+import { request as placementRequest } from "../prompts/placement.js";
 import { MakeInput, ParseTextbookInput } from "../schemas.js";
 import { answer, isParsed, notYet, parse, run } from "./common.js";
 
@@ -25,7 +27,15 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
   routes.post("/make", async (c) => {
     const body = await parse(c, MakeInput);
     if (!isParsed(body)) return body;
-    return notYet(c, "/ai/make");
+    const v = body.value;
+    switch (v.kind) {
+      case "check":
+        return run(c, deps, body.centre, { kind: "check", input: v, request: checkRequest(v.classLevel, v.subject, v.skills) });
+      case "placement":
+        return run(c, deps, body.centre, { kind: "placement", input: v, request: placementRequest(v.classLevel, v.subject, v.chapters) });
+      default:
+        return notYet(c, "/ai/make");
+    }
   });
   return routes;
 }

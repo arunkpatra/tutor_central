@@ -1,5 +1,5 @@
 import type { ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
-import type { CheckOutput, NoteOutput, PaperOutput, QuestionSetOutput, ScanOutput, TextbookOutput } from "./schemas.js";
+import type { CheckOutput, ChecksOutput, NoteOutput, PaperOutput, PlacementOutput, QuestionSetOutput, ScanOutput, TextbookOutput } from "./schemas.js";
 
 export type FakeScript = { answer?: unknown; refuse?: boolean; fail?: string; delayMs?: number };
 
@@ -148,9 +148,27 @@ const textbook: TextbookOutput = {
   ],
 };
 
+/** The close's three checks on three class 8 Science skills (P10-Close). */
+const checks: ChecksOutput = {
+  questions: [
+    { skill: "Balance a chemical equation", question: "Balance H₂ + O₂ → H₂O.", answer: "2H₂ + O₂ → 2H₂O" },
+    { skill: "Name the reactants", question: "In magnesium burning in air, what are the reactants?", answer: "Magnesium and oxygen" },
+    { skill: "Tell a physical from a chemical change", question: "Is ice melting a physical or a chemical change?", answer: "Physical: no new substance forms" },
+  ],
+};
+
+/** The placement's questions on three class 5 Mathematics chapters (P10-Placement). */
+const placement: PlacementOutput = {
+  questions: [
+    { chapter: "The Fish Tale", question: "Which is longer, 1 km or 800 m?", answer: "1 km" },
+    { chapter: "Shapes and Angles", question: "Is the corner of a page a right angle?", answer: "Yes" },
+    { chapter: "How Many Squares?", question: "A rectangle is 3 squares by 4 squares. How many squares?", answer: "12" },
+  ],
+};
+
 /** The boards' results (P6-Result-Paper, P6-Result-ProgressNote, P6-Scan-Review, P6-Check-Result,
  *  P10-Textbook-Chapters), one per kind. */
-export const SAMPLE = { paper, homework, worksheet, progress_note: note, scan_register: scan, check_paper: check, parse_textbook: textbook };
+export const SAMPLE = { paper, homework, worksheet, progress_note: note, scan_register: scan, check_paper: check, parse_textbook: textbook, check: checks, placement };
 
 /** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
 export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
@@ -158,6 +176,8 @@ export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
     if (request.text.includes("contents page")) return "parse_textbook";
     return request.text.includes("register") ? "scan_register" : "check_paper";
   }
+  if (request.text.includes("placement")) return "placement";
+  if (request.text.includes("for each skill")) return "check";
   if (request.text.includes("progress note")) return "progress_note";
   if (request.text.includes("homework")) return "homework";
   if (request.text.includes("worksheet")) return "worksheet";
@@ -170,5 +190,29 @@ export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
 export function localScript(request: ClaudeRequest<unknown>): FakeScript {
   const kind = kindOf(request);
   const blank = kind === "scan_register" && (request.images?.[0]?.base64.length ?? 0) < 1400;
+  if (kind === "check" || kind === "placement") return { answer: fitted(kind, quoted(request.text)), delayMs: 1500 };
   return { answer: blank ? { rows: [] } : SAMPLE[kind], delayMs: 1500 };
+}
+
+/** The names a check or placement prompt quotes, in order. */
+function quoted(text: string): string[] {
+  return [...text.matchAll(/"([^"]+)"/g)].map((m) => m[1] ?? "");
+}
+
+/** One question per skill or chapter the request names, the sample's where it has one: a local close or placement
+ *  meets the student's own chapters, not the sample's three. */
+function fitted(kind: "check" | "placement", names: string[]): ChecksOutput | PlacementOutput {
+  if (kind === "check") {
+    return {
+      questions: names.map(
+        (skill) => SAMPLE.check.questions.find((q) => q.skill === skill) ?? { skill, question: `Show me one example of: ${skill}.`, answer: "One worked example" },
+      ),
+    };
+  }
+  return {
+    questions: names.map(
+      (chapter) =>
+        SAMPLE.placement.questions.find((q) => q.chapter === chapter) ?? { chapter, question: `What is the main idea of ${chapter}?`, answer: "The chapter's first idea" },
+    ),
+  };
 }

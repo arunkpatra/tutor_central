@@ -1,13 +1,13 @@
 import { expect, test } from "bun:test";
 import { fakeApple } from "../src/apple-fake.js";
-import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
 const verify = async (t: string) => (t === "good" ? { id: "u1" } : null);
-const app = (claude = fakeClaude({ answer: SAMPLE.parse_textbook }), db = fakeDb()) => makeApp({ verify, claude, db, apple: fakeApple({}) });
+const app = (claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), db = fakeDb()) => makeApp({ verify, claude, db, apple: fakeApple({}) });
 const post = (a: ReturnType<typeof makeApp>, path: string, body: unknown) => a.request(path, { method: "POST", headers: auth, body: JSON.stringify(body) });
 const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0]).toString("base64");
 const image = { imageBase64: jpeg, mediaType: "image/jpeg" };
@@ -39,4 +39,42 @@ test("the monthly allowance is worded for the month on a V2 kind", async () => {
   const r = await post(app(undefined, fakeDb({ limit: 0 })), "/ai/parse-textbook", { centreId, image, classLevel: "5", subject: "Mathematics" });
   expect(r.status).toBe(429);
   expect(await r.json()).toEqual({ error: "You've made this month's 0. More next month.", limit: 0, kind: "parse_textbook" });
+});
+
+const check = { kind: "check", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation", "Name the reactants", "Tell a physical from a chemical change"] };
+
+test("make check asks three questions, one per skill, on Haiku, with no student in the record", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.check });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", check);
+  expect(r.status).toBe(200);
+  const body = (await r.json()) as { result: { questions: { skill: string; question: string; answer: string }[] } };
+  expect(body.result.questions).toHaveLength(3);
+  expect(body.result.questions.map((q) => q.skill)).toEqual(check.skills);
+  expect(db.started[0]).toMatchObject({ kind: "check", model: "claude-haiku-5-5", input: { skills: check.skills, classLevel: "8" } });
+  expect(JSON.stringify(db.started[0])).not.toContain("studentId");
+});
+
+test("make check takes one to three skills", async () => {
+  const one = await post(app(fakeClaude({ answer: { questions: [SAMPLE.check.questions[0]] } })), "/ai/make", { ...check, skills: ["Balance a chemical equation"] });
+  expect(one.status).toBe(200);
+  const four = await post(app(), "/ai/make", { ...check, skills: [...check.skills, "One more"] });
+  expect(four.status).toBe(400);
+});
+
+test("make placement asks one question per chapter in the book's order", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.placement });
+  const r = await post(app(claude), "/ai/make", { kind: "placement", centreId, classLevel: "5", subject: "Mathematics", chapters: ["The Fish Tale", "Shapes and Angles", "How Many Squares?"] });
+  expect(r.status).toBe(200);
+  const body = (await r.json()) as { result: { questions: { chapter: string; question: string; answer: string }[] } };
+  expect(body.result.questions.map((q) => q.chapter)).toEqual(["The Fish Tale", "Shapes and Angles", "How Many Squares?"]);
+  expect(claude.requests[0]?.model).toBe("claude-haiku-5-5");
+});
+
+test("a check and a placement need no student's consent; the other kinds still answer 501", async () => {
+  const db = fakeDb({ consent: false });
+  expect((await post(app(undefined, db), "/ai/make", check)).status).toBe(200);
+  const sheet = await post(app(undefined, db), "/ai/make", { kind: "sheet", centreId, classLevel: "8", subject: "Science", skills: ["Balance a chemical equation"] });
+  expect(sheet.status).toBe(501);
+  expect(db.started).toHaveLength(1);
 });
