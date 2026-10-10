@@ -3,17 +3,10 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-10, session 20 (the V2 track opens, on Fable 5.1). **Session 20:** the V2 brainstorm: the research note
-`docs/v2/research.md` (six threads) and the draft spec `docs/spec-v2.md` (the plan, not the tools; proposed D56 to D65), awaiting
-the owner's review; then the phase files for Phases 10 to 16. **Session 19:** the Phase 9 run began (on Opus 5.5). **Session 19:** Tasks 1 to 3 done: the API
-deployed to `main`'s head (`999e881`, run 37965871936); build 18 passed on the owner's iPhone, its checklist ticked and its
-notes written (`docs/release.md`); the tester's guide (`docs/testing/tester-guide.md`) and the findings file
-(`plan/phase-09-findings.md`); Test Information saved, the "Tutors" group made, **build 18 submitted to Beta App Review on
-2026-10-09**. **Session 18:** `plan/phase-09-plan.md` approved, D52 to D55.
-**Next session (2026-10-10):** a new track, V2. The owner: V1 is the baseline (a working app for one use case, valuable to
-tutors) and goes on through Phase 9's testing for technical, usability, UI and crash feedback; separately, think about V2 to
-compete with the top apps in the category. Start with brainstorming (`superpowers:brainstorming`), then a plan; no feature
-without a phase, a plan and boards (rule 1). Phase 9 carries on alongside.
+**Last updated:** 2026-10-10, session 20 (the V2 track opens, on Fable 5.1). **Session 20:** the V2 brainstorm; the research
+note `docs/v2/research.md`; the spec `docs/spec-v2.md` approved by the owner (D56 to D65); the scope files for Phases 10 to 16
+written. **Next:** `plan/phase-10-plan.md` (the boards in seven steps, then the migrations, seeds, API skeletons and iOS
+plumbing), then the Phase 10 boards on Fable (D17). **Session 19:** the Phase 9 run began (on Opus 5.5).
 **Phase 9's next:** each later session opens from `plan/resume/018-phase-9-run.md` with what the owner brings: Apple's answer on build 18
 (approved, or a message to answer), the tester's lines for D1 to D6 and D8 (Task 4, sent to the tester on 2026-10-09), then
 D7 and the invitations (Task 5, where the testers' facts T1 to T6 are filled and checked against D52 first), then the readings
@@ -37,6 +30,7 @@ every parent +919611385678). Left for Phase 9's end (Owner step 6): attach the f
 | 7 Settings, account, notifications, offline, hardening, release candidate | Done, PRs #63 to #73 | "As built" in `phase-07-settings-and-hardening.md`; the accessibility record in `docs/design/accessibility-pass.md`; the release checklist in `docs/release.md` |
 | 8 Website | Done, PRs #76 to #82 | "As built" in `phase-08-website.md`; then #83 to #89 after the close (the 30-day words, the crash fix, the minors, U33, the sheet title, store-shots, seed-review) |
 | 9 User testing | Running since session 19 (2026-10-09) | `phase-09-plan.md` (D52 to D55): Tasks 1 to 3 done, build 18 in Beta App Review; Task 4 (the tester) next; the run by `resume/018-phase-9-run.md`; findings in `phase-09-findings.md` |
+| 10 to 16 V2 (`docs/spec-v2.md`) | Phase 10 next | Scope files `phase-10-v2-design-and-foundation.md` to `phase-16-release.md`; Phase 10's plan is the next document |
 
 ## In flight
 
