@@ -57,9 +57,12 @@ public extension SheetStore {
         }
     }
 
-    /// "sheet 1", the words the made sheet's title ends with.
+    /// "sheet 1", the words the made sheet's title ends with; the tutor's own sheet passes on what it stands in for.
     private var place: String {
-        artefact?.title.components(separatedBy: " · ").last ?? "sheet 1"
+        if let own = ownContent {
+            return own.inPlaceOf
+        }
+        return artefact?.title.components(separatedBy: " · ").last ?? "sheet 1"
     }
 
     private func allowedOwn() async -> Bool {
@@ -76,11 +79,14 @@ public extension SheetStore {
             return
         }
         let base = artefact.title.components(separatedBy: " · ").first ?? artefact.title
-        let made = artefact.source == .own ? artefact.regeneratedFrom : artefact.id
+        let isOwn = artefact.source == .own
+        let made = isOwn ? artefact.regeneratedFrom : artefact.id
+        // Replacing the tutor's own sheet keeps its title, which already names the made one.
+        let title = isOwn ? artefact.title : "Your sheet · \(base.lowercased())"
         do {
             let kept = try await plans.keep(
                 NewArtefact(
-                    kind: .sheet, source: .own, title: "Your sheet · \(base.lowercased())", content: .own(content),
+                    kind: .sheet, source: .own, title: title, content: .own(content),
                     photoPath: photoPath, generationID: nil, regeneratedFrom: made
                 ),
                 to: link, centre: centre

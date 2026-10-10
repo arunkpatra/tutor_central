@@ -27,6 +27,17 @@ import Testing
         return store
     }
 
+    @Test func aLineReadsInThePlansOrderWhateverOrderTheItemsArriveIn() async {
+        var plan = FakePlansRepository.boardPlan(changed: false, done: false)
+        plan.items.reverse()
+        let store = await store(plans: FakePlansRepository(
+            plans: [plan],
+            artefacts: FakePlansRepository.boardArtefacts
+        ))
+        let meher = store.groups.first?.lines.first { $0.name == "Meher Shah" }
+        #expect(meher?.rest.map(\.text) == ["Practise set 1", "Check 3", "Homework sheet 1"])
+    }
+
     @Test func openingMakesThePlanAndShowsTheGroupsAsTheyLand() async {
         let store = await store()
         guard case .made = store.state else { Issue.record("not made: \(store.state)")
