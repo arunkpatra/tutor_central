@@ -37,6 +37,11 @@ struct PlanSection: View {
         }
     }
 
+    /// The scroll target of a batch's brief row.
+    static func briefID(_ batch: UUID) -> String {
+        "brief-\(batch.uuidString)"
+    }
+
     /// The scroll target of a batch's group card.
     static func groupID(_ batch: UUID, _ group: Int) -> String {
         "plan-\(batch.uuidString)-\(group)"
@@ -65,6 +70,7 @@ struct PlanSection: View {
                             }
                         }
                     }
+                    .id(PlanSection.briefID(store.classID))
                 }
             }
         }
@@ -98,9 +104,15 @@ struct GroupCardView: View {
                         note: line.note, teachLine: line.teach, rest: line.rest
                     ) { press(line) }
                         .contextMenu { LineMenu.rows(groups: groups, current: group.id, actions: actions(line)) }
-                        .popover(isPresented: .constant(menuFor == line.id), arrowEdge: .top) {
-                            LineMenuCard(groups: groups, current: group.id, actions: actions(line))
-                                .presentationCompactAdaptation(.popover)
+                        .anchorPreference(key: LineMenuSpot.Key.self, value: .bounds) { anchor in
+                            menuFor == line.id
+                                ? LineMenuSpot(
+                                    anchor: anchor,
+                                    groups: groups,
+                                    current: group.id,
+                                    actions: actions(line)
+                                )
+                                : nil
                         }
                         .rowDivider(line.id != group.lines.last?.id)
                 }
@@ -124,6 +136,49 @@ struct GroupCardView: View {
             skipHomework: { Task { await store.skipHomework(student: line.id) } },
             leaveOut: { Task { await store.leaveOut(student: line.id) } }
         )
+    }
+}
+
+/// Where the board state's menu is drawn: the pressed line's bounds and its rows.
+struct LineMenuSpot {
+    let anchor: Anchor<CGRect>
+    let groups: [Int]
+    let current: Int
+    let actions: LineMenu.Actions
+
+    struct Key: PreferenceKey {
+        static var defaultValue: LineMenuSpot? {
+            nil
+        }
+
+        static func reduce(value: inout LineMenuSpot?, nextValue: () -> LineMenuSpot?) {
+            value = value ?? nextValue()
+        }
+    }
+
+    /// The board draws the menu from 46 above the line's top, at the page's trailing edge.
+    static var lift: CGFloat {
+        46
+    }
+}
+
+/// The board state's menu over Today (P10-Today-Plan-StudentMenu): the screen dimmed, the menu on the system's glass
+/// at the pressed line.
+struct LineMenuOverlay: View {
+    let spot: LineMenuSpot?
+
+    var body: some View {
+        GeometryReader { proxy in
+            if let spot {
+                let line = proxy[spot.anchor]
+                ZStack(alignment: .topLeading) {
+                    Tokens.dim.color.ignoresSafeArea()
+                    LineMenuCard(groups: spot.groups, current: spot.current, actions: spot.actions)
+                        .glassEffect(in: .rect(cornerRadius: Tokens.radiusTile))
+                        .offset(x: proxy.size.width - LineMenuCard.width, y: line.minY - LineMenuSpot.lift)
+                }
+            }
+        }
     }
 }
 

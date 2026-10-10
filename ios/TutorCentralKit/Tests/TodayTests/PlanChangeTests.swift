@@ -125,4 +125,12 @@ import Testing
         #expect(store.groups.count == 1)
         #expect(made.items.allSatisfy { $0.artefactID == nil || made.artefact($0.artefactID) != nil })
     }
+
+    @Test func aGroupLeftWithNoOneIsNotShown() async throws {
+        let store = await PlanStoreTests().store()
+        let riyasGroup = try #require(line(store, FakeStudentsRepository.riya)?.groupNo)
+        await store.move(student: FakeStudentsRepository.riya, to: 1)
+        #expect(!store.groups.map(\.id).contains(riyasGroup))
+        #expect(store.groups.allSatisfy { !$0.lines.isEmpty })
+    }
 }

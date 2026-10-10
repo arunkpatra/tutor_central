@@ -13,6 +13,8 @@ public enum TodayBoardState: Hashable, Sendable {
     case lineMenu(UUID)
     /// The Change sheet up (P10-Today-Plan-Change).
     case changeSheet
+    /// Scrolled to Group 1, its moved and skipped lines (P10-Today-Plan-Changed).
+    case planChanged
 }
 
 /// Today live, to P4-Today-Soon (dark and light), -Evening, -NoClass and -AddingTask; P2-Today-Empty for a centre with
@@ -99,6 +101,7 @@ public struct TodayView: View {
                 .padding(.top, max(0, Tokens.pageTop - topInset))
                 .padding(.bottom, Tokens.contentBottom)
             }
+            .overlayPreferenceValue(LineMenuSpot.Key.self) { LineMenuOverlay(spot: $0) }
             .statusBarGlass()
             .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
             .scrollDismissesKeyboard(.interactively)
@@ -173,9 +176,12 @@ public struct TodayView: View {
         switch boardState {
         case .scrolledToPlan:
             try? await Task.sleep(for: .seconds(Tokens.panel))
-            proxy.scrollTo(PlanSection.groupID(first.id, 2), anchor: .top)
+            proxy.scrollTo(PlanSection.briefID(first.id), anchor: .top)
         case .changeSheet:
             changing = ChangingBatch(id: first.id)
+        case .planChanged:
+            try? await Task.sleep(for: .seconds(Tokens.panel))
+            proxy.scrollTo(PlanSection.groupID(first.id, 1), anchor: .top)
         default:
             if let batch = store.focusBatch {
                 try? await Task.sleep(for: .seconds(Tokens.panel))

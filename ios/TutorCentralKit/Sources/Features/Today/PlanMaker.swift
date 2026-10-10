@@ -128,7 +128,10 @@ public final class PlanMaker: Sendable {
         let briefs = await (try? plans.briefChapters(centre: centre)) ?? []
         let missing = ArtefactBudget.requests(
             for: draft, students: Self.byID(members), spacedSkills: spaced(draft, record), briefsMade: briefs
-        ).filter { !plan.fills(place(of: $0, in: draft)) }
+        ).filter { request in
+            let place = place(of: request, in: draft)
+            return plan.hasLine(for: place) && !plan.fills(place)
+        }
         let work = PlanWork(draft: draft, record: record, centre: centre)
         let made = await makeAll(missing, into: plan, work: work, progress: progress)
         guard !Task.isCancelled else { return }

@@ -168,8 +168,24 @@ extension PlanRecord {
         return switch place.kind {
         case .practise: artefact(group: place.group, kind: .sheet, homework: false) != nil
         case .homework: artefact(group: place.group, kind: .sheet, homework: true) != nil
-        case .check: artefact(group: place.group, kind: .check) != nil
+        case .check: artefact(group: place.group, kind: .check) != nil || eachHasOwnChecks(place.group)
         default: items.contains { $0.kind == place.kind && $0.groupNo == place.group && $0.artefactID != nil }
+        }
+    }
+
+    /// Whether the plan has the line a place's artefact links to (a figure only where the rules wrote its line).
+    func hasLine(for place: LinePlace) -> Bool {
+        items.contains { item in
+            item.kind == place.kind && item.groupNo == place.group
+                && (place.student.map { item.studentID == $0 } ?? true)
+        }
+    }
+
+    /// Every member's check line in the group links their own checks.
+    private func eachHasOwnChecks(_ group: Int) -> Bool {
+        let lines = items.filter { $0.groupNo == group && $0.kind == .check && $0.studentID != nil }
+        return !lines.isEmpty && lines.allSatisfy { line in
+            artefact(line.artefactID).map { $0.studentID == line.studentID } ?? false
         }
     }
 

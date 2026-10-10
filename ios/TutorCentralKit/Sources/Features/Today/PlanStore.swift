@@ -65,7 +65,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     /// The system alert's words for a change refused or failed (U33).
     public var message: String?
     /// Whether the network is there (AppShell's connectivity); a test sets it.
-    @ObservationIgnored public var online: () -> Bool = { true }
+    @ObservationIgnored public var online: () async -> Bool = { true }
     let workspace: Workspace
     let register: any Register
     let plans: any PlansRepository
@@ -135,7 +135,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         if record == nil, let copy = cache?.load(classID: classID, date: today) {
             show(.made(copy.value))
         }
-        guard online() else {
+        guard await online() else {
             if record == nil {
                 show(.offline)
             }

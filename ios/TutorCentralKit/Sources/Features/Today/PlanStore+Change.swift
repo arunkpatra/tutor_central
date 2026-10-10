@@ -20,7 +20,7 @@ public extension PlanStore {
     internal static let changeFailed = "Couldn't change the plan. Nothing was changed."
 
     func move(student: UUID, to group: Int) async {
-        guard let plan = record, allowed() else { return }
+        guard let plan = record, await allowed() else { return }
         let theirs = plan.items(of: student)
         guard let from = theirs.first?.groupNo, from != group else { return }
         do {
@@ -47,7 +47,7 @@ public extension PlanStore {
 
     /// The student's lines skipped for today: they close with attendance alone (no checks, homework off).
     func leaveOut(student: UUID) async {
-        guard var plan = record, allowed() else { return }
+        guard var plan = record, await allowed() else { return }
         do {
             try await plans.leaveOut(student: student, plan: plan.id, centre: centre)
             for index in plan.items.indices where plan.items[index].studentID == student {
@@ -61,7 +61,7 @@ public extension PlanStore {
 
     /// "Keep this for Wednesdays": the weekday's group count and subjects on the batch.
     func keep(choices: PlanChoices, for weekday: Weekday) async {
-        guard allowed() else { return }
+        guard await allowed() else { return }
         let count = choices.groups ?? groups.count
         let subjects = (1 ... max(count, 1)).map { choices.subjects[$0] ?? changeChoices.subjects[$0] ?? "" }
         do {
@@ -75,7 +75,7 @@ public extension PlanStore {
 
     /// Use this plan: today's plan made again with the sheet's choices (the material made again).
     func useToday(choices: PlanChoices?) async {
-        guard allowed() else { return }
+        guard await allowed() else { return }
         await make(choices: choices)
     }
 
@@ -125,8 +125,8 @@ public extension PlanStore {
     // MARK: - Helpers
 
     /// Online, or refused in words.
-    private func allowed() -> Bool {
-        guard online() else {
+    private func allowed() async -> Bool {
+        guard await online() else {
             message = OfflineRefusal.words(for: .changePlan)
             return false
         }
@@ -134,7 +134,7 @@ public extension PlanStore {
     }
 
     private func skip(student: UUID, kind: PlanLineKind) async {
-        guard var plan = record, allowed(),
+        guard var plan = record, await allowed(),
               let index = plan.items.firstIndex(where: { $0.studentID == student && $0.kind == kind }) else { return }
         do {
             try await plans.skip(item: plan.items[index].id, centre: centre)

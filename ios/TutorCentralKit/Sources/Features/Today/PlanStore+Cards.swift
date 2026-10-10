@@ -6,9 +6,11 @@ import Foundation
 extension PlanStore {
     static let briefLine = "Five minutes · three common mistakes · the worked example to use"
 
+    /// A group everyone has left today (moved, or left out) has no card (P10-Today-Plan-Changed).
     func cards(_ plan: PlanRecord) -> [GroupCardModel] {
-        plan.groups.map { group in
+        plan.groups.compactMap { group in
             let lines = studentLines(plan, group: group.number)
+            guard !lines.isEmpty else { return nil }
             return GroupCardModel(
                 id: group.number,
                 title: group.chapter.isEmpty ? "Group \(group.number)" : "Group \(group.number) · \(group.chapter)",

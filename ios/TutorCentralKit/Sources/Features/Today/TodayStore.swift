@@ -227,6 +227,8 @@ import Observation
             cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
         }
         tick(clock)
+        // The counts are in; the plans fill their section as they are made.
+        loading = false
         await loadPlans()
     }
 

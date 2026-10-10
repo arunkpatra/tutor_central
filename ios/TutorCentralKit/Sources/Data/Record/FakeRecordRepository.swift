@@ -111,7 +111,15 @@ public extension FakeRecordRepository {
     /// The close of `FakeAttendanceRepository.seedWithTodayClosed`: three checks each for four of the five who came,
     /// eight right, and homework given to all five (P10-Today-AfterClose's counts).
     nonisolated static var todaysChecks: [CheckRecord] {
-        let session = FakeAttendanceRepository.seedWithTodayClosed[0]
+        checks(of: FakeAttendanceRepository.seedWithTodayClosed[0])
+    }
+
+    nonisolated static var todaysHomework: [HomeworkRecord] {
+        homework(of: FakeAttendanceRepository.seedWithTodayClosed[0])
+    }
+
+    /// Three checks each for four of those who came, eight right.
+    nonisolated static func checks(of session: AttendanceSession) -> [CheckRecord] {
         let checked = session.marks.filter { $0.value == .present }.map(\.key).sorted { $0.uuidString < $1.uuidString }
             .prefix(4)
         return checked.enumerated().flatMap { index, student in
@@ -125,9 +133,9 @@ public extension FakeRecordRepository {
         }
     }
 
-    nonisolated static var todaysHomework: [HomeworkRecord] {
-        let session = FakeAttendanceRepository.seedWithTodayClosed[0]
-        return session.marks.filter { $0.value == .present }.map(\.key).map { student in
+    /// Homework given to each who came.
+    nonisolated static func homework(of session: AttendanceSession) -> [HomeworkRecord] {
+        session.marks.filter { $0.value == .present }.map(\.key).map { student in
             HomeworkRecord(
                 id: UUID(), studentID: student, sessionID: session.id, givenAt: FakeAttendanceRepository.closedAt,
                 status: .given
