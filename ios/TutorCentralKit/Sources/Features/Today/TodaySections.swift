@@ -2,28 +2,24 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// The next class (P4-Today-Soon, -Evening, -NoClass): the eyebrow in accentText while it is soon or running, the class
-/// or the next class day in title2, its line, and Mark attendance while it can be marked.
-struct HeroCard: View {
+/// The batch hero (P10-Today-Plan, -AfterClose, -NoBatch; P4-Today-Evening): Start class while the batch is soon or
+/// running, Open the class once it is closed, no button for a later batch.
+struct BatchHeroCard: View {
     let hero: TodayStore.Hero
-    let markAttendance: () -> Void
+    let openClose: (UUID) -> Void
 
     var body: some View {
-        Card(.hero) {
-            VStack(alignment: .leading, spacing: Tokens.rowPaddingDense) {
-                Eyebrow(hero.eyebrow, accent: hero.accent, strong: hero.accent)
-                VStack(alignment: .leading, spacing: Tokens.rowGapInner * 2) {
-                    Text(hero.title).typeStyle(Tokens.title2).foregroundStyle(Tokens.text.color)
-                    Text(hero.line).typeStyle(Tokens.subhead).monospacedDigit().foregroundStyle(Tokens.text2.color)
-                }
-                if hero.canMark {
-                    Button(action: markAttendance) {
-                        Label("Mark attendance", systemImage: "checkmark.circle").frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.primary(.card))
-                    .padding(.top, Tokens.rowGapInner)
-                }
-            }
+        BatchHero(
+            eyebrow: hero.eyebrow, accent: hero.accent, title: hero.title, titleMark: hero.titleMark, line: hero.line,
+            action: action
+        )
+    }
+
+    private var action: BatchHero.Action? {
+        switch hero.kind {
+        case .start: .primary("Start class", symbol: "play", run: { openClose(hero.classID) })
+        case .closed: .secondary("Open the class", run: { openClose(hero.classID) })
+        case .upcoming: nil
         }
     }
 }

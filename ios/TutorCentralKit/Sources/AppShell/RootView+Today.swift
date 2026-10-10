@@ -12,7 +12,7 @@ extension RootView {
             let store = shell.today ?? TodayStore(
                 workspace: workspace, counts: deps.counts, register: register(for: workspace),
                 attendance: deps.attendance, events: deps.events, tasks: tasksStore(for: workspace), now: deps.now,
-                cache: cachedRead(workspace, "today")
+                cache: cachedRead(workspace, "today"), record: deps.record
             )
             TodayView(
                 store: store,
@@ -20,7 +20,7 @@ extension RootView {
                     openSettings: { shell.tabs.push(.settings) },
                     openTab: { shell.tabs.select($0) },
                     openSchedule: { shell.tabs.push(.schedule) },
-                    openMarkAttendance: { openAttendance(classID: $0, date: nil, in: workspace) },
+                    openClose: { openAttendance(classID: $0, date: nil, in: workspace) },
                     openClass: { shell.tabs.push(.classroom($0)) },
                     openEvent: { shell.tabs.push(.event($0)) },
                     openFeesDue: { openFeesDue(in: workspace) },

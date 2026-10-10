@@ -106,3 +106,32 @@ public extension FakeRecordRepository {
         }
     }
 }
+
+public extension FakeRecordRepository {
+    /// The close of `FakeAttendanceRepository.seedWithTodayClosed`: three checks each for four of the five who came,
+    /// eight right, and homework given to all five (P10-Today-AfterClose's counts).
+    nonisolated static var todaysChecks: [CheckRecord] {
+        let session = FakeAttendanceRepository.seedWithTodayClosed[0]
+        let checked = session.marks.filter { $0.value == .present }.map(\.key).sorted { $0.uuidString < $1.uuidString }
+            .prefix(4)
+        return checked.enumerated().flatMap { index, student in
+            (0 ..< 3).map { number in
+                CheckRecord(
+                    id: UUID(), studentID: student, skillID: UUID(), sessionID: session.id,
+                    question: "A question", correct: index * 3 + number < 8,
+                    at: FakeAttendanceRepository.closedAt, isPlacement: false
+                )
+            }
+        }
+    }
+
+    nonisolated static var todaysHomework: [HomeworkRecord] {
+        let session = FakeAttendanceRepository.seedWithTodayClosed[0]
+        return session.marks.filter { $0.value == .present }.map(\.key).map { student in
+            HomeworkRecord(
+                id: UUID(), studentID: student, sessionID: session.id, givenAt: FakeAttendanceRepository.closedAt,
+                status: .given
+            )
+        }
+    }
+}

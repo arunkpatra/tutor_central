@@ -52,7 +52,7 @@ public struct TodayView: View {
                         )
                     }
                     if let hero = store.hero {
-                        HeroCard(hero: hero) { actions.openMarkAttendance(hero.classID) }
+                        BatchHeroCard(hero: hero, openClose: actions.openClose)
                     }
                     TodaySection(store: store, actions: actions)
                     if !store.comingUp.isEmpty {

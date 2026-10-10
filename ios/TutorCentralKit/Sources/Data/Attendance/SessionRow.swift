@@ -12,6 +12,7 @@ struct SessionRow: Decodable {
     let classId: UUID?
     let date: String
     let savedAt: Date
+    let closedAt: Date?
     let attendanceMarks: [Mark]
 
     var session: AttendanceSession {
@@ -19,7 +20,8 @@ struct SessionRow: Decodable {
             id: id, classID: classId, date: Day(iso: date) ?? Day(year: 1970, month: 1, day: 1)!, savedAt: savedAt,
             marks: Dictionary(uniqueKeysWithValues: attendanceMarks.compactMap { mark in
                 AttendanceStatus(rawValue: mark.status).map { (mark.studentId, $0) }
-            })
+            }),
+            closedAt: closedAt
         )
     }
 }

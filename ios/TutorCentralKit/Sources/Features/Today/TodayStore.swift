@@ -7,13 +7,23 @@ import Observation
 /// Today live (P4-Today-*): the heading, greeting and counts; the next class with its countdown; today's classes and
 /// events; coming up; the tasks. A refresh that fails keeps the last numbers and says so (the stale pattern).
 @MainActor @Observable public final class TodayStore {
-    /// The hero card: the next class with the time until it starts and Mark attendance, or the next class day.
+    /// What the hero offers: Start class, Open the class once closed, nothing for a later batch.
+    public enum HeroKind: Hashable, Sendable {
+        case start
+        case closed
+        case upcoming
+    }
+
+    /// The batch hero (10.3): Start class while the next batch is soon or running; what happened once today's batch
+    /// is closed, with Open the class; the next batch later, tomorrow or on a later day, with no button.
     public struct Hero: Hashable, Sendable {
+        public let kind: HeroKind
         public let eyebrow: String
         public let accent: Bool
         public let title: String
+        /// The closed hero's title carries the ok tick.
+        public let titleMark: Bool
         public let line: String
-        public let canMark: Bool
         public let classID: UUID
     }
 
@@ -51,25 +61,29 @@ import Observation
     public private(set) var workspace: Workspace
     public private(set) var nextClass: NextClass?
     public let tasks: TasksStore
-    private var sessions: [AttendanceSession] = []
+    private(set) var sessions: [AttendanceSession] = []
     private var events: [CalendarEvent] = []
-    private var clock: Date
+    private(set) var clock: Date
     private let repository: any CountsRepository
-    private let register: any Register
+    let register: any Register
     private let attendance: any AttendanceRepository
     private let eventsRepository: any EventsRepository
     private let now: @Sendable () -> Date
-    private let calendar: Calendar
+    let calendar: Calendar
     private let cache: CachedRead<TodaySnapshot>?
     private var loaded = false
+    let record: (any RecordRepository)?
+    /// Today's closed sessions' checks and homework, by session, for the closed hero's line.
+    var closeCounts: [UUID: CloseCounts] = [:]
 
     public init(
         workspace: Workspace, counts: any CountsRepository, register: any Register,
         attendance: any AttendanceRepository, events: any EventsRepository, tasks: TasksStore,
         now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india,
-        cache: CachedRead<TodaySnapshot>? = nil
+        cache: CachedRead<TodaySnapshot>? = nil, record: (any RecordRepository)? = nil
     ) {
         self.cache = cache
+        self.record = record
         self.workspace = workspace
         repository = counts
         self.register = register
@@ -93,7 +107,7 @@ import Observation
         workspace.profile.initials
     }
 
-    private var today: Day {
+    var today: Day {
         Day(clock, calendar: calendar)
     }
 
@@ -105,40 +119,6 @@ import Observation
     /// True once the register has classes: an empty Today section then says "Nothing today", not "No classes yet".
     public var hasClasses: Bool {
         !register.activeClasses.isEmpty
-    }
-
-    public var hero: Hero? {
-        guard let nextClass else { return nil }
-        let classroom = nextClass.classroom
-        let members = Self.students(register.members(of: classroom.id).count)
-        let time = classroom.timeRange
-        switch nextClass {
-        case .soon, .running:
-            return Hero(
-                eyebrow: nextClass.eyebrow, accent: true, title: classroom.name,
-                line: [time, members].compactMap(\.self).joined(separator: " · "), canMark: true,
-                classID: classroom.id
-            )
-        case .laterToday:
-            return Hero(
-                eyebrow: nextClass.eyebrow, accent: false, title: classroom.name,
-                line: [time, members].compactMap(\.self).joined(separator: " · "), canMark: false,
-                classID: classroom.id
-            )
-        case .tomorrow:
-            let day = today.adding(days: 1, calendar: calendar).shortWeekdayText
-            return Hero(
-                eyebrow: nextClass.eyebrow, accent: false, title: classroom.name,
-                line: [day, time, members].compactMap(\.self).joined(separator: " · "), canMark: false,
-                classID: classroom.id
-            )
-        case let .onDay(_, day):
-            return Hero(
-                eyebrow: nextClass.eyebrow, accent: false, title: "Next class on \(day.weekday(in: calendar).name)",
-                line: [classroom.name, day.shortWeekdayText, time].compactMap(\.self).joined(separator: " · "),
-                canMark: false, classID: classroom.id
-            )
-        }
     }
 
     public var todayRows: [TodayRow] {
@@ -233,6 +213,7 @@ import Observation
         if let read = await weekEvents {
             events = read
         }
+        await readCloseCounts()
         if fresh {
             savedAt = nil
             cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
@@ -240,7 +221,7 @@ import Observation
         tick(clock)
     }
 
-    private static func students(_ count: Int) -> String {
+    static func students(_ count: Int) -> String {
         count == 1 ? "1 student" : "\(count) students"
     }
 }
@@ -250,7 +231,8 @@ public struct TodayActions {
     let openSettings: () -> Void
     let openTab: (AppTab) -> Void
     let openSchedule: () -> Void
-    let openMarkAttendance: (UUID) -> Void
+    /// Start class and Open the class: the close of today's batch.
+    let openClose: (UUID) -> Void
     let openClass: (UUID) -> Void
     let openEvent: (UUID) -> Void
     /// Today's Due tile: the Fees tab at Due.
@@ -264,7 +246,7 @@ public struct TodayActions {
         openSettings: @escaping () -> Void,
         openTab: @escaping (AppTab) -> Void,
         openSchedule: @escaping () -> Void,
-        openMarkAttendance: @escaping (UUID) -> Void,
+        openClose: @escaping (UUID) -> Void,
         openClass: @escaping (UUID) -> Void,
         openEvent: @escaping (UUID) -> Void,
         openFeesDue: @escaping () -> Void,
@@ -274,7 +256,7 @@ public struct TodayActions {
         self.openSettings = openSettings
         self.openTab = openTab
         self.openSchedule = openSchedule
-        self.openMarkAttendance = openMarkAttendance
+        self.openClose = openClose
         self.openClass = openClass
         self.openEvent = openEvent
         self.openFeesDue = openFeesDue
