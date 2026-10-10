@@ -1,6 +1,24 @@
 import { createClient } from "@supabase/supabase-js";
 
-export type AIKind = "paper" | "homework" | "worksheet" | "progress_note" | "scan_register" | "check_paper";
+export type AIKind = V1Kind | V2Kind;
+export type V1Kind = "paper" | "homework" | "worksheet" | "progress_note" | "scan_register" | "check_paper";
+/** The V2 kinds (migration 0012): one monthly allowance per centre; note, can_do, test_tomorrow and gap_report need the
+ *  student's consent (start_ai_generation, migration 0013). */
+export type V2Kind =
+  | "plan"
+  | "sheet"
+  | "worked_example"
+  | "figure"
+  | "brief"
+  | "check"
+  | "placement"
+  | "mock"
+  | "note"
+  | "can_do"
+  | "test_tomorrow"
+  | "gap_report"
+  | "parse_school"
+  | "parse_textbook";
 export type Finish = {
   status: "ok" | "failed";
   output: string | null;
