@@ -51,3 +51,8 @@ struct SkillRow: Decodable {
         )
     }
 }
+
+/// A chapter's position alone (the tutor's own chapter goes after the last).
+struct PositionRow: Decodable {
+    let position: Int
+}

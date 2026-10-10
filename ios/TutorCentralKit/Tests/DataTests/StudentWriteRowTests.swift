@@ -47,4 +47,34 @@ struct StudentWriteRowTests {
         .first)
         #expect(cleared.notes == nil)
     }
+
+    @Test func theWrittenValuesCarryTheV2Fields() {
+        var draft = StudentDraft()
+        draft.name = "Riya Sharma"
+        draft.classLevel = .nine
+        draft.board = .karnataka
+        draft.schoolID = FakeSchoolsRepository.vidya.id
+        draft.messageLanguage = .hindi
+        let values = SupabaseStudentsRepository.values(draft)
+        #expect(values["class_level"] == .string("9") && values["board"] == .string("karnataka"))
+        #expect(values["message_language"] == .string("hi"))
+        #expect(values["school_id"] == .string(FakeSchoolsRepository.vidya.id.uuidString.lowercased()))
+        draft.classLevel = .five
+        // A board below class 8 is not kept.
+        #expect(SupabaseStudentsRepository.values(draft)["board"] == .null)
+        draft.classLevel = nil
+        draft.schoolID = nil
+        #expect(SupabaseStudentsRepository.values(draft)["class_level"] == .null)
+        #expect(SupabaseStudentsRepository.values(draft)["school_id"] == .null)
+    }
+
+    @Test func consentValuesWriteAndClear() throws {
+        let phone = try #require(PhoneNumber(e164: "+919811122233"))
+        let record = ConsentRecord(at: Date(timeIntervalSince1970: 1_791_000_000), phone: phone, how: .call)
+        let set = SupabaseStudentsRepository.consentValues(record)
+        #expect(set["consent_how"] == .string("call") && set["consent_phone"] == .string("+919811122233"))
+        #expect(set["consent_at"] != .null)
+        let cleared = SupabaseStudentsRepository.consentValues(nil)
+        #expect(cleared["consent_at"] == .null && cleared["consent_phone"] == .null && cleared["consent_how"] == .null)
+    }
 }

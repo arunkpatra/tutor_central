@@ -19,4 +19,6 @@ public protocol StudentsRepository: Sendable {
     func deleteMany(ids: [UUID]) async throws
     /// The whole notes text (nil clears), answering the student as stored (a checked paper's line, and its Undo).
     func updateNotes(id: UUID, notes: String?) async throws -> Student
+    /// The parent's consent recorded (D62), or cleared with nil; the student as stored.
+    func setConsent(id: UUID, _ consent: ConsentRecord?) async throws -> Student
 }

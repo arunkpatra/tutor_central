@@ -65,4 +65,45 @@ private extension Data {
     func replacingOccurrences(of target: String, with replacement: String) -> Data {
         Data((String(bytes: self, encoding: .utf8) ?? "").replacingOccurrences(of: target, with: replacement).utf8)
     }
+
+    @Test func aV1RowReadsWithV2Defaults() throws {
+        let json = Data(#"""
+        {"id":"aaaaaaaa-0000-0000-0000-000000000003","name":"Bir Bikram Singh","class_id":null,"monthly_fee":null,
+         "parent_name":null,"parent_phone":null,"date_of_birth":null,"gender":null,"notes":null,"archived_at":null,
+         "class_level":null,"school_id":null,"board":null,"message_language":"en","consent_at":null,
+         "consent_phone":null,"consent_how":null,"track_status":"not_known","track_reasons":[],"track_since":null}
+        """#.utf8)
+        let student = try SupabaseStudentsRepository.decoder.decode(StudentRow.self, from: json)
+            .student(calendar: DayHeading.india)
+        #expect(student.classLevel == nil && student.consent == nil && student.trackStatus == .notKnown)
+        #expect(student.messageLanguage == .english && student.trackReasons.isEmpty)
+    }
+
+    @Test func aV2RowReadsItsRecord() throws {
+        let json = Data(#"""
+        {"id":"aaaaaaaa-0000-0000-0000-000000000005","name":"Hemanth Reddy","class_id":null,"monthly_fee":null,
+         "parent_name":"Lakshmi Reddy","parent_phone":"+919380260871","date_of_birth":null,"gender":"male",
+         "notes":null,"archived_at":null,"class_level":"10","school_id":"7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60731",
+         "board":"cbse","message_language":"kn","consent_at":"2026-10-02T11:00:00+00:00",
+         "consent_phone":"+919380260871","consent_how":"whatsapp","track_status":"watch",
+         "track_reasons":["Absent 2 times in four weeks"],"track_since":"2026-10-02T12:34:00.123456+00:00"}
+        """#.utf8)
+        let student = try SupabaseStudentsRepository.decoder.decode(StudentRow.self, from: json)
+            .student(calendar: DayHeading.india)
+        #expect(student.classLevel == .ten && student.board == .cbse && student.messageLanguage == .kannada)
+        #expect(student.schoolID == FakeSchoolsRepository.vidya.id)
+        #expect(student.consent?.how == .whatsapp && student.consent?.phone.e164 == "+919380260871")
+        #expect(student.trackStatus == .watch && student.trackReasons == ["Absent 2 times in four weeks"])
+        #expect(student.trackSince != nil)
+    }
+
+    @Test func aConsentWithoutItsNumberIsNotARecord() throws {
+        let json = Data(#"""
+        {"id":"aaaaaaaa-0000-0000-0000-000000000005","name":"Hemanth Reddy","consent_at":"2026-10-02T11:00:00+00:00",
+         "consent_phone":null,"consent_how":"call"}
+        """#.utf8)
+        let student = try SupabaseStudentsRepository.decoder.decode(StudentRow.self, from: json)
+            .student(calendar: DayHeading.india)
+        #expect(student.consent == nil)
+    }
 }

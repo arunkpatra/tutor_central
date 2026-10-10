@@ -33,6 +33,11 @@ import Observation
     public var hasBirthDate = false
     public var birthDate: Day
     public var gender: Gender?
+    // V2: carried through an edit (the form's rows for them are Task 13's).
+    public var classLevel: ClassLevel?
+    public var schoolID: UUID?
+    public var board: Board?
+    public var messageLanguage: MessageLanguage = .default
     public private(set) var phoneError: String?
 
     public init(mode: Mode, classes: [Classroom], today: Day) {
@@ -56,6 +61,10 @@ import Observation
             hasBirthDate = draft.dateOfBirth != nil
             birthDate = draft.dateOfBirth ?? birthDate
             gender = draft.gender
+            classLevel = draft.classLevel
+            schoolID = draft.schoolID
+            board = draft.board
+            messageLanguage = draft.messageLanguage
         } else {
             original = nil
         }
@@ -144,6 +153,10 @@ import Observation
         draft.dateOfBirth = hasBirthDate ? birthDate : nil
         draft.gender = gender
         draft.notes = notes
+        draft.classLevel = classLevel
+        draft.schoolID = schoolID
+        draft.board = board
+        draft.messageLanguage = messageLanguage
         return draft
     }
 

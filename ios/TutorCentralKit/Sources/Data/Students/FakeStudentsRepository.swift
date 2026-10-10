@@ -5,6 +5,9 @@ import Foundation
 /// ids and this month's invoices (six paid on 4 October 2026), a scripted error, a delay, a record of every write.
 @MainActor public final class FakeStudentsRepository: StudentsRepository {
     public nonisolated static let akshita = id(1)
+    public nonisolated static let hemanth = id(5)
+    public nonisolated static let riya = id(9)
+    public nonisolated static let sahil = id(10)
 
     public nonisolated static let seed: [Student] = {
         let maths = FakeClassesRepository.maths.id
@@ -83,7 +86,7 @@ import Foundation
                 month: due(800)
             ),
         ]
-        return rows.enumerated().map { $1.student(id: id($0 + 1)) }
+        return rows.enumerated().map { withRecord($1.student(id: id($0 + 1))) }
     }()
 
     /// Dev, Riya and Sahil with their own fees, before any class or invoice exists (`students-few`).
@@ -106,6 +109,7 @@ import Foundation
     public private(set) var createdMany: [[StudentDraft]] = []
     public private(set) var deletedMany: [[UUID]] = []
     public private(set) var notesUpdates: [NotesUpdate] = []
+    public private(set) var consentCalls: [(UUID, ConsentRecord?)] = []
 
     /// One notes write: the student and the whole text sent.
     public struct NotesUpdate: Hashable, Sendable {
@@ -190,6 +194,14 @@ import Foundation
         return students[index]
     }
 
+    public func setConsent(id: UUID, _ consent: ConsentRecord?) async throws -> Student {
+        try await begin()
+        let index = try index(of: id)
+        consentCalls.append((id, consent))
+        students[index].consent = consent
+        return students[index]
+    }
+
     private func begin() async throws {
         if let delay {
             try? await Task.sleep(for: delay)
@@ -214,6 +226,10 @@ import Foundation
         changed.dateOfBirth = draft.dateOfBirth
         changed.gender = draft.gender
         changed.notes = draft.trimmedNotes
+        changed.classLevel = draft.classLevel
+        changed.schoolID = draft.schoolID
+        changed.board = draft.classLevel?.expectsBoard == true ? draft.board : nil
+        changed.messageLanguage = draft.messageLanguage
         return changed
     }
 

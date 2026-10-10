@@ -65,4 +65,20 @@ import Testing
             try await fake.updateNotes(id: FakeStudentsRepository.akshita, notes: nil)
         }
     }
+
+    @Test func theSeedCarriesTheV2RecordAndConsentIsSetAndCleared() async throws {
+        let repo = FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        let hemanth = try #require(repo.students.first { $0.id == FakeStudentsRepository.hemanth })
+        #expect(hemanth.classLevel == .ten && hemanth.schoolID == FakeSchoolsRepository.vidya.id && hemanth
+            .board == .cbse)
+        #expect(hemanth.trackStatus == .watch && hemanth.trackReasons.count == 2)
+        let bir = try #require(repo.students.first { $0.name == "Bir Bikram Singh" })
+        #expect(bir.classLevel == nil && bir.trackStatus == .notKnown)
+        let phone = try #require(PhoneNumber(e164: "+919811122233"))
+        let record = ConsentRecord(at: Date(timeIntervalSince1970: 0), phone: phone, how: .inPerson)
+        let agreed = try await repo.setConsent(id: FakeStudentsRepository.riya, record)
+        #expect(agreed.consent == record && repo.consentCalls.count == 1)
+        let cleared = try await repo.setConsent(id: FakeStudentsRepository.riya, nil)
+        #expect(cleared.consent == nil)
+    }
 }

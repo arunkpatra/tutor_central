@@ -20,6 +20,18 @@ struct StudentRow: Decodable {
     let gender: String?
     let notes: String?
     let archivedAt: Date?
+    // V2 (migration 0009); optional so a row selected without them still reads.
+    let classLevel: ClassLevel?
+    let schoolId: UUID?
+    let board: Board?
+    let messageLanguage: MessageLanguage?
+    let consentAt: Date?
+    let consentPhone: String?
+    let consentHow: ConsentMethod?
+    let trackStatus: TrackStatus?
+    let trackReasons: [String]?
+    let trackSince: Date?
+    let createdAt: Date?
     /// Absent on an insert's or update's answer, which selects the student's columns only.
     let feeInvoices: [Invoice]?
 
@@ -44,7 +56,24 @@ struct StudentRow: Decodable {
                         paidMethod: invoice.paidMethod.flatMap(MonthFee.PaidMethod.init(rawValue:))
                     )
                 }
-            }
+            },
+            classLevel: classLevel,
+            schoolID: schoolId,
+            board: board,
+            messageLanguage: messageLanguage ?? .default,
+            consent: consent,
+            trackStatus: trackStatus ?? .notKnown,
+            trackReasons: trackReasons ?? [],
+            trackSince: trackSince,
+            joinedAt: createdAt
         )
+    }
+
+    /// A record needs the three columns; anything less is not one.
+    private var consent: ConsentRecord? {
+        guard let consentAt, let how = consentHow, let phone = consentPhone.flatMap(PhoneNumber.init(e164:)) else {
+            return nil
+        }
+        return ConsentRecord(at: consentAt, phone: phone, how: how)
     }
 }

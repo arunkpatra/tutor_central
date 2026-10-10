@@ -130,4 +130,12 @@ import Testing
         let blank = StudentFormStore(mode: .fix(StudentDraft()), classes: FakeClassesRepository.seed, today: today)
         #expect(!blank.canSave, "a row needs a name")
     }
+
+    @Test func anEditKeepsTheStudentsRecord() {
+        let hemanth = FakeStudentsRepository.seed[4]
+        let form = StudentFormStore(mode: .edit(hemanth), classes: classes, today: today)
+        #expect(!form.isChanged)
+        form.notes = "Weak in signs."
+        #expect(form.draft.classLevel == .ten && form.draft.schoolID == hemanth.schoolID && form.draft.board == .cbse)
+    }
 }
