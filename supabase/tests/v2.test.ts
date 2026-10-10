@@ -121,3 +121,84 @@ test("the ladder is a chapter per domain with its steps as skills, one per stude
   expect((await a.from("chapters").insert({ centre_id: centre, student_id: st.id, subject: "Reading", position: 2, name: "Again", ladder: "reading" })).error).not.toBeNull();
   expect((await a.from("chapters").insert({ centre_id: centre, student_id: st.id, subject: "Art", position: 1, name: "Art", ladder: "drawing" })).error).not.toBeNull();
 });
+
+test("close_session writes the session, the checks, the homework and the tracking status, and a second close replaces them", async () => {
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "Evening batch", meeting_days: [1, 2, 3] }).select("id").single()).data!;
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Closer", class_level: "4", class_id: cls.id }).select("id").single()).data!;
+  const ch = (await a.from("chapters").insert({ centre_id: centre, student_id: st.id, subject: "Mathematics", position: 1, name: "Fractions" }).select("id").single()).data!;
+  const sk = (await a.from("skills").insert({ centre_id: centre, chapter_id: ch.id, student_id: st.id, position: 1, name: "Halves" }).select("id").single()).data!;
+  const art = (await a.from("artefacts").insert({ centre_id: centre, kind: "sheet", source: "own", title: "My sheet" }).select("id").single()).data!;
+  const plan = (await a.from("plans").insert({ centre_id: centre, class_id: cls.id, date: "2026-10-12" }).select("id").single()).data!;
+  const close = (marks: object, correct: boolean) =>
+    a.rpc("close_session", {
+      p_centre: centre,
+      p_class: cls.id,
+      p_date: "2026-10-12",
+      p_marks: marks,
+      p_checks: [{ student_id: st.id, skill_id: sk.id, question: { text: "Half of 8?" }, correct }],
+      p_homework: [{ student_id: st.id, artefact_id: art.id, status: "given" }],
+      p_track: { [st.id]: { status: "on_track", reasons: ["checks"] } },
+    });
+  const first = await close({ [st.id]: "present" }, true);
+  expect(first.error).toBeNull();
+  const since = (await a.from("students").select("track_since").eq("id", st.id).single()).data!.track_since;
+  expect(since).not.toBeNull();
+  const second = await close({ [st.id]: "absent" }, false);
+  expect(second.error).toBeNull();
+  expect(second.data).toBe(first.data);
+  const sid = first.data as string;
+  expect((await a.from("checks").select("correct, kind").eq("session_id", sid)).data).toEqual([{ correct: false, kind: "check" }]);
+  expect((await a.from("homework").select("status").eq("session_id", sid)).data).toEqual([{ status: "given" }]);
+  expect((await a.from("attendance_marks").select("status").eq("session_id", sid)).data).toEqual([{ status: "absent" }]);
+  expect((await a.from("students").select("track_status, track_reasons, track_since").eq("id", st.id).single()).data).toEqual({
+    track_status: "on_track",
+    track_reasons: ["checks"],
+    track_since: since,
+  });
+  expect((await a.from("skills").select("last_checked_at").eq("id", sk.id).single()).data?.last_checked_at).not.toBeNull();
+  const session = (await a.from("attendance_sessions").select("closed_at, plan_id").eq("id", sid).single()).data!;
+  expect(session.closed_at).not.toBeNull();
+  expect(session.plan_id).toBe(plan.id);
+  expect((await a.from("plans").select("session_id").eq("id", plan.id).single()).data).toEqual({ session_id: sid });
+});
+
+test("close_session with attendance alone is a close", async () => {
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "Alone", meeting_days: [4] }).select("id").single()).data!;
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Alone S", class_id: cls.id }).select("id").single()).data!;
+  const r = await a.rpc("close_session", { p_centre: centre, p_class: cls.id, p_date: "2026-10-13", p_marks: { [st.id]: "present" }, p_checks: [], p_homework: [], p_track: {} });
+  expect(r.error).toBeNull();
+  expect((await a.from("checks").select("id").eq("session_id", r.data as string)).data).toEqual([]);
+  expect((await a.from("attendance_sessions").select("plan_id").eq("id", r.data as string).single()).data).toEqual({ plan_id: null });
+});
+
+test("the close keeps homework given without a sheet and the placement's answers; a placement can stand without a session", async () => {
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "Placed", meeting_days: [5] }).select("id").single()).data!;
+  const st = (await a.from("students").insert({ centre_id: centre, name: "New one", class_level: "6", class_id: cls.id }).select("id").single()).data!;
+  const ch = (await a.from("chapters").insert({ centre_id: centre, student_id: st.id, subject: "Science", position: 1, name: "Cells" }).select("id").single()).data!;
+  const sk = (await a.from("skills").insert({ centre_id: centre, chapter_id: ch.id, student_id: st.id, position: 1, name: "Parts of a cell" }).select("id").single()).data!;
+  const r = await a.rpc("close_session", {
+    p_centre: centre,
+    p_class: cls.id,
+    p_date: "2026-10-14",
+    p_marks: { [st.id]: "present" },
+    p_checks: [{ student_id: st.id, skill_id: sk.id, question: { text: "Name a part" }, correct: true, kind: "placement" }],
+    p_homework: [{ student_id: st.id, status: "given" }],
+    p_track: {},
+  });
+  expect(r.error).toBeNull();
+  expect((await a.from("checks").select("kind").eq("session_id", r.data as string)).data).toEqual([{ kind: "placement" }]);
+  expect((await a.from("homework").select("artefact_id, status").eq("session_id", r.data as string)).data).toEqual([{ artefact_id: null, status: "given" }]);
+  const alone = await a.from("checks").insert({ centre_id: centre, student_id: st.id, skill_id: sk.id, question: {}, correct: false, kind: "placement" });
+  expect(alone.error).toBeNull();
+  const stray = await a.from("checks").insert({ centre_id: centre, student_id: st.id, skill_id: sk.id, question: {}, correct: false });
+  expect(stray.error).not.toBeNull();
+});
+
+test("close_session refuses a non-member and a malformed list, and leaves nothing behind", async () => {
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "Refused", meeting_days: [6] }).select("id").single()).data!;
+  const other = await userClient(l, `v2-close-${stamp}@example.com`);
+  expect((await other.rpc("close_session", { p_centre: centre, p_class: cls.id, p_date: "2026-10-15", p_marks: {}, p_checks: [], p_homework: [], p_track: {} })).error).not.toBeNull();
+  const bad = await a.rpc("close_session", { p_centre: centre, p_class: cls.id, p_date: "2026-10-15", p_marks: {}, p_checks: {}, p_homework: [], p_track: {} });
+  expect(bad.error).not.toBeNull();
+  expect((await a.from("attendance_sessions").select("id").eq("class_id", cls.id)).data).toEqual([]);
+});

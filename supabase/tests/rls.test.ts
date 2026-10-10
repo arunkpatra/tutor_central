@@ -24,6 +24,11 @@ const CENTRE_TABLES = [
   "textbooks",
   "chapters",
   "skills",
+  "plans",
+  "plan_items",
+  "artefacts",
+  "checks",
+  "homework",
 ] as const;
 
 beforeAll(async () => {
@@ -81,6 +86,16 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     .select("id")
     .single();
   expect(chapter.error).toBeNull();
+  const skill = await a
+    .from("skills")
+    .insert({ centre_id: centreA, chapter_id: chapter.data!.id, student_id: student.data!.id, position: 1, name: "A skill" })
+    .select("id")
+    .single();
+  expect(skill.error).toBeNull();
+  const plan = await a.from("plans").insert({ centre_id: centreA, date: "2026-10-12", groups: [], subjects: {} }).select("id").single();
+  expect(plan.error).toBeNull();
+  const artefact = await a.from("artefacts").insert({ centre_id: centreA, kind: "sheet", source: "own", title: "Own sheet" }).select("id").single();
+  expect(artefact.error).toBeNull();
   const inserts: Record<(typeof CENTRE_TABLES)[number], Record<string, unknown> | null> = {
     classes: { name: "Class A" },
     students: null,
@@ -94,7 +109,12 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     schools: null,
     textbooks: { school_id: school.data!.id, class_level: "3", subject: "English", title: "English 3" },
     chapters: null,
-    skills: { chapter_id: chapter.data!.id, student_id: student.data!.id, position: 1, name: "A skill" },
+    skills: null,
+    plans: null,
+    plan_items: { plan_id: plan.data!.id, kind: "brief" },
+    artefacts: null,
+    checks: { session_id: session.data!.id, student_id: student.data!.id, skill_id: skill.data!.id, question: {}, correct: true },
+    homework: { student_id: student.data!.id, session_id: session.data!.id, artefact_id: artefact.data!.id, status: "given" },
   };
   for (const [table, row] of Object.entries(inserts)) {
     if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
