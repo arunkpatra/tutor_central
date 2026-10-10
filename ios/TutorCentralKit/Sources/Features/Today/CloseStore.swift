@@ -165,7 +165,8 @@ public enum ClosePhase: Hashable, Sendable {
         for index in students.indices {
             let id = students[index].id
             students[index].catchUp = catchUp(id)
-            if let closedSession {
+            // Opened again: what was kept, for the students the close had; one who joined since starts as new.
+            if let closedSession, closedSession.marks[id] != nil {
                 students[index].present = closedSession.marks[id] != .absent
                 students[index].homeworkGiven = given.contains { $0.studentID == id }
                 students[index].checks = keptChecks(kept.filter { $0.studentID == id }, student: id) ?? .loading

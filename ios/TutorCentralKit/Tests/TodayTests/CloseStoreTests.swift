@@ -164,6 +164,33 @@ import Testing
         #expect(!store.students.contains { $0.present && !$0.homeworkGiven })
     }
 
+    @Test func aStudentWhoJoinedAfterTheCloseStartsPresentWithHomeworkGiven() async throws {
+        let students = FakeStudentsRepository.seed.map { student in
+            var moved = student
+            if student.id == FakeStudentsRepository.dev {
+                moved.classID = FakeClassesRepository.maths.id
+            }
+            return moved
+        }
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace, students: FakeStudentsRepository(students: students),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil, now: { Self.fivepast }
+        )
+        await register.load()
+        let store = CloseStore(
+            classID: FakeClassesRepository.maths.id, workspace: FakeCentreRepository.meeraWorkspace,
+            register: register, textbooks: FakeTextbooksRepository.seeded(),
+            record: FakeRecordRepository(
+                checks: FakeRecordRepository.todaysChecks, homework: FakeRecordRepository.todaysHomework
+            ),
+            attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithTodayClosed),
+            ai: FakeAIRepository(), now: { Self.at(7, 18, 40) }
+        )
+        await store.load()
+        let dev = try #require(store.students.first { $0.name == "Dev Kumar" })
+        #expect(dev.present && dev.homeworkGiven)
+    }
+
     @Test func theCatchUpLineNamesTheMissedDays() async {
         let store = await store(
             attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithNikhilAbsentTwice)
