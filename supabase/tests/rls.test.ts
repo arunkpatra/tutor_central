@@ -29,6 +29,8 @@ const CENTRE_TABLES = [
   "artefacts",
   "checks",
   "homework",
+  "school_items",
+  "marks",
 ] as const;
 
 beforeAll(async () => {
@@ -48,7 +50,7 @@ test("every public table has row-level security and at least one policy", async 
     where t.schemaname = 'public' group by t.tablename, t.rowsecurity order by t.tablename`;
   await db.close();
   const tables = rows.map((r: { tablename: string }) => r.tablename);
-  expect(tables).toEqual([...CENTRE_TABLES, "centre_members", "centres", "profiles"].sort());
+  expect(tables).toEqual([...CENTRE_TABLES, "centre_members", "centres", "profiles", "syllabi"].sort());
   for (const r of rows) expect({ table: r.tablename, rls: r.rowsecurity, policy: r.policies > 0 }).toEqual({ table: r.tablename, rls: true, policy: true });
 });
 
@@ -115,6 +117,8 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     artefacts: null,
     checks: { session_id: session.data!.id, student_id: student.data!.id, skill_id: skill.data!.id, question: {}, correct: true },
     homework: { student_id: student.data!.id, session_id: session.data!.id, artefact_id: artefact.data!.id, status: "given" },
+    school_items: { kind: "notice", date: "2026-10-20" },
+    marks: { student_id: student.data!.id, subject: "Maths", test: "FA1", date: "2026-07-20", score: 10, max: 15 },
   };
   for (const [table, row] of Object.entries(inserts)) {
     if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
