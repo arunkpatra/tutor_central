@@ -64,6 +64,20 @@ import Testing
         #expect(store.homeworkLabel(dev) == "Homework given · sheet 1")
     }
 
+    @Test func aTickedLineIsNotDoneForAStudentMarkedAbsent() async throws {
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let store = await tests.store(attendance: attendance, plans: .evening())
+        let practise = try #require(store.checklist[0].rows.first { $0.text == "Practise set 1" })
+        store.toggle(line: practise.id, in: 1)
+        let meher = try #require(store.students.firstIndex { $0.id == FakeStudentsRepository.meher })
+        store.toggle(meher)
+        #expect(await store.done())
+        let close = try #require(attendance.closes.last)
+        let plan = try #require(store.plan)
+        let meherItems = Set(plan.items(of: FakeStudentsRepository.meher).map(\.id))
+        #expect(close.done.count == 2 && meherItems.isDisjoint(with: close.done))
+    }
+
     @Test func aTapOnAPlanCheckMovesTheStudentsOwnSkill() async throws {
         let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
         let store = await tests.store(attendance: attendance, plans: .evening())

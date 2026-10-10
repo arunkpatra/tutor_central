@@ -47,9 +47,14 @@ public extension CloseStore {
         plan?.items(of: student).first { $0.kind == .homework && $0.skippedAt == nil }
     }
 
-    /// The ticked lines' items, for Done.
+    /// The ticked lines' items of the students who came, for Done.
     internal var doneItems: [UUID] {
-        checklist.flatMap(\.rows).filter(\.done).flatMap(\.itemIDs)
+        let absent = Set(students.filter { !$0.present }.map(\.id))
+        let owner = Dictionary(uniqueKeysWithValues: (plan?.items ?? []).map { ($0.id, $0.studentID) })
+        return checklist.flatMap(\.rows).filter(\.done).flatMap(\.itemIDs).filter { item in
+            guard let student = owner[item] ?? nil else { return true }
+            return !absent.contains(student)
+        }
     }
 
     // MARK: - Reading the plan
