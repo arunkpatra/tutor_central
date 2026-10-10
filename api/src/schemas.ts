@@ -216,7 +216,7 @@ export const TextbookOutput = z.object({
   title: z.string().max(200).nullable(),
   chapters: z
     .array(z.object({ name: z.string().min(1).max(200), skills: z.array(z.string().min(1).max(200)).min(1).max(8) }))
-    .min(1)
+    // None when the page holds no chapters (the prompt asks for that): the route refuses it in words.
     .max(40),
 });
 export type TextbookOutput = z.infer<typeof TextbookOutput>;

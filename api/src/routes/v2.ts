@@ -22,7 +22,8 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
     if (typeof image === "string") return answer(c, errors.badImage(image));
     const { classLevel, subject } = body.value;
     const input = { kind: "parse_textbook", pages: 1, bytes: image.bytes, classLevel, subject };
-    return run(c, deps, body.centre, { kind: "parse_textbook", input, request: textbookRequest(image, classLevel, subject) });
+    const request = textbookRequest(image, classLevel, subject);
+    return run(c, deps, body.centre, { kind: "parse_textbook", input, request, empty: (read) => read.chapters.length === 0 });
   });
   routes.post("/make", async (c) => {
     const body = await parse(c, MakeInput);
