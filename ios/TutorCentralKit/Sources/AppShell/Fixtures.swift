@@ -173,7 +173,7 @@ public enum Fixtures {
              .eventGone,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayScrolled, .todayPlanning,
              .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayEvening, .todayAddingTask,
-             .todayAfterClose,
+             .sheet, .sheetKey, .sheetBoard, .todayAfterClose,
              .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
              .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
              .feesGenerate,

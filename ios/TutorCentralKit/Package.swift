@@ -1,7 +1,9 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
-let features = ["Today", "Students", "Fees", "Attendance", "Schedule", "AITools", "Settings", "Onboarding"]
+let features = [
+    "Today", "Students", "Fees", "Attendance", "Schedule", "AITools", "Settings", "Onboarding", "Artefacts",
+]
 
 let package = Package(
     name: "TutorCentralKit",
@@ -44,6 +46,8 @@ let package = Package(
             // A real register (Students) under Delete account's counts; the feature itself sees only `Register`.
             .testTarget(name: "SettingsTests", dependencies: ["Settings", "Students"]),
             .testTarget(name: "AIToolsTests", dependencies: ["AITools", "Students"]),
+            // A real register (Students) under the sheet's names; the feature itself sees only `Register`.
+            .testTarget(name: "ArtefactsTests", dependencies: ["Artefacts", "Students"]),
         ],
     swiftLanguageModes: [.v6]
 )

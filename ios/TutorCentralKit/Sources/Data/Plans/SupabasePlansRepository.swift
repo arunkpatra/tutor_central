@@ -20,6 +20,12 @@ public final class SupabasePlansRepository: PlansRepository {
         return try Self.decoder.decode([PlanRow].self, from: response.data).first?.record
     }
 
+    public func plan(id: UUID, centre: UUID) async throws -> PlanRecord? {
+        let response = try await client.from("plans").select(Self.columns).eq("centre_id", value: centre)
+            .eq("id", value: id).limit(1).execute()
+        return try Self.decoder.decode([PlanRow].self, from: response.data).first?.record
+    }
+
     public func make(_ draft: PlanDraft, centre: UUID) async throws -> PlanRecord {
         let response = try await client.rpc("make_plan", params: Self.makeParams(draft, centre: centre)).execute()
         let made = try Self.decoder.decode(MadePlanRow.self, from: response.data)

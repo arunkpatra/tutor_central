@@ -210,7 +210,8 @@ public struct RootView: View {
                 school: { SchoolLaterView(build: deps.bundleVersion) },
                 textbook: { textbookView(student: $0, subject: $1) },
                 placement: { placementView($0) },
-                close: { closeView($0) }
+                close: { closeView($0) },
+                artefact: { artefactView($0) }
             )
         }
     }

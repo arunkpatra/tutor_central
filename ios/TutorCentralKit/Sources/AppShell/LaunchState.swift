@@ -109,6 +109,10 @@ public enum LaunchState: String, CaseIterable, Sendable {
     /// The hero after the close over the plan's cards (P10-Today-AfterClose, without To parents): the Evening batch
     /// closed at 18:32.
     case todayAfterClose = "today-after-close"
+    /// Group 1's homework sheet (P10-Sheet, dark and light); its key; the board at question 3.
+    case sheet
+    case sheetKey = "sheet-key"
+    case sheetBoard = "sheet-board"
     /// The close of the Evening batch (P10-Close, -Scrolled, -Placement).
     case close
     case closeScrolled = "close-scrolled"

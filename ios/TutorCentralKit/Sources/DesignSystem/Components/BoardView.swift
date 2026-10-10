@@ -74,7 +74,8 @@ public struct BoardView: View {
             }
         }
         .padding(.horizontal, Tokens.pageSide)
-        .padding(.vertical, Tokens.pageTop)
+        .padding(.top, Tokens.rowPaddingDense)
+        .padding(.bottom, Tokens.rowPaddingDense)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(Tokens.ground.color)
     }

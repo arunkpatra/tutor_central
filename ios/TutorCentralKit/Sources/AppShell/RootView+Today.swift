@@ -26,7 +26,8 @@ extension RootView {
                     openEvent: { shell.tabs.push(.event($0)) },
                     openFeesDue: { openFeesDue(in: workspace) },
                     openAI: { shell.tabs.push(.aiAssistant) },
-                    openScanRegister: { shell.tabs.push(.scanRegister) }
+                    openScanRegister: { shell.tabs.push(.scanRegister) },
+                    openArtefact: { shell.tabs.push(.artefact($0)) }
                 ),
                 ticks: !deps.fixedClock,
                 boardState: launch.flatMap(Self.todayBoardState),
