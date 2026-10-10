@@ -27,10 +27,18 @@ extension CloseStore {
     public func retryChecks(for index: Int) async {
         guard students.indices.contains(index) else { return }
         students[index].checks = .loading
+        let id = students[index].id
+        if bookFailures[id] != nil {
+            await keep(readBook(id))
+        }
         await makeChecks([index])
     }
 
     private func checks(for id: UUID) async -> CloseChecks {
+        if let failure = bookFailures[id] {
+            return .failed(TransportError.isOffline(failure) ? Self.offlineWords
+                : "Couldn't load the checks. Check your connection and try again.")
+        }
         let chapters = chapters[id] ?? [], skills = skills[id] ?? []
         guard !chapters.isEmpty, let level = register.student(id)?.classLevel else { return .none }
         let picked = SpacedQueue.pick(skills: skills, chapters: chapters, now: now(), calendar: calendar)

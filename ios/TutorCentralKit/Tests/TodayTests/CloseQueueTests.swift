@@ -69,6 +69,34 @@ import Testing
         ))
     }
 
+    @Test func aBookThatCouldNotBeReadSaysTheChecksNeedAConnection() async {
+        let textbooks = FakeTextbooksRepository.evening()
+        textbooks.nextError = URLError(.notConnectedToInternet)
+        let store = await tests.store(textbooks: textbooks)
+        #expect(store.students.contains { $0.checks == .failed(CloseStore.offlineWords) })
+        let failed = store.students.firstIndex { $0.checks == .failed(CloseStore.offlineWords) } ?? 0
+        await store.retryChecks(for: failed)
+        #expect(store.students[failed].checks != .failed(CloseStore.offlineWords))
+    }
+
+    @Test func withTwoBatchesClosedTheLatestCloseTakesTheHero() async throws {
+        let queue = queue()
+        let store = await tests.store(now: CloseStoreTests.at(7, 17, 30))
+        store.queue = queue
+        store.online = { false }
+        _ = await store.done()
+        var sessions = FakeAttendanceRepository.seedWithToday
+        sessions[0].closedAt = CloseStoreTests.at(7, 17, 20)
+        let today = await TodayStoreTests().make(
+            now: CloseStoreTests.at(7, 17, 40), students: FakeStudentsRepository.eveningSeed,
+            classes: FakeClassesRepository.withEvening, sessions: sessions
+        )
+        today.queue = queue
+        await today.load()
+        let hero = try #require(today.hero)
+        #expect(hero.kind == .closed && hero.eyebrow == "Evening batch · saved on this iPhone")
+    }
+
     @Test func theStudentsShowAtOnceWhileTheReadsWait() async throws {
         let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
         attendance.delay = .seconds(2)

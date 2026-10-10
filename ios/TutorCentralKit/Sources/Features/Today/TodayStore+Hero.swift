@@ -16,21 +16,15 @@ struct ClosedBatch {
 }
 
 extension TodayStore {
+    /// A batch not yet closed that is soon or running offers Start class; otherwise the latest close today reads what
+    /// happened (until the next batch is soon); otherwise the next batch later, tomorrow or on a later day.
     public var hero: Hero? {
         let closedToday = closedBatches
-        if let nextClass, nextClass.canMark {
-            if let closed = closedToday.first(where: { $0.session.classID == nextClass.classroom.id }) {
-                // Closed before its end: a batch not yet closed that is soon or running takes the hero.
-                let closedIDs = Set(closedToday.compactMap(\.session.classID))
-                let open = register.activeClasses.filter { !closedIDs.contains($0.id) }
-                if let after = NextClass.find(in: open, now: clock, calendar: calendar), after.canMark {
-                    return startHero(after)
-                }
-                return closedHero(closed)
-            }
-            return startHero(nextClass)
+        let closedIDs = Set(closedToday.compactMap(\.session.classID))
+        let open = register.activeClasses.filter { !closedIDs.contains($0.id) }
+        if let next = NextClass.find(in: open, now: clock, calendar: calendar), next.canMark {
+            return startHero(next)
         }
-        // After the batch, its close stays the hero until the next batch is soon.
         if let closed = closedToday
             .max(by: { ($0.session.closedAt ?? .distantPast) < ($1.session.closedAt ?? .distantPast) }),
             let hero = closedHero(closed) {

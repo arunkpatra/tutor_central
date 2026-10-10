@@ -75,6 +75,8 @@ public enum ClosePhase: Hashable, Sendable {
     let calendar: Calendar
     var chapters: [UUID: [Chapter]] = [:]
     var skills: [UUID: [Skill]] = [:]
+    /// The students whose chapters could not be read, with why: their checks say so in place.
+    var bookFailures: [UUID: any Error] = [:]
     /// The students' checks and homework of the last four weeks, before this close.
     var history: [CheckRecord] = []
     var homeworkHistory: [HomeworkRecord] = []
@@ -255,18 +257,27 @@ public enum ClosePhase: Hashable, Sendable {
                 group.addTask { await self.readBook(id) }
             }
             for await book in group {
-                chapters[book.id] = book.chapters
-                skills[book.id] = book.skills
+                keep(book)
             }
         }
         history = await checks ?? []
         homeworkHistory = await homework ?? []
     }
 
-    private func readBook(_ id: UUID) async -> StudentBook {
-        async let read = try? textbooks.chapters(student: id)
-        async let list = try? textbooks.skills(student: id)
-        return await StudentBook(id: id, chapters: read ?? [], skills: list ?? [])
+    func readBook(_ id: UUID) async -> StudentBook {
+        do {
+            async let read = textbooks.chapters(student: id)
+            async let list = textbooks.skills(student: id)
+            return try await StudentBook(id: id, chapters: read, skills: list, failure: nil)
+        } catch {
+            return StudentBook(id: id, chapters: [], skills: [], failure: error)
+        }
+    }
+
+    func keep(_ book: StudentBook) {
+        chapters[book.id] = book.chapters
+        skills[book.id] = book.skills
+        bookFailures[book.id] = book.failure
     }
 
     /// Opened again: the checks kept today, tapped as they were answered.
@@ -295,6 +306,7 @@ struct StudentBook: Sendable {
     let id: UUID
     let chapters: [Chapter]
     let skills: [Skill]
+    let failure: (any Error)?
 }
 
 private extension Array {
