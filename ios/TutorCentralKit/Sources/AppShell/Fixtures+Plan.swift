@@ -10,7 +10,14 @@ extension Fixtures {
     static let planStates: Set<LaunchState> = .init([
         .today, .todayScrolled, .todayPlanning, .todayLineMenu, .todayPlanChanged, .todayPlanChange,
         .todayAfterClose, .workedExample, .brief,
-    ]).union(sheetStates)
+    ]).union(sheetStates).union(figureStates.keys)
+
+    /// The figure boards' states and their templates (P10-Figure-*).
+    static let figureStates: [LaunchState: FigureSpec.Kind] = [
+        .figureNumberLine: .numberLine, .figureFractionBar: .fractionBar, .figurePlaceValue: .placeValue,
+        .figureUnitCircle: .unitCircle, .figureTriangle: .triangle, .figureCell: .labelledCell,
+        .figureFoodChain: .foodChain,
+    ]
 
     /// The sheet's states (P10-Sheet and its forms), over the boards' plan.
     static let sheetStates: Set<LaunchState> = [
@@ -70,6 +77,8 @@ extension Fixtures {
             return plans
         case .sheetOwn:
             return FakePlansRepository.evening(ownSheet: ownSheet, photoPath: ownPhotoPath)
+        case _ where figureStates[state] != nil:
+            return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
         case _ where planStates.contains(state):
             return FakePlansRepository.evening(changed: state == .todayPlanChanged, done: state == .todayAfterClose)
         default:

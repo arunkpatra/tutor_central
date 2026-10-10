@@ -63,6 +63,11 @@ public struct ArtefactScreen: View {
                 )
             case .brief?:
                 BriefView(store: briefStore())
+            case .figure?:
+                FigureScreen(store: FigureStore(
+                    artefactID: artefactID, workspace: context.workspace, register: context.register,
+                    plans: context.plans
+                ))
             case nil where gone:
                 SheetView(store: sheetStore(), actions: actions, boardState: nil)
             default:

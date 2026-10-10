@@ -122,6 +122,14 @@ public enum LaunchState: String, CaseIterable, Sendable {
     /// Group 1's worked example at its second step (P10-WorkedExample); the Chemical reactions brief (P10-Brief).
     case workedExample = "worked-example"
     case brief
+    /// The seven figures (P10-Figure-*), each on its board's skill.
+    case figureNumberLine = "figure-number-line"
+    case figureFractionBar = "figure-fraction-bar"
+    case figurePlaceValue = "figure-place-value"
+    case figureUnitCircle = "figure-unit-circle"
+    case figureTriangle = "figure-triangle"
+    case figureCell = "figure-cell"
+    case figureFoodChain = "figure-food-chain"
     /// The close of the Evening batch (P10-Close, -Scrolled, -Placement).
     case close
     case closeScrolled = "close-scrolled"

@@ -22,12 +22,13 @@ extension RootView {
     }
 
     /// The artefacts' launch states on Today's stack: Group 1's homework sheet, the tutor's own, Group 1's worked
-    /// example, the brief.
+    /// example, the brief, a figure board's figure.
     static func artefactRoutes(for state: LaunchState) -> [Route]? {
         switch state {
         case .sheetOwn: [.artefact(Fixtures.ownSheet)]
         case .workedExample: [.artefact(Fixtures.groupOneExample)]
         case .brief: [.artefact(Fixtures.brief)]
+        case _ where Fixtures.figureStates[state] != nil: [.artefact(FakePlansRepository.figureID)]
         case _ where Fixtures.sheetStates.contains(state): [.artefact(Fixtures.groupOneSheet)]
         default: nil
         }

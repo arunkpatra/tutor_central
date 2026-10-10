@@ -6,9 +6,11 @@ enum ArtefactWords {
     static let aiLine = "AI can make mistakes. Check every question and answer before you share it."
     static let gone = "This sheet isn't here any more."
 
-    /// "Class 8 Science"; a ladder's group, whose subject is its chapter, "Class 2"; nil when neither is known.
+    /// "Class 8 Science"; a ladder's group, whose subject is its chapter, "Class 2"; nil when neither is known. The
+    /// classes are the members'; a group whose members are not in the register, the plan's.
     @MainActor static func classSubject(_ group: PlanGroup, register: any Register) -> String? {
-        let levels = Array(Set(group.memberIDs.compactMap { register.student($0)?.classLevel })).sorted()
+        let members = Array(Set(group.memberIDs.compactMap { register.student($0)?.classLevel })).sorted()
+        let levels = members.isEmpty ? group.classLevels.sorted() : members
         let classes = levels.map(\.title).joined(separator: " and ")
         let words = [classes.isEmpty ? nil : classes, group.subject == group.chapter ? nil : group.subject]
             .compactMap(\.self).joined(separator: " ")
