@@ -57,4 +57,22 @@ struct ClassroomTests {
         gone.archivedAt = Date()
         #expect(gone.isArchived)
     }
+
+    @Test func aBatchCachedBeforeThePlanReadsWithNoPatternAndNoCount() throws {
+        let json = #"""
+        {"id":"6D8E1C0A-0000-0000-0000-000000000001","name":"Evening batch","meetingDays":[1],"subject":null,
+         "monthlyFee":null,"startTime":null,"endTime":null,"archivedAt":null}
+        """#
+        let room = try JSONDecoder().decode(Classroom.self, from: Data(json.utf8))
+        #expect(room.planGroups == nil)
+        #expect(room.planPattern.isEmpty)
+    }
+
+    @Test func aBatchWithAPatternRoundTrips() throws {
+        var room = Self.maths
+        room.planGroups = 2
+        room.planPattern = [.wednesday: PlanPattern(groups: 2, subjects: ["Science", "Mathematics"])]
+        let read = try JSONDecoder().decode(Classroom.self, from: JSONEncoder().encode(room))
+        #expect(read == room)
+    }
 }
