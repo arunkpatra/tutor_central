@@ -47,6 +47,16 @@ public enum PDFMaker {
         40
     }
 
+    /// The width a page's content takes, for a picture drawn to go on it (a figure).
+    public static var contentWidth: CGFloat {
+        page.width - 2 * margin
+    }
+
+    /// The scale a picture for a page is rendered at, sharp in print.
+    public static var imageScale: CGFloat {
+        3
+    }
+
     public enum Failure: Error {
         case noContext
     }

@@ -74,7 +74,7 @@ public extension AISamples {
             )
         case .triangle:
             FigureContent(
-                figure: .triangle(angles: [90, 53, 37], labels: ["3", "4", "5"]),
+                figure: .triangle(angles: [90, 53, 37], labels: ["5", "4", "3"]),
                 caption: "A right angle marked, the sides named, the rule beside it."
             )
         case .labelledCell:

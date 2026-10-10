@@ -35,12 +35,12 @@ public struct ArtefactScreen: View {
     let artefactID: UUID
     let context: ArtefactsContext
     let actions: ArtefactsActions
-    let boardState: SheetBoardState?
+    let boardState: ArtefactBoardState?
     @State private var kind: ArtefactKind?
     @State private var gone = false
 
     public init(
-        artefactID: UUID, context: ArtefactsContext, actions: ArtefactsActions, boardState: SheetBoardState? = nil
+        artefactID: UUID, context: ArtefactsContext, actions: ArtefactsActions, boardState: ArtefactBoardState? = nil
     ) {
         self.artefactID = artefactID
         self.context = context
@@ -53,6 +53,21 @@ public struct ArtefactScreen: View {
             switch kind {
             case .sheet?:
                 SheetView(store: sheetStore(), actions: actions, boardState: boardState)
+            case .workedExample?:
+                WorkedExampleView(
+                    store: WorkedExampleStore(
+                        artefactID: artefactID, workspace: context.workspace, register: context.register,
+                        plans: context.plans
+                    ),
+                    showsTwo: boardState == .secondStep
+                )
+            case .brief?:
+                BriefView(store: briefStore())
+            case .figure?:
+                FigureScreen(store: FigureStore(
+                    artefactID: artefactID, workspace: context.workspace, register: context.register,
+                    plans: context.plans
+                ))
             case nil where gone:
                 SheetView(store: sheetStore(), actions: actions, boardState: nil)
             default:
@@ -64,6 +79,15 @@ public struct ArtefactScreen: View {
             kind = found?.kind
             gone = found == nil
         }
+    }
+
+    private func briefStore() -> BriefStore {
+        let store = BriefStore(
+            artefactID: artefactID, workspace: context.workspace, register: context.register, plans: context.plans,
+            ai: context.ai, now: context.now, calendar: context.calendar
+        )
+        store.online = context.online
+        return store
     }
 
     private func sheetStore() -> SheetStore {

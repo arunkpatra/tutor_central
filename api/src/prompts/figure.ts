@@ -8,7 +8,7 @@ const RULES: Record<FigureKind, string> = {
   fraction_bar: "fraction_bar: parts (1 to 24), shaded (at most parts) and the label as a fraction.",
   place_value: "place_value: one whole number up to 9,999,999.",
   unit_circle: "unit_circle: one angle in degrees, 0 to 360.",
-  triangle: "triangle: three angles that sum to 180 and three side labels; use 90 for a right angle.",
+  triangle: "triangle: three angles that sum to 180 and three side labels, labels[i] the side opposite angles[i]; use 90 for a right angle.",
   labelled_cell: "labelled_cell: plant or animal, and one to five part names as the class's chapter names them.",
   food_chain: "food_chain: two to six links, the first a plant, each eaten by the next.",
 };
