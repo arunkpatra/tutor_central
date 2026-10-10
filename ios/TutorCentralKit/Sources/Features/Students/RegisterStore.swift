@@ -15,12 +15,20 @@ import Observation
     public private(set) var lastSavedAt: Date?
     public var search = ""
     public var filter: StudentFilter = .all
-    public var sort: StudentSort = .name
+    /// By tracking status first (P10-Students-List): those who need the tutor at the top.
+    public var sort: StudentSort = .status
+    /// The centre's schools (V2), for the student form's school sheet.
+    public internal(set) var schools: [School] = []
 
     let workspace: Workspace
     private let studentsRepository: any StudentsRepository
     let classesRepository: any ClassesRepository
     private let cache: RegisterCache?
+    /// Where the parent's message language last chosen is kept (the form starts from it); nil keeps it in memory.
+    let languageDefaults: UserDefaults?
+    var languageInMemory = MessageLanguage.default
+    let schoolsRepository: (any SchoolsRepository)?
+    let textbooksRepository: (any TextbooksRepository)?
     /// When the register on screen was saved on this iPhone, until the network replaces it (D39).
     public private(set) var savedAt: Date?
     /// The last read failed for the network, not the server.
@@ -34,11 +42,16 @@ import Observation
 
     public init(
         workspace: Workspace, students: any StudentsRepository, classes: any ClassesRepository,
-        cache: RegisterCache?, now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india
+        cache: RegisterCache?, now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india,
+        schools: (any SchoolsRepository)? = nil, textbooks: (any TextbooksRepository)? = nil,
+        languageDefaults: UserDefaults? = nil
     ) {
+        self.languageDefaults = languageDefaults
         self.workspace = workspace
         studentsRepository = students
         classesRepository = classes
+        schoolsRepository = schools
+        textbooksRepository = textbooks
         self.cache = cache
         self.now = now
         self.calendar = calendar
@@ -126,7 +139,7 @@ import Observation
         )) {
             return phone.display
         }
-        return classroom(student.classID)?.name ?? "No class yet"
+        return classroom(student.classID)?.name ?? "No batch yet"
     }
 
     // MARK: Reads
@@ -166,6 +179,7 @@ import Observation
             async let read = studentsRepository.students(centre: workspace.centre.id, period: period)
             async let classRead = classesRepository.classes(centre: workspace.centre.id)
             (students, classes) = try await (read, classRead)
+            await readSchools()
             error = nil
             offlineRead = false
             savedAt = nil
@@ -179,6 +193,14 @@ import Observation
             offlineRead = TransportError.isOffline(error)
             // A saved register offline: the line under the title says it.
             self.error = loaded && offlineRead ? nil : "Couldn't refresh. Check your connection and try again."
+        }
+    }
+
+    /// The schools ride along with the register; a failed read keeps the ones shown (the form still saves without).
+    private func readSchools() async {
+        guard let schoolsRepository else { return }
+        if let read = try? await schoolsRepository.schools(centre: workspace.centre.id) {
+            schools = read
         }
     }
 
@@ -245,6 +267,7 @@ public extension RegisterStore {
             let made = try await studentsRepository.create(draft, centre: workspace.centre.id)
             replace(placeholder.id, with: made)
             succeeded()
+            await recordSaved(made, before: nil)
             return made
         } catch {
             students.removeAll { $0.id == placeholder.id }
@@ -267,12 +290,17 @@ public extension RegisterStore {
         optimistic.dateOfBirth = draft.dateOfBirth
         optimistic.gender = draft.gender
         optimistic.notes = draft.trimmedNotes
+        optimistic.classLevel = draft.classLevel
+        optimistic.schoolID = draft.schoolID
+        optimistic.board = draft.board
+        optimistic.messageLanguage = draft.messageLanguage
         replace(id, with: optimistic)
         do {
             var saved = try await studentsRepository.update(id: id, with: draft)
             saved.thisMonth = before.thisMonth
             replace(id, with: saved)
             succeeded()
+            await recordSaved(saved, before: before)
             return true
         } catch {
             replace(id, with: before)

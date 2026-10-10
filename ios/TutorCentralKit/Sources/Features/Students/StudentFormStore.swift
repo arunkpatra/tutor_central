@@ -33,17 +33,34 @@ import Observation
     public var hasBirthDate = false
     public var birthDate: Day
     public var gender: Gender?
-    // V2: carried through an edit (the form's rows for them are Task 13's).
+    // V2 (P10-NewStudent): the class, the school, the board from class 8, the parent's message language.
     public var classLevel: ClassLevel?
-    public var schoolID: UUID?
+    public var schoolID: UUID? {
+        didSet {
+            // The school's board, when it has one and none is chosen yet.
+            if schoolID != oldValue, board == nil, let school = schools.first(where: { $0.id == schoolID }) {
+                board = school.board
+            }
+        }
+    }
+
     public var board: Board?
     public var messageLanguage: MessageLanguage = .default
+    /// The centre's schools for the school sheet, with each one's student count.
+    public private(set) var schools: [School]
+    public var schoolCounts: [UUID: Int]
     public private(set) var phoneError: String?
 
-    public init(mode: Mode, classes: [Classroom], today: Day) {
+    public init(
+        mode: Mode, classes: [Classroom], schools: [School] = [], schoolCounts: [UUID: Int] = [:], today: Day,
+        defaultLanguage: MessageLanguage = .default
+    ) {
         self.mode = mode
         self.classes = classes.filter { !$0.isArchived }.sorted { $0.name < $1.name }
+        self.schools = schools.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        self.schoolCounts = schoolCounts
         self.today = today
+        messageLanguage = defaultLanguage
         birthDate = Day(year: today.year - 12, month: today.month, day: min(today.day, 28))!
         let start: StudentDraft? = switch mode {
         case .new: nil
@@ -92,6 +109,63 @@ import Observation
         classroom?.name ?? "No batch yet"
     }
 
+    /// New student needs the class; Edit and Fix this row do not (plan decision 5).
+    public var requiresClass: Bool {
+        if case .new = mode {
+            true
+        } else {
+            false
+        }
+    }
+
+    /// The Class tile's value; nil shows its placeholder, "Choose".
+    public var classTitle: String? {
+        classLevel?.title
+    }
+
+    /// Under the Class tile until a class is chosen (P10-NewStudent).
+    public var classHelper: String? {
+        classLevel == nil ? "LKG to class 10. The plan and the sheets follow it." : nil
+    }
+
+    /// The School tile's value; nil shows "Choose or add".
+    public var schoolTitle: String? {
+        schoolID.flatMap { id in schools.first { $0.id == id } }?.name
+    }
+
+    /// The Board row shows from class 8.
+    public var showsBoard: Bool {
+        classLevel?.expectsBoard == true
+    }
+
+    public var boardHelper: String {
+        "Shown from class 8. The chapters follow the board's list."
+    }
+
+    /// "Notes to Neha are written in this language…" (P10-NewStudent-End): the parent's first name.
+    public var languageHelper: String {
+        let first = parentName.split(whereSeparator: \.isWhitespace).first.map(String.init) ?? "the parent"
+        return "Notes to \(first) are written in this language, with English beside them for you."
+    }
+
+    /// The school sheet's line under a school: "4 students · CBSE", "No students yet".
+    public func schoolLine(_ school: School) -> String {
+        let count = schoolCounts[school.id] ?? 0
+        let students = switch count {
+        case 0: "No students yet"
+        case 1: "1 student"
+        default: "\(count) students"
+        }
+        return [students, school.board?.title].compactMap(\.self).joined(separator: " · ")
+    }
+
+    /// A school made from the sheet's last row: chosen at once.
+    public func schoolAdded(_ school: School) {
+        schools.append(school)
+        schools.sort { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        schoolID = school.id
+    }
+
     public var classFee: Money? {
         classroom?.monthlyFee
     }
@@ -110,12 +184,12 @@ import Observation
 
     public var feeHelper: String {
         if case let .fix(read) = mode, let fee = read.fee, typedFee == fee, let classFee {
-            return "Read from the page. The class fee is \(classFee.formatted) too."
+            return "Read from the page. The batch fee is \(classFee.formatted) too."
         }
         return switch (classFee, feeText.isEmpty) {
-        case (nil, true): "Pick a class to use its fee, or type one here."
-        case let (fee?, true): "Using the class fee, \(fee.formatted). Type an amount to set one for this student."
-        case let (fee?, false): "The class fee is \(fee.formatted). This student pays this amount instead."
+        case (nil, true): "Leave empty to use the batch fee once a batch is chosen."
+        case let (fee?, true): "Using the batch fee, \(fee.formatted). Type an amount to set one for this student."
+        case let (fee?, false): "The batch fee is \(fee.formatted). This student pays this amount instead."
         case (nil, false): "This student's own fee."
         }
     }
@@ -211,7 +285,7 @@ import Observation
     }
 
     private var problems: Set<StudentDraft.Problem> {
-        draft.problems(today: today)
+        draft.problems(today: today, requiresClass: requiresClass)
     }
 
     private func message(_ problem: StudentDraft.Problem) -> String? {

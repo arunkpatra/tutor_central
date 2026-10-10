@@ -10,9 +10,10 @@ import Testing
 
     @Test func aNewFormStartsEmptyWithSaveDisabled() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
+        form.classLevel = .ten
         #expect(form.title == "New student" && form.classLabel == "No batch yet" && form.feePlaceholder == "0" && !form
             .canSave)
-        #expect(form.feeHelper == "Pick a class to use its fee, or type one here." && form.notesCount == 0)
+        #expect(form.feeHelper == "Leave empty to use the batch fee once a batch is chosen." && form.notesCount == 0)
         form.name = "Riya Sharma"
         #expect(form.canSave && form.draft.trimmedName == "Riya Sharma" && form.draft.fee == nil)
     }
@@ -20,6 +21,7 @@ import Testing
     /// P7-NewStudent-ClassMade: a class made from the form's menu joins the menu, is chosen, and its fee is used.
     @Test func aClassMadeFromTheFormIsChosen() {
         let form = StudentFormStore(mode: .new, classes: [], today: today)
+        form.classLevel = .ten
         form.memberCounts = [FakeClassesRepository.maths.id: 6]
         let physics = Classroom(
             id: UUID(), name: "Class 12 Physics", subject: "Physics", monthlyFee: Money(rupees: 1500), meetingDays: [],
@@ -27,20 +29,21 @@ import Testing
         )
         form.classAdded(physics)
         #expect(form.classes == [physics] && form.classID == physics.id && form.classLabel == "Class 12 Physics")
-        #expect(form.feeHelper == "Using the class fee, ₹1,500. Type an amount to set one for this student.")
+        #expect(form.feeHelper == "Using the batch fee, ₹1,500. Type an amount to set one for this student.")
         #expect(form.membersLine(physics.id) == "No students yet")
         #expect(form.membersLine(FakeClassesRepository.maths.id) == "6 students")
     }
 
     @Test func anUntouchedFeeFollowsTheClassATypedOneStays() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
+        form.classLevel = .ten
         form.name = "Riya Sharma"
         form.select(classID: FakeClassesRepository.maths.id)
         #expect(form.feePlaceholder == "1,200" && form.feeText == "" && form.draft.fee == nil)
-        #expect(form.feeHelper == "Using the class fee, ₹1,200. Type an amount to set one for this student.")
+        #expect(form.feeHelper == "Using the batch fee, ₹1,200. Type an amount to set one for this student.")
         form.feeText = "1,500"
         #expect(form.draft.fee == Money(rupees: 1500) && form
-            .feeHelper == "The class fee is ₹1,200. This student pays this amount instead.")
+            .feeHelper == "The batch fee is ₹1,200. This student pays this amount instead.")
         form.select(classID: FakeClassesRepository.science.id)
         #expect(
             form.feeText == "1,500" && form.draft.fee == Money(rupees: 1500),
@@ -52,6 +55,7 @@ import Testing
 
     @Test func clearingTheFeeReturnsToTheClassFee() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
+        form.classLevel = .ten
         form.name = "Riya Sharma"
         form.select(classID: FakeClassesRepository.maths.id)
         form.feeText = "1,500"
@@ -65,6 +69,7 @@ import Testing
 
     @Test func thePhoneIsCheckedOnCommitAndClearedOnTyping() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
+        form.classLevel = .ten
         form.name = "Riya Sharma"
         form.digits = "981112223"
         form.commitPhone()
@@ -75,6 +80,7 @@ import Testing
 
     @Test func birthDateAndGenderAreOptionalToggles() throws {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
+        form.classLevel = .ten
         form.name = "Riya Sharma"
         #expect(form.draft.dateOfBirth == nil && form.draft.gender == nil)
         form.hasBirthDate = true
@@ -107,6 +113,7 @@ import Testing
 
     @Test func limitsAreSaidUnderTheirFields() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
+        form.classLevel = .ten
         form.name = String(repeating: "a", count: 81)
         #expect(form.nameError == "Keep the name under 80 characters.")
         form.name = "Riya"
@@ -122,7 +129,7 @@ import Testing
         kavya.classID = FakeClassesRepository.maths.id
         let store = StudentFormStore(mode: .fix(kavya), classes: FakeClassesRepository.seed, today: today)
         #expect(store.title == "Fix this row" && store.name == "Kavya Nair" && store.feeText == "1,200")
-        #expect(store.feeHelper == "Read from the page. The class fee is ₹1,200 too.")
+        #expect(store.feeHelper == "Read from the page. The batch fee is ₹1,200 too.")
         #expect(store.phoneHelper == "Nothing was read for the number. Type it, or leave it empty and add it later.")
         #expect(store.canSave, "the row as read can be kept as it is")
         store.digits = "98765 00000"
@@ -137,5 +144,65 @@ import Testing
         #expect(!form.isChanged)
         form.notes = "Weak in signs."
         #expect(form.draft.classLevel == .ten && form.draft.schoolID == hemanth.schoolID && form.draft.board == .cbse)
+    }
+
+    @Test func aNewStudentNeedsNameAndClassAndTheBoardShowsFromClassEight() {
+        let form = StudentFormStore(
+            mode: .new, classes: [], schools: [FakeSchoolsRepository.vidya], schoolCounts: [:], today: today,
+            defaultLanguage: .english
+        )
+        form.name = "Riya Sharma"
+        #expect(!form.canSave && form.classTitle == nil && !form.showsBoard)
+        #expect(form.classHelper == "LKG to class 10. The plan and the sheets follow it.")
+        form.classLevel = .five
+        #expect(form.canSave && form.schoolTitle == nil && form.classHelper == nil)
+        form.classLevel = .nine
+        #expect(form.showsBoard && form.boardHelper == "Shown from class 8. The chapters follow the board's list.")
+        form.schoolID = FakeSchoolsRepository.vidya.id
+        #expect(form.schoolTitle == "Vidya Niketan" && form.board == .cbse)
+    }
+
+    @Test func editingAV1StudentSavesWithoutAClass() throws {
+        let bir = try #require(FakeStudentsRepository.seed.first { $0.name == "Bir Bikram Singh" })
+        let form = StudentFormStore(
+            mode: .edit(bir), classes: FakeClassesRepository.seed, schools: [], schoolCounts: [:], today: today,
+            defaultLanguage: .english
+        )
+        form.parentName = "Harjeet S Singh"
+        #expect(form.canSave && form.classLevel == nil)
+    }
+
+    @Test func theLanguageStartsFromTheTutorsLastChoiceAndTheHelperNamesTheParent() {
+        let form = StudentFormStore(
+            mode: .new, classes: [], schools: [], schoolCounts: [:], today: today, defaultLanguage: .kannada
+        )
+        form.parentName = "Neha Sharma"
+        #expect(form.messageLanguage == .kannada)
+        #expect(form.languageHelper == "Notes to Neha are written in this language, with English beside them for you.")
+        form.parentName = ""
+        #expect(form
+            .languageHelper == "Notes to the parent are written in this language, with English beside them for you.")
+    }
+
+    @Test func theFeeHelperSpeaksOfTheBatch() {
+        let form = StudentFormStore(
+            mode: .new, classes: FakeClassesRepository.seed, schools: [], schoolCounts: [:], today: today,
+            defaultLanguage: .english
+        )
+        #expect(form.feeHelper == "Leave empty to use the batch fee once a batch is chosen.")
+        form.select(classID: FakeClassesRepository.maths.id)
+        #expect(form.feeHelper == "Using the batch fee, ₹1,200. Type an amount to set one for this student.")
+        form.feeText = "1,500"
+        #expect(form.feeHelper == "The batch fee is ₹1,200. This student pays this amount instead.")
+    }
+
+    @Test func theSchoolsLineCountsItsStudentsAndNamesTheBoard() {
+        let form = StudentFormStore(
+            mode: .new, classes: [], schools: [FakeSchoolsRepository.vidya],
+            schoolCounts: [FakeSchoolsRepository.vidya.id: 4],
+            today: today, defaultLanguage: .english
+        )
+        #expect(form.schoolLine(FakeSchoolsRepository.vidya) == "4 students · CBSE")
+        #expect(form.schoolLine(School(id: UUID(), name: "New", board: nil)) == "No students yet")
     }
 }

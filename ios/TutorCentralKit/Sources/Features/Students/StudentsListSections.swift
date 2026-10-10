@@ -137,7 +137,8 @@ struct RegisterList: View {
                     nameMatch: StudentQuery.matchRange(in: student.name, search: store.search),
                     detail: store.rowDetail(for: student),
                     fee: student.fee(in: store.classroom(student.classID))?.formatted,
-                    status: student.feeMark.map(Self.status)
+                    status: student.feeMark.map(Self.status),
+                    lead: (student.trackStatus.title, student.trackStatus.kind)
                 ) { openStudent(student.id) }
                     .rowDivider(index < shown.count - 1)
             }
@@ -184,10 +185,11 @@ struct NoStudentsCard: View {
             EmptyState(
                 symbol: "person.2",
                 title: "No students yet",
-                line: "Add them one by one, or photograph your paper register and we'll read it.",
+                line: "Add a student by hand, or photograph a page of your paper register and we read the names into a "
+                    + "list you check.",
                 actions: (
                     .init("Add a student", emphasis: .primary, run: addStudent),
-                    .init("Scan register", run: scanRegister)
+                    .init("Scan paper register", run: scanRegister)
                 )
             )
         }
@@ -202,13 +204,14 @@ struct NoClassesSection: View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
             SectionHeader("Batches")
             Card {
-                EmptyRow(
+                EmptyState(
                     symbol: "book.closed",
                     title: "No batches yet",
-                    line: "Group students into batches to take attendance and set one fee for all."
+                    line: "A batch is the students you teach together, with its days and times. Each student can be in "
+                        + "one.",
+                    action: .init("Create a batch", run: createClass)
                 )
             }
-            Button("Create a batch", action: createClass).buttonStyle(.secondary()).fixedSize()
         }
     }
 }
@@ -268,5 +271,17 @@ struct ErrorLine: View {
             Button("Retry", action: retry).buttonStyle(.quiet)
         }
         .padding(.horizontal, Tokens.rowGapInner)
+    }
+}
+
+extension TrackStatus {
+    /// The Kit's tone and symbol for the status (DesignSystem imports nothing).
+    var kind: TrackKind {
+        switch self {
+        case .notOnTrack: .notOnTrack
+        case .watch: .watch
+        case .onTrack: .onTrack
+        case .notKnown: .notKnown
+        }
     }
 }

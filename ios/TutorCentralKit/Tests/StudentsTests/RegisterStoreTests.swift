@@ -29,7 +29,7 @@ import Testing
         let store = make()
         await store.load()
         #expect(store.students.count == 10 && store.classes.count == 2 && !store.loading && store.error == nil)
-        #expect(store.visible.map(\.name).first == "Akshita Rao" && store.countLine == "10 students" && store
+        #expect(store.visible.map(\.name).first == "Hemanth Reddy" && store.countLine == "10 students" && store
             .showsFilters)
         #expect(store.period == Period(year: 2026, month: 10) && store.today == Day(year: 2026, month: 10, day: 7))
     }
@@ -61,7 +61,7 @@ import Testing
         #expect(store.rowDetail(for: akshita) == "+91 97991 13211")
         let sahil = try #require(store.students.first { $0.name == "Sahil Verma" })
         store.search = ""
-        #expect(store.rowDetail(for: sahil) == "No class yet")
+        #expect(store.rowDetail(for: sahil) == "No batch yet")
     }
 
     @Test func withNoClassesTheRowShowsThePhoneAndNoFilters() async {

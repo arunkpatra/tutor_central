@@ -222,7 +222,12 @@ public struct RootView: View {
             cache: deps.cachesRegister
                 ? .forCentre(workspace.centre.id)
                 : deps.filesDirectory.map { RegisterCache.forCentre(workspace.centre.id, directory: $0) },
-            now: deps.now
+            now: deps.now,
+            schools: deps.schools,
+            textbooks: deps.textbooks,
+            // The last message language chosen is kept on this iPhone (wiped at sign-out); the fixtures keep it in
+            // memory.
+            languageDefaults: deps.cachesRegister ? .standard : nil
         )
         made.onChanged = { replanReminders() }
         // Kept at once, in the same pass: the detail pushed by a launch state or a link reads the same register as the

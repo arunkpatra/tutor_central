@@ -41,7 +41,7 @@ public enum Fixtures {
             classes: FakeClassesRepository(classes: register(for: state).classes),
             attendance: attendance,
             messages: messages(for: state),
-            schools: FakeSchoolsRepository(),
+            schools: FakeSchoolsRepository(schools: boardSchools),
             textbooks: FakeTextbooksRepository.seeded(),
             record: FakeRecordRepository(),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
@@ -65,6 +65,21 @@ public enum Fixtures {
             bundleVersion: "1.0 (14)"
         )
     }
+
+    /// P10-NewStudent-School's three schools.
+    static let boardSchools = [
+        FakeSchoolsRepository.vidya,
+        School(
+            id: UUID(uuidString: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60732") ?? UUID(),
+            name: "National Public School",
+            board: nil
+        ),
+        School(
+            id: UUID(uuidString: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60733") ?? UUID(),
+            name: "St Mary's School",
+            board: .icse
+        ),
+    ]
 
     /// The message log: Hemanth's absence alert and the fee reminders the boards show.
     @MainActor static func messages(for state: LaunchState) -> FakeMessageLogRepository {
@@ -163,7 +178,8 @@ public enum Fixtures {
         case .todayEmpty, .laterStudents, .laterAttendance, .laterSchool, .laterMore, .settings, .studentsEmpty,
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
-             .studentNewInvalid, .studentNewNewClass, .studentNewClassMade, .student, .studentArchived,
+             .studentNewInvalid, .studentNewNewClass, .studentNewClassMade, .studentNewClass9, .studentNewClassPicker,
+             .studentNewSchool, .studentNewEnd, .student, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm,
              .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
              .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,

@@ -91,7 +91,8 @@ public struct StudentDetailView: View {
                 autofocus: false,
                 onSave: { await register.updateStudent(store.id, with: $0) },
                 onClose: { editing = nil },
-                addClass: { await register.addClass($0) }
+                addClass: { await register.addClass($0) },
+                addSchool: { await register.addSchool(name: $0) }
             )
         }
         .task {
@@ -202,10 +203,7 @@ public struct StudentDetailView: View {
 
     private func edit() {
         guard let student = store.student else { return }
-        let form = StudentFormStore(mode: .edit(student), classes: register.activeClasses, today: register.today)
-        form.memberCounts = Dictionary(grouping: register.activeStudents.compactMap(\.classID)) { $0 }
-            .mapValues(\.count)
-        editing = form
+        editing = register.form(.edit(student))
     }
 
     private func archive() {
