@@ -35,6 +35,14 @@ test("parse-textbook checks the photo first and says so when the chapters cannot
   expect(await refused.json()).toEqual({ error: "Couldn't read the chapters from this photo. Try a flatter, brighter one." });
 });
 
+test("a page with no chapters on it is refused in words, never answered with an empty list", async () => {
+  const db = fakeDb();
+  const r = await post(app(fakeClaude({ answer: { title: null, chapters: [] } }), db), "/ai/parse-textbook", { centreId, image, classLevel: "5", subject: "Mathematics" });
+  expect(r.status).toBe(422);
+  expect(await r.json()).toEqual({ error: "Couldn't read the chapters from this photo. Try a flatter, brighter one." });
+  expect(db.finished[0]).toMatchObject({ status: "failed" });
+});
+
 test("the monthly allowance is worded for the month on a V2 kind", async () => {
   const r = await post(app(undefined, fakeDb({ limit: 0 })), "/ai/parse-textbook", { centreId, image, classLevel: "5", subject: "Mathematics" });
   expect(r.status).toBe(429);

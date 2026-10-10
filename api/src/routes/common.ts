@@ -8,7 +8,14 @@ import { CentreInput } from "../schemas.js";
 
 export type C = Context<Vars>;
 /** One call, as a route hands it to `run`: what is recorded, what Claude is asked, and how its answer is kept. */
-export type Call<T> = { kind: AIKind; input: unknown; request: ClaudeRequest<T>; keep?: (parsed: T) => T };
+export type Call<T> = {
+  kind: AIKind;
+  input: unknown;
+  request: ClaudeRequest<T>;
+  keep?: (parsed: T) => T;
+  /** An answer that holds nothing to use (a page with no chapters): recorded as failed and refused in words. */
+  empty?: (parsed: T) => boolean;
+};
 
 // What every AI route shares (moved from routes/ai.ts for routes/v2.ts): start the record (consent, the limit), call
 // Claude, finish the record, answer `{ id, result }` or an error in words (src/errors.ts); the body's validation.
@@ -31,6 +38,11 @@ export async function run<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centr
     return answer(c, errors.service());
   }
   const result = await deps.claude.complete(call.request);
+  if (result.kind === "ok" && call.empty?.(result.parsed)) {
+    const tokens = { tokensIn: result.tokensIn, tokensOut: result.tokensOut };
+    await deps.db.finish(token, id, { status: "failed", output: null, model: result.model, ...tokens });
+    return answer(c, errors.refused(call.kind));
+  }
   if (result.kind === "ok") {
     const kept = call.keep ? call.keep(result.parsed) : result.parsed;
     const tokens = { tokensIn: result.tokensIn, tokensOut: result.tokensOut };
