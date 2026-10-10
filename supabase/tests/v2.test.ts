@@ -529,3 +529,106 @@ test("a student moved up a class gets the new class's book, last year's chapters
   expect(again.error).toBeNull();
   expect((await a.from("chapters").select("id").eq("student_id", s)).data).toHaveLength(5);
 });
+
+// ---- Phase 12: the plan's write, the artefact's keep, the close's done lines ----
+async function batchWithTwo() {
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: `Batch ${stamp}`, meeting_days: [1, 2, 3, 4, 5], start_time: "17:00", end_time: "18:30" }).select("id").single()).data!;
+  const s1 = (await a.from("students").insert({ centre_id: centre, class_id: cls.id, name: "Plan One", class_level: "8" }).select("id").single()).data!;
+  const s2 = (await a.from("students").insert({ centre_id: centre, class_id: cls.id, name: "Plan Two", class_level: "5" }).select("id").single()).data!;
+  return { cls, s1, s2 };
+}
+const items = (s1: string, s2: string) => [
+  { student_id: s1, group_no: 1, kind: "teach", words: "Teach: Balancing equations" },
+  { student_id: s1, group_no: 1, kind: "practise", words: "Practise set 1" },
+  { student_id: s1, group_no: 1, kind: "check", words: "Check 3" },
+  { student_id: s1, group_no: 1, kind: "homework", words: "Homework sheet 1" },
+  { student_id: s2, group_no: 2, kind: "teach", words: "Teach: Compare simple fractions" },
+  { student_id: s2, group_no: 2, kind: "homework", words: "Homework sheet 1, light" },
+  { student_id: null, group_no: 1, kind: "brief", words: "Your brief · Chemical reactions" },
+];
+
+test("make_plan writes the day's plan with its groups and items in one call, and a second call replaces it", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const groups = [{ group_no: 1, subject: "Science", chapter: "Chemical reactions", skill: "Balancing equations" }, { group_no: 2, subject: "Mathematics", chapter: "Parts and Wholes", skill: "Compare simple fractions" }];
+  const first = await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-07", p_groups: groups, p_subjects: { "1": "Science", "2": "Mathematics" }, p_items: items(s1.id, s2.id) });
+  expect(first.error).toBeNull();
+  const made = first.data as { plan_id: string; items: { id: string; student_id: string | null; group_no: number; kind: string }[] };
+  expect(made.items).toHaveLength(7);
+  expect(made.items.filter((i) => i.kind === "brief")[0]?.student_id).toBeNull();
+  const again = await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-07", p_groups: [groups[0]], p_subjects: { "1": "Science" }, p_items: items(s1.id, s2.id).slice(0, 4) });
+  expect((again.data as { plan_id: string }).plan_id).toBe(made.plan_id);
+  const rows = await a.from("plan_items").select("id").eq("plan_id", made.plan_id);
+  expect(rows.data).toHaveLength(4);
+  const plan = await a.from("plans").select("groups, subjects, made_at").eq("id", made.plan_id).single();
+  expect((plan.data!.groups as unknown[]).length).toBe(1);
+});
+
+test("make_plan refuses a non-member, a plan for another centre's batch, and a bad item kind", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const b = await userClient(l, `v2-plan-b-${stamp}@example.com`);
+  const other = (await b.rpc("create_centre", { p_name: "Other", p_whatsapp: "+919999999902" })).data as string;
+  expect((await b.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-07", p_groups: [], p_subjects: {}, p_items: [] })).error?.code).toBe("42501");
+  expect((await b.rpc("make_plan", { p_centre: other, p_class: cls.id, p_date: "2026-10-07", p_groups: [], p_subjects: {}, p_items: [] })).error).not.toBeNull();
+  expect((await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-07", p_groups: [], p_subjects: {}, p_items: [{ student_id: s1.id, group_no: 1, kind: "revise" }] })).error).not.toBeNull();
+  void s2;
+});
+
+test("keep_artefact writes the artefact and links the group's items of its kind; a personal keep links one student; a regenerate relinks and keeps the old", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const plan = (await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-08", p_groups: [], p_subjects: {}, p_items: items(s1.id, s2.id) })).data as { plan_id: string };
+  const sheet = { kind: "sheet", source: "made", title: "Balancing equations · sheet 1", content: { title: "Balancing equations", questions: [{ number: 1, text: "Balance H2 + O2", answer: "2H2 + O2 → 2H2O" }], for_homework: true, light: false } };
+  const kept = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: sheet, p_plan: plan.plan_id, p_group_no: 1, p_student: null, p_item_kind: "homework" });
+  expect(kept.error).toBeNull();
+  const linked = await a.from("plan_items").select("student_id, artefact_id").eq("plan_id", plan.plan_id).eq("kind", "homework");
+  expect(linked.data!.find((r) => r.student_id === s1.id)?.artefact_id).toBe(kept.data as string);
+  expect(linked.data!.find((r) => r.student_id === s2.id)?.artefact_id).toBeNull();
+  const own = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "check", source: "made", title: "Plan One's checks", content: { questions: [] } }, p_plan: plan.plan_id, p_group_no: 1, p_student: s1.id, p_item_kind: "check" });
+  expect(own.error).toBeNull();
+  const again = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { ...sheet, regenerated_from: kept.data }, p_plan: plan.plan_id, p_group_no: 1, p_student: null, p_item_kind: "homework" });
+  expect(again.error).toBeNull();
+  const relinked = await a.from("plan_items").select("artefact_id").eq("plan_id", plan.plan_id).eq("kind", "homework").eq("student_id", s1.id).single();
+  expect(relinked.data!.artefact_id).toBe(again.data as string);
+  const old = await a.from("artefacts").select("id, plan_id").eq("id", kept.data as string).single();
+  expect(old.data!.plan_id).toBe(plan.plan_id);
+});
+
+test("keep_artefact refuses a non-member and a kind outside the enum, and links nothing when the row is not written", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const plan = (await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-09", p_groups: [], p_subjects: {}, p_items: items(s1.id, s2.id) })).data as { plan_id: string };
+  const b = await userClient(l, `v2-keep-b-${stamp}@example.com`);
+  expect((await b.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "sheet", title: "x", content: {} }, p_plan: plan.plan_id, p_group_no: 1, p_student: null, p_item_kind: "homework" })).error?.code).toBe("42501");
+  expect((await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "poster", title: "x", content: {} }, p_plan: plan.plan_id, p_group_no: 1, p_student: null, p_item_kind: "homework" })).error).not.toBeNull();
+  const linked = await a.from("plan_items").select("artefact_id").eq("plan_id", plan.plan_id).eq("kind", "homework");
+  expect(linked.data!.every((r) => r.artefact_id === null)).toBe(true);
+});
+
+test("close_session marks the plan's done lines and links the plan; the eight-argument call still works", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const plan = (await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-12", p_groups: [], p_subjects: {}, p_items: items(s1.id, s2.id) })).data as { plan_id: string; items: { id: string; kind: string }[] };
+  const done = plan.items.filter((i) => i.kind === "teach").map((i) => i.id);
+  const sid = (await a.rpc("close_session", { p_centre: centre, p_class: cls.id, p_date: "2026-10-12", p_marks: { [s1.id]: "present", [s2.id]: "present" }, p_checks: [], p_homework: [], p_track: {}, p_states: [], p_done: done })).data as string;
+  const items2 = await a.from("plan_items").select("kind, done_at").eq("plan_id", plan.plan_id);
+  expect(items2.data!.filter((i) => i.kind === "teach").every((i) => i.done_at !== null)).toBe(true);
+  expect(items2.data!.filter((i) => i.kind !== "teach").every((i) => i.done_at === null)).toBe(true);
+  expect((await a.from("plans").select("session_id").eq("id", plan.plan_id).single()).data!.session_id).toBe(sid);
+  const eight = await a.rpc("close_session", { p_centre: centre, p_class: cls.id, p_date: "2026-10-12", p_marks: { [s1.id]: "present" }, p_checks: [], p_homework: [], p_track: {}, p_states: [] });
+  expect(eight.error).toBeNull();
+});
+
+test("a batch keeps its group count and weekday pattern; the count is 1 to 3", async () => {
+  const { cls } = await batchWithTwo();
+  expect((await a.from("classes").update({ plan_groups: 2, plan_pattern: { "3": { groups: 2, subjects: ["Science", "Mathematics"] } } }).eq("id", cls.id)).error).toBeNull();
+  expect((await a.from("classes").update({ plan_groups: 4 }).eq("id", cls.id)).error).not.toBeNull();
+  const read = await a.from("classes").select("plan_groups, plan_pattern").eq("id", cls.id).single();
+  expect(read.data).toEqual({ plan_groups: 2, plan_pattern: { "3": { groups: 2, subjects: ["Science", "Mathematics"] } } });
+});
+
+test("a skipped or moved line keeps its marks", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const plan = (await a.rpc("make_plan", { p_centre: centre, p_class: cls.id, p_date: "2026-10-13", p_groups: [], p_subjects: {}, p_items: items(s1.id, s2.id) })).data as { plan_id: string; items: { id: string; kind: string; student_id: string | null }[] };
+  const homework = plan.items.find((i) => i.kind === "homework" && i.student_id === s1.id)!;
+  expect((await a.from("plan_items").update({ skipped_at: new Date().toISOString() }).eq("id", homework.id)).error).toBeNull();
+  expect((await a.from("plan_items").update({ group_no: 2, moved_from: 1 }).eq("plan_id", plan.plan_id).eq("student_id", s1.id)).error).toBeNull();
+  const moved = await a.from("plan_items").select("group_no, moved_from").eq("plan_id", plan.plan_id).eq("student_id", s1.id);
+  expect(moved.data!.every((r) => r.group_no === 2 && r.moved_from === 1)).toBe(true);
+});
