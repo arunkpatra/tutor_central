@@ -76,7 +76,8 @@ extension Fixtures {
     @MainActor static func queueChanges(for state: LaunchState, in folder: URL) {
         let changes: [QueuedChange] = switch state {
         case .syncFailed: [failedFee]
-        case .pending, .pendingDiscard: threeChanges
+        case .pending: threeChanges + [waitingClose]
+        case .pendingDiscard: threeChanges
         default: []
         }
         guard !changes.isEmpty else { return }
@@ -97,6 +98,29 @@ extension Fixtures {
             madeAt: india(day: 7, hour: 17, minute: 6)
         )
         return [twoWaitingChanges[0], alert, failedFee]
+    }
+
+    /// Class 8 Science closed at 17:40 offline: Dev absent, two checks each for Meher and Nikhil (Phase 11's pending
+    /// row).
+    static var waitingClose: QueuedChange {
+        let today = Day(year: 2026, month: 10, day: 7) ?? Day(now, calendar: DayHeading.india)
+        let members = FakeStudentsRepository.seed.filter { $0.classID == FakeClassesRepository.science.id }.map(\.id)
+        let marks = Dictionary(uniqueKeysWithValues: members.map {
+            ($0, $0 == FakeStudentsRepository.dev ? AttendanceStatus.absent : .present)
+        })
+        let checks = [FakeStudentsRepository.meher, FakeStudentsRepository.nikhil].flatMap { student in
+            [true, false].map {
+                SessionClose.Check(studentID: student, skillID: UUID(), question: "", correct: $0, isPlacement: false)
+            }
+        }
+        let close = SessionClose(
+            classID: FakeClassesRepository.science.id, date: today, marks: marks, checks: checks,
+            homework: [], track: [:]
+        )
+        return QueuedChange(
+            kind: .close(close: close, className: "Class 8 Science", present: 2, total: 3),
+            madeAt: india(day: 7, hour: 17, minute: 40)
+        )
     }
 
     static var failedFee: QueuedChange {

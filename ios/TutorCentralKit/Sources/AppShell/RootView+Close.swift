@@ -8,15 +8,22 @@ extension RootView {
     @ViewBuilder func closeView(_ classID: UUID) -> some View {
         if case let .ready(workspace) = session.state {
             CloseView(
-                store: CloseStore(
-                    classID: classID, workspace: workspace, register: register(for: workspace),
-                    textbooks: deps.textbooks, record: deps.record, attendance: deps.attendance, ai: deps.ai,
-                    now: deps.now
-                ),
+                store: closeStore(classID, in: workspace),
                 boardState: launch.flatMap(Self.closeBoardState),
                 onMessage: { notices.show($0) }
             )
         }
+    }
+
+    /// The store with the centre's queue and the network's state: a close made offline waits on this iPhone (D39).
+    private func closeStore(_ classID: UUID, in workspace: Workspace) -> CloseStore {
+        let store = CloseStore(
+            classID: classID, workspace: workspace, register: register(for: workspace), textbooks: deps.textbooks,
+            record: deps.record, attendance: deps.attendance, ai: deps.ai, now: deps.now
+        )
+        store.queue = centreQueue()
+        store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
+        return store
     }
 
     /// The close's launch states on Today's stack.

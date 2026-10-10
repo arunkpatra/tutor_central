@@ -35,6 +35,8 @@ extension RootView {
                 if shell.today == nil {
                     shell.today = store
                 }
+                // A close kept on this iPhone reads closed on the hero before it is sent (D39).
+                store.queue = centreQueue()
             }
             .onChange(of: store.tasks.message) { _, message in
                 guard let message else { return }

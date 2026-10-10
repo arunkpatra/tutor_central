@@ -73,6 +73,8 @@ import Observation
     private let cache: CachedRead<TodaySnapshot>?
     private var loaded = false
     let record: (any RecordRepository)?
+    /// The centre's queue (AppShell's): a close kept on this iPhone reads closed on the hero before it is sent.
+    public var queue: (any ChangeQueueing)?
     /// Today's closed sessions' checks and homework, by session, for the closed hero's line.
     var closeCounts: [UUID: CloseCounts] = [:]
 

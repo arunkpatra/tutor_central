@@ -8,21 +8,53 @@ struct CloseCounts: Hashable, Sendable {
     var homework = 0
 }
 
+/// A batch closed today: its session (the server's, or one made from a close kept on this iPhone) and the counts.
+struct ClosedBatch {
+    let session: AttendanceSession
+    let counts: CloseCounts
+    let savedHere: Bool
+}
+
 extension TodayStore {
     public var hero: Hero? {
-        let closedToday = sessions.filter { $0.date == today && $0.closedAt != nil && $0.classID != nil }
+        let closedToday = closedBatches
         if let nextClass, nextClass.canMark {
-            if let closed = closedToday.first(where: { $0.classID == nextClass.classroom.id }) {
+            if let closed = closedToday.first(where: { $0.session.classID == nextClass.classroom.id }) {
                 return closedHero(closed)
             }
             return startHero(nextClass)
         }
         // After the batch, its close stays the hero until the next batch is soon.
-        if let closed = closedToday.max(by: { ($0.closedAt ?? .distantPast) < ($1.closedAt ?? .distantPast) }),
-           let hero = closedHero(closed) {
+        if let closed = closedToday
+            .max(by: { ($0.session.closedAt ?? .distantPast) < ($1.session.closedAt ?? .distantPast) }),
+            let hero = closedHero(closed) {
             return hero
         }
         return nextClass.map(upcomingHero)
+    }
+
+    /// Today's closes: those kept on this iPhone first (they are newer), then the server's.
+    private var closedBatches: [ClosedBatch] {
+        let kept: [ClosedBatch] = (queue?.pending.changes ?? []).compactMap { change in
+            guard case let .close(close, _, _, _) = change.kind, close.date == today, close.classID != nil else {
+                return nil
+            }
+            let session = AttendanceSession(
+                id: change.id, classID: close.classID, date: close.date, savedAt: change.madeAt, marks: close.marks,
+                closedAt: change.madeAt
+            )
+            let counts = CloseCounts(
+                checks: close.checks.count, right: close.checks.count(where: \.correct), homework: close.homework.count
+            )
+            return ClosedBatch(session: session, counts: counts, savedHere: true)
+        }
+        let served = sessions.filter { session in
+            session.date == today && session.closedAt != nil && session.classID != nil
+                && !kept.contains { $0.session.classID == session.classID }
+        }
+        return kept + served.map {
+            ClosedBatch(session: $0, counts: closeCounts[$0.id] ?? CloseCounts(), savedHere: false)
+        }
     }
 
     private func startHero(_ next: NextClass) -> Hero {
@@ -61,9 +93,11 @@ extension TodayStore {
     }
 
     /// "Class 10 Maths · closed at 18:32", "5 of 6 came" with the tick, then the checks, homework and who was away.
-    private func closedHero(_ session: AttendanceSession) -> Hero? {
+    private func closedHero(_ closed: ClosedBatch) -> Hero? {
+        let session = closed.session, counts = closed.counts
         guard let closedAt = session.closedAt, let classroom = register.classroom(session.classID) else { return nil }
-        let counts = closeCounts[session.id] ?? CloseCounts()
+        let when = closed.savedHere ? "saved on this iPhone"
+            : "closed at \(QueuedChange.clock(closedAt, calendar: calendar))"
         var parts: [String] = []
         if counts.checks > 0 {
             parts.append("\(counts.right) of \(counts.checks) \(counts.checks == 1 ? "check" : "checks") right")
@@ -75,7 +109,7 @@ extension TodayStore {
             parts.append(absent)
         }
         return Hero(
-            kind: .closed, eyebrow: "\(classroom.name) · closed at \(QueuedChange.clock(closedAt, calendar: calendar))",
+            kind: .closed, eyebrow: "\(classroom.name) · \(when)",
             accent: false, title: "\(session.presentCount) of \(session.marks.count) came", titleMark: true,
             line: parts.isEmpty ? timeAndMembers(classroom) : parts.joined(separator: " · "), classID: classroom.id
         )

@@ -10,9 +10,17 @@ extension CloseStore {
         let before = phase
         let close = makeClose()
         phase = .closing
+        if await mustQueue() {
+            keepHere(close)
+            return true
+        }
         do {
             _ = try await attendance.close(close, centre: workspace.centre.id)
         } catch {
+            if queue != nil, TransportError.isOffline(error) {
+                keepHere(close)
+                return true
+            }
             phase = before
             message = "The class wasn't closed. Check your connection and try again. Your taps are still here."
             return false
