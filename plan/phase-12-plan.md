@@ -2332,7 +2332,7 @@ subjects' questions in `Placement.groups` order.
         #expect(plan.artefact(group: 1, kind: .brief) != nil)      // class 8 is above 7
         #expect(plan.artefact(group: 3, kind: .brief) == nil)      // Sahil's class 2 group
         #expect(ai.sheets.count == 6)
-        #expect(ai.topics.isEmpty)                                  // every group had a skill
+        #expect(ai.topics.isEmpty)                                  // each group had a skill
     }
 
     @Test func aGroupWithoutASkillAsksForATopic() async throws {
