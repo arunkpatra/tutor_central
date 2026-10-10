@@ -33,6 +33,9 @@ PRs #90 to #96, two production deploys, a fresh final review, a TestFlight build
 10. Task 10: "As built, Part B", the README (rows 9 and 10, D66), `STATE.md`, `phase-09-user-testing.md` and
     `phase-15-make-and-polish.md` (D66), resume 021 and its index, this record, the ledger and the owner's messages.
 
+11. The owner installed build 19 on his iPhone: the V1 screens fine. He withdrew build 18's Beta App Review for the
+    "Tutors" group.
+
 ## Why things are as they are
 
 - **The tables carry what the approved boards show,** beyond the spec's list: how the parent agreed (`consent_how`), since

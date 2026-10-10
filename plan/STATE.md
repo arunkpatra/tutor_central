@@ -34,9 +34,8 @@ the tutor round is Phase 15's, on V2. **Next:** Phase 11's plan on Fable from `r
 
 ## In flight
 
-Nothing open on GitHub after #96. Build 19 is processing in App Store Connect; installing it on the owner's iPhone from the internal group and opening each V1 screen is the build's last check (`docs/release.md`, "The build"). The remote holds `main`, `pr-shots`, and the merged branches
-`tools/review-seed`, `tools/store-shots` and `phase-10/*` (seven), the owner's to delete. Build 18 sits in Beta App Review
-for the "Tutors" group; with Phase 9 cancelled it is the owner's to withdraw or leave (App Store Connect, TestFlight).
+Nothing open on GitHub after #96. Build 19 is on the owner's iPhone from the internal group, the V1 screens fine (the owner, 2026-10-10). The remote holds `main`, `pr-shots`, and the merged branches
+`tools/review-seed`, `tools/store-shots` and `phase-10/*` (seven), the owner's to delete. Build 18's Beta App Review for the "Tutors" group was withdrawn by the owner (2026-10-10, D66).
 
 ## Production
 
@@ -65,7 +64,7 @@ for the "Tutors" group; with Phase 9 cancelled it is the owner's to withdraw or 
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group; 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
+  run number. 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group (the owner's iPhone: V1 screens fine); 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
   (U33, #86); 16 by run 37944725866 (the API at api.tutorcentral.in); 15 by run 37943689238 (the crash fix #84, the minors
   #85, "normally within 30 days" #83). `ITSAppUsesNonExemptEncryption` is false in `Info.plist`, so no build waits on a
   compliance question. Each run revokes the Apple Development certificate it makes (#75).

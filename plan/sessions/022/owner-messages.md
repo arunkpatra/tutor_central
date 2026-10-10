@@ -11,3 +11,4 @@
 7. After step 1 (the app group): "registered"
 8. After step 2 (the share extension's App ID): "Saved"
 9. After step 3 (the app group on the app's App ID): "Saved"
+10. "Build 19 installed on my iPhone, V1 screens fine. Beta App Review for the “Tutors” group withdrawn"
