@@ -17,7 +17,8 @@ extension RootView {
         switch state {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
-             .studentNewClassMade, .student, .studentArchived,
+             .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
+             .student, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
@@ -194,18 +195,17 @@ extension RootView {
     }
 
     static func studentsBoardState(_ state: LaunchState) -> StudentsBoardState? {
-        switch state {
-        case .studentsSearching: .searching
-        case .studentsFiltered: .filteredToScience
-        case .studentsAddMenu: .addMenu
-        case .studentNew: .newStudentEmpty
-        case .studentNewFilled: .newStudentFilled
-        case .studentNewInvalid: .newStudentInvalid
-        case .studentNewNewClass: .newStudentNewClass
-        case .studentNewClassMade: .newStudentClassMade
-        default: nil
-        }
+        studentsBoardStates[state]
     }
+
+    /// Each Students state's board state (a table: the switch passed the lint's complexity).
+    static let studentsBoardStates: [LaunchState: StudentsBoardState] = [
+        .studentsSearching: .searching, .studentsFiltered: .filteredToScience, .studentsAddMenu: .addMenu,
+        .studentNew: .newStudentEmpty, .studentNewFilled: .newStudentFilled, .studentNewInvalid: .newStudentInvalid,
+        .studentNewNewClass: .newStudentNewClass, .studentNewClassMade: .newStudentClassMade,
+        .studentNewClass9: .newStudentClass9, .studentNewClassPicker: .newStudentClassPicker,
+        .studentNewSchool: .newStudentSchool, .studentNewEnd: .newStudentEnd,
+    ]
 
     static func classesBoardState(_ state: LaunchState) -> ClassesBoardState? {
         switch state {

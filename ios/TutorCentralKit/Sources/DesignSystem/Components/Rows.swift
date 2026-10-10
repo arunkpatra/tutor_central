@@ -157,7 +157,8 @@ struct RowTitles: View {
     }
 }
 
-/// Student: avatar 40; name, then the class (or the parent's phone); the fee in numberRow and under it this month's
+/// Student: avatar 40; name, then the status word in its colour (V2, P10-Students-List) and the batch (or the parent's
+/// phone); the fee in numberRow and under it this month's
 /// status in captionStrong in its colour (text2 when the status has no tone: Waived); chevron. No fee, nothing on the
 /// right but the chevron; no status, the fee alone.
 public struct StudentRow: View {
@@ -167,9 +168,11 @@ public struct StudentRow: View {
     let detail: String
     let fee: String?
     let status: (tone: StatusTone?, text: String)?
+    let lead: (word: String, kind: TrackKind)?
     let action: (() -> Void)?
 
-    /// `nameMatch` colours the letters a search matched in accentText. `status` is nil when the month has no invoice.
+    /// `lead` is the tracking status word that starts the second line. `nameMatch` colours the letters a search matched
+    /// in accentText. `status` is nil when the month has no invoice.
     public init(
         initials: String,
         name: String,
@@ -177,8 +180,10 @@ public struct StudentRow: View {
         detail: String,
         fee: String?,
         status: (tone: StatusTone?, text: String)? = nil,
+        lead: (word: String, kind: TrackKind)? = nil,
         action: (() -> Void)? = nil
     ) {
+        self.lead = lead
         self.initials = initials
         self.name = name
         self.nameMatch = nameMatch
@@ -192,7 +197,18 @@ public struct StudentRow: View {
         ListRow(action: action) {
             Avatar(initials: initials)
             AdaptiveRow {
-                RowTitles(title: name, titleMatch: nameMatch, subtitle: detail)
+                if let lead {
+                    VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                        RowTitles(title: name, titleMatch: nameMatch, subtitle: nil)
+                        (Text(lead.word).foregroundStyle(lead.kind.color.color).fontWeight(.semibold)
+                            + Text(" · \(detail)").foregroundStyle(Tokens.text2.color))
+                            .typeStyle(Tokens.footnote)
+                            .lineLimit(1)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
+                    RowTitles(title: name, titleMatch: nameMatch, subtitle: detail)
+                }
                 if let fee {
                     TrailingColumn {
                         Text(fee).typeStyle(Tokens.numberRow).foregroundStyle(Tokens.text.color)

@@ -16,6 +16,12 @@ public enum StudentsBoardState: Sendable {
     case newStudentNewClass
     /// The new class chosen on the form (P7-NewStudent-ClassMade).
     case newStudentClassMade
+    /// V2 (P10-NewStudent-Class9, -ClassPicker, -School, -End): the Board row, the class wheel open, the school sheet
+    /// open, the form scrolled to its end.
+    case newStudentClass9
+    case newStudentClassPicker
+    case newStudentSchool
+    case newStudentEnd
 }
 
 /// Pushes on the Students tab. AppShell owns the stack; the feature asks for a screen.
@@ -118,7 +124,11 @@ public struct StudentsView: View {
                 onSave: { await store.addStudent($0) != nil },
                 onClose: { newStudent = nil },
                 addClass: { await store.addClass($0) },
-                boardNewClass: boardState == .newStudentNewClass ? ClassFormSheet.fixture() : nil
+                addSchool: { await store.addSchool(name: $0) },
+                boardNewClass: boardState == .newStudentNewClass ? ClassFormSheet.fixture() : nil,
+                boardPicker: boardState == .newStudentClassPicker ? .classWheel
+                    : boardState == .newStudentSchool ? .school : nil,
+                scrolledToEnd: boardState == .newStudentEnd
             )
         }
         .sheet(item: $newClass) { form in
@@ -177,9 +187,7 @@ public struct StudentsView: View {
     }
 
     private func addStudent() {
-        let form = StudentFormStore(mode: .new, classes: store.activeClasses, today: store.today)
-        form.memberCounts = Dictionary(grouping: store.activeStudents.compactMap(\.classID)) { $0 }.mapValues(\.count)
-        newStudent = form
+        newStudent = store.form(.new)
     }
 
     private func createClass() {
@@ -205,12 +213,13 @@ public struct StudentsView: View {
                 meetingDays: [.tuesday, .thursday, .saturday], startTime: nil, endTime: nil, archivedAt: nil
             )
             newStudent?.classAdded(physics)
-        case .newStudentFilled, .newStudentInvalid:
-            newStudent = StudentFormSheet.fixture(
-                invalid: boardState == .newStudentInvalid,
-                classes: store.activeClasses,
-                today: store.today
-            )
+        case .newStudentFilled, .newStudentInvalid, .newStudentClass9, .newStudentClassPicker, .newStudentSchool,
+             .newStudentEnd:
+            let form = StudentFormSheet.fixture(invalid: boardState == .newStudentInvalid, register: store)
+            if boardState == .newStudentClass9 {
+                form.classLevel = .nine
+            }
+            newStudent = form
         case nil:
             break
         }

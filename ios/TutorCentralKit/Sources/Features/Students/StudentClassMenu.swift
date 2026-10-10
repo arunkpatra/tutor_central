@@ -26,15 +26,15 @@ struct ClassMenu: View {
             }
             if canAdd {
                 Divider()
-                Button("New class…", systemImage: "plus") {
+                Button("New batch…", systemImage: "plus") {
                     Keyboard.dismiss()
                     newClass()
                 }
             }
         } label: {
-            PickerTile(label: "Class", value: store.classLabel) {}
+            PickerTileLabel(label: "Batch", value: store.classroom?.name, placeholder: "No batch yet")
         }
-        .accessibilityLabel("Class, \(store.classLabel)")
+        .accessibilityLabel("Batch, \(store.classLabel)")
     }
 
     /// On for the class chosen; turning one on chooses it (turning the chosen one off leaves it chosen).

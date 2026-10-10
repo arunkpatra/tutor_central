@@ -15,10 +15,16 @@ public struct StudentFormSheet: View {
     let onRemove: (() -> Void)?
     /// Makes a class from the menu's New class… (P7-NewStudent-NewClass); nil hides it (a scanned row).
     let addClass: ((ClassroomDraft) async -> Classroom?)?
+    /// Adds a school from the school sheet's last row (V2); nil hides the row.
+    let addSchool: ((String) async -> School?)?
+    /// The board of the form's end (P10-NewStudent-End): opened scrolled to the notes.
+    let scrolledToEnd: Bool
     @State private var newClass: ClassFormStore?
+    @State var pickingClass = false
+    @State var pickingSchool = false
     @State private var saving = false
     @State private var confirmingDiscard = false
-    @State private var pickingBirthDate = false
+    @State var pickingBirthDate = false
 
     /// `showsFocus` draws the name focused without the keyboard (the empty board); `autofocus` raises the keyboard on
     /// the name of a new student (off for every board state).
@@ -30,8 +36,12 @@ public struct StudentFormSheet: View {
         onClose: @escaping () -> Void,
         onRemove: (() -> Void)? = nil,
         addClass: ((ClassroomDraft) async -> Classroom?)? = nil,
-        boardNewClass: ClassFormStore? = nil
+        addSchool: ((String) async -> School?)? = nil,
+        boardNewClass: ClassFormStore? = nil,
+        boardPicker: StudentFormPicker? = nil,
+        scrolledToEnd: Bool = false
     ) {
+        self.scrolledToEnd = scrolledToEnd
         self.store = store
         self.showsFocus = showsFocus
         self.autofocus = autofocus
@@ -39,7 +49,10 @@ public struct StudentFormSheet: View {
         self.onClose = onClose
         self.onRemove = onRemove
         self.addClass = addClass
+        self.addSchool = addSchool
         _newClass = State(initialValue: boardNewClass)
+        _pickingClass = State(initialValue: boardPicker == .classWheel)
+        _pickingSchool = State(initialValue: boardPicker == .school)
     }
 
     public var body: some View {
@@ -50,10 +63,19 @@ public struct StudentFormSheet: View {
                 save: .init("Save", enabled: store.canSave && !saving, run: save)
             )
             .padding(.horizontal, Tokens.pageSide)
-            ScrollView {
-                fields
-                    .padding(.horizontal, Tokens.pageSide)
-                    .padding(.bottom, Tokens.contentBottom)
+            ScrollViewReader { reader in
+                ScrollView {
+                    fields
+                        .padding(.horizontal, Tokens.pageSide)
+                        .padding(.bottom, Tokens.contentBottom)
+                    Color.clear.frame(height: 0).id(Self.end)
+                }
+                .task {
+                    if scrolledToEnd {
+                        try? await Task.sleep(for: .seconds(Tokens.panel))
+                        reader.scrollTo(Self.end, anchor: .bottom)
+                    }
+                }
             }
             .scrollDismissesKeyboard(.interactively)
         }
@@ -80,11 +102,16 @@ public struct StudentFormSheet: View {
                 onClose: { newClass = nil }
             )
         }
+        .sheet(isPresented: $pickingSchool) {
+            SchoolSheet(store: store, addSchool: addSchool) { pickingSchool = false }
+        }
         .presentationDetents([.large])
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
         .presentationBackground(Tokens.surface1.color)
     }
+
+    static let end = "end"
 
     private var isFix: Bool {
         if case .fix = store.mode {
@@ -107,12 +134,22 @@ public struct StudentFormSheet: View {
             TextWell(
                 label: "Name",
                 text: $store.name,
-                placeholder: "The student's full name",
+                placeholder: "The student's name",
                 error: store.nameError,
                 content: .name,
                 showsFocus: showsFocus && !isFix,
                 autofocus: autofocus && isNew
             )
+            if !isFix {
+                classTile
+                PickerField(label: "School", value: store.schoolTitle, placeholder: "Choose or add") {
+                    Keyboard.dismiss()
+                    pickingSchool = true
+                }
+                if store.showsBoard {
+                    boardMenu
+                }
+            }
             ClassMenu(store: store, canAdd: addClass != nil) { newClass = ClassFormStore(mode: .new) }
             TextWell(
                 label: "Monthly fee",
@@ -129,7 +166,7 @@ public struct StudentFormSheet: View {
             TextWell(
                 label: "Parent's name",
                 text: $store.parentName,
-                placeholder: isFix ? "Parent's name" : "Who you call about this student",
+                placeholder: isFix ? "Parent's name" : "Who you message",
                 error: store.parentNameError,
                 content: .name
             )
@@ -147,6 +184,12 @@ public struct StudentFormSheet: View {
                     Button("Remove this row", action: onRemove).buttonStyle(.destructive(.form))
                 }
             } else {
+                ChipRow(
+                    label: "Parent's message language",
+                    options: MessageLanguage.allCases.map { ($0, $0.title) },
+                    selection: $store.messageLanguage,
+                    helper: store.languageHelper
+                )
                 birthDate
                 gender
                 NotesWell(
@@ -158,67 +201,6 @@ public struct StudentFormSheet: View {
                 )
             }
         }
-    }
-
-    /// The tile with its switch; once on, the day beside the switch opens the system's calendar.
-    private var birthDate: some View {
-        VStack(alignment: .leading, spacing: Tokens.fieldGap) {
-            TileRow(label: "Date of birth") {
-                HStack(spacing: Tokens.rowPaddingDense) {
-                    if store.hasBirthDate {
-                        Button { pickingBirthDate = true } label: { PickerValue(store.birthDate.text) }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel("Date of birth, \(store.birthDate.text)")
-                            .popover(isPresented: $pickingBirthDate) {
-                                DatePicker(
-                                    "Date of birth",
-                                    selection: birthDateBinding,
-                                    in: birthDateRange,
-                                    displayedComponents: .date
-                                )
-                                .datePickerStyle(.graphical)
-                                // Its width (without it the calendar collapses to a sliver: build 10) and the
-                                // centre's day, whatever zone the phone is in.
-                                .calendarPopover(timeZone: DayHeading.india.timeZone)
-                            }
-                    }
-                    // Nothing on one line (the tile fixes the row's size); the switch at the right edge when the
-                    // date goes under the label.
-                    Spacer(minLength: 0)
-                    Switch(isOn: $store.hasBirthDate, label: "Add a date of birth")
-                }
-            }
-            if let error = store.birthDateError {
-                FieldMessage(error)
-            }
-        }
-    }
-
-    private var gender: some View {
-        VStack(alignment: .leading, spacing: Tokens.fieldGap) {
-            HStack(spacing: Tokens.rowGapInner * 2) {
-                Text("Gender").foregroundStyle(Tokens.text2.color)
-                Text("(optional)").foregroundStyle(Tokens.text3.color)
-            }
-            .typeStyle(Tokens.footnote)
-            HStack(spacing: Tokens.inline) {
-                ForEach(Gender.allCases, id: \.self) { gender in
-                    FilterChip(gender.label, isOn: store.gender == gender) { store.toggle(gender) }
-                }
-            }
-        }
-    }
-
-    private var birthDateBinding: Binding<Date> {
-        Binding(
-            get: { store.birthDate.date(in: DayHeading.india) },
-            set: { store.birthDate = Day($0, calendar: DayHeading.india) }
-        )
-    }
-
-    private var birthDateRange: ClosedRange<Date> {
-        let earliest = Day(year: StudentDraft.earliestBirthYear, month: 1, day: 1) ?? store.today
-        return earliest.date(in: DayHeading.india) ... store.today.date(in: DayHeading.india)
     }
 
     private var discardDialog: some View {
@@ -260,19 +242,23 @@ public struct StudentFormSheet: View {
 }
 
 public extension StudentFormSheet {
-    /// The boards' sample (P3-NewStudent-Filled): Riya Sharma in Class 10 Maths at her own fee; `invalid` leaves the
-    /// number a digit short and checks it (P3-NewStudent-Invalid).
-    static func fixture(invalid: Bool, classes: [Classroom], today: Day) -> StudentFormStore {
-        let form = StudentFormStore(mode: .new, classes: classes, today: today)
+    /// The boards' sample (P10-NewStudent-Filled): Riya Sharma at class 5, Vidya Niketan, the Class 10 Maths batch at
+    /// her
+    /// own fee, her parent in Hindi; `invalid` leaves the number a digit short and checks it (P3-NewStudent-Invalid).
+    @MainActor static func fixture(invalid: Bool, register: RegisterStore) -> StudentFormStore {
+        let form = register.form(.new)
         form.name = "Riya Sharma"
+        form.classLevel = .five
+        form.schoolID = register.schools.first { $0.name == "Vidya Niketan" }?.id
         form.select(classID: FakeClassesRepository.maths.id)
         form.feeText = "1,500"
         form.parentName = "Neha Sharma"
         form.digits = invalid ? "981112223" : "9811122233"
+        form.messageLanguage = .hindi
         form.hasBirthDate = true
-        form.birthDate = Day(year: 2011, month: 3, day: 14) ?? today
+        form.birthDate = Day(year: 2016, month: 3, day: 14) ?? register.today
         form.toggle(.female)
-        form.notes = "Board exam in March. Prefers the evening batch."
+        form.notes = "Prefers the evening batch."
         if invalid {
             form.commitPhone()
         }

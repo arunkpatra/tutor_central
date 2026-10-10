@@ -4,7 +4,7 @@ import Foundation
 /// centre's copy, the register, the lists' caches, the queue, the QR image) and this iPhone's settings (haptics,
 /// appearance, reminders). Pending notifications are the notification client's; the caller removes them.
 public enum Wipe {
-    public static let defaultsKeys = ["haptics", "appearance", "reminders", "reminders.asked"]
+    public static let defaultsKeys = ["haptics", "appearance", "reminders", "reminders.asked", "lastMessageLanguage"]
 
     public static func everything(centre: UUID, directory: URL? = nil, defaults: UserDefaults = .standard) {
         let folder = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
