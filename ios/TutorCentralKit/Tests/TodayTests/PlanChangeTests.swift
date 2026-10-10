@@ -34,6 +34,26 @@ import Testing
         #expect(store.changedNote)
     }
 
+    @Test func aMovedStudentTakesTheNewGroupsMaterialNotTheirOld() async throws {
+        // Sahil's lines first, as the record may answer: their old group's material must not pass for the new one's.
+        var board = FakePlansRepository.boardPlan(changed: false, done: false)
+        let sahils = board.items.filter { $0.studentID == FakeStudentsRepository.sahil }
+        board.items = sahils + board.items.filter { $0.studentID != FakeStudentsRepository.sahil }
+        let plans = FakePlansRepository(plans: [board], artefacts: FakePlansRepository.boardArtefacts)
+        let store = await PlanStoreTests().store(plans: plans)
+        let before = try await plan(plans)
+        let groupOne = (
+            check: before.artefact(group: 1, kind: .check)?.id,
+            set: before.artefact(group: 1, kind: .sheet, homework: false)?.id,
+            sheet: before.artefact(group: 1, kind: .sheet, homework: true)?.id
+        )
+        await store.move(student: FakeStudentsRepository.sahil, to: 1)
+        let after = try await plan(plans).items(of: FakeStudentsRepository.sahil)
+        #expect(after.first { $0.kind == .check }?.artefactID == groupOne.check)
+        #expect(after.first { $0.kind == .practise }?.artefactID == groupOne.set)
+        #expect(after.first { $0.kind == .homework }?.artefactID == groupOne.sheet)
+    }
+
     @Test func skipHomeworkStrikesTheBitAndSaysSkippedToday() async throws {
         let store = await PlanStoreTests().store()
         await store.skipHomework(student: FakeStudentsRepository.nikhil)
@@ -90,6 +110,27 @@ import Testing
         await store.keep(choices: PlanChoices(groups: 2, subjects: [1: "Science", 2: "Mathematics"]), for: .wednesday)
         let evening = try #require(classes.classes.first { $0.id == PlanTest.evening.id })
         #expect(evening.planPattern[.wednesday] == PlanPattern(groups: 2, subjects: ["Science", "Mathematics"]))
+    }
+
+    @Test func keepWithANewGroupCountKeepsTheSubjectsTheSheetShows() async throws {
+        // Today's plan numbers its groups otherwise than the two-group preview: Group 1 is Mathematics.
+        var board = FakePlansRepository.boardPlan(changed: false, done: false)
+        board.groups = board.groups.map { group in
+            PlanGroup(
+                number: group.number, subject: group.number == 1 ? "Mathematics" : "Science", chapter: group.chapter,
+                skill: group.skill, classLevels: group.classLevels, memberIDs: group.memberIDs, skillID: group.skillID
+            )
+        }
+        let classes = FakeClassesRepository(classes: FakeClassesRepository.withEvening)
+        let store = await PlanStoreTests().store(
+            plans: FakePlansRepository(plans: [board], artefacts: FakePlansRepository.boardArtefacts), classes: classes
+        )
+        let two = PlanChoices(groups: 2, subjects: [:])
+        let shown = await store.preview(two).map(\.subject)
+        #expect(shown == ["Science", "Mathematics"])
+        await store.keep(choices: two, for: .wednesday)
+        let evening = try #require(classes.classes.first { $0.id == PlanTest.evening.id })
+        #expect(evening.planPattern[.wednesday] == PlanPattern(groups: 2, subjects: shown))
     }
 
     @Test func aMoveBeforeTheSheetLandsFollowsTheNewGroup() async throws {
