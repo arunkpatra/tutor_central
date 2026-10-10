@@ -15,9 +15,10 @@ public enum AttendanceBoardState: Sendable {
     case saveFailed
 }
 
-/// The Attendance tab's root, to P4-Attendance-Mark-Fresh (dark and light), -ClassMenu, -Exceptions, -Saved,
-/// -PastDate, P4-Absence-Alert and P4-Attendance-Empty: the date and the class, everyone present, the whole row
-/// toggles, Save in a footer above the tab bar; once saved, the absent students with Tell parent.
+/// The mark screen, pushed (D65; P10-Attendance-Pushed over P4-Attendance-Mark-Fresh, -ClassMenu, -Exceptions, -Saved,
+/// -PastDate, P4-Absence-Alert and P4-Attendance-Empty): Back, the title and the quiet History; the date and the batch,
+/// everyone present, the whole row toggles, Save in the footer band above the safe area; once saved, the absent
+/// students with Tell parent.
 public struct AttendanceView: View {
     @Bindable var store: AttendanceStore
     let actions: AttendanceActions
@@ -29,6 +30,7 @@ public struct AttendanceView: View {
     @State private var picksClass = false
     @State private var alert: AbsenceAlert?
     @Environment(\.openURL) private var openURL
+    @Environment(\.dismiss) private var dismiss
 
     public init(
         store: AttendanceStore, actions: AttendanceActions, boardState: AttendanceBoardState? = nil,
@@ -74,6 +76,7 @@ public struct AttendanceView: View {
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if store.hasStudents {
                 FooterButton { footer }
@@ -90,17 +93,11 @@ public struct AttendanceView: View {
     }
 
     private var titleRow: some View {
-        HStack(alignment: .lastTextBaseline) {
-            Text("Attendance")
-                .typeStyle(Tokens.display)
-                .singleLineTitle()
-                .foregroundStyle(Tokens.text.color)
-                .accessibilityAddTraits(.isHeader)
-            Spacer(minLength: Tokens.inline)
-            if store.hasStudents {
-                Button("History", action: actions.openHistory).buttonStyle(.quiet)
-            }
-        }
+        BackRow(
+            title: "Attendance",
+            action: store.hasStudents ? ("History", actions.openHistory) : nil,
+            back: { dismiss() }
+        )
     }
 
     private var pickers: some View {
@@ -117,7 +114,7 @@ public struct AttendanceView: View {
                     .calendarPopover(timeZone: DayHeading.india.timeZone)
                 }
                 .rowDivider()
-            PickerLine(label: "Class", value: store.className) { picksClass = true }
+            PickerLine(label: "Batch", value: store.className) { picksClass = true }
                 .popover(isPresented: $picksClass, arrowEdge: .top) {
                     ClassMenu(options: store.classOptions, chosen: store.draft.classID) { classID in
                         picksClass = false

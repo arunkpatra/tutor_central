@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Member (class detail): avatar 40; name and the parent's phone; "Class fee" in footnote text2, or the student's own
+/// Member (class detail): avatar 40; name and the parent's phone; "Batch fee" in footnote text2, or the student's own
 /// fee in footnoteStrong text (P3-ClassDetail); chevron.
 public struct MemberRow: View {
     let initials: String
@@ -25,7 +25,7 @@ public struct MemberRow: View {
             if let fee {
                 Text(fee).typeStyle(Tokens.footnoteStrong).monospacedDigit().foregroundStyle(Tokens.text.color)
             } else {
-                Text("Class fee").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                Text("Batch fee").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
             Chevron()
         }

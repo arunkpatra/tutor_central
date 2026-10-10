@@ -16,7 +16,7 @@ struct ClassMenu: View {
             // Toggles, not a Picker: a menu Picker drops the second line (the count); a toggle keeps the tick and
             // the line.
             Section {
-                Toggle("No class", isOn: chosen(nil))
+                Toggle("No batch", isOn: chosen(nil))
                 ForEach(store.classes) { classroom in
                     Toggle(isOn: chosen(classroom.id)) {
                         Text(classroom.name)

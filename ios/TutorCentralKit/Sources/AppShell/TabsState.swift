@@ -41,13 +41,28 @@ import SwiftUI
         }
     }
 
+    /// Attendance's mark root on the tab that asked (Today's Mark attendance, a batch's, History's session, a student's
+    /// month): pushed, or come back to when it is already on that stack, so History's session does not stack a second.
+    func showAttendance() {
+        var path = paths[selected, default: []]
+        if let index = path.lastIndex(of: .attendance) {
+            path.removeSubrange((index + 1)...)
+        } else {
+            path.append(.attendance)
+        }
+        paths[selected] = path
+    }
+
     /// A link opens its tab at the root, then its screen (a student's detail; the fees month is set by the caller).
     /// Returns false when this build has no screen for it, so the caller can say so.
     func open(_ link: DeepLink) -> Bool {
         selected = link.tab
         paths[link.tab] = []
         switch link {
-        case .today, .authCallback, .attendance: return true
+        case .today, .authCallback: return true
+        case .attendance:
+            paths[link.tab] = [.attendance]
+            return true
         case let .event(id):
             paths[link.tab] = [.event(id)]
             return true
@@ -72,6 +87,8 @@ enum Route: Hashable {
     /// Teacher reminders, from Settings.
     case reminders
     case student(UUID)
+    /// Attendance's mark root (D65: under More, and pushed from Today and a batch).
+    case attendance
     case classes
     case classroom(UUID)
     case history

@@ -117,8 +117,8 @@ struct MembersSection: View {
                 if members.isEmpty {
                     EmptyRow(
                         symbol: "person.2",
-                        title: "No students in this class",
-                        line: "Add students to the class from its page."
+                        title: "No students in this batch",
+                        line: "Add students to the batch from its page."
                     )
                 } else {
                     VStack(spacing: 0) {
@@ -144,7 +144,7 @@ struct NoStudentsCard: View {
             EmptyState(
                 symbol: "checkmark.circle",
                 title: "No students yet",
-                line: "Add your students and their classes first. Marking who came then takes two taps.",
+                line: "Add your students and their batches first. Marking who came then takes two taps.",
                 action: .init("Go to Students", run: openStudents),
                 size: .screen
             )

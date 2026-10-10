@@ -40,7 +40,7 @@ public struct AddMembersSheet: View {
                 if candidates.isEmpty {
                     EmptyState(
                         symbol: "person.2",
-                        title: "Everyone is in this class",
+                        title: "Everyone is in this batch",
                         line: "Add a student from the Students tab first."
                     )
                 } else {
@@ -59,7 +59,7 @@ public struct AddMembersSheet: View {
                             }
                         }
                         Text(
-                            "A student moved from another class keeps a fee of their own; otherwise this class's fee "
+                            "A student moved from another batch keeps a fee of their own; otherwise this batch's fee "
                                 + "applies from next month."
                         )
                         .typeStyle(Tokens.footnote)

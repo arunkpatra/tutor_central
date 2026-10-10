@@ -29,7 +29,7 @@ struct ScanReviewView: View {
                         PickerTile(label: "Add to", value: store.className ?? "No class") {}
                     }
                     .accessibilityLabel("Add to, \(store.className ?? "No class")")
-                    Text("Everyone ticked joins this class. A fee read from the page stays as the student's own.")
+                    Text("Everyone ticked joins this batch. A fee read from the page stays as the student's own.")
                         .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                         .padding(.horizontal, Tokens.rowGapInner)
                 }

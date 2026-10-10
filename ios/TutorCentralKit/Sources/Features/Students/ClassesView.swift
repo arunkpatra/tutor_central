@@ -35,10 +35,10 @@ public struct ClassesView: View {
                     Card {
                         EmptyState(
                             symbol: "book.closed",
-                            title: "No classes yet",
-                            line: "Classes you add appear here with their meeting days and fee. "
-                                + "A class takes attendance in one go and gives new students their fee.",
-                            action: .init("Create a class", emphasis: .primary, run: createClass)
+                            title: "No batches yet",
+                            line: "Batches you add appear here with their meeting days and fee. "
+                                + "A batch takes attendance in one go and gives new students their fee.",
+                            action: .init("Create a batch", emphasis: .primary, run: createClass)
                         )
                     }
                 } else {
@@ -74,11 +74,11 @@ public struct ClassesView: View {
 
     private var navigationRow: some View {
         ZStack {
-            Text("Classes").typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
+            Text("Batches").typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
             HStack {
                 IconButton(symbol: "chevron.left", label: "Back") { dismiss() }
                 Spacer()
-                IconButton(symbol: "plus", label: "Create a class", action: createClass)
+                IconButton(symbol: "plus", label: "Create a batch", action: createClass)
             }
         }
     }
@@ -86,7 +86,7 @@ public struct ClassesView: View {
     private var classes: some View {
         let shown = register.activeClasses
         return VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader(shown.count == 1 ? "1 class" : "\(shown.count) classes")
+            SectionHeader(shown.count == 1 ? "1 batch" : "\(shown.count) batches")
             Card {
                 VStack(spacing: 0) {
                     ForEach(Array(shown.enumerated()), id: \.element.id) { index, classroom in
@@ -105,7 +105,7 @@ public struct ClassesView: View {
     private var unassigned: some View {
         let students = register.unassigned
         return VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Not in a class")
+            SectionHeader("Not in a batch")
             ClassRow(
                 symbol: "person.crop.circle.badge.questionmark",
                 name: students.count == 1 ? "1 student" : "\(students.count) students",
@@ -114,7 +114,7 @@ public struct ClassesView: View {
             ) { navigation.showUnassigned() }
                 .lineLimit(1)
                 .surface(radius: Tokens.radiusCard)
-            Text("A student without a class is counted and billed on their own fee; attendance is taken by class.")
+            Text("A student without a batch is counted and billed on their own fee; attendance is taken by batch.")
                 .typeStyle(Tokens.footnote)
                 .foregroundStyle(Tokens.text3.color)
                 .padding(.horizontal, Tokens.rowGapInner)

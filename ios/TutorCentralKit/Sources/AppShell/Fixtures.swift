@@ -160,7 +160,7 @@ public enum Fixtures {
     public static func initialState(for state: LaunchState) -> SessionStore.State {
         switch state {
         case .onboarding: .needsOnboarding(FakeAuthRepository.meera)
-        case .todayEmpty, .laterStudents, .laterAttendance, .laterMore, .settings, .studentsEmpty,
+        case .todayEmpty, .laterStudents, .laterAttendance, .laterSchool, .laterMore, .settings, .studentsEmpty,
              .studentsFew,
              .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
              .studentNewInvalid, .studentNewNewClass, .studentNewClassMade, .student, .studentArchived,

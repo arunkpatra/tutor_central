@@ -150,7 +150,7 @@ public struct TodayView: View {
             ) { actions.openFeesDue() }
             StatTile(
                 value: "\(store.counts.classesToday)",
-                label: "Classes today",
+                label: "Batches today",
                 tone: tone(store.counts.classesToday)
             ) {
                 actions.openSchedule()

@@ -116,7 +116,7 @@ struct AttendanceCard: View {
     let seeAll: () -> Void
 
     private var emptyLine: String {
-        "Mark \(store.student?.firstName ?? "the student")'s class from the Attendance tab to see this month here."
+        "Mark \(store.student?.firstName ?? "the student")'s batch from Attendance in More to see this month here."
     }
 
     var body: some View {

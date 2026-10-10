@@ -41,7 +41,7 @@ import Testing
         #expect(store.visible.map(\.name) == ["Dev Kumar", "Meher Shah", "Nikhil Das"] && store
             .countLine == "3 in Class 8 Science")
         store.filter = .unassigned
-        #expect(store.visible.map(\.name) == ["Sahil Verma"] && store.countLine == "1 with no class")
+        #expect(store.visible.map(\.name) == ["Sahil Verma"] && store.countLine == "1 with no batch")
         store.filter = .all
         store.search = "sh"
         // "sh" is in Lakshmi too: the board drew three rows, the rule (any part of the name) finds four.

@@ -145,7 +145,7 @@ public struct ClassFormSheet: View {
             }
             .buttonStyle(.destructive())
             .environment(\.buttonIconSize, Tokens.iconSmall)
-            Text("Its students stay in Students with no class. Attendance history is kept.")
+            Text("Its students stay in Students with no batch. Attendance history is kept.")
                 .typeStyle(Tokens.footnote)
                 .foregroundStyle(Tokens.text3.color)
                 .multilineTextAlignment(.center)
@@ -173,7 +173,7 @@ public struct ClassFormSheet: View {
                     DialogView(
                         title: "Archive \(store.name)?",
                         message: "\(membersCount == 1 ? "1 student stays" : "\(membersCount) students stay") in "
-                            + "Students with no class. Attendance history is kept. The class leaves every list.",
+                            + "Students with no batch. Attendance history is kept. The batch leaves every list.",
                         action: "Archive",
                         destructive: false,
                         onCancel: { self.dialog = nil },

@@ -35,8 +35,7 @@ public enum DeepLink: Equatable, Sendable {
         case .today, .authCallback: .today
         case .student: .students
         case .fees: .fees
-        case .attendance: .attendance
-        case .event: .more
+        case .attendance, .event: .more
         }
     }
 }

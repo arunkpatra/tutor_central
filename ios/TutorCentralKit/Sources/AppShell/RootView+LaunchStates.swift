@@ -27,7 +27,8 @@ extension RootView {
         case .laterAttendance, .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaveFailed,
              .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
-             .historyEmpty: .attendance
+             .historyEmpty: .more
+        case .laterSchool: .school
         case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .more
         case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone,
              .eventDeleteConfirm,
@@ -133,7 +134,7 @@ extension RootView {
 
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.
     static func initialRoutes(for state: LaunchState) -> [Route] {
-        if let routes = settingsRoutes(for: state) {
+        if let routes = settingsRoutes(for: state) ?? attendanceRoutes(for: state) {
             return routes
         }
         return switch state {
@@ -142,13 +143,23 @@ extension RootView {
             [.student(FakeStudentsRepository.akshita)]
         case .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: [.classes]
         case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
-        case .history, .historyByStudent, .historyEmpty: [.history]
-        case .historyStudent: [.history, .historyStudent(FakeAttendanceRepository.hemanth)]
         // U33-Event-Gone: a link to an event that was deleted.
         case .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventDeleteConfirm, .eventGone:
             state == .eventGone ? [.event(Fixtures.goneEvent)] : [.schedule]
         case .tasks, .tasksEmpty: [.tasks]
         default: studentFeesRoutes(for: state)
+        }
+    }
+
+    /// Attendance under More (D65): the mark root pushed, History and a student's month over it.
+    private static func attendanceRoutes(for state: LaunchState) -> [Route]? {
+        switch state {
+        case .attendance, .attendanceClassMenu, .attendanceExceptions, .attendanceSaveFailed, .attendanceSaved,
+             .attendanceAlert, .attendancePast, .attendanceEmpty, .offlineAttendanceSaved:
+            [.attendance]
+        case .history, .historyByStudent, .historyEmpty: [.attendance, .history]
+        case .historyStudent: [.attendance, .history, .historyStudent(FakeAttendanceRepository.hemanth)]
+        default: nil
         }
     }
 

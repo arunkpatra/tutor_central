@@ -24,7 +24,7 @@ struct SearchAndFilters: View {
                         ForEach(store.activeClasses) { classroom in
                             chip(classroom.name, .classroom(classroom.id))
                         }
-                        chip("No class", .unassigned)
+                        chip("No batch", .unassigned)
                         if store.students.contains(where: \.isArchived) {
                             chip("Archived", .archived)
                         }
@@ -41,13 +41,13 @@ struct SearchAndFilters: View {
     }
 }
 
-/// One compact row that opens the Classes list: the icon tile, "Classes", the class names, the count.
+/// One compact row that opens the batches list: the icon tile, "Batches", the batch names, the count.
 struct ClassesRow: View {
     let classes: [Classroom]
     let open: () -> Void
 
     var body: some View {
-        ClassRow(name: "Classes", summary: classes.map(\.name).joined(separator: " · "), members: classes.count) {
+        ClassRow(name: "Batches", summary: classes.map(\.name).joined(separator: " · "), members: classes.count) {
             open()
         }
         .surface(radius: Tokens.radiusTile)
@@ -87,7 +87,7 @@ struct RegisterList: View {
                 Card { rows }.opacity(store.refreshing ? Tokens.opacityStale : 1)
             }
             if searching {
-                Text("Matches names and phone numbers, in every class and the archive.")
+                Text("Matches names and phone numbers, in every batch and the archive.")
                     .typeStyle(Tokens.footnote)
                     .foregroundStyle(Tokens.text3.color)
                     .padding(.horizontal, Tokens.rowGapInner)
@@ -162,7 +162,7 @@ struct ClassFooter: View {
         HStack(spacing: Tokens.rowPaddingDense) {
             Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
             Spacer(minLength: 0)
-            Button("Open class", action: open).buttonStyle(.quiet).fixedSize()
+            Button("Open batch", action: open).buttonStyle(.quiet).fixedSize()
         }
         .padding(.horizontal, Tokens.rowGapInner)
     }
@@ -200,15 +200,15 @@ struct NoClassesSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Classes")
+            SectionHeader("Batches")
             Card {
                 EmptyRow(
                     symbol: "book.closed",
-                    title: "No classes yet",
-                    line: "Group students into classes to take attendance and set one fee for all."
+                    title: "No batches yet",
+                    line: "Group students into batches to take attendance and set one fee for all."
                 )
             }
-            Button("Create a class", action: createClass).buttonStyle(.secondary()).fixedSize()
+            Button("Create a batch", action: createClass).buttonStyle(.secondary()).fixedSize()
         }
     }
 }
@@ -227,7 +227,7 @@ struct AddMenu: View {
         VStack(spacing: 0) {
             row("Add a student", symbol: "person.badge.plus", action: addStudent).rowDivider(glass: true)
             row("Scan paper register", symbol: "doc.viewfinder", action: scanRegister).rowDivider(glass: true)
-            row("Create a class", symbol: "book.closed", action: createClass)
+            row("New batch", symbol: "book.closed", action: createClass)
         }
         .frame(width: Self.width)
     }

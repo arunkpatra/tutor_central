@@ -2,7 +2,8 @@
 public enum AppTab: String, CaseIterable, Sendable, Hashable {
     case today
     case students
+    /// V2 (Phase 11): the School tab; Attendance moved under More (D65).
+    case school
     case fees
-    case attendance
     case more
 }

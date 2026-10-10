@@ -141,7 +141,7 @@ public struct RootView: View {
             notices.show("That opens in a later build.")
         }
         if case let .attendance(date, classID) = link, case let .ready(workspace) = session.state {
-            openAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
+            loadAttendance(classID: classID, date: date.flatMap(Day.init(iso:)), in: workspace)
         }
         if case let .fees(month) = link, case let .ready(workspace) = session.state {
             openFees(month: Self.linkMonth(month), in: workspace)
@@ -203,7 +203,8 @@ public struct RootView: View {
                 studentFees: { studentFeesView($0) },
                 payments: { paymentsView },
                 reports: { reportsView },
-                tools: { toolsView($0) }
+                tools: { toolsView($0) },
+                school: { SchoolLaterView(build: deps.bundleVersion) }
             )
         }
     }
