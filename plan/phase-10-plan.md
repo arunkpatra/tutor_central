@@ -109,7 +109,7 @@ settle to `docs/design/information-architecture.md` ("Phase 10 boards"), new par
 `design-tokens.md` (with their Swift tokens in the same later PR, D25), and commit as documents (D12). A board's
 figures are illustrative (`docs/design/README.md`).
 
-- [ ] **10.1 The shell** (row 14). The tab bar with Today, Students, School, Fees, More, dark and light; More's
+- [x] **10.1 The shell** (row 14, approved 2026-10-10; seven boards, Attendance under More added). The tab bar with Today, Students, School, Fees, More, dark and light; More's
       layout with Organise (Schedule, Attendance, Reports), Make (Make something, Check a paper, Scan register), App
       (Settings, Account, Help); the School tab empty ("Nothing from a school yet" and the "Ask parents to forward"
       button, a plain label, no icon).

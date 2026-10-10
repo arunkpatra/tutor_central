@@ -13,7 +13,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Approved 2026-10-07 (step 0.2) |
 | Telling the tutor what happened (U33): undo, in place, alert, inline | `feedback.md` | Choosing how any message reaches the tutor; the toast is for Undo only |
 | Information architecture | `information-architecture.md` | Entry flow, tabs and stacks, deep links, launch states, the Phase 2 board list |
-| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames) |
+| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames), `P10-*` (Phase 10, the V2 screens, rows 14 to 20) |
 
 ## Status
 
@@ -28,6 +28,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | 0.7 Phase 6 boards | Approved by the owner 2026-10-08: 44 boards in row 9 of the canvas (`mockups/P6-*.dc.html`); the list, the launch states and what the boards settle in `information-architecture.md`; the new parts and the texts in `components.md` |
 | 0.8 Phase 7 boards | Approved by the owner 2026-10-09: 41 boards in row 10 of the canvas (`mockups/P7-*.dc.html`); the list, the launch states and what the boards settle in `information-architecture.md`; the new parts and the texts in `components.md`; the numbers in `design-tokens.md` |
 | 0.9 Phase 8 boards, the website | Approved by the owner 2026-10-09: 27 boards in row 11 of the canvas (`mockups/P8-*.dc.html`): the five pages at 1280 and 390, dark and light, plus U7 and U24; the list, the web's type scale, what the boards settle and the claims table in `information-architecture.md`; the web parts in `components.md` |
+| 10.1 Phase 10, the shell (V2, `docs/spec-v2.md`) | Approved by the owner 2026-10-10: 7 boards in row 14 of the canvas (`mockups/P10-Shell-*`, `P10-More*`, `P10-School-Empty*`, `P10-Attendance-Pushed`): the five tabs, More's layout, the School tab empty, Attendance under More; the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 10 boards"); the parts in `components.md` |
 
 ## The three directions (step 0.1, decided: A)
 

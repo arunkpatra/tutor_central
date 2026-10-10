@@ -24,8 +24,9 @@ The session gate lives in `AppShell` and is the only thing that decides which of
 | Today | Today | Schedule, Attendance mark (via Mark attendance), class (via a row), student (via a fee row) | A task is added inline, not on a sheet |
 | Students | Students list | Student detail, a student's fees, Class detail, Classes list | New student, Edit student, New class, Edit class, Scan register, archive and delete confirmations |
 | Fees | Fees (month) | Parent payments (via Payments), Student detail (via a row) | Generate month, Mark paid, Waive, Remind, Receipt |
-| Attendance | Attendance (Mark) | History (by date, by student, one student's month); a saved class reopens on the Mark root by date and class | Absence alert |
-| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account (its password sheet, sign out, Delete account), Help; Settings pushes Parent payments, Teacher reminders, Account, Help and Pending changes (also reached from the failed-send banner on any tab root) | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
+| Attendance (V1; under More from Phase 11, D65) | Attendance (Mark) | History (by date, by student, one student's month); a saved class reopens on the Mark root by date and class | Absence alert |
+| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account (its password sheet, sign out, Delete account), Help; Settings pushes Parent payments, Teacher reminders, Account, Help and Pending changes (also reached from the failed-send banner on any tab root). From Phase 11 (P10-More): Organise holds Schedule, Attendance (the Mark root pushed, with History), Tasks, Classes, Reports; Make holds Make something (AI Assistant's successor, Phase 15), Check a paper, Scan register; App holds Settings, Account, Help | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
+| School (V2, from Phase 11; its content Phase 13) | School: items by date, or the empty card | An item, the exam calendar, exam preparation (Phase 10 boards, step 10.5) | Items for confirmation, Ask parents to forward, the "+" menu |
 
 Each tab keeps its own navigation stack. Tapping the active tab pops to its root. A student detail reached
 from Today or Fees is pushed on that tab's stack, not a jump to the Students tab.
@@ -37,7 +38,8 @@ from Today or Fees is pushed on that tab's stack, not a jump to the Students tab
 | `today` | The Today tab root |
 | `student/<id>` | Student detail on the Students tab |
 | `fees?month=YYYY-MM` | The Fees tab at that month |
-| `attendance?date=YYYY-MM-DD&class=<id>` | Attendance mark for that day and class |
+| `attendance?date=YYYY-MM-DD&class=<id>` | Attendance mark for that day and class (from Phase 11, pushed on the More tab) |
+| `school/<item>` | A school item on the School tab (V2, Phase 13) |
 | `event/<id>` | The event in Schedule on the More tab |
 
 Notifications (Phase 7) carry these links: a class reminder opens `attendance?date=&class=`, an event reminder `event/<id>`, the
@@ -701,3 +703,48 @@ is the store's; search shows the first three.
 | `Store-4-Scan` | `scan-review` | Scan a register | Photograph your register | Your students are read from the page, ready to add. |
 | `Store-5-Check` | `check-result` | Check a paper | Check a paper in minutes | A suggested mark for every answer. You decide. |
 | `Store-6-Paper` | `ai-result-paper` | Teaching tools | A question paper, ready to share | Pick a topic and a level. Copy it or share it as a PDF. |
+
+## Phase 10 boards (V2, `docs/spec-v2.md`): step 10.1, the shell (approved 2026-10-10)
+
+Row 14 of the canvas (y 37200; the title note at 36900); sources `mockups/P10-*.dc.html`. Dark for every state; light for the
+three tab roots. Content is the seed's on Wednesday 7 October 2026 at 16:35, as the V1 boards draw it. The V2 boards extend the
+approved V1 boards; what a V2 board does not redraw stays as V1 built it (D56).
+
+| Board | Source |
+|---|---|
+| Today with the five tabs (dark and light): Today, Students, School, Fees, More; Today's content as V1 built it until step 10.3 | `P10-Shell-Today`, `-Light` |
+| More (dark and light): Organise, Make, App | `P10-More`, `-Light` |
+| The School tab with nothing yet (dark and light) | `P10-School-Empty`, `-Light` |
+| Attendance reached from More | `P10-Attendance-Pushed` |
+
+Phase 11 builds these states (the light twins from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `today` | Today with the five-tab bar (every tab root follows: `students`, `fees`, `more`, `school-empty`) |
+| `more` | The More root with Organise, Make and App (supersedes P7-More) |
+| `school-empty` | The School tab with nothing from a school yet: the empty card and its two buttons |
+| `attendance` | The Mark root pushed on the More tab, Save attendance in the footer (every attendance state follows: `attendance-exceptions`, `-saved`, `-alert`, `-past`, `-empty`, `-class-menu`) |
+
+What the boards settle:
+
+- **The tab bar** holds Today, Students, School, Fees, More (`sun.max`, `person.2`, `building.columns`, `indianrupeesign`, `ellipsis`).
+  Attendance leaves the bar and keeps its two screens unchanged under More (D65): the Mark root is pushed with a Back row, its
+  title and the quiet History, and its Save attendance button sits in a footer band above the safe area (12 of ground above,
+  `pageSide` beside, 50 below) instead of above the tab bar. Today's Mark attendance, a class detail's Mark attendance and the
+  `attendance?date=&class=` link open it the same way, each on its own tab's stack.
+- **More** is three list cards: Organise (Schedule, Attendance, Tasks, Classes, Reports), Make (Make something, Check a paper, Scan
+  register), App (Settings, Account, Help). Tasks and Classes stay: the Tasks screen with Clear and the Classes list have no
+  other way in from More, and nothing from V1 is dropped (D56). Until Phase 15 builds Make something, its row opens AI
+  Assistant as V1's row did (the same screen under the new name is a Phase 15 decision, not a Phase 11 one).
+- **The word on screen stays "class"** (the tile "Classes today", the row "Classes", the picker "Class"). The spec says "batch"
+  for V1's class; D56 and D65 say nothing is renamed.
+- **The School tab** is a tab root with the large title and a "+" icon button (its menu, From a photo and Paste a message, is
+  step 10.5's). Empty, it shows one card: `building.columns`, "Nothing from a school yet", the line "Tests, homework, notices
+  and holidays appear here, by student, once a school's message or a photo of it reaches Tutor Central.", the primary Ask parents
+  to forward (the message that starts the flow, spec section 8) and the secondary Add from a photo, both plain labels; under
+  the card the footnote "From WhatsApp, share the school's message to Tutor Central. From Photos, share a timetable or a
+  circular. You check each item before it is kept." Until Phase 13 builds the tab's content, Phase 11 shows the Later card in
+  its place (P2-Later's pattern, as V1 did for a tab that came later), so no button on screen does nothing.
+- **Today** keeps V1's content (the greeting, the tiles, the next class, Today, Coming up, Tasks, the Create row) until step
+  10.3 redraws it around the plan.

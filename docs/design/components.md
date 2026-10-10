@@ -592,3 +592,20 @@ state is defined by the keyboard being up (P8-Event-Edit-Keyboard).
 
 The texts are on the boards' sources; `/privacy` and `/terms` are the owner's once he fills the `[OWNER: …]` placeholders and
 reviews the claims table in `information-architecture.md`.
+
+## Phase 10 parts (step 10.1, approved 2026-10-10): the shell
+
+**Tab bar, five tabs:** Today `sun.max`, Students `person.2`, School `building.columns`, Fees `indianrupeesign`, More `ellipsis`;
+everything else as the Kit's tab bar. Attendance is no longer a tab (D65).
+
+**More's rows:** the Setting row with its symbol: Schedule `calendar`, Attendance `checkmark.circle`, Tasks `checklist`, Classes
+`book.closed`, Reports `chart.bar`; Make something `sparkles`, Check a paper `doc.text.magnifyingglass`, Scan register
+`doc.viewfinder`; Settings `gearshape`, Account `person.crop.circle`, Help `questionmark.circle`.
+
+**Empty card with two buttons (the School tab):** the empty-state pattern inside a list card (symbol 28 `text3`, `headline`,
+`subhead` `text2` at most 280 wide), then the primary 50 and a secondary 46 at the card's full width minus its padding, 10 apart,
+8 under the line; the card's padding 28 20 20. Buttons carry plain labels, no symbol (the owner, 2026-10-08).
+
+**Footer band on a pushed screen (Attendance under More):** the Phase 6 form footer: a band of `ground` 130 high at the bottom,
+the primary 50 at 50 above the bottom edge (the safe area), `pageSide` beside; the content scrolls under it. After a save the
+button becomes the Saved mark as on the root.
