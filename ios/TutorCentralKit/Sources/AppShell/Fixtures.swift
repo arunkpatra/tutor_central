@@ -172,7 +172,8 @@ public enum Fixtures {
              .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
              .eventGone,
              .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayScrolled, .todayPlanning,
-             .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayAddingTask, .todayAfterClose,
+             .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayEvening, .todayAddingTask,
+             .todayAfterClose,
              .close, .closeScrolled, .closePlacement, .more, .feesEmpty, .fees,
              .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
              .feesGenerate,
@@ -246,7 +247,7 @@ public enum Fixtures {
     static func attendance(for state: LaunchState) -> [AttendanceSession] {
         switch state {
         case .history, .historyByStudent, .historyStudent, .student, .studentFeesDue, .studentFees, .schedule,
-             .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone, .eventDeleteConfirm,
+             .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone, .eventDeleteConfirm, .todayEvening,
              .reports,
              .reportsAttendance,
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
@@ -259,15 +260,14 @@ public enum Fixtures {
     /// Each state's clock: the boards' Wednesday at 18:30, or the minute a board names (P4-Attendance-Mark-Saved and
     /// P4-Absence-Alert are saved at 18:32).
     static func clock(for state: LaunchState) -> Date {
-        switch state {
+        if let today = todayClock(state) {
+            return today
+        }
+        return switch state {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
-        case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
-        case _ where planStates.contains(state) && state != .todayAfterClose: india(day: 7, hour: 16, minute: 35)
-        case .todayNoBatch: india(day: 10, hour: 9, minute: 30)
         case _ where offlineStates.contains(state): offlineClock(state)
         case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
-        case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
         case _ where closeStates.contains(state): india(day: 7, hour: 17, minute: 5)
         default: now
         }
@@ -276,16 +276,12 @@ public enum Fixtures {
     /// Today's tiles on the boards: ten students, ₹4,000 due (the seed's four unpaid), the classes meeting that day.
     static func counts(for state: LaunchState) -> TodayCounts {
         switch state {
-        case .today, .todayAddingTask, .todayAI, .todayAfterClose, .syncSending, .syncSent, .syncFailed:
+        case .today, .todayEvening, .todayAddingTask, .todayAI, .todayAfterClose, .syncSending, .syncSent, .syncFailed:
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case _ where planStates.contains(state): TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoBatch: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero
         }
-    }
-
-    static func india(day: Int, hour: Int, minute: Int) -> Date {
-        DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? now
     }
 
     /// P3-StudentDetail-Archived: Akshita archived on the boards' day.
@@ -294,5 +290,23 @@ public enum Fixtures {
         var archived = student
         archived.archivedAt = now
         return archived
+    }
+}
+
+extension Fixtures {
+    static func india(day: Int, hour: Int, minute: Int) -> Date {
+        DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? now
+    }
+
+    /// Today's states' clocks: the plan's at 16:35, after the close at 18:40, the evening at 19:30, Saturday's 09:30.
+    static func todayClock(_ state: LaunchState) -> Date? {
+        switch state {
+        case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
+        case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
+        case _ where planStates.contains(state): india(day: 7, hour: 16, minute: 35)
+        case .todayNoBatch: india(day: 10, hour: 9, minute: 30)
+        case .todayEvening: india(day: 7, hour: 19, minute: 30)
+        default: nil
+        }
     }
 }

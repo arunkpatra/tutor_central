@@ -103,6 +103,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case todayPlanChange = "today-plan-change"
     /// Saturday 10 October: no batch, the next on Monday (P10-Today-NoBatch).
     case todayNoBatch = "today-no-batch"
+    /// Today at 19:30 (V1's store page, Store-1-Today, until Phase 16 redoes the store boards).
+    case todayEvening = "today-evening"
     case todayAddingTask = "today-adding-task"
     /// The hero after the close over the plan's cards (P10-Today-AfterClose, without To parents): the Evening batch
     /// closed at 18:32.

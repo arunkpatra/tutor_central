@@ -11,7 +11,6 @@ extension LaunchStateTests {
         ] {
             #expect(LaunchState(rawValue: name) != nil, "\(name)")
         }
-        #expect(LaunchState(rawValue: "today-evening") == nil)
         #expect(LaunchState(rawValue: "today-no-class") == nil)
     }
 }
