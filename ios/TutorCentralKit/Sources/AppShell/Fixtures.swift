@@ -40,10 +40,10 @@ public enum Fixtures {
             students: students,
             classes: FakeClassesRepository(classes: register(for: state).classes),
             attendance: attendance,
-            messages: FakeMessageLogRepository(
-                logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed,
-                now: { clock(for: state) }
-            ),
+            messages: messages(for: state),
+            schools: FakeSchoolsRepository(),
+            textbooks: FakeTextbooksRepository.seeded(),
+            record: FakeRecordRepository(),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
@@ -63,6 +63,13 @@ public enum Fixtures {
             now: { clock(for: state) },
             fixedClock: true,
             bundleVersion: "1.0 (14)"
+        )
+    }
+
+    /// The message log: Hemanth's absence alert and the fee reminders the boards show.
+    @MainActor static func messages(for state: LaunchState) -> FakeMessageLogRepository {
+        FakeMessageLogRepository(
+            logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed, now: { clock(for: state) }
         )
     }
 

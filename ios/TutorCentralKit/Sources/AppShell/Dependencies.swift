@@ -12,6 +12,11 @@ public struct Dependencies: Sendable {
     public let classes: any ClassesRepository
     public let attendance: any AttendanceRepository
     public let messages: any MessageLogRepository
+    /// V2's record (Phase 11): the schools, the textbooks and each student's chapters and skills, the checks and
+    /// homework.
+    public let schools: any SchoolsRepository
+    public let textbooks: any TextbooksRepository
+    public let record: any RecordRepository
     public let events: any EventsRepository
     public let tasks: any TasksRepository
     public let fees: any FeesRepository
@@ -48,6 +53,9 @@ public struct Dependencies: Sendable {
         classes: any ClassesRepository,
         attendance: any AttendanceRepository,
         messages: any MessageLogRepository,
+        schools: any SchoolsRepository,
+        textbooks: any TextbooksRepository,
+        record: any RecordRepository,
         events: any EventsRepository,
         tasks: any TasksRepository,
         fees: any FeesRepository,
@@ -72,6 +80,9 @@ public struct Dependencies: Sendable {
         self.classes = classes
         self.attendance = attendance
         self.messages = messages
+        self.schools = schools
+        self.textbooks = textbooks
+        self.record = record
         self.events = events
         self.tasks = tasks
         self.fees = fees
@@ -110,6 +121,9 @@ public struct Dependencies: Sendable {
             classes: SupabaseClassesRepository(client: client),
             attendance: SupabaseAttendanceRepository(client: client),
             messages: SupabaseMessageLogRepository(client: client),
+            schools: SupabaseSchoolsRepository(client: client),
+            textbooks: SupabaseTextbooksRepository(client: client),
+            record: SupabaseRecordRepository(client: client),
             events: SupabaseEventsRepository(client: client),
             tasks: SupabaseTasksRepository(client: client),
             fees: SupabaseFeesRepository(client: client),

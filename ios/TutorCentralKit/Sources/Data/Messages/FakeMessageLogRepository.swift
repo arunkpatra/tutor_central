@@ -34,13 +34,18 @@ import Foundation
     public private(set) var logged: [UUID] = []
     public private(set) var feeLogged: [FeeLog] = []
     public private(set) var progressLogs: [UUID] = []
+    public private(set) var consentLogs: [UUID] = []
+    /// Messages of the V2 kinds by student (a consent ask, a weekly note), beside the absences and fees above.
+    public var entries: [UUID: [MessageEntry]]
     private let now: () -> Date
 
     public init(
-        logs: [AbsenceLog] = [], feeLogs: [FeeLog] = [], now: @escaping () -> Date = { FakeCountsRepository.fixedNow }
+        logs: [AbsenceLog] = [], feeLogs: [FeeLog] = [], entries: [UUID: [MessageEntry]] = [:],
+        now: @escaping () -> Date = { FakeCountsRepository.fixedNow }
     ) {
         self.logs = logs
         self.feeLogs = feeLogs
+        self.entries = entries
         self.now = now
     }
 
@@ -80,6 +85,30 @@ import Foundation
         try takeError()
         progressLogs.append(studentID)
         return now()
+    }
+
+    public func logConsent(centre _: UUID, studentID: UUID) async throws -> Date {
+        try takeError()
+        consentLogs.append(studentID)
+        entries[studentID, default: []].append(MessageEntry(id: UUID(), kind: .consent, openedAt: now(), language: nil))
+        return now()
+    }
+
+    /// The absences and fee messages as entries, with the V2 entries, newest first.
+    public func messages(centre _: UUID, student: UUID) async throws -> [MessageEntry] {
+        try takeError()
+        let absences = logs.filter { $0.studentID == student }.map {
+            MessageEntry(id: UUID(), kind: .absence, openedAt: $0.openedAt, language: nil)
+        }
+        let fees = feeLogs.filter { $0.studentID == student }.map {
+            MessageEntry(
+                id: UUID(),
+                kind: $0.kind == .reminder ? .reminder : .receipt,
+                openedAt: $0.openedAt,
+                language: nil
+            )
+        }
+        return (absences + fees + entries[student, default: []]).sorted { $0.openedAt > $1.openedAt }
     }
 
     private func takeError() throws {

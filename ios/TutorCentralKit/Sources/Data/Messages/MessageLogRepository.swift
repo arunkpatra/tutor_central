@@ -55,4 +55,8 @@ public protocol MessageLogRepository: Sendable {
     func logFee(centre: UUID, studentID: UUID, kind: FeeLog.Kind, month: Period) async throws -> FeeLog
     /// A progress note's Open WhatsApp, logged before the link opens; when it was opened.
     func logProgress(centre: UUID, studentID: UUID) async throws -> Date
+    /// The consent ask's Open WhatsApp, logged before the link opens (kind `consent`); when it was opened.
+    func logConsent(centre: UUID, studentID: UUID) async throws -> Date
+    /// Everything sent about one student, newest first (the page's Messages section and the consent's "asked on").
+    func messages(centre: UUID, student: UUID) async throws -> [MessageEntry]
 }
