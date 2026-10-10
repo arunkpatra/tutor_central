@@ -609,3 +609,72 @@ everything else as the Kit's tab bar. Attendance is no longer a tab (D65).
 **Footer band on a pushed screen (Attendance under More):** the Phase 6 form footer: a band of `ground` 130 high at the bottom,
 the primary 50 at 50 above the bottom edge (the safe area), `pageSide` beside; the content scrolls under it. After a save the
 button becomes the Saved mark as on the root.
+
+## Phase 10 parts (step 10.2, approved 2026-10-10): Students
+
+**Status word:** the tracking status as a word in its colour, `footnote` 600: On track `ok`, Watch `due`, Not on track `overdue`,
+Not known yet `text3`. On a student row it leads the second line ("Watch · Class 10 Maths"); on the tracking card it is the
+title with its symbol (`checkmark.circle`, `clock`, `exclamationmark.circle`, `circle`).
+
+**Tracking card:** a compact hero (padding 16, radius 18): the status word 17/700 with its symbol 20 and "since <day>" `caption`
+`text3` on the right; the reasons `rowLine` `text2`; a `line` rule; the eyebrow "Next" over the step in `rowLine` `text`, the quiet
+Change (or Place <name>) on the right.
+
+**Picker tile with a helper:** the Phase 3 tile picker (46 high, `surface2`) with a `footnote` `text3` line under it; a tile not
+yet chosen shows its placeholder in `text3` ("Choose", "Choose or add", "No batch yet").
+
+**Chip row in a form:** the Phase 3 gender chips, with a label above and an optional helper under, for the parent's message
+language (English, Hinglish, Hindi, Kannada).
+
+**Choice row on a sheet:** the student picker's row with a leading icon tile (`building.columns`) and a count line; the last row
+holds a field (Add a school, Add a skill) with `plus` in `accentText`.
+
+**Chapter row:** a 20 pt position column `time` `text2`, the chapter name `rowTitle`, a line of its skill states (`4 of 4 secure`),
+`chevron.down` in `text3`; open, the row sits on `surface2` with `chevron.up` and its skills follow.
+
+**Skill row:** indented under its chapter (padding 10 16 10 44): the skill `subhead`, an optional `caption` `text3` line (when it was
+checked), the state mark on the right.
+
+**State mark:** symbol 16 and the word in `caption` 600: Secure `ok` `checkmark.circle`, Practising `due` `clock`, Taught `text2`
+`circle`, Revisit `overdue` `exclamationmark.circle`, Not started `text3` `circle`.
+
+**Subject head:** the first row of a subject's card: the subject 15/700 over its line (`14 chapters from the book · 3 taught`),
+a quiet action on the right (Add a chapter, Add the book).
+
+**Trend card:** a compact card: the title and the percentage `numberRow`; twelve bars 36 high, radius 3, 4 apart, on `lineStrong`
+tracks, each filled to its session's right answers of three (`ok` 3, `due` 2, `overdue` 1 or 0); a `footnote` `text2` line.
+
+**Ladder:** a row per skill area (Reading, Writing, Numbers): the title `rowTitle` and the current step's line on the right; five
+cells, each a 6 pt bar (radius 3) over its name in 11/14: secure steps `ok`, the current step `accent` with its name in
+`accentText` 700, the rest `lineStrong` and `text3`.
+
+**Mark row:** the test `rowTitle`, the school and date `footnote`, the score `numberRow`, a compact chip when below the usual
+(`due`, `clock`).
+
+**Check row:** an eyebrow with the skill `caption` `text2`, the question `subhead`, then the expected answer `footnote` `text3` on the
+left and the Right | Wrong pair on the right: a `well` track 150 wide, radius 13, padding 3, two segments 34 high, radius 10;
+Right on is `ok` fill with `okInk`, Wrong on is `overdue` fill with `overdueInk`, off segments `text2` 600. Untapped is neither.
+
+**Consent section:** a list card with one row in three states (`information-architecture.md`); the agreed row carries
+`checkmark.circle` 22 in `ok` and the quiet Change; the other two carry buttons 44 high (the fee row's) under the line.
+
+**Creating card with a photo:** the Phase 6 creating card with a 56 × 72 thumbnail on the left.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The consent message | "Hello <parent first name>, I use Tutor Central to plan <child>'s classes and keep her progress. To prepare her practice sheets and your weekly note, her name, class, marks and work may be read by an AI service (Claude, by Anthropic). It keeps nothing for training and deletes what it reads within 30 days. Please reply YES if you agree. Thank you." then the tutor's name and the centre (the absence alert's signature); "his" for a boy, "their" when the gender is not set |
+| The ask's footnote | "Opens WhatsApp with the message ready to send. We note the day you asked on <child>'s page; record the reply when it comes. The text is copied too, in case WhatsApp can't open." |
+| Consent, not asked | "Not asked yet" · "Before <child>'s own work, marks or name go to the AI service, her parent agrees once on WhatsApp." · "Ask <parent> on WhatsApp" |
+| Consent, waiting | "Asked <parent> on <day>" · "Waiting for her reply. <child>'s own notes and marking wait too; sheets and sets do not." · Ask again · Parent agreed |
+| Consent, agreed | "<parent> agreed" · "<day> · <number> · her reply on WhatsApp" · Change · the footnote "<child>'s name, marks and work go to the AI service only for his own material and notes. Export or delete everything about him from Edit." |
+| Parent agreed (the sheet) | "<parent> agreed" · "<child>'s parent" · Agreed on (a day tile, today or earlier) · Replied from (the parent's number, editable) · "Kept with <child>'s record: the day and the number. From now her own notes, marking and messages can be made. You can change or remove this any time." · Record the reply |
+| Not known yet | "<child> joined on <day>. Her first week's checks show where she stands; a placement shows it sooner." · Next: "Start with the class's first chapter until the checks say otherwise." · Place <child> |
+| Add a textbook | "Photograph the contents page" · "Open <child>'s <subject> book at its contents page and take a photo. We read the chapter names into a list you check." · the subject tile's helper "<school>, class <n>. <child>'s classmates there get the same chapters." · the notices "The photo goes to our AI service to be read. We keep no copy; the service deletes it within 30 days." "Only the chapter names are kept, nothing from inside the book." "Nothing is saved until you have checked the list and tapped Keep." · "AI can make mistakes. Check every chapter before you keep them." |
+| Reading | "Reading the contents page" · "Usually under a minute. <subject> · <school> · class <n>" |
+| The chapters | "<n> chapters read" with Add a chapter · each row "<k> skills read" · "Keep <n> chapters" · "Open a chapter to change its name or skills, or remove it. Nothing is kept until you tap Keep." |
+| A chapter | "Chapter <k>" · Chapter (the name) · "Skills, <n>" · "What the plan teaches and checks, one at a time, in this order." · Remove this chapter |
+| The placement | "A few questions per subject, so the plan starts at the right place. Ask them in your words and tap what <child> answers. Skip any you don't ask." · "<n> of <m> right" beside each subject · Done · "Done keeps what you tapped. <child>'s chapters start from the first skill she got wrong in each subject." |
+| The school sheet | "One textbook photo per school and class serves everyone there. From class 8 the board is asked on the form." |
+| The form's helpers | Class: "LKG to class 10. The plan and the sheets follow it." · Board: "Shown from class 8. The chapters follow the board's list." · Fee: "Leave empty to use the batch fee once a batch is chosen." / "The batch fee is ₹1,200. This student pays this amount instead." · Language: "Notes to <parent> are written in this language, with English beside them for you." |

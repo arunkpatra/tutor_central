@@ -1773,7 +1773,7 @@
    "y": 37200,
    "w": 393,
    "h": 852,
-   "title": "Phase 10 · 10.1 More: Organise (Schedule, Attendance, Tasks, Classes, Reports), Make (Make something, Check a paper, Scan register), App (Settings, Account, Help) · dark"
+   "title": "Phase 10 · 10.1 More: Organise (Schedule, Attendance, Tasks, Batches, Reports), Make (Make something, Check a paper, Scan register), App (Settings, Account, Help) · dark"
   },
   "P10-More-Light.dc.html": {
    "x": 1419,
@@ -1802,6 +1802,167 @@
    "w": 393,
    "h": 852,
    "title": "Phase 10 · 10.1 Attendance reached from More: V1's mark screen unchanged behind a Back row, Save attendance in the footer above the safe area, no tab bar"
+  },
+  "P10-Students-List.dc.html": {
+   "x": 0,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Students sorted by tracking status: not on track first, then watch, on track, not known yet; the status word leads each row's line · dark"
+  },
+  "P10-Students-List-Light.dc.html": {
+   "x": 473,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Students sorted by tracking status · light"
+  },
+  "P10-Students-Empty.dc.html": {
+   "x": 946,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Students with nothing yet: the same two cards as V1, plain labels, the five tabs"
+  },
+  "P10-NewStudent.dc.html": {
+   "x": 1419,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 New student, empty: name focused, Class, School and Batch to choose, fee, parent; Save until the name and class are in"
+  },
+  "P10-NewStudent-Filled.dc.html": {
+   "x": 1892,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 New student filled: Riya Sharma, class 5, Vidya Niketan, the evening batch, her own fee, her mother's number; Save live"
+  },
+  "P10-NewStudent-Class9.dc.html": {
+   "x": 2365,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 New student at class 9: the Board row appears under School (CBSE, ICSE, Karnataka state, Other)"
+  },
+  "P10-NewStudent-ClassPicker.dc.html": {
+   "x": 2838,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The class wheel over the form: LKG, UKG, 1 to 10"
+  },
+  "P10-NewStudent-End.dc.html": {
+   "x": 3311,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 New student scrolled to the end: the parent's message language, date of birth, gender, notes (the header stays)"
+  },
+  "P10-NewStudent-School.dc.html": {
+   "x": 3784,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The school sheet: the centre's schools with their counts, one chosen, Add a school as the last row"
+  },
+  "P10-Student.dc.html": {
+   "x": 4257,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The student's page: class, school and batch under the name, the tracking status with its reasons and the next step, the parent, this week · dark"
+  },
+  "P10-Student-Light.dc.html": {
+   "x": 4730,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The student's page · light"
+  },
+  "P10-Student-Record.dc.html": {
+   "x": 5203,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The page scrolled to the record: chapters by subject with their skills and state marks (secure, practising, taught, revisit, not started), the check trend, marks"
+  },
+  "P10-Student-End.dc.html": {
+   "x": 5676,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The page scrolled on: homework, the school's items, messages sent, consent (agreed, with the date and number), fees as V1; attendance, notes, archive and delete follow as V1"
+  },
+  "P10-Student-NotKnown.dc.html": {
+   "x": 6149,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 A new student's page: not known yet with what will tell, Place Riya, consent not asked, the record waiting for a book"
+  },
+  "P10-Student-Ladder.dc.html": {
+   "x": 6622,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 A class 2 student: the ladder for reading, writing and numbers (the stage where he is, in the accent; secure steps in ok), then the school's book for EVS"
+  },
+  "P10-Consent-Ask.dc.html": {
+   "x": 7095,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Ask for consent: the message to the parent in a well, Open WhatsApp; the date of the ask is noted on the page"
+  },
+  "P10-Consent-Record.dc.html": {
+   "x": 7568,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Record the parent's reply: the day and the number, kept with the student"
+  },
+  "P10-Student-Consent-Waiting.dc.html": {
+   "x": 8041,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The consent section while the reply is awaited: Ask again, Parent agreed"
+  },
+  "P10-Textbook-Intro.dc.html": {
+   "x": 8514,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Add a textbook: the subject, what happens to the photo, Take a photo or Choose from Photos"
+  },
+  "P10-Textbook-Reading.dc.html": {
+   "x": 8987,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 Reading the contents page: the photo beside the creating card, Cancel"
+  },
+  "P10-Textbook-Chapters.dc.html": {
+   "x": 9460,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The chapters read from the page, in order, each with the skills under it; open one to edit or remove; Keep writes them for Riya and her classmates"
+  },
+  "P10-Textbook-Chapter-Edit.dc.html": {
+   "x": 9933,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 A chapter opened: its name, the skills read under it (remove, add, reorder by drag), Remove this chapter"
+  },
+  "P10-Placement.dc.html": {
+   "x": 10406,
+   "y": 38600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 10 · 10.2 The placement: a few questions per subject, right or wrong as the student answers, Done; the same form sits in the close for a student with no checks yet"
   }
  },
  "createdOnFiles": {
@@ -1928,10 +2089,18 @@
   "p10_1": {
    "kind": "title1",
    "maxW": 8000,
-   "text": "Step 10.1 · Phase 10, the shell — five tabs (Today, Students, School, Fees, More); More with Organise, Make and App; the School tab empty; Attendance under More",
+   "text": "Step 10.1 · Phase 10, the shell — five tabs (Today, Students, School, Fees, More); More with Organise, Make and App; the School tab empty; Attendance under More; V1's class is a batch on screen",
    "w": 240,
    "x": 0,
    "y": 36900
+  },
+  "p10_2": {
+   "kind": "title1",
+   "maxW": 8000,
+   "text": "Step 10.2 · Phase 10, Students — the list by tracking status; add student V2 (class, school, board from class 8, batch, the parent's language); the student's page with the record (skills and their states, the check trend, marks, homework, school items, messages, consent); consent asked and recorded; the textbook's contents page to chapters; the ladder for LKG to 3; the placement",
+   "w": 240,
+   "x": 0,
+   "y": 38300
   }
  },
  "order": [
@@ -2188,7 +2357,30 @@
   "P10-More-Light.dc.html",
   "P10-School-Empty.dc.html",
   "P10-School-Empty-Light.dc.html",
-  "P10-Attendance-Pushed.dc.html"
+  "P10-Attendance-Pushed.dc.html",
+  "P10-Students-List.dc.html",
+  "P10-Students-List-Light.dc.html",
+  "P10-Students-Empty.dc.html",
+  "P10-NewStudent.dc.html",
+  "P10-NewStudent-Filled.dc.html",
+  "P10-NewStudent-Class9.dc.html",
+  "P10-NewStudent-ClassPicker.dc.html",
+  "P10-NewStudent-End.dc.html",
+  "P10-NewStudent-School.dc.html",
+  "P10-Student.dc.html",
+  "P10-Student-Light.dc.html",
+  "P10-Student-Record.dc.html",
+  "P10-Student-End.dc.html",
+  "P10-Student-NotKnown.dc.html",
+  "P10-Student-Ladder.dc.html",
+  "P10-Consent-Ask.dc.html",
+  "P10-Consent-Record.dc.html",
+  "P10-Student-Consent-Waiting.dc.html",
+  "P10-Textbook-Intro.dc.html",
+  "P10-Textbook-Reading.dc.html",
+  "P10-Textbook-Chapters.dc.html",
+  "P10-Textbook-Chapter-Edit.dc.html",
+  "P10-Placement.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

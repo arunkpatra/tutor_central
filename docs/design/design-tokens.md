@@ -263,4 +263,9 @@ as "at 14:10", yesterday as "yesterday at 18:30", else "on Mon 5 Oct"); the writ
 and the absence alert's log, replays them in the order made, one at a time, each on its own, with last write wins per
 row, and keeps a failed one until it is discarded; a toast after Undo on a queued fee removes it from the queue (nothing
 was written); account deletion asks Apple to revoke first, then deletes the auth user, then wipes the register cache,
-the queue, the QR image and the settings on the iPhone; sign-out wipes the same.
+the queue, the QR image and the settings on the iPhone; sign-out wipes the same. Phase 10 (V2, step 10.2): a student's class is one of LKG, UKG, 1 to 10 and a board one of CBSE, ICSE, Karnataka state,
+Other, asked from class 8 only; the parent's message language is English unless the tutor's last choice was another; the check trend
+shows the last three weeks of sessions, three questions a session; the ladder has five steps per area; the placement asks a few
+questions per subject and the student's chapters start from the first skill got wrong; consent is recorded per student as the day
+and the parent's number, and only the student's own notes, marking and messages wait for it; the check row's pair is 150 × 34 on a
+track 40 high and the trend's bars 36 high.

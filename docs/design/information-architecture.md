@@ -25,7 +25,7 @@ The session gate lives in `AppShell` and is the only thing that decides which of
 | Students | Students list | Student detail, a student's fees, Class detail, Classes list | New student, Edit student, New class, Edit class, Scan register, archive and delete confirmations |
 | Fees | Fees (month) | Parent payments (via Payments), Student detail (via a row) | Generate month, Mark paid, Waive, Remind, Receipt |
 | Attendance (V1; under More from Phase 11, D65) | Attendance (Mark) | History (by date, by student, one student's month); a saved class reopens on the Mark root by date and class | Absence alert |
-| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account (its password sheet, sign out, Delete account), Help; Settings pushes Parent payments, Teacher reminders, Account, Help and Pending changes (also reached from the failed-send banner on any tab root). From Phase 11 (P10-More): Organise holds Schedule, Attendance (the Mark root pushed, with History), Tasks, Classes, Reports; Make holds Make something (AI Assistant's successor, Phase 15), Check a paper, Scan register; App holds Settings, Account, Help | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
+| More | More | Schedule, Tasks, Classes, Settings, Reports, AI Assistant (its four forms, a result, History), Check a paper (pages, the scheme, the marks), Scan register (the list to check); Account (its password sheet, sign out, Delete account), Help; Settings pushes Parent payments, Teacher reminders, Account, Help and Pending changes (also reached from the failed-send banner on any tab root). From Phase 11 (P10-More): Organise holds Schedule, Attendance (the Mark root pushed, with History), Tasks, Batches (V1's Classes list), Reports; Make holds Make something (AI Assistant's successor, Phase 15), Check a paper, Scan register; App holds Settings, Account, Help | New event, Edit event (with Delete event), Share as CSV, the student picker, the consent, Send the note, Fix this row, the camera |
 | School (V2, from Phase 11; its content Phase 13) | School: items by date, or the empty card | An item, the exam calendar, exam preparation (Phase 10 boards, step 10.5) | Items for confirmation, Ask parents to forward, the "+" menu |
 
 Each tab keeps its own navigation stack. Tapping the active tab pops to its root. A student detail reached
@@ -733,12 +733,16 @@ What the boards settle:
   title and the quiet History, and its Save attendance button sits in a footer band above the safe area (12 of ground above,
   `pageSide` beside, 50 below) instead of above the tab bar. Today's Mark attendance, a class detail's Mark attendance and the
   `attendance?date=&class=` link open it the same way, each on its own tab's stack.
-- **More** is three list cards: Organise (Schedule, Attendance, Tasks, Classes, Reports), Make (Make something, Check a paper, Scan
-  register), App (Settings, Account, Help). Tasks and Classes stay: the Tasks screen with Clear and the Classes list have no
-  other way in from More, and nothing from V1 is dropped (D56). Until Phase 15 builds Make something, its row opens AI
+- **More** is three list cards: Organise (Schedule, Attendance, Tasks, Batches, Reports), Make (Make something, Check a paper, Scan
+  register), App (Settings, Account, Help). Tasks and Batches stay: the Tasks screen with Clear and the batches list (V1's
+  Classes) have no other way in from More, and nothing from V1 is dropped (D56). Until Phase 15 builds Make something, its row opens AI
   Assistant as V1's row did (the same screen under the new name is a Phase 15 decision, not a Phase 11 one).
-- **The word on screen stays "class"** (the tile "Classes today", the row "Classes", the picker "Class"). The spec says "batch"
-  for V1's class; D56 and D65 say nothing is renamed.
+- **V1's class is a "batch" on screen** (the owner, 2026-10-10, at step 10.2: "Batch everywhere"): the tile "Batches today", More's
+  row "Batches", the attendance picker "Batch", the Students tab's Batches row and filter chips, the student form's Batch
+  picker, "the batch fee". "Class" now means the student's class (LKG to 10), as the spec's section 4 and the tutors' own word.
+  The table stays `classes` (D56 renames nothing in the model); only the words on screen change, and V1's screens take the new
+  word as Phase 11 touches them (the Classes list, New class and Edit class become New batch and Edit batch, the class tile on
+  the attendance picker reads Batch).
 - **The School tab** is a tab root with the large title and a "+" icon button (its menu, From a photo and Paste a message, is
   step 10.5's). Empty, it shows one card: `building.columns`, "Nothing from a school yet", the line "Tests, homework, notices
   and holidays appear here, by student, once a school's message or a photo of it reaches Tutor Central.", the primary Ask parents
@@ -748,3 +752,92 @@ What the boards settle:
   its place (P2-Later's pattern, as V1 did for a tab that came later), so no button on screen does nothing.
 - **Today** keeps V1's content (the greeting, the tiles, the next class, Today, Coming up, Tasks, the Create row) until step
   10.3 redraws it around the plan.
+
+## Phase 10 boards: step 10.2, Students (approved 2026-10-10)
+
+Row 15 of the canvas (y 38600; the title note at 38300); sources `mockups/P10-Students-*`, `P10-NewStudent-*`, `P10-Student-*`,
+`P10-Consent-*`, `P10-Textbook-*`, `P10-Placement`. Dark for every state; light for the list and the student's page. Content is
+the seed's ten students given illustrative class levels, schools and records (Hemanth Reddy, class 10, Vidya Niketan, CBSE,
+on watch; Riya Sharma, class 5, new; Sahil Verma, class 2, on the ladder); the owner's rule holds: the screens follow the data.
+
+| Board | Source |
+|---|---|
+| Students sorted by status (dark and light); the empty list | `P10-Students-List`, `-Light`, `P10-Students-Empty` |
+| New student: empty, filled, at class 9 (the Board row), the class wheel, the school sheet, scrolled to the end | `P10-NewStudent`, `-Filled`, `-Class9`, `-ClassPicker`, `-School`, `-End` |
+| The student's page: the top (dark and light), the record, the end; a new student (not known yet); a class 2 student (the ladder) | `P10-Student`, `-Light`, `-Record`, `-End`, `-NotKnown`, `-Ladder` |
+| Consent: the ask, the record, waiting for the reply | `P10-Consent-Ask`, `P10-Consent-Record`, `P10-Student-Consent-Waiting` |
+| The textbook's contents page: intro, reading, the chapters, a chapter opened | `P10-Textbook-Intro`, `-Reading`, `-Chapters`, `-Chapter-Edit` |
+| The placement | `P10-Placement` |
+
+Phase 11 builds these states (the light twins from `--appearance light`; the clock is Wednesday 7 October 2026, 16:35):
+
+| State | Shows |
+|---|---|
+| `students` | Students sorted by status with the status word on each row (supersedes P3-Students-Many; `students-empty`, `-few`, `-searching`, `-filtered`, `-add-menu` follow with Batches for Classes) |
+| `student-new` | New student empty, the name focused, Save disabled |
+| `student-new-filled` | Riya Sharma filled in at class 5, Save live |
+| `student-new-class9` | The form at class 9 with the Board row |
+| `student-new-class-picker` | The class wheel open |
+| `student-new-school` | The school sheet over the form |
+| `student-new-end` | The form scrolled to its end |
+| `student` | Hemanth Reddy's page: the top (supersedes P3-StudentDetail and P5-StudentDetail-Fees) |
+| `student-record` | The page scrolled to the record |
+| `student-end` | The page scrolled to homework, school, messages, consent, fees |
+| `student-not-known` | Riya Sharma's page: not known yet, consent not asked, no book |
+| `student-ladder` | Sahil Verma's page: the ladder |
+| `student-consent-ask` | The consent message sheet over Riya's page |
+| `student-consent-record` | The Parent agreed sheet |
+| `student-consent-waiting` | Riya's page with the reply awaited |
+| `textbook-intro` | Add a textbook |
+| `textbook-reading` | Reading the contents page |
+| `textbook-chapters` | The chapters read, Keep |
+| `textbook-chapter-edit` | A chapter's sheet |
+| `placement` | The placement for Riya |
+
+What the boards settle:
+
+- **The list** sorts by tracking status by default (not on track, watch, on track, not known yet; by name inside each), then
+  Name and Fee as V1; each row's line starts with the status word in its colour (`ok`, `due`, `overdue`, `text3`) and goes on
+  with the batch. The fee column stays. Filter chips name the batches; the compact row above the list is Batches.
+- **New student (V2)**: Name; Class (a wheel of LKG, UKG, Class 1 to Class 10; required with the name); School (a floating sheet:
+  the centre's schools with their student counts and board, one chosen, Add a school as the last row with a field; optional);
+  Board (CBSE, ICSE, Karnataka state, Other), shown only from class 8; Batch (V1's class picker, optional); Monthly fee (V1);
+  Parent's name and WhatsApp number (V1); Parent's message language (chips English, Hinglish, Hindi, Kannada; English unless the
+  tutor's last choice was another); Date of birth, Gender, Notes (V1). Edit student is the same form. Save needs the name and
+  the class; nothing else is required (spec section 2).
+- **The student's page** is V1's page extended, in this order: the nav row (Back, the name, Edit); the header (avatar 56, the
+  name, the class chip, the batch chip, the school and board line, the fee line); the tracking card (the status with its
+  symbol, since when, the reasons in one or two sentences, "Next" with the step the plan will take and the quiet Change, which
+  opens the four next steps: re-teach with a worked example, step back to the prerequisite, add to the spaced queue, tell the
+  parent); the parent card (V1); This week (the sessions of the week: came, how many checks right, what was taught, homework
+  given; today's row opens Today); Record (per subject a card: the subject's head with its chapter count and the quiet Add a
+  chapter; chapter rows with their position, name and a count of skill states; an open chapter lists its skills with a state
+  mark; a subject with no book shows the empty row with Add the book); Checks (the three-week trend: one bar per session,
+  the bar's height the right answers of three, `ok` for 3, `due` for 2, `overdue` for fewer; the percentage; the counts);
+  Marks (one row per test: the test and subject, the school and date, the score, a chip when it is below the student's
+  usual; Add from a photo); Homework (one row per sheet given: Done, Partial, Not done chips); School (the student's items
+  with their dates; See all opens the School tab's list filtered to the student); Messages (what was sent, when, the
+  language, opened); Consent (three states below); Fees, Attendance, Notes, Archive and Delete as V1.
+- **Not known yet** (a student without checks) says what will tell (the first week's checks, or a placement) and offers
+  Place <name> on the card's Next line; the Record shows each subject waiting for its book.
+- **The ladder** (LKG to 3) replaces chapters for Reading, Writing and Numbers: five steps each, the secure steps in `ok`,
+  the current one in the accent with its name in 700, the rest in `lineStrong`; the line says the step and when it moved up.
+  Other subjects (EVS, the school's books) keep chapters. The steps: Reading Letters, Words, Sentences, Paragraph, Story;
+  Writing Traces, Letters, Words, Sentences, Short text; Numbers To 9, To 99, Add, Subtract, Multiply.
+- **Consent (D62)** is a section on the page, never a gate on a screen. Not asked: the line says what the parent agrees to and a
+  secondary "Ask <parent> on WhatsApp" opens the message sheet (the text in `components.md`; Open WhatsApp logs a `consent`
+  row and notes the day asked). Waiting: "Asked <parent> on <day>", what waits (the student's own notes and marking) and what
+  does not (sheets and sets), Ask again and Parent agreed. Agreed: "<parent> agreed" with the day, the number and how; the quiet
+  Change reopens the Parent agreed sheet (the day, the number, Record the reply) and can clear it. Export and delete per
+  student live on Edit student (Phase 11 decides their form).
+- **The textbook (D58)** is captured from the student's page (Add a textbook, Add the book) for one subject: the intro names
+  the school and class and says the classmates get the same chapters; the photo goes through V1's camera or Photos; reading
+  shows the creating card with the photo's thumbnail over the intro dimmed; the chapters read are a list in the book's order,
+  each with the skills read under it, Add a chapter, and a chapter sheet (the name, the skills with remove and add, Remove
+  this chapter); Keep writes the textbook once for the school, class and subject and the chapters and skills for each student
+  of that school and class. Nothing is written before Keep.
+- **The placement** is a pushed screen (from Place <name>, and the same form inside the close for a student with no checks): a
+  footnote on how to use it, per subject a card of check rows (the skill as the eyebrow, the question, the expected answer,
+  a Right | Wrong pair; untapped is skipped), the count beside the subject's title, Done in the footer. Done keeps the taps;
+  each subject's chapters start from the first skill got wrong.
+- **The check row** (`components.md`) is the one control for a right-or-wrong answer here and in the close (step 10.3).

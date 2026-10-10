@@ -113,7 +113,7 @@ figures are illustrative (`docs/design/README.md`).
       layout with Organise (Schedule, Attendance, Reports), Make (Make something, Check a paper, Scan register), App
       (Settings, Account, Help); the School tab empty ("Nothing from a school yet" and the "Ask parents to forward"
       button, a plain label, no icon).
-- [ ] **10.2 Students** (row 15). Add student V2 (class level picker LKG to 10; school: pick or add; board row shown
+- [x] **10.2 Students** (row 15, approved 2026-10-10, "Batch everywhere" for V1's class on screen; 23 boards). Add student V2 (class level picker LKG to 10; school: pick or add; board row shown
       from class 8; parent name and phone; language), the consent message sheet (the text, Send on WhatsApp, "Parent
       agreed" with the date), the textbook capture (intro, camera, the parsed chapters for confirmation with edit and
       delete rows, saved), the ladder (LKG to 3: reading, writing, numbers with their levels), the placement in the
