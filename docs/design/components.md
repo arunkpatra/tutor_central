@@ -656,7 +656,8 @@ left and the Right | Wrong pair on the right: a `well` track 150 wide, radius 13
 Right on is `ok` fill with `okInk`, Wrong on is `overdue` fill with `overdueInk`, off segments `text2` 600. Untapped is neither.
 
 **Consent section:** a list card with one row in three states (`information-architecture.md`); the agreed row carries
-`checkmark.circle` 22 in `ok` and the quiet Change; the other two carry buttons 44 high (the fee row's) under the line.
+`checkmark.circle` 22 in `ok` and the quiet Change; the other two carry two buttons 44 high (the fee row's) under the line: Ask on
+WhatsApp (secondary, a plain label) and Parent agreed (primary, `checkmark`).
 
 **Creating card with a photo:** the Phase 6 creating card with a 56 × 72 thumbnail on the left.
 
@@ -666,10 +667,10 @@ The texts:
 |---|---|
 | The consent message | "Hello <parent first name>, I use Tutor Central to plan <child>'s classes and keep her progress. To prepare her practice sheets and your weekly note, her name, class, marks and work may be read by an AI service (Claude, by Anthropic). It keeps nothing for training and deletes what it reads within 30 days. Please reply YES if you agree. Thank you." then the tutor's name and the centre (the absence alert's signature); "his" for a boy, "their" when the gender is not set |
 | The ask's footnote | "Opens WhatsApp with the message ready to send. We note the day you asked on <child>'s page; record the reply when it comes. The text is copied too, in case WhatsApp can't open." |
-| Consent, not asked | "Not asked yet" · "Before <child>'s own work, marks or name go to the AI service, her parent agrees once on WhatsApp." · "Ask <parent> on WhatsApp" |
+| Consent, not recorded | "Not recorded yet" · "Before <child>'s own work, marks or name go to the AI service, her parent agrees once: in person, on a call or on WhatsApp. Note it here." · Ask on WhatsApp · Parent agreed · the footnote "Asking on WhatsApp is optional: it sends a message you can read first. Either way, only the day, the number and how are kept." |
 | Consent, waiting | "Asked <parent> on <day>" · "Waiting for her reply. <child>'s own notes and marking wait too; sheets and sets do not." · Ask again · Parent agreed |
-| Consent, agreed | "<parent> agreed" · "<day> · <number> · her reply on WhatsApp" · Change · the footnote "<child>'s name, marks and work go to the AI service only for his own material and notes. Export or delete everything about him from Edit." |
-| Parent agreed (the sheet) | "<parent> agreed" · "<child>'s parent" · Agreed on (a day tile, today or earlier) · Replied from (the parent's number, editable) · "Kept with <child>'s record: the day and the number. From now her own notes, marking and messages can be made. You can change or remove this any time." · Record the reply |
+| Consent, agreed | "<parent> agreed" · "<day> · <number> · in person" (or "on a call", "her reply on WhatsApp") · Change · the footnote "<child>'s name, marks and work go to the AI service only for his own material and notes. Export or delete everything about him from Edit." |
+| Parent agreed (the sheet) | "<parent> agreed" · "<child>'s parent" · How (chips: In person, On a call, On WhatsApp) · Agreed on (a day tile, today or earlier) · Parent's number (editable) · "Kept with <child>'s record: the day, the number and how. From now her own notes, marking and messages can be made. You can change or remove this any time." · Record it |
 | Not known yet | "<child> joined on <day>. Her first week's checks show where she stands; a placement shows it sooner." · Next: "Start with the class's first chapter until the checks say otherwise." · Place <child> |
 | Add a textbook | "Photograph the contents page" · "Open <child>'s <subject> book at its contents page and take a photo. We read the chapter names into a list you check." · the subject tile's helper "<school>, class <n>. <child>'s classmates there get the same chapters." · the notices "The photo goes to our AI service to be read. We keep no copy; the service deletes it within 30 days." "Only the chapter names are kept, nothing from inside the book." "Nothing is saved until you have checked the list and tapped Keep." · "AI can make mistakes. Check every chapter before you keep them." |
 | Reading | "Reading the contents page" · "Usually under a minute. <subject> · <school> · class <n>" |

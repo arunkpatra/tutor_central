@@ -824,12 +824,14 @@ What the boards settle:
   the current one in the accent with its name in 700, the rest in `lineStrong`; the line says the step and when it moved up.
   Other subjects (EVS, the school's books) keep chapters. The steps: Reading Letters, Words, Sentences, Paragraph, Story;
   Writing Traces, Letters, Words, Sentences, Short text; Numbers To 9, To 99, Add, Subtract, Multiply.
-- **Consent (D62)** is a section on the page, never a gate on a screen. Not asked: the line says what the parent agrees to and a
-  secondary "Ask <parent> on WhatsApp" opens the message sheet (the text in `components.md`; Open WhatsApp logs a `consent`
-  row and notes the day asked). Waiting: "Asked <parent> on <day>", what waits (the student's own notes and marking) and what
-  does not (sheets and sets), Ask again and Parent agreed. Agreed: "<parent> agreed" with the day, the number and how; the quiet
-  Change reopens the Parent agreed sheet (the day, the number, Record the reply) and can clear it. Export and delete per
-  student live on Edit student (Phase 11 decides their form).
+- **Consent (D62)** is a section on the page, never a gate on a screen, and the WhatsApp message is optional (the owner,
+  2026-10-10). Not recorded: the line says the parent agrees once, in person, on a call or on WhatsApp; two buttons: Ask on
+  WhatsApp (secondary; opens the message sheet, the text in `components.md`; Open WhatsApp logs a `consent` row and notes the
+  day asked) and Parent agreed (primary; opens the record sheet straight away). Waiting (only after a WhatsApp ask): "Asked
+  <parent> on <day>", what waits (the student's own notes and marking) and what does not (sheets and sets), Ask again and
+  Parent agreed. The record sheet: How (In person, On a call, On WhatsApp), Agreed on (today or earlier), the parent's
+  number, Record it. Agreed: "<parent> agreed" with the day, the number and how; the quiet Change reopens the sheet and can
+  clear it. Export and delete per student live on Edit student (Phase 11 decides their form).
 - **The textbook (D58)** is captured from the student's page (Add a textbook, Add the book) for one subject: the intro names
   the school and class and says the classmates get the same chapters; the photo goes through V1's camera or Photos; reading
   shows the creating card with the photo's thumbnail over the intro dimmed; the chapters read are a list in the book's order,
