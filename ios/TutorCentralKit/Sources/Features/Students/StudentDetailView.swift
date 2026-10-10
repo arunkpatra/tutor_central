@@ -21,7 +21,7 @@ public enum StudentDetailBoardState: Sendable {
 public struct StudentDetailView: View {
     /// Kept for the life of the screen: AppShell makes a store each time it builds the view, and this month's
     /// attendance read into the first must not be lost to the next.
-    @State private var store: StudentDetailStore
+    @State var store: StudentDetailStore
     let register: RegisterStore
     let actions: StudentsActions
     let navigation: StudentsNavigation
@@ -29,13 +29,14 @@ public struct StudentDetailView: View {
     let onMissing: () -> Void
     /// A refused write's words, for AppShell's system alert (U33).
     let onMessage: (String) -> Void
-    @State private var confirming: Confirmation?
-    @State private var deleting = false
-    @State private var editing: StudentFormStore?
-    @State private var asking = false
-    @State private var recordingConsent = false
-    @State private var topInset: CGFloat = 0
-    @Environment(\.dismiss) private var dismiss
+    @State var confirming: Confirmation?
+    @State var deleting = false
+    @State var editing: StudentFormStore?
+    @State var asking = false
+    @State var addingChapter: AddingChapter?
+    @State var recordingConsent = false
+    @State var topInset: CGFloat = 0
+    @Environment(\.dismiss) var dismiss
 
     public init(
         store: StudentDetailStore,
@@ -79,7 +80,11 @@ public struct StudentDetailView: View {
                         consentSection
                     }
                     ThisWeekSection(rows: store.thisWeek)
-                    RecordSection(store: store, addTextbook: nil, addChapter: nil).id(Anchor.record)
+                    RecordSection(
+                        store: store, addTextbook: { navigation.openTextbook(store.id, $0) },
+                        addChapter: { addingChapter = AddingChapter(subject: $0) }
+                    )
+                    .id(Anchor.record)
                     if let checks = store.checks {
                         ChecksSection(lines: checks)
                     }
@@ -144,6 +149,21 @@ public struct StudentDetailView: View {
         .sheet(isPresented: $asking) {
             ConsentAskSheet(store: store.consent) { asking = false }
                 .boardDetents(MessageSheet.boardFraction)
+        }
+        .sheet(item: $addingChapter) { adding in
+            ChapterSheet(
+                position: store.nextPosition(adding.subject), initialName: "", initialSkills: [],
+                onSave: { name, skills in
+                    Task { await store.addChapter(subject: adding.subject, name: name, skills: skills) }
+                },
+                onRemove: nil, close: { addingChapter = nil }
+            )
+        }
+        .onAppear {
+            // Back from Add a textbook: the chapters the book brought.
+            if store.recordLoaded {
+                Task { await store.loadRecord() }
+            }
         }
         .sheet(isPresented: $recordingConsent) {
             ConsentRecordSheet(store: store.consent) { recordingConsent = false }
@@ -248,7 +268,7 @@ public struct StudentDetailView: View {
         56
     }
 
-    private func edit() {
+    func edit() {
         guard let student = store.student else { return }
         editing = register.form(.edit(student))
     }
@@ -270,29 +290,12 @@ public struct StudentDetailView: View {
             }
         }
     }
+}
 
-    private enum Anchor: Hashable {
-        case record, end
-    }
-
-    /// The scrolled boards: the record (its current chapter open) or the end.
-    private func scrollForBoard(_ reader: ScrollViewProxy) async {
-        guard boardState == .record || boardState == .end, store.recordLoaded else { return }
-        if boardState == .record {
-            store.openCurrentChapter()
-        }
-        try? await Task.sleep(for: .seconds(Tokens.panel))
-        reader.scrollTo(boardState == .record ? Anchor.record : Anchor.end, anchor: .top)
-    }
-
-    private func setUpBoardState() {
-        switch boardState {
-        case .archiveConfirm: confirming = .archive
-        case .deleteConfirm: confirming = .delete
-        case .edit: edit()
-        case .consentAsk: asking = true
-        case .consentRecord: recordingConsent = true
-        case .record, .end, nil: break
-        }
+/// Add a chapter of the tutor's own to a subject on the page.
+struct AddingChapter: Identifiable, Hashable {
+    let subject: String
+    var id: String {
+        subject
     }
 }

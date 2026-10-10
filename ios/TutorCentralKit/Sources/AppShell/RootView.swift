@@ -204,7 +204,8 @@ public struct RootView: View {
                 payments: { paymentsView },
                 reports: { reportsView },
                 tools: { toolsView($0) },
-                school: { SchoolLaterView(build: deps.bundleVersion) }
+                school: { SchoolLaterView(build: deps.bundleVersion) },
+                textbook: { textbookView(student: $0, subject: $1) }
             )
         }
     }
@@ -275,28 +276,6 @@ public struct RootView: View {
                 actions: studentsActions,
                 navigation: studentsNavigation,
                 boardState: launch.flatMap(Self.classDetailBoardState)
-            )
-        }
-    }
-
-    @ViewBuilder private func studentDetailView(_ id: UUID) -> some View {
-        if case let .ready(workspace) = session.state {
-            let register = register(for: workspace)
-            StudentDetailView(
-                store: StudentDetailStore(
-                    id: id, register: register, attendance: deps.attendance, messages: deps.messages,
-                    textbooks: deps.textbooks, record: deps.record, now: deps.now,
-                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
-                ),
-                register: register,
-                actions: studentsActions,
-                navigation: studentsNavigation,
-                boardState: launch.flatMap(Self.studentDetailBoardState),
-                onMissing: {
-                    shell.tabs.remove(.student(id))
-                    notices.show(StudentDetailStore.missingMessage)
-                },
-                onMessage: { notices.show($0) }
             )
         }
     }

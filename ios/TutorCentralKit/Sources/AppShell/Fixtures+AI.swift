@@ -12,7 +12,7 @@ extension Fixtures {
         switch state {
         case .aiGenerating, .aiResultRegenerating: ai.delay = .seconds(3600)
         case .aiGenerateFailed, .scanFailed, .checkFailed: ai.script = .failure(.offline)
-        case .scanReading, .checkChecking: ai.delay = .seconds(3600)
+        case .scanReading, .checkChecking, .textbookReading: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
         default: break
         }

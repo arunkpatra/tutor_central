@@ -30,14 +30,18 @@ public struct StudentsNavigation {
     let openClasses: () -> Void
     let openClass: (UUID) -> Void
     let showUnassigned: () -> Void
+    /// Add a textbook for a student, for a subject or to choose one (V2).
+    let openTextbook: (UUID, String?) -> Void
 
     /// `showUnassigned` goes back to the list with the "No class" filter on.
     public init(
         openStudent: @escaping (UUID) -> Void,
         openClasses: @escaping () -> Void,
         openClass: @escaping (UUID) -> Void,
-        showUnassigned: @escaping () -> Void
+        showUnassigned: @escaping () -> Void,
+        openTextbook: @escaping (UUID, String?) -> Void = { _, _ in }
     ) {
+        self.openTextbook = openTextbook
         self.openStudent = openStudent
         self.openClasses = openClasses
         self.openClass = openClass
