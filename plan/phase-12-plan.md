@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
 > superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-Written 2026-10-10 (session 25, Fable 5.1) from `phase-12-class-plan.md`, `docs/spec-v2.md` and the approved Phase 10
+Written 2026-10-10 (session 25, Fable 5.1), approved by the owner the same day with the two Phase 12 boards, from `phase-12-class-plan.md`, `docs/spec-v2.md` and the approved Phase 10
 boards (steps 10.3 and 10.4), plus the two Phase 12 boards for U37 and U39 (row 21 of the canvas, `P12-*`). Ticked as it
 goes. The build runs on Opus 5.5 from `resume/024-phase-12-build.md`, inline, task by task, with one ledger as sessions
 22 and 24 kept.
@@ -186,7 +186,7 @@ Small decisions, written here so they are not re-decided. The one that is the ow
     tokens. The owner is told before it runs (it costs money).
 23. **Branches** `phase-12/<slug>` in the main checkout, one pull request each, as sessions 22 and 24 worked.
 24. **The owner's to confirm:** the two Phase 12 boards (P12-Close-Cards, P12-Pending-Close), drawn by session 25 on row 21
-    of the canvas, before PR 8 builds them; and the cost run's spend before Task 24 runs it.
+    of the canvas, approved on 2026-10-10 ("the boards are approved too"); and the cost run's spend before Task 24 runs it.
 
 ## Review focus
 
@@ -292,8 +292,7 @@ three groups, Group 1's balancing equations sheet and checks, the brief for Chem
 | main | 24, 25 | | The deploy, the hand runs, the cost run, TestFlight, the documents (D12) | |
 
 Each pull request: `bun check` green, one change, described by what it does and how it was checked, the pictures by
-`bun shots <state>` and `bun pr-shots` (rule 2). PR 8 waits for the owner's approval of the two Phase 12 boards
-(decision 24).
+`bun shots <state>` and `bun pr-shots` (rule 2). The two Phase 12 boards PR 8 builds are approved (decision 24).
 
 ---
 
@@ -3212,7 +3211,7 @@ boards'; the top row gains the quiet "Plan" (pops to Today) when `hasPlan`.
 
 ### Task 21: Today: the close card's three states (U37, U38) and the pending close's symbol (U39) (PR 8)
 
-Waits for the owner's approval of P12-Close-Cards and P12-Pending-Close (decision 24).
+The boards P12-Close-Cards and P12-Pending-Close are approved (decision 24).
 
 **Files:**
 - Modify: `Features/Today/CloseSections.swift` (the card states to the board), `CloseStore+Checks.swift` (the words),

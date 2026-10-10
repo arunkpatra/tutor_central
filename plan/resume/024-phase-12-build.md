@@ -1,8 +1,8 @@
 # Resume 024: Phase 12 (the plan), the build
 
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Opus 5.5
-(D17: plans on Fable, builds on Opus). The plan was written in session 25 and shown to the owner; the two Phase 12 boards
-(P12-Close-Cards, P12-Pending-Close, row 21 of the canvas) need his approval before PR 8 builds them.
+(D17: plans on Fable, builds on Opus). The plan and the two Phase 12 boards (P12-Close-Cards, P12-Pending-Close, row 21 of the
+canvas) were approved by the owner on 2026-10-10.
 
 ---
 
@@ -35,9 +35,7 @@ Read, in this order, before doing anything:
 **Your work:** execute `plan/phase-12-plan.md` with `superpowers:executing-plans`, inline, task by task, tests first,
 one pull request per row of its table (nine), each with `bun check` green and the pictures per D7 (`bun shots`, `bun
 pr-shots`, the table in the description), merged when green. Keep one ledger as sessions 22 and 24 did (each ruling
-with what it costs if wrong; the hand runs; the review). After PR 2, `gh workflow run deploy` (Task 24 step 1). PR 8
-waits for the owner's approval of the two P12 boards; if he has not answered when you reach it, ask once and build PRs 9
-and the rest meanwhile. Before Task 24's cost run (run 8, the local API without `AI_FAKE`, about ₹10), tell the owner and
+with what it costs if wrong; the hand runs; the review). After PR 2, `gh workflow run deploy` (Task 24 step 1). Before Task 24's cost run (run 8, the local API without `AI_FAKE`, about ₹10), tell the owner and
 wait for his yes. After PR 9: the hand runs (Task 24), the cost run, the reviewer pass (Task 25), `gh workflow run
 testflight`, then the documents (Task 25) to `main` (D12), `plan/STATE.md` last, and `plan/sessions/026/record.md`,
 `ledger.md` and `owner-messages.md`.

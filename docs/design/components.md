@@ -789,7 +789,7 @@ The texts:
 | The mock | "Mock in the school's pattern" · "25 marks · 40 minutes · chapters 1 and 2 · made today, 16:40" · "as Vidya Niketan sets them" · Mark from a photo · "AI can make mistakes. Check every question before you give it. Marking from a photo uses this paper's key." |
 | The gap report | "After the mock" · "The test is on Thursday. Two days left." · By skill · The last two days · Use this plan · "Replaces the two days' lines in the plan. Leave it and the plan carries on as it was." |
 
-## Phase 12 parts (drawn 2026-10-10, session 25; awaiting the owner's approval): the close's card states, the waiting close
+## Phase 12 parts (approved 2026-10-10): the close's card states, the waiting close
 
 **Close student card, the wait:** the head, the eyebrow "Check · 3 questions", one row of a 16 pt spinner (`lineStrong` ring,
 `text3` arc) and a `footnote` `text3` line, the `line` rule, the homework switch row.

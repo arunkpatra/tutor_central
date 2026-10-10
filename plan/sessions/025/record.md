@@ -61,5 +61,5 @@ Reading only; `bun check` from its cache. No simulator run. Headless Chrome for 
 
 ## Next
 
-The owner's reading of the plan, then his approval of the two boards; then Phase 12's build on Opus 5.5 from
-`resume/024-phase-12-build.md`.
+The owner approved the plan and the two boards the same day ("The plan is approved; the boards are approved too").
+Phase 12's build on Opus 5.5 from `resume/024-phase-12-build.md`.

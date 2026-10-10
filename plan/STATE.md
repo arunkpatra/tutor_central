@@ -9,8 +9,9 @@ the plan made on the phone by Domain rules with `/ai/plan` naming a first topic 
 per group from the plan; a new `Artefacts` feature for the sheet, the worked example, the figures and the brief; the close
 from the plan online and offline; the budget tested against the price sheet; the cost run on the real API. The two boards
 the owner's polish rows need (P12-Close-Cards dark and light for U37 and U38, P12-Pending-Close for U39) are on row 21 of
-the canvas and mirrored, awaiting his approval. `resume/024-phase-12-build.md` written and indexed. **Next:** the owner reads
-the plan and approves the boards; then Phase 12's build on Opus 5.5 from `resume/024-phase-12-build.md`.
+the canvas and mirrored. The owner approved the plan and the boards the same day ("The plan is approved; the boards are
+approved too"). `resume/024-phase-12-build.md` written and indexed. **Next:** Phase 12's build on Opus 5.5 from
+`resume/024-phase-12-build.md`.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -31,7 +32,7 @@ the plan and approves the boards; then Phase 12's build on Opus 5.5 from `resume
 | 9 User testing | Cancelled by the owner, 2026-10-10 (D66) | V1 was the proof of concept; the tutor round is Phase 15's, on V2, by Phase 9's method (D52 to D55); `phase-09-plan.md` kept as that method |
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
-| 12 The plan | Planned (session 25, 2026-10-10): `phase-12-plan.md`; the two Phase 12 boards await the owner's approval; the build next from `resume/024-phase-12-build.md` | Scope `phase-12-class-plan.md`; boards 10.3, 10.4 and row 21 (`P12-*`) |
+| 12 The plan | Planned (session 25, 2026-10-10): `phase-12-plan.md` and the two Phase 12 boards approved by the owner the same day; the build next from `resume/024-phase-12-build.md` | Scope `phase-12-class-plan.md`; boards 10.3, 10.4 and row 21 (`P12-*`) |
 | 13 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-12-class-plan.md` to `phase-16-release.md` |
 
 ## In flight

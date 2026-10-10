@@ -1001,7 +1001,7 @@ What the boards settle:
   or `overdue` by its fraction and the line that says what went wrong; The last two days, a row per day with the lines the plan
   will take, Change; Use this plan replaces those days' lines; leaving it keeps the plan as it was.
 
-## Phase 12 boards (drawn 2026-10-10, session 25; awaiting the owner's approval)
+## Phase 12 boards (approved 2026-10-10)
 
 Row 21 of the canvas (y 47000; the title note at 46700); sources `mockups/P12-Close-Cards`, `-Light`, `P12-Pending-Close`.
 Two boards for the polish rows the owner took into Phase 12 (U37, U38, U39): the close card's states no earlier board drew,
