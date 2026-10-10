@@ -34,7 +34,6 @@ test("the V2 routes validate, then answer 501 until their phase", async () => {
     ["/ai/plan", { centreId, classId: null, date: "2026-10-12" }],
     ["/ai/make", { centreId, kind: "brief", classLevel: "9", subject: "Science", chapter: "Motion" }],
     ["/ai/parse-school", { centreId, text: "FA2 on Monday" }],
-    ["/ai/parse-textbook", { centreId, image: { imageBase64: "AAAA", mediaType: "image/jpeg" }, classLevel: "3", subject: "English" }],
   ] as const) {
     const r = await post(path, JSON.stringify(body));
     expect({ path, status: r.status, body: await r.json() }).toEqual({ path, status: 501, body: { error: "not yet", route: path } });

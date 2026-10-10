@@ -166,7 +166,7 @@ export const MakeInput = z.discriminatedUnion("kind", [
   z.object({ ...V2, kind: z.literal("worked_example"), classLevel: ClassLevel, subject: Subject, skill: Name }),
   z.object({ ...V2, kind: z.literal("figure"), figure: FigureKind, classLevel: ClassLevel, subject: Subject, skill: Name }),
   z.object({ ...V2, kind: z.literal("brief"), classLevel: ClassLevel, subject: Subject, chapter: Name }),
-  z.object({ ...V2, kind: z.literal("check"), classLevel: ClassLevel, subject: Subject, skills: Skills.length(3) }),
+  z.object({ ...V2, kind: z.literal("check"), classLevel: ClassLevel, subject: Subject, skills: Skills.min(1).max(3) }),
   z.object({ ...V2, kind: z.literal("placement"), classLevel: ClassLevel, subject: Subject, chapters: z.array(Name).min(1).max(30) }),
   z.object({
     ...V2,
@@ -209,6 +209,25 @@ export type ParseSchoolInput = z.infer<typeof ParseSchoolInput>;
 /** POST /ai/parse-textbook: a contents page, with the class and subject it is for. */
 export const ParseTextbookInput = z.object({ ...V2, image: Image, classLevel: ClassLevel, subject: Subject });
 export type ParseTextbookInput = z.infer<typeof ParseTextbookInput>;
+
+/** What a contents page reads into (POST /ai/parse-textbook): the chapter names as printed and one to eight short skills
+ *  under each, from the section headings; nothing from inside the book (D58). The position is the order. */
+export const TextbookOutput = z.object({
+  title: z.string().max(200).nullable(),
+  chapters: z
+    .array(z.object({ name: z.string().min(1).max(200), skills: z.array(z.string().min(1).max(200)).min(1).max(8) }))
+    .min(1)
+    .max(40),
+});
+export type TextbookOutput = z.infer<typeof TextbookOutput>;
+
+/** The close's questions (one per skill, asked aloud, answered in a few words) and the placement's (one per chapter, the
+ *  chapter's most basic idea). The app keeps the question and the tap; the answer is for the tutor's eye. */
+const Question = { question: z.string().min(1).max(300), answer: z.string().min(1).max(200) };
+export const ChecksOutput = z.object({ questions: z.array(z.object({ skill: Name, ...Question })).min(1).max(3) });
+export type ChecksOutput = z.infer<typeof ChecksOutput>;
+export const PlacementOutput = z.object({ questions: z.array(z.object({ chapter: Name, ...Question })).min(1).max(30) });
+export type PlacementOutput = z.infer<typeof PlacementOutput>;
 
 /** POST /account/revoke-apple (D38): the fresh authorization code the app got from Apple at deletion. */
 export const RevokeAppleInput = z.object({ code: z.string().min(1).max(2000) });

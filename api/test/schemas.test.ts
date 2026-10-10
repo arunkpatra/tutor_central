@@ -111,7 +111,9 @@ test("MakeInput accepts each kind with its fields and nothing else", () => {
   expect(MakeInput.safeParse({ ...c, kind: "figure", figure: "pie_chart", classLevel: "4", subject: "Mathematics", skill: "Quarters" }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "brief", classLevel: "10", subject: "Mathematics", chapter: "Trigonometry" }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: ["Cells", "Tissues", "Organs"] }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: ["Cells"] }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: ["Cells"] }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: [] }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: ["A", "B", "C", "D"] }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "placement", classLevel: "7", subject: "English", chapters: ["Chapter 1", "Chapter 2"] }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "mock", classLevel: "10", subject: "Science", portions: ["Light", "Electricity"], pattern: { marks: 40, durationMinutes: 90 } }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "kn", week: { taught: ["Halves"], right: ["Halves"], practise: ["Quarters"], coming: [] }, tutorName: "Meera" }).success).toBe(true);
