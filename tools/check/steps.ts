@@ -96,7 +96,8 @@ export const STEPS: Step[] = [
   },
   {
     name: "api",
-    inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock"],
+    // schemas.test parses the class 10 blueprints of the syllabus data.
+    inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**"],
     run: () => run("bun run check", "api"),
   },
   {

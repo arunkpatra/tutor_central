@@ -307,3 +307,48 @@ test("the V2 allowance has a hard cap on calls started, failed ones included", a
   expect(capped.error?.message).toContain("ai_limit_reached");
   expect(capped.error?.details).toBe("600");
 });
+
+test("a second capture of the book keeps each student's progress: names follow the book, states and checks stay", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: "Recapture School" }).select("id").single()).data!;
+  const first = [
+    { position: 1, name: "Shapes", skills: ["Circles", "Squares"] },
+    { position: 2, name: "Numbers", skills: ["Counting"] },
+    { position: 3, name: "Money", skills: ["Coins"] },
+  ];
+  const book = (await a.from("textbooks").insert({ centre_id: centre, school_id: school.id, class_level: "3", subject: "Mathematics", title: "Maths 3", chapters: first }).select("id").single()).data!;
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Kept", class_level: "3", school_id: school.id }).select("id").single()).data!;
+  const copy = () => a.rpc("copy_textbook_chapters", { p_centre: centre, p_textbook: book.id, p_student: st.id });
+  expect((await copy()).error).toBeNull();
+  const circles = (await a.from("skills").select("id").eq("student_id", st.id).eq("name", "Circles").single()).data!;
+  await a.from("skills").update({ state: "secure" }).eq("id", circles.id);
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "Recapture batch" }).select("id").single()).data!;
+  const closed = await a.rpc("close_session", {
+    p_centre: centre, p_class: cls.id, p_date: "2026-10-16", p_marks: { [st.id]: "present" },
+    p_checks: [{ student_id: st.id, skill_id: circles.id, question: { text: "A round shape?" }, correct: true }],
+    p_homework: [], p_track: {},
+  });
+  expect(closed.error).toBeNull();
+  // The tutor photographs the page again: chapter 1 renamed with a skill added, chapter 2 the same, chapter 3 gone.
+  const second = [
+    { position: 1, name: "Shapes and Patterns", skills: ["Circles and rings", "Squares", "Triangles"] },
+    { position: 2, name: "Numbers", skills: ["Counting"] },
+  ];
+  expect((await a.from("textbooks").update({ chapters: second }).eq("id", book.id)).error).toBeNull();
+  expect((await copy()).error).toBeNull();
+  const chapters = await a.from("chapters").select("position, name").eq("student_id", st.id).order("position");
+  expect(chapters.data).toEqual([{ position: 1, name: "Shapes and Patterns" }, { position: 2, name: "Numbers" }]);
+  const skills = await a.from("skills").select("id, name, state").eq("student_id", st.id).order("name");
+  expect(skills.data?.map((s) => [s.name, s.state])).toEqual([
+    ["Circles and rings", "secure"], ["Counting", "not_started"], ["Squares", "not_started"], ["Triangles", "not_started"],
+  ]);
+  expect(skills.data?.find((s) => s.name === "Circles and rings")?.id).toBe(circles.id);
+  expect((await a.from("checks").select("correct").eq("skill_id", circles.id)).data).toEqual([{ correct: true }]);
+});
+
+test("photo paths with the centre's id in capitals reach the centre's folder, and a photo is never overwritten", async () => {
+  const bytes = new Blob([new Uint8Array([0xff, 0xd8, 0xff, 0xd9])], { type: "image/jpeg" });
+  const path = `${centre.toUpperCase()}/textbooks/upper.jpg`;
+  expect((await a.storage.from("photos").upload(path, bytes)).error).toBeNull();
+  expect((await a.storage.from("photos").upload(path, bytes, { upsert: true })).error).not.toBeNull();
+  expect((await a.storage.from("photos").remove([path])).error).toBeNull();
+});

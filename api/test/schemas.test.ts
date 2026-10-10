@@ -141,3 +141,11 @@ test("Scheme accepts a mock's key", () => {
   expect(Scheme.safeParse({ kind: "mock", artefactId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60720" }).success).toBe(true);
   expect(Scheme.safeParse({ kind: "mock", artefactId: "nope" }).success).toBe(false);
 });
+
+test("a mock takes the board's blueprint as the syllabus data writes it", async () => {
+  for (const file of ["cbse/10/social-science.json", "cbse/10/science.json", "karnataka/10/english.json"]) {
+    const { blueprint } = await Bun.file(`${import.meta.dir}/../../supabase/syllabi/${file}`).json();
+    const parsed = MakeInput.safeParse({ ...centre, kind: "mock", classLevel: "10", subject: "Science", portions: ["All"], pattern: blueprint });
+    expect({ file, ok: parsed.success }).toEqual({ file, ok: true });
+  }
+});

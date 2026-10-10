@@ -177,7 +177,7 @@ export const MakeInput = z.discriminatedUnion("kind", [
     pattern: z.object({
       marks: z.number().int().min(5).max(100),
       durationMinutes: z.number().int().min(10).max(240),
-      sections: z.array(z.object({ name: z.string().max(20), questions: z.number().int().positive(), marksEach: z.number().positive() })).optional(),
+      sections: z.array(z.object({ name: z.string().max(40), questions: z.number().int().positive(), marksEach: z.number().positive() })).optional(),
     }),
   }),
   z.object({
