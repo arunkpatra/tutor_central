@@ -76,21 +76,33 @@ public struct PickerTile: View {
     }
 }
 
-/// A picker's value: accentText bodyStrong with chevron.up.chevron.down at 16.
+/// A picker's value: accentText bodyStrong with chevron.up.chevron.down at 16; nothing chosen, the placeholder in
+/// `text3` (components.md "Picker tile with a helper").
 public struct PickerValue: View {
     let value: String
+    let quiet: Bool
 
     public init(_ value: String) {
         self.value = value
+        quiet = false
+    }
+
+    public init(_ value: String?, placeholder: String) {
+        (self.value, quiet) = Self.shown(value: value, placeholder: placeholder)
+    }
+
+    /// The words shown, and whether they are the quiet placeholder.
+    nonisolated static func shown(value: String?, placeholder: String) -> (String, Bool) {
+        value.map { ($0, false) } ?? (placeholder, true)
     }
 
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
-            Text(value).typeStyle(Tokens.bodyStrong).lineLimit(1)
+            Text(value).typeStyle(quiet ? Tokens.body : Tokens.bodyStrong).lineLimit(1)
             Image(systemName: "chevron.up.chevron.down").accessibilityHidden(true)
                 .font(.system(size: Tokens.iconInline))
         }
-        .foregroundStyle(Tokens.accentText.color)
+        .foregroundStyle((quiet ? Tokens.text3 : Tokens.accentText).color)
     }
 }
 
