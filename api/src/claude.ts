@@ -6,7 +6,7 @@ import type { ZodType } from "zod";
 
 export type ImageInput = { mediaType: "image/jpeg" | "image/png" | "image/webp"; base64: string };
 export type ClaudeRequest<T> = {
-  model: "claude-sonnet-5-5" | "claude-opus-5-5";
+  model: "claude-haiku-5-5" | "claude-sonnet-5-5" | "claude-opus-5-5";
   effort: "medium" | "high";
   system: string;
   /** The user turn's text, after the images. */

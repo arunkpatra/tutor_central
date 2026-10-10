@@ -15,6 +15,10 @@ import {
   CentreInput,
   CheckPaperInput,
   GenerateInput,
+  MakeInput,
+  ParseSchoolInput,
+  ParseTextbookInput,
+  PlanInput,
   type ScanOutput,
   ScanRegisterInput,
 } from "../schemas.js";
@@ -23,7 +27,7 @@ type C = Context<Vars>;
 /** One call, as a route hands it to `run`: what is recorded, what Claude is asked, and how its answer is kept. */
 type Call<T> = { kind: AIKind; input: unknown; request: ClaudeRequest<T>; keep?: (parsed: T) => T };
 
-/** The three AI routes. Each: validate the body, check any photo, start the record (consent, the day's limit), call
+/** The three V1 AI routes and the V2 skeletons. Each: validate the body, check any photo, start the record (consent, the day's limit), call
  *  Claude, finish the record, answer `{ id, result }` or an error in words (src/errors.ts). Photos are never stored:
  *  the record's input holds the page count and the bytes (docs/spec.md section 6). */
 export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
@@ -58,6 +62,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
       pages.push(image);
     }
     const { scheme, studentName } = body.value;
+    if (scheme.kind === "mock") return notYet(c, "/ai/check-paper");
     let text: string | null = scheme.kind === "typed" ? scheme.text : null;
     if (scheme.kind === "paper") {
       const stored = await deps.db.generation(c.get("token"), scheme.generationId);
@@ -74,7 +79,23 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     return run(c, deps, body.centre, { kind: "check_paper", input, request: checkRequest(pages, text ?? "", studentName) });
   });
 
+  // V2 (docs/spec-v2.md section 9): the contract is validated now; each route is built in its phase (11 to 14).
+  const skeleton = <T>(path: string, schema: ZodType<T>) =>
+    routes.post(path, async (c) => {
+      const body = await parse(c, schema);
+      if (!isParsed(body)) return body;
+      return notYet(c, `/ai${path}`);
+    });
+  skeleton("/plan", PlanInput);
+  skeleton("/make", MakeInput);
+  skeleton("/parse-school", ParseSchoolInput);
+  skeleton("/parse-textbook", ParseTextbookInput);
+
   return routes;
+}
+
+function notYet(c: C, route: string) {
+  return c.json({ error: "not yet", route }, 501);
 }
 
 function generateRequest(input: GenerateInput): ClaudeRequest<unknown> {

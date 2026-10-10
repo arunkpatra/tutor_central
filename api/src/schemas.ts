@@ -69,6 +69,8 @@ export type ScanRegisterInput = z.infer<typeof ScanRegisterInput>;
 export const Scheme = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("typed"), text: z.string().min(1).max(4000) }),
   z.object({ kind: z.literal("paper"), generationId: z.guid() }),
+  /** A mock's key (docs/spec-v2.md section 7); marked from Phase 13. */
+  z.object({ kind: z.literal("mock"), artefactId: z.guid() }),
 ]);
 
 /** POST /ai/check-paper: up to six page photos, together under Vercel's body limit, and the scheme. */
@@ -130,6 +132,83 @@ export const CheckOutput = z.object({
   summary: z.string(),
 });
 export type CheckOutput = z.infer<typeof CheckOutput>;
+
+// V2 (docs/spec-v2.md sections 7 and 9). The values are the database's (migrations 0009 to 0013) and the app's Domain.
+export const ClassLevel = z.enum(["lkg", "ukg", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
+export type ClassLevel = z.infer<typeof ClassLevel>;
+export const Language = z.enum(["en", "hinglish", "hi", "kn"]);
+/** The figure templates the app draws from a typed spec (D59); a kind without a template has no figure. */
+export const FigureKind = z.enum(["number_line", "fraction_bar", "place_value", "unit_circle", "triangle", "labelled_cell", "food_chain"]);
+const Day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+const Subject = z.string().min(1).max(80);
+const Name = z.string().min(1).max(200);
+const Skills = z.array(Name);
+const Student = { studentId: z.guid(), studentName: z.string().min(1).max(80), tutorName: z.string().min(1).max(80) };
+const V2 = { ...CentreInput.shape };
+
+/** POST /ai/plan: the batch (null: the session for all students) and the day; the API reads the record as the user. */
+export const PlanInput = z.object({ ...V2, classId: z.guid().nullable(), date: Day });
+export type PlanInput = z.infer<typeof PlanInput>;
+
+/** POST /ai/make: one artefact of a kind. Group material names skills and a level and no student; the personal kinds
+ *  name the student and need their consent (start_ai_generation). */
+export const MakeInput = z.discriminatedUnion("kind", [
+  z.object({
+    ...V2,
+    kind: z.literal("sheet"),
+    classLevel: ClassLevel,
+    subject: Subject,
+    skills: Skills.min(1).max(6),
+    questions: z.number().int().min(3).max(30).default(10),
+    forHomework: z.boolean().default(false),
+    groupNo: z.number().int().min(1).max(9).optional(),
+  }),
+  z.object({ ...V2, kind: z.literal("worked_example"), classLevel: ClassLevel, subject: Subject, skill: Name }),
+  z.object({ ...V2, kind: z.literal("figure"), figure: FigureKind, classLevel: ClassLevel, subject: Subject, skill: Name }),
+  z.object({ ...V2, kind: z.literal("brief"), classLevel: ClassLevel, subject: Subject, chapter: Name }),
+  z.object({ ...V2, kind: z.literal("check"), classLevel: ClassLevel, subject: Subject, skills: Skills.length(3) }),
+  z.object({ ...V2, kind: z.literal("placement"), classLevel: ClassLevel, subject: Subject, chapters: z.array(Name).min(1).max(30) }),
+  z.object({
+    ...V2,
+    kind: z.literal("mock"),
+    classLevel: ClassLevel,
+    subject: Subject,
+    portions: z.array(Name).min(1).max(30),
+    pattern: z.object({
+      marks: z.number().int().min(5).max(100),
+      durationMinutes: z.number().int().min(10).max(240),
+      sections: z.array(z.object({ name: z.string().max(20), questions: z.number().int().positive(), marksEach: z.number().positive() })).optional(),
+    }),
+  }),
+  z.object({
+    ...V2,
+    kind: z.literal("note"),
+    ...Student,
+    language: Language,
+    week: z.object({ taught: Skills, right: Skills, practise: Skills, coming: z.array(z.string().max(200)) }),
+  }),
+  z.object({ ...V2, kind: z.literal("can_do"), ...Student, language: Language, ladder: z.record(z.string().max(40), z.string().max(40)) }),
+  z.object({ ...V2, kind: z.literal("test_tomorrow"), ...Student, language: Language, subject: Subject, date: Day, portions: z.string().max(2000).optional() }),
+  z.object({
+    ...V2,
+    kind: z.literal("gap_report"),
+    studentId: z.guid(),
+    marking: z
+      .array(z.object({ question: z.number().int().positive(), marks: z.number().min(0), max: z.number().positive(), note: z.string().max(500).optional() }))
+      .min(1),
+  }),
+]);
+export type MakeInput = z.infer<typeof MakeInput>;
+
+/** POST /ai/parse-school: what the school sent, as text or one photo. */
+export const ParseSchoolInput = z
+  .object({ ...V2, text: z.string().min(1).max(4000).optional(), image: Image.optional() })
+  .refine((v) => v.text !== undefined || v.image !== undefined, { message: "text or image is needed" });
+export type ParseSchoolInput = z.infer<typeof ParseSchoolInput>;
+
+/** POST /ai/parse-textbook: a contents page, with the class and subject it is for. */
+export const ParseTextbookInput = z.object({ ...V2, image: Image, classLevel: ClassLevel, subject: Subject });
+export type ParseTextbookInput = z.infer<typeof ParseTextbookInput>;
 
 /** POST /account/revoke-apple (D38): the fresh authorization code the app got from Apple at deletion. */
 export const RevokeAppleInput = z.object({ code: z.string().min(1).max(2000) });
