@@ -3,7 +3,9 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-09, session 19 (Phase 9's run begins, on Opus 5.5). **Session 19:** Tasks 1 to 3 done: the API
+**Last updated:** 2026-10-10, session 20 (the V2 track opens, on Fable 5.1). **Session 20:** the V2 brainstorm: the research note
+`docs/v2/research.md` (six threads) and the draft spec `docs/spec-v2.md` (the plan, not the tools; proposed D56 to D65), awaiting
+the owner's review; then the phase files for Phases 10 to 16. **Session 19:** the Phase 9 run began (on Opus 5.5). **Session 19:** Tasks 1 to 3 done: the API
 deployed to `main`'s head (`999e881`, run 37965871936); build 18 passed on the owner's iPhone, its checklist ticked and its
 notes written (`docs/release.md`); the tester's guide (`docs/testing/tester-guide.md`) and the findings file
 (`plan/phase-09-findings.md`); Test Information saved, the "Tutors" group made, **build 18 submitted to Beta App Review on
