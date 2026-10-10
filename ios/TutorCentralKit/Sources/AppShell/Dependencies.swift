@@ -17,6 +17,9 @@ public struct Dependencies: Sendable {
     public let schools: any SchoolsRepository
     public let textbooks: any TextbooksRepository
     public let record: any RecordRepository
+    /// The day's plans and their artefacts (Phase 12); the `photos` bucket (the tutor's own sheets).
+    public let plans: any PlansRepository
+    public let photos: any PhotoStore
     public let events: any EventsRepository
     public let tasks: any TasksRepository
     public let fees: any FeesRepository
@@ -56,6 +59,8 @@ public struct Dependencies: Sendable {
         schools: any SchoolsRepository,
         textbooks: any TextbooksRepository,
         record: any RecordRepository,
+        plans: any PlansRepository,
+        photos: any PhotoStore,
         events: any EventsRepository,
         tasks: any TasksRepository,
         fees: any FeesRepository,
@@ -83,6 +88,8 @@ public struct Dependencies: Sendable {
         self.schools = schools
         self.textbooks = textbooks
         self.record = record
+        self.plans = plans
+        self.photos = photos
         self.events = events
         self.tasks = tasks
         self.fees = fees
@@ -124,6 +131,8 @@ public struct Dependencies: Sendable {
             schools: SupabaseSchoolsRepository(client: client),
             textbooks: SupabaseTextbooksRepository(client: client),
             record: SupabaseRecordRepository(client: client),
+            plans: SupabasePlansRepository(client: client),
+            photos: SupabasePhotoStore(client: client),
             events: SupabaseEventsRepository(client: client),
             tasks: SupabaseTasksRepository(client: client),
             fees: SupabaseFeesRepository(client: client),

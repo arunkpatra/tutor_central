@@ -59,4 +59,14 @@ struct SessionCloseParamsTests {
         let state: AnyJSON = .object(["skill_id": .string(skill.uuidString.lowercased()), "state": .string("secure")])
         #expect(params["p_states"] == .array([state]))
     }
+
+    @Test func theDoneLinesGoAsAnArrayOfIds() throws {
+        let item = UUID()
+        let close = try SessionClose(
+            classID: UUID(), date: #require(Day(iso: "2026-10-07")), marks: [:], checks: [], homework: [], track: [:],
+            states: [], done: [item]
+        )
+        let params = SupabaseAttendanceRepository.closeParams(close, centre: UUID())
+        #expect(params["p_done"] == .array([.string(item.uuidString.lowercased())]))
+    }
 }

@@ -4,7 +4,8 @@ import Foundation
 import Observation
 
 /// Delete account (P7-Delete, D37, D38): what goes, the centre's name typed, then Apple's confirmation and revocation
-/// for an Apple account, then `delete_account()`. A failure before the deletion leaves everything and the tutor signed
+/// for an Apple account, then the centre's photos removed from Storage, then `delete_account()`. A failure before the
+/// deletion leaves everything and the tutor signed
 /// in; Retry runs every step again (a second Apple authorization gives a fresh code). The run is the store's task:
 /// refused while one runs; Back cancels it and a late answer is dropped. Once the account is deleted, `onDeleted` (the
 /// wipe, the landing) runs whatever happened to the screen.
@@ -30,6 +31,8 @@ import Observation
     private let register: any Register
     private let auth: any AuthRepository
     private let account: any AccountRepository
+    private let photos: any PhotoStore
+    private let centre: UUID
     private let reauthorize: @MainActor () async throws(AccountFailure) -> String
     private let onDeleted: @MainActor () async -> Void
     private var generation = 0
@@ -37,13 +40,15 @@ import Observation
 
     public init(
         workspace: Workspace, register: any Register, auth: any AuthRepository, account: any AccountRepository,
-        reauthorize: @escaping @MainActor () async throws(AccountFailure) -> String,
+        photos: any PhotoStore, reauthorize: @escaping @MainActor () async throws(AccountFailure) -> String,
         onDeleted: @escaping @MainActor () async -> Void
     ) {
         centreName = workspace.centre.name
         self.register = register
         self.auth = auth
         self.account = account
+        self.photos = photos
+        centre = workspace.centre.id
         self.reauthorize = reauthorize
         self.onDeleted = onDeleted
     }
@@ -100,6 +105,8 @@ import Observation
                 guard mine == generation else { return }
             }
             phase = .deleting
+            try await removePhotos()
+            guard mine == generation else { return }
             try await auth.deleteAccount()
             // The account is gone whatever the screen does now: the deletion's own sign-out can take the screen away
             // before this line, so the wipe and the landing's words run here, from the store's task.
@@ -108,6 +115,19 @@ import Observation
         } catch {
             guard mine == generation else { return }
             phase = error == .cancelled ? .idle : .failed(Self.failure(error))
+        }
+    }
+
+    /// The centre's photos go before the account (D40): Storage keeps a file after its rows are gone. A failure here
+    /// stops
+    /// the deletion with nothing removed but photos, and the tutor still signed in.
+    private func removePhotos() async throws(AccountFailure) {
+        do {
+            try await photos.removeAll(centre: centre)
+        } catch is URLError {
+            throw .offline
+        } catch {
+            throw .unexpected
         }
     }
 

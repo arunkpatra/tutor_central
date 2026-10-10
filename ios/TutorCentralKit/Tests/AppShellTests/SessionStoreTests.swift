@@ -18,6 +18,8 @@ import Testing
             schools: FakeSchoolsRepository(),
             textbooks: FakeTextbooksRepository(),
             record: FakeRecordRepository(),
+            plans: FakePlansRepository(),
+            photos: FakePhotoStore(),
             events: FakeEventsRepository(),
             tasks: FakeTasksRepository(),
             fees: FakeFeesRepository(),

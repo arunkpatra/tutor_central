@@ -1,7 +1,8 @@
 import Foundation
 
 /// The close of a class (docs/spec-v2.md section 6): who came, the checks tapped, the homework given and each student's
-/// tracking status and the skill states that moved, written in one call by `close_session` (migrations 0010, 0017).
+/// tracking status, the skill states that moved and the plan's lines done, written in one call by `close_session`
+/// (migrations 0010, 0017, 0019).
 /// Attendance alone is a close. `Codable`, so a close made offline waits in the queue (plan decision 18).
 public struct SessionClose: Hashable, Sendable, Codable {
     public struct Check: Hashable, Sendable, Codable {
@@ -49,6 +50,9 @@ public struct SessionClose: Hashable, Sendable, Codable {
     public let homework: [Homework]
     public let track: [UUID: Track]
     public let states: [SkillStateChange]
+    /// The plan's lines the tutor ticked (`plan_items.done_at` through `close_session`'s `p_done`); none without a
+    /// plan.
+    public let done: [UUID]
 
     public init(
         classID: UUID?,
@@ -57,7 +61,8 @@ public struct SessionClose: Hashable, Sendable, Codable {
         checks: [Check],
         homework: [Homework],
         track: [UUID: Track],
-        states: [SkillStateChange] = []
+        states: [SkillStateChange] = [],
+        done: [UUID] = []
     ) {
         self.classID = classID
         self.date = date
@@ -66,5 +71,21 @@ public struct SessionClose: Hashable, Sendable, Codable {
         self.homework = homework
         self.track = track
         self.states = states
+        self.done = done
+    }
+
+    /// A close kept in the queue by build 20 has no done lines.
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        try self.init(
+            classID: c.decodeIfPresent(UUID.self, forKey: .classID),
+            date: c.decode(Day.self, forKey: .date),
+            marks: c.decode([UUID: AttendanceStatus].self, forKey: .marks),
+            checks: c.decode([Check].self, forKey: .checks),
+            homework: c.decode([Homework].self, forKey: .homework),
+            track: c.decode([UUID: Track].self, forKey: .track),
+            states: c.decodeIfPresent([SkillStateChange].self, forKey: .states) ?? [],
+            done: c.decodeIfPresent([UUID].self, forKey: .done) ?? []
+        )
     }
 }

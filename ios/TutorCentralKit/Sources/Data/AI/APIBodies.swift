@@ -194,3 +194,87 @@ struct PlacementEnvelope: Decodable {
     let id: UUID
     let result: Result
 }
+
+/// POST /ai/make with kind `sheet` (P10-Sheet): group material, no student.
+struct MakeSheetBody: Encodable {
+    let kind = "sheet"
+    let centreId: String
+    let classLevel: String
+    let subject: String
+    let skills: [String]
+    let questions: Int
+    let forHomework: Bool
+    let reason: String?
+}
+
+/// POST /ai/make with kind `worked_example`.
+struct MakeWorkedExampleBody: Encodable {
+    let kind = "worked_example"
+    let centreId: String
+    let classLevel: String
+    let subject: String
+    let skill: String
+}
+
+/// POST /ai/make with kind `figure`: `figure` names the template.
+struct MakeFigureBody: Encodable {
+    let kind = "figure"
+    let centreId: String
+    let figure: String
+    let classLevel: String
+    let subject: String
+    let skill: String
+}
+
+/// POST /ai/make with kind `brief`.
+struct MakeBriefBody: Encodable {
+    let kind = "brief"
+    let centreId: String
+    let classLevel: String
+    let subject: String
+    let chapter: String
+}
+
+/// POST /ai/plan: the groups to name, by class and subject.
+struct PlanBody: Encodable {
+    struct Group: Encodable {
+        let groupNo: Int
+        let classLevel: String
+        let subject: String
+    }
+
+    let centreId: String
+    let classId: String?
+    let date: String
+    let month: Int
+    let groups: [Group]
+
+    /// `classId` is sent as null when there is no batch, as the schema reads it.
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: Keys.self)
+        try container.encode(centreId, forKey: .centreId)
+        try container.encode(classId, forKey: .classId)
+        try container.encode(date, forKey: .date)
+        try container.encode(month, forKey: .month)
+        try container.encode(groups, forKey: .groups)
+    }
+
+    private enum Keys: String, CodingKey { case centreId, classId, date, month, groups }
+}
+
+/// `{ id, result }` for a kind whose result decodes as `Result`.
+struct MadeEnvelope<Result: Decodable>: Decodable {
+    let id: UUID
+    let result: Result
+}
+
+/// A sheet as the API answers it (a question set); the app adds its use.
+struct SheetResult: Decodable {
+    let title: String
+    let instructions: String?
+    let questions: [SheetQuestion]
+}
+
+struct TopicsResult: Decodable {
+    let groups: [PlanTopic]
+}

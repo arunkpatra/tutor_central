@@ -45,6 +45,7 @@ public enum Fixtures {
             textbooks: closeStates.contains(state) ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),
+            plans: FakePlansRepository(), photos: FakePhotoStore(),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),

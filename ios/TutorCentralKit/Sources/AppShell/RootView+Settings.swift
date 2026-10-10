@@ -78,7 +78,7 @@ extension RootView {
             DeleteAccountView(
                 store: DeleteAccountStore(
                     workspace: workspace, register: register(for: workspace), auth: deps.auth, account: deps.account,
-                    reauthorize: reauthorize
+                    photos: deps.photos, reauthorize: reauthorize
                 ) {
                     await wipe.run()
                     session.deleted(centreName: workspace.centre.name)

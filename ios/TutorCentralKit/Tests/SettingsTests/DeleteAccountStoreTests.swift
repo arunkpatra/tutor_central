@@ -9,6 +9,7 @@ import Testing
     let auth = FakeAuthRepository(user: FakeAuthRepository.meera)
     let account = FakeAccountRepository()
     let followUps = FollowUps()
+    let photos = FakePhotoStore()
 
     /// What ran after the deletion, before the store said done.
     @MainActor final class FollowUps {
@@ -27,7 +28,7 @@ import Testing
         let followUps = followUps
         return DeleteAccountStore(
             workspace: FakeCentreRepository.meeraWorkspace, register: register, auth: auth, account: account,
-            reauthorize: reauthorize, onDeleted: { followUps.count += 1 }
+            photos: photos, reauthorize: reauthorize, onDeleted: { followUps.count += 1 }
         )
     }
 
@@ -142,5 +143,29 @@ import Testing
         store.cancel()
         await run.value
         #expect(auth.deleted == 1 && followUps.count == 1 && store.phase == .done)
+    }
+
+    @Test func deletionRemovesTheCentresPhotosAfterAppleAndBeforeTheAccount() async throws {
+        let centre = FakeCentreRepository.meeraWorkspace.centre.id
+        _ = try await photos.add(Data([1]), centre: centre, kind: "own")
+        let store = make()
+        await store.load()
+        store.typed = "Bright Minds Tuition"
+        await store.delete()
+        #expect(photos.paths.isEmpty && account.revoked == ["code-1"] && auth.deleted == 1)
+    }
+
+    @Test func aPhotoRemovalThatFailsLeavesTheAccountWhole() async throws {
+        _ = try await photos.add(Data([1]), centre: FakeCentreRepository.meeraWorkspace.centre.id, kind: "own")
+        photos.failure = URLError(.notConnectedToInternet)
+        let store = make()
+        await store.load()
+        store.typed = "Bright Minds Tuition"
+        await store.delete()
+        #expect(auth.deleted == 0 && photos.paths.count == 1)
+        #expect(store.phase == .failed(DeleteAccountStore.Failure(
+            title: "Couldn't delete your account.",
+            line: "Check your connection and try again. Nothing was removed; you are still signed in."
+        )))
     }
 }
