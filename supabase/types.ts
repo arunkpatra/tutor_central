@@ -289,14 +289,14 @@ isOneToOne: false
                   ]
                 },"classes": {
                   Row: {
-                    "archived_at": string | null,"centre_id": string,"created_at": string,"end_time": string | null,"id": string,"meeting_days": (number)[],"monthly_fee": number | null,"name": string,"start_time": string | null,"subject": string | null,"updated_at": string
+                    "archived_at": string | null,"centre_id": string,"created_at": string,"end_time": string | null,"id": string,"meeting_days": (number)[],"monthly_fee": number | null,"name": string,"plan_groups": number | null,"plan_pattern": NonNullable<Json>,"start_time": string | null,"subject": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"centre_id": string,"created_at"?: string,"end_time"?: string | null,"id"?: string,"meeting_days"?: (number)[],"monthly_fee"?: number | null,"name": string,"start_time"?: string | null,"subject"?: string | null,"updated_at"?: string
+                    "archived_at"?: string | null,"centre_id": string,"created_at"?: string,"end_time"?: string | null,"id"?: string,"meeting_days"?: (number)[],"monthly_fee"?: number | null,"name": string,"plan_groups"?: number | null,"plan_pattern"?: NonNullable<Json>,"start_time"?: string | null,"subject"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "archived_at"?: string | null,"centre_id"?: string,"created_at"?: string,"end_time"?: string | null,"id"?: string,"meeting_days"?: (number)[],"monthly_fee"?: number | null,"name"?: string,"start_time"?: string | null,"subject"?: string | null,"updated_at"?: string
+                    "archived_at"?: string | null,"centre_id"?: string,"created_at"?: string,"end_time"?: string | null,"id"?: string,"meeting_days"?: (number)[],"monthly_fee"?: number | null,"name"?: string,"plan_groups"?: number | null,"plan_pattern"?: NonNullable<Json>,"start_time"?: string | null,"subject"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -425,14 +425,14 @@ isOneToOne: false
                   ]
                 },"plan_items": {
                   Row: {
-                    "artefact_id": string | null,"centre_id": string,"created_at": string,"done_at": string | null,"group_no": number | null,"id": string,"kind": Database["public"]['Enums']["plan_item_kind"],"plan_id": string,"skill_id": string | null,"student_id": string | null,"updated_at": string
+                    "artefact_id": string | null,"centre_id": string,"created_at": string,"done_at": string | null,"group_no": number | null,"id": string,"kind": Database["public"]['Enums']["plan_item_kind"],"moved_from": number | null,"plan_id": string,"skill_id": string | null,"skipped_at": string | null,"student_id": string | null,"updated_at": string,"words": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "artefact_id"?: string | null,"centre_id": string,"created_at"?: string,"done_at"?: string | null,"group_no"?: number | null,"id"?: string,"kind": Database["public"]['Enums']["plan_item_kind"],"plan_id": string,"skill_id"?: string | null,"student_id"?: string | null,"updated_at"?: string
+                    "artefact_id"?: string | null,"centre_id": string,"created_at"?: string,"done_at"?: string | null,"group_no"?: number | null,"id"?: string,"kind": Database["public"]['Enums']["plan_item_kind"],"moved_from"?: number | null,"plan_id": string,"skill_id"?: string | null,"skipped_at"?: string | null,"student_id"?: string | null,"updated_at"?: string,"words"?: string
                   }
                   Update: {
-                    "artefact_id"?: string | null,"centre_id"?: string,"created_at"?: string,"done_at"?: string | null,"group_no"?: number | null,"id"?: string,"kind"?: Database["public"]['Enums']["plan_item_kind"],"plan_id"?: string,"skill_id"?: string | null,"student_id"?: string | null,"updated_at"?: string
+                    "artefact_id"?: string | null,"centre_id"?: string,"created_at"?: string,"done_at"?: string | null,"group_no"?: number | null,"id"?: string,"kind"?: Database["public"]['Enums']["plan_item_kind"],"moved_from"?: number | null,"plan_id"?: string,"skill_id"?: string | null,"skipped_at"?: string | null,"student_id"?: string | null,"updated_at"?: string,"words"?: string
                   }
                   Relationships: [
                     {
@@ -699,7 +699,7 @@ isOneToOne: false
 { Args: { "p_class": string }; Returns: undefined
                            },
 "close_session":
-{ Args: { "p_centre": string,"p_checks": Json,"p_class": string,"p_date": string,"p_homework": Json,"p_marks": Json,"p_states"?: Json,"p_track": Json }; Returns: string
+{ Args: { "p_centre": string,"p_checks": Json,"p_class": string,"p_date": string,"p_done"?: (string)[],"p_homework": Json,"p_marks": Json,"p_states"?: Json,"p_track": Json }; Returns: string
                            },
 "copy_textbook_chapters":
 { Args: { "p_centre": string,"p_student": string,"p_textbook": string }; Returns: undefined
@@ -724,6 +724,12 @@ isOneToOne: false
                            },
 "is_member":
 { Args: { "c": string }; Returns: boolean
+                           },
+"keep_artefact":
+{ Args: { "p_artefact": Json,"p_centre": string,"p_group_no": number,"p_item_kind": Database["public"]['Enums']["plan_item_kind"],"p_plan": string,"p_student": string }; Returns: string
+                           },
+"make_plan":
+{ Args: { "p_centre": string,"p_class": string,"p_date": string,"p_groups": Json,"p_items": Json,"p_subjects": Json }; Returns: Json
                            },
 "photo_centre":
 { Args: { "p_name": string }; Returns: string
