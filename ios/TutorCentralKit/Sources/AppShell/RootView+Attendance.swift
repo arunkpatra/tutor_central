@@ -4,7 +4,9 @@ import Domain
 import Foundation
 import SwiftUI
 
-/// The Attendance tab's wiring: its one store, the ways in (the tab, Mark attendance, the link) and its root.
+/// Attendance's wiring (D65: under More, pushed): its one store, the ways in (More's row, Mark attendance on Today and
+/// on
+/// a batch, History's session, the link) and its screen.
 extension RootView {
     /// One mark screen for the life of the workspace, so the date, the class and the unsaved toggles survive a tab
     /// switch. It reads the shared register.
@@ -26,16 +28,21 @@ extension RootView {
         return made
     }
 
-    /// Mark attendance on a class, on Today, or the `attendance?date=&class=` link: the tab, at that class and day (a
-    /// day that does not parse is today).
+    /// Mark attendance on a batch or on Today, History's session, a student's month: the mark root on the tab that
+    /// asked, at that batch and day.
     func openAttendance(classID: UUID?, date: Day?, in workspace: Workspace) {
+        shell.tabs.showAttendance()
+        loadAttendance(classID: classID, date: date, in: workspace)
+    }
+
+    /// The mark screen at a batch and day (a day that does not parse is today); the `attendance?date=&class=` link has
+    /// already put it on More's stack.
+    func loadAttendance(classID: UUID?, date: Day?, in workspace: Workspace) {
         let store = attendanceStore(for: workspace)
-        shell.tabs.paths[.attendance] = []
-        shell.tabs.selected = .attendance
         Task { await store.open(classID: classID, date: date ?? store.today) }
     }
 
-    /// History, pushed on the Attendance tab; a class opens on the mark root at its day.
+    /// History, pushed over the mark root; a batch's session opens the mark root at its day.
     @ViewBuilder var historyView: some View {
         if case let .ready(workspace) = session.state {
             HistoryView(

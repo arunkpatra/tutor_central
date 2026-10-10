@@ -10,7 +10,7 @@ import Testing
 
     @Test func aNewFormStartsEmptyWithSaveDisabled() {
         let form = StudentFormStore(mode: .new, classes: classes, today: today)
-        #expect(form.title == "New student" && form.classLabel == "No class" && form.feePlaceholder == "0" && !form
+        #expect(form.title == "New student" && form.classLabel == "No batch yet" && form.feePlaceholder == "0" && !form
             .canSave)
         #expect(form.feeHelper == "Pick a class to use its fee, or type one here." && form.notesCount == 0)
         form.name = "Riya Sharma"

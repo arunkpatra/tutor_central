@@ -4,12 +4,12 @@ import Foundation
 import SwiftUI
 
 /// The five tabs on iOS 26's own tab bar (components.md, "Tab bar": the system's floating glass bar with the board's
-/// symbols), each with its own navigation stack. Today's and Students' roots and the Students screens are passed in;
-/// the other three tabs are on the way.
+/// symbols), each with its own navigation stack: Today, Students, School, Fees, More (P10-Shell-Today). Attendance is a
+/// pushed screen (D65).
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
     Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
-    Payments: View, Reports: View, Tools: View
+    Payments: View, Reports: View, Tools: View, School: View
 >: View {
     @Bindable var state: TabsState
     let toasts: ToastCenter
@@ -31,15 +31,15 @@ struct TabsView<
     let reports: () -> Reports
     /// The AI tools' screens (the Assistant, its forms, results and History).
     let tools: (Route) -> Tools
+    /// The School tab's root: the Later card until Phase 13.
+    let school: () -> School
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
             Tab("Today", systemImage: "sun.max", value: AppTab.today) { stack(.today) { today() } }
             Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
+            Tab("School", systemImage: "building.columns", value: AppTab.school) { stack(.school) { school() } }
             Tab("Fees", systemImage: "indianrupeesign", value: AppTab.fees) { stack(.fees) { fees() } }
-            Tab("Attendance", systemImage: "checkmark.circle", value: AppTab.attendance) {
-                stack(.attendance) { attendance() }
-            }
             Tab("More", systemImage: "ellipsis", value: AppTab.more) {
                 stack(.more) { MoreView { state.push($0) } }
             }
@@ -51,7 +51,7 @@ struct TabsView<
     @ViewBuilder private func destination(_ route: Route) -> some View {
         switch route {
         case .student, .classes, .classroom, .studentFees: studentsDestination(route)
-        case .history, .historyStudent: attendanceDestination(route)
+        case .attendance, .history, .historyStudent: attendanceDestination(route)
         case .settings, .account, .deleteAccount, .help, .pendingChanges, .reminders: settings(route)
         case .payments, .reports: moreDestination(route)
         case .schedule: schedule(nil)
@@ -81,10 +81,10 @@ struct TabsView<
     }
 
     @ViewBuilder private func attendanceDestination(_ route: Route) -> some View {
-        if case let .historyStudent(id) = route {
-            studentMonth(id)
-        } else {
-            history()
+        switch route {
+        case let .historyStudent(id): studentMonth(id)
+        case .history: history()
+        default: attendance()
         }
     }
 

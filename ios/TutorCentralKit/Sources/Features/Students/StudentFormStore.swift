@@ -89,7 +89,7 @@ import Observation
     }
 
     public var classLabel: String {
-        classroom?.name ?? "No class"
+        classroom?.name ?? "No batch yet"
     }
 
     public var classFee: Money? {

@@ -6,8 +6,8 @@ import Testing
 @MainActor struct ClassFormStoreTests {
     @Test func aNewClassNeedsOnlyAName() {
         let form = ClassFormStore(mode: .new)
-        #expect(form.title == "New class" && !form.canSave && form.summary == "No days set" && form
-            .feeHelper == "Students you add to this class start at this fee.")
+        #expect(form.title == "New batch" && !form.canSave && form.summary == "No days set" && form
+            .feeHelper == "Students you add to this batch start at this fee.")
         form.name = "Class 12 Physics"
         #expect(form.canSave && form.draft.trimmedName == "Class 12 Physics" && form.draft.meetingDays.isEmpty)
     }
@@ -42,12 +42,12 @@ import Testing
 
     @Test func editingStartsFromTheClassAndSavesOnlyWhenChanged() {
         let form = ClassFormStore(mode: .edit(FakeClassesRepository.maths))
-        #expect(form.title == "Edit class" && form.name == "Class 10 Maths" && form.subject == "Mathematics" && form
+        #expect(form.title == "Edit batch" && form.name == "Class 10 Maths" && form.subject == "Mathematics" && form
             .feeText == "1,200")
         #expect(form.days == [.monday, .wednesday, .friday] && form.summary == "Mon, Wed, Fri · 17:00–18:00" && !form
             .canSave)
         #expect(form
-            .feeHelper == "Changing it changes the fee of every student on the class fee, from next month's bill.")
+            .feeHelper == "Changing it changes the fee of every student on the batch fee, from next month's bill.")
         form.daySelection.insert(6)
         #expect(form.isChanged && form.canSave)
     }

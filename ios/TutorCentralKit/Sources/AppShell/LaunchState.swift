@@ -20,6 +20,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case todayEmpty = "today-empty"
     case laterStudents = "later-students"
     case laterAttendance = "later-attendance"
+    /// The School tab's Later card (P2-Later's pattern, P10-School-Empty's symbol) until Phase 13.
+    case laterSchool = "later-school"
     case laterMore = "later-more"
     case settings
     case studentsEmpty = "students-empty"

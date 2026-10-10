@@ -169,7 +169,7 @@ public struct ClassDetailView: View {
                     EmptyRow(
                         symbol: "person.2",
                         title: "No students yet",
-                        line: "Add students from the register, or pick this class when you add one."
+                        line: "Add students from the register, or pick this batch when you add one."
                     )
                 } else {
                     VStack(spacing: 0) {

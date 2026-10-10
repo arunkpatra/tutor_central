@@ -43,13 +43,13 @@ struct TodaySection: View {
                         EmptyRow(
                             symbol: "calendar",
                             title: "Nothing today",
-                            line: "No classes meet today and there are no events."
+                            line: "No batches meet today and there are no events."
                         )
                     } else {
                         EmptyRow(
                             symbol: "calendar",
-                            title: "No classes yet",
-                            line: "Classes you create show here on the days they meet, with one tap to mark attendance."
+                            title: "No batches yet",
+                            line: "Batches you create show here on the days they meet, with one tap to mark attendance."
                         )
                     }
                 } else {

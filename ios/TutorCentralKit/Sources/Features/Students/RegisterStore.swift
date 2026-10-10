@@ -102,7 +102,7 @@ import Observation
         switch filter {
         case .all: return "\(shown) \(shown == 1 ? "student" : "students")"
         case let .classroom(id): return "\(shown) in \(classroom(id)?.name ?? "the class")"
-        case .unassigned: return "\(shown) with no class"
+        case .unassigned: return "\(shown) with no batch"
         case .archived: return "\(shown) archived"
         }
     }

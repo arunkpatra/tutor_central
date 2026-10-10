@@ -24,7 +24,7 @@ import Testing
             messages: FakeMessageLogRepository()
         )
         #expect(detail.student?.name == "Akshita Rao" && detail.classroom?.name == "Class 10 Maths")
-        #expect(detail.feeLine == "₹1,200 a month, the class fee" && detail.monthTitle == "October 2026")
+        #expect(detail.feeLine == "₹1,200 a month, the batch fee" && detail.monthTitle == "October 2026")
         #expect(detail.monthLine == "Paid by UPI on 4 Oct" && detail.monthAmount == "₹1,200" && detail.monthMark?
             .text == "Paid")
         #expect(detail.archivedLine == nil && detail.notesLine == nil)

@@ -104,7 +104,7 @@ public enum FeeActionKind: Sendable {
             return "\(own.formatted) a month"
         }
         if let fee = classroom?.monthlyFee {
-            return "\(fee.formatted) a month, the class fee"
+            return "\(fee.formatted) a month, the batch fee"
         }
         return "No fee set yet"
     }

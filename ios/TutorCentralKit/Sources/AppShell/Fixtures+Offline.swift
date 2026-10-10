@@ -19,7 +19,7 @@ extension Fixtures {
         switch state {
         case .offlineStudents, .offlineWriteRefused: .students
         case .offlineFees, .offlineNoCache, .offlineFeeMarked: .fees
-        case .offlineAttendanceSaved: .attendance
+        case .offlineAttendanceSaved: .more
         default: nil
         }
     }

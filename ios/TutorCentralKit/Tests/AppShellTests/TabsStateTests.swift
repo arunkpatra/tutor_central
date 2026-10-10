@@ -28,11 +28,27 @@ import Testing
         #expect(tabs.paths[.students] == [] && tabs.selected == .students)
     }
 
-    @Test func anAttendanceLinkOpensTheTab() {
-        let tabs = TabsState(selected: .today)
-        tabs.push(.settings)
+    @Test func anAttendanceLinkPushesTheMarkRootOnMore() {
+        let tabs = TabsState(selected: .fees)
+        tabs.push(.payments)
         #expect(tabs.open(.attendance(date: "2026-10-05", classID: nil)))
-        #expect(tabs.selected == .attendance && tabs.paths[.attendance] == [])
+        #expect(tabs.selected == .more && tabs.paths[.more] == [.attendance])
+        // Another tab's stack is left alone.
+        #expect(tabs.paths[.fees] == [.payments])
+    }
+
+    @Test func markAttendancePushesOnTheTabThatAskedAndComesBackToAnOpenMarkRoot() {
+        let tabs = TabsState(selected: .today)
+        tabs.showAttendance()
+        #expect(tabs.paths[.today] == [.attendance])
+        tabs.push(.history)
+        // History's session opens the mark root already under it, not a second one.
+        tabs.showAttendance()
+        #expect(tabs.paths[.today] == [.attendance])
+        tabs.select(.students)
+        tabs.push(.classroom(UUID()))
+        tabs.showAttendance()
+        #expect(tabs.paths[.students]?.last == .attendance && tabs.paths[.students]?.count == 2)
     }
 
     @Test func anEventLinkOpensItOnTheMoreTab() {

@@ -37,17 +37,17 @@ import Observation
 
     public var title: String {
         if case .edit = mode {
-            "Edit class"
+            "Edit batch"
         } else {
-            "New class"
+            "New batch"
         }
     }
 
     public var feeHelper: String {
         if case .edit = mode {
-            "Changing it changes the fee of every student on the class fee, from next month's bill."
+            "Changing it changes the fee of every student on the batch fee, from next month's bill."
         } else {
-            "Students you add to this class start at this fee."
+            "Students you add to this batch start at this fee."
         }
     }
 

@@ -2,8 +2,9 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// The More tab's root (P7-More, dark and light): Organise (Schedule, Tasks, Classes, Reports), Create (the AI tools)
-/// and App (Settings, Account, Help). Its rows are navigation, so the root is AppShell's.
+/// The More tab's root (P10-More, dark and light): Organise (Schedule, Attendance, Tasks, Batches, Reports), Make (Make
+/// something, Check a paper, Scan register) and App (Settings, Account, Help). Its rows are navigation, so the root is
+/// AppShell's. Make something opens the AI Assistant until Phase 15 builds Make (the 10.1 note).
 struct MoreView: View {
     let open: (Route) -> Void
     @State private var topInset: CGFloat = 0
@@ -18,12 +19,15 @@ struct MoreView: View {
                     .accessibilityAddTraits(.isHeader)
                 group("Organise") {
                     SettingRow(symbol: "calendar", label: "Schedule", action: { open(.schedule) }).rowDivider()
-                    SettingRow(symbol: "checkmark.circle", label: "Tasks", action: { open(.tasks) }).rowDivider()
-                    SettingRow(symbol: "book.closed", label: "Classes", action: { open(.classes) }).rowDivider()
+                    SettingRow(symbol: "checkmark.circle", label: "Attendance", action: { open(.attendance) })
+                        .rowDivider()
+                    SettingRow(symbol: "checklist", label: "Tasks", action: { open(.tasks) }).rowDivider()
+                    SettingRow(symbol: "book.closed", label: "Batches", action: { open(.classes) }).rowDivider()
                     SettingRow(symbol: "chart.bar", label: "Reports", action: { open(.reports) })
                 }
-                group("Create") {
-                    SettingRow(symbol: "sparkles", label: "AI Assistant", action: { open(.aiAssistant) }).rowDivider()
+                group("Make") {
+                    SettingRow(symbol: "sparkles", label: "Make something", action: { open(.aiAssistant) })
+                        .rowDivider()
                     SettingRow(
                         symbol: "doc.text.magnifyingglass", label: "Check a paper",
                         action: { open(.checkPaper(UUID())) }

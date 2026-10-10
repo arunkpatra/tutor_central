@@ -1,3 +1,4 @@
+import Domain
 import Foundation
 import Testing
 @testable import AppShell
@@ -35,7 +36,17 @@ struct DeepLinkTests {
     @Test func eachLinkNamesItsTab() {
         #expect(DeepLink.today.tab == .today && DeepLink.student(UUID()).tab == .students)
         #expect(DeepLink.fees(month: nil).tab == .fees && DeepLink.attendance(date: nil, classID: nil)
-            .tab == .attendance)
+            .tab == .more)
         #expect(DeepLink.event(UUID()).tab == .more && DeepLink.authCallback.tab == .today)
+    }
+
+    @Test func attendanceOpensOnTheMoreTab() throws {
+        let url =
+            try #require(
+                URL(string: "tutorcentral://attendance?date=2026-10-05&class=33333333-3333-3333-3333-333333333331")
+            )
+        let link = try #require(DeepLink(url: url))
+        #expect(link.tab == .more)
+        #expect(AppTab.allCases == [.today, .students, .school, .fees, .more])
     }
 }

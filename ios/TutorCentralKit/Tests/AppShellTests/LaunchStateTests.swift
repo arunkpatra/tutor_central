@@ -109,8 +109,9 @@ struct LaunchStateTests {
         ]
         for state in states {
             #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
-            #expect(RootView.tab(for: state) == .attendance)
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.attendance])
         }
+        #expect(RootView.tab(for: .laterSchool) == .school)
         #expect(RootView.attendanceBoardState(.attendanceClassMenu) == .classMenu)
         #expect(RootView.attendanceBoardState(.attendanceAlert) == .alert)
         let centre = Fixtures.meeraWorkspace.centre.id
@@ -125,11 +126,12 @@ struct LaunchStateTests {
         #expect(try await empty.students.students(centre: centre, period: october).isEmpty)
     }
 
-    @MainActor @Test func theHistoryStatesPushOnTheAttendanceTab() {
+    @MainActor @Test func theHistoryStatesPushOverTheMarkRootOnMore() {
         for state in [LaunchState.history, .historyByStudent, .historyEmpty] {
-            #expect(RootView.tab(for: state) == .attendance && RootView.initialRoutes(for: state) == [.history])
+            #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.attendance, .history])
         }
         #expect(RootView.initialRoutes(for: .historyStudent) == [
+            .attendance,
             .history,
             .historyStudent(FakeAttendanceRepository.hemanth),
         ])
@@ -260,7 +262,7 @@ struct LaunchStateTests {
 
     /// U33's boards: each opens where its board draws it.
     @MainActor @Test func theU33StatesOpenWhereTheirBoardsDo() {
-        #expect(RootView.tab(for: .attendanceSaveFailed) == .attendance)
+        #expect(RootView.tab(for: .attendanceSaveFailed) == .more)
         #expect(RootView.attendanceBoardState(.attendanceSaveFailed) == .saveFailed)
         #expect(RootView.tab(for: .eventGone) == .more && RootView
             .initialRoutes(for: .eventGone) == [.event(Fixtures.goneEvent)])
