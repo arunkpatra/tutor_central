@@ -40,6 +40,11 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case studentNewClassPicker = "student-new-class-picker"
     case studentNewSchool = "student-new-school"
     case studentNewEnd = "student-new-end"
+    /// V2's student page (P10-Student-Record, -End, -NotKnown, -Ladder).
+    case studentRecord = "student-record"
+    case studentEnd = "student-end"
+    case studentNotKnown = "student-not-known"
+    case studentLadder = "student-ladder"
     case student
     case studentArchived = "student-archived"
     case studentArchiveConfirm = "student-archive-confirm"

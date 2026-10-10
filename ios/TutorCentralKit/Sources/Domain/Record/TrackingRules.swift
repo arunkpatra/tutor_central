@@ -133,7 +133,8 @@ public enum TrackingRules {
         return (share < 0.5 ? .notOnTrack : .watch, "\(right) of \(window.count) checks right over three weeks")
     }
 
-    private static func nextStep(_ status: TrackStatus, current: Skill?) -> String {
+    /// The "Next" line for a status, the current skill named (the tracking card's step).
+    public static func nextStep(_ status: TrackStatus, current: Skill?) -> String {
         switch (status, current) {
         case let (.onTrack, skill?): "Continue with \(skill.name)."
         case let (.watch, skill?): "Teach \(skill.name) again with a worked example."

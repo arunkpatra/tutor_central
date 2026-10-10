@@ -41,7 +41,7 @@ import Testing
             attendance: FakeAttendanceRepository(),
             messages: FakeMessageLogRepository()
         )
-        .feeLine == "₹1,500 a month")
+        .feeLine == "₹1,500 a month, her own fee")
         let dev = try #require(register.students.first { $0.name == "Dev Kumar" })
         let devDetail = StudentDetailStore(
             id: dev.id,

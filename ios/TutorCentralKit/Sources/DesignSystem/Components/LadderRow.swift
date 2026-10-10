@@ -30,7 +30,7 @@ public struct LadderRow: View {
     }
 
     /// The steps for a count of secure ones: those secure, the next current, the rest to come.
-    nonisolated static func stepKinds(secure: Int, of count: Int) -> [Step] {
+    public nonisolated static func stepKinds(secure: Int, of count: Int) -> [Step] {
         (0 ..< count).map { $0 < secure ? .secure : $0 == secure ? .current : .later }
     }
 

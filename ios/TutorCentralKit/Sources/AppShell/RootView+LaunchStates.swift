@@ -18,7 +18,7 @@ extension RootView {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
-             .student, .studentArchived,
+             .student, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
@@ -135,12 +135,12 @@ extension RootView {
 
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.
     static func initialRoutes(for state: LaunchState) -> [Route] {
-        if let routes = settingsRoutes(for: state) ?? attendanceRoutes(for: state) {
+        if let routes = settingsRoutes(for: state) ?? attendanceRoutes(for: state) ?? studentPageRoutes(for: state) {
             return routes
         }
         return switch state {
         case .settings: [.settings]
-        case .student, .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit:
+        case .studentArchived, .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit:
             [.student(FakeStudentsRepository.akshita)]
         case .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm: [.classes]
         case .classDetail, .classAddMembers: [.classroom(FakeClassesRepository.maths.id)]
@@ -149,6 +149,16 @@ extension RootView {
             state == .eventGone ? [.event(Fixtures.goneEvent)] : [.schedule]
         case .tasks, .tasksEmpty: [.tasks]
         default: studentFeesRoutes(for: state)
+        }
+    }
+
+    /// V2's student page (P10-Student and its scrolls): Hemanth; not known yet: Riya; the ladder: Sahil.
+    private static func studentPageRoutes(for state: LaunchState) -> [Route]? {
+        switch state {
+        case .student, .studentRecord, .studentEnd: [.student(FakeStudentsRepository.hemanth)]
+        case .studentNotKnown: [.student(FakeStudentsRepository.riya)]
+        case .studentLadder: [.student(FakeStudentsRepository.sahil)]
+        default: nil
         }
     }
 
@@ -190,6 +200,8 @@ extension RootView {
         case .studentArchiveConfirm: .archiveConfirm
         case .studentDeleteConfirm: .deleteConfirm
         case .studentEdit: .edit
+        case .studentRecord: .record
+        case .studentEnd: .end
         default: nil
         }
     }

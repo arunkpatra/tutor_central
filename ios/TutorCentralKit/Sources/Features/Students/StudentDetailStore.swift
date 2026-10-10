@@ -21,19 +21,38 @@ public enum FeeActionKind: Sendable {
     }
 
     public let id: UUID
-    private let register: RegisterStore
+    let register: RegisterStore
     private let attendance: any AttendanceRepository
-    private let messages: any MessageLogRepository
-    private var sessions: [AttendanceSession] = []
+    let messageLog: any MessageLogRepository
+    let textbooks: (any TextbooksRepository)?
+    let record: (any RecordRepository)?
+    let now: @Sendable () -> Date
+    var sessions: [AttendanceSession] = []
     private var feeLogs: [FeeLog] = []
+    // V2's record (P10-Student): the student's chapters and skills, checks and homework, every message sent.
+    var chapters: [Chapter] = []
+    var skills: [Skill] = []
+    var checkRecords: [CheckRecord] = []
+    var homeworkRecords: [HomeworkRecord] = []
+    var entries: [MessageEntry] = []
+    var openChapterID: UUID?
+    /// The record's reads have answered (the record's board opens its chapter then).
+    public internal(set) var recordLoaded = false
+    /// A refused write's words for the system alert (U33); the view clears it.
+    public var message: String?
 
     public init(
-        id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository
+        id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository,
+        textbooks: (any TextbooksRepository)? = nil, record: (any RecordRepository)? = nil,
+        now: @escaping @Sendable () -> Date = Date.init
     ) {
         self.id = id
         self.register = register
         self.attendance = attendance
-        self.messages = messages
+        messageLog = messages
+        self.textbooks = textbooks
+        self.record = record
+        self.now = now
     }
 
     /// Nil while nothing is marked this month: the empty row says so, never 0%.
@@ -54,17 +73,19 @@ public enum FeeActionKind: Sendable {
         )
     }
 
-    /// This month's sessions and the student's fee messages; a failed read leaves its section as it was.
+    /// This month's sessions, the student's fee messages and the record; a failed read leaves its section as it was.
     public func load() async {
         let centre = register.workspace.centre.id
         async let sessionsRead = try? attendance.sessions(centre: centre, month: register.period)
-        async let logsRead = try? messages.feeLogs(centre: centre, student: id)
+        async let logsRead = try? messageLog.feeLogs(centre: centre, student: id)
+        async let recordRead: Void = loadRecord()
         if let read = await sessionsRead {
             sessions = read
         }
         if let read = await logsRead {
             feeLogs = read
         }
+        await recordRead
     }
 
     /// "Reminded Tue 6 Oct" once a reminder about this month's fee was opened (the latest).
@@ -101,7 +122,7 @@ public enum FeeActionKind: Sendable {
     public var feeLine: String {
         guard let student else { return "" }
         if let own = student.monthlyFee {
-            return "\(own.formatted) a month"
+            return "\(own.formatted) a month, \(Self.possessive(student.gender)) own fee"
         }
         if let fee = classroom?.monthlyFee {
             return "\(fee.formatted) a month, the batch fee"

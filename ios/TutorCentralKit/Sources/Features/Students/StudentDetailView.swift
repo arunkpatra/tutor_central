@@ -7,6 +7,9 @@ public enum StudentDetailBoardState: Sendable {
     case archiveConfirm
     case deleteConfirm
     case edit
+    /// Scrolled to the record with the current chapter open (P10-Student-Record); to the end (P10-Student-End).
+    case record
+    case end
 }
 
 /// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent with
@@ -21,6 +24,8 @@ public struct StudentDetailView: View {
     let navigation: StudentsNavigation
     let boardState: StudentDetailBoardState?
     let onMissing: () -> Void
+    /// A refused write's words, for AppShell's system alert (U33).
+    let onMessage: (String) -> Void
     @State private var confirming: Confirmation?
     @State private var deleting = false
     @State private var editing: StudentFormStore?
@@ -33,8 +38,10 @@ public struct StudentDetailView: View {
         actions: StudentsActions,
         navigation: StudentsNavigation,
         boardState: StudentDetailBoardState? = nil,
-        onMissing: @escaping () -> Void
+        onMissing: @escaping () -> Void,
+        onMessage: @escaping (String) -> Void = { _ in }
     ) {
+        self.onMessage = onMessage
         _store = State(initialValue: store)
         self.register = register
         self.actions = actions
@@ -44,6 +51,12 @@ public struct StudentDetailView: View {
     }
 
     public var body: some View {
+        ScrollViewReader { reader in
+            page.task(id: store.recordLoaded) { await scrollForBoard(reader) }
+        }
+    }
+
+    private var page: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 // Outside the student: a screen whose student has gone still has its way back.
@@ -53,7 +66,18 @@ public struct StudentDetailView: View {
                     if let line = store.archivedLine {
                         Banner(symbol: "archivebox", text: line)
                     }
+                    if let tracking = store.tracking {
+                        TrackingSection(lines: tracking, firstName: student.firstName, place: nil)
+                    }
                     ParentCard(student: student, call: store.callURL, whatsApp: store.whatsAppURL, addContact: edit)
+                    ThisWeekSection(rows: store.thisWeek)
+                    RecordSection(store: store, addTextbook: nil, addChapter: nil).id(Anchor.record)
+                    if let checks = store.checks {
+                        ChecksSection(lines: checks)
+                    }
+                    HomeworkSection(rows: store.homework) { id, status in Task { await store.setHomework(id, status) } }
+                    SchoolSection(line: store.schoolEmptyLine)
+                    MessagesSection(rows: store.messages).id(Anchor.end)
                     MonthFeeCard(
                         store: store,
                         seeAll: { actions.openStudentFees(student.id) },
@@ -106,6 +130,11 @@ public struct StudentDetailView: View {
         }
         // A student who goes while the screen is open (deleted elsewhere, a refresh): the route leaves, with a word.
         // A deletion made here dismisses on its own.
+        .onChange(of: store.message) { _, message in
+            guard let message else { return }
+            onMessage(message)
+            store.message = nil
+        }
         .onChange(of: store.student == nil) { _, missing in
             if missing, !deleting {
                 onMissing()
@@ -134,15 +163,18 @@ public struct StudentDetailView: View {
                     if let chip = store.archivedChip {
                         Chip(.neutral(chip, symbol: "archivebox"))
                     }
+                    if let classChip = store.classChip {
+                        Chip(.neutral(classChip))
+                    }
                     if let classroom = store.classroom {
                         Button { navigation.openClass(classroom.id) } label: { Chip(.neutral(classroom.name)) }
                             .pressable()
                     }
-                    Text(store.feeLine)
-                        .typeStyle(Tokens.footnote)
-                        .foregroundStyle(Tokens.text2.color)
-                        .frame(minHeight: Chip.height)
                 }
+                if let school = store.schoolLine {
+                    Text(school).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                }
+                Text(store.feeLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
         }
     }
@@ -224,12 +256,26 @@ public struct StudentDetailView: View {
         }
     }
 
+    private enum Anchor: Hashable {
+        case record, end
+    }
+
+    /// The scrolled boards: the record (its current chapter open) or the end.
+    private func scrollForBoard(_ reader: ScrollViewProxy) async {
+        guard boardState == .record || boardState == .end, store.recordLoaded else { return }
+        if boardState == .record {
+            store.openCurrentChapter()
+        }
+        try? await Task.sleep(for: .seconds(Tokens.panel))
+        reader.scrollTo(boardState == .record ? Anchor.record : Anchor.end, anchor: .top)
+    }
+
     private func setUpBoardState() {
         switch boardState {
         case .archiveConfirm: confirming = .archive
         case .deleteConfirm: confirming = .delete
         case .edit: edit()
-        case nil: break
+        case .record, .end, nil: break
         }
     }
 }
