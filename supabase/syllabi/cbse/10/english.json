@@ -1,0 +1,341 @@
+{
+  "board": "cbse",
+  "classLevel": "10",
+  "subject": "English",
+  "edition": "2026-27",
+  "source": "NCERT, First Flight: Textbook in English for Class X and Footprints without Feet: Supplementary Reader in English for Class X, both Reprint 2026-27, contents pages and lesson tasks; https://ncert.nic.in/textbook/pdf/jeff1ps.pdf, https://ncert.nic.in/textbook/pdf/jefp1ps.pdf. Blueprint: CBSE English Language and Literature (184) SQP 2026-27, https://cbseacademic.nic.in/web_material/SQP/ClassX_2026_27/EnglishL-SQP.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "First Flight: A Letter to God",
+      "skills": [
+        "Reading: understanding the story",
+        "Words with more than one meaning (‘hope’)",
+        "Non-defining relative clauses",
+        "Using negatives for emphasis",
+        "Metaphors",
+        "Speaking about an experience",
+        "Listening: a letter"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "First Flight: Dust of Snow",
+      "skills": [
+        "Reading the poem",
+        "Nature in the poem",
+        "Symbols: the crow and the hemlock",
+        "Relating the poem to one’s own experience"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "First Flight: Fire and Ice",
+      "skills": [
+        "Reading the poem",
+        "What fire and ice stand for",
+        "Rhyme scheme and contrasting ideas"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "First Flight: Nelson Mandela: Long Walk to Freedom",
+      "skills": [
+        "Reading: understanding the text",
+        "Nouns formed from verbs",
+        "Using the definite article with names",
+        "Idiomatic expressions",
+        "Speaking: preparing a short speech",
+        "Looking at contrasts",
+        "Contrasting views with coordinated clauses",
+        "Writing: expressing your opinion"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "First Flight: A Tiger in the Zoo",
+      "skills": [
+        "Reading the poem",
+        "Contrast through words and images",
+        "The effect of repetition",
+        "Comparing poems",
+        "Speaking: for or against zoos"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "First Flight: Two Stories about Flying",
+      "skills": [
+        "Reading: His First Flight",
+        "Reading: The Black Aeroplane",
+        "Writing a composition about learning a skill",
+        "Words with more than one meaning (‘black’)",
+        "Phrases with ‘fly’",
+        "Words with the same or nearly the same meaning"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "First Flight: How to Tell Wild Animals",
+      "skills": [
+        "Reading the poem",
+        "Humour in the poem",
+        "Rhyme",
+        "Poetic licence: liberties with language"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "First Flight: The Ball Poem",
+      "skills": [
+        "Reading the poem",
+        "Loss and responsibility",
+        "The world of possessions",
+        "Writing a paragraph about losing something"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "First Flight: From the Diary of Anne Frank",
+      "skills": [
+        "Reading: understanding the diary",
+        "Compound words",
+        "Phrasal verbs",
+        "Idioms",
+        "Using a dictionary for idiomatic expressions",
+        "Contracted forms",
+        "Listening: a diary extract"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "First Flight: Amanda!",
+      "skills": [
+        "Reading the poem",
+        "The speakers in the poem",
+        "Understanding Amanda’s character"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "First Flight: Glimpses of India",
+      "skills": [
+        "Reading: A Baker from Goa",
+        "Reading: Coorg",
+        "Reading: Tea from Assam",
+        "Writing a paragraph about the author’s childhood",
+        "Comparing two texts",
+        "Collocations",
+        "Words built from a verb and a particle",
+        "Adjectives ending in -ing and -ed"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "First Flight: The Trees",
+      "skills": [
+        "Reading the poem",
+        "Imagery",
+        "The trees as a metaphor",
+        "Comparing poems"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "First Flight: Mijbil the Otter",
+      "skills": [
+        "Reading: understanding the story",
+        "Describing a repeated action in the past",
+        "Noun modifiers",
+        "Expressions for quantity (‘a cloud of dust’)",
+        "Speaking: caring for a pet",
+        "Writing a description of a person or an animal"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "First Flight: Fog",
+      "skills": [
+        "Reading the poem",
+        "Metaphor",
+        "Free verse"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "First Flight: Madam Rides the Bus",
+      "skills": [
+        "Reading: understanding the story",
+        "Understanding the character of Valli",
+        "A child’s point of view in the story",
+        "Speaking: acting out conversations",
+        "Writing a three-paragraph composition"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "First Flight: The Tale of Custard the Dragon",
+      "skills": [
+        "Reading the poem",
+        "Characters in the poem",
+        "Poetic devices: simile and others",
+        "Rhyme scheme",
+        "Images in the poem",
+        "The ballad form"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "First Flight: The Sermon at Benares",
+      "skills": [
+        "Reading: understanding the text",
+        "Old-fashioned style and current language",
+        "Combining clauses with a semicolon or a dash",
+        "Coping with grief",
+        "Writing a three-paragraph composition"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "First Flight: For Anne Gregory",
+      "skills": [
+        "Reading the poem",
+        "Outer beauty and inner qualities",
+        "Being loved for oneself"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "First Flight: The Proposal",
+      "skills": [
+        "Reading a play",
+        "Translated expressions",
+        "Reported speech",
+        "Changing direct speech into reported speech"
+      ]
+    },
+    {
+      "position": 20,
+      "name": "Footprints: A Triumph of Surgery",
+      "skills": [
+        "Reading: understanding the story",
+        "The narrator as a character",
+        "Real-life episode or fiction",
+        "Talking about it: overindulgence of pets and children"
+      ]
+    },
+    {
+      "position": 21,
+      "name": "Footprints: The Thief’s Story",
+      "skills": [
+        "Reading: understanding the story",
+        "Hari Singh’s change of heart",
+        "Why Anil does not hand the thief over",
+        "Talking about it: the setting of the story"
+      ]
+    },
+    {
+      "position": 22,
+      "name": "Footprints: The Midnight Visitor",
+      "skills": [
+        "Reading: understanding the story",
+        "How Ausable outwits Max",
+        "Talking about it: presence of mind"
+      ]
+    },
+    {
+      "position": 23,
+      "name": "Footprints: A Question of Trust",
+      "skills": [
+        "Reading: understanding the story",
+        "The lady’s deception",
+        "Horace Danby as a character",
+        "Talking about it: do intentions justify actions?"
+      ]
+    },
+    {
+      "position": 24,
+      "name": "Footprints: Footprints without Feet",
+      "skills": [
+        "Reading: understanding the story",
+        "Griffin as a scientist",
+        "Talking about it: invisibility and invisible forces"
+      ]
+    },
+    {
+      "position": 25,
+      "name": "Footprints: The Making of a Scientist",
+      "skills": [
+        "Reading: understanding the text",
+        "How one becomes a scientist",
+        "Talking about it: wondering about the world around us"
+      ]
+    },
+    {
+      "position": 26,
+      "name": "Footprints: The Necklace",
+      "skills": [
+        "Reading: understanding the story",
+        "How the necklace changed the Loisels’ life",
+        "The cause of Matilda’s ruin",
+        "Talking about it: honesty and contentment"
+      ]
+    },
+    {
+      "position": 27,
+      "name": "Footprints: Bholi",
+      "skills": [
+        "Reading: understanding the story",
+        "The teacher’s role in Bholi’s change",
+        "Bholi’s refusal of an unequal match",
+        "Talking about it: girls’ rights and education"
+      ]
+    },
+    {
+      "position": 28,
+      "name": "Footprints: The Book That Saved the Earth",
+      "skills": [
+        "Reading a play",
+        "How Noodle handles Think-Tank",
+        "Books and electronic media",
+        "Talking about it: misreading nursery rhymes"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 180,
+    "sections": [
+      {
+        "name": "A (reading)",
+        "questions": 2,
+        "marksEach": 10
+      },
+      {
+        "name": "B (grammar)",
+        "questions": 10,
+        "marksEach": 1
+      },
+      {
+        "name": "B (writing)",
+        "questions": 2,
+        "marksEach": 5
+      },
+      {
+        "name": "C (extracts)",
+        "questions": 2,
+        "marksEach": 5
+      },
+      {
+        "name": "C (short answer)",
+        "questions": 6,
+        "marksEach": 3
+      },
+      {
+        "name": "C (long answer)",
+        "questions": 2,
+        "marksEach": 6
+      }
+    ]
+  }
+}

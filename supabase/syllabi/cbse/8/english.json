@@ -1,0 +1,207 @@
+{
+  "board": "cbse",
+  "classLevel": "8",
+  "subject": "English",
+  "edition": "2026-27",
+  "source": "NCERT, Poorvi: Textbook of English for Grade 8 (Reprint 2026-27), contents page and lesson task headings (Let us learn, Let us listen, Let us speak, Let us write); https://ncert.nic.in/textbook/pdf/hepr1ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "The Wit that Won Hearts",
+      "skills": [
+        "Reading: understanding the story",
+        "Idiomatic expressions",
+        "Sound words",
+        "Compound words",
+        "Conditional sentences (if clauses)",
+        "Listening: a narrated story",
+        "Speaking: tone in questions",
+        "Writing a narrative essay"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "A Concrete Example",
+      "skills": [
+        "Reading the poem",
+        "Word meaning in context",
+        "Making new words by changing a letter",
+        "Listening: a presentation",
+        "Speaking: apologising",
+        "Writing a notice"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Wisdom Paves the Way",
+      "skills": [
+        "Reading a play",
+        "Noun forms of words",
+        "Words with more than one meaning",
+        "Modal verbs",
+        "Listening for speakers’ views",
+        "Speaking: word stress and intonation",
+        "Writing a letter of complaint"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "A Tale of Valour: Major Somnath Sharma and the Battle of Badgam",
+      "skills": [
+        "Reading: understanding the account",
+        "Expressions and their use",
+        "Collective nouns",
+        "Noun and verb pairs (advice, advise)",
+        "Subject-verb agreement",
+        "Speaking about serving the nation",
+        "Writing a letter of enquiry"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Somebody’s Mother",
+      "skills": [
+        "Reading the poem",
+        "Antonyms",
+        "Idioms with ‘hand’",
+        "Analogies",
+        "Speaking: the ‘-ed’ endings",
+        "Narrating an incident",
+        "Writing a diary entry"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Verghese Kurien— I Too Had A Dream",
+      "skills": [
+        "Reading: understanding the text",
+        "Fact and opinion",
+        "Synonyms",
+        "Punctuation: the en dash and the em dash",
+        "Possessive pronouns",
+        "Prepositional phrases",
+        "Speaking: stress, pausing and chunking",
+        "Writing a letter to grandparents"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "The Case of the Fifth Word",
+      "skills": [
+        "Reading a mystery story",
+        "Phrasal verbs",
+        "Commonly confused word pairs",
+        "Spoonerisms",
+        "Linking words: conjunctions and relative pronouns",
+        "Combining sentences",
+        "Reported speech",
+        "Writing a report"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "The Magic Brush of Dreams",
+      "skills": [
+        "Reading the poem",
+        "Words with more than one meaning (‘draw’)",
+        "Expressions of sudden feeling",
+        "Speaking: the falling tone",
+        "Speaking: making requests",
+        "Writing an imaginative essay"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Spectacular Wonders",
+      "skills": [
+        "Reading: understanding the text",
+        "Synonyms",
+        "Binomials",
+        "Participles",
+        "Gerunds",
+        "Speaking: making a presentation",
+        "Writing a descriptive essay"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "The Cherry Tree",
+      "skills": [
+        "Reading: understanding the story",
+        "Odd word out",
+        "Taste words",
+        "Antonyms",
+        "Tenses",
+        "Punctuation",
+        "Speaking: syllables",
+        "Writing an article"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Harvest Hymn",
+      "skills": [
+        "Reading the poem",
+        "Words for farming implements",
+        "Synonyms from context",
+        "Archaic words",
+        "Speaking: silent letters",
+        "Making a presentation",
+        "Writing slogans"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Waiting for the Rain",
+      "skills": [
+        "Reading: understanding the story",
+        "Homophones",
+        "Adjective-noun collocations",
+        "Tenses",
+        "Determiners",
+        "Speaking: role-play",
+        "Writing a letter to a ward councillor"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Feathered Friend",
+      "skills": [
+        "Reading: understanding the story",
+        "Adjectives",
+        "Merged words",
+        "Expressing future time",
+        "Speaking: silent letters",
+        "Speaking: asking for and giving suggestions",
+        "Writing an article"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Magnifying Glass",
+      "skills": [
+        "Reading the poem",
+        "Collective nouns",
+        "Idioms with ‘eye’",
+        "Adjectives with the suffix ‘-ish’",
+        "Speaking: the /v/ and /f/ sounds",
+        "Writing a conversation"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Bibha Chowdhuri: The Beam of Light that Lit the Path for Women in Indian Science",
+      "skills": [
+        "Reading: understanding the text",
+        "Antonyms",
+        "One-word substitutes",
+        "Words with the suffix ‘-ship’",
+        "Acronyms",
+        "Active and passive voice",
+        "Speaking: panel discussion",
+        "Writing a report"
+      ]
+    }
+  ],
+  "blueprint": null
+}

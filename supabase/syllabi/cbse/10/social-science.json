@@ -1,0 +1,393 @@
+{
+  "board": "cbse",
+  "classLevel": "10",
+  "subject": "Social Science",
+  "edition": "2026-27",
+  "source": "NCERT, India and the Contemporary World – II (Textbook in History for Class X), Contemporary India – II (Textbook in Geography for Class X), Democratic Politics-II (Textbook in Political Science for Class X) and Understanding Economic Development (Social Science Textbook for Class X), all Reprint 2026-27, contents pages and chapter headings; https://ncert.nic.in/textbook/pdf/jess3ps.pdf, https://ncert.nic.in/textbook/pdf/jess1ps.pdf, https://ncert.nic.in/textbook/pdf/jess4ps.pdf, https://ncert.nic.in/textbook/pdf/jess2ps.pdf. Order and blueprint: CBSE Social Science (087) SQP 2026-27, https://cbseacademic.nic.in/web_material/SQP/ClassX_2026_27/SocialScience-SQP.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "History: The Rise of Nationalism in Europe",
+      "skills": [
+        "The French Revolution and the idea of the nation",
+        "The making of nationalism in Europe",
+        "What did liberal nationalism stand for?",
+        "The age of revolutions: 1830-1848",
+        "The making of Germany and Italy",
+        "The strange case of Britain",
+        "Visualising the nation",
+        "Nationalism and imperialism"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "History: Nationalism in India",
+      "skills": [
+        "The First World War, Khilafat and Non-Cooperation",
+        "The idea of satyagraha",
+        "The Rowlatt Act",
+        "Differing strands within the movement",
+        "Towards civil disobedience",
+        "The Salt March and the Civil Disobedience Movement",
+        "The limits of civil disobedience",
+        "The sense of collective belonging"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "History: The Making of a Global World",
+      "skills": [
+        "The pre-modern world",
+        "Silk routes link the world",
+        "The nineteenth century (1815-1914)",
+        "Indentured labour migration from India",
+        "The inter-war economy",
+        "The Great Depression",
+        "India and the Great Depression",
+        "Rebuilding a world economy: the post-war era"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "History: The Age of Industrialisation",
+      "skills": [
+        "Before the Industrial Revolution",
+        "Hand labour and steam power",
+        "Industrialisation in the colonies",
+        "Manchester comes to India",
+        "Factories come up",
+        "The early entrepreneurs",
+        "The peculiarities of industrial growth",
+        "Market for goods"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "History: Print Culture and the Modern World",
+      "skills": [
+        "The first printed books",
+        "Print comes to Europe",
+        "The print revolution and its impact",
+        "The reading mania",
+        "India and the world of print",
+        "Religious reform and public debates",
+        "New forms of publication",
+        "Print and censorship"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Geography: Resources and Development",
+      "skills": [
+        "Development of resources",
+        "Resource planning in India",
+        "Land resources",
+        "Land use pattern in India",
+        "Land degradation and conservation measures",
+        "Soil as a resource",
+        "Classification of soils",
+        "Soil erosion and soil conservation"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Geography: Forest and Wildlife Resources",
+      "skills": [
+        "Flora and fauna in India",
+        "Conservation of forest and wildlife in India",
+        "Project Tiger",
+        "Types and distribution of forest and wildlife resources",
+        "Community and conservation"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Geography: Water Resources",
+      "skills": [
+        "Water scarcity and the need for water conservation and management",
+        "Hydraulic structures in ancient India",
+        "Multi-purpose river projects and integrated water resources management",
+        "Rainwater harvesting",
+        "Bamboo drip irrigation system"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Geography: Agriculture",
+      "skills": [
+        "Types of farming",
+        "Primitive subsistence farming",
+        "Intensive subsistence farming",
+        "Commercial farming",
+        "Cropping pattern",
+        "Major crops"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Geography: Minerals and Energy Resources",
+      "skills": [
+        "Mode of occurrence of minerals",
+        "Ferrous minerals",
+        "Non-ferrous minerals",
+        "Non-metallic minerals",
+        "Conservation of minerals",
+        "Conventional sources of energy",
+        "Non-conventional sources of energy",
+        "Conservation of energy resources"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Geography: Manufacturing Industries",
+      "skills": [
+        "Importance of manufacturing",
+        "Classification of industries",
+        "Agro-based industries",
+        "Textile industry",
+        "Sugar industry",
+        "Mineral-based industries",
+        "Industrial pollution and environmental degradation",
+        "Control of environmental degradation"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Geography: Lifelines of National Economy",
+      "skills": [
+        "Roadways",
+        "Railways",
+        "Pipelines",
+        "Waterways",
+        "Major sea ports",
+        "Communication",
+        "International trade",
+        "Tourism as a trade"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Political Science: Power-sharing",
+      "skills": [
+        "Belgium and Sri Lanka",
+        "Majoritarianism in Sri Lanka",
+        "Accommodation in Belgium",
+        "Why power sharing is desirable?",
+        "Forms of power-sharing"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Political Science: Federalism",
+      "skills": [
+        "What is federalism?",
+        "What makes India a federal country?",
+        "Linguistic states",
+        "How is federalism practised?",
+        "Language policy",
+        "Centre-State relations",
+        "Decentralisation in India"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Political Science: Gender, Religion and Caste",
+      "skills": [
+        "Gender and politics",
+        "Public/private division",
+        "Women’s political representation",
+        "Religion, communalism and politics",
+        "Communalism",
+        "Secular state",
+        "Caste and politics",
+        "Caste in politics"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "Political Science: Political Parties",
+      "skills": [
+        "Why do we need political parties?",
+        "How many parties should we have?",
+        "National parties",
+        "State parties",
+        "Challenges to political parties",
+        "How can parties be reformed?"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "Political Science: Outcomes of Democracy",
+      "skills": [
+        "How do we assess democracy’s outcomes?",
+        "Accountable, responsive and legitimate government",
+        "Economic growth and development",
+        "Reduction of inequality and poverty",
+        "Accommodation of social diversity",
+        "Dignity and freedom of the citizens"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "Economics: Development",
+      "skills": [
+        "What development promises — different people, different goals",
+        "Income and other goals",
+        "National development",
+        "How to compare different countries or states?",
+        "Income and other criteria",
+        "Public facilities",
+        "Sustainability of development"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "Economics: Sectors of the Indian Economy",
+      "skills": [
+        "Sectors of economic activities",
+        "Comparing the three sectors",
+        "Primary, secondary and tertiary sectors in India",
+        "Division of sectors as organised and unorganised",
+        "Sectors in terms of ownership: public and private sectors"
+      ]
+    },
+    {
+      "position": 20,
+      "name": "Economics: Money and Credit",
+      "skills": [
+        "Money as a medium of exchange",
+        "Modern forms of money",
+        "Loan activities of banks",
+        "Two different credit situations",
+        "Terms of credit",
+        "Formal sector credit in India",
+        "Self-help groups for the poor"
+      ]
+    },
+    {
+      "position": 21,
+      "name": "Economics: Globalisation and the Indian Economy",
+      "skills": [
+        "Production across countries",
+        "Interlinking production across countries",
+        "Foreign trade and integration of markets",
+        "What is globalisation?",
+        "Factors that have enabled globalisation",
+        "World Trade Organisation",
+        "Impact of globalisation in India",
+        "The struggle for a fair globalisation"
+      ]
+    },
+    {
+      "position": 22,
+      "name": "Economics: Consumer Rights",
+      "skills": [
+        "The consumer in the marketplace",
+        "Consumer movement",
+        "Consumer rights",
+        "Taking the consumer movement forward"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 180,
+    "sections": [
+      {
+        "name": "A (History)",
+        "questions": 4,
+        "marksEach": 1
+      },
+      {
+        "name": "A (History, 2 marks)",
+        "questions": 1,
+        "marksEach": 2
+      },
+      {
+        "name": "A (History, 3 marks)",
+        "questions": 1,
+        "marksEach": 3
+      },
+      {
+        "name": "A (History, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      },
+      {
+        "name": "A (History, case)",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "A (History, map)",
+        "questions": 1,
+        "marksEach": 2
+      },
+      {
+        "name": "B (Geography)",
+        "questions": 6,
+        "marksEach": 1
+      },
+      {
+        "name": "B (Geography, 2 marks)",
+        "questions": 1,
+        "marksEach": 2
+      },
+      {
+        "name": "B (Geography, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      },
+      {
+        "name": "B (Geography, case)",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "B (Geography, map)",
+        "questions": 1,
+        "marksEach": 3
+      },
+      {
+        "name": "C (Political Science)",
+        "questions": 4,
+        "marksEach": 1
+      },
+      {
+        "name": "C (Political Science, 2 marks)",
+        "questions": 2,
+        "marksEach": 2
+      },
+      {
+        "name": "C (Political Science, 3 marks)",
+        "questions": 1,
+        "marksEach": 3
+      },
+      {
+        "name": "C (Political Science, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      },
+      {
+        "name": "C (Political Science, case)",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "D (Economics)",
+        "questions": 6,
+        "marksEach": 1
+      },
+      {
+        "name": "D (Economics, 3 marks)",
+        "questions": 3,
+        "marksEach": 3
+      },
+      {
+        "name": "D (Economics, 5 marks)",
+        "questions": 1,
+        "marksEach": 5
+      }
+    ]
+  }
+}

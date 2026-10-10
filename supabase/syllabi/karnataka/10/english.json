@@ -1,0 +1,341 @@
+{
+  "board": "karnataka",
+  "classLevel": "10",
+  "subject": "English",
+  "edition": "2026-27",
+  "source": "KTBS, English First Language (Revised), Tenth Standard, Part I and Part II (state English First Language reader: Prose, Poetry, Non-Detail), English medium, contents page and the book's Design of Activities and Exercises; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/LANGUAGE%20TEXTBOOKS/10th%20English%20FL%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/LANGUAGE%20TEXTBOOKS/10th%20English%20FL%20Part%20-%202%202026-27.pdf ; blueprint from KSEAB SSLC Model Question Paper 1 (2025-26 set on the 2025-26 model paper page), First Language English 14E, https://kseeb.karnataka.gov.in/QP2026/SSLC2025-26MODEL_QP",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Prose: A Wrong Man in Workers' Paradise",
+      "skills": [
+        "Reading: comprehension and close study",
+        "Antonyms, idioms and phrases",
+        "Dictionary work",
+        "Skimming and scanning",
+        "Speaking: role play",
+        "Making requests and giving directions",
+        "Articles and prepositions"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Prose: The Elixir of Life",
+      "skills": [
+        "Reading: comprehension and close study",
+        "Matching words with meanings; antonyms",
+        "Flow chart to paragraph",
+        "Pie chart to paragraph",
+        "Report writing and presentation",
+        "Pronunciation of commonly mispronounced words",
+        "Countable and uncountable nouns"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Prose: The Gift of the Magi",
+      "skills": [
+        "Phrases, idioms and antonyms",
+        "Dialogue writing",
+        "Reported speech and oral reporting",
+        "Letter writing",
+        "Pronunciation: silent letters",
+        "Narrating a story from pictures",
+        "Subject-verb agreement",
+        "Question tags and inversion"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Prose: Louis Pasteur, Conqueror of Disease",
+      "skills": [
+        "Antonyms and differences between words",
+        "Passive construction",
+        "Reporting",
+        "Parts of the body as verbs",
+        "Collocations",
+        "Word stress",
+        "Joke session",
+        "Rhetorical patterns"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Prose: What is Moral Action?",
+      "skills": [
+        "Similar but different words",
+        "One-word substitutes",
+        "Paragraph writing",
+        "Note-making",
+        "Group discussion",
+        "Tenses: present, past and future time"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Poem: To a Pair of Sarus Cranes",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Figures of speech",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Poem: Abraham Lincoln's Letter to his Son's Teacher",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Poem: The Temple and the Body (Vachana)",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Figures of speech",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Poem: Lochinvar",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Figures of speech",
+        "Rhythm and rhyme scheme",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Poem: A Poison Tree",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Alliteration",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Non-detail: Treasure Island",
+      "skills": [
+        "Glossary: word meanings",
+        "Comprehension questions",
+        "Group discussion"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Non-detail: Karna",
+      "skills": [
+        "Reading for self-study",
+        "Glossary: word meanings",
+        "Comprehension questions"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Prose: The Eyes are not Here",
+      "skills": [
+        "Dictionary work: sound words",
+        "Report writing",
+        "Going beyond the story",
+        "Pronunciation: word endings",
+        "Informal expressions in conversation",
+        "Modals"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Prose: The Girl who was Anne Frank",
+      "skills": [
+        "One-word substitutes and word formation",
+        "Frequency words",
+        "Collocations",
+        "Diary writing",
+        "Paragraph writing",
+        "Speaking: introducing oneself and interviews",
+        "Pronunciation: vowels",
+        "Modals and the passive verb form"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Prose: A Village Cricket Match",
+      "skills": [
+        "Antonyms",
+        "Punctuation",
+        "Direct speech",
+        "Dictionary work",
+        "Speaking: narrating an event",
+        "Debate",
+        "Synthesis of sentences: simple to simple"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "Prose: Consumerist Culture",
+      "skills": [
+        "Synonyms, antonyms and one word for definitions",
+        "Idioms",
+        "Group discussion",
+        "Conducting a survey and presenting findings",
+        "Debate",
+        "Pronunciation: shift in stress",
+        "Passive construction",
+        "Synthesis of sentences: simple to complex and compound"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "Prose: The Pie and the Tart",
+      "skills": [
+        "Odd word out",
+        "Types of humour",
+        "Reporting",
+        "Dialogue writing",
+        "Homophones",
+        "Weak forms in connected speech",
+        "Play reading and role play",
+        "Passive construction: instructions and recipes"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "Poem: Sonnet 73",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Metaphors",
+        "Rhyme scheme of the sonnet",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "Poem: The Stolen Boat",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Figures of speech",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 20,
+      "name": "Poem: Mending Wall",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Metaphor",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 21,
+      "name": "Poem: Buttoo",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 22,
+      "name": "Poem: C.L.M.",
+      "skills": [
+        "Reading the poem: comprehension",
+        "Close study of lines",
+        "Figures of speech",
+        "Rhyme scheme",
+        "Paragraph writing"
+      ]
+    },
+    {
+      "position": 23,
+      "name": "Non-detail: Ulysses and the Cyclops",
+      "skills": [
+        "Reading for self-study",
+        "Glossary: word meanings",
+        "Comprehension questions"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 100,
+    "durationMinutes": 195,
+    "sections": [
+      {
+        "name": "I",
+        "questions": 6,
+        "marksEach": 1
+      },
+      {
+        "name": "II",
+        "questions": 4,
+        "marksEach": 1
+      },
+      {
+        "name": "III",
+        "questions": 3,
+        "marksEach": 1
+      },
+      {
+        "name": "IV",
+        "questions": 4,
+        "marksEach": 1
+      },
+      {
+        "name": "V",
+        "questions": 7,
+        "marksEach": 2
+      },
+      {
+        "name": "VI",
+        "questions": 3,
+        "marksEach": 2
+      },
+      {
+        "name": "VII",
+        "questions": 6,
+        "marksEach": 3
+      },
+      {
+        "name": "VIII",
+        "questions": 5,
+        "marksEach": 3
+      },
+      {
+        "name": "IX",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "X",
+        "questions": 3,
+        "marksEach": 4
+      },
+      {
+        "name": "XI",
+        "questions": 1,
+        "marksEach": 4
+      },
+      {
+        "name": "XII",
+        "questions": 1,
+        "marksEach": 5
+      },
+      {
+        "name": "XIII",
+        "questions": 1,
+        "marksEach": 5
+      }
+    ]
+  }
+}

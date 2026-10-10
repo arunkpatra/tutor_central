@@ -1,0 +1,175 @@
+{
+  "board": "cbse",
+  "classLevel": "10",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "source": "NCERT, Mathematics: Textbook for Class X (Reprint 2026-27), contents page and chapter headings; https://ncert.nic.in/textbook/pdf/jemh1ps.pdf. Blueprint: CBSE Mathematics Standard (041) SQP 2026-27, https://cbseacademic.nic.in/web_material/SQP/ClassX_2026_27/MathsStandard-SQP.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Real Numbers",
+      "skills": [
+        "The Fundamental Theorem of Arithmetic",
+        "HCF and LCM by prime factorisation",
+        "Revisiting irrational numbers",
+        "Proving that a number is irrational"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Polynomials",
+      "skills": [
+        "Degree and zeroes of a polynomial",
+        "Geometrical meaning of the zeroes of a polynomial",
+        "Relationship between zeroes and coefficients of a polynomial"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Pair of Linear Equations in Two Variables",
+      "skills": [
+        "Graphical method of solution of a pair of linear equations",
+        "Algebraic methods of solving a pair of linear equations",
+        "Substitution method",
+        "Elimination method"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Quadratic Equations",
+      "skills": [
+        "Quadratic equations",
+        "Solution of a quadratic equation by factorisation",
+        "Nature of roots"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Arithmetic Progressions",
+      "skills": [
+        "Arithmetic progressions",
+        "nth term of an AP",
+        "Sum of first n terms of an AP"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Triangles",
+      "skills": [
+        "Similar figures",
+        "Similarity of triangles",
+        "Criteria for similarity of triangles"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Coordinate Geometry",
+      "skills": [
+        "Distance formula",
+        "Section formula",
+        "Mid-point of a line segment"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Introduction to Trigonometry",
+      "skills": [
+        "Trigonometric ratios",
+        "Trigonometric ratios of some specific angles",
+        "Trigonometric identities"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Some Applications of Trigonometry",
+      "skills": [
+        "Heights and distances",
+        "Line of sight and angle of elevation",
+        "Angle of depression"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Circles",
+      "skills": [
+        "Secants and tangents",
+        "Tangent to a circle",
+        "Tangent perpendicular to the radius at the point of contact",
+        "Number of tangents from a point on a circle",
+        "Lengths of tangents from an external point"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Areas Related to Circles",
+      "skills": [
+        "Sector and segment of a circle",
+        "Area of a sector",
+        "Length of an arc of a sector",
+        "Area of a segment"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Surface Areas and Volumes",
+      "skills": [
+        "Solids formed by combining basic solids",
+        "Surface area of a combination of solids",
+        "Volume of a combination of solids"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Statistics",
+      "skills": [
+        "Mean of grouped data",
+        "Direct method",
+        "Assumed mean method",
+        "Step-deviation method",
+        "Mode of grouped data",
+        "Median of grouped data"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Probability",
+      "skills": [
+        "Probability — a theoretical approach",
+        "Equally likely outcomes",
+        "Complementary events",
+        "Impossible and sure events"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 180,
+    "sections": [
+      {
+        "name": "A",
+        "questions": 20,
+        "marksEach": 1
+      },
+      {
+        "name": "B",
+        "questions": 5,
+        "marksEach": 2
+      },
+      {
+        "name": "C",
+        "questions": 6,
+        "marksEach": 3
+      },
+      {
+        "name": "D",
+        "questions": 4,
+        "marksEach": 5
+      },
+      {
+        "name": "E (case)",
+        "questions": 3,
+        "marksEach": 4
+      }
+    ]
+  }
+}

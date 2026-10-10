@@ -1,0 +1,179 @@
+{
+  "board": "karnataka",
+  "classLevel": "8",
+  "subject": "Science",
+  "edition": "2026-27",
+  "source": "KTBS, Curiosity, Textbook of Science for Grade 8, Part 1 and Part 2, English medium, contents page (section headings read by OCR of the KTBS PDF pages); https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/8th%20English%20Science%20Part%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/8th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/8th%20English%20Science%20Part%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Exploring the Investigative World of Science",
+      "skills": [
+        "Asking a scientific question",
+        "Things we can change or control in an experiment",
+        "Things we can observe or measure",
+        "Changing one thing at a time",
+        "Keeping notes of observations"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "The Invisible Living World: Beyond Our Naked Eye",
+      "skills": [
+        "What Is a Cell?",
+        "Variation in shape and structure of cells",
+        "What Are the Levels of Organisation in the Body of a Living Organism?",
+        "What Are Microorganisms?",
+        "How Are We Connected to Microbes?",
+        "Microorganisms and food",
+        "Why Is Cell Considered to Be a Basic Unit of Life?"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Health: The Ultimate Treasure",
+      "skills": [
+        "Health: Is It More Than Not Falling Sick?",
+        "How Can We Stay Healthy?",
+        "How Do We Know That We Are Unwell?",
+        "Diseases: What Are the Causes and Types?",
+        "How are communicable diseases caused and spread?",
+        "How are non-communicable diseases caused?",
+        "How to Prevent and Control Diseases?",
+        "Treatment of diseases"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Electricity: Magnetic and Heating Effects",
+      "skills": [
+        "Does an Electric Current Have a Magnetic Effect?",
+        "Electromagnets",
+        "Lifting electromagnets",
+        "Does a Current Carrying Wire Get Hot?",
+        "How Does a Battery Generate Electricity?",
+        "Voltaic cell",
+        "Dry cells",
+        "Rechargeable batteries"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Exploring Forces",
+      "skills": [
+        "What Is a Force?",
+        "What Can a Force Do to the Bodies on Which It Is Applied?",
+        "Are Forces an Interaction Between Two or More Objects?",
+        "What Are the Different Types of Forces?",
+        "Contact forces",
+        "Non-contact forces"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Pressure, Winds, Storms, and Cyclones",
+      "skills": [
+        "Pressure",
+        "Pressure Exerted by Air",
+        "Formation of Wind",
+        "High-Speed Winds Result in Lowering of Air Pressure",
+        "Storms, Thunderstorms, and Lightning",
+        "Cyclone"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Particulate Nature of Matter",
+      "skills": [
+        "What Is Matter Composed of?",
+        "What Decides Different States of Matter?",
+        "Solid state",
+        "Liquid state",
+        "Gaseous state",
+        "How Does the Interparticle Spacing Differ in the Three States of Matter?",
+        "How Particles Move in Different States of Matter?"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Nature of Matter: Elements, Compounds, and Mixtures",
+      "skills": [
+        "What Are Mixtures?",
+        "Is air a mixture?",
+        "Types of mixtures",
+        "What Are Pure Substances?",
+        "What Are the Types of Pure Substances?",
+        "Elements",
+        "How Do We Use Elements, Compounds, and Mixtures?",
+        "What Are Minerals?"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "The Amazing World of Solutes, Solvents, and Solutions",
+      "skills": [
+        "What Are Solute, Solvent, and Solution?",
+        "How Much Solute Can a Fixed Amount of Solvent Dissolve?",
+        "How does temperature affect the solubility of a solute?",
+        "Solubility of Gases",
+        "Why Do Objects Float or Sink in Water?",
+        "What Is Density?",
+        "Determination of density",
+        "Effect of temperature and pressure on density"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Light: Mirrors and Lenses",
+      "skills": [
+        "What Are Spherical Mirrors?",
+        "What Are the Characteristics of Images Formed by Spherical Mirrors?",
+        "What Are the Laws of Reflection?",
+        "Reflection from plane, concave and convex mirrors",
+        "What Is a Lens?",
+        "Convex and concave lenses"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Keeping Time with the Skies",
+      "skills": [
+        "How Does the Moon's Appearance Change and Why?",
+        "Phases of the Moon",
+        "How Did Calendars Come into Existence?",
+        "Lunar, solar and luni-solar calendars",
+        "The Indian National Calendar",
+        "Are Festivals Related to Astronomical Phenomena?",
+        "Why Do We Launch Artificial Satellites in Space?"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "How Nature Works in Harmony",
+      "skills": [
+        "Who All Live Together in Nature?",
+        "Does Every Organism in a Community Matter?",
+        "What Are the Different Types of Interactions Among Organisms and their Surroundings?",
+        "Who Eats Whom?",
+        "What Happens to Waste in Nature?",
+        "How Does One Change Lead to Another?",
+        "How Do Interactions Maintain Balance in Ecosystems?",
+        "What Are the Benefits of an Ecosystem?"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Our Home: Earth, a Unique Life Sustaining Planet",
+      "skills": [
+        "Why Is Earth a Unique Planet?",
+        "What Do the Planets of Our Solar System Look Like?",
+        "What Makes the Earth Suitable for Life to Exist?",
+        "What Allows Life to Be Sustained on Earth?",
+        "What Keeps Life from Disappearing?",
+        "Asexual and sexual reproduction",
+        "What Are the Threats to Life on Earth?"
+      ]
+    }
+  ],
+  "blueprint": null
+}

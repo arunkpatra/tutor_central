@@ -1,0 +1,176 @@
+{
+  "board": "karnataka",
+  "classLevel": "10",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "source": "KTBS, Mathematics Textbook for Class X, Part I and Part II, English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20Maths%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20Maths%20Part%20-%202%202026-27.pdf ; blueprint from KSEAB SSLC Model Question Paper 1 2026-27, Mathematics 81-E, https://kseeb.karnataka.gov.in/QP2026/SSLC2025-26MODEL_QP",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Real Numbers",
+      "skills": [
+        "The Fundamental Theorem of Arithmetic",
+        "HCF and LCM by prime factorisation",
+        "Revisiting Irrational Numbers"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "Polynomials",
+      "skills": [
+        "Geometrical Meaning of the Zeroes of a Polynomial",
+        "Graphs of linear, quadratic and cubic polynomials",
+        "Relationship between Zeroes and Coefficients of a Polynomial"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Pair of Linear Equations in Two Variables",
+      "skills": [
+        "Graphical Method of Solution of a Pair of Linear Equations",
+        "Algebraic Methods of Solving a Pair of Linear Equations",
+        "Substitution Method",
+        "Elimination Method"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Quadratic Equations",
+      "skills": [
+        "Quadratic Equations",
+        "Solution of a Quadratic Equation by Factorisation",
+        "Nature of Roots"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Arithmetic Progressions",
+      "skills": [
+        "Arithmetic Progressions",
+        "nth Term of an AP",
+        "Sum of First n Terms of an AP"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Triangles",
+      "skills": [
+        "Similar Figures",
+        "Similarity of Triangles",
+        "Criteria for Similarity of Triangles"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Coordinate Geometry",
+      "skills": [
+        "Distance Formula",
+        "Section Formula",
+        "Mid-point of a line segment"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Introduction to Trigonometry",
+      "skills": [
+        "Trigonometric Ratios",
+        "Trigonometric Ratios of Some Specific Angles",
+        "Trigonometric Identities"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Some Applications of Trigonometry",
+      "skills": [
+        "Heights and Distances",
+        "Line of sight",
+        "Angle of elevation",
+        "Angle of depression"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Circles",
+      "skills": [
+        "Tangent to a Circle",
+        "Number of Tangents from a Point on a Circle",
+        "Lengths of tangents drawn from an external point"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Areas Related to Circles",
+      "skills": [
+        "Areas of Sector and Segment of a Circle",
+        "Minor and major sectors and segments",
+        "Area of a sector",
+        "Length of an arc of a sector",
+        "Area of a segment"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Surface Areas and Volumes",
+      "skills": [
+        "Solids: cuboid, cone, cylinder, sphere and hemisphere",
+        "Surface Area of a Combination of Solids",
+        "Volume of a Combination of Solids"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Statistics",
+      "skills": [
+        "Mean of Grouped Data",
+        "Mode of Grouped Data",
+        "Median of Grouped Data"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Probability",
+      "skills": [
+        "Probability — A Theoretical Approach",
+        "Elementary events",
+        "Complementary events",
+        "Impossible and sure events"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 195,
+    "sections": [
+      {
+        "name": "I",
+        "questions": 8,
+        "marksEach": 1
+      },
+      {
+        "name": "II",
+        "questions": 8,
+        "marksEach": 1
+      },
+      {
+        "name": "III",
+        "questions": 8,
+        "marksEach": 2
+      },
+      {
+        "name": "IV",
+        "questions": 9,
+        "marksEach": 3
+      },
+      {
+        "name": "V",
+        "questions": 4,
+        "marksEach": 4
+      },
+      {
+        "name": "VI",
+        "questions": 1,
+        "marksEach": 5
+      }
+    ]
+  }
+}

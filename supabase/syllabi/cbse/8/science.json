@@ -1,0 +1,180 @@
+{
+  "board": "cbse",
+  "classLevel": "8",
+  "subject": "Science",
+  "edition": "2026-27",
+  "source": "NCERT, Curiosity: Textbook of Science for Grade 8 (Reprint 2026-27), contents page and chapter headings; https://ncert.nic.in/textbook/pdf/hecu1ps.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "Exploring the Investigative World of Science",
+      "skills": [
+        "Asking focused scientific questions",
+        "Systematic investigation: planning simple experiments",
+        "Observing carefully and keeping notes"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "The Invisible Living World: Beyond Our Naked Eye",
+      "skills": [
+        "What is a cell?",
+        "Variation in shape and structure of cells",
+        "What are the levels of organisation in the body of a living organism?",
+        "What are microorganisms?",
+        "How are we connected to microbes?",
+        "Key players in cleaning the environment",
+        "Microorganisms and food",
+        "Why is cell considered to be a basic unit of life?"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "Health: The Ultimate Treasure",
+      "skills": [
+        "Health: is it more than not falling sick?",
+        "How can we stay healthy?",
+        "How do we know that we are unwell?",
+        "Diseases: what are the causes and types?",
+        "How are communicable diseases caused and spread?",
+        "How are non-communicable diseases caused?",
+        "How to prevent and control diseases?",
+        "Treatment of diseases"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "Electricity: Magnetic and Heating Effects",
+      "skills": [
+        "Does an electric current have a magnetic effect?",
+        "Electromagnets",
+        "Lifting electromagnets",
+        "Does a current carrying wire get hot?",
+        "How does a battery generate electricity?",
+        "Voltaic cell",
+        "Dry cells",
+        "Rechargeable batteries"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Exploring Forces",
+      "skills": [
+        "What is a force?",
+        "What can a force do to the objects on which it is applied?",
+        "Are forces an interaction between two or more objects?",
+        "What are the different types of forces?",
+        "Contact forces",
+        "Non-contact forces",
+        "Weight and its measurement",
+        "Floating and sinking"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Pressure, Winds, Storms, and Cyclones",
+      "skills": [
+        "Pressure",
+        "Pressure exerted by air",
+        "Formation of wind",
+        "High-speed winds result in lowering of air pressure",
+        "Storms, thunderstorms, and lightning",
+        "Cyclone"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Particulate Nature of Matter",
+      "skills": [
+        "What is matter composed of?",
+        "What decides different states of matter?",
+        "Solid state",
+        "Liquid state",
+        "Gaseous state",
+        "How does the interparticle spacing differ in the three states of matter?",
+        "How particles move in different states of matter?"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Nature of Matter: Elements, Compounds, and Mixtures",
+      "skills": [
+        "What are mixtures?",
+        "Is air a mixture?",
+        "Types of mixtures",
+        "What are pure substances?",
+        "Elements",
+        "Compounds",
+        "How do we use elements, compounds, and mixtures?",
+        "What are minerals?"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "The Amazing World of Solutes, Solvents, and Solutions",
+      "skills": [
+        "What are solute, solvent, and solution?",
+        "How much solute can a fixed amount of solvent dissolve?",
+        "How does temperature affect the solubility of a solute?",
+        "Solubility of gases",
+        "Why do objects float or sink in water?",
+        "What is density?",
+        "Determination of density",
+        "Effect of temperature on density"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Light: Mirrors and Lenses",
+      "skills": [
+        "What are spherical mirrors?",
+        "What are the characteristics of images formed by spherical mirrors?",
+        "What are the laws of reflection?",
+        "What is a lens?"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Keeping Time with the Skies",
+      "skills": [
+        "How does the Moon’s appearance change and why?",
+        "Phases of the Moon",
+        "How did calendars come into existence?",
+        "Lunar calendars",
+        "Solar calendars",
+        "Luni-solar calendars",
+        "Are festivals related to astronomical phenomena?",
+        "Why do we launch artificial satellites in space?"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "How Nature Works in Harmony",
+      "skills": [
+        "How do we experience and interpret our surroundings?",
+        "Who all live together in nature?",
+        "Does every organism in a community matter?",
+        "What are the different types of interactions among organisms and their surroundings?",
+        "Who eats whom?",
+        "What happens to waste in nature?",
+        "How do interactions maintain balance in ecosystems?",
+        "What are the benefits of an ecosystem?"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Our Home: Earth, a Unique Life Sustaining Planet",
+      "skills": [
+        "Why is Earth a unique planet?",
+        "What do the planets of our solar system look like?",
+        "What makes the Earth suitable for life to exist?",
+        "What allows life to be sustained on Earth?",
+        "What keeps life from disappearing?",
+        "Asexual reproduction",
+        "Sexual reproduction",
+        "What are the threats to life on Earth?"
+      ]
+    }
+  ],
+  "blueprint": null
+}

@@ -1,0 +1,407 @@
+{
+  "board": "karnataka",
+  "classLevel": "9",
+  "subject": "Social Science",
+  "edition": "2026-27",
+  "source": "KTBS, Social Science Class 9 Part 1 and Part 2 (History, Political Science, Sociology, Geography, Economics, Business Studies), English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/9th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/9th%20English%20SS%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/9th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/9th%20English%20SS%20Part%20-%202%202026-27.pdf",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "History: Western Religions",
+      "skills": [
+        "Judaism",
+        "History of the Jews",
+        "Zoroastrianism",
+        "Christianity: the life of Jesus Christ",
+        "The teachings of Jesus Christ",
+        "The spread of Christianity",
+        "Islam: Prophet Muhammad Paigambar",
+        "Teachings and practices of Islam"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "History: India from 6th to 14th Century",
+      "skills": [
+        "The Rajputs (6th to 12th century)",
+        "Rajput art and architecture",
+        "The Karkota dynasty of Kashmir",
+        "Muhammad Ghazni and Muhammad Ghori",
+        "The Delhi Sultanate",
+        "Sayyid and Lodhi dynasties",
+        "The contributions of the Delhi Sultanate"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "History: Religious Reformers of India",
+      "skills": [
+        "Shankaracharya and Adwaita",
+        "Ramanujacharya and Vishistadwaita",
+        "Madhwacharya and Dwaita",
+        "Basavanna – the Vishwa Guru"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "History: Vijayanagara Empire and Bahamani Kingdom",
+      "skills": [
+        "Establishment of the Vijayanagara empire",
+        "Dynasties that ruled Vijayanagara",
+        "Krishnadevaraya",
+        "Fall of the Vijayanagara Empire",
+        "Cultural contributions of the Vijayanagara empire",
+        "The Bahamani kingdom",
+        "Contributions of the Bahamani Sultans"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "Political Science: Our Constitution",
+      "skills": [
+        "Formation of the Constituent Assembly",
+        "Drafting Committee of the Constitution",
+        "The Preamble",
+        "Salient features of our Constitution",
+        "Fundamental Rights",
+        "Fundamental Duties",
+        "Directive Principles of State Policy"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Political Science: The Union Government",
+      "skills": [
+        "Legislature: Lok Sabha and Rajya Sabha",
+        "Qualifications of the members",
+        "Lok Sabha Speaker and the Opposition Leader",
+        "Powers and functions of the Parliament",
+        "Election and qualifications of the President",
+        "Powers and functions of the President",
+        "Powers and functions of the Prime Minister",
+        "Central Cabinet"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Political Science: The State Government",
+      "skills": [
+        "State Legislature",
+        "Vidhana Sabha",
+        "Legislative Council (Vidhana Parishat)",
+        "Legislative powers and functions of the State Legislature",
+        "Governor",
+        "State Council of Ministers",
+        "Functions and powers of the Chief Minister"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Political Science: The Judiciary",
+      "skills": [
+        "Uniform judiciary system",
+        "Supreme Court",
+        "High Court",
+        "Subordinate Courts",
+        "People's Courts (Lok Adalats)"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Sociology: Family",
+      "skills": [
+        "Meaning of family",
+        "Features of a joint family",
+        "Relationships among the members of the family",
+        "Stages in the development of the individual"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Geography: Our State Karnataka – Physiographic Divisions",
+      "skills": [
+        "Origin of the name 'Karnataka' and formation of the state",
+        "Geographical location",
+        "Size and frontiers",
+        "Physical divisions",
+        "Hills and highest peaks",
+        "Mountain passes"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Geography: Natural Diversity of Karnataka",
+      "skills": [
+        "Climate of Karnataka",
+        "Seasons of Karnataka",
+        "Southwest monsoon",
+        "Seasonal distribution of rainfall",
+        "Soils of Karnataka",
+        "Types of vegetation",
+        "Animals of Karnataka"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Geography: Water Resources of Karnataka",
+      "skills": [
+        "Rivers of Karnataka",
+        "East-flowing and west-flowing rivers",
+        "Irrigation in Karnataka",
+        "Hydro-electric power stations",
+        "Major dams of Karnataka"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Geography: Land Resources of Karnataka",
+      "skills": [
+        "Land utilization",
+        "Pattern of land utilization in Karnataka",
+        "Importance and types of farming",
+        "The major crops of Karnataka",
+        "Food crops",
+        "Commercial crops"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Economics: Economic Structure",
+      "skills": [
+        "Structural transformation",
+        "Ancient and traditional economic systems",
+        "Sources of income",
+        "Sources of employment",
+        "Static and dynamic economy",
+        "Towards a self-reliant economy"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Economics: Sectors of Indian Economy",
+      "skills": [
+        "Primary sector",
+        "Secondary sector",
+        "Public sector and private sector",
+        "Tertiary sector",
+        "Karnataka economy"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "Business Studies: Management of Business",
+      "skills": [
+        "Meaning of management",
+        "Principles of management",
+        "Decision-making and its process",
+        "Functional areas of management"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "History: The Ahom Dynasty, the Mughals and the Marathas",
+      "skills": [
+        "Ahom dynasty and their achievements",
+        "Babur",
+        "Humayun and Sher Shah",
+        "Akbar",
+        "Shah Jahan and Aurangzeb",
+        "The contributions of the Mughals",
+        "Shivaji and his administration",
+        "The relationship between the Mughals and Shivaji"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "History: Bhakti Pantha",
+      "skills": [
+        "Ramananda",
+        "Kabir",
+        "Chaitanya and Guru Nanak",
+        "Srimantha Shankaradeva and Madhavadeva",
+        "Meerabai",
+        "Purandaradasa and Kanakadasa",
+        "Shishunala Sharif and the Sufi saints",
+        "Effects of the Bhakti movement"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "History: Europe: Medieval and Modern",
+      "skills": [
+        "Medieval Europe and feudalism",
+        "The Renaissance",
+        "Literature, art and science during the Renaissance",
+        "Effects of the Renaissance",
+        "Geographical explorations",
+        "Religious Reformation",
+        "Counter Reformation movement",
+        "Industrial Revolution"
+      ]
+    },
+    {
+      "position": 20,
+      "name": "History: Revolution and Rise of Nation States",
+      "skills": [
+        "Rise of nation states",
+        "American War of Independence",
+        "The French Revolution",
+        "Unification movements",
+        "Unification of Italy",
+        "Unification of Germany"
+      ]
+    },
+    {
+      "position": 21,
+      "name": "Political Science: The Election System",
+      "skills": [
+        "Election Commission of India",
+        "Electoral constituencies",
+        "Election process",
+        "Political parties",
+        "Coalition governments",
+        "Media and democracy"
+      ]
+    },
+    {
+      "position": 22,
+      "name": "Political Science: Defence of the Nation",
+      "skills": [
+        "Chief of Defence Staff",
+        "Indian Army",
+        "Indian Navy",
+        "Indian Air Force",
+        "Defence preparedness and research and development",
+        "Gallantry awards",
+        "Central Armed Police Forces",
+        "Secondary line of defence"
+      ]
+    },
+    {
+      "position": 23,
+      "name": "Political Science: National Integration",
+      "skills": [
+        "Meaning of nationalism",
+        "Unity in diversity",
+        "Factors that enable national integration",
+        "National symbols"
+      ]
+    },
+    {
+      "position": 24,
+      "name": "Political Science: An Introduction to the Study of International Relations",
+      "skills": [
+        "Study of international relations",
+        "Key definitions of international relations",
+        "Nature and scope of international relations",
+        "Importance of studying international relations"
+      ]
+    },
+    {
+      "position": 25,
+      "name": "Sociology: Socialisation and Family Relationships",
+      "skills": [
+        "Meaning and importance of socialisation",
+        "Influence of socialisation on an individual",
+        "Agents of socialisation"
+      ]
+    },
+    {
+      "position": 26,
+      "name": "Sociology: Community",
+      "skills": [
+        "Meaning of community",
+        "Cities and the features of urban communities",
+        "Industrialisation and urbanisation",
+        "Rural communities",
+        "Tribal communities"
+      ]
+    },
+    {
+      "position": 27,
+      "name": "Geography: Mineral Resources of Karnataka",
+      "skills": [
+        "Importance of minerals",
+        "Iron ore",
+        "Manganese",
+        "Bauxite",
+        "Gold",
+        "Distribution and production of minerals in Karnataka"
+      ]
+    },
+    {
+      "position": 28,
+      "name": "Geography: Transport System in Karnataka",
+      "skills": [
+        "Importance of transport",
+        "Road transport and important highways",
+        "Railways and important rail routes",
+        "Metro rail transport",
+        "Water transport",
+        "Air transport"
+      ]
+    },
+    {
+      "position": 29,
+      "name": "Geography: Industries of Karnataka",
+      "skills": [
+        "Importance of industries",
+        "Iron and steel industry",
+        "Cotton textile industry",
+        "Sugar industry",
+        "Paper industry",
+        "Cement industry",
+        "Information technology industries",
+        "Industrial regions of Karnataka"
+      ]
+    },
+    {
+      "position": 30,
+      "name": "Geography: Major Tourist Centres of Karnataka",
+      "skills": [
+        "Natural and cultural tourist centres",
+        "Main tourist centres of the state",
+        "Hills and waterfalls",
+        "Historical places",
+        "Wildlife sanctuaries of Karnataka"
+      ]
+    },
+    {
+      "position": 31,
+      "name": "Economics: Money and Credit",
+      "skills": [
+        "Importance, evolution and functions of money",
+        "Indigenous bankers",
+        "Types of credit",
+        "Evolution and types of banks",
+        "Types of bank deposits",
+        "Reserve Bank of India"
+      ]
+    },
+    {
+      "position": 32,
+      "name": "Economics: Labour and Employment",
+      "skills": [
+        "Meaning, features and importance of labour",
+        "Types of labour",
+        "Division of labour",
+        "Productive and reproductive labour",
+        "Role of women and discrimination in labour",
+        "Unemployment and its types",
+        "Abolition of bonded labour and child labour"
+      ]
+    },
+    {
+      "position": 33,
+      "name": "Business Studies: Marketing Management",
+      "skills": [
+        "Market: meaning and types",
+        "Marketing: meaning, functions and importance",
+        "Marketing mix",
+        "Producers, middlemen and consumers",
+        "Consumer rights and consumer forums"
+      ]
+    }
+  ],
+  "blueprint": null
+}

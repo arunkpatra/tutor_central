@@ -1,0 +1,456 @@
+{
+  "board": "karnataka",
+  "classLevel": "10",
+  "subject": "Social Science",
+  "edition": "2026-27",
+  "source": "KTBS, Social Science Class 10 Part 1 and Part 2 (History, Political Science, Sociology, Geography, Economics, Business Studies), English medium, contents page; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20%20SS%20%20Part%20-%201%202026-27.pdf ; https://textbooks.karnataka.gov.in/uploads/Karnataka_Textbook_Society/2026-27%20TEXTBOOKS/10th%20STD/ENGLISH%20MEDIUM%20TEXTBOOKS/10th%20English%20%20SS%20%20Part%20-%202%202026-27.pdf ; blueprint from KSEAB SSLC Model Question Paper 1 2026-27, Social Science 85-E, https://kseeb.karnataka.gov.in/QP2026/SSLC2025-26MODEL_QP",
+  "chapters": [
+    {
+      "position": 1,
+      "name": "History: The Advent of Europeans to India",
+      "skills": [
+        "Trade relations between India and Europe",
+        "The fall of Constantinople and a new sea route to India",
+        "European trade companies",
+        "The competition between the English and the French",
+        "The Carnatic Wars",
+        "Battle of Plassey, Battle of Buxar and the dual government",
+        "The British policy of aggression"
+      ]
+    },
+    {
+      "position": 2,
+      "name": "History: The Extension of the British Rule",
+      "skills": [
+        "Anglo-Maratha wars",
+        "Lord Wellesley and the Subsidiary Alliance",
+        "The consolidation of the British power (1818–1857)",
+        "Anglo-Sikh wars",
+        "Dalhousie and the Doctrine of Lapse"
+      ]
+    },
+    {
+      "position": 3,
+      "name": "History: The Impact of the British Rule in India",
+      "skills": [
+        "Administrative and judicial system",
+        "Land tax policies: Permanent Zamindari, Mahalwari and Ryotwari systems",
+        "The impact of the British land tax system",
+        "The modern education system",
+        "The impact of British education in India",
+        "Laws implemented during the rule of the East India Company",
+        "British Government Acts (1858–1947)"
+      ]
+    },
+    {
+      "position": 4,
+      "name": "History: Opposition to British Rule in Karnataka and Wodeyars of Mysore",
+      "skills": [
+        "Wodeyars of Mysore",
+        "The Rule of Commissioners (1831–1881)",
+        "Hyder Ali and Tippu Sultan",
+        "Anglo-Mysore Wars (1767–1799)",
+        "Dondiya Wagh",
+        "Rebellion of Kittur – Rani Chennamma and Sangolli Rayanna",
+        "Rebellion of Amara Sullya",
+        "Rebellions of Surapura, Koppal and the Bedas of Halagali"
+      ]
+    },
+    {
+      "position": 5,
+      "name": "History: Social and Religious Reform Movements",
+      "skills": [
+        "Brahmo Samaj",
+        "Young Bengal Movement",
+        "Arya Samaj and Prarthana Samaj",
+        "Satyashodhak Samaj",
+        "Aligarh Movement",
+        "Ramakrishna Mission",
+        "Theosophical Society",
+        "Sri Narayana Guru and Periyar"
+      ]
+    },
+    {
+      "position": 6,
+      "name": "Political Science: Public Administration – An Introduction",
+      "skills": [
+        "Meaning and definition of public administration",
+        "Importance of public administration",
+        "Recruitment: meaning and types",
+        "Union Public Service Commission",
+        "State Public Service Commissions and the Karnataka Public Service Commission",
+        "Law and order",
+        "The role of the Central Government"
+      ]
+    },
+    {
+      "position": 7,
+      "name": "Political Science: Challenges of India and Their Remedies",
+      "skills": [
+        "Communalism",
+        "Regionalism and sub-regionalism",
+        "Illiteracy",
+        "Corruption",
+        "Gender discrimination and gender minorities",
+        "Economic inequality and population explosion",
+        "Poverty and measures to eradicate it",
+        "Profiteering and smuggling"
+      ]
+    },
+    {
+      "position": 8,
+      "name": "Sociology: Social Stratification",
+      "skills": [
+        "Social stratification",
+        "Social inequality",
+        "Differences in people",
+        "Untouchability – a social evil",
+        "Measures to eradicate untouchability"
+      ]
+    },
+    {
+      "position": 9,
+      "name": "Sociology: Work and Economic Life",
+      "skills": [
+        "Division of labour and classes",
+        "Labour discrimination",
+        "Unemployment: types, reasons, consequences and solutions",
+        "Organised and unorganised workers"
+      ]
+    },
+    {
+      "position": 10,
+      "name": "Geography: India – Geographical Position and Physical Features",
+      "skills": [
+        "Heritage of our country and the origin of the word 'Bharat'",
+        "Location of India in the world",
+        "Extent, land and water boundaries and neighbouring countries",
+        "Physical features of India",
+        "Northern Mountains",
+        "Northern Great Plain",
+        "Peninsular Plateau",
+        "Coastal Plains and islands"
+      ]
+    },
+    {
+      "position": 11,
+      "name": "Geography: India – Seasons",
+      "skills": [
+        "Main features of India's climate",
+        "Summer season",
+        "South-west monsoon season",
+        "Retreating monsoon season",
+        "Winter season",
+        "Distribution of rainfall"
+      ]
+    },
+    {
+      "position": 12,
+      "name": "Geography: India – Soils",
+      "skills": [
+        "Types of soil in India and their distribution",
+        "Soil erosion",
+        "Causes and effects of soil erosion",
+        "Conservation of soil and management"
+      ]
+    },
+    {
+      "position": 13,
+      "name": "Geography: India – Forest Resources",
+      "skills": [
+        "Types of forests in India",
+        "Distribution of forests",
+        "Conservation of forests",
+        "Wildlife sanctuaries and national parks",
+        "Biosphere reserves"
+      ]
+    },
+    {
+      "position": 14,
+      "name": "Geography: India – Water Resources",
+      "skills": [
+        "Importance of irrigation",
+        "Types of irrigation",
+        "Multi-purpose river valley projects",
+        "Major hydro-electric power projects",
+        "National electricity grid",
+        "Rain water harvesting"
+      ]
+    },
+    {
+      "position": 15,
+      "name": "Economics: Economy and Government",
+      "skills": [
+        "Relationship between government and economy",
+        "Planning in India",
+        "Five Year Plans and their achievements",
+        "Green Revolution",
+        "Rainbow Revolution",
+        "NITI Aayog"
+      ]
+    },
+    {
+      "position": 16,
+      "name": "Business Studies: Bank Transactions",
+      "skills": [
+        "Meaning of banks",
+        "Banks and post offices in financial transactions",
+        "Characteristics of banks",
+        "Functions of banks",
+        "Types of bank accounts",
+        "Procedure to open a bank account",
+        "Advantages of opening a bank account",
+        "Bank operations"
+      ]
+    },
+    {
+      "position": 17,
+      "name": "History: The First War of Indian Independence (1857)",
+      "skills": [
+        "Causes for the First War of Independence",
+        "Immediate cause for the revolt",
+        "Eruption of the revolt and its spread",
+        "Nature of the revolt",
+        "Failure of the revolt and its effects"
+      ]
+    },
+    {
+      "position": 18,
+      "name": "History: The Freedom Struggle",
+      "skills": [
+        "Rise of nationalism",
+        "Indian National Congress",
+        "Moderates, extremists and revolutionaries",
+        "Gandhian era (1920–1947)",
+        "Khilafat, Civil Disobedience and Quit India movements",
+        "Farmers', labourers' and tribal movements",
+        "Leaders of the freedom movement",
+        "Partition of India"
+      ]
+    },
+    {
+      "position": 19,
+      "name": "History: India After Independence",
+      "skills": [
+        "Consequences of the partition of India",
+        "Communal riots and the problem of refugees",
+        "Formation of new government",
+        "Integration of native provinces",
+        "Reorganisation of states"
+      ]
+    },
+    {
+      "position": 20,
+      "name": "History: World Wars and India's Role",
+      "skills": [
+        "The First World War",
+        "Rise of dictators",
+        "World War II",
+        "India and the Second World War"
+      ]
+    },
+    {
+      "position": 21,
+      "name": "Political Science: India's Foreign Policy and Global Challenges",
+      "skills": [
+        "Meaning and definition of foreign policy",
+        "Principles of Indian foreign policy",
+        "Denial of human rights and India's efforts to protect human rights",
+        "Economic inequality",
+        "Arms race",
+        "Terrorism"
+      ]
+    },
+    {
+      "position": 22,
+      "name": "Political Science: World Organisations",
+      "skills": [
+        "Establishment of the United Nations",
+        "Aims and objectives of the UN",
+        "Organs and functions of the UN",
+        "Achievements of the UN",
+        "Agencies of the UN",
+        "World Bank institutions",
+        "Regional co-operation"
+      ]
+    },
+    {
+      "position": 23,
+      "name": "Sociology: Collective Behaviour and Protests",
+      "skills": [
+        "Collective behaviour",
+        "Mob: meaning, nature and effects",
+        "Riots: meaning, nature and effects",
+        "Different forms of collective behaviour",
+        "Environmental movements",
+        "Women's movements",
+        "Farmer, labour and anti-untouchability movements"
+      ]
+    },
+    {
+      "position": 24,
+      "name": "Sociology: Social Challenges",
+      "skills": [
+        "Child labour",
+        "Child marriage",
+        "Child Marriage Prohibition Act 2006",
+        "Harassment of women",
+        "Dowry and the Prohibition of Dowry Act 1961",
+        "Female foeticide and female infanticide"
+      ]
+    },
+    {
+      "position": 25,
+      "name": "Geography: India – Land Use and Agriculture",
+      "skills": [
+        "Factors affecting land use",
+        "Types of land use",
+        "Meaning and significance of agriculture",
+        "Types of agriculture",
+        "Food crops",
+        "Commercial crops",
+        "Beverage crops",
+        "Horticulture and floriculture"
+      ]
+    },
+    {
+      "position": 26,
+      "name": "Geography: India – Mineral and Power Resources",
+      "skills": [
+        "Minerals of India and their importance",
+        "Iron ore and manganese ore",
+        "Bauxite, mica and gold",
+        "Power resources",
+        "Atomic minerals",
+        "Non-conventional energy: solar and wind power",
+        "Scarcity and conservation of energy resources"
+      ]
+    },
+    {
+      "position": 27,
+      "name": "Geography: India – Transport and Communication",
+      "skills": [
+        "Importance of transport",
+        "Road transport and national highways",
+        "Problems of road transport",
+        "Railways",
+        "Water transport and major ports",
+        "Air transport",
+        "Communication and its media",
+        "Geographical Information System, GPS and remote sensing"
+      ]
+    },
+    {
+      "position": 28,
+      "name": "Geography: India – Major Industries",
+      "skills": [
+        "Importance of industries",
+        "Industrial zones of India",
+        "Factors influencing location of industries",
+        "Iron and steel industry",
+        "Cotton textile industry",
+        "Sugar and aluminium industries",
+        "Paper industry",
+        "Knowledge-based industries"
+      ]
+    },
+    {
+      "position": 29,
+      "name": "Geography: India – Natural Disasters",
+      "skills": [
+        "Natural disasters",
+        "Cyclones",
+        "Floods",
+        "Landslides",
+        "Coastal erosion",
+        "Earthquakes",
+        "Measures to be taken during natural disasters"
+      ]
+    },
+    {
+      "position": 30,
+      "name": "Economics: Rural Development",
+      "skills": [
+        "Meaning and significance of rural development",
+        "Rural development and decentralisation",
+        "Rural development and Panchayat Raj institutions",
+        "Rural employment programmes",
+        "Rural development and women"
+      ]
+    },
+    {
+      "position": 31,
+      "name": "Economics: Public Finance and Budget",
+      "skills": [
+        "Meaning and importance of public finance",
+        "Budget",
+        "Public income and capital receipts",
+        "Public expenditure",
+        "Deficit finance and fiscal deficit",
+        "Other deficits in the budget"
+      ]
+    },
+    {
+      "position": 32,
+      "name": "Business Studies: Entrepreneurship",
+      "skills": [
+        "Meaning of entrepreneur",
+        "Characteristics of an entrepreneur",
+        "Importance of entrepreneurs",
+        "Role of entrepreneurship",
+        "Self-employment opportunities",
+        "Financial institutions for entrepreneurs",
+        "Self-employment schemes"
+      ]
+    },
+    {
+      "position": 33,
+      "name": "Business Studies: Consumer Education and Protection",
+      "skills": [
+        "The user and the provider",
+        "Consumer rights and consumer awareness",
+        "The reasons for consumer exploitation",
+        "World Consumers' Day",
+        "Consumer Protection Act: major objectives",
+        "Precautions while buying goods and services",
+        "Filing cases in the consumer court"
+      ]
+    }
+  ],
+  "blueprint": {
+    "marks": 80,
+    "durationMinutes": 195,
+    "sections": [
+      {
+        "name": "I",
+        "questions": 8,
+        "marksEach": 1
+      },
+      {
+        "name": "II",
+        "questions": 8,
+        "marksEach": 1
+      },
+      {
+        "name": "III",
+        "questions": 8,
+        "marksEach": 2
+      },
+      {
+        "name": "IV",
+        "questions": 9,
+        "marksEach": 3
+      },
+      {
+        "name": "V",
+        "questions": 4,
+        "marksEach": 4
+      },
+      {
+        "name": "VI",
+        "questions": 1,
+        "marksEach": 5
+      }
+    ]
+  }
+}
