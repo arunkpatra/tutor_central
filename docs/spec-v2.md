@@ -1,8 +1,8 @@
 # Tutor Central V2: product and technical specification
 
-Drafted 2026-10-10 from the V2 brainstorm and `docs/v2/research.md`, revised the same day after a review. Not yet
-approved. V1 (`docs/spec.md`, Phases 0 to 9) is the base; nothing V1 does is dropped (rule 10). The decisions this spec
-needs are listed at the end; on approval they take numbers in `plan/README.md`.
+Approved by the owner on 2026-10-10 (decisions D56 to D65 in `plan/README.md`). Drafted the same day from the V2
+brainstorm and `docs/v2/research.md`, revised after a review. V1 (`docs/spec.md`, Phases 0 to 9) is the base; nothing V1
+does is dropped (rule 10). The phases are `plan/phase-10-*.md` to `phase-16-*.md`.
 
 ## 1. What it is
 
@@ -45,7 +45,7 @@ or change any decision where it appears; the app does not ask the tutor to confi
    class and a topic; a note needs a name and what happened; attendance needs no plan. No feature has a set-up step in
    front of it. The one exception is consent, and it applies only before a student's own data goes to the AI (section
    8), not to material made from a skill at a level.
-2. **The plan is a suggestion.** Tonight shows what the app proposes. The tutor can follow it, follow part of it, change
+2. **The plan is a suggestion.** Today shows what the app proposes. The tutor can follow it, follow part of it, change
    a line, or ignore it. The record learns from what the tutor did. A skipped line is not carried over and the app does
    not remind the tutor of it.
 3. **The record grows from use, not from data entry.** What the tutor does adds to it. What the tutor does not do
@@ -76,7 +76,7 @@ A feature that needs a gate, a sequence or a setting to work is redesigned until
                                                          │
                  ┌───────────────────────────────────────┼─────────────────────────────┐
                  ▼                                       ▼                             ▼
-      Tonight: the plan                     on track / not on track            the parent's note
+      Today: the plan                     on track / not on track            the parent's note
       groups, teach, practise,               with the reason and the            (≤3 a week, in their
       check, homework; material              next step                          language, tutor reads first)
       made when the app opens
@@ -94,15 +94,15 @@ Sign-in and onboarding as V1. Five tabs.
 
 | Tab | Holds |
 |---|---|
-| **Tonight** | V1's Today, extended: greeting and stat tiles (students, fees due, batches today); the day's batches, each with its plan: level groups, one line per student (teach, practise, check, homework) with the material ready, the tutor's brief for the chapter, Start class → the close, and after the close what goes to parents; upcoming events and tasks as in Today. On a note day, the notes waiting to be read and sent. On a day with no batch, the next one |
+| **Today** | V1's Today, extended: greeting and stat tiles (students, fees due, batches today); the day's batches, each with its plan: level groups, one line per student (teach, practise, check, homework) with the material ready, the tutor's brief for the chapter, Start class → the close, and after the close what goes to parents; upcoming events and tasks as in Today. On a note day, the notes waiting to be read and sent. On a day with no batch, the next one |
 | **Students** | V1's Students, extended: the list, sorted by tracking status; add a student (name, class level LKG to 10, school, parent, language); the student's page: this week, the record (skills by subject, check trend, marks, attendance, homework), the school's items, messages sent, consent, fees (V1), notes, edit, archive; the "+" menu (add student, scan register, create batch) |
 | **School** | Items from schools, per student or per class of a school: exams with dates and portions, homework, notices, holidays; the exam calendar; "Ask parents to forward" (the message that starts the flow); exam preparation for each coming test |
 | **Fees** | As V1: month, ledger, remind, mark paid, receipt, generate month, UPI |
 | **More** | Organise: Schedule (batches: V1's classes, their days and times; events), Attendance (mark any day, class or all students, and history: V1's screens), Reports. Make: Make something (each kind, for ad hoc use), Check a paper, Scan register (the Students tab's screen, D36). App: Settings, Account, Help |
 
 "Batch" is V1's class (`classes`): a named group with meeting days and times. The Attendance tab's two screens move
-under More unchanged; the close is the quick path for tonight's batch. V1's deep links keep working; new ones:
-`tutorcentral://tonight` and `.../school/<item>`.
+under More unchanged; the close is the quick path for today's batch. V1's deep links keep working; new ones:
+`tutorcentral://school/<item>`.
 
 Create and edit are sheets with Cancel and Save, as V1. An AI-made artefact is shown before it is used or sent; the
 tutor can regenerate it with one tap and a reason ("easier", "shorter", "more sums"), edit the text, or replace it with
@@ -117,7 +117,7 @@ Per student, the record is what the app knows. Material is made from it.
 | Identity | Add student | Name, class level (LKG, UKG, 1 to 10), school, board from class 8, parent name and phone, message language (English, Hinglish, Hindi, Kannada), consent |
 | Chapters and skills | A photo of a textbook's contents page, taken once per school, class and subject and shared by the students of that class; the board's list for classes 8 to 10; the stage ladder for LKG and UKG, and for reading, writing and numbers in classes 1 to 3 | Per subject, the ordered chapters and the skills under each, copied per student with a state: not started, taught, practising, secure, revisit |
 | Starting point | The first week's checks; or, if the tutor wants it sooner, a short placement (a check kind: a few questions per subject, tapped right or wrong) | LKG to 3: reading, writing and number levels on an ASER/NIPUN-style ladder; 4 to 10: the starting chapter per subject |
-| Checks | The close | Three questions per session, right or wrong, each tied to a skill; one from tonight, two spaced from earlier weeks |
+| Checks | The close | Three questions per session, right or wrong, each tied to a skill; one from today, two spaced from earlier weeks |
 | Attendance | The close, or V1's Attendance screens | Present, absent |
 | Homework | The plan and the next close | Given (which sheet), done, partial, not done |
 | School items | The School tab | Exams (subject, date, portions), homework the school set, notices, holidays |
@@ -138,8 +138,8 @@ homework is light; the note tells the parent what the student can now do.
 ## 6. The plan
 
 Made for each batch of the day when the app opens, or in the background when iOS grants a refresh, from the record, with
-the material. Opening before the batch shows "Planning tonight" for the seconds it takes; a plan already made opens at
-once. A local notification at a time the tutor can change reminds them to open the app ("Batch at 5. Open for tonight's
+the material. Opening before the batch shows "Planning today's class" for the seconds it takes; a plan already made opens at
+once. A local notification at a time the tutor can change reminds them to open the app ("Batch at 5. Open for today's
 plan").
 
 1. **Who.** The students of the batch by the schedule; a student absent twice in a row gets a catch-up line.
@@ -183,7 +183,7 @@ worksheet, progress note) and its two photo tools (scan register, check a paper)
 | Mock | A student, an exam | Portions, the school's pattern or the board's blueprint | PDF, the key, marking from a photo (V1's check a paper) |
 | Note | A parent | The week's record | Text in the parent's language, in WhatsApp, with English beside it for the tutor |
 | Can-now-do | A parent of a LKG to 3 student | The ladder | Text, in WhatsApp |
-| Test tomorrow | A parent | A school item | Text: subject, portions, what to revise tonight |
+| Test tomorrow | A parent | A school item | Text: subject, portions, what to revise today |
 | Gap report | The tutor, after a mock | The marking | On the phone |
 | Own | Any of the above | The tutor's photo or words | Takes the same place in the plan and the record |
 
@@ -227,7 +227,7 @@ targets:
 | `DesignSystem` | Figure views from their specs; the sheet document view and its PDF export (SwiftUI's `ImageRenderer`, no UIKit) |
 | `Domain` | Class levels and stages; the ladder; skills and states; the rules: grouping, subject choice, spaced queue, homework size, artefact budget, exam split, tracking status, note cadence; figure specs and their validation |
 | `Data` | Repositories for the new tables; the API client for the new routes; the background refresh task; the share receiver's hand-off |
-| `Features/Tonight` | V1's Today, extended: the plan, the brief, the close, the note day |
+| `Features/Today` | V1's Today, extended: the plan, the brief, the close, the note day |
 | `Features/Students` | V1's Students, extended: the record, placement, textbook capture, consent; Scan register stays here (D36) |
 | `Features/School` | Items, the calendar, exam preparation |
 | `Features/Make` | Make something, Check a paper (from AITools) |
@@ -319,11 +319,11 @@ can use on its own (section 2). Phase 9's findings continue to be fixed alongsid
 | 15 | Make and polish | Make something and Check a paper in Make; Reports extended (progress per student, per term); the open polish rows the owner picks; a second round of tutor testing on TestFlight |
 | 16 | Release | The subscription and the allowance; the website's V2 text; the App Store listing and screenshots; submission |
 
-## 12. Decisions this spec needs
+## 12. Decisions
 
-Proposed; numbered on approval in `plan/README.md`.
+Numbered in `plan/README.md` on 2026-10-10.
 
-| Proposed | Decision |
+| # | Decision |
 |---|---|
 | D56 | V2's scope: the plan as the default way in. A solo tutor of LKG to class 10 students in English-medium schools; V1 is the base and nothing in it is dropped or renamed; Android later by the owner's plan. |
 | D57 | The design method, section 2: the app decides by default; the tutor can ignore or change any decision where it appears; nothing has to be configured. Each feature works on its own; the plan is a suggestion; the record grows from use; hand-made material is treated the same as generated; the close is the one routine made easiest. The only gate is consent, and only before a student's own data goes to the AI. |
