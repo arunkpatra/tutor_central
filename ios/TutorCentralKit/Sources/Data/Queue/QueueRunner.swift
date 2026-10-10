@@ -69,6 +69,8 @@ public enum RunOutcome: Hashable, Sendable {
             _ = try await fees.markPaid(id: invoiceID, method: method, at: paidAt)
         case let .absenceLog(studentID, _, about):
             _ = try await messages.logAbsence(centre: centre, studentID: studentID, about: about)
+        case let .close(close, _, _, _):
+            _ = try await attendance.close(close, centre: centre)
         }
     }
 
@@ -104,6 +106,12 @@ public enum RunOutcome: Hashable, Sendable {
             return studentGone
                 ? "A student marked here is no longer in the register, so this attendance can't be saved. \(keep)"
                 : "\(className) is no longer here, so this attendance can't be saved. \(keep)"
+        case let .close(_, className, _, _) where gone:
+            let message = (error as? PostgrestError)?.message ?? ""
+            let studentGone = ["attendance_marks", "checks", "homework", "skills"].contains { message.contains($0) }
+            return studentGone
+                ? "A student marked here is no longer in the register, so this close can't be saved. \(keep)"
+                : "\(className) is no longer here, so this close can't be saved. \(keep)"
         case let .markPaid(_, studentName, _, _, _, _) where gone:
             return "\(studentName) is no longer in the register, so their fee can't be marked. \(keep)"
         case let .absenceLog(_, studentName, _) where gone:

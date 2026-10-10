@@ -59,6 +59,9 @@ import Observation
         case let .markPaid(_, studentName, month, _, _, _):
             return "\(Self.firstName(studentName))'s \(month.monthName) fee stays as it was: due. "
                 + "The mark you made here is lost."
+        case let .close(close, className, _, _):
+            return "Attendance for \(className) on \(close.date.shortWeekdayText) stays as it was. "
+                + "The checks and homework you marked here are lost."
         case let .absenceLog(_, studentName, _):
             return "The absence alert for \(Self.firstName(studentName)) isn't noted on their page. "
                 + "WhatsApp already opened."

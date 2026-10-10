@@ -101,4 +101,76 @@ struct PendingChangesTests {
         let data = try JSONEncoder().encode(pending)
         #expect(try JSONDecoder().decode(PendingChanges.self, from: data) == pending)
     }
+
+    @Test func aSecondCloseOfTheSameBatchAndDayReplacesTheFirst() throws {
+        var pending = PendingChanges()
+        let batch = UUID(), day = try day(7)
+        func close(_ present: Int) -> QueuedChange {
+            QueuedChange(
+                kind: .close(
+                    close: SessionClose(
+                        classID: batch,
+                        date: day,
+                        marks: [:],
+                        checks: [],
+                        homework: [],
+                        track: [:]
+                    ),
+                    className: "Evening batch",
+                    present: present,
+                    total: 5
+                ),
+                madeAt: FakeClock.oct7at1635
+            )
+        }
+        pending.add(close(5))
+        pending.add(close(4))
+        #expect(pending.changes.count == 1)
+        if case let .close(_, _, present, _) = pending.changes[0].kind {
+            #expect(present == 4)
+        } else {
+            Issue.record("not a close")
+        }
+        pending.add(QueuedChange(kind: .attendance(
+            classID: batch,
+            className: "Evening batch",
+            date: day,
+            marks: [:],
+            present: 5,
+            total: 5
+        ), madeAt: FakeClock.oct7at1635))
+        #expect(pending.changes.count == 2 && pending.has(kind: .close) && pending.has(kind: .attendance))
+    }
+
+    @Test func theCloseRowReadsAsTheBoardDoes() throws {
+        let check = SessionClose.Check(
+            studentID: dev,
+            skillID: UUID(),
+            question: "Q",
+            correct: true,
+            isPlacement: false
+        )
+        let checks = [check]
+        let change = try QueuedChange(
+            kind: .close(
+                close: SessionClose(
+                    classID: UUID(),
+                    date: day(7),
+                    marks: [:],
+                    checks: checks,
+                    homework: [],
+                    track: [:]
+                ),
+                className: "Evening batch",
+                present: 4,
+                total: 5
+            ),
+            madeAt: FakeClock.oct7at1832
+        )
+        #expect(change.title == "Class closed · Evening batch")
+        #expect(change.line(calendar: calendar) == "Wed 7 Oct · 4 of 5 came · 1 check · 18:32")
+        #expect(change.shortName == "the close of Evening batch")
+        let back = try JSONDecoder().decode(QueuedChange.self, from: JSONEncoder().encode(change))
+        #expect(back == change)
+    }
 }

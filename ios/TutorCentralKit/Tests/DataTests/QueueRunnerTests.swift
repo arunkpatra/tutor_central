@@ -170,4 +170,37 @@ import Testing
         #expect(QueueRunner.classify(FakeFeesRepository.noSuchRow) == .refused)
         #expect(QueueRunner.classify(PostgrestError(code: "42501", message: "denied")) == .refused)
     }
+
+    @Test func aQueuedCloseIsSentAsOne() async throws {
+        let close = try SessionClose(
+            classID: FakeClassesRepository.maths.id, date: #require(Day(year: 2026, month: 10, day: 7)),
+            marks: [FakeStudentsRepository.akshita: .absent], checks: [], homework: [], track: [:]
+        )
+        let change = QueuedChange(
+            kind: .close(close: close, className: "Class 10 Maths", present: 0, total: 1), madeAt: Date()
+        )
+        let (queue, runner) = make([change])
+        #expect(await runner.run() == .done(sent: 1, failed: 0))
+        #expect(attendance.closes == [close] && queue.pending.isEmpty)
+    }
+
+    @Test func aGoneBatchFailsTheCloseInWords() throws {
+        let close = try SessionClose(
+            classID: UUID(),
+            date: #require(Day(year: 2026, month: 10, day: 7)),
+            marks: [:],
+            checks: [],
+            homework: [],
+            track: [:]
+        )
+        let change = QueuedChange(
+            kind: .close(close: close, className: "Evening batch", present: 0, total: 0),
+            madeAt: Date()
+        )
+        #expect(QueueRunner.reason(for: change, error: PostgrestError(code: "23503", message: "attendance_sessions"))
+            == "Evening batch is no longer here, so this close can't be saved. Keep it here or discard it.")
+        let studentGone = "A student marked here is no longer in the register, so this close can't be saved."
+        #expect(QueueRunner.reason(for: change, error: PostgrestError(code: "23503", message: "checks"))
+            == "\(studentGone) Keep it here or discard it.")
+    }
 }
