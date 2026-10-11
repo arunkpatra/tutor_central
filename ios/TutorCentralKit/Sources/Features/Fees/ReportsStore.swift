@@ -90,6 +90,9 @@ import Observation
     var progressInputs: [UUID: ProgressInput] = [:]
     /// The rows from this iPhone's copy, shown while the network is away.
     var progressCopy: [ProgressRow]?
+    /// The span and the month the figures on screen belong to: a new one shows its copy at once, else nothing.
+    var progressShown: String?
+    var monthShown: Period?
     var loadGeneration = 0
     let workspace: Workspace
     let register: any Register
@@ -200,6 +203,9 @@ import Observation
         }
         let centre = workspace.centre.id
         let month = month
+        if monthShown != month {
+            showMonthAtOnce(month)
+        }
         do {
             async let invoicesRead = fees.invoices(centre: centre, month: month)
             async let sessionsRead = attendance.sessions(centre: centre, month: month)
@@ -220,6 +226,18 @@ import Observation
             guard generation == loadGeneration else { return }
             showMonthCopy(month, failure: error)
         }
+    }
+
+    /// A month not on screen yet: its copy at once while the network answers (hand run 14), else no figures.
+    private func showMonthAtOnce(_ month: Period) {
+        let copy = cache?.month(month).load()
+        invoices = copy?.value.invoices ?? []
+        sessions = copy?.value.sessions ?? []
+        logs = copy?.value.logs ?? []
+        if let copy {
+            (savedAt, loaded) = (copy.savedAt, true)
+        }
+        monthShown = month
     }
 
     /// This iPhone's copy of the month when the network is away; else the error line (U26).
