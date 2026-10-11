@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { fakeApple } from "../src/apple-fake.js";
-import { fakeClaude, kindOf, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, kindOf, localScript, SAMPLE } from "../src/claude-fake.js";
+import { request as noteRequestForFake } from "../src/prompts/note.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 import { MessageOutput } from "../src/schemas.js";
@@ -351,4 +352,20 @@ test("a body the schema refuses is a 400 marked invalid, so the app never shows 
   const r = await post(app(), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week: { ...week, right: "x".repeat(121) } });
   expect(r.status).toBe(400);
   expect(((await r.json()) as { reason?: string }).reason).toBe("invalid");
+});
+
+// ---- Phase 15: the note from Make with the tutor's own words ----
+test("a note with tutorSays reaches the model and is recorded with it", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.note });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week, tutorSays: "Ask him to read aloud." });
+  expect(r.status).toBe(200);
+  expect(db.started[0]).toMatchObject({ kind: "note", input: { tutorSays: "Ask him to read aloud." } });
+  expect(claude.requests[0]?.text).toContain("The tutor adds: Ask him to read aloud.");
+});
+
+test("the local fake ends its note with the tutor's words, so a hand run shows them", () => {
+  const r = noteRequestForFake({ kind: "note", centreId, ...student, classLevel: "8", language: "hi", week, tutorSays: "Ask him to read aloud." });
+  const made = localScript(r).answer as { message: string; english: string };
+  expect(made.english.endsWith("Ask him to read aloud.")).toBe(true);
 });

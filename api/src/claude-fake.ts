@@ -437,8 +437,16 @@ export function localScript(request: ClaudeRequest<unknown>): FakeScript {
   if (kind === "sheet") return { answer: counted(Number(request.text.match(/Exactly (\d+) questions/)?.[1] ?? 8)), delayMs: 1500 };
   if (kind === "plan") return { answer: topics(request.text), delayMs: 1500 };
   if (kind === "parse_school") return { answer: request.images?.length ? PHOTO_ITEMS : SAMPLE.parse_school, delayMs: 1500 };
+  if (kind === "note") return { answer: withTutorsWords(request.text), delayMs: 1500 };
   if (kind === "mock") return { answer: patterned(Number(request.text.match(/Pattern: (\d+) marks/)?.[1] ?? 25)), delayMs: 1500 };
   return { answer: blank ? { rows: [] } : SAMPLE[kind], delayMs: 1500 };
+}
+
+/** The weekly note, ending with the tutor's own words when the prompt carries them (Make's note, Phase 15). */
+function withTutorsWords(text: string): MessageOutput {
+  const words = text.match(/^The tutor adds: (.+)$/m)?.[1];
+  if (!words) return SAMPLE.note;
+  return { message: `${SAMPLE.note.message} ${words}`, english: `${SAMPLE.note.english} ${words}` };
 }
 
 /** The names a check or placement prompt quotes, in order. */

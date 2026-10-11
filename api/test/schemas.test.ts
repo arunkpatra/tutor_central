@@ -311,3 +311,23 @@ test("the parents' messages need no tutor's name: the app signs them, the models
   const old = MakeInput.safeParse({ ...body, tutorName: "Meera" });
   expect(old.success && !("tutorName" in old.data)).toBe(true);
 });
+
+// Phase 15: the note from Make carries the tutor's own words (plan/phase-15-plan.md decision 7).
+const makeNote = { kind: "note", centreId: "11111111-1111-1111-1111-111111111111", studentId: "22222222-2222-2222-2222-222222222222", studentName: "Dev", centreName: "Bright Minds", classLevel: "8", language: "hi", week: { monday: "2026-10-05", taught: [], practise: [], coming: [] } };
+
+test("a note takes the tutor's own words, at most 300", () => {
+  expect(MakeInput.safeParse({ ...makeNote, tutorSays: "Please ask Dev to show you the balancing steps." }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...makeNote, tutorSays: "म".repeat(300) }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...makeNote, tutorSays: "x".repeat(301) }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...makeNote, tutorSays: "" }).success).toBe(false);
+});
+
+test("a sheet, worked example, figure or brief from Make that names a student is a 400 (D62)", () => {
+  const c = { centreId: "11111111-1111-1111-1111-111111111111", classLevel: "8", subject: "Science" };
+  const studentId = "22222222-2222-2222-2222-222222222222";
+  expect(MakeInput.safeParse({ ...c, kind: "sheet", skills: ["Balancing equations"], studentId }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "worked_example", skill: "Balancing equations", studentId }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "figure", figure: "fraction_bar", skill: "Fractions on a bar", studentName: "Dev" }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "brief", chapter: "Chemical reactions", studentId }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "sheet", skills: ["Balancing equations"], tutorSays: "x" }).success).toBe(false);
+});
