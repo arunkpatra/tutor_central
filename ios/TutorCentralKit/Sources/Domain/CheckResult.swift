@@ -87,12 +87,14 @@ public enum MarkEdit {
 public enum SchemeSource: Hashable, Sendable {
     case paper(generationID: UUID)
     case typed(String)
+    /// A mock's key (Phase 13): its generation for the API, its artefact for the marks it writes.
+    case mock(generationID: UUID, artefactID: UUID)
 
     public static let typedLimit = 4000
 
     public var isValid: Bool {
         switch self {
-        case .paper: return true
+        case .paper, .mock: return true
         case let .typed(text):
             let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
             return !trimmed.isEmpty && trimmed.storedCount <= Self.typedLimit

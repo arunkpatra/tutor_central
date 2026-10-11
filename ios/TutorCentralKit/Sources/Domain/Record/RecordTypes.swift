@@ -79,6 +79,7 @@ public enum MessageKind: String, CaseIterable, Hashable, Sendable, Codable {
     case reminder, receipt, absence, progress, note
     case canDo = "can_do", testTomorrow = "test_tomorrow"
     case homework, consent
+    case forwardAsk = "forward_ask"
 
     public var title: String {
         switch self {
@@ -91,6 +92,7 @@ public enum MessageKind: String, CaseIterable, Hashable, Sendable, Codable {
         case .testTomorrow: "Test tomorrow"
         case .homework: "Homework"
         case .consent: "Consent"
+        case .forwardAsk: "Asked to forward"
         }
     }
 }

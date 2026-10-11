@@ -69,4 +69,21 @@ struct ArtefactContentTests {
         ))) == "2 steps")
         #expect(Artefact.countLine(for: .other) == nil)
     }
+
+    @Test func aMockAndAGapReportRoundTripThroughTheKeepsKeys() throws {
+        let mock = MockContent.fixture
+        let data = try ArtefactContent.mock(mock).encoded()
+        #expect(String(bytes: data, encoding: .utf8)?.contains("\"duration_minutes\"") == true)
+        #expect(try ArtefactContent.decode(kind: .mock, json: data) == .mock(mock))
+        let report = GapReportContent.fixture
+        #expect(try ArtefactContent
+            .decode(kind: .gapReport, json: ArtefactContent.gapReport(report).encoded()) == .gapReport(report))
+        #expect(mock.marks == 25 && mock
+            .line == "25 marks · 40 minutes · Chemical reactions and Acids, bases and salts")
+        let copy = try JSONDecoder().decode(
+            ArtefactContent.self,
+            from: JSONEncoder().encode(ArtefactContent.mock(mock))
+        )
+        #expect(copy == .mock(mock))
+    }
 }

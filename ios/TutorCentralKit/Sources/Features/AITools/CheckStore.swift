@@ -88,6 +88,7 @@ import Observation
         switch scheme {
         case let .paper(id): papers.first { $0.id == id }?.result.title ?? "Marking scheme"
         case .typed: "Typed scheme"
+        case .mock: "The mock"
         }
     }
 

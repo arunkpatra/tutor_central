@@ -87,6 +87,9 @@ struct SchemeBody: Encodable {
         case let .typed(typed):
             kind = "typed"
             text = typed.trimmingCharacters(in: .whitespacesAndNewlines)
+        case let .mock(id, _):
+            kind = "mock"
+            generationId = id.uuidString.lowercased()
         }
     }
 }

@@ -11,7 +11,7 @@ public struct PlanInput: Sendable {
     public let skills: [UUID: [Skill]]
     /// The batch's sessions, any month, for the catch-up line.
     public let sessions: [AttendanceSession]
-    /// Phase 13 fills it; empty now.
+    /// Each student's nearest exam within the window, for the subject rule.
     public let schoolItems: [SchoolItemHint]
     public let now: Date
     public let calendar: Calendar
@@ -19,12 +19,18 @@ public struct PlanInput: Sendable {
     public let groupCount: Int?
     /// By group number.
     public let subjects: [Int: String]
+    /// By student: the exam they revise for today (Phase 13).
+    public let revisions: [UUID: RevisionLine]
+    /// Students on holiday today: left out (Phase 13).
+    public let holidays: Set<UUID>
 
     public init(
         classroom: Classroom, date: Day, students: [Student], chapters: [UUID: [Chapter]], skills: [UUID: [Skill]],
         sessions: [AttendanceSession], schoolItems: [SchoolItemHint], now: Date, calendar: Calendar,
-        groupCount: Int?, subjects: [Int: String]
+        groupCount: Int?, subjects: [Int: String], revisions: [UUID: RevisionLine] = [:], holidays: Set<UUID> = []
     ) {
+        self.revisions = revisions
+        self.holidays = holidays
         self.classroom = classroom
         self.date = date
         self.students = students
@@ -68,9 +74,15 @@ public enum PlanRules {
     /// before the teach line when the student missed the last two), a brief line per group above class 7. A group whose
     /// members have no skill in its subject has `skill == ""` and `chapter == ""`: the maker asks /ai/plan for them.
     public static func plan(_ input: PlanInput) -> PlanDraft {
+        let present = input.students.filter { !input.holidays.contains($0.id) }
+        let away = input.students.filter { input.holidays.contains($0.id) }.map(\.id)
+        let exams = examGroups(present, input: input)
+        let inExams = Set(exams.flatMap { $0.map(\.id) })
+        let rest = present.filter { !inExams.contains($0.id) }
         let count = input.groupCount ?? input.pattern?.groups ?? input.classroom.planGroups
-        let cut = groups(input.students, count: count)
-        let ranked = cut.sorted { lhs, rhs in
+        let left = maxGroups - exams.count
+        let levelCut = rest.isEmpty ? [] : groups(rest, count: count.map { min($0, left) } ?? left)
+        let ranked = levelCut.sorted { lhs, rhs in
             if lhs.count != rhs.count {
                 return lhs.count > rhs.count
             }
@@ -78,13 +90,24 @@ public enum PlanRules {
         }
         var planned: [PlanGroup] = []
         var lines: [PlanLine] = []
+        for (index, members) in exams.enumerated() {
+            let group = examGroup(index + 1, members: members, input: input)
+            planned.append(group)
+            lines += members.flatMap { examLines($0, group: group, input: input) }
+        }
         for (index, members) in ranked.enumerated() {
-            let number = index + 1
-            let override = input.subjects[number] ?? input.pattern?.subjects[safe: index]
+            let number = exams.count + index + 1
+            let override = input.subjects[number] ?? input.pattern?.subjects[safe: number - 1]
             let subject = groupSubject(members, input: input, override: override)
             let group = group(number, members: members, subject: subject, input: input)
             planned.append(group)
-            lines += members.flatMap { studentLines($0, group: group, input: input) }
+            lines += members.flatMap { member in
+                studentLines(member, group: group, input: input).map { line in
+                    // A student whose exam has no group of its own keeps the group's material and their own words.
+                    guard line.kind == .teach, let revision = input.revisions[member.id] else { return line }
+                    return line.with(words: revisionTeach(revision))
+                }
+            }
             lines.append(PlanLine(
                 studentID: nil, groupNo: number, kind: .workedExample, skillID: group.skillID,
                 words: groupLineWords(.workedExample, group)
@@ -96,7 +119,11 @@ public enum PlanRules {
                 lines.append(briefLine(group))
             }
         }
-        return PlanDraft(classID: input.classroom.id, date: input.date, groups: planned, lines: lines, leftOut: [])
+        return PlanDraft(
+            classID: input.classroom.id, date: input.date, groups: planned,
+            lines: lines.map { $0.with(words: cut($0.words)) },
+            leftOut: away
+        )
     }
 
     /// The brief's title and line before its chapter ("Your brief · Chemical reactions").

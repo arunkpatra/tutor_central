@@ -28,7 +28,7 @@ extension PlanMaker {
                 return (artefact(.check, "Checks · \(skills.first ?? "")", content, made.generationID), place)
             case let .placement(student, level):
                 return try await placement(student, level: level, work: work).map { ($0, place) }
-            case .sheet, .workedExample, .figure, .brief:
+            case .sheet, .workedExample, .figure, .brief, .mock:
                 return try await groupMaterial(request, centre: work.centre).map { ($0, place) }
             }
         } catch {
@@ -56,7 +56,7 @@ extension PlanMaker {
         case let .brief(_, chapter, level, subject):
             let made = try await ai.makeBrief(classLevel: level, subject: subject, chapter: chapter, centre: centre)
             return artefact(.brief, PlanRules.briefPrefix + chapter, .brief(made.brief), made.generationID)
-        case .checks, .personalChecks, .placement:
+        case .checks, .personalChecks, .placement, .mock:
             return nil
         }
     }
@@ -99,6 +99,7 @@ extension PlanMaker {
         case let .workedExample(group, _, _, _): LinePlace(group: group, student: nil, kind: .workedExample)
         case let .figure(group, _, _, _, _): LinePlace(group: group, student: nil, kind: .figure)
         case let .brief(group, _, _, _): LinePlace(group: group, student: nil, kind: .brief)
+        case let .mock(group, _, _, _, _, _, _): LinePlace(group: group, student: nil, kind: .practise)
         }
     }
 

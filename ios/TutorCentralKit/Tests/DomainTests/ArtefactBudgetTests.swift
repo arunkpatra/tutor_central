@@ -225,7 +225,7 @@ struct ArtefactBudgetTests {
         for request in requests {
             switch request {
             case .personalChecks, .placement: break // named by id for the link, never sent: the maker sends skills only
-            case .checks, .sheet, .workedExample, .figure, .brief: #expect(request.studentID == nil)
+            case .checks, .sheet, .workedExample, .figure, .brief, .mock: #expect(request.studentID == nil)
             }
         }
     }
@@ -241,6 +241,7 @@ extension ArtefactRequest {
         case .workedExample: "workedExample"
         case .figure: "figure"
         case .brief: "brief"
+        case .mock: "mock"
         }
     }
 
