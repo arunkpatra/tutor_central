@@ -29,13 +29,7 @@ public enum HolidayRules {
                 let lastOfMonth = index == days.count - 1 || days[index + 1].month != day.month
                 return lastOfMonth ? "\(day.weekdayDayText) \(day.shortMonthText)" : day.weekdayDayText
             }
-            return "\(listed(words)) · \(batch.name)"
+            return "\(ListWords.and(words)) · \(batch.name)"
         }.joined(separator: "\n")
-    }
-
-    /// "a", "a and b", "a, b and c".
-    static func listed(_ words: [String]) -> String {
-        guard let last = words.last, words.count > 1 else { return words.first ?? "" }
-        return "\(words.dropLast().joined(separator: ", ")) and \(last)"
     }
 }
