@@ -102,8 +102,9 @@ struct SheetFooter: View {
                             .buttonStyle(.secondary(.form)).disabled(true)
                     }
                     Button {
-                        if let pdf {
-                            Printer.print(pdf, title: store.title)
+                        // The tutor's copy: with the key at the end when the sheet was made so.
+                        if let printed = (try? PDFMaker.pdf(for: store.printSheet)) ?? pdf {
+                            Printer.print(printed, title: store.title)
                         }
                     } label: { Label("Print", systemImage: "printer") }
                         .buttonStyle(.secondary(.form))

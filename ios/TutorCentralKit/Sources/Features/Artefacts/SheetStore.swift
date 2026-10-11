@@ -147,8 +147,18 @@ import UIKit
 
     // MARK: - The PDF and the board
 
-    /// The PDF as shown: the questions, the key only when Key is chosen.
+    /// The PDF that is shared: the questions, the key only when Key is chosen ("Key at the end" is for the tutor, left
+    /// out of what is shared: P10-Make-Form).
     public var pdfSheet: PDFSheet {
+        sheetPDF(withKey: form == .key)
+    }
+
+    /// What Print sends: as shared, with the key after the questions on a Make sheet made with "Key at the end".
+    public var printSheet: PDFSheet {
+        sheetPDF(withKey: form == .key || artefact?.madeFor?.keyAtEnd == true)
+    }
+
+    private func sheetPDF(withKey: Bool) -> PDFSheet {
         if let own = ownContent {
             let image = ownImage.flatMap(UIImage.init(data:))
             let blocks: [PDFBlock] = image.map { [.image($0)] } ?? own.text.map { [.text($0)] } ?? []
@@ -159,13 +169,8 @@ import UIKit
         let answers = sheet.questions.map { PDFLine(number: $0.number, text: $0.answer, marks: nil) }
         return PDFSheet(
             title: title, instructions: sheet.instructions,
-            blocks: [.section(title: nil, lines: questions)] + (showsKeyInPDF ? [.key(answers)] : [])
+            blocks: [.section(title: nil, lines: questions)] + (withKey ? [.key(answers)] : [])
         )
-    }
-
-    /// The key with Key, and on a Make sheet made with "Key at the end".
-    private var showsKeyInPDF: Bool {
-        form == .key || artefact?.madeFor?.keyAtEnd == true
     }
 
     public var boardQuestion: SheetQuestion? {
