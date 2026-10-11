@@ -167,7 +167,10 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
             message = "That didn't go through. Check your connection and try again. The item is still here."
             return false
         }
-        if let path = item.photoPath {
+        // One photo serves each item read from it: it goes with the last of them.
+        if let path = item.photoPath,
+           let others = try? await repository.items(centre: workspace.centre.id),
+           !others.contains(where: { $0.photoPath == path }) {
             try? await photos.remove(path: path)
         }
         self.item = nil

@@ -61,6 +61,24 @@ import Testing
         ])
     }
 
+    @Test func aPhotoTwoItemsShareStaysUntilTheLastOfThemGoes() async {
+        let exams = SchoolFixtures.boardItems.filter { $0.kind == .exam }.prefix(2).map { item in
+            var shared = item
+            shared.photoPath = "c/item/a.jpg"
+            return shared
+        }
+        let photos = FakePhotoStore(paths: ["c/item/a.jpg"])
+        let repo = FakeSchoolItemsRepository(items: exams)
+        let first = await makeStore(exams[0].id, photos: photos, repo: repo)
+        await first.load()
+        #expect(await first.delete())
+        #expect(photos.paths == ["c/item/a.jpg"], "the other item still shows it")
+        let second = await makeStore(exams[1].id, photos: photos, repo: repo)
+        await second.load()
+        #expect(await second.delete())
+        #expect(photos.paths.isEmpty)
+    }
+
     @Test func anItemGoneReadsGone() async {
         let store = await makeStore(UUID())
         await store.load()

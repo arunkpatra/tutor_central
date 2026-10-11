@@ -53,14 +53,16 @@ public struct CalendarMonth: View {
         )
     }
 
-    /// The School tab's month (P10-School-Calendar): one 4 pt dot per kind of item on a day, exam first, three at most.
+    /// The School tab's month (P10-School-Calendar): one 4 pt dot per kind of item on a day, exam first, three at most;
+    /// no card of its own (it sits in the caller's with the month header, as the schedule's does).
     public init(month: Date, today: Date, selected: Binding<Date?>, dots: [Date: [CalendarDot]], calendar: Calendar) {
         self.init(
             days: Self.monthDays(month, calendar),
             today: today,
             selected: selected,
             marked: [],
-            calendar: calendar
+            calendar: calendar,
+            framed: false
         )
         dotsByDay = Dictionary(dots.map { (calendar.startOfDay(for: $0.key), $0.value) }) { first, second in
             first + second
