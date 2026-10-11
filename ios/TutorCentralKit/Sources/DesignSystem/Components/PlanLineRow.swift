@@ -83,8 +83,8 @@ public struct PlanLineRow: View {
 
     private var teach: Text {
         guard let status else { return Text(teachLine).foregroundStyle(Tokens.text.color) }
-        return Text(status.word).foregroundStyle(status.kind.color.color).fontWeight(.semibold)
-            + Text(" · \(teachLine)").foregroundStyle(Tokens.text.color)
+        let word = Text(status.word).foregroundStyle(status.kind.color.color).fontWeight(.semibold)
+        return Text("\(word)\(Text(" · \(teachLine)").foregroundStyle(Tokens.text.color))")
     }
 
     private var restLine: Text {
@@ -93,7 +93,7 @@ public struct PlanLineRow: View {
             let separator = index == 0 ? Text("") : Text(" · ").foregroundStyle(Tokens.text2.color)
             let piece = Text(bit.text).strikethrough(bit.struck)
                 .foregroundStyle((bit.struck ? Tokens.text3 : Tokens.text2).color)
-            return line + separator + piece
+            return Text("\(line)\(separator)\(piece)")
         }
     }
 

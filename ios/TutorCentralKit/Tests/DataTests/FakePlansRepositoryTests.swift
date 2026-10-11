@@ -19,7 +19,7 @@ import Testing
             )), photoPath: nil, generationID: nil, regeneratedFrom: nil),
             to: ArtefactLink(plan: made.id, group: 1, student: nil, itemKind: .homework), centre: centre
         )
-        let read = try try await #require(repo.plan(centre: centre, classID: made.classID, date: made.date))
+        let read = try await #require(repo.plan(centre: centre, classID: made.classID, date: made.date))
         #expect(read.items.filter { $0.groupNo == 1 && $0.kind == .homework }.allSatisfy { $0.artefactID == sheet.id })
         #expect(read.artefacts.map(\.id) == [sheet.id])
     }
@@ -41,11 +41,11 @@ import Testing
         let dev = try #require(made.items[0].studentID)
         try await repo.skip(item: #require(made.items(of: dev).first { $0.kind == .homework }?.id), centre: centre)
         try await repo.move(items: made.items(of: dev).map(\.id), to: 2, from: 1, centre: centre)
-        var read = try try await #require(repo.plan(centre: centre, classID: made.classID, date: made.date))
+        var read = try await #require(repo.plan(centre: centre, classID: made.classID, date: made.date))
         #expect(read.items(of: dev).allSatisfy { $0.groupNo == 2 && $0.movedFrom == 1 })
         #expect(read.items(of: dev).first { $0.kind == .homework }?.skippedAt != nil)
         try await repo.leaveOut(student: dev, plan: made.id, centre: centre)
-        read = try try await #require(repo.plan(centre: centre, classID: made.classID, date: made.date))
+        read = try await #require(repo.plan(centre: centre, classID: made.classID, date: made.date))
         #expect(read.items(of: dev).allSatisfy { $0.skippedAt != nil })
     }
 

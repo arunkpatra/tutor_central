@@ -193,6 +193,12 @@ public struct StudentRow: View {
         self.action = action
     }
 
+    /// The status word in its colour, then the detail.
+    private func leadLine(_ lead: (word: String, kind: TrackKind)) -> Text {
+        let word = Text(lead.word).foregroundStyle(lead.kind.color.color).fontWeight(.semibold)
+        return Text("\(word)\(Text(" · \(detail)").foregroundStyle(Tokens.text2.color))")
+    }
+
     public var body: some View {
         ListRow(action: action) {
             Avatar(initials: initials)
@@ -200,8 +206,7 @@ public struct StudentRow: View {
                 if let lead {
                     VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                         RowTitles(title: name, titleMatch: nameMatch, subtitle: nil)
-                        (Text(lead.word).foregroundStyle(lead.kind.color.color).fontWeight(.semibold)
-                            + Text(" · \(detail)").foregroundStyle(Tokens.text2.color))
+                        leadLine(lead)
                             .typeStyle(Tokens.footnote)
                             .lineLimit(1)
                     }

@@ -11,7 +11,7 @@ public struct CountsLine: View {
         self.absent = absent
     }
 
-    public static func text(present: Int, absent: Int) -> (present: String, absent: String) {
+    public nonisolated static func text(present: Int, absent: Int) -> (present: String, absent: String) {
         ("\(present) present", "\(absent) absent")
     }
 
