@@ -269,4 +269,12 @@ import Testing
             day: 11
         ))
     }
+
+    @Test func lastWeeksNoteSentOnMondayMorningIsNotThisWeeks() async {
+        var world = World(sent: [Self.dev])
+        world.sentAt = PlanTest.at(5, 9, 0)
+        let store = await Self.make(world)
+        await store.load()
+        #expect(row(store, Self.dev)?.state == .read)
+    }
 }

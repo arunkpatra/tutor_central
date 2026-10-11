@@ -24,7 +24,8 @@ extension RootView {
              .textbookChapterEdit, .placement, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
-             .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees: .students
+             .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees,
+             .studentMessages: .students
         case .feesEmpty, .fees, .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing,
              .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive: .fees

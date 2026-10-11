@@ -69,6 +69,9 @@ extension Fixtures {
     }
 
     @MainActor static func plans(for state: LaunchState) -> FakePlansRepository {
+        if state == .studentMessages {
+            return FakePlansRepository(artefacts: devNotes, now: noteDayClock)
+        }
         switch state {
         case .todayPlanning:
             // P10-Today-Planning: the plan is still being written.

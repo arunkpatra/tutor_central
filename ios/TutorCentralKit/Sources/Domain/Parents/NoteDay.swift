@@ -55,6 +55,18 @@ public struct NoteDay: Hashable, Sendable, Codable {
         return max(monday, noteDay.adding(days: -6, calendar: calendar)) ... noteDay
     }
 
+    /// The first day a send counts as this note day's: the day after the previous note day's on-period (which runs to
+    /// the end of the day after it). Last week's note sent on Monday morning stays last week's.
+    public static func sendsFrom(_ noteDay: Day) -> Day {
+        noteDay.adding(days: -5, calendar: utcCalendar)
+    }
+
+    private static let utcCalendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        return calendar
+    }()
+
     private func isBeforeTime(_ now: Date, calendar: Calendar) -> Bool {
         let parts = calendar.dateComponents([.hour, .minute], from: now)
         return TimeOfDay(hour: parts.hour ?? 0, minute: parts.minute ?? 0).map { $0 < time } ?? false

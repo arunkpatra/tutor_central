@@ -285,11 +285,13 @@ struct SchoolSection: View {
 /// Messages (P10-Student-End): what was sent from here, newest first.
 struct MessagesSection: View {
     let rows: [StudentDetailStore.MessageLine]
+    /// See all: the sent log (Phase 14).
+    let seeAll: () -> Void
 
     var body: some View {
         if !rows.isEmpty {
             VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                SectionHeader("Messages")
+                SectionHeader("Messages", action: ("See all", seeAll))
                 Card {
                     VStack(spacing: 0) {
                         ForEach(rows.prefix(5)) { row in
