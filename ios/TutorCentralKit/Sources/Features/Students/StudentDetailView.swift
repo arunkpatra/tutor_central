@@ -126,6 +126,7 @@ public struct StudentDetailView: View {
             .padding(.top, max(0, Tokens.pageTop - topInset))
             .padding(.bottom, Tokens.contentBottom)
         }
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
@@ -286,11 +287,6 @@ public struct StudentDetailView: View {
         56
     }
 
-    func edit() {
-        guard let student = store.student else { return }
-        editing = register.form(.edit(student))
-    }
-
     private func delete() {
         deleting = true
         Task {
@@ -317,6 +313,11 @@ extension StudentDetailView {
     /// This week's quiet Today, when the batch meets today (U35).
     var openToday: (() -> Void)? {
         store.todaysBatch.map { batch in { actions.openToday(batch) } }
+    }
+
+    func edit() {
+        guard let student = store.student else { return }
+        editing = register.form(.edit(student))
     }
 
     func archive() {
