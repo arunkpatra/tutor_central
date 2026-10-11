@@ -65,7 +65,8 @@ The owner's two rulings of 2026-10-11 are tasks of this plan, not questions:
 
 - **D67, the model per kind of AI work in one place.** One checked-in table of work type to model, with a class band where
   it matters and marking a handwritten paper apart from reading a printed report card; an environment variable per work
-  type overrides it at deploy with no code change; `MARKING_MODEL` and `models.ts`' table fold into it; the price sheet and
+  type (`AI_MODEL_<WORK_TYPE>` on Vercel; an unknown model name stops the API at start, so the deploy's smoke fails, not a
+  tutor's call) overrides it at deploy with no code change, the owner's "env vars etc."; `MARKING_MODEL` and `models.ts`' table fold into it; the price sheet and
   the cost run read it; tests prove an override reaches the next call and its log. Measure reading a report card on Sonnet
   and on Opus in the cost run and set the table's default from it (the owner approved real calls for testing).
 - **D68, what Phase 13 left, and what this phase finds.** Fold in U41 to U45 (a board first for any that changes what is seen

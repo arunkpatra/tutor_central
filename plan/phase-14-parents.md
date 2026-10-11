@@ -20,7 +20,7 @@ what to do next.
 6. **Messages carry the tutor's name** and "Made with Tutor Central".
 7. **The model for each kind of AI work in one place (D67).** One checked-in table of work type to model (with a class band
    where it matters; marking a handwritten paper and reading a printed report card as separate work types), overridable
-   per work type by an environment variable at deploy; `MARKING_MODEL` and the per-kind table in `api/src/models.ts` folded
+   per work type by an environment variable at deploy (`AI_MODEL_<WORK_TYPE>`; an unknown model stops the API at start); `MARKING_MODEL` and the per-kind table in `api/src/models.ts` folded
    into it; the price sheet and the cost run read it; the model used stays logged per call.
 8. **What Phase 13 left (D68).** U41 to U45 on `plan/ui-polish.md` (boards first where they change what is seen), the five
    `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`, and the API answering a lost database connection as
