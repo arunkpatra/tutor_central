@@ -218,7 +218,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case reports, reportsAttendance = "reports-attendance", reportsExport = "reports-export"
     case reportsEmpty = "reports-empty", reportsProgress = "reports-progress"
     case reportsProgressTerm = "reports-progress-term", reportsProgressSort = "reports-progress-sort"
-    case reportsProgressExport = "reports-progress-export"
+    case reportsProgressExport = "reports-progress-export", makeSheetNoClass = "make-sheet-no-class"
     case make, makeEmpty = "make-empty", makeSheet = "make-sheet", makeFor = "make-for"
     case makeForStudent = "make-for-student", makeWorkedExample = "make-worked-example", makeFigure = "make-figure"
     case aiPaper = "ai-paper"

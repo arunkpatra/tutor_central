@@ -150,6 +150,13 @@ import Observation
         case .classLevel: nil
         }
         guard let whose else { return kind == .sheet ? alone : nil }
+        if level == nil {
+            // No class known: the way out, in the helper's place (P10-Make-Form draws no Class tile).
+            if case .student = target {
+                return "\(whose) has no class yet. Set it on their page, or choose a class in For."
+            }
+            return "No class is set for \(whose)'s students. Choose a class in For."
+        }
         let against = "Made against \(whose)'s record."
         return kind == .sheet ? "\(against) \(alone)" : against
     }
