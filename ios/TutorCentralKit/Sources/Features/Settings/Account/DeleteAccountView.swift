@@ -61,6 +61,7 @@ public struct DeleteAccountView: View {
             .padding(.bottom, Tokens.contentBottom)
         }
         .scrollDismissesKeyboard(.interactively)
+        .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
