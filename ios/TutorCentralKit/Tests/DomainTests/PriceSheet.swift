@@ -19,6 +19,8 @@ enum PriceSheet {
         case .workedExample: Typical(tokensIn: 756, tokensOut: 400)
         case .figure: Typical(tokensIn: 700, tokensOut: 200)
         case .brief: Typical(tokensIn: 1205, tokensOut: 1231)
+        // An estimate until the cost run (plan/phase-13-plan.md Task 27).
+        case .mock: Typical(tokensIn: 2000, tokensOut: 2500)
         }
     }
 
@@ -26,7 +28,7 @@ enum PriceSheet {
         switch request {
         case .checks, .personalChecks, .placement: haiku
         case let .sheet(_, _, level, _, _, _): level <= .five ? haiku : sonnet
-        case .workedExample, .figure, .brief: sonnet
+        case .workedExample, .figure, .brief, .mock: sonnet
         }
     }
 

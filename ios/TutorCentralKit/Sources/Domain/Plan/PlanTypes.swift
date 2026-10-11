@@ -19,10 +19,13 @@ public struct PlanGroup: Hashable, Sendable, Codable, Identifiable {
     public let memberIDs: [UUID]
     /// The skill row of the first member who has it; nil for a group named by /ai/plan.
     public let skillID: UUID?
+    /// The exam its members revise for (Phase 13; the chapter is the exam's title, the skill the day's portion); nil
+    /// for a level group and in Phase 12's copies.
+    public let examItemID: UUID?
 
     public init(
         number: Int, subject: String, chapter: String, skill: String, classLevels: [ClassLevel], memberIDs: [UUID],
-        skillID: UUID?
+        skillID: UUID?, examItemID: UUID? = nil
     ) {
         self.number = number
         self.subject = subject
@@ -31,13 +34,14 @@ public struct PlanGroup: Hashable, Sendable, Codable, Identifiable {
         self.classLevels = classLevels
         self.memberIDs = memberIDs
         self.skillID = skillID
+        self.examItemID = examItemID
     }
 
     /// The group with the chapter and skill /ai/plan named.
     public func named(chapter: String, skill: String) -> PlanGroup {
         PlanGroup(
             number: number, subject: subject, chapter: chapter, skill: skill, classLevels: classLevels,
-            memberIDs: memberIDs, skillID: skillID
+            memberIDs: memberIDs, skillID: skillID, examItemID: examItemID
         )
     }
 
@@ -45,8 +49,48 @@ public struct PlanGroup: Hashable, Sendable, Codable, Identifiable {
     public func with(members: [UUID]) -> PlanGroup {
         PlanGroup(
             number: number, subject: subject, chapter: chapter, skill: skill, classLevels: classLevels,
-            memberIDs: members, skillID: skillID
+            memberIDs: members, skillID: skillID, examItemID: examItemID
         )
+    }
+}
+
+/// A student's exam line for the day (plan/phase-13-plan.md decision 10), from `ExamPreparation`: the exam, the day's
+/// portion, the mock's pattern, and the gap report's line when one was used.
+public struct RevisionLine: Hashable, Sendable {
+    public let itemID: UUID
+    public let title: String
+    public let subject: String
+    public let examDate: Day
+    public let day: PreparationDay
+    /// The gap report's line for this day, when one was used.
+    public let gapLine: String?
+    /// The student's weakest skills in the mock's marking (the after-mock set's).
+    public let gapSkills: [String]
+    /// The exam's portions as parts (the mock's and the checks' when the day names no skill).
+    public let portions: [String]
+    /// The mock's pattern (the board's blueprint or the default by class).
+    public let pattern: MockPattern?
+    /// The revision set's number: the day's place among the exam's revision and after-mock days.
+    public let setNumber: Int
+
+    public init(
+        itemID: UUID, title: String, subject: String, examDate: Day, day: PreparationDay, gapLine: String? = nil,
+        gapSkills: [String] = [], portions: [String] = [], pattern: MockPattern? = nil, setNumber: Int? = nil
+    ) {
+        self.itemID = itemID
+        self.title = title
+        self.subject = subject
+        self.examDate = examDate
+        self.day = day
+        self.gapLine = gapLine
+        self.gapSkills = gapSkills
+        self.portions = portions
+        self.pattern = pattern
+        if case let .revise(index) = day.kind {
+            self.setNumber = setNumber ?? index
+        } else {
+            self.setNumber = setNumber ?? 1
+        }
     }
 }
 

@@ -42,6 +42,10 @@ extension SchoolSamples {
         sample("C", "Bir Bikram Singh", level: nil, school: nil)
     }
 
+    var sahil: Student {
+        sample("0", "Sahil Verma", level: .two, school: stMarys.id)
+    }
+
     var people: [Student] {
         [riya, dev, nikhil, akshita, meher, bir]
     }
@@ -86,7 +90,8 @@ extension SchoolSamples {
                 month: 10,
                 day: 16
             )!,
-            title: "Science unit test 3", portions: "Ch 1 Chemical reactions · Ch 2 Acids, bases and salts"
+            title: "Science unit test 3", portions: "Ch 1 Chemical reactions · Ch 2 Acids, bases and salts",
+            id: UUID(uuidString: "66666666-6666-6666-6666-666666666661")!
         )
         item.subject = "Science"
         return item
@@ -148,10 +153,11 @@ extension SchoolSamples {
 
 extension SchoolItem {
     static func fixture(
-        kind: SchoolItemKind, audience: ItemAudience, date: Day, title: String? = nil, portions: String? = nil
+        kind: SchoolItemKind, audience: ItemAudience, date: Day, title: String? = nil, portions: String? = nil,
+        id: UUID = UUID()
     ) -> SchoolItem {
         SchoolItem(
-            id: UUID(), kind: kind, audience: audience, title: title ?? kind.rawValue.capitalized, subject: nil,
+            id: id, kind: kind, audience: audience, title: title ?? kind.rawValue.capitalized, subject: nil,
             date: date, endDate: nil, portions: portions, sourceText: nil, photoPath: nil, source: .typed,
             receivedAt: FakeClock.oct7at1635, confirmedAt: FakeClock.oct7at1635
         )
