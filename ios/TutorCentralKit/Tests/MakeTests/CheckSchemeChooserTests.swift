@@ -13,7 +13,8 @@ import Testing
 
     /// Dev's exam (Science unit test 3, class 8 at Vidya Niketan) has its mock; Make made one for Dev too.
     static func make(
-        students: [Student] = FakeStudentsRepository.eveningSeed, history: [Generation] = FakeAIHistoryRepository.seed
+        students: [Student] = FakeStudentsRepository.eveningSeed, history: [Generation] = FakeAIHistoryRepository.seed,
+        presetMock: Bool = false
     ) async -> CheckStore {
         let workspace = FakeCentreRepository.meeraWorkspaceConsented
         let roster = FakeStudentsRepository(students: students)
@@ -29,10 +30,19 @@ import Testing
             generationID: UUID(), schoolItemID: FakeSchoolItemsRepository.scienceTest3
         )
         let plans = FakePlansRepository(artefacts: [examMock] + FakePlansRepository.madeRecent)
+        let preset = examMock.generationID.map { generation in
+            CheckPreset(
+                studentID: dev, scheme: .mock(generationID: generation, artefactID: examMock.id),
+                mark: MarkTarget(
+                    subject: "Science", test: "Science unit test 3 · mock", schoolItemID: examMock.schoolItemID,
+                    artefactID: examMock.id
+                )
+            )
+        }
         let store = CheckStore(
             workspace: workspace, register: register, ai: FakeAIRepository(),
             history: FakeAIHistoryRepository(generations: history), students: roster, centres: FakeCentreRepository(),
-            now: { now }, record: FakeRecordRepository(), plans: plans,
+            now: { now }, record: FakeRecordRepository(), preset: presetMock ? preset : nil, plans: plans,
             schoolItems: FakeSchoolItemsRepository(items: FakeSchoolItemsRepository.boardItems)
         )
         store.studentID = dev
@@ -114,6 +124,13 @@ import Testing
         await store.loadSchemes()
         try store.choose(#require(store.schemeChoices.first { !$0.isMock }))
         #expect(store.introSchemeTitle == "Quadratic equations")
+    }
+
+    /// Hand run 8: Mark from a photo's tile reads as the chooser does (P10-Make-Check).
+    @Test func aPresetsMockReadsOnTheTileAsTheChooserNamesIt() async {
+        let store = await Self.make(presetMock: true)
+        await store.loadSchemes()
+        #expect(store.introSchemeTitle == "Science unit test 3 · the mock")
     }
 
     static func paper(at date: Date) -> Generation {

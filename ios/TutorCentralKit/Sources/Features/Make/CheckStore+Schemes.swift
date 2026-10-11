@@ -78,10 +78,11 @@ public extension CheckStore {
     /// The tile's value: "Science unit test 3 · the mock", a paper's title, a preset's mock, "Type a scheme".
     var introSchemeTitle: String {
         guard skipsScheme else { return "Type a scheme" }
-        if case .typed = scheme {
-            return "Typed scheme"
+        switch scheme {
+        case .typed: return "Typed scheme"
+        case let .mock(_, artefact): return mocks.first { $0.id == artefact }.map(mockTitle) ?? schemeTitle
+        case .paper: return schemeTitle
         }
-        return schemeTitle
     }
 
     /// "2 pages", "1 page", "No pages" (U23).
