@@ -61,8 +61,30 @@ struct MakeGapBody: Encodable {
         studentId = request.studentID.uuidString.lowercased()
         classLevel = request.classLevel.rawValue
         subject = request.subject
-        daysLeft = request.daysLeft
-        bySkill = request.bySkill
+        daysLeft = min(Self.maxDays, max(1, request.daysLeft))
+        bySkill = Self.weakest(request.bySkill)
+    }
+
+    /// The API's limits (`/ai/make` kind `gap_report`): three days, twelve skills, a note of 300.
+    static let maxDays = 3
+    static let maxSkills = 12
+    static let noteLimit = 300
+
+    /// The twelve weakest skills (lowest share first, ties in the mock's order), sent in the mock's order with their
+    /// notes cut to the limit; the report kept with the exam holds every skill.
+    static func weakest(_ tallies: [GapReportContent.Tally]) -> [GapReportContent.Tally] {
+        let share = { (tally: GapReportContent.Tally) in Double(tally.right) / Double(max(tally.of, 1)) }
+        let kept = Set(
+            tallies.enumerated()
+                .sorted { share($0.element) != share($1.element) ? share($0.element) < share($1.element) : $0.offset < $1.offset }
+                .prefix(maxSkills).map(\.offset)
+        )
+        return tallies.enumerated().filter { kept.contains($0.offset) }.map { _, tally in
+            GapReportContent.Tally(
+                skill: tally.skill, right: tally.right, of: tally.of,
+                note: tally.note.map { String(String.UnicodeScalarView($0.unicodeScalars.prefix(noteLimit))) }
+            )
+        }
     }
 }
 

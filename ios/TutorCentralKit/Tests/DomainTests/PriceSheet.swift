@@ -3,7 +3,7 @@ import Foundation
 
 /// The price sheet the budget is tested against (plan decision 6): USD per million tokens, the rupee at 85, and the
 /// typical tokens per kind as the cost run measured them (session 026, the twelve-student Evening batch: 13 calls,
-/// ₹4.57); the figure, not asked in that run, keeps its estimate.
+/// ₹4.57; the mock from session 028's, ₹3.94 on Sonnet); the figure, not asked in either run, keeps its estimate.
 enum PriceSheet {
     static let rupeesPerDollar = 85.0
     struct Model { let input: Double; let output: Double }
@@ -19,8 +19,7 @@ enum PriceSheet {
         case .workedExample: Typical(tokensIn: 756, tokensOut: 400)
         case .figure: Typical(tokensIn: 700, tokensOut: 200)
         case .brief: Typical(tokensIn: 1205, tokensOut: 1231)
-        // An estimate until the cost run (plan/phase-13-plan.md Task 27).
-        case .mock: Typical(tokensIn: 2000, tokensOut: 2500)
+        case .mock: Typical(tokensIn: 1166, tokensOut: 4399)
         }
     }
 

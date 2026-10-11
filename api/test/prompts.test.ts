@@ -190,3 +190,10 @@ test("schemeText reads a mock's key with its sections", () => {
   expect(text).toContain("Section A");
   expect(text).toContain("Q1 (1 mark)");
 });
+
+// The cost run (2026-10-11): Sonnet wrote day lines over the output's limit and the report was refused.
+test("the gap report asks for lines within the output's limits", () => {
+  const r = gapReportRequest({ kind: "gap_report", centreId: "c", studentId: "s", classLevel: "8", subject: "Science", daysLeft: 2, bySkill: [{ skill: "Balancing equations", right: 3, of: 10 }] });
+  expect(r.system).toContain("at most 160 characters");
+  expect(r.system).toContain("summary at most 180 characters");
+});

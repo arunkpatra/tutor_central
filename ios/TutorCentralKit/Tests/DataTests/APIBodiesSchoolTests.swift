@@ -143,4 +143,24 @@ struct APIBodiesSchoolTests {
             _ = try await ai.parseSchool(.text("x"), today: today, schools: [], classLevels: [], centre: centre)
         }
     }
+
+    /// Review Important 3, seen in the cost run: a real mock gave 20 skills and the API takes 12, three days at most
+    /// and notes of 300; the body sends the twelve weakest, the days clamped, the notes cut.
+    @Test func theGapBodyKeepsWithinTheAPIsLimits() {
+        let tallies = (1 ... 20).map { index in
+            GapReportContent.Tally(
+                skill: "Skill \(index)", right: index % 3, of: 3, note: String(repeating: "n", count: 400)
+            )
+        }
+        let body = MakeGapBody(
+            GapRequest(studentID: UUID(), classLevel: .eight, subject: "Science", daysLeft: 4, bySkill: tallies),
+            centre: UUID()
+        )
+        #expect(body.daysLeft == 3 && body.bySkill.count == 12)
+        #expect(body.bySkill.allSatisfy { ($0.note?.count ?? 0) <= 300 })
+        #expect(body.bySkill.allSatisfy { $0.right < 2 }) // the weakest first: none with 2 of 3 when twelve are fewer
+        let order = tallies.map(\.skill)
+        let sent = body.bySkill.map(\.skill)
+        #expect(sent == order.filter { sent.contains($0) }) // in the mock's order
+    }
 }
