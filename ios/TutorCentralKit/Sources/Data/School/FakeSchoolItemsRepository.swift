@@ -38,7 +38,7 @@ import Foundation
         return added
     }
 
-    public func update(_ item: SchoolItem) async throws -> SchoolItem {
+    public func update(_ item: SchoolItem, centre _: UUID) async throws -> SchoolItem {
         try begin()
         if let index = stored.firstIndex(where: { $0.id == item.id }) {
             stored[index] = item

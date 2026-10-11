@@ -13,6 +13,9 @@ struct ClassroomRow: Decodable {
     let planGroups: Int?
     /// `{"3": {"groups": 2, "subjects": [...]}}`, by ISO weekday.
     let planPattern: [String: PlanPattern]?
+    /// The note day (migration 0023): the ISO weekday and "18:00:00"; nil reads as Sunday 18:00 in the app.
+    let noteWeekday: Int?
+    let noteTime: String?
 
     var classroom: Classroom {
         Classroom(
@@ -24,7 +27,15 @@ struct ClassroomRow: Decodable {
                 if let raw = Int(entry.key), let day = Weekday(rawValue: raw) {
                     patterns[day] = entry.value
                 }
-            }
+            },
+            noteDay: noteDay
         )
+    }
+
+    private var noteDay: NoteDay? {
+        guard let weekday = noteWeekday.flatMap(Weekday.init(rawValue:)),
+              let time = noteTime.flatMap(TimeOfDay.init(iso:))
+        else { return nil }
+        return NoteDay(weekday: weekday, time: time)
     }
 }

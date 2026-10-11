@@ -31,12 +31,11 @@ public final class SupabaseSchoolItemsRepository: SchoolItemsRepository {
         return try Self.decoder.decode([SchoolItemRow].self, from: response.data).compactMap(\.item)
     }
 
-    public func update(_ item: SchoolItem) async throws -> SchoolItem {
-        let response = try await client.from("school_items").update(SchoolItemWrite(item: item)).eq(
-            "id",
-            value: item.id
-        )
-        .select(SchoolItemRow.columns).single().execute()
+    /// The item's own row, filtered by its centre as well as its id (RLS holds; the filter says so in the query).
+    public func update(_ item: SchoolItem, centre: UUID) async throws -> SchoolItem {
+        let response = try await client.from("school_items").update(SchoolItemWrite(item: item))
+            .eq("centre_id", value: centre).eq("id", value: item.id)
+            .select(SchoolItemRow.columns).single().execute()
         return try Self.decoder.decode(SchoolItemRow.self, from: response.data).item ?? item
     }
 

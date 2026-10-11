@@ -32,7 +32,7 @@ struct FakeSchoolItemsRepositoryTests {
         var item = try #require(try await repo.add([draft("Ex 3.2", date: today)], photoPath: nil, centre: centre)
             .first)
         item.title = "Ex 3.3"
-        #expect(try await repo.update(item).title == "Ex 3.3")
+        #expect(try await repo.update(item, centre: UUID()).title == "Ex 3.3")
         #expect(try await repo.items(centre: centre).map(\.title) == ["Ex 3.3"])
     }
 

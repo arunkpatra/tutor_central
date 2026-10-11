@@ -38,6 +38,9 @@ import Foundation
     /// Test tomorrow's sends, with their language and words.
     public private(set) var testTomorrowLogs: [TestTomorrowLog] = []
 
+    /// The parents' messages logged (Phase 14), in order.
+    public private(set) var messageLogs: [ParentMessage] = []
+
     public struct TestTomorrowLog: Hashable, Sendable {
         public let studentID: UUID
         public let language: MessageLanguage
@@ -125,7 +128,7 @@ import Foundation
         try takeError()
         testTomorrowLogs.append(TestTomorrowLog(studentID: studentID, language: language, body: body))
         entries[studentID, default: []]
-            .append(MessageEntry(id: UUID(), kind: .testTomorrow, openedAt: now(), language: language))
+            .append(MessageEntry(id: UUID(), kind: .testTomorrow, openedAt: now(), language: language, body: body))
         return now()
     }
 
@@ -150,6 +153,16 @@ import Foundation
         return entries.flatMap { student, list in
             list.filter { $0.openedAt >= since }.map { StudentMessage(studentID: student, entry: $0) }
         }.sorted { $0.entry.openedAt > $1.entry.openedAt }
+    }
+
+    public func logMessage(_ message: ParentMessage, centre _: UUID) async throws -> Date {
+        try takeError()
+        messageLogs.append(message)
+        entries[message.studentID, default: []].append(MessageEntry(
+            id: UUID(), kind: message.kind, openedAt: now(), language: message.language, channel: message.channel,
+            body: message.body
+        ))
+        return now()
     }
 
     private func takeError() throws {

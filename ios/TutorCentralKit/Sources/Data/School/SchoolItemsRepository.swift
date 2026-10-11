@@ -10,7 +10,7 @@ public protocol SchoolItemsRepository: Sendable {
     /// Add on "Check what was read" (plan/phase-13-plan.md decision 1): the complete, ticked drafts in one insert with
     /// `confirmed_at` set; the items back.
     func add(_ drafts: [SchoolItemDraft], photoPath: String?, centre: UUID) async throws -> [SchoolItem]
-    func update(_ item: SchoolItem) async throws -> SchoolItem
+    func update(_ item: SchoolItem, centre: UUID) async throws -> SchoolItem
     func delete(id: UUID, centre: UUID) async throws
 }
 

@@ -21,4 +21,6 @@ public protocol StudentsRepository: Sendable {
     func updateNotes(id: UUID, notes: String?) async throws -> Student
     /// The parent's consent recorded (D62), or cleared with nil; the student as stored.
     func setConsent(id: UUID, _ consent: ConsentRecord?) async throws -> Student
+    /// The next step the tutor chose for a student not on track (Phase 14); nil: the plan's own.
+    func setNextStep(id: UUID, _ step: NextStep?) async throws -> Student
 }

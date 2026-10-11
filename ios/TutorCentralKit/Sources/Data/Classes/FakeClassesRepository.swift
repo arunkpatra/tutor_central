@@ -32,6 +32,8 @@ import Foundation
     public private(set) var created: [ClassroomDraft] = []
     public private(set) var updated: [UUID] = []
     public private(set) var archived: [UUID] = []
+    /// The note days written, in order (nil: back to Sunday 18:00).
+    public private(set) var noteDayCalls: [NoteDay?] = []
 
     public init(classes: [Classroom] = []) {
         self.classes = classes
@@ -79,6 +81,14 @@ import Foundation
         changed.startTime = draft.startTime
         changed.endTime = draft.endTime
         return changed
+    }
+
+    public func setNoteDay(id: UUID, _ noteDay: NoteDay?, centre _: UUID) async throws -> Classroom {
+        try await takeError()
+        guard let index = classes.firstIndex(where: { $0.id == id }) else { throw URLError(.fileDoesNotExist) }
+        classes[index].noteDay = noteDay
+        noteDayCalls.append(noteDay)
+        return classes[index]
     }
 
     public func setPlanGroups(_ count: Int?, classID: UUID) async throws {
