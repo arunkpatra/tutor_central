@@ -160,3 +160,27 @@ insert into public.marks (centre_id, student_id, subject, test, date, score, max
 select s.centre_id, s.id, 'Mathematics', t.test, t.date, t.score, 25
   from public.students s, (values ('Class test', current_date - 80, 18), ('Unit test 1', current_date - 44, 19), ('Unit test 2', current_date - 9, 14)) as t(test, date, score)
  where s.centre_id = '22222222-2222-2222-2222-222222222222' and s.name = 'Hemanth Reddy';
+
+-- Phase 15: three weeks of checks at the Evening batch's closes, three a session on each student's own skills begun
+-- (every fourth wrong; Ishaan Bose's two of three), and Riya placed with two. The trend, the tracking rules and Reports'
+-- Progress then show figures by the rules (plan/phase-15-plan.md decision 20). Ishaan's status is stated so the list and
+-- Progress show a student not on track before the next close works it out.
+insert into public.checks (centre_id, session_id, student_id, skill_id, kind, question, correct, created_at)
+select a.centre_id, a.id, k.student_id, k.id, 'check', jsonb_build_object('question', k.name, 'answer', ''),
+       case when s.name = 'Ishaan Bose' then k.position % 2 = 0
+            else (row_number() over (partition by k.student_id order by a.date, k.position)) % 4 <> 0 end,
+       a.date + time '18:20'
+  from public.attendance_sessions a
+  join public.students s on s.class_id = a.class_id and s.centre_id = a.centre_id
+  join public.chapters c on c.student_id = s.id and c.position = 1
+  join public.skills k on k.chapter_id = c.id and k.position <= 3 and k.state <> 'not_started'
+ where a.centre_id = '22222222-2222-2222-2222-222222222222' and a.date >= current_date - 21
+   and a.class_id = '33333333-3333-3333-3333-333333333333';
+insert into public.checks (centre_id, student_id, skill_id, kind, question, correct, created_at)
+select s.centre_id, s.id, k.id, 'placement', jsonb_build_object('question', k.name, 'answer', ''), k.position = 1, now() - interval '4 days'
+  from public.students s join public.chapters c on c.student_id = s.id and c.position = 1
+  join public.skills k on k.chapter_id = c.id and k.position <= 2
+ where s.centre_id = '22222222-2222-2222-2222-222222222222' and s.name = 'Riya Sharma';
+update public.students set track_status = 'not_on_track', track_reasons = '["Half the checks wrong in two weeks"]'::jsonb,
+       track_since = current_date - 3
+ where centre_id = '22222222-2222-2222-2222-222222222222' and name = 'Ishaan Bose';
