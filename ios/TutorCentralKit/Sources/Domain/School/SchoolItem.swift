@@ -43,11 +43,13 @@ public struct SchoolItem: Identifiable, Hashable, Sendable, Codable {
     public var source: SchoolItemSource
     public var receivedAt: Date
     public var confirmedAt: Date?
+    /// An exam's preparation window in days (`school_items.window_days`, U43); nil reads as 14.
+    public var windowDays: Int?
 
     public init(
         id: UUID, kind: SchoolItemKind, audience: ItemAudience, title: String, subject: String?, date: Day,
         endDate: Day?, portions: String?, sourceText: String?, photoPath: String?, source: SchoolItemSource,
-        receivedAt: Date, confirmedAt: Date?
+        receivedAt: Date, confirmedAt: Date?, windowDays: Int? = nil
     ) {
         self.id = id
         self.kind = kind
@@ -62,6 +64,7 @@ public struct SchoolItem: Identifiable, Hashable, Sendable, Codable {
         self.source = source
         self.receivedAt = receivedAt
         self.confirmedAt = confirmedAt
+        self.windowDays = windowDays
     }
 
     /// The last day the item stands for: a holiday's end, else its day.

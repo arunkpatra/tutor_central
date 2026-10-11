@@ -80,6 +80,7 @@ public enum MessageKind: String, CaseIterable, Hashable, Sendable, Codable {
     case canDo = "can_do", testTomorrow = "test_tomorrow"
     case homework, consent
     case forwardAsk = "forward_ask"
+    case notOnTrack = "not_on_track"
 
     public var title: String {
         switch self {
@@ -93,21 +94,53 @@ public enum MessageKind: String, CaseIterable, Hashable, Sendable, Codable {
         case .homework: "Homework"
         case .consent: "Consent"
         case .forwardAsk: "Asked to forward"
+        case .notOnTrack: "Not on track"
         }
     }
 }
 
-/// One message sent about a student (`message_log`), as the page's Messages section lists it.
+/// How a message left the app (`message_log.channel`): WhatsApp opened with it, or copied to send another way.
+public enum MessageChannel: String, Hashable, Sendable, Codable {
+    case whatsAppLink = "whatsapp_link", copied
+}
+
+/// One message sent about a student (`message_log`), as the page's Messages section and the sent log list it.
 public struct MessageEntry: Identifiable, Hashable, Sendable, Codable {
     public let id: UUID
     public let kind: MessageKind
     public let openedAt: Date
     public let language: MessageLanguage?
+    public let channel: MessageChannel
+    /// The text as sent (the note, the not-on-track message); nil for V1's kinds.
+    public let body: String?
 
-    public init(id: UUID, kind: MessageKind, openedAt: Date, language: MessageLanguage?) {
+    public init(
+        id: UUID, kind: MessageKind, openedAt: Date, language: MessageLanguage?,
+        channel: MessageChannel = .whatsAppLink,
+        body: String? = nil
+    ) {
         self.id = id
         self.kind = kind
         self.openedAt = openedAt
         self.language = language
+        self.channel = channel
+        self.body = body
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, kind, openedAt, language, channel, body
+    }
+
+    /// An entry cached before Phase 14 has no channel and no body.
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        try self.init(
+            id: c.decode(UUID.self, forKey: .id),
+            kind: c.decode(MessageKind.self, forKey: .kind),
+            openedAt: c.decode(Date.self, forKey: .openedAt),
+            language: c.decodeIfPresent(MessageLanguage.self, forKey: .language),
+            channel: c.decodeIfPresent(MessageChannel.self, forKey: .channel) ?? .whatsAppLink,
+            body: c.decodeIfPresent(String.self, forKey: .body)
+        )
     }
 }

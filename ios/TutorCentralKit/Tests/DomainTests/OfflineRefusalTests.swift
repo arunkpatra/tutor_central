@@ -57,4 +57,21 @@ struct OfflineRefusalSchoolTests {
             #expect(!ErrorWordsTests.banned.contains { OfflineRefusal.words(for: write).lowercased().contains($0) })
         }
     }
+
+    @Test func theThreeReadingRefusalsSayWhatWaits() {
+        #expect(OfflineRefusal.words(for: .readShared).contains("waits here"))
+        #expect(!OfflineRefusal.words(for: .readPasted).contains("waits here"))
+        #expect(OfflineRefusal.words(for: .readPasted).contains("Try again"))
+        #expect(!OfflineRefusal.words(for: .readPhoto).contains("waits here"))
+        #expect(OfflineRefusal.words(for: .readPhoto).contains("Try again"))
+    }
+
+    @Test func theParentsWritesSayTheyNeedAConnection() {
+        for write in [OfflineRefusal.Write.weeklyNote, .readMarks, .notOnTrack, .noteDay, .nextStep, .saveMarks] {
+            #expect(OfflineRefusal.words(for: write).hasPrefix("You're offline."), "\(write)")
+        }
+        #expect(OfflineRefusal.words(for: .weeklyNote)
+            == "You're offline. The note is written from this week's record and needs a connection.")
+        #expect(OfflineRefusal.words(for: .saveMarks).hasSuffix("They're still here."))
+    }
 }

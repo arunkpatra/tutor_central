@@ -200,12 +200,7 @@ import Testing
         let sheet = try #require(store.reminder(for: hemanth))
         #expect(sheet.title == "Remind the parent" && sheet.headline == "Hemanth's October fee is due" && sheet
             .parentLine == "Lakshmi Reddy · +91 93802 60871")
-        #expect(sheet.label == "Message" && sheet.text == """
-        Hello Lakshmi, Hemanth's fee of ₹1,200 for October is due. You can pay by UPI to meera@okhdfcbank. Thank you.
-
-        Meera Nair
-        Bright Minds Tuition
-        """)
+        #expect(sheet.label == "Message" && sheet.text == reminderText)
         #expect(sheet.note == "Opens WhatsApp with the message ready to send. We note the date on the fee. "
             + "The text is copied too, in case WhatsApp can't open.")
         let url = await store.send(sheet)
@@ -275,3 +270,12 @@ import Testing
         #expect(store.outstandingLine == "Nothing due")
     }
 }
+
+/// The reminder as the sheet shows it, the app's signature last.
+private let reminderText = """
+Hello Lakshmi, Hemanth's fee of ₹1,200 for October is due. You can pay by UPI to meera@okhdfcbank. Thank you.
+
+Meera Nair
+Bright Minds Tuition
+Made with Tutor Central
+"""

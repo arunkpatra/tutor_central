@@ -55,6 +55,9 @@ import Testing
             .languageTitle == "Hindi")
         #expect(ai.messageCalls.first?.language == .hindi && ai.messageCalls.first?.revise == "balancing equations")
         #expect(store.note.hasPrefix("Opens WhatsApp with the Hindi message ready to send. We note it on Dev's page."))
+        // The model no longer signs (Phase 14): the app appends the one signature.
+        #expect(store.message.hasSuffix("\n\nMeera Nair\nBright Minds Tuition\nMade with Tutor Central"))
+        #expect(store.message.components(separatedBy: "Bright Minds Tuition").count == 2)
     }
 
     @Test func aHindiParentWithoutConsentGetsTheEnglishTemplateAndTheReason() async {

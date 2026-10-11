@@ -65,7 +65,8 @@ import Testing
         let note = try #require(FakeAIHistoryRepository.seed.first { $0.kind == .progressNote })
         let message = try #require(store.noteMessage(note, text: "Hello Lakshmi, a short note."))
         #expect(message.name == "Hemanth Reddy" && message.parentLine == "Lakshmi Reddy · +91 93802 60871")
-        #expect(message.text == "Hello Lakshmi, a short note.\n\nMeera Nair\nBright Minds Tuition")
+        #expect(message
+            .text == "Hello Lakshmi, a short note.\n\nMeera Nair\nBright Minds Tuition\nMade with Tutor Central")
         #expect(message.url?.absoluteString.hasPrefix("https://wa.me/919380260871?text=") == true)
     }
 
@@ -78,7 +79,8 @@ import Testing
         let note = try #require(FakeAIHistoryRepository.seed.first { $0.kind == .progressNote })
         await store.openNote(note, text: "Hello Lakshmi.")
         #expect(messages.progressLogs == [note.studentID].compactMap(\.self))
-        #expect(copied == "Hello Lakshmi.\n\nMeera Nair\nBright Minds Tuition" && opened?.host() == "wa.me")
+        #expect(copied == "Hello Lakshmi.\n\nMeera Nair\nBright Minds Tuition\nMade with Tutor Central" && opened?
+            .host() == "wa.me")
     }
 
     @Test func consentIsRecordedAndMerged() async {

@@ -111,9 +111,12 @@ public struct PlanLine: Hashable, Sendable, Codable {
     public let words: String
     /// A check line whose questions are the student's own (plan decision 5).
     public let personalChecks: Bool
+    /// The line under a not-on-track student's teach line on Today ("Since Fri 9 Oct · tell Ramesh after the class").
+    public let caption: String?
 
     public init(
-        studentID: UUID?, groupNo: Int, kind: PlanLineKind, skillID: UUID?, words: String, personalChecks: Bool = false
+        studentID: UUID?, groupNo: Int, kind: PlanLineKind, skillID: UUID?, words: String, personalChecks: Bool = false,
+        caption: String? = nil
     ) {
         self.studentID = studentID
         self.groupNo = groupNo
@@ -121,20 +124,21 @@ public struct PlanLine: Hashable, Sendable, Codable {
         self.skillID = skillID
         self.words = words
         self.personalChecks = personalChecks
+        self.caption = caption
     }
 
     /// The line with a student's own skill (a group /ai/plan named, once their chapter and skill are written).
     public func with(skillID: UUID) -> PlanLine {
         PlanLine(
             studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
-            personalChecks: personalChecks
+            personalChecks: personalChecks, caption: caption
         )
     }
 
     func with(words: String) -> PlanLine {
         PlanLine(
             studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
-            personalChecks: personalChecks
+            personalChecks: personalChecks, caption: caption
         )
     }
 }
@@ -172,7 +176,10 @@ public struct PlanDraft: Hashable, Sendable {
                 lines.append(line)
             }
         }
-        return PlanDraft(classID: classID, date: date, groups: renamed, lines: lines, leftOut: leftOut)
+        return PlanDraft(
+            classID: classID, date: date, groups: renamed, lines: lines, leftOut: leftOut,
+            personalCheckSkills: personalCheckSkills
+        )
     }
 
     /// A brief line for each group whose chapter the tutor had a brief made for before, when it has none.
@@ -183,7 +190,7 @@ public struct PlanDraft: Hashable, Sendable {
         guard !missing.isEmpty else { return self }
         return PlanDraft(
             classID: classID, date: date, groups: groups, lines: lines + missing.map(PlanRules.briefLine),
-            leftOut: leftOut
+            leftOut: leftOut, personalCheckSkills: personalCheckSkills
         )
     }
 
@@ -193,13 +200,19 @@ public struct PlanDraft: Hashable, Sendable {
     public let lines: [PlanLine]
     /// Students with no lines (left out today).
     public let leftOut: [UUID]
+    /// By student: skills put first in their own checks ("Add it to the checks", Phase 14).
+    public let personalCheckSkills: [UUID: [Skill]]
 
-    public init(classID: UUID, date: Day, groups: [PlanGroup], lines: [PlanLine], leftOut: [UUID]) {
+    public init(
+        classID: UUID, date: Day, groups: [PlanGroup], lines: [PlanLine], leftOut: [UUID],
+        personalCheckSkills: [UUID: [Skill]] = [:]
+    ) {
         self.classID = classID
         self.date = date
         self.groups = groups
         self.lines = lines
         self.leftOut = leftOut
+        self.personalCheckSkills = personalCheckSkills
     }
 }
 

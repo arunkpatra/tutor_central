@@ -17,6 +17,7 @@ struct AbsenceMessageTests {
 
         Meera Nair
         Bright Minds Tuition
+        Made with Tutor Central
         """)
     }
 
@@ -35,6 +36,7 @@ struct AbsenceMessageTests {
         Hello, Sahil was absent from class on Monday 5 October. Please let me know if everything is all right.
 
         Bright Minds Tuition
+        Made with Tutor Central
         """)
     }
 

@@ -14,7 +14,7 @@ struct ConsentMessageTests {
         #expect(her.hasPrefix("Hello Neha, I use Tutor Central to plan Riya's classes and keep her progress."))
         #expect(her.contains("her name, class, marks and work may be read by an AI service (Claude, by Anthropic)."))
         #expect(her.contains("Please reply YES if you agree. Thank you."))
-        #expect(her.hasSuffix("Meera Nair\nBright Minds Tuition"))
+        #expect(her.hasSuffix("Meera Nair\nBright Minds Tuition\nMade with Tutor Central"))
         #expect(ConsentMessage.text(
             parentFirstName: "Ramesh",
             childFirstName: "Dev",
@@ -35,6 +35,6 @@ struct ConsentMessageTests {
             gender: .other,
             tutorName: "M",
             centreName: nil
-        ).hasSuffix("Thank you.\n\nM"))
+        ).hasSuffix("Thank you.\n\nM\nMade with Tutor Central"))
     }
 }

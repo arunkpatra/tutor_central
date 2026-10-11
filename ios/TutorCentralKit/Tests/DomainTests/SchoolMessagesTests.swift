@@ -43,6 +43,7 @@ struct TestTomorrowMessageTests {
 
         Meera Nair
         Bright Minds Tuition
+        Made with Tutor Central
         """)
     }
 
@@ -56,6 +57,7 @@ struct TestTomorrowMessageTests {
         Hello, Riya's FA2 is tomorrow (Thursday 8 October). This evening, a short revision will help. Thank you.
 
         Bright Minds Tuition
+        Made with Tutor Central
         """)
     }
 
@@ -99,14 +101,14 @@ struct ForwardAskMessageTests {
         Hello, this is Meera from Bright Minds Tuition. Please forward me whatever the school sends about tests, \
         portions, homework and holidays, as soon as it comes.
         """))
-        #expect(text.hasSuffix("Thank you.\n\nMeera Nair\nBright Minds Tuition"))
+        #expect(text.hasSuffix("Thank you.\n\nMeera Nair\nBright Minds Tuition\nMade with Tutor Central"))
         #expect(text.storedCount <= ForwardAskMessage.limit)
     }
 
     @Test func withoutATutorNameTheCentreSpeaks() {
         let text = ForwardAskMessage.text(tutorName: nil, centreName: "Bright Minds Tuition")
         #expect(text.hasPrefix("Hello, this is Bright Minds Tuition. Please forward me"))
-        #expect(text.hasSuffix("Thank you.\n\nBright Minds Tuition"))
+        #expect(text.hasSuffix("Thank you.\n\nBright Minds Tuition\nMade with Tutor Central"))
     }
 }
 

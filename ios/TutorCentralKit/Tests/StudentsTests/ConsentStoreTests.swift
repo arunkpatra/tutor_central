@@ -58,7 +58,7 @@ import Testing
     @Test func theMessageSpeaksOfTheChildAndSignsOff() async throws {
         let (store, _) = try await store()
         #expect(store.message.hasPrefix("Hello Neha, I use Tutor Central to plan Riya's classes"))
-        #expect(store.message.hasSuffix("Meera Nair\nBright Minds Tuition"))
+        #expect(store.message.hasSuffix("Meera Nair\nBright Minds Tuition\nMade with Tutor Central"))
     }
 
     @Test func offlineTheAskAndTheRecordAreRefusedInWords() async throws {

@@ -106,9 +106,10 @@ public enum SchoolItemRules {
         today: Day,
         calendar: Calendar
     ) -> SchoolItem? {
-        let last = today.adding(days: windowDays, calendar: calendar)
-        return sorted(items.filter { $0.kind == .exam && $0.date >= today && $0.date <= last && reaches($0, student) })
-            .first
+        sorted(items.filter {
+            $0.kind == .exam && ExamPreparation.isWithinWindow($0, today: today, calendar: calendar)
+                && reaches($0, student)
+        }).first
     }
 
     /// Each active student's nearest exam with a subject, for the plan's subject rule (Phase 12's hint).
