@@ -62,6 +62,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     @ObservationIgnored public var onOpenStudent: ((UUID) -> Void)?
     /// Each listed student's parent's suggested messages this week, for the held sheet.
     private var parentWeek: [UUID: [MessageEntry]] = [:]
+    /// The read in hand: an earlier read that answers late (a pull during Change day's reload) is dropped.
+    @ObservationIgnored private var generation = 0
 
     let workspace: Workspace
     let register: any Register
@@ -122,6 +124,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     }
 
     public func load() async {
+        generation += 1
+        let mine = generation
         await register.loadIfNeeded()
         let moment = now()
         let days = onDays(at: moment)
@@ -132,10 +136,12 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
         }
         do {
             let week = try await read(days: days, at: moment)
+            guard mine == generation else { return }
             rows = rowsOrdered(week.rows)
             parentWeek = week.parents
             loadFailed = false
         } catch {
+            guard mine == generation else { return }
             // Offline or a failed read: the register's rows, so a note kept on this iPhone still opens (plan decision
             // 21); what was sent this week is not known, so nothing is counted.
             rows = rowsOrdered(registerRows(days))
@@ -171,27 +177,22 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
         return days.count == 1 ? days.first ?? .default : .default
     }
 
-    /// The next note day after the one shown (the held sheet's "waits for Sunday the 18th").
-    public var nextNoteDay: Day? {
-        rows.map(\.noteDay).min().map { _ in
-            chosen.noteDay(for: now(), calendar: calendar).adding(days: 7, calendar: calendar)
-        }
-    }
-
     /// The batches whose students are listed now.
     func shownBatches() -> [Classroom] {
         let ids = Set(rows.compactMap { register.student($0.id)?.classID })
         return register.activeClasses.filter { ids.contains($0.id) }
     }
 
-    /// Change day (P10-NoteDay-Change): the day set on each batch shown, then the card read again; refused offline.
+    /// Change day (P10-NoteDay-Change): the day set on each batch shown whose note day is the one the wheel shows (a
+    /// batch with another day, still on from yesterday, keeps its own), then the card read again; refused offline.
     public func changeDay(to noteDay: NoteDay) async -> Bool {
         guard await online() else {
             message = OfflineRefusal.words(for: .noteDay)
             return false
         }
         do {
-            for batch in shownBatches() {
+            let current = chosen
+            for batch in shownBatches() where batch.effectiveNoteDay == current {
                 let written = try await classes.setNoteDay(
                     id: batch.id, noteDay == .default ? nil : noteDay, centre: workspace.centre.id
                 )
@@ -199,6 +200,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
             }
         } catch {
             message = "That didn't go through. Check your connection and try again."
+            // A failure part way: the card shows what was written.
+            await load()
             return false
         }
         await load()

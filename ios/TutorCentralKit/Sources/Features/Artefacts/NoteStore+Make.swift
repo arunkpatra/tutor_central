@@ -137,13 +137,15 @@ extension NoteStore {
                 weekMonday: week.lowerBound, facts: facts, generationID: made.generationID
             )
             let title = isLadder ? "\(student.firstName) can now do" : "\(student.firstName)'s week"
-            let artefact = try await context.plans.keepNote(
-                NewNote(
-                    studentID: student.id, kind: isLadder ? .canDo : .note, title: title, content: note,
-                    regeneratedFrom: previous
-                ),
-                centre: context.workspace.centre.id
+            let new = NewNote(
+                studentID: student.id, kind: isLadder ? .canDo : .note, title: title, content: note,
+                regeneratedFrom: previous
             )
+            // The call is paid for: the note is kept even when the screen was left meanwhile (a task of its own, not
+            // cancelled with the screen's), so the next Read opens it rather than paying again.
+            let plans = context.plans
+            let centre = context.workspace.centre.id
+            let artefact = try await Task { try await plans.keepNote(new, centre: centre) }.value
             keepCopy(artefact)
             show(artefact)
         } catch let failure as APIFailure {
@@ -158,7 +160,7 @@ extension NoteStore {
     private func call(_ record: NoteRecord, student: Student) async throws(APIFailure) -> MadeMessage {
         let workspace = context.workspace
         let tutor = workspace.profile.displayName ?? workspace.centre.name
-        let level = student.classLevel ?? .five
+        let level = student.classLevel ?? .messageFallback
         if isLadder {
             let facts = CanDoWeek.facts(
                 chapters: record.chapters, skills: record.skills, week: week, calendar: context.calendar

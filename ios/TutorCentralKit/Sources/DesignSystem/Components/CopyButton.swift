@@ -4,22 +4,31 @@ import UIKit
 /// Copy, said in place (U33-Result-Copied): the text goes to the pasteboard and the button reads "✓ Copied" in `ok` for
 /// `doneStay`, with the success haptic; no toast. `copied` shows the done state at once (the board's launch state).
 public struct CopyButton: View {
-    let text: () -> String
-    /// Runs after the copy (the note logs it, Phase 14).
-    let onCopy: (() -> Void)?
+    /// The text the button writes itself; nil when `copy` writes it (the note's store copies and logs, Phase 14).
+    let text: (() -> String)?
+    let copy: (() -> Void)?
     @State private var copied: Bool
     @State private var resetting: Task<Void, Never>?
 
-    public init(copied: Bool = false, onCopy: (() -> Void)? = nil, text: @escaping () -> String) {
+    public init(copied: Bool = false, text: @escaping () -> String) {
         self.text = text
-        self.onCopy = onCopy
+        copy = nil
+        _copied = State(initialValue: copied)
+    }
+
+    /// The caller copies (and may log the copy); the button says it in place.
+    public init(copied: Bool = false, copy: @escaping () -> Void) {
+        text = nil
+        self.copy = copy
         _copied = State(initialValue: copied)
     }
 
     public var body: some View {
         Button {
-            UIPasteboard.general.string = text()
-            onCopy?()
+            if let text {
+                UIPasteboard.general.string = text()
+            }
+            copy?()
             Haptic.play(.success)
             copied = true
             resetting?.cancel()

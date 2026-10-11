@@ -146,9 +146,10 @@ public struct ReadMarksView: View {
             let saved = onSaved
             toasts?.show(toast, action: ("Undo", {
                 Task {
-                    if await undo.undo() {
-                        saved()
+                    if let words = await undo.undo() {
+                        notices?.show(words)
                     }
+                    saved()
                 }
             }))
             dismiss()

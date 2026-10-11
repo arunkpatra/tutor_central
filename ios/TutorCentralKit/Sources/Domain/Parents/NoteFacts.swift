@@ -94,8 +94,11 @@ public enum NoteWeek {
         let attended = record.sessions.filter { week.contains($0.date) && $0.marks[student.id] != nil }
         let absences = attended.filter { $0.marks[student.id] == .absent }.count
         let absentAllWeek = !attended.isEmpty && absences == attended.count
+        // First taught this week (decision 2): moved from not started to taught in the week. A skill that only moved on
+        // (practising, secure) was taught before; the record keeps no earlier state, so one taught and moved on within
+        // the same week shows under Got right instead.
         let taught = absentAllWeek ? [] : order.sorted(skills.filter {
-            $0.state != .notStarted && week.contains(Day($0.stateAt, calendar: calendar))
+            $0.state == .taught && week.contains(Day($0.stateAt, calendar: calendar))
         }).prefix(taughtLimit).map(\.self)
         let weekChecks = record.checks.filter { !$0.isPlacement && week.contains(Day($0.at, calendar: calendar)) }
         let rightCount = weekChecks.filter(\.correct).count

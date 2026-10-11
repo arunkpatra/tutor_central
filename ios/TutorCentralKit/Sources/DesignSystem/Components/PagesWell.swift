@@ -9,7 +9,7 @@ public struct PagesWell: View {
     let line: String
     let addPage: (() -> Void)?
     static var thumbnail: CGSize {
-        CGSize(width: 58, height: 74)
+        CGSize(width: 56, height: 72)
     }
 
     public init(label: String, image: UIImage?, line: String, addPage: (() -> Void)?) {

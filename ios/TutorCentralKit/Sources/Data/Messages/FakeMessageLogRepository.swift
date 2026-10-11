@@ -31,6 +31,8 @@ import Foundation
     public var logs: [AbsenceLog]
     public var feeLogs: [FeeLog]
     public var nextError: (any Error)?
+    /// Tests: `entries(centre:since:)` answers what it held when asked, this long after (a slow read).
+    public var entriesDelay: Duration?
     public private(set) var logged: [UUID] = []
     public private(set) var feeLogged: [FeeLog] = []
     public private(set) var progressLogs: [UUID] = []
@@ -150,6 +152,10 @@ import Foundation
 
     public func entries(centre _: UUID, since: Date) async throws -> [StudentMessage] {
         try takeError()
+        let entries = entries
+        if let entriesDelay {
+            try await Task.sleep(for: entriesDelay)
+        }
         return entries.flatMap { student, list in
             list.filter { $0.openedAt >= since }.map { StudentMessage(studentID: student, entry: $0) }
         }.sorted { $0.entry.openedAt > $1.entry.openedAt }

@@ -214,4 +214,18 @@ import Testing
         await unmade.load()
         #expect(unmade.stage == .failed(OfflineRefusal.words(for: .weeklyNote)))
     }
+
+    @Test func aNoteAnsweredAsTheScreenIsLeftIsStillKeptSoTheNextReadMakesNoCall() async throws {
+        let world = World()
+        world.plans.keepDelay = .milliseconds(300)
+        let store = await Self.make(Self.dev, world)
+        let reading = Task { await store.load() }
+        while world.ai.noteCalls.isEmpty {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        try await Task.sleep(for: .milliseconds(50))
+        reading.cancel()
+        try await Task.sleep(for: .milliseconds(450))
+        #expect(world.plans.kept.count == 1)
+    }
 }

@@ -60,3 +60,8 @@ public enum ClassLevel: String, CaseIterable, Hashable, Sendable, Codable, Compa
         lhs.ordinal < rhs.ordinal
     }
 }
+
+public extension ClassLevel {
+    /// The class a parent's message or report names when the student has none set: one value for every message kind.
+    static let messageFallback: ClassLevel = .eight
+}

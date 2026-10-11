@@ -37,6 +37,8 @@ public extension StudentDetailStore {
         }
     }
 
+    static let closeWaitingWords = "The class you closed hasn't been sent yet. Choose the next step once it has."
+
     /// The step ticked: the tutor's, else the plan's own.
     var chosenStep: NextStep {
         student?.effectiveStep ?? .leave
@@ -46,6 +48,10 @@ public extension StudentDetailStore {
     /// offline in words.
     func chooseStep(_ step: NextStep) async -> Bool {
         guard let student else { return false }
+        if closeWaits?(id) == true {
+            message = Self.closeWaitingWords
+            return false
+        }
         guard await online() else {
             message = OfflineRefusal.words(for: .nextStep)
             return false

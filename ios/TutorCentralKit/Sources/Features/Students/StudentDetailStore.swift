@@ -51,6 +51,9 @@ public enum FeeActionKind: Sendable {
     public let consent: ConsentStore
     /// A next step written (Phase 14): AppShell makes today's plans again for the student.
     @ObservationIgnored public var onStepChanged: ((UUID) -> Void)?
+    /// A close kept on this iPhone that tracks the student is still to be sent (AppShell's, the queue's): a step chosen
+    /// now would be cleared when it lands.
+    @ObservationIgnored public var closeWaits: ((UUID) -> Bool)?
 
     public init(
         id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository,

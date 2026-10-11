@@ -104,7 +104,7 @@ import Testing
         #expect(added[0].subject == "Mathematics" && added[0].test == "Unit test 2")
         #expect(added[0].score == 14 && added[0].max == 25 && added[0].studentID == Self.hemanth)
         #expect(store.toast == "2 marks saved to Hemanth's page")
-        #expect(await store.undo() && world.record.marks.isEmpty)
+        #expect(await store.undo() == nil && world.record.marks.isEmpty)
     }
 
     @Test func aSubjectWithNoBookIsKeptAsWrittenAndSaved() async {
@@ -222,5 +222,17 @@ import Testing
         #expect(hemanth.canAddMarks && hemanth.marksConsentLine == nil)
         let riya = page(Self.riya)
         #expect(!riya.canAddMarks && riya.marksConsentLine == "Marks from a photo wait for Neha's consent.")
+    }
+
+    @Test func aFailedUndoSaysSoAndASecondUndoTakesBackWhatIsLeft() async {
+        let world = World()
+        let store = await Self.store(world)
+        store.add(Self.page)
+        await store.read()
+        _ = await store.save()
+        world.record.nextError = URLError(.notConnectedToInternet)
+        #expect(await store.undo() == ReadMarksStore.undoFailed)
+        #expect(world.record.marks.count == 2)
+        #expect(await store.undo() == nil && world.record.marks.isEmpty)
     }
 }

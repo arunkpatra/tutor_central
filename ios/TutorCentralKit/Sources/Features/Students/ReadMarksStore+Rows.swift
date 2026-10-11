@@ -63,17 +63,18 @@ public extension ReadMarksStore {
         return true
     }
 
-    /// The toast's Undo: each mark saved taken back. The words are returned: the screen has gone.
-    func undo() async -> Bool {
-        do {
-            for id in saved {
+    /// The toast's Undo: each mark saved taken back; nil when done, else the words for the alert (the screen has gone,
+    /// so they are returned, not set). A mark not yet taken back stays for another Undo.
+    func undo() async -> String? {
+        while let id = saved.first {
+            do {
                 try await record.deleteMark(id: id, centre: centre)
+            } catch {
+                return Self.undoFailed
             }
-            saved = []
-            toast = nil
-            return true
-        } catch {
-            return false
+            saved.removeFirst()
         }
+        toast = nil
+        return nil
     }
 }

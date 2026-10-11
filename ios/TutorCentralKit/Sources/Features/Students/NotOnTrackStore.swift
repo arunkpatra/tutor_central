@@ -133,7 +133,8 @@ import Observation
                 NotOnTrackRequest(
                     studentID: student.id, studentName: student.name, parentName: student.parentName,
                     tutorName: workspace.profile.displayName ?? workspace.centre.name,
-                    centreName: workspace.centre.name, classLevel: student.classLevel ?? .eight, language: language,
+                    centreName: workspace.centre.name, classLevel: student.classLevel ?? .messageFallback,
+                    language: language,
                     facts: facts
                 ),
                 centre: workspace.centre.id

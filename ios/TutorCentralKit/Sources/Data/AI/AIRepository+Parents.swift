@@ -12,12 +12,14 @@ public struct NoteRequest: Hashable, Sendable {
         public let coming: [String]
         public let attendance: String?
 
+        /// Held to the API's limits (api/src/schemas.ts, the note's `week`): a longer body is a 400 the tutor cannot
+        /// act on.
         public init(taught: [String], right: String?, practise: [String], coming: [String], attendance: String?) {
-            self.taught = taught
-            self.right = right
-            self.practise = practise
-            self.coming = coming
-            self.attendance = attendance
+            self.taught = taught.prefix(6).map { String($0.prefix(200)) }
+            self.right = right.map { String($0.prefix(120)) }
+            self.practise = practise.prefix(3).map { String($0.prefix(200)) }
+            self.coming = coming.prefix(3).map { String($0.prefix(200)) }
+            self.attendance = attendance.map { String($0.prefix(80)) }
         }
 
         public init(_ facts: NoteFacts) {

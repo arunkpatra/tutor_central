@@ -31,7 +31,7 @@ struct ResultFooter: View {
                         .disabled(generation.request == nil)
                 }
                 HStack(spacing: Tokens.tileGap) {
-                    CopyButton(copied: copied) { PaperText.plain(generation.result, key: generation.printsKey) }
+                    CopyButton(copied: copied, text: { PaperText.plain(generation.result, key: generation.printsKey) })
                     share
                 }
                 .disabled(regenerating)

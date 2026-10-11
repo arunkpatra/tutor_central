@@ -183,3 +183,19 @@ struct PendingChangesTests {
         #expect(change.line(calendar: calendar) == "Wed 7 Oct · 2 of 3 came · 18:32")
     }
 }
+
+extension PendingChangesTests {
+    @Test func aQueuedCloseThatTracksAStudentIsFoundForThem() throws {
+        let dev = UUID(), meher = UUID()
+        let close = try SessionClose(
+            classID: UUID(), date: day(7), marks: [:], checks: [], homework: [],
+            track: [dev: SessionClose.Track(status: .watch, reasons: [])]
+        )
+        var pending = PendingChanges()
+        #expect(!pending.closeWaits(for: dev))
+        pending.add(QueuedChange(
+            kind: .close(close: close, className: "Evening batch", present: 4, total: 5), madeAt: FakeClock.oct7at1832
+        ))
+        #expect(pending.closeWaits(for: dev) && !pending.closeWaits(for: meher))
+    }
+}

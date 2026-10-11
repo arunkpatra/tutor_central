@@ -156,3 +156,33 @@ extension APIClientTests {
         #expect(recorder.requests.first?.url?.path == "/ai/read-marks")
     }
 }
+
+struct ParentsLimitsTests {
+    @Test func theNotesFactsKeepWithinTheAPIsLimits() {
+        let long = String(repeating: "x", count: 300)
+        let week = NoteRequest.Week(
+            taught: Array(repeating: long, count: 8), right: long, practise: Array(repeating: long, count: 5),
+            coming: Array(repeating: long, count: 5), attendance: long
+        )
+        #expect(week.taught.count == 6 && week.taught.allSatisfy { $0.count <= 200 })
+        #expect((week.right?.count ?? 0) <= 120 && (week.attendance?.count ?? 0) <= 80)
+        #expect(week.practise.count == 3 && week.coming.count == 3 && week.coming.allSatisfy { $0.count <= 200 })
+    }
+
+    @Test func aRequestTheAPIFoundInvalidNeverShowsItsWords() {
+        let invalid = ErrorBody(
+            error: "week.right: String must contain at most 120 characters",
+            reason: "invalid",
+            limit: nil
+        )
+        #expect(APIClient.failure(status: 400, body: invalid) == .service)
+        let tutorFacing = ErrorBody(
+            error: "That mock is no longer here. Type the scheme instead.",
+            reason: nil,
+            limit: nil
+        )
+        #expect(APIClient
+            .failure(status: 400, body: tutorFacing) ==
+            .server("That mock is no longer here. Type the scheme instead."))
+    }
+}

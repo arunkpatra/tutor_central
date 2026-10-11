@@ -10,6 +10,18 @@ public struct PendingChanges: Hashable, Sendable, Codable {
         self.changes = changes
     }
 
+    /// A close kept on this iPhone writes this student's status when it is sent: a next step chosen before then would
+    /// be
+    /// cleared by it (migration 0025), so the choice waits.
+    public func closeWaits(for student: UUID) -> Bool {
+        changes.contains { change in
+            if case let .close(close, _, _, _) = change.kind {
+                return close.track[student] != nil
+            }
+            return false
+        }
+    }
+
     public mutating func add(_ change: QueuedChange) {
         guard let index = changes.firstIndex(where: { Self.sameRow($0.kind, change.kind) }) else {
             changes.append(change)
