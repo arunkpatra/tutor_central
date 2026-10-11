@@ -271,6 +271,34 @@ import Testing
         #expect(store.groups.isEmpty && store.groupsEmptyLine == "Open Today to make the plan.")
     }
 
+    /// Hand run 1: with two batches meeting today, each group's line names its batch (two "Group 1"s otherwise).
+    @Test func twoBatchesTodayNameTheirGroupsBatch() async throws {
+        let evening = FakePlansRepository.evening()
+        let plan = try #require(evening.plans.first)
+        let maths = PlanRecord(
+            id: UUID(), classID: FakeClassesRepository.maths.id, date: plan.date, madeAt: plan.madeAt,
+            groups: Array(plan.groups.prefix(1)), items: [], artefacts: [], sessionID: nil
+        )
+        let plans = FakePlansRepository(plans: evening.plans + [maths], artefacts: [], now: evening.now)
+        let kit = await MakeFormStoreTests.kit(.sheet, plans: plans)
+        let store = kit.store.forStore()
+        await store.load()
+        #expect(store.groups.filter { $0.line.hasPrefix("Evening batch · ") }.count == plan.groups.count)
+        #expect(store.groups.filter { $0.line.hasPrefix("Class 10 Maths · ") }.count == 1)
+    }
+
+    /// Hand run 1: the For tile opens on the segment of what is chosen (a group's on Group), Student when nothing is.
+    @Test func theForTileOpensOnTheChosenTargetsSegment() async {
+        let kit = await MakeFormStoreTests.kit(.sheet)
+        #expect(kit.store.forSegment == .student)
+        kit.store.choose(MakeFormStoreTests.groupOne)
+        #expect(kit.store.forSegment == .group)
+        kit.store.choose(.classLevel(.eight))
+        #expect(kit.store.forSegment == .level)
+        kit.store.choose(.batch(FakeClassesRepository.evening.id))
+        #expect(kit.store.forSegment == .batch)
+    }
+
     @Test func theBatchesCountTheirStudentsAndTheCentresLevelsComeFirst() async {
         let kit = await MakeFormStoreTests.kit(.sheet)
         let store = kit.store.forStore()

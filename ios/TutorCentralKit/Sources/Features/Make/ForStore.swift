@@ -16,6 +16,16 @@ import Observation
             case .level: "Class"
             }
         }
+
+        /// The segment a target sits in; Student when nothing is chosen.
+        public init(for target: MakeTarget?) {
+            self = switch target {
+            case .group?: .group
+            case .batch?: .batch
+            case .classLevel?: .level
+            default: .student
+            }
+        }
     }
 
     public struct Row: Identifiable, Hashable, Sendable {
@@ -37,12 +47,7 @@ import Observation
     init(context: MakeContext, chosen: MakeTarget?) {
         self.context = context
         self.chosen = chosen
-        segment = switch chosen {
-        case .group?: .group
-        case .batch?: .batch
-        case .classLevel?: .level
-        default: .student
-        }
+        segment = Segment(for: chosen)
     }
 
     public static let groupsEmptyTitle = "No groups today"
@@ -53,7 +58,11 @@ import Observation
     public func load() async {
         await context.register.loadIfNeeded()
         let register = context.register
-        groups = await TodayGroups.read(context).map { today in
+        let todays = await TodayGroups.read(context)
+        // Two batches meeting today each have a Group 1: the line then leads with the batch.
+        let twoBatches = Set(todays.map(\.classID)).count > 1
+        let batchName = { (group: TodayGroup) in twoBatches ? register.classroom(group.classID)?.name : nil }
+        groups = todays.map { today in
             let group = today.group
             let names = group.memberIDs.compactMap { register.student($0)?.firstName }.joined(separator: ", ")
             let levels = Array(Set(group.memberIDs.compactMap { register.student($0)?.classLevel })).sorted()
@@ -64,7 +73,8 @@ import Observation
                 target: .group(plan: today.planID, number: group.number),
                 title: ["Group \(group.number)", group.chapter.isEmpty ? group.skill : group.chapter]
                     .filter { !$0.isEmpty }.joined(separator: " · "),
-                line: [names, classSubject, "today's plan"].filter { !$0.isEmpty }.joined(separator: " · ")
+                line: [batchName(today) ?? "", names, classSubject, "today's plan"].filter { !$0.isEmpty }
+                    .joined(separator: " · ")
             )
         }
         loaded = true
