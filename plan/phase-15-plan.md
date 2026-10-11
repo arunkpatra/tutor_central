@@ -3,11 +3,11 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
 > superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-Written 2026-10-11 (session 31, Fable 5.1) from `phase-15-make-and-polish.md`, `docs/spec-v2.md` and the approved Phase 10
+Written 2026-10-11 (session 31, Fable 5.1), approved by the owner the same day with the two Phase 15 boards ("Boards
+approved. Agree with round start."), from `phase-15-make-and-polish.md`, `docs/spec-v2.md` and the approved Phase 10
 boards (step 10.7: Make, a kind's form, the For sheet, Check a paper under Make, Reports' Progress by month and by term, the
-Kit's Phase 10 rows), with Phase 9's method for the tutor round (D52 to D55, moved to V2 by D66). Two things are the owner's
-and are asked in the session's message (the "Owner's questions" below); the plan carries the proposal for each so the build
-can start the day he answers. Ticked as it goes. The build runs on Opus 5.5 from `resume/030-phase-15-build.md`, inline, task
+Kit's Phase 10 rows), with Phase 9's method for the tutor round (D52 to D55, moved to V2 by D66). The owner's two questions (the
+"Owner's questions" below) were answered the same day. Ticked as it goes. The build runs on Opus 5.5 from `resume/030-phase-15-build.md`, inline, task
 by task, with one ledger as sessions 22 to 30 kept.
 
 **Goal:** a tutor can make any of the plan's material on their own, from More's Make something, for a student, a group,
@@ -51,7 +51,7 @@ rewritten here); what Phases 12 to 14 built in their "As built" and `plan/sessio
   pictures in the pull request, both appearances where the board has both (D7). What no board redraws stays as Phases 11
   to 14 built it. The two new boards this phase needs
   (the website's trust page, decision 24; U20's consent words, decision 22) were drawn by the plan session (row 25 of the
-  canvas, `P15-*`) and are built only once the owner approves them; a polish row that changes what is seen beyond an approved board has its board first.
+  canvas, `P15-*`) and approved by the owner on 2026-10-11; a polish row that changes what is seen beyond an approved board has its board first.
 - Nothing from V1 is renamed, dropped or narrowed in the model (D56, D26). Migration 0026 is additive: one nullable column
   and a function parameter with a default, so build 25's calls still resolve. `types.ts` regenerated and committed with it.
 - A replaced function: `security invoker`, `set search_path = ''`, `revoke all … from public, anon`, `grant execute … to
@@ -1073,8 +1073,7 @@ pictures of each changed state in both appearances, the row to Done with its pul
   fraction from the board's top (a number, in the view with its source line). State `ai-note-send`. No board.
 - [ ] **U20:** the centre's consent sheet reached from a note speaks of a note, not a photo: a `ConsentSheet(kind: .note)` with
   the sentences "Before the first note" and "What you write about the student goes to our AI service to be put into words
-  …" in the shape of the photo's. The words are P15-Consent-Note's (row 25, drawn by session 31), approved before this pull
-  request. Failing test: `AIStoreTests.theConsentSheetForANoteSpeaksOfNotes`. State `ai-note-consent`.
+  …" in the shape of the photo's. The words are P15-Consent-Note's (row 25, approved 2026-10-11). Failing test: `AIStoreTests.theConsentSheetForANoteSpeaksOfNotes`. State `ai-note-consent`.
 - [ ] **U21:** "Couldn't create the homework." and "Couldn't create the worksheet." fit one line as the board's "the paper."
   does: the failure row's title shortened to "Couldn't create it." for the two longer kinds (the line under it names the
   reason), or the row given the width the board gives it; whichever keeps the board's two-line shape at the default size.
@@ -1108,8 +1107,7 @@ pictures of each changed state in both appearances, the row to Done with its pul
   table row), `web/content/privacy.ts` (the consent facts), `web/content/site.ts` (the nav), `web/test/unit/pages.test.ts`,
   `words.test.ts`, `web/test/export/*`, `tools/web-smoke.ts` (five pages)
 
-- [ ] **Step 1: the board** is drawn (session 31: `P15-Web-Trust*`, row 25, mirrored, the claims table in
-  `information-architecture.md`); the owner's approval is recorded in the ledger before Step 2.
+- [ ] **Step 1: the board** `P15-Web-Trust*` (row 25, approved 2026-10-11, the claims table in `information-architecture.md`).
 - [ ] **Step 2: the failing tests** (`pages.test.ts`: `/trust` exports with its heading and the `tc-commit` meta; `words.test.ts`:
   no banned word, no vendor name on `/trust`; the privacy page's new paragraph present), then the page and the content,
   `bun check --only=web` green, `bun web-shots --pages /trust,/privacy`, the pictures by `bun pr-shots`. Commit, PR 12, merge;
@@ -1425,9 +1423,8 @@ the round starts (question 2). Spec 9's trust page in the phase that first sends
 Task 13. Spec 8's "material made from a skill at a level needs no consent" → decision 3 and Review focus 6.
 
 **Placeholder scan:** no "TBD", no "similar to Task N" without the content; the views are specified by their Kit parts and
-the boards' texts, as this repository's plans do; the migration, the guide and the notes are written out. Two things wait
-on the owner and are marked: the round's start (question 2) and the two boards' approval (decisions 22 and 24, drawn by
-this session). Task 12's rows are written into the ledger when question 1 is
+the boards' texts, as this repository's plans do; the migration, the guide and the notes are written out. Nothing waits on the
+owner: both questions are answered and the two boards approved (2026-10-11). Task 12's rows are written into the ledger when question 1 is
 answered, in the shape given.
 
 **Type consistency:** `MakeKind`, `MakeTarget`, `MakeFor`, `MakeRules`, `Term`, `ProgressSpan`, `OfflineRefusal.Write.make`,

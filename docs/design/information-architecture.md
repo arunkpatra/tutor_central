@@ -1298,11 +1298,11 @@ system's (Apple's secure button draws its own); the filtered tab's footnote is g
 row is on a kept exam's sheet only (a draft takes 14 until kept); a note held for consent opens the student's page rather
 than the held sheet (P10-Held draws three messages only).
 
-## Phase 15 boards (session 31, 2026-10-11): the two states no earlier step drew
+## Phase 15 boards (approved 2026-10-11, session 31): the two states no earlier step drew
 
 Row 25 of the canvas (y 52600; the title note at 52300); sources `mockups/P15-Web-Trust*` (fluid pages at 1280 and 390, dark
-and light, in the Phase 8 page pattern) and `P15-Consent-Note` (dark). Drawn by the plan session before the plan's tasks that
-build them; approved by the owner before PR 12 and PR 11a start.
+and light, in the Phase 8 page pattern) and `P15-Consent-Note` (dark). Drawn by the plan session and approved by the owner the
+same day ("Boards approved").
 
 | Board | Source |
 |---|---|

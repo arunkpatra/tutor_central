@@ -1,6 +1,6 @@
 # Phase 15: Make and polish
 
-**Status:** Planned (session 31, 2026-10-11): `phase-15-plan.md`, shown to the owner with its two questions (the polish rows; when the round starts); the build on Opus 5.5 from `resume/030-phase-15-build.md`. **Depends on:** Phases 11 to 14; boards 10.7; the trust page's board (drawn in the build session, approved first).
+**Status:** Planned and approved (session 31, 2026-10-11): `phase-15-plan.md` with the owner's answers (twelve polish rows taken; the round after his own test of the build) and the two Phase 15 boards approved; the build on Opus 5.5 from `resume/030-phase-15-build.md`. **Depends on:** Phases 11 to 14; boards 10.7 and row 25.
 
 ## Goal
 

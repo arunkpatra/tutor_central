@@ -78,5 +78,6 @@ Headless Chrome for the boards; no `bun check` run (no code changed); no simulat
 
 ## Next
 
-The owner's approval of the two boards and his answer on the round's start, then Phase 15's build on Opus 5.5 from
+The owner approved the plan, the boards and the round's start the same day ("Boards approved . Agree with round
+start."). Phase 15's build on Opus 5.5 from
 `resume/030-phase-15-build.md`.

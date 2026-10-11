@@ -10,5 +10,4 @@
    first, approval secured and then plan to be written. You were specifically instructed to keep chatter to a minimum possible
    and take small decisions yourself."
 
-The answer to question 2 (when the round starts relative to the build) and the boards' approval are recorded here when they
-come.
+4. "Boards approved . Agree with round start."

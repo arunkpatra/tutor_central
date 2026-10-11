@@ -1,8 +1,8 @@
 # Resume 030: Phase 15 (Make and polish), the build
 
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Opus 5.5
-(D17: plans on Fable, builds on Opus). The plan is `plan/phase-15-plan.md`, approved by the owner with his answers to its
-two questions (the polish rows taken; when the round starts); the boards are Phase 10's step 10.7 (approved 2026-10-10) and
+(D17: plans on Fable, builds on Opus). The plan is `plan/phase-15-plan.md`, approved by the owner on 2026-10-11 with his answers to
+its two questions (twelve polish rows taken; the round after his own test of the build); the boards are Phase 10's step 10.7 (approved 2026-10-10) and
 the two Phase 15 boards of row 25 (the trust page; the consent sheet from a note), approved before the build. This session builds the phase's
 pull requests, runs the hand runs and the cost run, has the work reviewed, ships the TestFlight build, then sets the tutor
 round up and runs its readings over its three weeks (one session per reading or fix; this prompt is pasted again at each).
