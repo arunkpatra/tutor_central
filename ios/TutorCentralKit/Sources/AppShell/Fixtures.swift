@@ -15,7 +15,7 @@ public enum Fixtures {
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
         let (auth, centres) = session(for: state)
         let counts = FakeCountsRepository(counts: counts(for: state))
-        let students = FakeStudentsRepository(students: register(for: state).students)
+        let students = FakeStudentsRepository(students: withSchoolLanguages(register(for: state).students, for: state))
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
         let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
         scriptFailures(for: state, counts: counts, students: students, fees: fees, attendance: attendance)

@@ -35,6 +35,15 @@ import Foundation
     public private(set) var feeLogged: [FeeLog] = []
     public private(set) var progressLogs: [UUID] = []
     public private(set) var consentLogs: [UUID] = []
+    /// Test tomorrow's sends, with their language and words.
+    public private(set) var testTomorrowLogs: [TestTomorrowLog] = []
+
+    public struct TestTomorrowLog: Hashable, Sendable {
+        public let studentID: UUID
+        public let language: MessageLanguage
+        public let body: String
+    }
+
     /// Messages of the V2 kinds by student (a consent ask, a weekly note), beside the absences and fees above.
     public var entries: [UUID: [MessageEntry]]
     private let now: () -> Date
@@ -111,9 +120,10 @@ import Foundation
         return (absences + fees + entries[student, default: []]).sorted { $0.openedAt > $1.openedAt }
     }
 
-    public func logTestTomorrow(centre _: UUID, studentID: UUID, language: MessageLanguage, body _: String) async throws
+    public func logTestTomorrow(centre _: UUID, studentID: UUID, language: MessageLanguage, body: String) async throws
         -> Date {
         try takeError()
+        testTomorrowLogs.append(TestTomorrowLog(studentID: studentID, language: language, body: body))
         entries[studentID, default: []]
             .append(MessageEntry(id: UUID(), kind: .testTomorrow, openedAt: now(), language: language))
         return now()

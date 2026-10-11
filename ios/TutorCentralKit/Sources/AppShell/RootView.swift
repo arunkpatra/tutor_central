@@ -40,6 +40,7 @@ public struct RootView: View {
             tabs.push(route)
         }
         let shell = ShellState(tabs: tabs)
+        shell.testTomorrow = launch.flatMap(Fixtures.testTomorrowAsk(for:))
         Self.follow(initial, shell: shell, deps: deps)
         if launch == .syncSending {
             // P7-Sync-Sending: back online, three changes going.
@@ -192,7 +193,7 @@ public struct RootView: View {
             // A newer answer about the same sign-in (Apple's name arriving) makes a fresh form.
             .id(user)
         case .ready:
-            TabsView(
+            schoolSheets(TabsView(
                 state: shell.tabs,
                 toasts: toasts,
                 today: { todayView },
@@ -217,7 +218,7 @@ public struct RootView: View {
                 placement: { placementView($0) },
                 close: { closeView($0) },
                 artefact: { artefactView($0) }
-            )
+            ))
         }
     }
 

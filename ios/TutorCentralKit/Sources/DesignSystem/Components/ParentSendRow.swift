@@ -10,13 +10,19 @@ public struct ParentSendRow: View {
     let name: String
     let line: String
     let state: State
+    /// The first row of To parents draws Send as the primary (P10-Today-AfterClose).
+    let primary: Bool
     let send: () async -> Void
     @SwiftUI.State private var sending = false
     static var avatar: CGFloat {
         36
     }
 
-    public init(initials: String, name: String, line: String, state: State, send: @escaping () async -> Void) {
+    public init(
+        initials: String, name: String, line: String, state: State, primary: Bool = false,
+        send: @escaping () async -> Void
+    ) {
+        self.primary = primary
         self.initials = initials
         self.name = name
         self.line = line
@@ -39,7 +45,7 @@ public struct ParentSendRow: View {
                 } label: {
                     Label("Send", systemImage: "message")
                 }
-                .buttonStyle(.secondary(.row, loading: sending))
+                .buttonStyle(SendStyle(primary: primary, loading: sending))
                 .fixedSize()
             case .sent:
                 Label("Sent", systemImage: "checkmark")
@@ -48,6 +54,20 @@ public struct ParentSendRow: View {
             case .noNumber:
                 Text("No number").typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
             }
+        }
+    }
+}
+
+/// Send as the primary or the secondary row button.
+private struct SendStyle: ButtonStyle {
+    let primary: Bool
+    let loading: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        if primary {
+            PrimaryButtonStyle(size: .row, loading: loading).makeBody(configuration: configuration)
+        } else {
+            SecondaryButtonStyle(size: .row, loading: loading).makeBody(configuration: configuration)
         }
     }
 }

@@ -8,7 +8,7 @@ public enum OfflineRefusal {
         case generateFees, waiveFee, remind, note
         case consent, textbook, placement, homeworkStatus, addChapter
         case regenerate, changePlan, ownSheet
-        case schoolItem, readSchool, forwardAsk, mark, gapReport
+        case schoolItem, readSchool, forwardAsk, mark, gapReport, testTomorrow
     }
 
     public static func words(for write: Write) -> String {
@@ -30,6 +30,7 @@ public enum OfflineRefusal {
         .forwardAsk: "You're offline. Sending needs a connection to note who was asked.",
         .mark: "You're offline. Marking needs a connection; the photos are still here.",
         .gapReport: "You're offline. The gap report needs a connection.",
+        .testTomorrow: "You're offline. Sending needs a connection to note it on the student's page.",
     ]
 
     private static let actions: [Write: String] = [

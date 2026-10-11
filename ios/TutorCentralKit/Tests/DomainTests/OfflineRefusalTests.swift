@@ -51,6 +51,8 @@ struct OfflineRefusalSchoolTests {
         #expect(OfflineRefusal
             .words(for: .mark) == "You're offline. Marking needs a connection; the photos are still here.")
         #expect(OfflineRefusal.words(for: .gapReport) == "You're offline. The gap report needs a connection.")
+        #expect(OfflineRefusal.words(for: .testTomorrow)
+            == "You're offline. Sending needs a connection to note it on the student's page.")
         for write in [OfflineRefusal.Write.schoolItem, .readSchool, .forwardAsk, .mark, .gapReport] {
             #expect(!ErrorWordsTests.banned.contains { OfflineRefusal.words(for: write).lowercased().contains($0) })
         }

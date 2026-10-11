@@ -64,6 +64,9 @@ public struct TodayView: View {
                     if let hero = store.hero {
                         BatchHeroCard(hero: hero, openClose: actions.openClose)
                     }
+                    if !store.toParents.isEmpty {
+                        ToParentsSection(rows: store.toParents, send: actions.sendToParent)
+                    }
                     ForEach(store.planBatches) { batch in
                         if let plan = store.plans[batch.id] {
                             PlanSection(

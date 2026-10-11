@@ -58,14 +58,35 @@ public enum ExamPreparation {
             .filter { !$0.isEmpty }
     }
 
-    /// The student's chapters a part names: either name contains the other, ignoring case and a "Ch n" prefix.
+    /// The student's chapters a part names: either name contains the other, ignoring case and a "Ch n" prefix; else the
+    /// chapters whose numbers it gives ("Ch 2", "chapters 1 and 2", "chapters 1 to 3").
     public static func matching(_ portion: String, in chapters: [Chapter]) -> [Chapter] {
         let words = dropMarker(portion.trimmingCharacters(in: .whitespaces)).lowercased()
         guard !words.isEmpty else { return [] }
-        return chapters.filter {
+        let named = chapters.filter {
             let name = $0.name.lowercased()
             return words.contains(name) || name.contains(words)
-        }.sorted { $0.position < $1.position }
+        }
+        guard named.isEmpty else { return named.sorted { $0.position < $1.position } }
+        let positions = chapterNumbers(portion)
+        return chapters.filter { positions.contains($0.position) }.sorted { $0.position < $1.position }
+    }
+
+    /// The chapter numbers a part gives after "Ch", "Chapter" or "Chapters": a list, or a range with "to" or "-".
+    static func chapterNumbers(_ text: String) -> Set<Int> {
+        var numbers: Set<Int> = []
+        for match in text.matches(of: /(?i:\bch(?:apters?)?\.?\s*(\d+(?:\s*(?:,|and|&|to|-)\s*\d+)*))/) {
+            let run = String(match.1)
+            let values = run.matches(of: /\d+/).compactMap { Int($0.output) }
+            if run.contains("to") || run.contains("-"), values.count == 2, let low = values.first,
+               let high = values.last,
+               low <= high {
+                numbers.formUnion(low ... high)
+            } else {
+                numbers.formUnion(values)
+            }
+        }
+        return numbers
     }
 
     public static func isWithinWindow(_ exam: SchoolItem, today: Day, calendar _: Calendar) -> Bool {

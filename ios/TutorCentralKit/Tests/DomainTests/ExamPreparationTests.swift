@@ -31,6 +31,13 @@ struct ExamPreparationTests: SchoolSamples {
             .map(\.name) == ["Acids, bases and salts"])
     }
 
+    @Test func aPortionNamingChapterNumbersMatchesThoseChapters() {
+        #expect(ExamPreparation.matching("chapters 1 and 2", in: devChapters).map(\.position) == [1, 2])
+        #expect(ExamPreparation.matching("Ch 2", in: devChapters).map(\.name) == ["Acids, bases and salts"])
+        #expect(ExamPreparation.matching("Chapters 1 to 2", in: devChapters).count == 2)
+        #expect(ExamPreparation.matching("Chapter 9", in: devChapters).isEmpty)
+    }
+
     @Test func nineDaysOutSplitsTwoPortionsOverTheRevisionDaysWithTheMockTwoDaysBefore() {
         // Fri 16 Oct: meeting days Wed 7, Thu 8, Fri 9, Mon 12, Tue 13, Wed 14, Thu 15 (seven). Mock Wed 14; after-mock
         // Thu 15.
