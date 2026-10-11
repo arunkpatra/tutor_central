@@ -136,7 +136,11 @@ import Testing
         ai.delay = .seconds(5)
         let store = await store(ai: ai, load: false)
         let load = Task { await store.load() }
-        try await Task.sleep(for: .milliseconds(300))
+        // The material takes 5 s here: wait for the lines (CI's runner is slower than a fixed 300 ms allowed).
+        let until = ContinuousClock.now.advanced(by: .seconds(4))
+        while store.record == nil, ContinuousClock.now < until {
+            try await Task.sleep(for: .milliseconds(20))
+        }
         guard case let .planning(plan?) = store.state else { Issue.record("not planning with lines: \(store.state)")
             load.cancel()
             return
