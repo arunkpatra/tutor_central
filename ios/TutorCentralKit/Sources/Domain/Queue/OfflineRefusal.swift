@@ -8,7 +8,7 @@ public enum OfflineRefusal {
         case generateFees, waiveFee, remind, note
         case consent, textbook, placement, homeworkStatus, addChapter
         case regenerate, changePlan, ownSheet
-        case schoolItem, readSchool, forwardAsk, mark, gapReport, testTomorrow
+        case schoolItem, forwardAsk, mark, gapReport, testTomorrow
         case readShared, readPasted, readPhoto
         case weeklyNote, sendNote, readMarks, notOnTrack, noteDay, nextStep, saveMarks
     }
@@ -27,8 +27,6 @@ public enum OfflineRefusal {
         .changePlan: "You're offline. Changing the plan needs a connection; nothing was changed.",
         .ownSheet: "You're offline. Using your own sheet needs a connection; nothing was changed.",
         .schoolItem: "You're offline. Keeping what the school sent needs a connection; nothing was kept.",
-        .readSchool:
-            "You're offline. Reading what the school sent needs a connection; it waits here until you're back online.",
         .forwardAsk: "You're offline. Sending needs a connection to note who was asked.",
         .mark: "You're offline. Marking needs a connection; the photos are still here.",
         .gapReport: "You're offline. The gap report needs a connection.",

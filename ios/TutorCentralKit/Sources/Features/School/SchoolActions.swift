@@ -24,6 +24,8 @@ public enum ReadSource: Hashable, Sendable {
     case pasted(String)
     case typed
     case shared(SharedRead)
+    /// Paste a message (U41): the screen waits for the system's Paste button, so iOS asks nothing.
+    case pasteWaiting
 }
 
 /// The School tab's pushes and sheets. AppShell owns the stack; the feature asks for a screen.

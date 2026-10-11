@@ -104,7 +104,8 @@ public struct StudentDetailView: View {
                     checksAndMarks
                     HomeworkSection(rows: store.homework, open: actions.openArtefact, set: setHomework)
                     SchoolSection(
-                        line: store.schoolEmptyLine, rows: store.schoolRows, seeAll: navigation.openSchool,
+                        line: store.schoolEmptyLine, rows: store.schoolRows,
+                        seeAll: { navigation.openSchool(store.id) },
                         open: navigation.openSchoolItem
                     )
                     MessagesSection(rows: store.messages) { actions.openMessages(store.id) }.id(Anchor.end)

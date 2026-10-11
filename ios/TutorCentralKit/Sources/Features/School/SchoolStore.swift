@@ -30,6 +30,9 @@ public struct SchoolRowModel: Identifiable, Hashable, Sendable {
     /// The copy's time, for the status line (D39).
     public private(set) var savedAt: Date?
     public private(set) var offlineRead = false
+    /// The tab filtered to one student (U42, P14-School-Student): what reaches them, until Show all, a link or the tab
+    /// bar clears it.
+    public var filter: UUID?
 
     let workspace: Workspace
     private let repository: any SchoolItemsRepository
@@ -67,13 +70,13 @@ public struct SchoolRowModel: Identifiable, Hashable, Sendable {
 
     /// The list from today on: This week, Next week, Later.
     public var buckets: [(title: String, rows: [SchoolRowModel])] {
-        SchoolItemRules.buckets(items, today: today, calendar: calendar).map { ($0.title, $0.items.map(row)) }
+        SchoolItemRules.buckets(shown, today: today, calendar: calendar).map { ($0.title, $0.items.map(row)) }
     }
 
     /// Each day an item stands on, with its kinds (a holiday on each of its days).
     public var dots: [Day: [CalendarDot]] {
         var dots: [Day: [CalendarDot]] = [:]
-        for item in items {
+        for item in shown {
             let span = max(0, item.date.days(to: item.lastDay))
             for offset in 0 ... span {
                 let day = item.date.adding(days: offset, calendar: calendar)
@@ -89,9 +92,40 @@ public struct SchoolRowModel: Identifiable, Hashable, Sendable {
     /// The chosen day's items (the calendar's list), today's at first.
     public var dayRows: [SchoolRowModel] {
         let day = selectedDay ?? today
-        return items.filter { $0.date <= day && day <= $0.lastDay }
+        return shown.filter { $0.date <= day && day <= $0.lastDay }
             .sorted { $0.title < $1.title }
             .map(row)
+    }
+
+    /// The items the list and the calendar show: the filtered student's, else all.
+    var shown: [SchoolItem] {
+        guard let student = filteredStudent else { return items }
+        return items.filter { SchoolItemRules.reaches($0, student) }
+    }
+
+    private var filteredStudent: Student? {
+        filter.flatMap { register.student($0) }
+    }
+
+    /// "Dev's items".
+    public var filterChip: String? {
+        filteredStudent.map { "\($0.firstName)'s items" }
+    }
+
+    /// Under the list while filtered.
+    public var filterLine: String? {
+        filteredStudent.map {
+            "What reaches \($0.firstName): their own items, their class's and their school's. "
+                + "Show all lists the centre's."
+        }
+    }
+
+    public var filterInitials: String {
+        filteredStudent.map { NameInitials.of($0.name) } ?? ""
+    }
+
+    public func showAll() {
+        filter = nil
     }
 
     public func load() async {

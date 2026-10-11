@@ -90,7 +90,8 @@ extension MessagesStore {
         case .consent: MessageCadence.heldWords(reason)
         }
         return Held(
-            title: MessageKind.note.title, line: "Held since \(day.shortWeekdayText) · \(why)", noteDay: day
+            title: MessageKind.note.title, line: "Held since \(day.shortWeekdayText) · \(why)", noteDay: day,
+            waitsForConsent: reason != .threeThisWeek
         )
     }
 

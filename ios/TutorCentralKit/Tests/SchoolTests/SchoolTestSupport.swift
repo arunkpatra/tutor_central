@@ -20,6 +20,10 @@ enum SchoolFixtures {
         return register
     }
 
+    static var devStudent: Student? {
+        FakeStudentsRepository.eveningSeed.first { $0.id == FakeStudentsRepository.dev }
+    }
+
     static var tmp: URL {
         FileManager.default.temporaryDirectory.appendingPathComponent("school-\(UUID().uuidString)")
     }

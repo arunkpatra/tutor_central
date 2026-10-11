@@ -3,7 +3,8 @@ import Domain
 import SwiftUI
 
 /// The item's sheet (P10-School-Confirm-Edit, P10-School-Item-Edit): Cancel, "Item", Save; Kind, Title, For (the For
-/// sheet), Subject, Date (and To for a holiday), Portions with the 500 counter, Remove this item.
+/// sheet), Subject, Date (and To for a holiday), a kept exam's Preparation (P14-School-Item-Window), Portions with the
+/// 500 counter, Remove this item.
 public struct ItemFormSheet: View {
     @Bindable var store: ItemFormStore
     let onSave: (SchoolItemDraft) -> Void
@@ -12,6 +13,7 @@ public struct ItemFormSheet: View {
     @State private var choosingFor = false
     @State private var picksDate = false
     @State private var picksEnd = false
+    @State private var picksWindow = false
 
     public init(
         store: ItemFormStore, onSave: @escaping (SchoolItemDraft) -> Void, onRemove: (() -> Void)?,
@@ -48,6 +50,9 @@ public struct ItemFormSheet: View {
                     ) { choosingFor = true }
                     subject
                     dates
+                    if store.showsWindow {
+                        preparation
+                    }
                     NotesWell(
                         label: "Portions", text: $store.portions, placeholder: "Chapters, pages or topics",
                         limit: SchoolItemRules.portionsLimit, optional: true
@@ -88,6 +93,19 @@ public struct ItemFormSheet: View {
                     FilterChip(name, isOn: store.subject == name) { store.subject = name }
                 }
             }
+        }
+    }
+
+    /// The exam's window: the system wheel of 7, 10, 14 and 21 days in a popover (U43).
+    private var preparation: some View {
+        VStack(alignment: .leading, spacing: Tokens.inline) {
+            PickerTile(label: "Preparation", value: store.windowTitle) { picksWindow = true }
+                .popover(isPresented: $picksWindow) {
+                    WheelPopover(
+                        eyebrow: "Preparation", values: store.windowChoices, selection: $store.windowDays
+                    ) { "\($0) days before" }
+                }
+            FieldHelper("Revision starts this many days before the test. 14 unless you change it.")
         }
     }
 

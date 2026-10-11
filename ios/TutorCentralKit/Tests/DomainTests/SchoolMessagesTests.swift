@@ -19,6 +19,15 @@ struct MessageCadenceTests {
         #expect(MessageCadence.canSuggest(Array(entries.prefix(2)), now: wed, calendar: calendar))
     }
 
+    @Test func aCopiedNoteIsNotASendAndDoesNotCount() {
+        let copied = MessageEntry(
+            id: UUID(), kind: .note, openedAt: wed, language: .hindi, channel: .copied
+        )
+        let entries = [entry(.testTomorrow, daysAgo: 1), entry(.notOnTrack, daysAgo: 0), copied]
+        #expect(MessageCadence.suggestedCount(entries, now: wed, calendar: calendar) == 2)
+        #expect(MessageCadence.suggested(entries, now: wed, calendar: calendar).count == 2)
+    }
+
     @Test func lastWeeksAndHandSendsDoNotCount() {
         let entries = [
             entry(.note, daysAgo: 4), entry(.reminder, daysAgo: 1), entry(.absence, daysAgo: 0),

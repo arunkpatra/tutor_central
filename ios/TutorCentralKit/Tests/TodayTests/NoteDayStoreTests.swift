@@ -217,10 +217,14 @@ import Testing
         #expect(sunday.rows.count == 7)
     }
 
-    @Test func aFailedReadSaysSoInPlace() async {
+    @Test func aWeekThatCannotBeReadListsTheRegistersRowsSoAKeptNoteStillOpens() async {
         let store = await Self.make(World(recordFails: true))
         await store.load()
-        #expect(store.isOn && store.loadFailed && store.rows.isEmpty)
+        #expect(store.isOn && store.loadFailed && store.rows.count == 7)
+        #expect(store.heroLine == "7 notes for parents" && store.countLine == "")
+        #expect(row(store, Self.dev)?.line == "Hindi" && row(store, Self.dev)?.state == .read)
+        #expect(row(store, Self.riya)?.line == "Hindi · waits for Neha's consent")
+        #expect(row(store, Self.riya)?.state == .held(.consent(parentFirstName: "Neha")))
     }
 
     @Test func changeDayWritesTheBatchesWhoseNoteDayIsShownAndRefusesOffline() async {
@@ -276,5 +280,22 @@ import Testing
         let store = await Self.make(world)
         await store.load()
         #expect(row(store, Self.dev)?.state == .read)
+    }
+}
+
+extension NoteDayStoreTests {
+    @Test func aRowHeldForConsentOpensTheStudentNotTheCadenceSheet() async {
+        let store = await Self.make(World())
+        await store.load()
+        var opened: [UUID] = []
+        var notes: [UUID] = []
+        store.onOpenStudent = { opened.append($0) }
+        store.onOpenNote = { student, _ in notes.append(student) }
+        #expect(store.held(for: Self.riya) == nil)
+        let riya = try? #require(row(store, Self.riya))
+        if let riya {
+            store.open(riya)
+        }
+        #expect(opened == [Self.riya] && notes.isEmpty)
     }
 }

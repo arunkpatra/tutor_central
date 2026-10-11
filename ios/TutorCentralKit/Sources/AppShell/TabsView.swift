@@ -47,7 +47,7 @@ struct TabsView<
     let parents: (Route) -> Parents
 
     var body: some View {
-        TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
+        TabView(selection: Binding(get: { state.selected }, set: { state.choose($0) })) {
             Tab("Today", systemImage: "sun.max", value: AppTab.today) { stack(.today) { today() } }
             Tab("Students", systemImage: "person.2", value: AppTab.students) { stack(.students) { students() } }
             Tab("School", systemImage: "building.columns", value: AppTab.school) { stack(.school) { school() } }

@@ -132,7 +132,7 @@ import Testing
         let left = Box()
         let offline = await makeStore(.pasted("x"), left: left, online: false)
         await offline.read()
-        #expect(offline.message == OfflineRefusal.words(for: .readSchool) && left.left == 0)
+        #expect(offline.message == OfflineRefusal.words(for: .readPasted) && left.left == 0)
     }
 
     @Test func addOfflineIsRefusedAndKeepsTheDrafts() async {
@@ -150,5 +150,50 @@ import Testing
         #expect(store.stage == .read && store.drafts.isEmpty && !store.canAdd)
         store.leave()
         #expect(left.left == 1)
+    }
+
+    @Test func pasteAMessageWaitsForThePasteButtonAndReadsOnIt() async {
+        let ai = FakeAIRepository()
+        let store = await makeStore(.pasteWaiting, ai: ai)
+        await store.read()
+        #expect(store.stage == .pasteWaiting && ai.parseCalls.isEmpty && !store.canAdd)
+        #expect(store
+            .pasteLine == "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do.")
+        #expect(store.footnote.hasPrefix("Each item read appears here"))
+        await store.paste(SchoolFixtures.boardMessage)
+        #expect(ai.parseCalls.count == 1 && store.drafts.count == 3 && store.sourceText == SchoolFixtures.boardMessage)
+        #expect(store.footnote.hasPrefix("Open an item"))
+    }
+
+    @Test func pastingNothingSaysSoAndKeepsWaiting() async {
+        let ai = FakeAIRepository()
+        let store = await makeStore(.pasteWaiting, ai: ai)
+        await store.read()
+        await store.paste("   ")
+        #expect(store.stage == .pasteWaiting && ai.parseCalls.isEmpty && store.message != nil)
+    }
+
+    @Test func aFailedAddRemovesTheUploadedPhoto() async {
+        let photos = FakePhotoStore()
+        let items = FakeSchoolItemsRepository(items: [])
+        let store = await makeStore(.photo(jpeg), items: items, photos: photos)
+        await store.read()
+        #expect(store.canAdd)
+        items.nextError = URLError(.badServerResponse)
+        #expect(await store.add() == false)
+        #expect(photos.paths.isEmpty)
+        #expect(store.stage == .read && !store.drafts.isEmpty)
+    }
+
+    @Test func theOfflineRefusalNamesTheSource() async {
+        let shared = SharedRead(id: "a", text: SchoolFixtures.boardMessage, image: nil, receivedAt: SchoolFixtures.now)
+        for (source, refusal) in [
+            (ReadSource.shared(shared), OfflineRefusal.Write.readShared),
+            (.pasted(SchoolFixtures.boardMessage), .readPasted), (.photo(jpeg), .readPhoto),
+        ] {
+            let store = await makeStore(source, online: false)
+            await store.read()
+            #expect(store.message == OfflineRefusal.words(for: refusal))
+        }
     }
 }

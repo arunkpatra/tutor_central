@@ -89,6 +89,7 @@ extension RootView {
             calendar: DayHeading.india
         )
         store.onOpenNote = { student, noteDay in shell.tabs.push(.note(student, noteDay)) }
+        store.onOpenStudent = { shell.tabs.push(.student($0)) }
         return store
     }
 }

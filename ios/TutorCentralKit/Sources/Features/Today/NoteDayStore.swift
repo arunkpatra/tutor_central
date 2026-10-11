@@ -58,6 +58,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     public var message: String?
     /// Read and Send it now: AppShell opens the note (Artefacts) for the student and the note day.
     @ObservationIgnored public var onOpenNote: ((UUID, Day) -> Void)?
+    /// A row held for consent: the student's page, where the consent is recorded (AppShell's).
+    @ObservationIgnored public var onOpenStudent: ((UUID) -> Void)?
     /// Each listed student's parent's suggested messages this week, for the held sheet.
     private var parentWeek: [UUID: [MessageEntry]] = [:]
 
@@ -134,8 +136,32 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
             parentWeek = week.parents
             loadFailed = false
         } catch {
-            rows = []
+            // Offline or a failed read: the register's rows, so a note kept on this iPhone still opens (plan decision
+            // 21); what was sent this week is not known, so nothing is counted.
+            rows = rowsOrdered(registerRows(days))
+            parentWeek = [:]
             loadFailed = true
+        }
+    }
+
+    /// The rows the register alone gives: the language, and the consent a note waits for.
+    func registerRows(_ days: [UUID: Day]) -> [NoteRowModel] {
+        days.compactMap { id, noteDay in
+            guard let student = register.student(id) else { return nil }
+            let language = student.messageLanguage.title
+            let state: NoteRowModel.State = student.consent == nil
+                ? .held(.consent(parentFirstName: student.parentName.flatMap {
+                    $0.split(separator: " ").first.map(String.init)
+                }))
+                : .read
+            let line = if case let .held(reason) = state {
+                "\(language) · \(MessageCadence.heldWords(reason))"
+            } else {
+                language
+            }
+            return NoteRowModel(
+                id: id, name: student.name, initials: student.initials, line: line, state: state, noteDay: noteDay
+            )
         }
     }
 
@@ -180,7 +206,12 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     }
 
     /// Read on a row, and the held sheet's Send it now (the send counts as one more, by the tutor's hand).
+    /// Read: the note; a row held for consent opens the student's page instead (no note is made without it).
     public func open(_ row: NoteRowModel) {
+        if case .held(.consent) = row.state {
+            onOpenStudent?(row.id)
+            return
+        }
         onOpenNote?(row.id, row.noteDay)
     }
 
@@ -190,7 +221,7 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
 
     /// The held sheet for a held row, nil for any other.
     public func held(for student: UUID) -> HeldNote? {
-        guard let row = rows.first(where: { $0.id == student }), case .held = row.state,
+        guard let row = rows.first(where: { $0.id == student }), case .held(.threeThisWeek) = row.state,
               let person = register.student(student) else { return nil }
         let entries = (parentWeek[student] ?? []).sorted { $0.openedAt < $1.openedAt }
         let next = row.noteDay.adding(days: 7, calendar: calendar)

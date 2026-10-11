@@ -21,6 +21,7 @@ extension RootView {
             now: deps.now, calendar: DayHeading.india
         )
         shell.school = store
+        shell.tabs.onTabChosen = { [weak store] in store?.showAll() }
         return store
     }
 
@@ -64,7 +65,8 @@ extension RootView {
                         openArtefact: { shell.tabs.push(.artefact($0)) },
                         testTomorrow: { shell.testTomorrow = $0 },
                         markPaper: { student, mock, exam in markMock(student, mock: mock, exam: exam) },
-                        openGapReport: { exam, student in shell.tabs.push(.schoolGapReport(exam, student)) }
+                        openGapReport: { exam, student in shell.tabs.push(.schoolGapReport(exam, student)) },
+                        openStudent: { shell.tabs.push(.student($0)) }
                     ),
                     recordChanged: shell.recordChanged,
                     back: { shell.tabs.remove(route) }
