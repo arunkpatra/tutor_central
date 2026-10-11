@@ -8,7 +8,10 @@ short and true. History belongs in git and in the phase files, not here.
 with a test that failed first), the cost run on the real API after the owner's yes (₹4.57 for the twelve-student batch,
 about ₹91 a month at twenty sessions), a fresh review on Fable 5.1 (Critical 1 and Important 2, 3, 5, 6 fixed in #119;
 Important 4 ruled; ten minors deferred), deploy 2, and TestFlight 1.0.0 (21) (run 38099197755). "As built" in `phase-12-class-plan.md`; the
-record, ledger and the owner's messages in `plan/sessions/026/`. Build 22 is on the owner's iPhone, fine ("Build 22 installed, app works", 2026-10-11). **Next:** Phase 13's plan
+record, ledger and the owner's messages in `plan/sessions/026/`. Build 22 is on the owner's iPhone, fine ("Build 22 installed, app works", 2026-10-11). Then #122: the AI forms take
+the class by level, no batch (the owner found the class picker empty on a centre with no batches; boards row 22 approved;
+hand-run on the real API; reviewed); TestFlight 1.0.0 (23). The owner's pushback rule is `docs/working/pushback.md`.
+**Next:** Phase 13's plan
 (School) on Fable from `resume/025-phase-13-plan.md`, which carries his two questions left from Phase 12.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
@@ -38,7 +41,7 @@ record, ledger and the owner's messages in `plan/sessions/026/`. Build 22 is on 
 Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are). A student link while
 another student's page was open showed the first student: fixed in #121 (every pushed screen takes its route as its
 identity). The remote holds `main`,
-`pr-shots`, and the merged `phase-10/*`, `phase-11/*` and `phase-12/*` branches, the owner's to delete.
+`pr-shots`, and the merged `phase-10/*`, `phase-11/*`, `phase-12/*` and `fix/*` branches, the owner's to delete.
 
 ## Production
 
@@ -69,7 +72,8 @@ identity). The remote holds `main`,
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (22) by run 38100960937 (Phase 12 with the student-link fix #121) on the owner's iPhone, fine;
+  run number. 1.0.0 (23) by run 38105466595 (the AI forms by class level, #122) on the internal group; 1.0.0 (22) by
+  run 38100960937 (Phase 12 with the student-link fix #121) on the owner's iPhone, fine;
   1.0.0 (21) by run 38099197755 (Phase 12: the plan on Today, the material, the close from the plan) on the internal group;
   1.0.0 (20) by run 38062450111 (Phase 11: the five tabs, the V2 student, consent, the textbook, the placement,
   the batch hero and the close) on the owner's iPhone, fine; 1.0.0 (19) by run 38047105651 (Phase 10: the share extension and the background refresh; nothing new on screen) on the internal group (the owner's iPhone: V1 screens fine); 1.0.0 (18) by run 37950611572 (the sheet title, #87) is on TestFlight's internal group; 17 by run 37948604787
