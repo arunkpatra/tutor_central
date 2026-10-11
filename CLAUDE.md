@@ -36,6 +36,9 @@ AI teaching tools. India first. Supabase behind it, a thin Hono API on Vercel fo
 works and ends. Update `plan/STATE.md` before you stop. A phase starts with its plan file, shown first.
 
 ## Working with the owner
+- Check each request against the spec, the decisions, the boards and the code before building it. Push back, with a
+  concrete reason and an alternative, when it is wrong for the product; build it when it is right; never invent an
+  objection. How: `docs/working/pushback.md`.
 - Be brief. No chatter. Decide small and medium things yourself and say what you decided. Ask only for major
   decisions, one question at a time.
 - Build in logical parts and show each one. No long silent stretches.

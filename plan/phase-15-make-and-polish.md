@@ -9,6 +9,8 @@ The ad hoc path exists for tutors who want it, Reports show progress, the polish
 ## Scope
 
 1. **Make something.** The kinds, each from a student, a group, a class level or a topic; the result as elsewhere.
+   Question paper, Homework and Worksheet already take a class level with no batch (#122, P12-Form-Paper-Class); Make's
+   For tile adds Student and Group around that, and does not bring back a batch for those kinds.
 2. **Check a paper** moved from AITools to Make; Scan register stays in Students (D36).
 3. **Reports** extended: progress per student and per term (skills secure, check trend, marks, attendance).
 4. **Polish.** The open rows of `plan/ui-polish.md` the owner picks, by its "How it works".

@@ -33,8 +33,8 @@ close follows the plan online and offline. Read, in this order, before doing any
    Artefacts/`, `Sources/Data/Plans/` (PlanCache), the School tab's placeholder.
 
 **What is already true:** production holds migrations 0001 to 0020 and the API at `6a23563` with `/plan` and `/make` (sheet,
-worked example, figure, brief, check, placement) live; TestFlight carries 1.0.0 (22), Phase 12 with the student-link fix
-(#121). The plan's subject per student already takes "the nearest school item" as an input with no items behind it.
+worked example, figure, brief, check, placement) live; TestFlight carries 1.0.0 (23): Phase 12, the student-link fix
+(#121), and the AI forms by class level with no batch (#122). The plan's subject per student already takes "the nearest school item" as an input with no items behind it.
 
 **Your work:** write `plan/phase-13-plan.md` with `superpowers:writing-plans`: tasks in order, tests first (the item rules:
 kind, student or class of a school, subject, date, portions; a holiday removing the day's plan; the exam window and the
@@ -58,7 +58,8 @@ plan and list them; ask the owner one question at a time only for what is his. T
 Then write `plan/resume/026-phase-13-build.md` for the build on Opus 5.5 and index both in `plan/resume/README.md`. Show
 the owner the plan before any build starts. Documents only, to `main` (D12).
 
-**The owner's rules:** be brief; decide small things and say what you decided; ask one question at a time; no technical
+**The owner's rules:** check each request against the spec, the decisions, the boards and the code, and push back with a
+concrete reason when it is wrong (`docs/working/pushback.md`); be brief; decide small things and say what you decided; ask one question at a time; no technical
 words in anything a tutor reads (D41); plain voice in documents (no slogans, no "every"); nothing from V1 renamed in the
 model (D56); migrations additive (D26); no service-role key (D37, D60). Update `plan/STATE.md` before you stop; write
 `plan/sessions/027/record.md` (or the next number) at the end.

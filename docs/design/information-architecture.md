@@ -1210,8 +1210,9 @@ forms take the class by level, with no batch.
 | The Class tile open: New student's class wheel (P10-NewStudent-ClassPicker) | `P12-Form-Paper-ClassWheel`, `-Light` |
 | Nothing to start from: Class reads Choose, Subject empty with its placeholder, Create the paper waiting | `P12-Form-Paper-NoClass`, `-Light` |
 
-What the boards settle: Question paper, Homework and Worksheet take the same Class tile; the form starts on the class most of
-the centre's students are in, else the last one chosen; the subject is typed, remembered for the next form of its kind, and
+What the boards settle: Question paper, Homework and Worksheet take the same Class tile; the form starts on the last class
+chosen for its kind, else the class most of the centre's students are in (corrected 2026-10-11, before the build: the last
+choice is what a tutor making the same class's papers expects); the subject is typed, remembered for the next form of its kind, and
 its "From the class" helper goes; the AI is sent the class level ("Class 10"); History lists a paper as "Question paper ·
 Class 10 · Sun 11 Oct" (a paper made from a batch before keeps the batch's name). The Progress note is unchanged.
 

@@ -63,3 +63,19 @@ the day was queried by date.
 The owner installs 1.0.0 (21) from the internal group and checks the plan on his iPhone (the tester's T4 to T7). Then
 Phase 13's plan (School) on Fable; the owner's call on writing a new batch's named topic as each member's chapter and skill
 (the ledger's Final ruling on Important 3).
+
+## After the phase (2026-10-11)
+
+- **#121:** a link to another student opened the page already showing; every pushed screen now takes its route as its
+  identity. TestFlight 1.0.0 (22), fine on the owner's iPhone.
+- **#122:** on a centre with no batches the AI forms' Class picker opened nothing (the owner, build 22). Cause: Question
+  paper, Homework and Worksheet took their class from a batch, a V1 leftover; the API never needed one and V2's Make form
+  offers "a class on its own". The owner ruled for the class by level; boards P12-Form-Paper-Class, -ClassWheel, -NoClass
+  approved (canvas row 22) and mirrored first. Built test first; a hand run with every batch archived on the real
+  Anthropic API (₹3.44: a Class 8 Science paper, a Class 5 English homework), which found the remembered values unwired; a
+  fresh review on Fable ("With fixes": Check a paper's list named the batch) fixed with a test. My proposed starting order
+  (most common class first) was wrong; the build takes the last class chosen first, and the board note says so.
+- **The owner's standing rule:** push back on a wrong request with a concrete reason and an alternative, never invent
+  one: `docs/working/pushback.md`, linked from CLAUDE.md "Working with the owner".
+- TestFlight 1.0.0 (23) by run 38105466595 from `6fa0913`.
+
