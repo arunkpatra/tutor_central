@@ -77,6 +77,18 @@ import Testing
         #expect(store.countLine.hasPrefix("1 of "))
     }
 
+    /// Hand run 15: offline the screen read "0 of 22 sent" over parents already asked.
+    @Test func whoWasAskedNotReadClaimsNoCountAndTryAgainReads() async {
+        let entry = MessageEntry(id: UUID(), kind: .forwardAsk, openedAt: SchoolFixtures.now, language: nil)
+        let log = FakeMessageLogRepository(entries: [FakeStudentsRepository.meher: [entry]])
+        log.nextError = URLError(.timedOut)
+        let store = await makeStore(log: log)
+        await store.load()
+        #expect(store.loadFailed && store.rows.isEmpty && store.countLine.isEmpty)
+        await store.load()
+        #expect(!store.loadFailed && store.countLine.hasPrefix("1 of "))
+    }
+
     @Test func sendOfflineIsRefusedInWords() async throws {
         let log = FakeMessageLogRepository()
         let opened = Opened()

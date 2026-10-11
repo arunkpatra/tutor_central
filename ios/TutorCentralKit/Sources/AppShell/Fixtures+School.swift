@@ -7,7 +7,8 @@ import School
 extension Fixtures {
     static let schoolStates: Set<LaunchState> = [
         .schoolEmpty, .school, .schoolCalendar, .schoolAddMenu, .schoolReading, .schoolConfirm, .schoolConfirmEdit,
-        .schoolItemHomework, .schoolItemHoliday, .schoolAsk, .schoolTestTomorrow,
+        .schoolItemHomework, .schoolItemHoliday, .schoolAsk, .schoolAskFailed,
+        .schoolTestTomorrow,
     ]
 
     /// Dev's parent writes in Hindi and agreed (P10-TestTomorrow, P10-Today-AfterClose's "Dev's father · Hindi").
@@ -55,7 +56,7 @@ extension RootView {
             [.schoolRead(.pasted(FakeSchoolItemsRepository.boardMessage))]
         case .schoolItemHomework: [.schoolItem(FakeSchoolItemsRepository.mathsHomework)]
         case .schoolItemHoliday: [.schoolItem(FakeSchoolItemsRepository.dasara)]
-        case .schoolAsk: [.schoolAsk]
+        case .schoolAsk, .schoolAskFailed: [.schoolAsk]
         case .schoolTestTomorrow: [.schoolItem(FakeSchoolItemsRepository.devsTest)]
         default: nil
         }

@@ -30,6 +30,8 @@ import Observation
     }
 
     public private(set) var rows: [ParentRow] = []
+    /// Who was asked could not be read: no row or count is claimed (feedback.md, a list that could not load).
+    public private(set) var loadFailed = false
     /// A refused or failed send, for the system alert.
     public var notice: String?
 
@@ -53,14 +55,19 @@ import Observation
         message = ForwardAskMessage.text(tutorName: workspace.profile.displayName, centreName: workspace.centre.name)
     }
 
-    /// "2 of 7 sent".
+    /// "2 of 7 sent"; nothing while who was asked could not be read.
     public var countLine: String {
-        "\(rows.filter(\.sent).count) of \(rows.count) sent"
+        loadFailed ? "" : "\(rows.filter(\.sent).count) of \(rows.count) sent"
     }
 
     public func load() async {
         await register.loadIfNeeded()
-        let asked = await (try? messages.forwardAsked(centre: workspace.centre.id)) ?? [:]
+        guard let asked = try? await messages.forwardAsked(centre: workspace.centre.id) else {
+            loadFailed = true
+            rows = []
+            return
+        }
+        loadFailed = false
         let withNumbers = register.activeStudents.filter { $0.parentPhone != nil }.sorted { $0.name < $1.name }
         var order: [String] = []
         var byNumber: [String: [Student]] = [:]

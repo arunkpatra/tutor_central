@@ -25,10 +25,14 @@ extension Fixtures {
         let asked = state == .studentConsentWaiting
             ? [FakeStudentsRepository.riya: [riyaAsked(at: clock(for: state))]]
             : forwardAsked(for: state)
-        return FakeMessageLogRepository(
+        let log = FakeMessageLogRepository(
             logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed, entries: asked,
             now: { clock(for: state) }
         )
+        if state == .schoolAskFailed {
+            log.nextError = URLError(.notConnectedToInternet)
+        }
+        return log
     }
 
     static func riyaAsked(at date: Date) -> MessageEntry {

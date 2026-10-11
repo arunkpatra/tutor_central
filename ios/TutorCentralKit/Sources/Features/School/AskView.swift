@@ -31,7 +31,9 @@ public struct AskView: View {
                         Text(store.countLine).typeStyle(Tokens.footnote).monospacedDigit()
                             .foregroundStyle(Tokens.text2.color)
                     }
-                    if !store.rows.isEmpty {
+                    if store.loadFailed {
+                        LoadFailedView("Couldn't load the parents.") { Task { await store.load() } }
+                    } else if !store.rows.isEmpty {
                         Card {
                             VStack(spacing: 0) {
                                 ForEach(store.rows) { row in
