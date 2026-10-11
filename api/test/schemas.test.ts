@@ -260,3 +260,9 @@ test("Scheme names a mock by its generation, and CheckPaperInput may name the st
   expect(Scheme.safeParse({ kind: "mock", artefactId: centreId }).success).toBe(false);
   expect(CheckPaperInput.safeParse({ pages: [image], scheme: { kind: "typed", text: "Q1" }, studentName: "Dev", studentId: centreId }).success).toBe(true);
 });
+
+test("a mock's marking names the student, so their consent is always asked", () => {
+  const body = { pages: [image], scheme: { kind: "mock", generationId: centreId }, studentName: "Dev" };
+  expect(CheckPaperInput.safeParse(body).success).toBe(false);
+  expect(CheckPaperInput.safeParse({ ...body, studentId: centreId }).success).toBe(true);
+});

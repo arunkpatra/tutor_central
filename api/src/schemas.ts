@@ -84,7 +84,9 @@ export const CheckPaperInput = z
   })
   .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= 4_200_000, {
     message: "pages: too many characters in one request",
-  });
+  })
+  // A mock is marked for one named student: without the id the gate could not ask their consent (D62).
+  .refine((v) => v.scheme.kind !== "mock" || v.studentId !== undefined, { message: "studentId: a mock's marking names the student" });
 export type CheckPaperInput = z.infer<typeof CheckPaperInput>;
 
 /** Every AI body names the centre; start_ai_generation refuses one the tutor is not a member of. */
