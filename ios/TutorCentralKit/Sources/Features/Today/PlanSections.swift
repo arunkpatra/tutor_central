@@ -33,7 +33,7 @@ struct PlanSection: View {
                 CreatingCard(title: "Planning today's class", line: Self.planningLine, cancel: store.cancel)
             }
         case .planning, .made:
-            section(change: change) { cards }
+            section(change: store.isClosed ? nil : change) { cards }
         }
     }
 
@@ -103,7 +103,11 @@ struct GroupCardView: View {
                         initials: line.initials, name: line.name, status: (line.status, line.statusKind),
                         note: line.note, teachLine: line.teach, rest: line.rest
                     ) { press(line) }
-                        .contextMenu { LineMenu.rows(groups: groups, current: group.id, actions: actions(line)) }
+                        .contextMenu {
+                            if !store.isClosed {
+                                LineMenu.rows(groups: groups, current: group.id, actions: actions(line))
+                            }
+                        }
                         .anchorPreference(key: LineMenuSpot.Key.self, value: .bounds) { anchor in
                             menuFor == line.id
                                 ? LineMenuSpot(

@@ -133,6 +133,10 @@ public struct TodayView: View {
                 withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) {
                     proxy.scrollTo(Self.planID(batch), anchor: .top)
                 }
+                // Cleared once in view, so the same batch asked again scrolls again.
+                if boardState == nil {
+                    store.focusBatch = nil
+                }
             }
             .onChange(of: store.tasks.adding) { _, adding in
                 // The field opens above the keyboard, not under it (build 10): once the keyboard is up, the Tasks card

@@ -219,6 +219,8 @@ public final class PlanMaker: Sendable {
             for try await (id, chapters, skills) in group {
                 record.chapters[id] = chapters
                 record.skills[id] = skills
+                // The close offline reads this copy to record the plan's checks on each student's own skills.
+                cache?.keepBook(BookCopy(chapters: chapters, skills: skills), student: id, at: now())
             }
         }
         record.sessions = try await thisMonth + lastMonth

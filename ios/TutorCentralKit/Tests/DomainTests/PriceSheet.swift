@@ -2,7 +2,8 @@ import Foundation
 @testable import Domain
 
 /// The price sheet the budget is tested against (plan decision 6): USD per million tokens, the rupee at 85, and the
-/// typical tokens per kind (the cost run of Task 24 replaces these with the measured figures).
+/// typical tokens per kind as the cost run measured them (session 026, the twelve-student Evening batch: 13 calls,
+/// ₹4.57); the figure, not asked in that run, keeps its estimate.
 enum PriceSheet {
     static let rupeesPerDollar = 85.0
     struct Model { let input: Double; let output: Double }
@@ -13,11 +14,11 @@ enum PriceSheet {
     struct Typical { let tokensIn: Int; let tokensOut: Int }
     static func typical(_ request: ArtefactRequest) -> Typical {
         switch request {
-        case .checks, .personalChecks, .placement: Typical(tokensIn: 700, tokensOut: 250)
-        case .sheet: Typical(tokensIn: 900, tokensOut: 1400)
-        case .workedExample: Typical(tokensIn: 700, tokensOut: 700)
+        case .checks, .personalChecks, .placement: Typical(tokensIn: 762, tokensOut: 746)
+        case .sheet: Typical(tokensIn: 710, tokensOut: 876)
+        case .workedExample: Typical(tokensIn: 756, tokensOut: 400)
         case .figure: Typical(tokensIn: 700, tokensOut: 200)
-        case .brief: Typical(tokensIn: 800, tokensOut: 1300)
+        case .brief: Typical(tokensIn: 1205, tokensOut: 1231)
         }
     }
 

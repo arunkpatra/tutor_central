@@ -87,8 +87,10 @@ extension PlanStore {
             let name = student?.name ?? ""
             let status = student?.trackStatus ?? .notKnown
             let teach = items.first { $0.kind == .catchUp }?.words ?? items.first { $0.kind == .teach }?.words ?? ""
-            let rest = items.filter { [.practise, .check, .homework].contains($0.kind) }.map {
-                LineBit(text: $0.words, struck: $0.skippedAt != nil)
+            // In the plan's order, whatever order the record answers in.
+            let order: [PlanLineKind] = [.practise, .check, .homework]
+            let rest = order.flatMap { kind in
+                items.filter { $0.kind == kind }.map { LineBit(text: $0.words, struck: $0.skippedAt != nil) }
             }
             return PlanLineModel(
                 id: id, initials: NameInitials.of(name), name: name, status: status.title,

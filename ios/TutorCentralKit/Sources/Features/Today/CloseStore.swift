@@ -90,6 +90,9 @@ public enum ClosePhase: Hashable, Sendable {
     var history: [CheckRecord] = []
     var homeworkHistory: [HomeworkRecord] = []
     var sessions: [AttendanceSession] = []
+    /// The students' books are read (or their copies): a plan's check row then stands only on a skill of the student's
+    /// own.
+    var booksRead = false
     /// Today's session of the batch when it was already closed (opened again).
     var closedSession: AttendanceSession?
 
@@ -177,6 +180,7 @@ public enum ClosePhase: Hashable, Sendable {
         async let sessionsRead: Void = readSessions()
         async let recordsRead: Void = readRecords(members.map(\.id))
         _ = await (planRead, sessionsRead, recordsRead)
+        booksRead = true
         refreshPlanChecks()
         closedSession = sessions.first { $0.date == day && $0.classID == classID && $0.closedAt != nil }
         var kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []
@@ -295,12 +299,18 @@ public enum ClosePhase: Hashable, Sendable {
         homeworkHistory = await homework ?? []
     }
 
+    /// The student's chapters and skills; offline, the copy the plan or the last close kept.
     func readBook(_ id: UUID) async -> StudentBook {
         do {
             async let read = textbooks.chapters(student: id)
             async let list = textbooks.skills(student: id)
-            return try await StudentBook(id: id, chapters: read, skills: list, failure: nil)
+            let book = try await StudentBook(id: id, chapters: read, skills: list, failure: nil)
+            planCache?.keepBook(BookCopy(chapters: book.chapters, skills: book.skills), student: id, at: now())
+            return book
         } catch {
+            if TransportError.isOffline(error), let copy = planCache?.book(student: id) {
+                return StudentBook(id: id, chapters: copy.chapters, skills: copy.skills, failure: nil)
+            }
             return StudentBook(id: id, chapters: [], skills: [], failure: error)
         }
     }

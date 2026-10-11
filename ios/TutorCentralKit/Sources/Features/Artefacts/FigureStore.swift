@@ -16,6 +16,7 @@ import Observation
     public private(set) var loadFailed: String?
     /// Show large: the figure full screen.
     public var large = false
+    @ObservationIgnored public var planCache: PlanCache?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -32,20 +33,19 @@ import Observation
         let centre = workspace.centre.id
         await register.loadIfNeeded()
         do {
-            guard let found = try await plans.artefact(id: artefactID, centre: centre),
-                  case let .figure(content) = found.content else {
+            guard let read = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache),
+                  case let .figure(content) = read.artefact.content else {
                 loadFailed = "This figure isn't here any more."
                 return
             }
+            let found = read.artefact
             artefact = found
             guard content.figure.validate() == nil else {
                 loadFailed = "This figure can't be drawn."
                 return
             }
             figure = content
-            if let planID = found.planID {
-                plan = try await plans.plan(id: planID, centre: centre)
-            }
+            plan = read.plan
             loadFailed = nil
         } catch {
             loadFailed = "Couldn't load the figure. Check your connection and try again."

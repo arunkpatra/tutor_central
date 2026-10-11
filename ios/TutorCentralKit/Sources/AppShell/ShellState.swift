@@ -69,6 +69,13 @@ struct ScanVisit {
     /// The screens read what the server has now: on coming back to the app and after the queue sent (the owner,
     /// 2026-10-09: what changed meanwhile shows without a pull). Attendance keeps unsaved marks; a read that fails
     /// keeps what is shown.
+    /// A student's This week "Today" (U35): the Today tab at its root, scrolled to the batch's plan.
+    func openToday(batch: UUID) {
+        tabs.paths[.today] = []
+        tabs.select(.today)
+        today?.focusBatch = batch
+    }
+
     func refreshScreens() async {
         async let today: Void? = today?.load()
         async let tasks: Void? = tasks?.load()

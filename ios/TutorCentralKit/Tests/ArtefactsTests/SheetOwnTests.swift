@@ -39,6 +39,16 @@ import UIKit
         #expect(store.artefact?.id == made)
     }
 
+    @Test func replacingYourOwnSheetKeepsTheMadeSheetsWords() async throws {
+        let store = try await SheetStoreTests().store()
+        let made = try #require(store.artefact?.id)
+        await store.useOwn(photo: Self.jpeg(width: 1200))
+        await store.useOwn(text: "1. Balance Fe + O2")
+        #expect(store.title == "Your sheet · balancing equations")
+        #expect(store.ownContent?.inPlaceOf == "sheet 1")
+        #expect(store.artefact?.regeneratedFrom == made)
+    }
+
     @Test func typedWordsBecomeAnOwnSheetWithNoPhoto() async throws {
         let store = try await SheetStoreTests().store()
         await store.useOwn(text: "1. Balance Fe + O2\n2. Balance Mg + O2")

@@ -132,6 +132,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             show(.none)
             return
         }
+        // A run still making the plan keeps going: a second open (a return to the app, a pull) makes nothing twice.
+        guard run == nil else { return }
         if record == nil, let copy = cache?.load(classID: classID, date: today) {
             show(.made(copy.value))
         }
@@ -180,12 +182,16 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
         run = task
         await task.value
+        if run == task {
+            run = nil
+        }
     }
 
     /// The material the plan is still missing (a refresh that iOS stopped part-way), made into the plan as it is.
     private func complete(_ plan: PlanRecord) async {
         generation += 1
         let mine = generation
+        run?.cancel()
         let members = register.members(of: classID)
         let centre = centre
         let task = Task { [maker] in
@@ -195,6 +201,9 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
         run = task
         await task.value
+        if run == task {
+            run = nil
+        }
     }
 
     /// A run's news on screen. A kept artefact is linked into the plan as shown (a student moved meanwhile follows the

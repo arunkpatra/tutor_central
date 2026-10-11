@@ -13,7 +13,9 @@ extension RootView {
                 context: ArtefactsContext(
                     workspace: workspace, register: register(for: workspace), plans: deps.plans, ai: deps.ai,
                     photos: deps.photos, now: deps.now, calendar: DayHeading.india,
-                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline },
+                    planCache: deps.cachesLists
+                        ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil
                 ),
                 actions: ArtefactsActions(openArtefact: { shell.tabs.push(.artefact($0)) }),
                 boardState: launch.flatMap(Self.artefactBoardState)

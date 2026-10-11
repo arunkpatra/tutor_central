@@ -47,9 +47,14 @@ public extension CloseStore {
         plan?.items(of: student).first { $0.kind == .homework && $0.skippedAt == nil }
     }
 
-    /// The ticked lines' items, for Done.
+    /// The ticked lines' items of the students who came, for Done.
     internal var doneItems: [UUID] {
-        checklist.flatMap(\.rows).filter(\.done).flatMap(\.itemIDs)
+        let absent = Set(students.filter { !$0.present }.map(\.id))
+        let owner = Dictionary(uniqueKeysWithValues: (plan?.items ?? []).map { ($0.id, $0.studentID) })
+        return checklist.flatMap(\.rows).filter(\.done).flatMap(\.itemIDs).filter { item in
+            guard let student = owner[item] ?? nil else { return true }
+            return !absent.contains(student)
+        }
     }
 
     // MARK: - Reading the plan
@@ -73,6 +78,11 @@ public extension CloseStore {
         checklist = Self.checklist(read, names: { self.register.student($0)?.firstName ?? "" }, ticked: ticked)
         for index in students.indices where students[index].checks == .loading {
             takePlanChecks(index)
+            // Homework skipped today, or the student left out: none given, unless the tutor turns it on.
+            let homework = read.items(of: students[index].id).filter { $0.kind == .homework }
+            if !homework.isEmpty, homework.allSatisfy({ $0.skippedAt != nil }) {
+                students[index].homeworkGiven = false
+            }
         }
     }
 
@@ -84,12 +94,32 @@ public extension CloseStore {
         }
     }
 
-    private func takePlanChecks(_ index: Int) {
+    internal func takePlanChecks(_ index: Int) {
         let id = students[index].id
         guard let checks = planChecks(id) else { return }
-        students[index].checks = checks
-        if checks == .skipped, plan?.items(of: id).allSatisfy({ $0.skippedAt != nil }) == true {
-            students[index].homeworkGiven = false
+        students[index].checks = booksRead ? recordable(checks, student: id) : checks
+    }
+
+    /// The plan's checks a tap can be kept for: the rows on a skill of the student's own. With none, the card says
+    /// why: no book yet, or (the book unread offline) that the checks need the connection.
+    private func recordable(_ checks: CloseChecks, student: UUID) -> CloseChecks {
+        let unread = bookFailures[student] != nil
+        switch checks {
+        case let .rows(rows):
+            let kept = rows.filter { ownSkill($0.skillID, named: $0.skill, student: student) != nil }
+            return kept.isEmpty ? (unread ? .failed(Self.offlineWords) : .none) : .rows(kept)
+        case let .placement(subjects):
+            let own = Set((skills[student] ?? []).map(\.id))
+            let kept = subjects.map { subject in
+                PlacementSubject(
+                    title: subject.title, rows: subject.rows.filter { own.contains($0.skillID) },
+                    failure: subject.failure
+                )
+            }
+            .filter { !$0.rows.isEmpty }
+            return kept.isEmpty ? (unread ? .failed(Self.offlineWords) : .none) : .placement(kept)
+        default:
+            return checks
         }
     }
 

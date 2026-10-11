@@ -27,6 +27,35 @@ import Testing
         return store
     }
 
+    @Test func aLineReadsInThePlansOrderWhateverOrderTheItemsArriveIn() async {
+        var plan = FakePlansRepository.boardPlan(changed: false, done: false)
+        plan.items.reverse()
+        let store = await store(plans: FakePlansRepository(
+            plans: [plan],
+            artefacts: FakePlansRepository.boardArtefacts
+        ))
+        let meher = store.groups.first?.lines.first { $0.name == "Meher Shah" }
+        #expect(meher?.rest.map(\.text) == ["Practise set 1", "Check 3", "Homework sheet 1"])
+    }
+
+    @Test func aSecondOpenWhilePlanningMakesNothingTwice() async throws {
+        let once = FakeAIRepository(), oncePlans = FakePlansRepository()
+        _ = await store(plans: oncePlans, ai: once)
+        let ai = FakeAIRepository()
+        ai.delay = .milliseconds(200)
+        let plans = FakePlansRepository()
+        let store = await store(plans: plans, ai: ai, load: false)
+        let first = Task { await store.load() }
+        while store.record == nil {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        await store.load()
+        await first.value
+        #expect(ai.sheets.count == once.sheets.count)
+        #expect(ai.checkCalls.count == once.checkCalls.count)
+        #expect(plans.kept.count == oncePlans.kept.count)
+    }
+
     @Test func openingMakesThePlanAndShowsTheGroupsAsTheyLand() async {
         let store = await store()
         guard case .made = store.state else { Issue.record("not made: \(store.state)")

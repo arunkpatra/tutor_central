@@ -34,6 +34,31 @@ public struct PlanCache: Sendable {
         }
     }
 
+    /// An artefact in one of the plans kept here, with its plan: the material opens offline as Today's plan does.
+    public func artefact(_ id: UUID) -> (artefact: Artefact, plan: PlanRecord)? {
+        let names = (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) ?? []
+        let head = "cache-\(centre.uuidString.lowercased())-"
+        for name in names where name.hasPrefix(prefix) && name.hasSuffix(".json") {
+            let key = String(name.dropFirst(head.count).dropLast(".json".count))
+            guard let plan = CachedRead<PlanRecord>(centre: centre, key: key, directory: directory).load()?.value,
+                  let found = plan.artefacts.first(where: { $0.id == id }) else { continue }
+            return (found, plan)
+        }
+        return nil
+    }
+
+    /// A student's chapters and skills as last read online: the close offline records the plan's checks on the
+    /// student's own skills and moves them (D39).
+    public func keepBook(_ book: BookCopy, student: UUID, at: Date) {
+        CachedRead<BookCopy>(centre: centre, key: "book-\(student.uuidString.lowercased())", directory: directory)
+            .keep(book, at: at)
+    }
+
+    public func book(student: UUID) -> BookCopy? {
+        CachedRead<BookCopy>(centre: centre, key: "book-\(student.uuidString.lowercased())", directory: directory)
+            .load()?.value
+    }
+
     private var prefix: String {
         "cache-\(centre.uuidString.lowercased())-plan-"
     }
@@ -45,5 +70,16 @@ public struct PlanCache: Sendable {
 
     private func read(classID: UUID, date: Day) -> CachedRead<PlanRecord> {
         CachedRead(centre: centre, key: "plan-\(classID.uuidString.lowercased())-\(date.iso)", directory: directory)
+    }
+}
+
+/// A student's book as read: the chapters and their skills.
+public struct BookCopy: Codable, Sendable, Hashable {
+    public let chapters: [Chapter]
+    public let skills: [Skill]
+
+    public init(chapters: [Chapter], skills: [Skill]) {
+        self.chapters = chapters
+        self.skills = skills
     }
 }

@@ -31,9 +31,13 @@ struct HomeworkRow: Decodable {
     let sessionId: UUID
     let givenAt: Date
     let status: HomeworkStatus
+    let artefactId: UUID?
 
     var record: HomeworkRecord {
-        HomeworkRecord(id: id, studentID: studentId, sessionID: sessionId, givenAt: givenAt, status: status)
+        HomeworkRecord(
+            id: id, studentID: studentId, sessionID: sessionId, givenAt: givenAt, status: status,
+            artefactID: artefactId
+        )
     }
 }
 

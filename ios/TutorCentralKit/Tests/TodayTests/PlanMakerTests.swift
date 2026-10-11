@@ -135,4 +135,16 @@ import Testing
     func add(_ name: String) {
         names.append(name)
     }
+
+    @Test func makingThePlanKeepsEachMembersBookOnThisIPhone() async throws {
+        let cache = PlanCache(
+            centre: PlanTest.centre,
+            directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        )
+        let maker = PlanTest.maker(plans: FakePlansRepository(), cache: cache)
+        await maker.make(PlanTest.batch(PlanTest.members), choices: nil) { _ in }
+        let dev = try #require(cache.book(student: FakeStudentsRepository.dev))
+        #expect(dev.skills.map(\.id) == FakeTextbooksRepository.evening().skillsByStudent[FakeStudentsRepository.dev]?
+            .sorted { $0.position < $1.position }.map(\.id))
+    }
 }

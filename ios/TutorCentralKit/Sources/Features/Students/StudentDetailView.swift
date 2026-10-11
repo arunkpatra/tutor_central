@@ -81,7 +81,7 @@ public struct StudentDetailView: View {
                     if !consentAgreed {
                         consentSection
                     }
-                    ThisWeekSection(rows: store.thisWeek)
+                    ThisWeekSection(rows: store.thisWeek, openToday: openToday)
                     RecordSection(
                         store: store, addTextbook: { navigation.openTextbook(store.id, $0) },
                         addChapter: { addingChapter = AddingChapter(subject: $0) }
@@ -90,7 +90,7 @@ public struct StudentDetailView: View {
                     if let checks = store.checks {
                         ChecksSection(lines: checks)
                     }
-                    HomeworkSection(rows: store.homework) { id, status in Task { await store.setHomework(id, status) } }
+                    HomeworkSection(rows: store.homework, open: actions.openArtefact, set: setHomework)
                     SchoolSection(line: store.schoolEmptyLine)
                     MessagesSection(rows: store.messages).id(Anchor.end)
                     if consentAgreed {
@@ -299,5 +299,16 @@ struct AddingChapter: Identifiable, Hashable {
     let subject: String
     var id: String {
         subject
+    }
+}
+
+extension StudentDetailView {
+    /// This week's quiet Today, when the batch meets today (U35).
+    var openToday: (() -> Void)? {
+        store.todaysBatch.map { batch in { actions.openToday(batch) } }
+    }
+
+    func setHomework(_ id: UUID, _ status: HomeworkStatus) {
+        Task { await store.setHomework(id, status) }
     }
 }

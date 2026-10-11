@@ -64,6 +64,20 @@ import Testing
         #expect(store.homeworkLabel(dev) == "Homework given · sheet 1")
     }
 
+    @Test func aTickedLineIsNotDoneForAStudentMarkedAbsent() async throws {
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let store = await tests.store(attendance: attendance, plans: .evening())
+        let practise = try #require(store.checklist[0].rows.first { $0.text == "Practise set 1" })
+        store.toggle(line: practise.id, in: 1)
+        let meher = try #require(store.students.firstIndex { $0.id == FakeStudentsRepository.meher })
+        store.toggle(meher)
+        #expect(await store.done())
+        let close = try #require(attendance.closes.last)
+        let plan = try #require(store.plan)
+        let meherItems = Set(plan.items(of: FakeStudentsRepository.meher).map(\.id))
+        #expect(close.done.count == 2 && meherItems.isDisjoint(with: close.done))
+    }
+
     @Test func aTapOnAPlanCheckMovesTheStudentsOwnSkill() async throws {
         let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
         let store = await tests.store(attendance: attendance, plans: .evening())
@@ -96,6 +110,55 @@ import Testing
         let store = await tests.store(plans: plans)
         let dev = try #require(student(store, FakeStudentsRepository.dev))
         #expect(dev.checks == .skipped && dev.homeworkGiven)
+    }
+
+    @Test func aHomeworkSkippedTodayClosesWithNoneGiven() async throws {
+        let plans = FakePlansRepository.evening()
+        let plan = try #require(try await plans.plan(id: FakePlansRepository.planID, centre: Self.centre))
+        let item = try #require(plan.items.first { $0.studentID == FakeStudentsRepository.dev && $0.kind == .homework })
+        try await plans.skip(item: item.id, centre: Self.centre)
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let store = await tests.store(attendance: attendance, plans: plans)
+        let dev = try #require(student(store, FakeStudentsRepository.dev))
+        #expect(!dev.homeworkGiven)
+        guard case .rows = dev.checks else {
+            Issue.record("Dev keeps his checks")
+            return
+        }
+        #expect(await store.done())
+        #expect(attendance.closes.last?.homework.contains { $0.studentID == FakeStudentsRepository.dev } == false)
+    }
+
+    @Test func aStudentWithNoBookIsNotOfferedChecksTheirTapsCouldNotKeep() async throws {
+        let store = await tests.store(plans: .evening())
+        let nikhil = try #require(student(store, FakeStudentsRepository.nikhil))
+        #expect(nikhil.checks == .none)
+        guard case .rows = try #require(student(store, FakeStudentsRepository.dev)).checks else {
+            Issue.record("Dev has his book and his checks")
+            return
+        }
+    }
+
+    @Test func offlineWithNoCopyOfTheBookThePlansChecksSayTheyNeedTheConnection() async throws {
+        let textbooks = FakeTextbooksRepository.evening()
+        textbooks.failure = URLError(.notConnectedToInternet)
+        let store = await tests.store(textbooks: textbooks, plans: .evening())
+        #expect(try #require(student(store, FakeStudentsRepository.meher)).checks == .failed(CloseStore.offlineWords))
+    }
+
+    @Test func tryAgainBackOnlineTakesThePlansChecksWithNoCall() async throws {
+        let textbooks = FakeTextbooksRepository.evening()
+        textbooks.failure = URLError(.notConnectedToInternet)
+        let ai = FakeAIRepository()
+        let store = await tests.store(ai: ai, textbooks: textbooks, plans: .evening())
+        textbooks.failure = nil
+        let meher = try #require(store.students.firstIndex { $0.id == FakeStudentsRepository.meher })
+        await store.retryChecks(for: meher)
+        guard case .rows = store.students[meher].checks else {
+            Issue.record("the plan's checks after Try again")
+            return
+        }
+        #expect(ai.checkCalls.isEmpty)
     }
 
     @Test func aCloseFromACachedPlanMakesNoCall() async throws {
@@ -141,6 +204,31 @@ import Testing
         }
         await loading.value
         #expect(store.loaded && store.canFinish && !store.checklist.isEmpty)
+    }
+
+    @Test func offlineAPlanCheckIsRecordedOnTheStudentsSkillFromTheBooksCopy() async throws {
+        let cache = PlanCache(
+            centre: Self.centre, directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        )
+        let evening = FakePlansRepository.evening()
+        try cache.keep(#require(try await evening.plan(id: FakePlansRepository.planID, centre: Self.centre)), at: .now)
+        let online = FakeTextbooksRepository.evening()
+        let meherID = FakeStudentsRepository.meher
+        cache.keepBook(
+            BookCopy(chapters: online.chaptersByStudent[meherID] ?? [], skills: online.skillsByStudent[meherID] ?? []),
+            student: meherID, at: .now
+        )
+        let offline = FakeTextbooksRepository.evening()
+        offline.failure = URLError(.notConnectedToInternet)
+        let plans = FakePlansRepository()
+        plans.nextError = URLError(.notConnectedToInternet)
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let store = await tests.store(attendance: attendance, textbooks: offline, plans: plans, cache: cache)
+        let meher = try #require(store.students.firstIndex { $0.id == meherID })
+        store.tap(meher, 0, right: true)
+        #expect(await store.done())
+        let check = try #require(attendance.closes.last?.checks.first { $0.studentID == meherID })
+        #expect(online.skillsByStudent[meherID]?.contains { $0.id == check.skillID } == true)
     }
 
     @Test func aStudentTheRulesAddedAfterThePlanGoesPhaseElevensWay() async {

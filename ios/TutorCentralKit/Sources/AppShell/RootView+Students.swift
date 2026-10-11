@@ -15,7 +15,9 @@ extension RootView {
                 openAttendance(classID: id, date: nil, in: workspace)
             },
             openStudentAttendance: { shell.tabs.push(.historyStudent($0)) },
-            openFeeAction: { openFeeAction($0) }
+            openFeeAction: { openFeeAction($0) },
+            openToday: { shell.openToday(batch: $0) },
+            openArtefact: { shell.tabs.push(.artefact($0)) }
         )
     }
 

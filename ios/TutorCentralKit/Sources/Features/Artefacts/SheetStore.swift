@@ -26,6 +26,8 @@ import UIKit
     /// The system alert's words for a refused or failed write (U33).
     public var message: String?
     @ObservationIgnored public var online: () async -> Bool = { true }
+    /// The plans kept on this iPhone: offline the sheet opens from them.
+    @ObservationIgnored public var planCache: PlanCache?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -64,14 +66,14 @@ import UIKit
     public func load() async {
         await register.loadIfNeeded()
         do {
-            guard let found = try await plans.artefact(id: artefactID, centre: centre) else {
+            guard let found = try await ArtefactRead.read(
+                artefactID, centre: centre, plans: plans, cache: planCache
+            ) else {
                 loadFailed = ArtefactWords.gone
                 return
             }
-            artefact = found
-            if let planID = found.planID {
-                plan = try await plans.plan(id: planID, centre: centre)
-            }
+            artefact = found.artefact
+            plan = found.plan
             loadFailed = nil
             await loadOwnImage()
         } catch {

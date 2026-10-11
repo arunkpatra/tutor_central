@@ -109,4 +109,34 @@ import Testing
         #expect(store.thisWeek.allSatisfy { $0.title == "Absent" || $0.title.hasPrefix("Came") })
         #expect(store.thisWeek.first?.day == "Mon")
     }
+
+    @Test func thisWeekOffersTodayWhenTheBatchMeetsToday() async {
+        let store = await detail(FakeStudentsRepository.hemanth)
+        #expect(store.todaysBatch == FakeClassesRepository.maths.id)
+    }
+
+    @Test func noTodayOnADayTheBatchDoesNotMeet() async {
+        let saturday = DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 10, hour: 9)) ?? Date()
+        let store = await StudentDetailStore(
+            id: FakeStudentsRepository.hemanth, register: register(),
+            attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
+            messages: FakeMessageLogRepository(logs: FakeMessageLogRepository.seed),
+            textbooks: FakeTextbooksRepository.seeded(), record: FakeRecordRepository(), now: { saturday }
+        )
+        await store.load()
+        #expect(store.todaysBatch == nil)
+    }
+
+    @Test func aHomeworkRowKnowsItsSheet() async throws {
+        let sheet = UUID()
+        let session = try #require(FakeAttendanceRepository.seed.first {
+            $0.marks[FakeStudentsRepository.hemanth] == .present
+        })
+        let given = HomeworkRecord(
+            id: UUID(), studentID: FakeStudentsRepository.hemanth, sessionID: session.id, givenAt: now,
+            status: .given, artefactID: sheet
+        )
+        let store = await detail(FakeStudentsRepository.hemanth, record: FakeRecordRepository(homework: [given]))
+        #expect(store.homework.first?.artefactID == sheet)
+    }
 }
