@@ -10,7 +10,8 @@ cost run on the real models with the owner's yes (mock ₹3.94, marking ₹8.18,
 class of three); a fresh review on Fable 5.1 (no Critical, four Important fixed in #134, five minors deferred); deploy run
 38123899264; TestFlight 1.0.0 (24). The owner approved real AI calls in testing without asking (be judicious). "As built" in
 `phase-13-school.md`; the record and ledger in `plan/sessions/028/`.
-**Next:** the owner tries 1.0.0 (24) (T8: the share from WhatsApp); Phase 14 (parents) needs its plan.
+**Next:** the owner tries 1.0.0 (24) (T8: the share from WhatsApp); Phase 14's plan on Fable 5.1 from
+`resume/027-phase-14-plan.md`.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
