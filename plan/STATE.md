@@ -36,8 +36,9 @@ checks (the ledger's Final ruling on Important 3).
 
 ## In flight
 
-Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are). A suggested task
-(not started): a student link while another student's page is open shows the first student. The remote holds `main`,
+Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are). A student link while
+another student's page was open showed the first student: fixed in #121 (every pushed screen takes its route as its
+identity). The remote holds `main`,
 `pr-shots`, and the merged `phase-10/*`, `phase-11/*` and `phase-12/*` branches, the owner's to delete.
 
 ## Production
