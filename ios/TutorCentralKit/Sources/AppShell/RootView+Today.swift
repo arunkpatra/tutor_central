@@ -80,11 +80,13 @@ extension RootView {
 
     /// The note day (Phase 14): the register, the record and the log as the user; Read opens the note (Artefacts).
     func noteDayStore(_ workspace: Workspace) -> NoteDayStore {
-        NoteDayStore(
+        let store = NoteDayStore(
             workspace: workspace, register: register(for: workspace), textbooks: deps.textbooks, record: deps.record,
             attendance: deps.attendance, messages: deps.messages, schoolItems: deps.schoolItems, classes: deps.classes,
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, now: deps.now,
             calendar: DayHeading.india
         )
+        store.onOpenNote = { student, noteDay in shell.tabs.push(.note(student, noteDay)) }
+        return store
     }
 }

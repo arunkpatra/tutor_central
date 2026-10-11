@@ -10,7 +10,7 @@ struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
     Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
     Payments: View, Reports: View, Tools: View, School: View, SchoolScreen: View, Textbook: View, Placement: View,
-    Close: View, Artefact: View
+    Close: View, Artefact: View, Parents: View
 >: View {
     @Bindable var state: TabsState
     let toasts: ToastCenter
@@ -43,6 +43,8 @@ struct TabsView<
     let close: (UUID) -> Close
     /// A plan's artefact (V2).
     let artefact: (UUID) -> Artefact
+    /// Phase 14's screens: the weekly note.
+    let parents: (Route) -> Parents
 
     var body: some View {
         TabView(selection: Binding(get: { state.selected }, set: { state.select($0) })) {
@@ -77,6 +79,7 @@ struct TabsView<
         case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
              .checkResult: tools(route)
         case .schoolRead, .schoolItem, .schoolAsk, .schoolGapReport: schoolScreen(route)
+        case .note: parents(route)
         }
     }
 

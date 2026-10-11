@@ -14,6 +14,8 @@ public struct TwoLanguageMessageSheet: View {
     @Binding var message: String
     let english: String?
     let note: String
+    /// The tutor's signature under the message in text2, when it is not part of the editable text (the note).
+    let signature: String?
     let canOpen: Bool
     let open: () async -> Void
     let close: () -> Void
@@ -23,8 +25,10 @@ public struct TwoLanguageMessageSheet: View {
     public init(
         title: String, name: String, heading: String? = nil, parentLine: String, languageTitle: String,
         message: Binding<String>,
-        english: String?, note: String, canOpen: Bool, open: @escaping () async -> Void, close: @escaping () -> Void
+        english: String?, note: String, signature: String? = nil, canOpen: Bool, open: @escaping () async -> Void,
+        close: @escaping () -> Void
     ) {
+        self.signature = signature
         self.title = title
         self.name = name
         self.heading = heading
@@ -104,7 +108,12 @@ public struct TwoLanguageMessageSheet: View {
             if editing {
                 TextField("Message", text: $message, axis: .vertical).lineLimit(4 ... 12)
             } else {
-                Text(message).textSelection(.enabled)
+                VStack(alignment: .leading, spacing: Tokens.rowPaddingDense) {
+                    Text(message).textSelection(.enabled)
+                    if let signature {
+                        Text(signature).foregroundStyle(Tokens.text2.color)
+                    }
+                }
             }
         }
         .typeStyle(Tokens.body)

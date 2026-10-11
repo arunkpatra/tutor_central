@@ -5,17 +5,21 @@ import UIKit
 /// `doneStay`, with the success haptic; no toast. `copied` shows the done state at once (the board's launch state).
 public struct CopyButton: View {
     let text: () -> String
+    /// Runs after the copy (the note logs it, Phase 14).
+    let onCopy: (() -> Void)?
     @State private var copied: Bool
     @State private var resetting: Task<Void, Never>?
 
-    public init(copied: Bool = false, text: @escaping () -> String) {
+    public init(copied: Bool = false, onCopy: (() -> Void)? = nil, text: @escaping () -> String) {
         self.text = text
+        self.onCopy = onCopy
         _copied = State(initialValue: copied)
     }
 
     public var body: some View {
         Button {
             UIPasteboard.general.string = text()
+            onCopy?()
             Haptic.play(.success)
             copied = true
             resetting?.cancel()

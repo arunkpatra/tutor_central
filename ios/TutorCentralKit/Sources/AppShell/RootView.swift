@@ -217,7 +217,8 @@ public struct RootView: View {
                 textbook: { textbookView(student: $0, subject: $1) },
                 placement: { placementView($0) },
                 close: { closeView($0) },
-                artefact: { artefactView($0) }
+                artefact: { artefactView($0) },
+                parents: { parentsScreen($0) }
             ))
         }
     }
