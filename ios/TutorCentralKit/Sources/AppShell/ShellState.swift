@@ -71,6 +71,12 @@ struct AbsenceAsk: Identifiable, Hashable {
     @ObservationIgnored var make: MakeStore?
     /// The tutor's words from Make's note, for the note screen it opens (taken when the screen is built).
     @ObservationIgnored var noteWords: [UUID: String] = [:]
+
+    /// The words for the note screen being built, taken so a later open of the student's note makes nothing new.
+    func takeNoteWords(for student: UUID) -> String? {
+        noteWords.removeValue(forKey: student)
+    }
+
     /// The visit of Check a paper in progress, by its routes' id.
     @ObservationIgnored var check: CheckVisit?
     /// The visit of Scan register in progress: its list lives until Add or Back (Phase 6's minor 1).

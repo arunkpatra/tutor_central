@@ -316,7 +316,7 @@ extension Fixtures {
                 notOnTrackStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
         case _ where noteDayStates.contains(state) || closeStates.contains(state) || makeStates.contains(state): (
-                FakeStudentsRepository.eveningSeed,
+                eveningStudents(for: state),
                 FakeClassesRepository.withEvening
             )
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
@@ -325,6 +325,12 @@ extension Fixtures {
 }
 
 extension Fixtures {
+    /// The Evening batch's register; Riya before her class is set in `make-sheet-no-class` (the review's R-app-2).
+    static func eveningStudents(for state: LaunchState) -> [Student] {
+        guard state == .makeSheetNoClass else { return FakeStudentsRepository.eveningSeed }
+        return FakeStudentsRepository.eveningSeed.map { $0.id == FakeStudentsRepository.riya ? withoutClass($0) : $0 }
+    }
+
     /// A student as entered before their class was set.
     static func withoutClass(_ student: Student) -> Student {
         var unset = student

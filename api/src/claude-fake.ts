@@ -444,7 +444,7 @@ export function localScript(request: ClaudeRequest<unknown>): FakeScript {
 
 /** The weekly note, ending with the tutor's own words when the prompt carries them (Make's note, Phase 15). */
 function withTutorsWords(text: string): MessageOutput {
-  const words = text.match(/^The tutor adds: (.+)$/m)?.[1];
+  const words = text.match(/^The tutor adds: "(.+)"$/m)?.[1];
   if (!words) return SAMPLE.note;
   return { message: `${SAMPLE.note.message} ${words}`, english: `${SAMPLE.note.english} ${words}` };
 }

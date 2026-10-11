@@ -170,3 +170,19 @@ test("check-paper's model comes from the table, not a constant (D67)", async () 
     resetModelOverrides();
   }
 });
+
+test("a V1 progress note names its student for the gate and waits for their parent's consent (D62, the review's R-web-3)", async () => {
+  const studentId = "aaaaaaaa-0000-0000-0000-000000000005";
+  const note = {
+    kind: "progress_note", centreId, subject: "Mathematics", classLevel: "Class 10 Maths", studentId,
+    studentName: "Hemanth Reddy", observations: "Improving", tutorName: "Meera Nair", centreName: "Bright Minds Tuition",
+  };
+  const db = fakeDb();
+  const r = await post(app(fakeClaude({ answer: SAMPLE.progress_note }), db), "/ai/generate", note);
+  expect(r.status).toBe(200);
+  expect(db.started[0]).toMatchObject({ kind: "progress_note", student: studentId });
+  const claude = fakeClaude({ answer: SAMPLE.progress_note });
+  const refused = await post(app(claude, fakeDb({ studentConsent: false })), "/ai/generate", note);
+  expect(refused.status).toBe(403);
+  expect(claude.requests).toHaveLength(0);
+});

@@ -361,7 +361,7 @@ test("a note with tutorSays reaches the model and is recorded with it", async ()
   const r = await post(app(claude, db), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week, tutorSays: "Ask him to read aloud." });
   expect(r.status).toBe(200);
   expect(db.started[0]).toMatchObject({ kind: "note", input: { tutorSays: "Ask him to read aloud." } });
-  expect(claude.requests[0]?.text).toContain("The tutor adds: Ask him to read aloud.");
+  expect(claude.requests[0]?.text).toContain('The tutor adds: "Ask him to read aloud."');
 });
 
 test("the local fake ends its note with the tutor's words, so a hand run shows them", () => {

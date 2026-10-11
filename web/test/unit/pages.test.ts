@@ -42,6 +42,11 @@ test("privacy says what it must, in order, and marks itself current", () => {
   expect(html).not.toContain("[OWNER:");
 });
 
+test("the terms keep their own date; privacy and trust say when they changed (the review's minor 7)", () => {
+  expect(renderToStaticMarkup(createElement(Terms))).toContain("Last changed 9 October 2026.");
+  expect(renderToStaticMarkup(createElement(Privacy))).toContain("Last changed 12 October 2026.");
+});
+
 test("terms name the maker, the cost today, the limits, the notice and Indian law", () => {
   const html = renderToStaticMarkup(createElement(Terms));
   expect(html).toContain('href="/terms" aria-current="page"');
@@ -117,10 +122,25 @@ test("trust says what it must, in order, with no fourth link in the header (P15-
   ])
     expect(html, words).toContain(words);
   expect(html).not.toContain("[OWNER:");
+  // The review's findings: each sentence true against the code.
+  for (const words of [
+    "the student’s and the parent’s first names", // whoLines sends first names (minor 11)
+    "date of birth", // what the record holds (minor 8)
+    "the messages sent to the parent, their words and when", // message_log keeps the body (minor 9)
+    "A message or a circular from the school", // /ai/parse-school (R-web-2)
+    "the photo is kept with the item",
+    "keeps no copy of these photos",
+    "nothing on that list is written, marked or read for the student", // all four (minor 10)
+    "including the messages written to their parent", // 0027 (R-web-1)
+  ])
+    expect(html, words).toContain(words);
+  expect(html).not.toContain("keeps no copy of a photo");
 });
 
 test("privacy's children's details point to the trust page", () => {
   const html = renderToStaticMarkup(createElement(Privacy));
   expect(html).toContain('href="/trust"');
   expect(html).toContain("only after their parent has agreed");
+  // An answer sheet, like a register, comes after the centre's confirmation (and the parent's consent): minor 12.
+  expect(html).toContain("a photo of a register or an answer sheet");
 });

@@ -1,5 +1,5 @@
 import type { LegalPage } from "./legal";
-import { AI_RETENTION, CITY, EMAIL, MAKER, ROUTES, UPDATED } from "./site";
+import { AI_RETENTION, CITY, EMAIL, MAKER, PRIVACY_UPDATED, ROUTES } from "./site";
 
 /** /privacy, from docs/design/mockups/P8-Privacy.dc.html with the owner's answers (Owner step 0) and D50: no vendor or
  *  internal technology named, only what the app does with a tutor's records. Never moves: the app links it. */
@@ -9,7 +9,7 @@ export const PRIVACY = {
   line:
     "You put your students' details into the app to run your centre. This page says what the app keeps, where it is kept, " +
     "who can see it and how to remove it, in plain words.",
-  updated: `Last changed ${UPDATED}.`,
+  updated: `Last changed ${PRIVACY_UPDATED}.`,
   sections: [
     {
       heading: "Who is responsible",
@@ -111,7 +111,8 @@ export const PRIVACY = {
           kind: "p",
           text:
             "Students' details are entered by you, their tutor. Make sure the parents are fine with their child's details " +
-            "being kept in Tutor Central, and with a photo of a register being read by the AI service; the app asks you to " +
+            "being kept in Tutor Central, and with a photo of a register or an answer sheet being read by the AI service; the " +
+            "app asks you to " +
             "confirm this once, before the first photo. A parent who wants their child's details changed or removed asks " +
             "you; you can edit or delete a student in the app at any time. A student's own work, marks and messages to their " +
             "parent go to the AI service only after their parent has agreed, and the app keeps the day and the number the " +

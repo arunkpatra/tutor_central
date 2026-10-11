@@ -32,8 +32,9 @@ export const TRUST = {
         {
           kind: "p",
           text:
-            "What the tutor enters: the student’s name, class (LKG to 10), school and board, the parent’s name and phone " +
-            "number, and the language the parent reads messages in.",
+            "What the tutor enters: the student’s name, class (LKG to 10), school and board, date of birth and whether a boy " +
+            "or a girl when the tutor adds them, the parent’s name and phone number, the language the parent reads messages " +
+            "in, the monthly fee and the fees paid, and any notes the tutor writes about the student.",
         },
         {
           kind: "p",
@@ -41,7 +42,7 @@ export const TRUST = {
             "What the tutor’s teaching adds: the chapters and skills of the student’s textbooks and how far each has come; " +
             "which questions the student got right or wrong at the end of each class; who came to class; the homework given " +
             "and whether it was done; marks the tutor records; the school’s tests, homework and holidays the tutor adds; and " +
-            "which messages the tutor sent the parent, and when.",
+            "the messages sent to the parent, their words and when.",
         },
         { kind: "p", text: "No textbook’s text is kept, only the names of its chapters and skills." },
       ],
@@ -56,6 +57,13 @@ export const TRUST = {
             "level and the names of chapters and skills. Nothing about any student goes with them: not a name, not a mark, " +
             "not a photo. The tutor can make this material for any student or class without asking anyone.",
         },
+        {
+          kind: "p",
+          text:
+            "A message or a circular from the school, which the tutor pastes or photographs, is read so its tests, homework " +
+            "and holidays can be listed for the tutor to check. It is the school’s words, not the student’s record, though " +
+            "it may name a student. When it is a photo, the photo is kept with the item until the tutor deletes it.",
+        },
       ],
     },
     {
@@ -69,7 +77,7 @@ export const TRUST = {
           kind: "p",
           text:
             "The messages the app writes to the parent (the weekly note, what a young student can now do, a word when the " +
-            "student is not on track, a reminder the day before a test): the student’s and the parent’s names, the class, " +
+            "student is not on track, a reminder the day before a test): the student’s and the parent’s first names, the class, " +
             "and the facts the message is about, such as the week’s record (what was taught, what they got right, what to " +
             "practise, how many classes they came to), so it can be written in the parent’s language.",
         },
@@ -88,7 +96,7 @@ export const TRUST = {
           text:
             "The AI service is Claude, by Anthropic. What it reads is handled on Anthropic’s systems, which are outside " +
             `India. Anthropic never uses it to train its models and normally deletes it within ${AI_RETENTION}. Tutor ` +
-            "Central keeps no copy of a photo, only that one was sent.",
+            "Central keeps no copy of these photos, only that one was sent.",
         },
         {
           kind: "p",
@@ -111,8 +119,8 @@ export const TRUST = {
         {
           kind: "p",
           text:
-            "Until then the student’s messages to the parent are not written and their papers are not marked by the app; " +
-            "everything else works as before. The tutor sees on the student’s page that consent is waiting, and why.",
+            "Until then nothing on that list is written, marked or read for the student; everything else works as before. " +
+            "The tutor sees on the student’s page that consent is waiting, and why.",
         },
       ],
     },
@@ -125,7 +133,8 @@ export const TRUST = {
             "To see what is kept about their child: the tutor shows them the student’s page. To have something changed or " +
             "removed: the tutor edits or deletes it in the app. To withdraw consent: the tutor removes it from the " +
             "student’s page, and nothing about the child goes to the AI service from then on. To have the child removed " +
-            "altogether: the tutor deletes the student, and every record about them goes with it.",
+            "altogether: the tutor deletes the student, and every record about them goes with it, including the messages " +
+            "written to their parent.",
         },
         {
           kind: "p",
@@ -142,7 +151,7 @@ export const TRUST = {
           text:
             "Records are kept in India, by the companies that host the app. Only the tutor, signed in, can see a centre’s " +
             "records; one tutor can never read another’s. Nothing is sold and nothing is shared, except with the services " +
-            "that run the app and, after consent, the AI service as described above. The ",
+            "that run the app and the AI service as described above. The ",
           link: {
             label: "privacy page",
             href: ROUTES.privacy,
