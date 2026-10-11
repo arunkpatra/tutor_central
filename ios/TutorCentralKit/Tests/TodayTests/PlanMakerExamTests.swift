@@ -118,4 +118,43 @@ import Testing
         }
         #expect(checks.questions.map(\.skillID) == [idB, idA])
     }
+
+    // MARK: - The review's fixes
+
+    /// Review Important 1: on the test day the students go back to their level group; no revision lines, no sheets on
+    /// the portions.
+    @Test func theExamDayHasNoExamGroup() async throws {
+        let friday16 = FakeSchoolItemsRepository.day(16)
+        let maker = PlanTest.maker(plans: FakePlansRepository(), now: PlanTest.at(16, 16, 35), items: [exam16])
+        let draft = try await maker.draft(PlanTest.batch(PlanTest.members, on: friday16), choices: nil)
+        #expect(draft.groups.allSatisfy { $0.examItemID == nil })
+        #expect(teach(draft, FakeStudentsRepository.dev)?.hasPrefix(PlanRules.revisionPrefix) == false)
+    }
+
+    /// Review Important 4: two batches whose plans are made together on the mock day share one mock.
+    @Test func twoBatchesMadeTogetherShareOneMock() async throws {
+        let ai = FakeAIRepository(), plans = FakePlansRepository()
+        ai.delayByKind[.checks] = .milliseconds(50)
+        let wednesday14 = FakeSchoolItemsRepository.day(14)
+        let maker = PlanTest.maker(plans: plans, ai: ai, now: PlanTest.at(14, 16, 35), items: [exam16])
+        let evening = PlanTest.evening
+        let twin = Classroom(
+            id: UUID(), name: "Evening batch 2", subject: evening.subject, monthlyFee: nil,
+            meetingDays: evening.meetingDays, startTime: evening.startTime, endTime: evening.endTime, archivedAt: nil
+        )
+        let dev = PlanTest.members.filter { $0.id == FakeStudentsRepository.dev }
+        let meher = PlanTest.members.filter { $0.id == FakeStudentsRepository.meher }
+        async let first: Void = maker.make(PlanTest.batch(dev, on: wednesday14), choices: nil) { _ in }
+        async let second: Void = maker.make(
+            PlanTest.batch(meher, classroom: twin, on: wednesday14), choices: nil
+        ) { _ in }
+        _ = await (first, second)
+        #expect(ai.mockCalls.count == 1)
+        let mocks = plans.artefacts.filter { $0.kind == .mock }
+        #expect(mocks.count == 1)
+        for id in [evening.id, twin.id] {
+            let plan = try await plans.plan(centre: PlanTest.centre, classID: id, date: wednesday14)
+            #expect(plan?.artefact(group: 1, kind: .mock)?.id == mocks.first?.id)
+        }
+    }
 }

@@ -17,13 +17,25 @@ public final class SupabasePlansRepository: PlansRepository {
     public func plan(centre: UUID, classID: UUID, date: Day) async throws -> PlanRecord? {
         let response = try await client.from("plans").select(Self.columns).eq("centre_id", value: centre)
             .eq("class_id", value: classID).eq("date", value: date.iso).limit(1).execute()
-        return try Self.decoder.decode([PlanRow].self, from: response.data).first?.record
+        return try await withShared(Self.decoder.decode([PlanRow].self, from: response.data).first?.record, centre)
     }
 
     public func plan(id: UUID, centre: UUID) async throws -> PlanRecord? {
         let response = try await client.from("plans").select(Self.columns).eq("centre_id", value: centre)
             .eq("id", value: id).limit(1).execute()
-        return try Self.decoder.decode([PlanRow].self, from: response.data).first?.record
+        return try await withShared(Self.decoder.decode([PlanRow].self, from: response.data).first?.record, centre)
+    }
+
+    /// The artefacts the plan's lines link that another plan kept (an exam's mock shared by two batches): the embed
+    /// reaches only those whose `plan_id` is this plan.
+    private func withShared(_ plan: PlanRecord?, _ centre: UUID) async throws -> PlanRecord? {
+        guard var plan else { return nil }
+        let missing = Set(plan.items.compactMap(\.artefactID)).subtracting(plan.artefacts.map(\.id))
+        guard !missing.isEmpty else { return plan }
+        let response = try await client.from("artefacts").select(ArtefactRow.columns).eq("centre_id", value: centre)
+            .in("id", values: missing.map { $0.uuidString.lowercased() }).execute()
+        plan.artefacts += try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
+        return plan
     }
 
     public func make(_ draft: PlanDraft, centre: UUID) async throws -> PlanRecord {

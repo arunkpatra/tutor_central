@@ -158,9 +158,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             return
         }
         if let made {
-            show(.made(made))
-            cache?.keep(made, at: now())
-            await complete(made)
+            await open(made, classroom: classroom)
             return
         }
         guard await !maker.closed(classID: classID, date: today, centre: centre) else {
@@ -172,6 +170,18 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             return
         }
         await make(choices: nil)
+    }
+
+    /// A plan already made: shown and completed; none when the whole batch went on holiday after it was made and it
+    /// is not closed (review Important 2).
+    private func open(_ made: PlanRecord, classroom: Classroom) async {
+        if made.sessionID == nil, await wholeBatchOnHoliday(classroom) {
+            show(.holiday)
+            return
+        }
+        show(.made(made))
+        cache?.keep(made, at: now())
+        await complete(made)
     }
 
     /// Today's plan made again when an item changed for one of its members (a holiday, an exam): only while the batch

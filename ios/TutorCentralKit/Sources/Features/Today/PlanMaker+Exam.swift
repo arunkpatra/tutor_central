@@ -25,7 +25,8 @@ extension PlanMaker {
                 exam: exam, student: student, chapters: record.chapters[student.id] ?? [],
                 skills: record.skills[student.id] ?? [], context: context
             )
-            guard let day = days.first(where: { $0.day == batch.date }) else { continue }
+            // The test day itself has no revision: the student is back in their level group (review Important 1).
+            guard let day = days.first(where: { $0.day == batch.date }), day.kind != .exam else { continue }
             revisions[student.id] = revision(
                 exam, day: day, days: days, report: record.gapReports[student.id].flatMap {
                     $0.schoolItemID == exam.id ? $0 : nil
@@ -132,5 +133,44 @@ extension PlanMaker {
             artefact,
             LinePlace(group: place.group, student: nil, kind: .practise, schoolItem: request.schoolItemID)
         )
+    }
+
+    /// The exam's mock for this plan: one kept already, else the one another plan is making now, else a new one; a
+    /// mock this plan did not keep is linked to its group's set lines.
+    func sharedMock(
+        _ request: ArtefactRequest, item: UUID, group: Int, plan: PlanRecord, work: PlanWork
+    ) async -> Artefact? {
+        let lines = plan.items.filter { $0.groupNo == group && $0.kind == .practise }.map(\.id)
+        if let existing = await (try? plans.mock(for: item, centre: work.centre)) ?? nil {
+            return await link(existing, lines: lines, centre: work.centre)
+        }
+        let planID = plan.id
+        let (mock, ours) = await mockRuns.run(item) { [self] in
+            guard let shaped = await made(request, work: work) else { return nil }
+            return try? await plans.keep(shaped.0, to: shaped.1.on(planID), centre: work.centre)
+        }
+        guard let mock else { return nil }
+        return ours ? mock : await link(mock, lines: lines, centre: work.centre)
+    }
+
+    private func link(_ mock: Artefact, lines: [UUID], centre: UUID) async -> Artefact? {
+        await (try? plans.link(items: lines, to: mock.id, centre: centre)) == nil ? nil : mock
+    }
+}
+
+/// The mocks being made by exam: a second plan asking while one is made waits for it instead of making another.
+actor MockRuns {
+    private var runs: [UUID: Task<Artefact?, Never>] = [:]
+
+    /// The mock and whether this caller made it.
+    func run(_ item: UUID, make: @escaping @Sendable () async -> Artefact?) async -> (Artefact?, Bool) {
+        if let running = runs[item] {
+            return await (running.value, false)
+        }
+        let task = Task { await make() }
+        runs[item] = task
+        let mock = await task.value
+        runs[item] = nil
+        return (mock, true)
     }
 }

@@ -62,6 +62,8 @@ public final class PlanMaker: Sendable {
     let ai: any AIRepository
     let schoolItems: any SchoolItemsRepository
     let cache: PlanCache?
+    /// The mocks being made, by exam: two batches' plans made together share one (review Important 4).
+    let mockRuns = MockRuns()
     let now: @Sendable () -> Date
     let calendar: Calendar
 
@@ -97,6 +99,7 @@ public final class PlanMaker: Sendable {
         }
         var draft = PlanRules.plan(input(batch, record, choices))
         draft = await named(draft, members: members, centre: centre)
+        draft = await writeNamedSkills(draft, record: record, centre: centre)
         let briefs = await (try? plans.briefChapters(centre: centre)) ?? []
         draft = draft.addingBriefs(for: briefs)
         guard !Task.isCancelled else { return }
@@ -130,6 +133,12 @@ public final class PlanMaker: Sendable {
             await progress(.finished(plan))
             return
         }
+        let unnamed = plan
+        let plan = await nameUnnamed(plan, batch: batch, record: record)
+        if plan.groups != unnamed.groups {
+            // The groups now have names: the plan on screen takes them before its material lands.
+            await progress(.written(plan))
+        }
         let draft = plan.asDraft
         let briefs = await (try? plans.briefChapters(centre: centre)) ?? []
         let missing = ArtefactBudget.requests(
@@ -155,6 +164,14 @@ public final class PlanMaker: Sendable {
         var plan = plan
         for request in requests {
             guard !Task.isCancelled else { break }
+            if case let .mock(group, item, _, _, _, _, _) = request {
+                if let kept = await sharedMock(request, item: item, group: group, plan: plan, work: work) {
+                    plan = plan.keeping(kept, link: LinePlace(group: group, student: nil, kind: .practise))
+                    cache?.keep(plan, at: now())
+                    await progress(.kept(kept, plan))
+                }
+                continue
+            }
             guard let shaped = await made(request, work: work),
                   !Task.isCancelled,
                   let kept = try? await plans.keep(shaped.0, to: shaped.1.on(plan.id), centre: work.centre)
@@ -260,7 +277,7 @@ public final class PlanMaker: Sendable {
 
     /// The groups whose record names no skill, named by /ai/plan for the month; a failure leaves them unnamed (their
     /// material is made at the next open).
-    private func named(_ draft: PlanDraft, members: [Student], centre: UUID) async -> PlanDraft {
+    func named(_ draft: PlanDraft, members: [Student], centre: UUID) async -> PlanDraft {
         let unnamed = draft.groups.filter(\.skill.isEmpty)
         guard !unnamed.isEmpty else { return draft }
         let levels = Dictionary(uniqueKeysWithValues: members.map { ($0.id, $0.classLevel) })

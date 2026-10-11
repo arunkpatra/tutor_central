@@ -12,10 +12,12 @@ import Testing
         online: Bool = true, cache: PlanCache? = nil, now: Date = PlanTest.at1635,
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
         classes: FakeClassesRepository = FakeClassesRepository(classes: FakeClassesRepository.withEvening),
-        items: FakeSchoolItemsRepository = FakeSchoolItemsRepository(items: []), load: Bool = true
+        items: FakeSchoolItemsRepository = FakeSchoolItemsRepository(items: []),
+        textbooks: FakeTextbooksRepository = .evening(), load: Bool = true
     ) async -> PlanStore {
         let maker = PlanTest.maker(
-            plans: plans, ai: ai, attendance: attendance, cache: cache, now: now, schoolItems: items
+            plans: plans, ai: ai, textbooks: textbooks, attendance: attendance, cache: cache, now: now,
+            schoolItems: items
         )
         let store = await PlanStore(
             classID: PlanTest.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
@@ -242,5 +244,41 @@ import Testing
         #expect(card.title == "Group 1 · Science unit test 3")
         #expect(card.line == "Class 8 Science · 3 students · the test in 9 days")
         #expect(card.marks.map(\.name) == ["Set", "Sheet", "Checks"])
+    }
+
+    /// Task 24: a group the make could not name (the API away) is named when the plan is opened again.
+    @Test func reopeningNamesTheGroupTheMakeCouldNot() async throws {
+        let ai = FakeAIRepository(), plans = FakePlansRepository()
+        ai.scriptByKind[.topics] = .failure(.offline)
+        let textbooks = FakeTextbooksRepository() // no member has a book: every group needs /ai/plan
+        let first = await store(plans: plans, ai: ai, textbooks: textbooks)
+        let unnamed = first.record?.groups.filter(\.skill.isEmpty).map(\.number) ?? []
+        try #require(!unnamed.isEmpty)
+        ai.scriptByKind[.topics] = nil
+        let again = await store(plans: plans, ai: ai, textbooks: textbooks)
+        let named = again.record?.groups.filter { unnamed.contains($0.number) } ?? []
+        #expect(named.allSatisfy { !$0.skill.isEmpty })
+        #expect(again.groups.filter { unnamed.contains($0.id) }.allSatisfy { $0.title.contains(" · ") })
+    }
+
+    /// Review Important 2: a plan made before the whole batch went on holiday is not shown again when reopened.
+    @Test func aBatchWhollyOnHolidayStaysWithoutAPlanWhenReopened() async throws {
+        var vidya = classEightHoliday(on: FakeSchoolItemsRepository.day(30))
+        vidya.audience = .school(FakeSchoolsRepository.vidya.id)
+        // Sahil's own holiday, an item of its own (the PTM's row made a holiday).
+        var sahil = try #require(FakeSchoolItemsRepository.boardItems.first { $0.id == FakeSchoolItemsRepository.ptm })
+        sahil.kind = .holiday
+        sahil.audience = .student(FakeStudentsRepository.sahil)
+        sahil.date = FakeSchoolItemsRepository.day(30)
+        let plans = FakePlansRepository()
+        let items = FakeSchoolItemsRepository(items: [vidya, sahil])
+        let first = await store(plans: plans, items: items)
+        #expect(first.record != nil)
+        vidya.date = PlanTest.wednesday
+        sahil.date = PlanTest.wednesday
+        _ = try await items.update(vidya)
+        _ = try await items.update(sahil)
+        let again = await store(plans: plans, items: items)
+        #expect(again.state == .holiday && again.groups.isEmpty)
     }
 }

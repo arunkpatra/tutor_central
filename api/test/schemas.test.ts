@@ -266,3 +266,9 @@ test("a mock's marking names the student, so their consent is always asked", () 
   expect(CheckPaperInput.safeParse(body).success).toBe(false);
   expect(CheckPaperInput.safeParse({ ...body, studentId: centreId }).success).toBe(true);
 });
+
+test("a gap report day line may run to the plan's 200 characters", () => {
+  const day = { title: "Monday", line: "x".repeat(200) };
+  expect(GapReportOutput.safeParse({ summary: "s", days: [day] }).success).toBe(true);
+  expect(GapReportOutput.safeParse({ summary: "s", days: [{ ...day, line: "x".repeat(201) }] }).success).toBe(false);
+});

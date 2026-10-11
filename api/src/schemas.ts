@@ -339,7 +339,7 @@ export const mockMarks = (mock: MockOutput) => mock.sections.flatMap((s) => s.qu
  *  skill are the app's arithmetic. */
 export const GapReportOutput = z.object({
   summary: z.string().min(1).max(200),
-  days: z.array(z.object({ title: z.string().min(1).max(40), line: z.string().min(1).max(180) })).min(1).max(3),
+  days: z.array(z.object({ title: z.string().min(1).max(40), line: z.string().min(1).max(200) })).min(1).max(3),
 });
 export type GapReportOutput = z.infer<typeof GapReportOutput>;
 

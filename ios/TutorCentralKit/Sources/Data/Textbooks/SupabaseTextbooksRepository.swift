@@ -40,7 +40,7 @@ public final class SupabaseTextbooksRepository: TextbooksRepository {
 
     public func skills(student: UUID) async throws -> [Skill] {
         let response = try await client.from("skills")
-            .select("id, chapter_id, position, name, state, state_at, last_checked_at")
+            .select(SkillRow.columns)
             .eq("student_id", value: student).order("position").execute()
         return try Self.decoder.decode([SkillRow].self, from: response.data).map(\.skill)
     }
@@ -89,6 +89,16 @@ public final class SupabaseTextbooksRepository: TextbooksRepository {
             )).execute()
         }
         return chapter
+    }
+
+    public func addSkill(_ name: String, chapter: UUID, student: UUID, centre: UUID) async throws -> Skill {
+        let last = try await client.from("skills").select("position").eq("chapter_id", value: chapter)
+            .order("position", ascending: false).limit(1).execute()
+        let position = try (Self.decoder.decode([PositionRow].self, from: last.data).first?.position ?? 0) + 1
+        var row = Self.skillRows([name], chapter: chapter, student: student, centre: centre)[0]
+        row["position"] = .integer(position)
+        let response = try await client.from("skills").insert(row).select(SkillRow.columns).single().execute()
+        return try Self.decoder.decode(SkillRow.self, from: response.data).skill
     }
 
     public func ensureLadder(student: UUID, centre: UUID) async throws {
