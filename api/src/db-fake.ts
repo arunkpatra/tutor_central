@@ -2,9 +2,15 @@ import { type AIKind, type Db, DbFailure, type Finish } from "./db.js";
 
 const CONSENT_KINDS: AIKind[] = ["scan_register", "check_paper", "progress_note"];
 
-/** An in-memory Db for tests: refuses as start_ai_generation would (consent, the limit) and records every call. */
+/** An in-memory Db for tests: refuses as start_ai_generation would (the centre's consent, a named student's consent,
+ *  the limit) and records every call. */
 export function fakeDb(
-  options: { consent?: boolean; limit?: number; generations?: Record<string, { kind: AIKind; output: string | null }> } = {},
+  options: {
+    consent?: boolean;
+    studentConsent?: boolean;
+    limit?: number;
+    generations?: Record<string, { kind: AIKind; output: string | null }>;
+  } = {},
 ): Db & { started: unknown[]; finished: unknown[] } {
   const consent = options.consent ?? true;
   const limit = options.limit ?? 40;
@@ -15,6 +21,7 @@ export function fakeDb(
     finished,
     async start(token, args) {
       if (!consent && CONSENT_KINDS.includes(args.kind)) throw new DbFailure("consent");
+      if (args.student && options.studentConsent === false) throw new DbFailure("consent");
       if (started.length >= limit) throw new DbFailure("limit", limit);
       started.push({ token, ...args });
       return `gen-${started.length}`;
