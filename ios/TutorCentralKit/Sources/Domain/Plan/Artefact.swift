@@ -281,11 +281,18 @@ public struct Artefact: Hashable, Sendable, Codable, Identifiable {
     public let planID: UUID?
     public let regeneratedFrom: UUID?
     public let madeAt: Date
+    /// The call that made it (a mock's key is read from it when marking).
+    public let generationID: UUID?
+    /// The exam it serves (the mock, a gap report).
+    public let schoolItemID: UUID?
 
     public init(
         id: UUID, kind: ArtefactKind, source: ArtefactSource, title: String, content: ArtefactContent,
-        photoPath: String?, studentID: UUID?, planID: UUID?, regeneratedFrom: UUID?, madeAt: Date
+        photoPath: String?, studentID: UUID?, planID: UUID?, regeneratedFrom: UUID?, madeAt: Date,
+        generationID: UUID? = nil, schoolItemID: UUID? = nil
     ) {
+        self.generationID = generationID
+        self.schoolItemID = schoolItemID
         self.id = id
         self.kind = kind
         self.source = source

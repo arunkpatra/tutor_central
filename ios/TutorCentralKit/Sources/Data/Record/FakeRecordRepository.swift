@@ -8,6 +8,7 @@ import Foundation
     public private(set) var homework: [HomeworkRecord]
     public private(set) var placements: [PlacementRecord] = []
     public private(set) var statusChanges: [StatusChange] = []
+    public private(set) var marks: [MarkRecord]
     public var nextError: (any Error)?
 
     /// One homework status written.
@@ -16,9 +17,35 @@ import Foundation
         public let status: HomeworkStatus
     }
 
-    public init(checks: [CheckRecord] = seedChecks, homework: [HomeworkRecord] = seedHomework) {
+    public init(
+        checks: [CheckRecord] = seedChecks,
+        homework: [HomeworkRecord] = seedHomework,
+        marks: [MarkRecord] = []
+    ) {
         self.checks = checks
         self.homework = homework
+        self.marks = marks
+    }
+
+    public func marks(centre _: UUID, students: [UUID]) async throws -> [MarkRecord] {
+        try begin()
+        return marks.filter { students.contains($0.studentID) }.sorted { $0.date > $1.date }
+    }
+
+    public func addMark(_ mark: NewMark, centre _: UUID) async throws -> MarkRecord {
+        try begin()
+        let made = MarkRecord(
+            id: UUID(), studentID: mark.studentID, subject: mark.subject, test: mark.test, date: mark.date,
+            score: mark.score, max: mark.max, photoPath: mark.photoPath, schoolItemID: mark.schoolItemID,
+            artefactID: mark.artefactID, questions: mark.questions
+        )
+        marks.append(made)
+        return made
+    }
+
+    public func deleteMark(id: UUID, centre _: UUID) async throws {
+        try begin()
+        marks.removeAll { $0.id == id }
     }
 
     public func checks(centre _: UUID, students: [UUID], since: Date) async throws -> [CheckRecord] {

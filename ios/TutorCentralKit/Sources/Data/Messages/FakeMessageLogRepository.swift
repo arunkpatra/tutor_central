@@ -111,6 +111,37 @@ import Foundation
         return (absences + fees + entries[student, default: []]).sorted { $0.openedAt > $1.openedAt }
     }
 
+    public func logTestTomorrow(centre _: UUID, studentID: UUID, language: MessageLanguage, body _: String) async throws
+        -> Date {
+        try takeError()
+        entries[studentID, default: []]
+            .append(MessageEntry(id: UUID(), kind: .testTomorrow, openedAt: now(), language: language))
+        return now()
+    }
+
+    public func logForwardAsk(centre _: UUID, studentID: UUID) async throws -> Date {
+        try takeError()
+        entries[studentID, default: []].append(MessageEntry(
+            id: UUID(),
+            kind: .forwardAsk,
+            openedAt: now(),
+            language: nil
+        ))
+        return now()
+    }
+
+    public func forwardAsked(centre _: UUID) async throws -> [UUID: Date] {
+        try takeError()
+        return entries.compactMapValues { list in list.filter { $0.kind == .forwardAsk }.map(\.openedAt).max() }
+    }
+
+    public func entries(centre _: UUID, since: Date) async throws -> [StudentMessage] {
+        try takeError()
+        return entries.flatMap { student, list in
+            list.filter { $0.openedAt >= since }.map { StudentMessage(studentID: student, entry: $0) }
+        }.sorted { $0.entry.openedAt > $1.entry.openedAt }
+    }
+
     private func takeError() throws {
         guard let error = nextError else { return }
         nextError = nil
