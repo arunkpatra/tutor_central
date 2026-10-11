@@ -34,6 +34,15 @@ import Foundation
     public private(set) var figures: [FigureSpec.Kind] = []
     public private(set) var briefs: [String] = []
     public private(set) var topics: [[PlanTopicGroup]] = []
+    /// The school's calls (Phase 13).
+    public private(set) var parseCalls: [SchoolSource] = []
+    public private(set) var mockCalls: [MockRequest] = []
+    public private(set) var gapCalls: [GapRequest] = []
+    public private(set) var messageCalls: [TestTomorrowRequest] = []
+    /// The students named by each marking (nil for V1's).
+    public private(set) var checkStudents: [UUID?] = []
+    /// The items a reading answers, the samples unless a test sets others.
+    public var schoolItems: [ParsedItem]?
     /// A figure answered in place of the template's sample (a spec the app refuses).
     public var figureOverride: FigureContent?
     private let now: @Sendable () -> Date
@@ -64,9 +73,10 @@ import Foundation
     }
 
     public func checkPaper(
-        pages _: [ImageUpload], scheme: SchemeSource, studentName _: String, centre _: UUID
+        pages _: [ImageUpload], scheme: SchemeSource, studentName _: String, studentID: UUID?, centre _: UUID
     ) async throws(APIFailure) -> CheckAnswer {
         checks.append(scheme)
+        checkStudents.append(studentID)
         try await answer()
         return CheckAnswer(id: UUID(), result: AISamples.check)
     }
@@ -142,6 +152,43 @@ import Foundation
         topics.append(groups)
         try await answer(.topics)
         return AISamples.topics(groups)
+    }
+
+    public func parseSchool(
+        _ source: SchoolSource, today _: Day, schools _: [String], classLevels _: [ClassLevel], centre _: UUID
+    ) async throws(APIFailure) -> SchoolReading {
+        parseCalls.append(source)
+        try await answer()
+        if let schoolItems {
+            return SchoolReading(id: UUID(), items: schoolItems)
+        }
+        if case .image = source {
+            return SchoolReading(id: UUID(), items: AISamples.photoItems)
+        }
+        return SchoolReading(id: UUID(), items: AISamples.schoolItems)
+    }
+
+    public func makeMock(_ request: MockRequest, centre _: UUID) async throws(APIFailure) -> MadeMock {
+        mockCalls.append(request)
+        try await answer()
+        return MadeMock(generationID: UUID(), content: AISamples.mock(request))
+    }
+
+    public func makeGapReport(_ request: GapRequest, centre _: UUID) async throws(APIFailure) -> MadeGapReport {
+        gapCalls.append(request)
+        try await answer()
+        return MadeGapReport(generationID: UUID(), summary: AISamples.gapSummary, days: AISamples.gapDays)
+    }
+
+    public func makeTestTomorrow(
+        _ request: TestTomorrowRequest,
+        centre _: UUID
+    ) async throws(APIFailure) -> MadeMessage {
+        messageCalls.append(request)
+        try await answer()
+        return MadeMessage(
+            generationID: UUID(), message: AISamples.testTomorrowHindi, english: AISamples.testTomorrowEnglish
+        )
     }
 
     private func answer(_ call: Call) async throws(APIFailure) {

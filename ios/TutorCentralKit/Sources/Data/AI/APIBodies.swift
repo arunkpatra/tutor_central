@@ -99,6 +99,8 @@ struct CheckBody: Encodable {
     let pages: [ImageBody]
     let scheme: SchemeBody
     let studentName: String
+    /// A mock's marking names the student (left out otherwise).
+    let studentId: String?
 }
 
 /// `{ error, reason?, limit? }`: what the API says when it refuses.

@@ -82,7 +82,7 @@ public extension APIClient {
     /// The API's words for a figure that does not add up (api/src/errors.ts).
     static let figureRefused = "Couldn't draw a figure for this skill. The plan goes on without it."
 
-    private func made<Result: Decodable>(
+    internal func made<Result: Decodable>(
         _: Result.Type, body: some Encodable
     ) async throws(APIFailure) -> MadeEnvelope<Result> {
         let data = try await post("ai/make", body: body)
