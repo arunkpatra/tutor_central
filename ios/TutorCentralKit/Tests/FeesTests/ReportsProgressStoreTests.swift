@@ -142,6 +142,15 @@ import Testing
         #expect(offline.store.savedAt != nil && offline.store.offlineRead)
     }
 
+    /// Hand run 14: a good read keeps its time, so the line names it when the phone goes offline after.
+    @Test func aGoodReadKeepsItsTimeForTheOfflineLine() async {
+        let kit = await Self.kit()
+        #expect(kit.store.savedAt == Self.now && !kit.store.offlineRead)
+        kit.store.segment = .fees
+        await kit.store.load()
+        #expect(kit.store.savedAt == Self.now && !kit.store.offlineRead)
+    }
+
     @Test func theFeesMonthOpensFromItsCopyOffline() async {
         let folder = FileManager.default.temporaryDirectory.appending(path: "reports-\(UUID().uuidString)")
         let cache = ReportsCache(centre: FakeCentreRepository.meeraWorkspace.centre.id, directory: folder)

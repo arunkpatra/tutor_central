@@ -215,7 +215,7 @@ import Observation
                 MonthCopy(invoices: readInvoices, sessions: readSessions, logs: readLogs),
                 at: now()
             )
-            (error, savedAt, offlineRead, loaded) = (nil, nil, false, true)
+            (error, savedAt, offlineRead, loaded) = (nil, now(), false, true)
         } catch {
             guard generation == loadGeneration else { return }
             showMonthCopy(month, failure: error)
