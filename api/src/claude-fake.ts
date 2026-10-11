@@ -6,13 +6,17 @@ import type {
   Figure,
   FigureKind,
   FigureOutput,
+  GapReportOutput,
+  MockOutput,
   NoteOutput,
   PaperOutput,
+  ParseSchoolOutput,
   PlacementOutput,
   PlanOutput,
   QuestionSetOutput,
   ScanOutput,
   SheetOutput,
+  TestTomorrowOutput,
   TextbookOutput,
   WorkedExampleOutput,
 } from "./schemas.js";
@@ -251,6 +255,90 @@ const brief: BriefOutput = {
 /** A first topic for a group with no record (Group 1, class 8 Science, in October). */
 const plan: PlanOutput = { groups: [{ groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" }] };
 
+
+/** The board's message read (P10-School-Confirm): the exam, the homework and the holiday. */
+const parseSchool: ParseSchoolOutput = {
+  items: [
+    {
+      kind: "exam",
+      title: "Science unit test 3",
+      subject: "Science",
+      date: "2026-10-16",
+      endDate: null,
+      classLevel: "8",
+      school: "Vidya Niketan",
+      studentName: null,
+      portions: "Ch 1 Chemical reactions · Ch 2 Acids, bases and salts",
+    },
+    { kind: "homework", title: "Maths Ex 3.2, Q1 to 10", subject: "Mathematics", date: "2026-10-12", endDate: null, classLevel: "8", school: "Vidya Niketan", studentName: null, portions: null },
+    { kind: "holiday", title: "Dasara holidays", subject: null, date: "2026-10-19", endDate: "2026-10-21", classLevel: null, school: "Vidya Niketan", studentName: null, portions: null },
+  ],
+};
+
+/** A photographed date sheet read: two exams on one day. */
+const PHOTO_ITEMS: ParseSchoolOutput = {
+  items: [
+    { kind: "exam", title: "Science unit test", subject: "Science", date: "2026-10-16", endDate: null, classLevel: "8", school: null, studentName: null, portions: "Chapters 1 and 2" },
+    { kind: "exam", title: "Mathematics unit test", subject: "Mathematics", date: "2026-10-16", endDate: null, classLevel: "10", school: null, studentName: null, portions: "Chapters 3 and 4" },
+  ],
+};
+
+/** The mock (P10-Mock): 25 marks in 40 minutes, three sections, each question on one skill. */
+const mockQuestion = (number: number, text: string, marks: number, answer: string, skill: string) => ({ number, text, marks, answer, skill });
+const mock: MockOutput = {
+  title: "Science unit test 3",
+  durationMinutes: 40,
+  sections: [
+    {
+      name: "Section A",
+      marksEach: 1,
+      questions: [
+        mockQuestion(1, "Which of these is a chemical change? (a) melting ice (b) rusting iron (c) breaking glass (d) dissolving salt", 1, "(b) rusting iron", "Spot a chemical change"),
+        mockQuestion(2, "Name the gas given off when zinc reacts with dilute hydrochloric acid.", 1, "Hydrogen", "Spot a chemical change"),
+        mockQuestion(3, "Write the word equation for burning magnesium.", 1, "Magnesium + oxygen → magnesium oxide", "Write a word equation"),
+        mockQuestion(4, "Write the word equation for iron rusting.", 1, "Iron + oxygen + water → rust", "Write a word equation"),
+        mockQuestion(5, "Name the kind of reaction: CaCO₃ → CaO + CO₂.", 1, "Decomposition", "Name the types of reactions"),
+      ],
+    },
+    {
+      name: "Section B",
+      marksEach: 2,
+      questions: [
+        mockQuestion(6, "Balance: Al + O₂ → Al₂O₃.", 2, "4Al + 3O₂ → 2Al₂O₃", "Balance a chemical equation"),
+        mockQuestion(7, "Balance: H₂ + O₂ → H₂O.", 2, "2H₂ + O₂ → 2H₂O", "Balance a chemical equation"),
+        mockQuestion(8, "Give one example of a combination reaction, with its equation.", 2, "C + O₂ → CO₂", "Name the types of reactions"),
+        mockQuestion(9, "Give one example of a displacement reaction, with its equation.", 2, "Fe + CuSO₄ → FeSO₄ + Cu", "Name the types of reactions"),
+        mockQuestion(10, "Write the word equation for zinc and dilute hydrochloric acid.", 2, "Zinc + hydrochloric acid → zinc chloride + hydrogen", "Write a word equation"),
+      ],
+    },
+    {
+      name: "Section C",
+      marksEach: 5,
+      questions: [
+        mockQuestion(11, "A shiny strip of copper is left in moist air for a week. Describe what happens, name the change and write its equation.", 5, "A green coat forms; a chemical change; 2Cu + H₂O + CO₂ + O₂ → Cu(OH)₂·CuCO₃", "Spot a chemical change"),
+        mockQuestion(12, "Balance Fe + H₂O → Fe₃O₄ + H₂, showing each count.", 5, "3Fe + 4H₂O → Fe₃O₄ + 4H₂", "Balance a chemical equation"),
+      ],
+    },
+  ],
+};
+
+/** The gap report (P10-GapReport): the summary and the last two days. */
+const gapReport: GapReportOutput = {
+  summary: "Spotting and word equations are secure; balancing and the types of reactions need the last two days.",
+  days: [
+    { title: "Wednesday", line: "Balancing equations: the worked example, then a set of 6 · Types of reactions: a sorting set" },
+    { title: "Thursday morning", line: "A short mock, Section B only · the key to read together" },
+  ],
+};
+
+/** Test tomorrow in Hindi with the English beside it (P10-TestTomorrow). */
+const testTomorrow: TestTomorrowOutput = {
+  message:
+    "नमस्ते रमेश जी, कल (गुरुवार 8 अक्टूबर) देव का साइंस यूनिट टेस्ट है, अध्याय 1 और 2 से। आज शाम उसे समीकरण संतुलित करना एक बार दोहराने दें। धन्यवाद।\nMeera Nair\nBright Minds Tuition",
+  english:
+    "Hello Ramesh, Dev's science unit test is tomorrow (Thursday 8 October), from chapters 1 and 2. This evening, let him go over balancing equations once. Thank you.\nMeera Nair\nBright Minds Tuition",
+};
+
 /** The boards' results (P6-Result-Paper, P6-Result-ProgressNote, P6-Scan-Review, P6-Check-Result,
  *  P10-Textbook-Chapters, P10-Sheet, P10-WorkedExample, P10-Figure-FractionBar, P10-Brief), one per kind. */
 export const SAMPLE = {
@@ -268,10 +356,18 @@ export const SAMPLE = {
   figure,
   brief,
   plan,
+  parse_school: parseSchool,
+  mock,
+  gap_report: gapReport,
+  test_tomorrow: testTomorrow,
 };
 
 /** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
 export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
+  if (request.text.toLowerCase().includes("what the school sent")) return "parse_school";
+  if (request.text.includes("Pattern:")) return "mock";
+  if (request.text.includes("By skill:")) return "gap_report";
+  if (request.system.includes("test is tomorrow")) return "test_tomorrow";
   if (request.images?.length) {
     if (request.text.includes("contents page")) return "parse_textbook";
     return request.text.includes("register") ? "scan_register" : "check_paper";
@@ -299,6 +395,8 @@ export function localScript(request: ClaudeRequest<unknown>): FakeScript {
   if (kind === "figure") return { answer: FIGURES[templateOf(request.text)], delayMs: 1500 };
   if (kind === "sheet") return { answer: counted(Number(request.text.match(/Exactly (\d+) questions/)?.[1] ?? 8)), delayMs: 1500 };
   if (kind === "plan") return { answer: topics(request.text), delayMs: 1500 };
+  if (kind === "parse_school") return { answer: request.images?.length ? PHOTO_ITEMS : SAMPLE.parse_school, delayMs: 1500 };
+  if (kind === "mock") return { answer: patterned(Number(request.text.match(/Pattern: (\d+) marks/)?.[1] ?? 25)), delayMs: 1500 };
   return { answer: blank ? { rows: [] } : SAMPLE[kind], delayMs: 1500 };
 }
 
@@ -348,4 +446,22 @@ function topics(text: string): PlanOutput {
     skill: `The first idea of ${m[3]}`,
   }));
   return groups.length > 0 ? { groups } : SAMPLE.plan;
+}
+
+/** The sample mock's questions scaled so the marks sum to the pattern's: each question's marks in proportion, at least
+ *  one, the last taking the remainder (at least one too, so a small pattern drops questions from the end). */
+function patterned(marks: number): MockOutput {
+  const all = SAMPLE.mock.sections.flatMap((s) => s.questions.map((q) => ({ section: s.name, q })));
+  const total = all.reduce((n, { q }) => n + q.marks, 0);
+  const scaled = all.map(({ section, q }) => ({ section, q: { ...q, marks: Math.max(1, Math.floor((q.marks * marks) / total)) } }));
+  while (scaled.length > 1 && scaled.slice(0, -1).reduce((n, { q }) => n + q.marks, 0) >= marks) scaled.splice(scaled.length - 2, 1);
+  const last = scaled[scaled.length - 1];
+  if (last) last.q.marks = marks - scaled.slice(0, -1).reduce((n, { q }) => n + q.marks, 0);
+  const sections = SAMPLE.mock.sections
+    .map((s) => {
+      const questions = scaled.filter((x) => x.section === s.name).map((x) => x.q);
+      return { name: s.name, marksEach: questions[0]?.marks ?? 1, questions };
+    })
+    .filter((s) => s.questions.length > 0);
+  return { ...SAMPLE.mock, sections };
 }

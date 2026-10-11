@@ -69,16 +69,24 @@ export type ScanRegisterInput = z.infer<typeof ScanRegisterInput>;
 export const Scheme = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("typed"), text: z.string().min(1).max(4000) }),
   z.object({ kind: z.literal("paper"), generationId: z.guid() }),
-  /** A mock's key (docs/spec-v2.md section 7); marked from Phase 13. */
-  z.object({ kind: z.literal("mock"), artefactId: z.guid() }),
+  /** A mock's key (docs/spec-v2.md section 7): the mock's generation output, the one table the API reads. */
+  z.object({ kind: z.literal("mock"), generationId: z.guid() }),
 ]);
 
 /** POST /ai/check-paper: up to six page photos, together under Vercel's body limit, and the scheme. */
 export const CheckPaperInput = z
-  .object({ pages: z.array(Image).min(1).max(6), scheme: Scheme, studentName: z.string().min(1).max(80) })
+  .object({
+    pages: z.array(Image).min(1).max(6),
+    scheme: Scheme,
+    studentName: z.string().min(1).max(80),
+    /** Sent for a mock (Phase 13), so start_ai_generation asks the student's consent (D62). */
+    studentId: z.guid().optional(),
+  })
   .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= 4_200_000, {
     message: "pages: too many characters in one request",
-  });
+  })
+  // A mock is marked for one named student: without the id the gate could not ask their consent (D62).
+  .refine((v) => v.scheme.kind !== "mock" || v.studentId !== undefined, { message: "studentId: a mock's marking names the student" });
 export type CheckPaperInput = z.infer<typeof CheckPaperInput>;
 
 /** Every AI body names the centre; start_ai_generation refuses one the tutor is not a member of. */
@@ -161,6 +169,14 @@ export const PlanOutput = z.object({ groups: z.array(z.object({ groupNo: z.numbe
 export type PlanOutput = z.infer<typeof PlanOutput>;
 
 
+/** The mock's pattern: the board's blueprint as the syllabus data writes it, or the app's default by class. */
+export const MockPattern = z.object({
+  marks: z.number().int().min(5).max(100),
+  durationMinutes: z.number().int().min(10).max(240),
+  sections: z.array(z.object({ name: z.string().max(40), questions: z.number().int().positive(), marksEach: z.number().positive() })).optional(),
+});
+export type MockPattern = z.infer<typeof MockPattern>;
+
 /** POST /ai/make: one artefact of a kind. Group material names skills and a level and no student; the personal kinds
  *  name the student and need their consent (start_ai_generation). */
 export const MakeInput = z.discriminatedUnion("kind", [
@@ -187,13 +203,10 @@ export const MakeInput = z.discriminatedUnion("kind", [
     kind: z.literal("mock"),
     classLevel: ClassLevel,
     subject: Subject,
+    title: z.string().min(1).max(120),
     portions: z.array(Name).min(1).max(30),
-    pattern: z.object({
-      marks: z.number().int().min(5).max(100),
-      durationMinutes: z.number().int().min(10).max(240),
-      sections: z.array(z.object({ name: z.string().max(40), questions: z.number().int().positive(), marksEach: z.number().positive() })).optional(),
-    }),
-  }),
+    pattern: MockPattern,
+  }).strict(),
   z.object({
     ...V2,
     kind: z.literal("note"),
@@ -202,18 +215,34 @@ export const MakeInput = z.discriminatedUnion("kind", [
     week: z.object({ taught: Skills, right: Skills, practise: Skills, coming: z.array(z.string().max(200)) }),
   }),
   z.object({ ...V2, kind: z.literal("can_do"), ...Student, language: Language, ladder: z.record(z.string().max(40), z.string().max(40)) }),
-  z.object({ ...V2, kind: z.literal("test_tomorrow"), ...Student, language: Language, subject: Subject, date: Day, portions: z.string().max(2000).optional() }),
+  z.object({
+    ...V2,
+    kind: z.literal("test_tomorrow"),
+    ...Student,
+    centreName: z.string().max(120),
+    parentName: z.string().max(80).optional(),
+    language: Language,
+    subject: Subject,
+    title: z.string().min(1).max(120),
+    date: Day,
+    portions: z.string().max(500).optional(),
+    revise: z.string().max(200).optional(),
+  }),
   z.object({
     ...V2,
     kind: z.literal("gap_report"),
     studentId: z.guid(),
-    marking: z
-      .array(z.object({ question: z.number().int().positive(), marks: z.number().min(0), max: z.number().positive(), note: z.string().max(500).optional() }))
-      .min(1),
+    classLevel: ClassLevel,
+    subject: Subject,
+    daysLeft: z.number().int().min(1).max(3),
+    bySkill: z.array(z.object({ skill: Name, right: z.number().int().min(0), of: z.number().int().min(1), note: z.string().max(300).optional() })).min(1).max(12),
   }),
 ]);
 export type MakeInput = z.infer<typeof MakeInput>;
 export type SheetInput = Extract<MakeInput, { kind: "sheet" }>;
+export type MockInput = Extract<MakeInput, { kind: "mock" }>;
+export type GapReportInput = Extract<MakeInput, { kind: "gap_report" }>;
+export type TestTomorrowInput = Extract<MakeInput, { kind: "test_tomorrow" }>;
 
 /** A sheet is a question set (V1's homework and worksheet shape): the app's `SheetContent` decodes it. */
 export const SheetOutput = QuestionSetOutput;
@@ -253,11 +282,71 @@ export const BriefOutput = z.object({
 });
 export type BriefOutput = z.infer<typeof BriefOutput>;
 
-/** POST /ai/parse-school: what the school sent, as text or one photo. */
+/** POST /ai/parse-school: what the school sent, as text or one photo, with the day it is read on (so "Friday 16th Oct"
+ *  becomes a date), the centre's school names and class levels (so a named school and "Class VIII B" resolve), and
+ *  nothing about a student (D62). */
 export const ParseSchoolInput = z
-  .object({ ...V2, text: z.string().min(1).max(4000).optional(), image: Image.optional() })
+  .object({
+    ...V2,
+    text: z.string().min(1).max(4000).optional(),
+    image: Image.optional(),
+    today: Day,
+    schools: z.array(z.string().min(1).max(120)).max(20).optional(),
+    classLevels: z.array(ClassLevel).max(12).optional(),
+  })
+  .strict()
   .refine((v) => v.text !== undefined || v.image !== undefined, { message: "text or image is needed" });
 export type ParseSchoolInput = z.infer<typeof ParseSchoolInput>;
+
+/** One item as read: the words the school used; a date the message does not give is null (the tutor sets it). */
+export const ParsedItem = z.object({
+  kind: z.enum(["exam", "homework", "notice", "holiday"]),
+  title: z.string().min(1).max(120),
+  subject: z.string().max(80).nullable(),
+  date: Day.nullable(),
+  endDate: Day.nullable(),
+  classLevel: ClassLevel.nullable(),
+  school: z.string().max(120).nullable(),
+  studentName: z.string().max(80).nullable(),
+  portions: z.string().max(500).nullable(),
+});
+export type ParsedItem = z.infer<typeof ParsedItem>;
+export const ParseSchoolOutput = z.object({ items: z.array(ParsedItem).max(12) });
+export type ParseSchoolOutput = z.infer<typeof ParseSchoolOutput>;
+
+/** A mock (P10-Mock): V1's paper shape with the skill each question tests (the gap report's tallies) and the time. The
+ *  route refuses an answer whose marks do not sum to the pattern's. */
+export const MockOutput = z.object({
+  title: z.string().min(1).max(120),
+  durationMinutes: z.number().int().min(10).max(240),
+  sections: z
+    .array(
+      z.object({
+        name: z.string().min(1).max(40),
+        marksEach: z.number().int().min(1),
+        questions: z
+          .array(z.object({ number: z.number().int().min(1), text: z.string().min(1).max(600), marks: z.number().int().min(1), answer: z.string().min(1).max(600), skill: Name }))
+          .min(1),
+      }),
+    )
+    .min(1)
+    .max(5),
+});
+export type MockOutput = z.infer<typeof MockOutput>;
+export const mockMarks = (mock: MockOutput) => mock.sections.flatMap((s) => s.questions).reduce((n, q) => n + q.marks, 0);
+
+/** The gap report's words (P10-GapReport): a line on what the mock showed and one line per day left. The tallies by
+ *  skill are the app's arithmetic. */
+export const GapReportOutput = z.object({
+  summary: z.string().min(1).max(200),
+  days: z.array(z.object({ title: z.string().min(1).max(40), line: z.string().min(1).max(180) })).min(1).max(3),
+});
+export type GapReportOutput = z.infer<typeof GapReportOutput>;
+
+/** Test tomorrow in the parent's language with the English beside it for the tutor (P10-TestTomorrow). */
+export const TestTomorrowOutput = z.object({ message: z.string().min(1).max(600), english: z.string().min(1).max(600) });
+export type TestTomorrowOutput = z.infer<typeof TestTomorrowOutput>;
+
 
 /** POST /ai/parse-textbook: a contents page, with the class and subject it is for. */
 export const ParseTextbookInput = z.object({ ...V2, image: Image, classLevel: ClassLevel, subject: Subject });

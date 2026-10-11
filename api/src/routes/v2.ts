@@ -7,17 +7,20 @@ import { decodeImage } from "../images.js";
 import { request as briefRequest } from "../prompts/brief.js";
 import { request as checkRequest } from "../prompts/check.js";
 import { request as figureRequest } from "../prompts/figure.js";
+import { request as gapReportRequest } from "../prompts/gap-report.js";
+import { request as mockRequest } from "../prompts/mock.js";
 import { request as textbookRequest } from "../prompts/parse-textbook.js";
 import { request as placementRequest } from "../prompts/placement.js";
 import { request as planRequest } from "../prompts/plan.js";
 import { request as sheetRequest } from "../prompts/sheet.js";
+import { request as testTomorrowRequest } from "../prompts/test-tomorrow.js";
 import { request as workedExampleRequest } from "../prompts/worked-example.js";
-import { MakeInput, ParseTextbookInput, PlanInput } from "../schemas.js";
+import { MakeInput, mockMarks, ParseTextbookInput, PlanInput } from "../schemas.js";
 import { answer, isParsed, notYet, parse, run } from "./common.js";
 
 /** The V2 routes that are live (docs/spec-v2.md section 9): the textbook's contents page, `/plan` (a first topic for a
- *  group whose record names none), and `/make` for the group material (sheet, worked example, figure, brief, check) and
- *  the placement; the mock and the personal kinds answer 501 until their phase. The photo is never stored: the record's
+ *  group whose record names none), and `/make` for the group material (sheet, worked example, figure, brief, check), the
+ *  placement, the mock, the gap report and Test tomorrow; the note and can_do answer 501 until Phase 14. The photo is never stored: the record's
  *  input holds the page count, the bytes, the class and the subject. */
 export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
   const routes = new Hono<Vars>();
@@ -59,6 +62,13 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
         return run(c, deps, body.centre, { kind: "check", input: v, request: checkRequest(v.classLevel, v.subject, v.skills) });
       case "placement":
         return run(c, deps, body.centre, { kind: "placement", input: v, request: placementRequest(v.classLevel, v.subject, v.chapters) });
+      case "mock":
+        // A mock whose marks do not sum to the pattern's is an unfit answer, refused in words (decision 12).
+        return run(c, deps, body.centre, { kind: "mock", input: v, request: mockRequest(v), empty: (made) => mockMarks(made) !== v.pattern.marks });
+      case "gap_report":
+        return run(c, deps, body.centre, { kind: "gap_report", input: v, request: gapReportRequest(v), student: v.studentId });
+      case "test_tomorrow":
+        return run(c, deps, body.centre, { kind: "test_tomorrow", input: v, request: testTomorrowRequest(v), student: v.studentId });
       default:
         return notYet(c, "/ai/make");
     }

@@ -15,7 +15,13 @@ import {
   FigureOutput,
   PlanOutput,
   WorkedExampleOutput,
+  GapReportOutput,
+  MockOutput,
+  ParsedItem,
+  ParseSchoolOutput,
+  TestTomorrowOutput,
 } from "../src/schemas.js";
+import { SAMPLE } from "../src/claude-fake.js";
 
 test("GenerateInput accepts each kind and rejects an unknown one", () => {
   expect(GenerateInput.safeParse({ kind: "paper", subject: "Maths", classLevel: "Class 10", topic: "Trigonometry", marks: 40, questions: 10 }).success).toBe(true);
@@ -120,11 +126,11 @@ test("MakeInput accepts each kind with its fields and nothing else", () => {
   expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: [] }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: ["A", "B", "C", "D"] }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "placement", classLevel: "7", subject: "English", chapters: ["Chapter 1", "Chapter 2"] }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "mock", classLevel: "10", subject: "Science", portions: ["Light", "Electricity"], pattern: { marks: 40, durationMinutes: 90 } }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "mock", classLevel: "10", subject: "Science", title: "Science pre-board", portions: ["Light", "Electricity"], pattern: { marks: 40, durationMinutes: 90 } }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "kn", week: { taught: ["Halves"], right: ["Halves"], practise: ["Quarters"], coming: [] }, tutorName: "Meera" }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "can_do", studentId, studentName: "Anu", language: "en", ladder: { reading: "words", writing: "letters", numbers: "to_99" }, tutorName: "Meera" }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "test_tomorrow", studentId, studentName: "Anu", language: "hinglish", subject: "Science", date: "2026-11-02", portions: "Chapters 1 to 3", tutorName: "Meera" }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "gap_report", studentId, marking: [{ question: 1, marks: 2, max: 5, note: "Sign error" }] }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "test_tomorrow", studentId, studentName: "Anu", language: "hinglish", subject: "Science", title: "Science test", date: "2026-11-02", portions: "Chapters 1 to 3", tutorName: "Meera", centreName: "Bright Minds" }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "gap_report", studentId, classLevel: "8", subject: "Science", daysLeft: 2, bySkill: [{ skill: "Balancing equations", right: 2, of: 5, note: "Sign error" }] }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "ta", week: { taught: [], right: [], practise: [], coming: [] }, tutorName: "Meera" }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "sheet", classLevel: "11", subject: "Mathematics", skills: ["Halves"] }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "poem", classLevel: "5" }).success).toBe(false);
@@ -137,22 +143,22 @@ test("a sheet takes its defaults", () => {
 test("the parsers take text or a photo, and a contents photo with its class and subject", () => {
   const img = { imageBase64: "AAAA", mediaType: "image/jpeg" };
   const c = centre;
-  expect(ParseSchoolInput.safeParse({ ...c, text: "Science test on 2 Nov, ch 1-3" }).success).toBe(true);
-  expect(ParseSchoolInput.safeParse({ ...c, image: img }).success).toBe(true);
+  expect(ParseSchoolInput.safeParse({ ...c, text: "Science test on 2 Nov, ch 1-3", today: "2026-10-07" }).success).toBe(true);
+  expect(ParseSchoolInput.safeParse({ ...c, image: img, today: "2026-10-07" }).success).toBe(true);
   expect(ParseSchoolInput.safeParse({ ...c }).success).toBe(false);
   expect(ParseTextbookInput.safeParse({ ...c, image: img, classLevel: "5", subject: "Mathematics" }).success).toBe(true);
   expect(ParseTextbookInput.safeParse({ ...c, image: img, classLevel: "11", subject: "Mathematics" }).success).toBe(false);
 });
 
 test("Scheme accepts a mock's key", () => {
-  expect(Scheme.safeParse({ kind: "mock", artefactId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60720" }).success).toBe(true);
-  expect(Scheme.safeParse({ kind: "mock", artefactId: "nope" }).success).toBe(false);
+  expect(Scheme.safeParse({ kind: "mock", generationId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60720" }).success).toBe(true);
+  expect(Scheme.safeParse({ kind: "mock", generationId: "nope" }).success).toBe(false);
 });
 
 test("a mock takes the board's blueprint as the syllabus data writes it", async () => {
   for (const file of ["cbse/10/social-science.json", "cbse/10/science.json", "karnataka/10/english.json"]) {
     const { blueprint } = await Bun.file(`${import.meta.dir}/../../supabase/syllabi/${file}`).json();
-    const parsed = MakeInput.safeParse({ ...centre, kind: "mock", classLevel: "10", subject: "Science", portions: ["All"], pattern: blueprint });
+    const parsed = MakeInput.safeParse({ ...centre, kind: "mock", classLevel: "10", subject: "Science", title: "Science pre-board", portions: ["All"], pattern: blueprint });
     expect({ file, ok: parsed.success }).toEqual({ file, ok: true });
   }
 });
@@ -205,4 +211,58 @@ test("the worked example has two to six steps and a slip; the brief has three mi
 test("PlanOutput names a chapter and a skill per group", () => {
   expect(PlanOutput.safeParse({ groups: [{ groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" }] }).success).toBe(true);
   expect(PlanOutput.safeParse({ groups: [{ groupNo: 1, chapter: "" }] }).success).toBe(false);
+});
+
+const image = { imageBase64: "AAAA", mediaType: "image/jpeg" };
+
+test("ParseSchoolInput takes the message or a photo with today's date, the schools and the class levels, nothing else", () => {
+  const ok = ParseSchoolInput.safeParse({ centreId, text: "Unit test on Friday", today: "2026-10-07", schools: ["Vidya Niketan"], classLevels: ["8", "10"] });
+  expect(ok.success).toBe(true);
+  expect(ParseSchoolInput.safeParse({ centreId, today: "2026-10-07" }).success).toBe(false);
+  expect(ParseSchoolInput.safeParse({ centreId, text: "x", today: "7 Oct" }).success).toBe(false);
+  expect(ParseSchoolInput.safeParse({ centreId, text: "x", today: "2026-10-07", studentId: centreId }).success).toBe(false);
+});
+
+test("ParsedItem allows a missing date, an end date, a class and a student as read, and holds portions to 500", () => {
+  const item = { kind: "exam", title: "Science unit test 3", subject: "Science", date: null, endDate: null, classLevel: "8", school: "Vidya Niketan", studentName: null, portions: "Ch 1 · Ch 2" };
+  expect(ParsedItem.safeParse(item).success).toBe(true);
+  expect(ParsedItem.safeParse({ ...item, portions: "x".repeat(501) }).success).toBe(false);
+  expect(ParsedItem.safeParse({ ...item, kind: "party" }).success).toBe(false);
+  expect(ParseSchoolOutput.safeParse({ items: [] }).success).toBe(true);
+});
+
+test("a mock takes its title, portions and the pattern; the output's questions carry a skill and the total is checked by the route", () => {
+  const input = { kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions", "Acids, bases and salts"], pattern: { marks: 25, durationMinutes: 40 } };
+  expect(MakeInput.safeParse(input).success).toBe(true);
+  expect(MakeInput.safeParse({ ...input, studentId: centreId }).success).toBe(false);
+  const out = MockOutput.safeParse(SAMPLE.mock);
+  expect(out.success).toBe(true);
+  expect(SAMPLE.mock.sections.flatMap((s) => s.questions).every((q) => q.skill.length > 0)).toBe(true);
+});
+
+test("a gap report takes the tallies by skill and the days left; its output has one to three days", () => {
+  const input = { kind: "gap_report", centreId, studentId: centreId, classLevel: "8", subject: "Science", daysLeft: 2, bySkill: [{ skill: "Balancing equations", right: 3, of: 10, note: "Changed the formulas" }] };
+  expect(MakeInput.safeParse(input).success).toBe(true);
+  expect(MakeInput.safeParse({ ...input, daysLeft: 0 }).success).toBe(false);
+  expect(GapReportOutput.safeParse(SAMPLE.gap_report).success).toBe(true);
+  expect(GapReportOutput.safeParse({ summary: "x", days: [] }).success).toBe(false);
+});
+
+test("test tomorrow names the student, the parent, the language, the exam and what to revise", () => {
+  const input = { kind: "test_tomorrow", centreId, studentId: centreId, studentName: "Dev Kumar", tutorName: "Meera Nair", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2", revise: "balancing equations" };
+  expect(MakeInput.safeParse(input).success).toBe(true);
+  expect(MakeInput.safeParse({ ...input, language: "ta" }).success).toBe(false);
+  expect(TestTomorrowOutput.safeParse(SAMPLE.test_tomorrow).success).toBe(true);
+});
+
+test("Scheme names a mock by its generation, and CheckPaperInput may name the student", () => {
+  expect(Scheme.safeParse({ kind: "mock", generationId: centreId }).success).toBe(true);
+  expect(Scheme.safeParse({ kind: "mock", artefactId: centreId }).success).toBe(false);
+  expect(CheckPaperInput.safeParse({ pages: [image], scheme: { kind: "typed", text: "Q1" }, studentName: "Dev", studentId: centreId }).success).toBe(true);
+});
+
+test("a mock's marking names the student, so their consent is always asked", () => {
+  const body = { pages: [image], scheme: { kind: "mock", generationId: centreId }, studentName: "Dev" };
+  expect(CheckPaperInput.safeParse(body).success).toBe(false);
+  expect(CheckPaperInput.safeParse({ ...body, studentId: centreId }).success).toBe(true);
 });

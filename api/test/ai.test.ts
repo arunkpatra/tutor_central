@@ -105,3 +105,21 @@ test("the record keeps the class's and the student's ids, so a result read back 
   await post(app(fakeClaude({ answer: SAMPLE.progress_note }), db), "/ai/generate", note);
   expect(db.started[1]).toMatchObject({ input: { studentId } });
 });
+
+const image = { imageBase64: jpeg, mediaType: "image/jpeg" };
+
+test("check-paper marks against a mock's key read from its generation, names the student for the gate, and needs their consent", async () => {
+  const generations = { "11111111-1111-1111-1111-111111111111": { kind: "mock" as const, output: JSON.stringify(SAMPLE.mock) } };
+  const db = fakeDb({ generations });
+  const body = { centreId, pages: [image], scheme: { kind: "mock", generationId: "11111111-1111-1111-1111-111111111111" }, studentName: "Dev Kumar", studentId: centreId };
+  const claude = fakeClaude({ answer: SAMPLE.check_paper });
+  const r = await post(app(claude, db), "/ai/check-paper", body);
+  expect(r.status).toBe(200);
+  expect(claude.requests[0]?.text).toContain("Section A");
+  expect(db.started[0]).toMatchObject({ kind: "check_paper", student: centreId, input: { scheme: { kind: "mock", generationId: "11111111-1111-1111-1111-111111111111" } } });
+  const refused = await post(app(claude, fakeDb({ generations, studentConsent: false })), "/ai/check-paper", body);
+  expect(refused.status).toBe(403);
+  const gone = await post(app(claude, fakeDb()), "/ai/check-paper", body);
+  expect(gone.status).toBe(400);
+  expect(await gone.json()).toEqual({ error: "That mock is no longer here. Type the scheme instead." });
+});

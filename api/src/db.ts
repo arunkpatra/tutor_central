@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 export type AIKind = V1Kind | V2Kind;
 export type V1Kind = "paper" | "homework" | "worksheet" | "progress_note" | "scan_register" | "check_paper";
 /** The V2 kinds (migration 0012): one monthly allowance per centre; note, can_do, test_tomorrow and gap_report need the
- *  student's consent (start_ai_generation, migration 0013). */
+ *  student's consent (start_ai_generation, migration 0013), as does check_paper naming a student (0021). */
 export type V2Kind =
   | "plan"
   | "sheet"
@@ -31,7 +31,7 @@ export type Finish = {
  *  (no service-role key, D11). */
 export type Db = {
   /** start_ai_generation: the consent, the day's limit and the pending record; the row's id. Throws DbFailure. */
-  start(token: string, args: { centre: string; kind: AIKind; input: unknown; model: string }): Promise<string>;
+  start(token: string, args: { centre: string; kind: AIKind; input: unknown; model: string; student?: string }): Promise<string>;
   /** The row finished as the API saw it. A failure is logged and swallowed: the tutor has their answer, and a row left
    *  pending still counts against the limit, which is the safe side. */
   finish(token: string, id: string, result: Finish): Promise<void>;
@@ -56,12 +56,13 @@ export function makeDb(url: string, anonKey: string): Db {
       auth: { persistSession: false, autoRefreshToken: false },
     });
   return {
-    async start(token, { centre, kind, input, model }) {
+    async start(token, { centre, kind, input, model, student }) {
       const { data, error } = await client(token).rpc("start_ai_generation", {
         p_centre: centre,
         p_kind: kind,
         p_input: input,
         p_model: model,
+        p_student: student ?? null,
       });
       if (error) {
         if (error.message.includes("ai_not_a_member")) throw new DbFailure("not_a_member");

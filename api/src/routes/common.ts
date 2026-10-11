@@ -15,6 +15,8 @@ export type Call<T> = {
   keep?: (parsed: T) => T;
   /** An answer that holds nothing to use (a page with no chapters): recorded as failed and refused in words. */
   empty?: (parsed: T) => boolean;
+  /** The student a personal call names: start_ai_generation asks their consent (D62). */
+  student?: string;
 };
 
 // What every AI route shares (moved from routes/ai.ts for routes/v2.ts): start the record (consent, the limit), call
@@ -29,7 +31,7 @@ export async function run<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centr
   const token = c.get("token");
   let id: string;
   try {
-    id = await deps.db.start(token, { centre, kind: call.kind, input: call.input, model: call.request.model });
+    id = await deps.db.start(token, { centre, kind: call.kind, input: call.input, model: call.request.model, student: call.student });
   } catch (e) {
     if (!(e instanceof DbFailure)) throw e;
     if (e.reason === "consent") return answer(c, errors.consent());

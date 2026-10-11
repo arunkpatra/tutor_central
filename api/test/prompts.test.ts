@@ -10,6 +10,11 @@ import { request as plan } from "../src/prompts/plan.js";
 import { request as sheet } from "../src/prompts/sheet.js";
 import { request as workedExample } from "../src/prompts/worked-example.js";
 import { GenerateInput } from "../src/schemas.js";
+import { SAMPLE } from "../src/claude-fake.js";
+import { request as gapReportRequest } from "../src/prompts/gap-report.js";
+import { request as mockRequest } from "../src/prompts/mock.js";
+import { request as parseSchoolRequest } from "../src/prompts/parse-school.js";
+import { request as testTomorrowRequest } from "../src/prompts/test-tomorrow.js";
 
 test("a paper asks Sonnet at medium effort for sections, marks and answers that add up", () => {
   const input = GenerateInput.parse({ kind: "paper", subject: "Mathematics", classLevel: "Class 10 Maths", topic: "Quadratic equations" });
@@ -141,4 +146,47 @@ test("the plan's topics ask Sonnet for a first chapter and skill per group for t
   expect(r.text).toContain("October");
   expect(r.text).toContain("Group 1: class 8 Science");
   expect(r.system).toContain("textbook");
+});
+test("parse-school asks for items as the school wrote them, with today's date and the centre's schools and classes, on Sonnet", () => {
+  const r = parseSchoolRequest({ text: "Dear Parents, Science Unit Test 3 for Class 8 will be held on Friday 16th Oct.", image: null, today: "2026-10-07", schools: ["Vidya Niketan"], classLevels: ["8", "10"] });
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.text).toContain("Today is 2026-10-07");
+  expect(r.text).toContain("Vidya Niketan");
+  expect(r.system).toContain("null");
+  expect(r.images).toBeUndefined();
+});
+
+test("parse-school with a photo sends it and no text", () => {
+  const r = parseSchoolRequest({ text: null, image: { mediaType: "image/jpeg", base64: "AAAA", bytes: 3 }, today: "2026-10-07", schools: [], classLevels: [] });
+  expect(r.images).toHaveLength(1);
+  expect(r.text).toContain("what the school sent");
+});
+
+test("the mock asks for the pattern's marks exactly, one skill per question, nothing from inside a book", () => {
+  const r = mockRequest({ kind: "mock", centreId: "c", classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } });
+  expect(r.model).toBe("claude-sonnet-5-5");
+  expect(r.text).toContain("25 marks");
+  expect(r.text).toContain("40 minutes");
+  expect(r.system).toContain("skill");
+});
+
+test("the gap report asks for one line per day left, from the tallies", () => {
+  const r = gapReportRequest({ kind: "gap_report", centreId: "c", studentId: "s", classLevel: "8", subject: "Science", daysLeft: 2, bySkill: [{ skill: "Balancing equations", right: 3, of: 10 }] });
+  expect(r.text).toContain("2 days");
+  expect(r.text).toContain("Balancing equations: 3 of 10");
+  expect(r.model).toBe("claude-sonnet-5-5");
+});
+
+test("test tomorrow writes in the parent's language with the English beside, on Haiku, signed by the tutor", () => {
+  const r = testTomorrowRequest({ kind: "test_tomorrow", centreId: "c", studentId: "s", studentName: "Dev Kumar", tutorName: "Meera Nair", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2", revise: "balancing equations" });
+  expect(r.model).toBe("claude-haiku-5-5");
+  expect(r.text).toContain("Hindi");
+  expect(r.text).toContain("Thursday 8 October");
+  expect(r.system).toContain("English");
+});
+
+test("schemeText reads a mock's key with its sections", () => {
+  const text = schemeText(SAMPLE.mock, "mock");
+  expect(text).toContain("Section A");
+  expect(text).toContain("Q1 (1 mark)");
 });
