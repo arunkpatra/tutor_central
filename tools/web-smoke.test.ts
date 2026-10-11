@@ -20,6 +20,7 @@ const GOOD: Record<string, Answer> = {
   "https://tutorcentral.in/privacy": { status: 200, body: html("Privacy · Tutor Central") },
   "https://tutorcentral.in/terms": { status: 200, body: html("Terms · Tutor Central") },
   "https://tutorcentral.in/support": { status: 200, body: html("Support · Tutor Central") },
+  "https://tutorcentral.in/trust": { status: 200, body: html("Trust · Tutor Central") },
   "https://tutorcentral.in/privacy/": { status: 308, location: "/privacy" },
   "http://tutorcentral.in/": { status: 308, location: "https://tutorcentral.in/" },
   "https://www.tutorcentral.in/": { status: 308, location: "https://tutorcentral.in/" },
@@ -27,6 +28,11 @@ const GOOD: Record<string, Answer> = {
 
 test("a right site has no problems", async () => {
   expect(await once("https://tutorcentral.in", "abc", site(GOOD))).toEqual([]);
+});
+
+test("the trust page must be there too (Phase 15)", async () => {
+  const { "https://tutorcentral.in/trust": _, ...without } = GOOD;
+  expect((await once("https://tutorcentral.in", "abc", site(without))).length).toBeGreaterThan(0);
 });
 
 test("every page must be there with the commit; an unknown path is 404 with the not-found words", async () => {

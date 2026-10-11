@@ -4,10 +4,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import Privacy from "../../app/privacy/page";
 import Support from "../../app/support/page";
 import Terms from "../../app/terms/page";
+import Trust from "../../app/trust/page";
 import { PRIVACY } from "../../content/privacy";
 import { EMAIL } from "../../content/site";
 import { SUPPORT } from "../../content/support";
 import { TERMS } from "../../content/terms";
+import { TRUST } from "../../content/trust";
 
 function inOrder(html: string, headings: readonly string[]) {
   let at = 0;
@@ -91,4 +93,34 @@ test("support's last four answers are Help's in the app, word for word", async (
     expect(swift, q.question).toContain(`"${q.question}"`);
     expect(swift, q.question).toContain(q.answer);
   }
+});
+
+test("trust says what it must, in order, with no fourth link in the header (P15-Web-Trust)", () => {
+  const html = renderToStaticMarkup(createElement(Trust));
+  expect(html).toContain(TRUST.title);
+  expect(html).not.toContain('aria-current="page"');
+  inOrder(
+    html,
+    TRUST.sections.map((s) => s.heading),
+  );
+  // Each claim is something the app does (information-architecture.md, "Phase 15 boards", the claims table).
+  for (const words of [
+    "GoodGround LLP, Bangalore",
+    "No textbook’s text is kept",
+    "Nothing about any student goes with them",
+    "only after the student’s parent has agreed",
+    "Claude, by Anthropic",
+    "never uses it to train its models and normally deletes it within 30 days",
+    "the day and the phone number it came from",
+    "Records are kept in India",
+    'href="/privacy"',
+  ])
+    expect(html, words).toContain(words);
+  expect(html).not.toContain("[OWNER:");
+});
+
+test("privacy's children's details point to the trust page", () => {
+  const html = renderToStaticMarkup(createElement(Privacy));
+  expect(html).toContain('href="/trust"');
+  expect(html).toContain("only after their parent has agreed");
 });
