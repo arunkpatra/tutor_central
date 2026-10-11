@@ -1269,9 +1269,11 @@ Row 24 of the canvas (y 51200; the title note at 50900); sources `mockups/P14-*`
 | Paste a message (U41): Check what was read with the source well holding the system Paste button and the line "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do."; Add waiting | `P14-School-Paste` |
 | The School tab filtered to one student (U42), from the page's See all: the chip row under the segmented control ("Dev's items" with his initials; Show all) and his items alone; a footnote on what reaches him | `P14-School-Student` |
 | The exam's sheet with the preparation window (U43): a setting row "Preparation · 14 days before" between Date and Portions, its value opening the system wheel of 7, 10, 14 and 21; the helper "Revision starts this many days before the test. 14 unless you change it." | `P14-School-Item-Window` |
+| Can now do in a week no step moved (U46, approved 2026-10-11, session 30): the strip headed "On the ladder", "No change this week", the current step marked | `P14-CanNowDo-NoChange` |
 
 Phase 14 builds these states (`plan/phase-14-plan.md` "Launch states" has the full list with the 10.6 and 10.3 boards'):
-`marks-reading`; `marks-confirm` (both); `marks-edit`; `school-paste`; `school-student`; `school-item-window`.
+`marks-reading`; `marks-confirm` (both); `marks-edit`; `school-paste`; `school-student`; `school-item-window`;
+`note-can-do-no-change` (U46).
 
 What the boards settle:
 

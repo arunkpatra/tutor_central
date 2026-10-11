@@ -9,8 +9,10 @@ cadence, the sent log, not on track with the next step and the message to the pa
 D67's model table and D68's leftovers (U41 to U45, the minors, the lost connection); hand runs 1 to 15 against the local
 stack; the cost run (15 real calls, ₹2.52); a fresh review on Fable 5.1 with every finding fixed or ruled (#148, #149); two
 deploys (0023 and 0024; 0025); TestFlight 1.0.0 (25). The record in `plan/sessions/030/`.
-**Next:** Phase 15's plan (`phase-15-make-and-polish.md`), on Fable 5.1 (D17), with the boards it needs. The owner tests the
-builds together after the last phase (D68).
+After the close the owner approved the review's two rulings and took U46 and U47 (#150, #151; U46's board
+P14-CanNowDo-NoChange approved); `main` is ahead of build 25 by those two.
+**Next:** Phase 15's plan from `resume/029-phase-15-plan.md`, on Fable 5.1 (D17). The owner tests the builds together after
+the last phase (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -88,9 +90,8 @@ identity). The remote holds `main`,
 
 ## Open items
 
-- **Phase 14 closed with nothing of its own open (D68).** Two review findings ruled, not changed (the not-on-track message
-  is not held by the cadence; a copy made offline is not logged), in `plan/sessions/030/ledger.md`; U46 and U47 on the polish
-  list for the owner. CI's run 38148815276 crashed once in SchoolTests after every suite passed (not reproduced; watch for it).
+- **Phase 14 closed with nothing of its own open (D68).** Two review findings ruled, not changed, and approved by the owner
+  (the not-on-track message is not held by the cadence; a copy made offline is not logged); U46 and U47 done (#150, #151). CI's run 38148815276 crashed once in SchoolTests after every suite passed (not reproduced; watch for it).
 - **CI warnings kept (the owner's ask, #127):** `VNDetectBarcodesRequestRevision1` (QRDecoder's deliberate fallback for
   the simulator and CI), the AuthorizationController underscored-module note (Apple's SDK), and the runner's Homebrew lines.
 - **The cost of marking:** ₹8.18 a paper on Opus (two pages) is most of an exam's cost; D64's price reads it; D67 lets the

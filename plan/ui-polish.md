@@ -47,13 +47,13 @@ screen, several as a polish slice, or not at all.
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
 | U34 | 2026-10-10 | Students, the empty list (P10-Students-Empty) | Add a student and Scan paper register sit side by side (the Kit's empty state); the board stacks them at full width | Session 24 (Task 13) |
 | U40 | 2026-10-11 | A student's page, scrolled | Scrolled under the status bar, the parent's row shows through the time without the glass the other pushed screens draw | Session 26, hand run 7's screenshot |
-| U46 | 2026-10-11 | Can now do, an unchanged week | The strip is headed "Moved up" while its line reads "No change this week" (P10-CanNowDo draws only the moved week) | Session 30, the cost run (Dhruv) |
-| U47 | 2026-10-11 | The note, offline, a note kept this week | For about 20 s the screen reads "Writing <name>'s note" while the server is tried before the copy opens | Session 30, hand run 15 |
 
 ## Done
 
 | # | Done | Pull request | What changed |
 |---|---|---|---|
+| U46 | 2026-10-11 | #151 | Can now do in a week no step moved is headed "On the ladder" with "No change this week" (P14-CanNowDo-NoChange) |
+| U47 | 2026-10-11 | #150 | The note opens from the copy on this iPhone at once, then the server's; no 20 s of "Writing" on a connection that hangs |
 | U41 | 2026-10-11 | #146 | Paste a message waits for the system's Paste button: iOS asks nothing (P14-School-Paste) |
 | U42 | 2026-10-11 | #146 | The student page's School See all opens the School tab filtered to the student, with Show all (P14-School-Student) |
 | U43 | 2026-10-11 | #146 | A kept exam's sheet has Preparation, 7, 10, 14 or 21 days before (P14-School-Item-Window) |

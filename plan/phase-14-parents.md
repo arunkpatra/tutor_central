@@ -102,5 +102,5 @@ offline), the cost run (the English's limit, the refusal's words) and the review
 that failed first. Two review findings were ruled, not changed: the not-on-track message is not held by the cadence (the
 tutor's deliberate send, counted), and a copy made offline is not logged.
 
-**Left open.** Nothing of the phase's own. The polish rows U46 and U47 (Moved up's heading on an unchanged week; the
-note's 20 s "Writing" while a kept note is looked for offline); the device tests T11 to T14 wait for the tester.
+**Left open.** Nothing of the phase's own. U46 and U47, found in the phase, were taken after the close (#150, #151); the two
+review rulings were approved by the owner; the device tests T11 to T14 wait for the tester.

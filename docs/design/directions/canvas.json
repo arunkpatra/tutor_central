@@ -2579,6 +2579,13 @@
    "w": 393,
    "x": 2838,
    "y": 51200
+  },
+  "P14-CanNowDo-NoChange.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 3311,
+   "y": 51200,
+   "title": "Phase 14 · Can now do in a week no step moved (U46): the strip headed \"On the ladder\", \"No change this week\", the current step marked · dark"
   }
  },
  "createdOnFiles": {
@@ -2784,7 +2791,7 @@
   },
   "p14_1": {
    "kind": "title1",
-   "maxW": 2800,
+   "maxW": 3300,
    "w": 240,
    "x": 0,
    "y": 50900,
@@ -3156,7 +3163,8 @@
   "P14-Marks-Edit.dc.html",
   "P14-School-Paste.dc.html",
   "P14-School-Student.dc.html",
-  "P14-School-Item-Window.dc.html"
+  "P14-School-Item-Window.dc.html",
+  "P14-CanNowDo-NoChange.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
