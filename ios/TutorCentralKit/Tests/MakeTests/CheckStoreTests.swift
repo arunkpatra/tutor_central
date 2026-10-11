@@ -109,21 +109,25 @@ import Testing
         #expect(unconsented.shareText.isEmpty, "nothing to share before a check")
     }
 
+    /// The answer comes a second after the call, so a slow runner still cancels before it (CI saw the 200 ms one land
+    /// first); the steps wait on the store, not on a clock.
     @Test func aSecondCheckWhileOneRunsIsRefusedAndCancelDropsTheLateAnswer() async throws {
         let ai = FakeAIRepository()
-        ai.delay = .milliseconds(200)
+        ai.delay = .seconds(1)
         let store = await Self.make(ai: ai)
         store.addPages([Self.page])
         store.scheme = .typed("Q1 (1) b")
         store.begin()
-        try await Task.sleep(for: .milliseconds(30))
+        while ai.checks.isEmpty {
+            await Task.yield()
+        }
         #expect(store.stage == .checking && ai.checks.count == 1)
         store.begin()
-        try await Task.sleep(for: .milliseconds(30))
+        await Task.yield()
         #expect(ai.checks.count == 1, "one check at a time")
         store.cancel()
         #expect(store.stage == .scheme)
-        try await Task.sleep(for: .milliseconds(300))
+        try await Task.sleep(for: .milliseconds(1300))
         #expect(store.stage == .scheme && store.result == nil, "a cancelled check's answer is dropped")
     }
 
