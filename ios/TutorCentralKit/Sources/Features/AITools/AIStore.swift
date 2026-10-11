@@ -54,6 +54,8 @@ import UIKit
 
     public internal(set) var workspace: Workspace
     public var forms: [GenerationKind: GenerateRequest] = [:]
+    /// Where the last class and subject of each kind are kept on this iPhone (wiped at sign-out); nil keeps nothing.
+    @ObservationIgnored public var formDefaults: UserDefaults?
     public internal(set) var history: [Generation] = []
     public private(set) var historyLoaded = false
     public private(set) var historyError: String?
@@ -162,18 +164,18 @@ import UIKit
         return read
     }
 
-    /// The draft of a kind, else a new form on the first active class with its subject.
+    /// The draft of a kind, else a new form by class level (P12-Form-Paper-Class): the last class chosen for the kind,
+    /// else the one most students are in; the last subject typed for the kind. No batch is needed.
     public func form(for kind: GenerationKind) -> GenerateRequest {
         if let draft = forms[kind] {
             return draft
         }
-        let first = register.activeClasses.first
-        let classID = first?.id
-        let subject = first?.subject ?? ""
+        let level = startingLevel(for: kind)
+        let subject = Self.remembered(kind: kind, in: formDefaults)?.subject ?? ""
         switch kind {
-        case .paper: return .paper(PaperForm(classID: classID, subject: subject))
-        case .homework: return .homework(HomeworkForm(classID: classID, subject: subject))
-        case .worksheet: return .worksheet(WorksheetForm(classID: classID, subject: subject))
+        case .paper: return .paper(PaperForm(classLevel: level, subject: subject))
+        case .homework: return .homework(HomeworkForm(classLevel: level, subject: subject))
+        case .worksheet: return .worksheet(WorksheetForm(classLevel: level, subject: subject))
         case .progressNote: return .progressNote(NoteForm())
         }
     }

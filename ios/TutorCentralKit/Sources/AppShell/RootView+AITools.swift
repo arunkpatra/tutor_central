@@ -18,6 +18,8 @@ extension RootView {
         )
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
         made.historyCache = cachedRead(workspace, "ai-history")
+        // The last class and subject of each kind, kept on this iPhone (wiped at sign-out); the fixtures keep none.
+        made.formDefaults = deps.cachesRegister ? .standard : nil
         if let launch, Self.aiStates.contains(launch) {
             made.forms = Fixtures.aiForms(for: launch)
         }

@@ -26,7 +26,8 @@ struct GenerateBody: Encodable {
         kind = request.kind.rawValue
         centreId = context.centre.uuidString.lowercased()
         subject = context.subject
-        classLevel = context.className ?? "No class"
+        // The form's class level ("Class 10"); a form from a batch before, the batch's name.
+        classLevel = request.classLevel?.title ?? context.className ?? "No class"
         classId = request.classID?.uuidString.lowercased()
         switch request {
         case let .paper(form):

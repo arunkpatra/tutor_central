@@ -47,7 +47,8 @@ extension RootView {
 
     /// The AI Assistant's states, all on the More tab's stack.
     static let aiStates: Set<LaunchState> = [
-        .aiAssistant, .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
+        .aiAssistant, .aiAssistantEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet,
+        .aiNote, .aiNoteStudent, .aiGenerating,
         .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
         .aiHistory,
         .aiHistoryEmpty,
@@ -106,7 +107,8 @@ extension RootView {
         let note = FakeAIHistoryRepository.id(2)
         return switch state {
         case .aiAssistant, .aiAssistantEmpty: [.aiAssistant]
-        case .aiPaper, .aiGenerating, .aiGenerateFailed: [.aiAssistant, .aiForm(.paper)]
+        case .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiGenerating, .aiGenerateFailed:
+            [.aiAssistant, .aiForm(.paper)]
         case .aiHomework: [.aiAssistant, .aiForm(.homework)]
         case .aiWorksheet: [.aiAssistant, .aiForm(.worksheet)]
         case .aiNote, .aiNoteStudent: [.aiAssistant, .aiForm(.progressNote)]
@@ -126,13 +128,14 @@ extension RootView {
         case .aiResultRegenerating: .regenerating
         case .aiNoteSend: .noteSend
         case .aiResultCopied: .copied
+        case .aiPaperClassWheel: .classWheel
         default: nil
         }
     }
 
     /// The forms the boards draw with the focus ring on the field being typed in.
     static func showsFocus(_ state: LaunchState) -> Bool {
-        [.aiPaper, .aiHomework, .aiWorksheet, .aiNote].contains(state)
+        [.aiPaper, .aiPaperNoClass, .aiHomework, .aiWorksheet, .aiNote].contains(state)
     }
 
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.

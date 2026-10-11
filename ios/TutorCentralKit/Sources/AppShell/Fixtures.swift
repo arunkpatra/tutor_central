@@ -183,7 +183,8 @@ public enum Fixtures {
              .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
              .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
              .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
-             .aiAssistantEmpty, .aiPaper, .aiHomework, .aiWorksheet, .aiNote, .aiNoteStudent, .aiGenerating,
+             .aiAssistantEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet, .aiNote,
+             .aiNoteStudent, .aiGenerating,
              .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
              .aiHistory,
              .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview,
@@ -304,6 +305,8 @@ extension Fixtures {
         case .studentsFew: (FakeStudentsRepository.few, [])
         case .studentArchived: (FakeStudentsRepository.seed.map(archivingAkshita), FakeClassesRepository.seed)
         case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
+        // P12-Form-Paper-NoClass: no student has a class yet and there is no batch, so the paper starts on none.
+        case .aiPaperNoClass: (FakeStudentsRepository.seed.map(withoutClass), [])
         case _ where planStates.contains(state) || state == .todayNoBatch: (
                 planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
@@ -314,5 +317,15 @@ extension Fixtures {
             )
         default: (FakeStudentsRepository.seed, FakeClassesRepository.seed)
         }
+    }
+}
+
+extension Fixtures {
+    /// A student as entered before their class was set.
+    static func withoutClass(_ student: Student) -> Student {
+        var unset = student
+        unset.classLevel = nil
+        unset.classID = nil
+        return unset
     }
 }

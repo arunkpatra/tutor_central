@@ -181,7 +181,13 @@ public struct Generation: Hashable, Sendable, Identifiable, Codable {
     public func line(className: (UUID?) -> String?, calendar: Calendar) -> String {
         let about = kind == .progressNote ? studentID : request?.classID
         let day = Day(createdAt, calendar: calendar)
-        return "\(kind.title) · \(className(about) ?? "No class") · \(day.shortWeekdayText)"
+        return "\(kind.title) · \(self.className(batchName: { _ in className(about) })) · \(day.shortWeekdayText)"
+    }
+
+    /// The class the work is for: its level ("Class 10"); one made from a batch before, the batch's name; else "No
+    /// class".
+    public func className(batchName: (UUID?) -> String?) -> String {
+        request?.classLevel?.title ?? batchName(request?.classID) ?? "No class"
     }
 
     /// The hero's line: "10 questions · 20 marks · Medium · created today, 18:32"; a note "Warm · written Tue 6 Oct,

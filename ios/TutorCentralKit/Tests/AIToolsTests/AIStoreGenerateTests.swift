@@ -7,7 +7,7 @@ import Testing
 @MainActor struct AIStoreGenerateTests {
     static let maths = FakeClassesRepository.maths.id
     static let paper = GenerateRequest.paper(PaperForm(
-        classID: maths,
+        classLevel: .ten,
         subject: "Mathematics",
         topic: "Quadratic equations"
     ))
@@ -100,7 +100,9 @@ import Testing
     @Test func theContextNamesTheClassTheStudentAndTheAttendance() async throws {
         let store = await AIStoreTests.make()
         let context = store.context(for: Self.paper)
-        #expect(context.className == "Class 10 Maths" && context.subject == "Mathematics")
+        #expect(context.className == nil && context.subject == "Mathematics", "a paper by level names no batch")
+        let fromBatch = store.context(for: .paper(PaperForm(classID: Self.maths, subject: "Maths", topic: "Sets")))
+        #expect(fromBatch.className == "Class 10 Maths" && fromBatch.subject == "Maths")
         #expect(context.tutorName == "Meera Nair" && context.centreName == "Bright Minds Tuition")
         let hemanth = try #require(FakeStudentsRepository.seed.first { $0.name == "Hemanth Reddy" })
         let note = store.context(for: .progressNote(NoteForm(studentID: hemanth.id, observations: "x", tone: .warm)))
@@ -108,12 +110,12 @@ import Testing
         #expect(note.className == "Class 10 Maths" && note.subject == "Mathematics")
     }
 
-    @Test func aNewFormStartsOnTheFirstActiveClassWithItsSubject() async {
+    @Test func aNewFormStartsOnAClassLevelWithNoBatchAndNoSubjectYet() async {
         let store = await AIStoreTests.make()
         guard case let .paper(form) = store.form(for: .paper) else {
             Issue.record("not a paper form")
             return
         }
-        #expect(form.classID == FakeClassesRepository.maths.id && form.subject == "Mathematics" && form.topic.isEmpty)
+        #expect(form.classID == nil && form.classLevel != nil && form.subject.isEmpty && form.topic.isEmpty)
     }
 }

@@ -66,7 +66,10 @@ public enum Tone: String, Hashable, Sendable, CaseIterable, Codable {
 }
 
 public struct PaperForm: Hashable, Sendable, Codable {
+    /// The batch the form took its class from (V1, before students had a level); new forms leave it nil.
     public var classID: UUID?
+    /// The class the work is for (P12-Form-Paper-Class): sent to the AI as its title.
+    public var classLevel: ClassLevel?
     public var subject: String
     public var topic: String
     public var level: Level
@@ -77,10 +80,12 @@ public struct PaperForm: Hashable, Sendable, Codable {
     public static let marksRange = 5 ... 100
 
     public init(
-        classID: UUID? = nil, subject: String = "", topic: String = "", level: Level = .medium, questions: Int = 10,
+        classID: UUID? = nil, classLevel: ClassLevel? = nil, subject: String = "", topic: String = "",
+        level: Level = .medium, questions: Int = 10,
         marks: Int = 20
     ) {
         self.classID = classID
+        self.classLevel = classLevel
         self.subject = subject
         self.topic = topic
         self.level = level
@@ -90,7 +95,10 @@ public struct PaperForm: Hashable, Sendable, Codable {
 }
 
 public struct HomeworkForm: Hashable, Sendable, Codable {
+    /// The batch the form took its class from (V1, before students had a level); new forms leave it nil.
     public var classID: UUID?
+    /// The class the work is for (P12-Form-Paper-Class): sent to the AI as its title.
+    public var classLevel: ClassLevel?
     public var subject: String
     public var topic: String
     public var level: Level
@@ -99,13 +107,14 @@ public struct HomeworkForm: Hashable, Sendable, Codable {
     public static let questionsRange = 1 ... 30
 
     public init(
-        classID: UUID? = nil,
+        classID: UUID? = nil, classLevel: ClassLevel? = nil,
         subject: String = "",
         topic: String = "",
         level: Level = .medium,
         questions: Int = 5
     ) {
         self.classID = classID
+        self.classLevel = classLevel
         self.subject = subject
         self.topic = topic
         self.level = level
@@ -114,7 +123,10 @@ public struct HomeworkForm: Hashable, Sendable, Codable {
 }
 
 public struct WorksheetForm: Hashable, Sendable, Codable {
+    /// The batch the form took its class from (V1, before students had a level); new forms leave it nil.
     public var classID: UUID?
+    /// The class the work is for (P12-Form-Paper-Class): sent to the AI as its title.
+    public var classLevel: ClassLevel?
     public var subject: String
     public var topic: String
     public var level: Level
@@ -124,10 +136,12 @@ public struct WorksheetForm: Hashable, Sendable, Codable {
     public static let questionsRange = 1 ... 40
 
     public init(
-        classID: UUID? = nil, subject: String = "", topic: String = "", level: Level = .medium, questions: Int = 12,
+        classID: UUID? = nil, classLevel: ClassLevel? = nil, subject: String = "", topic: String = "",
+        level: Level = .medium, questions: Int = 12,
         withAnswers: Bool = true
     ) {
         self.classID = classID
+        self.classLevel = classLevel
         self.subject = subject
         self.topic = topic
         self.level = level
@@ -179,6 +193,16 @@ public enum GenerateRequest: Hashable, Sendable, Codable {
         }
     }
 
+    /// The class level a paper, homework or worksheet is for; nil for a note or a form from before.
+    public var classLevel: ClassLevel? {
+        switch self {
+        case let .paper(form): form.classLevel
+        case let .homework(form): form.classLevel
+        case let .worksheet(form): form.classLevel
+        case .progressNote: nil
+        }
+    }
+
     public var level: Level? {
         switch self {
         case let .paper(form): form.level
@@ -188,13 +212,16 @@ public enum GenerateRequest: Hashable, Sendable, Codable {
         }
     }
 
-    /// Create is enabled: a class chosen, a subject and a topic typed (trimmed, within their limits), or a student
+    /// Create is enabled: a class level chosen (or, from before, a batch), a subject and a topic typed (trimmed, within
+    /// their limits), or a
+    /// student
     /// chosen and observations typed (1 to 2000).
     public var isValid: Bool {
         switch self {
-        case let .paper(form): Self.isValid(classID: form.classID, subject: form.subject, topic: form.topic)
-        case let .homework(form): Self.isValid(classID: form.classID, subject: form.subject, topic: form.topic)
-        case let .worksheet(form): Self.isValid(classID: form.classID, subject: form.subject, topic: form.topic)
+        case let .paper(form): Self.isValid(form.classLevel, form.classID, subject: form.subject, topic: form.topic)
+        case let .homework(form): Self.isValid(form.classLevel, form.classID, subject: form.subject, topic: form.topic)
+        case let .worksheet(form):
+            Self.isValid(form.classLevel, form.classID, subject: form.subject, topic: form.topic)
         case let .progressNote(form):
             form.studentID != nil && Self.within(form.observations, limit: NoteForm.observationsLimit)
         }
@@ -214,8 +241,12 @@ public enum GenerateRequest: Hashable, Sendable, Codable {
         return "Writing \(questions) on \(topic.trimmingCharacters(in: .whitespacesAndNewlines))"
     }
 
-    private static func isValid(classID: UUID?, subject: String, topic: String) -> Bool {
-        classID != nil && within(subject, limit: subjectLimit) && within(topic, limit: topicLimit)
+    /// A class level, or for a request made before levels (History's Create again), the batch it was made from.
+    private static func isValid(_ classLevel: ClassLevel?, _ classID: UUID?, subject: String, topic: String) -> Bool {
+        (classLevel != nil || classID != nil) && within(subject, limit: subjectLimit) && within(
+            topic,
+            limit: topicLimit
+        )
     }
 
     private static func within(_ text: String, limit: Int) -> Bool {

@@ -29,6 +29,8 @@ public struct GenerationRow: Decodable, Sendable {
 /// The recorded body of a generation (api/src/schemas.ts, GenerateInput, with the class's and student's ids).
 private struct StoredInput: Decodable {
     let classId: UUID?
+    /// "Class 10" for a form by level; a batch's name for one from before (no level then).
+    let classLevel: String?
     let subject: String?
     let topic: String?
     let level: Level?
@@ -43,19 +45,23 @@ private struct StoredInput: Decodable {
         let subject = subject ?? ""
         let topic = topic ?? ""
         let level = level ?? .medium
+        let byLevel = classLevel.flatMap(ClassLevel.init(title:))
         switch kind {
         case .paper:
             return .paper(PaperForm(
-                classID: classId, subject: subject, topic: topic, level: level, questions: questions ?? 10,
+                classID: classId, classLevel: byLevel, subject: subject, topic: topic, level: level,
+                questions: questions ?? 10,
                 marks: marks ?? 20
             ))
         case .homework:
             return .homework(HomeworkForm(
-                classID: classId, subject: subject, topic: topic, level: level, questions: questions ?? 5
+                classID: classId, classLevel: byLevel, subject: subject, topic: topic, level: level,
+                questions: questions ?? 5
             ))
         case .worksheet:
             return .worksheet(WorksheetForm(
-                classID: classId, subject: subject, topic: topic, level: level, questions: questions ?? 12,
+                classID: classId, classLevel: byLevel, subject: subject, topic: topic, level: level,
+                questions: questions ?? 12,
                 withAnswers: withAnswers ?? true
             ))
         case .progressNote:

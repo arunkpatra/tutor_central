@@ -6,6 +6,8 @@ import SwiftUI
 /// Create again tapped (P6-Result-Regenerating), the student picker or the Send sheet open.
 public enum AIBoardState: Hashable, Sendable {
     case generating, failed, regenerating, noteSend, studentPicker
+    /// The Class tile open on the class wheel (P12-Form-Paper-ClassWheel).
+    case classWheel
     /// The result with Copy in its done state (U33-Result-Copied).
     case copied
 }
@@ -107,7 +109,7 @@ public struct GenerateFormView: View {
         }
         .task {
             await store.prepare()
-            fillClassIfNone()
+            fillLevelIfNone()
         }
         .task(id: note.studentID) {
             await store.prepare()
@@ -147,17 +149,23 @@ public struct GenerateFormView: View {
     @ViewBuilder private var fields: some View {
         switch kind {
         case .paper:
-            classFields(classID: $paper.classID, subject: $paper.subject, topic: $paper.topic, level: $paper.level)
+            classFields(
+                classLevel: $paper.classLevel,
+                subject: $paper.subject,
+                topic: $paper.topic,
+                level: $paper.level
+            )
             NumberTile(label: "Questions", value: $paper.questions, range: PaperForm.questionsRange)
             NumberTile(label: "Marks", value: $paper.marks, range: PaperForm.marksRange)
         case .homework:
             classFields(
-                classID: $homework.classID, subject: $homework.subject, topic: $homework.topic, level: $homework.level
+                classLevel: $homework.classLevel, subject: $homework.subject, topic: $homework.topic,
+                level: $homework.level
             )
             NumberTile(label: "Questions", value: $homework.questions, range: HomeworkForm.questionsRange)
         case .worksheet:
             classFields(
-                classID: $worksheet.classID, subject: $worksheet.subject, topic: $worksheet.topic,
+                classLevel: $worksheet.classLevel, subject: $worksheet.subject, topic: $worksheet.topic,
                 level: $worksheet.level
             )
             NumberTile(label: "Questions", value: $worksheet.questions, range: WorksheetForm.questionsRange)
@@ -172,16 +180,10 @@ public struct GenerateFormView: View {
 
     @ViewBuilder
     private func classFields(
-        classID: Binding<UUID?>, subject: Binding<String>, topic: Binding<String>, level: Binding<Level>
+        classLevel: Binding<ClassLevel?>, subject: Binding<String>, topic: Binding<String>, level: Binding<Level>
     ) -> some View {
-        ClassTile(classes: store.register.activeClasses, selected: classID.wrappedValue) { classroom in
-            let old = store.register.classroom(classID.wrappedValue)?.subject ?? ""
-            if subject.wrappedValue.isEmpty || subject.wrappedValue == old {
-                subject.wrappedValue = classroom.subject ?? ""
-            }
-            classID.wrappedValue = classroom.id
-        }
-        TextWell(label: "Subject", text: subject, helper: AIWords.subjectHelper, capitalisation: .words)
+        ClassLevelTile(classLevel: classLevel, opensWheel: boardState == .classWheel)
+        TextWell(label: "Subject", text: subject, placeholder: "Mathematics, Science…", capitalisation: .words)
         TextWell(
             label: "Topic", text: topic, capitalisation: .sentences, showsFocus: showsFocus,
             autofocus: !showsFocus && topic.wrappedValue.isEmpty
@@ -250,13 +252,14 @@ public struct GenerateFormView: View {
     }
 
     /// A new form opened before the register was read: the first active class and its subject, once it is.
-    private func fillClassIfNone() {
-        guard let first = store.register.activeClasses.first else { return }
-        let subject = first.subject ?? ""
+    /// A form made before the register was read starts on its class now (the last chosen, else the class most
+    /// students are in); a class already chosen stays.
+    private func fillLevelIfNone() {
+        guard let level = store.startingLevel(for: kind) else { return }
         switch kind {
-        case .paper where paper.classID == nil: (paper.classID, paper.subject) = (first.id, subject)
-        case .homework where homework.classID == nil: (homework.classID, homework.subject) = (first.id, subject)
-        case .worksheet where worksheet.classID == nil: (worksheet.classID, worksheet.subject) = (first.id, subject)
+        case .paper where paper.classLevel == nil: paper.classLevel = level
+        case .homework where homework.classLevel == nil: homework.classLevel = level
+        case .worksheet where worksheet.classLevel == nil: worksheet.classLevel = level
         default: break
         }
     }

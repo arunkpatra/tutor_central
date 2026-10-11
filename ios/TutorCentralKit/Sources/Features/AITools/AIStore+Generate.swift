@@ -95,6 +95,7 @@ public extension AIStore {
         }
         if regenerating == nil {
             forms[request.kind] = request
+            remember(request)
         }
         failure = nil
         lastRequest = (request, regenerating)
