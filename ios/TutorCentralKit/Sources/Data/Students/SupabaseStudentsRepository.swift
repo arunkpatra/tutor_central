@@ -10,7 +10,7 @@ public final class SupabaseStudentsRepository: StudentsRepository {
     static let decoder = PostgRESTDecoder.make()
     private static let columns = "id, name, class_id, monthly_fee, parent_name, parent_phone, date_of_birth, gender, "
         + "notes, archived_at, class_level, school_id, board, message_language, consent_at, consent_phone, "
-        + "consent_how, track_status, track_reasons, track_since, created_at"
+        + "consent_how, track_status, track_reasons, track_since, created_at, next_step"
 
     public init(client: SupabaseClient, calendar: Calendar = DayHeading.india) {
         self.client = client
@@ -87,6 +87,13 @@ public final class SupabaseStudentsRepository: StudentsRepository {
     public func setConsent(id: UUID, _ consent: ConsentRecord?) async throws -> Student {
         let response = try await client.from("students").update(Self.consentValues(consent)).eq("id", value: id)
             .select(Self.columns).single().execute()
+        return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
+    }
+
+    public func setNextStep(id: UUID, _ step: NextStep?) async throws -> Student {
+        let response = try await client.from("students")
+            .update(["next_step": step.map { AnyJSON.string($0.rawValue) } ?? .null])
+            .eq("id", value: id).select(Self.columns).single().execute()
         return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
     }
 

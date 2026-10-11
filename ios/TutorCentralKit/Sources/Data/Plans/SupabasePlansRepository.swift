@@ -72,6 +72,16 @@ public final class SupabasePlansRepository: PlansRepository {
         return try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
     }
 
+    public func notes(centre: UUID, students: [UUID], since: Date) async throws -> [Artefact] {
+        guard !students.isEmpty else { return [] }
+        let response = try await client.from("artefacts").select(ArtefactRow.columns).eq("centre_id", value: centre)
+            .in("kind", values: [ArtefactKind.note.rawValue, ArtefactKind.canDo.rawValue])
+            .in("student_id", values: students.map(\.uuidString))
+            .gte("created_at", value: ISO8601DateFormatter().string(from: since))
+            .order("created_at", ascending: false).execute()
+        return try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
+    }
+
     public func setContent(_ content: ArtefactContent, artefact: UUID, centre: UUID) async throws {
         let json = try JSONDecoder().decode(AnyJSON.self, from: content.encoded())
         try await client.from("artefacts").update(["content": json]).eq("centre_id", value: centre)

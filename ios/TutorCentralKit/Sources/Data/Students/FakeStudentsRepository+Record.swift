@@ -46,3 +46,13 @@ extension FakeStudentsRepository {
         return changed
     }
 }
+
+public extension FakeStudentsRepository {
+    func setNextStep(id: UUID, _ step: NextStep?) async throws -> Student {
+        try await begin()
+        let index = try index(of: id)
+        students[index].nextStep = step
+        nextStepCalls.append(step)
+        return students[index]
+    }
+}

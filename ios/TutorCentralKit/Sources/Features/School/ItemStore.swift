@@ -162,7 +162,7 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
         }
         let before = reached
         do {
-            item = try await repository.update(edited)
+            item = try await repository.update(edited, centre: workspace.centre.id)
             onChanged?(before.union(reached))
             if let item {
                 await loadPreparation(item)

@@ -107,19 +107,24 @@ public struct APIClient: AIRepository, AccountRepository {
     static func failure(status: Int, body: ErrorBody?) -> APIFailure {
         switch status {
         case 401: .signedOut
+        case 403 where body?.reason == "student_consent": .studentConsent(body?.error ?? APIFailure.studentAlert)
         case 403: body?.reason == "consent" ? .consent : .signedOut
         case 429 where body?.kind.map { v2Kinds.contains($0) } == true: .allowance(body?.limit ?? 0)
         case 429: .limit(body?.limit ?? 0)
         case 422: .refused(body?.error ?? APIFailure.service.message)
-        case 502, 503, 504: .service
-        default: body.map { .server($0.error) } ?? .service
+        // The API could not reach the database (D68): the tutor's connection words, never "sign in again".
+        case 503: .offline
+        // A tutor-facing 400 (a mock no longer here, a photo refused) keeps its words; any other status (a stale
+        // API's 501, a 500) never shows the body.
+        case 400: body.map { .server($0.error) } ?? .service
+        default: .service
         }
     }
 
     /// The kinds that share the centre's monthly allowance (api/src/db.ts `V2Kind`, migration 0012).
     static let v2Kinds: Set<String> = [
         "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do",
-        "test_tomorrow", "gap_report", "parse_school", "parse_textbook",
+        "test_tomorrow", "gap_report", "parse_school", "parse_textbook", "not_on_track", "read_marks",
     ]
 
     /// The `result` object of `{ id, result }` as JSON text, for `GenerationResult.decode`.

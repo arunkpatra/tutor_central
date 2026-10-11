@@ -32,6 +32,8 @@ struct StudentRow: Decodable {
     let trackReasons: [String]?
     let trackSince: Date?
     let createdAt: Date?
+    /// The next step the tutor chose (migration 0023); absent on an older select.
+    let nextStep: NextStep?
     /// Absent on an insert's or update's answer, which selects the student's columns only.
     let feeInvoices: [Invoice]?
 
@@ -65,7 +67,8 @@ struct StudentRow: Decodable {
             trackStatus: trackStatus ?? .notKnown,
             trackReasons: trackReasons ?? [],
             trackSince: trackSince,
-            joinedAt: createdAt
+            joinedAt: createdAt,
+            nextStep: nextStep
         )
     }
 

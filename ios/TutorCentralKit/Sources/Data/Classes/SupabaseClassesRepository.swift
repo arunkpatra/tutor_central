@@ -6,7 +6,8 @@ public final class SupabaseClassesRepository: ClassesRepository {
     private let client: SupabaseClient
     static let decoder = PostgRESTDecoder.make()
     private static let columns =
-        "id, name, subject, monthly_fee, meeting_days, start_time, end_time, archived_at, plan_groups, plan_pattern"
+        "id, name, subject, monthly_fee, meeting_days, start_time, end_time, archived_at, plan_groups, plan_pattern, "
+            + "note_weekday, note_time"
 
     public init(client: SupabaseClient) {
         self.client = client
@@ -33,6 +34,20 @@ public final class SupabaseClassesRepository: ClassesRepository {
 
     public func archive(id: UUID) async throws {
         try await client.rpc("archive_class", params: ["p_class": AnyJSON.string(id.uuidString)]).execute()
+    }
+
+    public func setNoteDay(id: UUID, _ noteDay: NoteDay?, centre: UUID) async throws -> Classroom {
+        let response = try await client.from("classes").update(Self.noteDayValues(noteDay))
+            .eq("centre_id", value: centre).eq("id", value: id).select(Self.columns).single().execute()
+        return try Self.decoder.decode(ClassroomRow.self, from: response.data).classroom
+    }
+
+    /// The two columns, or two nulls for the default.
+    static func noteDayValues(_ noteDay: NoteDay?) -> [String: AnyJSON] {
+        [
+            "note_weekday": noteDay.map { .integer($0.weekday.rawValue) } ?? .null,
+            "note_time": noteDay.map { .string($0.time.iso) } ?? .null,
+        ]
     }
 
     public func setPlanGroups(_ count: Int?, classID: UUID) async throws {

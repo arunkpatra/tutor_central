@@ -18,6 +18,13 @@ public struct CanDoFacts: Hashable, Sendable {
     public let atHome: String
     public let next: [String]
 
+    public init(movedUp: [MovedUp], canDo: [String], atHome: String, next: [String]) {
+        self.movedUp = movedUp
+        self.canDo = canDo
+        self.atHome = atHome
+        self.next = next
+    }
+
     /// "Sentences · moved up this week"; "No change this week".
     public var movedUpLine: String {
         movedUp.first.map { "\($0.step) · moved up this week" } ?? "No change this week"

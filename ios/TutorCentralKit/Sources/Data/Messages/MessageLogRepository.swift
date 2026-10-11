@@ -67,6 +67,9 @@ public protocol MessageLogRepository: Sendable {
     func forwardAsked(centre: UUID) async throws -> [UUID: Date]
     /// Every message since a moment with its student (the cadence counts a parent's week).
     func entries(centre: UUID, since: Date) async throws -> [StudentMessage]
+    /// A note, can-now-do or not-on-track message as sent or copied (Phase 14): its kind, language, words (cut to 4000)
+    /// and channel; when it was logged.
+    func logMessage(_ message: ParentMessage, centre: UUID) async throws -> Date
 }
 
 /// A logged message and the student it was about.
@@ -77,5 +80,22 @@ public struct StudentMessage: Hashable, Sendable {
     public init(studentID: UUID, entry: MessageEntry) {
         self.studentID = studentID
         self.entry = entry
+    }
+}
+
+/// A parent's message as sent or copied (Phase 14): the note, can-now-do or the not-on-track message.
+public struct ParentMessage: Hashable, Sendable {
+    public let studentID: UUID
+    public let kind: MessageKind
+    public let language: MessageLanguage
+    public let body: String
+    public let channel: MessageChannel
+
+    public init(studentID: UUID, kind: MessageKind, language: MessageLanguage, body: String, channel: MessageChannel) {
+        self.studentID = studentID
+        self.kind = kind
+        self.language = language
+        self.body = body
+        self.channel = channel
     }
 }

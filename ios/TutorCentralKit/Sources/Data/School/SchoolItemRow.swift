@@ -18,9 +18,11 @@ struct SchoolItemRow: Decodable {
     let source: String
     let receivedAt: Date
     let confirmedAt: Date?
+    /// An exam's window in days (migration 0023); null reads as 14.
+    let windowDays: Int?
 
     static let columns = "id, kind, school_id, student_id, class_level, title, subject, date, end_date, portions, "
-        + "source_text, photo_path, source, received_at, confirmed_at"
+        + "source_text, photo_path, source, received_at, confirmed_at, window_days"
 
     /// Nil for a kind this build does not know, or an item whose school has gone (no one to reach).
     var item: SchoolItem? {
@@ -28,7 +30,8 @@ struct SchoolItemRow: Decodable {
         return SchoolItem(
             id: id, kind: kind, audience: audience, title: title, subject: subject, date: day,
             endDate: endDate.flatMap(Day.init(iso:)), portions: portions, sourceText: sourceText, photoPath: photoPath,
-            source: SchoolItemSource(rawValue: source) ?? .typed, receivedAt: receivedAt, confirmedAt: confirmedAt
+            source: SchoolItemSource(rawValue: source) ?? .typed, receivedAt: receivedAt, confirmedAt: confirmedAt,
+            windowDays: windowDays
         )
     }
 
@@ -59,6 +62,8 @@ struct SchoolItemWrite: Encodable {
     let source: String
     let confirmedAt: Date?
     var receivedAt: Date?
+    /// Written null for 14, so an edit back to the default clears it.
+    var windowDays: Int?
 
     init(draft: SchoolItemDraft, photoPath: String?, centre: UUID, confirmedAt: Date) {
         let columns = Self.columns(draft.audience)
@@ -96,6 +101,7 @@ struct SchoolItemWrite: Encodable {
         photoPath = item.photoPath
         source = item.source.rawValue
         confirmedAt = nil
+        windowDays = item.kind == .exam ? item.windowDays : nil
     }
 
     private struct Columns {
@@ -116,7 +122,7 @@ struct SchoolItemWrite: Encodable {
     private enum CodingKeys: String, CodingKey {
         case centreId = "centre_id", kind, schoolId = "school_id", studentId = "student_id", classLevel = "class_level"
         case title, subject, date, endDate = "end_date", portions, sourceText = "source_text", photoPath = "photo_path"
-        case source, confirmedAt = "confirmed_at", receivedAt = "received_at"
+        case source, confirmedAt = "confirmed_at", receivedAt = "received_at", windowDays = "window_days"
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -136,6 +142,7 @@ struct SchoolItemWrite: Encodable {
         try c.encode(sourceText, forKey: .sourceText)
         try c.encode(photoPath, forKey: .photoPath)
         try c.encode(source, forKey: .source)
+        try c.encode(windowDays, forKey: .windowDays)
         if let confirmedAt {
             try c.encode(ISO8601DateFormatter().string(from: confirmedAt), forKey: .confirmedAt)
         }

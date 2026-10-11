@@ -97,6 +97,14 @@ import Foundation
         return artefacts.filter { $0.schoolItemID == item }.reversed()
     }
 
+    public func notes(centre _: UUID, students: [UUID], since: Date) async throws -> [Artefact] {
+        try await begin()
+        return artefacts.filter { artefact in
+            [.note, .canDo].contains(artefact.kind) && artefact.madeAt >= since
+                && artefact.studentID.map(students.contains) == true
+        }.reversed()
+    }
+
     public func setContent(_ content: ArtefactContent, artefact: UUID, centre _: UUID) async throws {
         try await begin()
         guard let index = artefacts.firstIndex(where: { $0.id == artefact }) else { return }

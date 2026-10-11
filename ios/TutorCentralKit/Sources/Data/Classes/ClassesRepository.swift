@@ -13,4 +13,6 @@ public protocol ClassesRepository: Sendable {
     func setPlanGroups(_ count: Int?, classID: UUID) async throws
     /// "Keep this for Wednesdays": the weekday's choices in `classes.plan_pattern`; nil removes them.
     func setPlanPattern(_ pattern: PlanPattern?, weekday: Weekday, classID: UUID) async throws
+    /// The batch's note day (Phase 14); nil writes nulls, read as Sunday 18:00.
+    func setNoteDay(id: UUID, _ noteDay: NoteDay?, centre: UUID) async throws -> Classroom
 }

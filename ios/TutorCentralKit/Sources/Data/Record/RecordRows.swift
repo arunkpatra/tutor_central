@@ -47,10 +47,16 @@ struct MessageEntryRow: Decodable {
     let kind: String
     let openedAt: Date
     let language: String?
+    /// Absent from a row read before Phase 14's columns were selected: WhatsApp, no body.
+    let channel: String?
+    let body: String?
 
     var entry: MessageEntry? {
         MessageKind(rawValue: kind).map {
-            MessageEntry(id: id, kind: $0, openedAt: openedAt, language: language.flatMap(MessageLanguage.init))
+            MessageEntry(
+                id: id, kind: $0, openedAt: openedAt, language: language.flatMap(MessageLanguage.init),
+                channel: channel.flatMap(MessageChannel.init) ?? .whatsAppLink, body: body
+            )
         }
     }
 }

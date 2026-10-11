@@ -33,6 +33,44 @@ public protocol PlansRepository: Sendable {
     func setContent(_ content: ArtefactContent, artefact: UUID, centre: UUID) async throws
     /// `name_plan_group` (migration 0021): a group /ai/plan could not name at the make, named later; links untouched.
     func nameGroup(plan: UUID, group: Int, chapter: String, skill: String, centre: UUID) async throws
+    /// The students' weekly notes and can-now-dos kept since a moment, newest first (Phase 14).
+    func notes(centre: UUID, students: [UUID], since: Date) async throws -> [Artefact]
+}
+
+public extension PlansRepository {
+    /// `keep_artefact` for a student's note: no plan, no exam, no line linked (as a gap report's keep).
+    func keepNote(_ note: NewNote, centre: UUID) async throws -> Artefact {
+        try await keep(note.artefact, to: note.link, centre: centre)
+    }
+}
+
+/// A weekly note or can-now-do before it is kept (plan/phase-14-plan.md decision 1).
+public struct NewNote: Hashable, Sendable {
+    public let studentID: UUID
+    /// `.note` or `.canDo`.
+    public let kind: ArtefactKind
+    public let title: String
+    public let content: NoteContent
+    public let regeneratedFrom: UUID?
+
+    public init(studentID: UUID, kind: ArtefactKind, title: String, content: NoteContent, regeneratedFrom: UUID?) {
+        self.studentID = studentID
+        self.kind = kind
+        self.title = title
+        self.content = content
+        self.regeneratedFrom = regeneratedFrom
+    }
+
+    var artefact: NewArtefact {
+        NewArtefact(
+            kind: kind, source: .made, title: title, content: .note(content), photoPath: nil,
+            generationID: content.generationID, regeneratedFrom: regeneratedFrom
+        )
+    }
+
+    var link: ArtefactLink {
+        ArtefactLink(plan: nil, group: 0, student: studentID, itemKind: .practise)
+    }
 }
 
 /// Where a kept artefact is linked: the plan's items of a kind in a group (student nil), or one student's; and the

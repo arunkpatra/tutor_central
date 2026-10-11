@@ -192,7 +192,7 @@ import Testing
         await store.load()
         let made = plans.made.count
         holiday.date = PlanTest.wednesday
-        _ = try await items.update(holiday)
+        _ = try await items.update(holiday, centre: UUID())
         await store.remakePlans(for: [FakeStudentsRepository.dev])
         #expect(plans.made.count == made + 1)
         #expect(plans.made.last?.classID == FakeClassesRepository.evening.id)

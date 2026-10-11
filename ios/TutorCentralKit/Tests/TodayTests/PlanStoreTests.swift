@@ -191,7 +191,7 @@ import Testing
         let plan = try #require(store.record)
         plans.markDone(Set(plan.items.prefix(1).map(\.id)), session: UUID())
         let made = plans.made.count
-        _ = try await items.update(classEightHoliday(on: PlanTest.wednesday))
+        _ = try await items.update(classEightHoliday(on: PlanTest.wednesday), centre: UUID())
         await store.remake(for: classEight)
         #expect(plans.made.count == made)
     }
@@ -201,7 +201,7 @@ import Testing
         let items = FakeSchoolItemsRepository(items: [classEightHoliday(on: FakeSchoolItemsRepository.day(30))])
         let store = await store(plans: plans, items: items)
         #expect(plans.made.count == 1)
-        _ = try await items.update(classEightHoliday(on: PlanTest.wednesday))
+        _ = try await items.update(classEightHoliday(on: PlanTest.wednesday), centre: UUID())
         await store.remake(for: classEight)
         #expect(plans.made.count == 2 && Set(plans.made.last?.leftOut ?? []) == classEight)
         let notHere: Set<UUID> = [FakeStudentsRepository.hemanth]
@@ -228,7 +228,7 @@ import Testing
         let store = await store(plans: plans, items: items)
         #expect(store.record?.groups.allSatisfy { $0.examItemID == nil } == true)
         exam.date = FakeSchoolItemsRepository.day(16)
-        _ = try await items.update(exam)
+        _ = try await items.update(exam, centre: UUID())
         await store.remake(for: classEight)
         #expect(store.record?.groups.first?.examItemID == exam.id)
         let dev = store.record?.items.first { $0.studentID == FakeStudentsRepository.dev && $0.kind == .teach }
@@ -276,8 +276,8 @@ import Testing
         #expect(first.record != nil)
         vidya.date = PlanTest.wednesday
         sahil.date = PlanTest.wednesday
-        _ = try await items.update(vidya)
-        _ = try await items.update(sahil)
+        _ = try await items.update(vidya, centre: UUID())
+        _ = try await items.update(sahil, centre: UUID())
         let again = await store(plans: plans, items: items)
         #expect(again.state == .holiday && again.groups.isEmpty)
     }

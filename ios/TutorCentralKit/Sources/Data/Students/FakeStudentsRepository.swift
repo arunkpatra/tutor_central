@@ -122,6 +122,8 @@ import Foundation
     public private(set) var deletedMany: [[UUID]] = []
     public private(set) var notesUpdates: [NotesUpdate] = []
     public private(set) var consentCalls: [(UUID, ConsentRecord?)] = []
+    /// The next steps written, in order.
+    public internal(set) var nextStepCalls: [NextStep?] = []
 
     /// One notes write: the student and the whole text sent.
     public struct NotesUpdate: Hashable, Sendable {
@@ -214,7 +216,7 @@ import Foundation
         return students[index]
     }
 
-    private func begin() async throws {
+    func begin() async throws {
         if let delay {
             try? await Task.sleep(for: delay)
         }
@@ -223,7 +225,7 @@ import Foundation
         throw error
     }
 
-    private func index(of id: UUID) throws -> Int {
+    func index(of id: UUID) throws -> Int {
         guard let index = students.firstIndex(where: { $0.id == id }) else { throw URLError(.fileDoesNotExist) }
         return index
     }

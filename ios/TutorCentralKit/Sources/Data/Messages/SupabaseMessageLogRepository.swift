@@ -95,7 +95,7 @@ public final class SupabaseMessageLogRepository: MessageLogRepository {
     }
 
     public func messages(centre: UUID, student: UUID) async throws -> [MessageEntry] {
-        let response = try await client.from("message_log").select("id, kind, opened_at, language")
+        let response = try await client.from("message_log").select("id, kind, opened_at, language, channel, body")
             .eq("centre_id", value: centre).eq("student_id", value: student)
             .order("opened_at", ascending: false).execute()
         return try Self.decoder.decode([MessageEntryRow].self, from: response.data).compactMap(\.entry)
@@ -137,10 +137,25 @@ public final class SupabaseMessageLogRepository: MessageLogRepository {
     }
 
     public func entries(centre: UUID, since: Date) async throws -> [StudentMessage] {
-        let response = try await client.from("message_log").select("id, student_id, kind, opened_at, language")
+        let response = try await client.from("message_log")
+            .select("id, student_id, kind, opened_at, language, channel, body")
             .eq("centre_id", value: centre).gte("opened_at", value: ISO8601DateFormatter().string(from: since))
             .order("opened_at", ascending: false).execute()
         return try Self.decoder.decode([StudentEntryRow].self, from: response.data).compactMap(\.message)
+    }
+
+    public func logMessage(_ message: ParentMessage, centre: UUID) async throws -> Date {
+        let response = try await client.from("message_log")
+            .insert([
+                "centre_id": AnyJSON.string(centre.uuidString),
+                "student_id": .string(message.studentID.uuidString),
+                "kind": .string(message.kind.rawValue),
+                "language": .string(message.language.rawValue),
+                "body": .string(String(message.body.prefix(4000))),
+                "channel": .string(message.channel.rawValue),
+            ])
+            .select(Self.feeColumns).single().execute()
+        return try Self.decoder.decode(ProgressLogRow.self, from: response.data).openedAt
     }
 
     private static let feeColumns = "student_id, kind, opened_at, about_date"
@@ -186,14 +201,14 @@ struct StudentEntryRow: Decodable {
     let kind: String
     let openedAt: Date
     let language: String?
+    let channel: String?
+    let body: String?
 
     var message: StudentMessage? {
         guard let studentId, let kind = MessageKind(rawValue: kind) else { return nil }
         let entry = MessageEntry(
-            id: id,
-            kind: kind,
-            openedAt: openedAt,
-            language: language.flatMap(MessageLanguage.init)
+            id: id, kind: kind, openedAt: openedAt, language: language.flatMap(MessageLanguage.init),
+            channel: channel.flatMap(MessageChannel.init) ?? .whatsAppLink, body: body
         )
         return StudentMessage(studentID: studentId, entry: entry)
     }
