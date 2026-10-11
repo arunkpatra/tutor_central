@@ -62,6 +62,9 @@ import Observation
         if target == nil, let remembered, stands(remembered) {
             choose(remembered)
         }
+        if kind == .brief, classLevel == nil, let last = rememberedBrief {
+            (classLevel, subject) = (last.level, last.subject)
+        }
     }
 
     var roster: MakeRoster {
@@ -195,7 +198,12 @@ import Observation
     // MARK: - The last target of each kind
 
     private var defaultsKey: String {
-        "make.\(kind.rawValue).target"
+        Self.defaultsKey(kind)
+    }
+
+    /// The key of a kind's last target; sign-out wipes it (`Wipe.defaultsKeys`).
+    nonisolated static func defaultsKey(_ kind: MakeKind) -> String {
+        Wipe.makeKey(kind)
     }
 
     private var remembered: MakeTarget? {
@@ -203,8 +211,28 @@ import Observation
     }
 
     func remember() {
+        if kind == .brief, let classLevel,
+           let data = try? JSONEncoder().encode(BriefDefaults(level: classLevel, subject: subject)) {
+            context.defaults?.set(data, forKey: briefKey)
+        }
         guard let target, let data = try? JSONEncoder().encode(target) else { return }
         context.defaults?.set(data, forKey: defaultsKey)
+    }
+
+    /// The brief has no target: its last class and subject, as V1's forms keep theirs.
+    private struct BriefDefaults: Codable {
+        let level: ClassLevel
+        let subject: String
+    }
+
+    nonisolated static let briefKey = Wipe.makeBriefKey
+
+    private var briefKey: String {
+        Self.briefKey
+    }
+
+    private var rememberedBrief: BriefDefaults? {
+        context.defaults?.data(forKey: briefKey).flatMap { try? JSONDecoder().decode(BriefDefaults.self, from: $0) }
     }
 
     private func stands(_ target: MakeTarget) -> Bool {
