@@ -109,7 +109,7 @@ import Observation
             let loaded = try await plans.made(centre: workspace.centre.id)
             madeCache?.keep(loaded, at: now())
             made = loaded
-            madeSavedAt = nil
+            madeSavedAt = now()
             madeOfflineRead = false
             madeLoaded = true
             madeError = nil

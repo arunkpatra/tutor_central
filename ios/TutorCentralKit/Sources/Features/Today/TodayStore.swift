@@ -238,7 +238,7 @@ import Observation
         await loadParents()
         await noteDay?.load()
         if fresh {
-            savedAt = nil
+            savedAt = now()
             cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
         }
         tick(clock)

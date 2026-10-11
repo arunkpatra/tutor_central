@@ -25,6 +25,18 @@ import Testing
         #expect(offline.activeStudents.count == 10 && offline.savedAt == saved && offline.offlineRead)
         #expect(offline.error == nil)
         await offline.refresh()
-        #expect(offline.savedAt == nil && !offline.offlineRead)
+        #expect(offline.savedAt == saved.addingTimeInterval(3600) && !offline.offlineRead)
+    }
+
+    /// Hand run 14: a reload that fails offline after a good read keeps the read's time; the line never says nothing
+    /// is saved over a list on screen.
+    @Test func aFailedRefreshAfterAGoodReadKeepsTheReadsTime() async {
+        let now = FakeCountsRepository.fixedNow
+        let students = FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        let store = make(students, at: now)
+        await store.load()
+        students.nextError = URLError(.notConnectedToInternet)
+        await store.refresh()
+        #expect(store.savedAt == now && store.offlineRead && store.error == nil)
     }
 }

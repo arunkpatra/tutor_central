@@ -72,12 +72,16 @@ import Testing
         #expect(store.counts.students == 10 && store.counts.due.rupees == 2200 && store.counts.classesToday == 2)
     }
 
+    /// Offline the last values stay with the offline line (hand run 14); any other failure says it couldn't refresh.
     @Test func aCountsFailureKeepsTheLastValuesAndSaysSo() async {
         let counts = FakeCountsRepository()
         counts.counts = TodayCounts(students: 3, due: .zero, classesToday: 1)
         let store = await make(counts)
         await store.load()
         counts.nextError = URLError(.notConnectedToInternet)
+        await store.load()
+        #expect(store.counts.students == 3 && store.error == nil && store.offlineRead && store.savedAt != nil)
+        counts.nextError = URLError(.badServerResponse)
         await store.load()
         #expect(store.counts.students == 3 && store.error == "Couldn't refresh. Check your connection and try again.")
     }

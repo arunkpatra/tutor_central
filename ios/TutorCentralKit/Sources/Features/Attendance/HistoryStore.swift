@@ -145,7 +145,7 @@ import Observation
             sessions = read
             sessionsMonth = month
             cache?(month).keep(read, at: now())
-            savedAt = nil
+            savedAt = now()
             offlineRead = false
             error = nil
         } catch {

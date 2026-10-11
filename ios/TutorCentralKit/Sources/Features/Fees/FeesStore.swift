@@ -223,7 +223,7 @@ import Observation
             let snapshot = FeesSnapshot(invoices: read, dueBefore: before, logs: readLogs)
             apply(snapshot, month: month)
             cache?(month).keep(snapshot, at: now())
-            savedAt = nil
+            savedAt = now()
             offlineRead = false
             error = nil
             loaded = true

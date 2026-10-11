@@ -48,7 +48,19 @@ import Testing
         await store.load()
         #expect(store.invoices.isEmpty && store.savedAt == nil && store.offlineRead && store.showsNothingSaved)
         await store.reload()
-        #expect(store.invoices.count == 10 && !store.offlineRead && !store.showsNothingSaved && store.savedAt == nil)
+        #expect(store.invoices.count == 10 && !store.offlineRead && !store.showsNothingSaved
+            && store.savedAt == FakeCountsRepository.fixedNow)
+    }
+
+    /// Hand run 14: a reload that fails offline after a good read keeps the read's time; the line never says nothing
+    /// is saved over a list on screen.
+    @Test func aFailedReloadAfterAGoodReadKeepsTheReadsTime() async {
+        let fees = FakeFeesRepository(invoices: FakeFeesRepository.seed)
+        let store = make(fees)
+        await store.load()
+        fees.nextError = URLError(.notConnectedToInternet)
+        await store.reload()
+        #expect(store.invoices.count == 10 && store.savedAt == FakeCountsRepository.fixedNow && store.offlineRead)
     }
 }
 

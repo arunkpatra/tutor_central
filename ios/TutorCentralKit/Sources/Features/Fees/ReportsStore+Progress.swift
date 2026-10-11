@@ -56,7 +56,7 @@ extension ReportsStore {
             guard generation == loadGeneration else { return }
             progressInputs = read
             progressCopy = nil
-            (error, savedAt, offlineRead, loaded) = (nil, nil, false, true)
+            (error, savedAt, offlineRead, loaded) = (nil, now(), false, true)
             cache?.progress(key).keep(progressRows, at: now())
         } catch {
             guard generation == loadGeneration else { return }

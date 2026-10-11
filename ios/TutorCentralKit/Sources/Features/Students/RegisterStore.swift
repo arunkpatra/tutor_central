@@ -182,7 +182,7 @@ import Observation
             await readSchools()
             error = nil
             offlineRead = false
-            savedAt = nil
+            savedAt = now()
             loaded = true
             persist()
         } catch {
