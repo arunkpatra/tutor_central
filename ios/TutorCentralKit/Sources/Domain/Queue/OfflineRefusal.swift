@@ -11,6 +11,7 @@ public enum OfflineRefusal {
         case schoolItem, forwardAsk, mark, gapReport, testTomorrow
         case readShared, readPasted, readPhoto
         case weeklyNote, sendNote, readMarks, notOnTrack, noteDay, nextStep, saveMarks
+        case make
     }
 
     public static func words(for write: Write) -> String {
@@ -41,6 +42,7 @@ public enum OfflineRefusal {
         .noteDay: "You're offline. Changing the note day needs a connection.",
         .nextStep: "You're offline. Changing the next step needs a connection.",
         .saveMarks: "You're offline. Saving the marks needs a connection. They're still here.",
+        .make: "You're offline. Making material needs a connection.",
     ]
 
     private static let actions: [Write: String] = [

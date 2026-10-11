@@ -103,3 +103,18 @@ struct ArtefactContentTests {
         #expect(tagged == content)
     }
 }
+
+struct MadeForContentTests {
+    @Test func madeForRoundTripsInTheContent() throws {
+        let content = ArtefactContent.sheet(SheetContent(
+            title: "Balancing equations", instructions: nil, questions: [], forHomework: false, light: false
+        ))
+        let made = MakeFor(target: .classLevel(.eight), title: "Class 8", line: "Science")
+        let json = try content.encoded(madeFor: made)
+        #expect(MakeFor.read(fromContent: json) == made)
+        guard case let .sheet(sheet) = try ArtefactContent.decode(kind: .sheet, json: json)
+        else { Issue.record("not a sheet"); return }
+        #expect(sheet.title == "Balancing equations")
+        #expect(try MakeFor.read(fromContent: content.encoded()) == nil)
+    }
+}
