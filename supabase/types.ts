@@ -25,14 +25,14 @@ export type Database = {
           Tables: {
             "ai_generations": {
                   Row: {
-                    "centre_id": string,"created_at": string,"id": string,"input": NonNullable<Json>,"kind": Database["public"]['Enums']["ai_kind"],"model": string | null,"output": string | null,"status": Database["public"]['Enums']["ai_status"],"tokens_in": number | null,"tokens_out": number | null,"updated_at": string
+                    "centre_id": string,"created_at": string,"id": string,"input": NonNullable<Json>,"kind": Database["public"]['Enums']["ai_kind"],"model": string | null,"output": string | null,"status": Database["public"]['Enums']["ai_status"],"student_id": string | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"created_at"?: string,"id"?: string,"input": NonNullable<Json>,"kind": Database["public"]['Enums']["ai_kind"],"model"?: string | null,"output"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string
+                    "centre_id": string,"created_at"?: string,"id"?: string,"input": NonNullable<Json>,"kind": Database["public"]['Enums']["ai_kind"],"model"?: string | null,"output"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string
                   }
                   Update: {
-                    "centre_id"?: string,"created_at"?: string,"id"?: string,"input"?: NonNullable<Json>,"kind"?: Database["public"]['Enums']["ai_kind"],"model"?: string | null,"output"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string
+                    "centre_id"?: string,"created_at"?: string,"id"?: string,"input"?: NonNullable<Json>,"kind"?: Database["public"]['Enums']["ai_kind"],"model"?: string | null,"output"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -41,6 +41,12 @@ export type Database = {
 isOneToOne: false
       referencedRelation: "centres"
       referencedColumns: ["id"]
+    },{
+      foreignKeyName: "ai_generations_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
     }
                   ]
                 },"artefacts": {
