@@ -86,6 +86,8 @@ public struct SchoolItemDraft: Hashable, Sendable, Identifiable {
     public var sourceText: String?
     public var source: SchoolItemSource
     public var ticked: Bool
+    /// When a share reached the inbox (kept as the item's `received_at`); nil: when it is added.
+    public var receivedAt: Date?
 
     public init(
         id: UUID = UUID(), kind: SchoolItemKind, audience: ItemAudience?, title: String, subject: String?, date: Day?,

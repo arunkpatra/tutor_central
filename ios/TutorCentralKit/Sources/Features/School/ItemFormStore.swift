@@ -35,6 +35,7 @@ public struct ForOption: Identifiable, Hashable, Sendable {
     private let draftID: UUID
     private let sourceText: String?
     private let source: SchoolItemSource
+    private let receivedAt: Date?
     let students: [Student]
     let schools: [School]
     let today: Day
@@ -50,6 +51,7 @@ public struct ForOption: Identifiable, Hashable, Sendable {
         draftID = draft?.id ?? UUID()
         sourceText = draft?.sourceText
         source = draft?.source ?? .typed
+        receivedAt = draft?.receivedAt
         self.students = students
         self.schools = schools
         self.today = today
@@ -90,6 +92,7 @@ public struct ForOption: Identifiable, Hashable, Sendable {
             sourceText: sourceText, source: source
         )
         draft.ticked = draft.isComplete && !endProblem
+        draft.receivedAt = receivedAt
         return draft
     }
 

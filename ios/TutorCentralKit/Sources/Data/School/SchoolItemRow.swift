@@ -58,6 +58,7 @@ struct SchoolItemWrite: Encodable {
     let photoPath: String?
     let source: String
     let confirmedAt: Date?
+    var receivedAt: Date?
 
     init(draft: SchoolItemDraft, photoPath: String?, centre: UUID, confirmedAt: Date) {
         let columns = Self.columns(draft.audience)
@@ -75,6 +76,7 @@ struct SchoolItemWrite: Encodable {
         self.photoPath = photoPath
         source = draft.source.rawValue
         self.confirmedAt = confirmedAt
+        receivedAt = draft.receivedAt
     }
 
     /// An edit: the item's own columns, its centre and confirmation left as they are.
@@ -114,7 +116,7 @@ struct SchoolItemWrite: Encodable {
     private enum CodingKeys: String, CodingKey {
         case centreId = "centre_id", kind, schoolId = "school_id", studentId = "student_id", classLevel = "class_level"
         case title, subject, date, endDate = "end_date", portions, sourceText = "source_text", photoPath = "photo_path"
-        case source, confirmedAt = "confirmed_at"
+        case source, confirmedAt = "confirmed_at", receivedAt = "received_at"
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -136,6 +138,9 @@ struct SchoolItemWrite: Encodable {
         try c.encode(source, forKey: .source)
         if let confirmedAt {
             try c.encode(ISO8601DateFormatter().string(from: confirmedAt), forKey: .confirmedAt)
+        }
+        if let receivedAt {
+            try c.encode(ISO8601DateFormatter().string(from: receivedAt), forKey: .receivedAt)
         }
     }
 }

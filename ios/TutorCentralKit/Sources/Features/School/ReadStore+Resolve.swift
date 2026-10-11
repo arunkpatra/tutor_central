@@ -14,12 +14,16 @@ enum DraftResolver {
         schools: [School],
         students: [Student]
     ) -> SchoolItemDraft {
-        SchoolItemDraft(
+        var draft = SchoolItemDraft(
             kind: parsed.kind, audience: audience(parsed, schools: schools, students: students),
             title: String(parsed.title.unicodeScalars.prefix(SchoolItemRules.titleLimit)), subject: parsed.subject,
             date: parsed.date, endDate: parsed.kind == .holiday ? parsed.endDate : nil, portions: parsed.portions,
             sourceText: sourceText(source), source: itemSource(source)
         )
+        if case let .shared(read) = source {
+            draft.receivedAt = read.receivedAt
+        }
+        return draft
     }
 
     static func audience(_ parsed: ParsedItem, schools: [School], students: [Student]) -> ItemAudience? {

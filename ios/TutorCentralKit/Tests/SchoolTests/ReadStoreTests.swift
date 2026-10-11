@@ -112,6 +112,17 @@ import Testing
         #expect(photos.paths.count == 1 && left.left == 1)
     }
 
+    @Test func aSharedItemKeepsTheTimeItWasShared() async {
+        let items = FakeSchoolItemsRepository(items: [])
+        let sharedAt = SchoolFixtures.now.addingTimeInterval(-180)
+        let shared = SharedRead(id: "a", text: SchoolFixtures.boardMessage, image: nil, receivedAt: sharedAt)
+        let store = await makeStore(.shared(shared), items: items)
+        await store.read()
+        #expect(store.drafts.allSatisfy { $0.receivedAt == sharedAt })
+        #expect(await store.add())
+        #expect(items.stored.allSatisfy { $0.receivedAt == sharedAt })
+    }
+
     @Test func nothingReadIsSaidInWordsAndOfflineTheInboxWaits() async {
         let ai = FakeAIRepository()
         ai.script = .failure(.refused("Couldn't find a test, homework, notice or holiday in this. Add it by hand."))
