@@ -71,7 +71,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     };
     // A paper marked for a named student (a mock) needs that student's consent (D62, migration 0021).
     const request = checkRequest(pages, text ?? "", studentName);
-    return run(c, deps, body.centre, { kind: "check_paper", input, request, student: studentId });
+    return run(c, deps, body.centre, { kind: "check_paper", input, request, student: studentId, studentName });
   });
 
   routes.post("/parse-school", async (c) => {

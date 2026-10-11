@@ -44,7 +44,7 @@ export type Db = {
 
 export class DbFailure extends Error {
   constructor(
-    public readonly reason: "not_a_member" | "consent" | "limit" | "other",
+    public readonly reason: "not_a_member" | "consent" | "student_consent" | "limit" | "other",
     public readonly limit?: number,
   ) {
     super(reason);
@@ -69,7 +69,7 @@ export function makeDb(url: string, anonKey: string): Db {
       });
       if (error) {
         if (error.message.includes("ai_not_a_member")) throw new DbFailure("not_a_member");
-        if (error.message.includes("ai_consent_missing")) throw new DbFailure("consent");
+        if (error.message.includes("ai_consent_missing")) throw new DbFailure(student ? "student_consent" : "consent");
         if (error.message.includes("ai_limit_reached")) throw new DbFailure("limit", Number(error.details));
         console.error("db start", error.message);
         throw new DbFailure("other");
