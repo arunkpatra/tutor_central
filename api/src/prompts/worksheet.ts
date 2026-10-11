@@ -1,4 +1,5 @@
 import type { ClaudeRequest } from "../claude.js";
+import { modelFor } from "../models.js";
 import { QuestionSetOutput, type WorksheetInput } from "../schemas.js";
 import { LEVEL_WORDS, VOICE } from "./shared.js";
 
@@ -6,7 +7,7 @@ import { LEVEL_WORDS, VOICE } from "./shared.js";
  *  the key is printed for the student. */
 export function request(input: WorksheetInput): ClaudeRequest<QuestionSetOutput> {
   return {
-    model: "claude-sonnet-5-5",
+    model: modelFor("worksheet"),
     effort: "medium",
     system: [
       VOICE,

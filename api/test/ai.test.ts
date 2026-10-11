@@ -3,6 +3,7 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 import { makeVerify } from "../src/verify.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
@@ -145,4 +146,18 @@ test("a named student's missing consent answers in the student's words, the cent
   expect(await r.json()).toEqual({ error: "Diya's parent hasn't agreed yet.", reason: "student_consent" });
   const centre = await post(app(undefined, fakeDb({ consent: false })), "/ai/scan-register", { centreId, ...image });
   expect(await centre.json()).toEqual({ error: "Agree to the notice before the first photo.", reason: "consent" });
+});
+
+test("check-paper's model comes from the table, not a constant (D67)", async () => {
+  applyModelOverrides({ AI_MODEL_CHECK_PAPER: "claude-sonnet-5-5" });
+  try {
+    const claude = fakeClaude({ answer: SAMPLE.check_paper });
+    const db = fakeDb();
+    const r = await post(app(claude, db), "/ai/check-paper", { centreId, pages: [image], scheme: { kind: "typed", text: "Q1 2 marks" }, studentName: "Dev" });
+    expect(r.status).toBe(200);
+    expect(claude.requests[0]?.model).toBe("claude-sonnet-5-5");
+    expect(db.started[0]).toMatchObject({ kind: "check_paper", model: "claude-sonnet-5-5" });
+  } finally {
+    resetModelOverrides();
+  }
 });
