@@ -176,14 +176,13 @@ public struct Generation: Hashable, Sendable, Identifiable, Codable {
         return studentID.flatMap(studentName) ?? result.title
     }
 
-    /// "Question paper · Class 10 · Tue 6 Oct, 18:32", "… · today, 18:32" as Make's rows read (a paper from a batch
-    /// before names the batch). `className` is asked for the form's class, or for a note the student's id (the register
-    /// answers either); nil reads "No class".
+    /// "Question paper · Class 10 · Tue 6 Oct" (P6-History), "… · today" beside Make's rows made today (a paper from a
+    /// batch before names the batch). `className` is asked for the form's class, or for a note the student's id (the
+    /// register answers either); nil reads "No class".
     public func line(className: (UUID?) -> String?, today: Day, calendar: Calendar) -> String {
         let about = kind == .progressNote ? studentID : request?.classID
         let day = Day(createdAt, calendar: calendar)
-        let name = day == today ? "today" : day.shortWeekdayText
-        let when = "\(name), \(QueuedChange.clock(createdAt, calendar: calendar))"
+        let when = day == today ? "today" : day.shortWeekdayText
         return "\(kind.title) · \(self.className(batchName: { _ in className(about) })) · \(when)"
     }
 

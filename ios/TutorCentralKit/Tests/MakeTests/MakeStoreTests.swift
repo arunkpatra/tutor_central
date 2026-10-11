@@ -94,8 +94,23 @@ import Testing
         #expect(store.rows[2].line == "Brief · today, 18:28")
         #expect(store.rows[0].symbol == "doc.text" && store.rows[0].opens == .artefact(store.made[0].id))
         #expect(store.rows[3].opens == .generation(FakeAIHistoryRepository.quadraticID))
-        // Hand run 12: V1's results read the day and time as Make's rows do (P10-Make), not "Mon 12 Oct" for today.
-        #expect(store.rows[3].line == "Question paper · Class 10 Maths · Tue 6 Oct, 18:32")
+        // P6-History's line for V1's results; hand run 12: one made today says "today" as Make's rows do, not its date.
+        #expect(store.rows[3].line == "Question paper · Class 10 Maths · Tue 6 Oct")
+    }
+
+    /// Hand run 12: a paper made today reads "today" beside Make's rows, not its date.
+    @Test func aV1ResultMadeTodaySaysToday() async {
+        let seed = FakeAIHistoryRepository.seed[0]
+        let today = Generation(
+            id: UUID(),
+            kind: seed.kind,
+            createdAt: Self.now,
+            request: seed.request,
+            result: seed.result
+        )
+        let store = await Self.make(history: FakeAIHistoryRepository(generations: [today]))
+        await store.loadHistory()
+        #expect(store.rows.first?.line == "Question paper · Class 10 Maths · today")
     }
 
     @Test func makeItAgainFromRecentReplacesTheRowAndKeepsTheRecord() async throws {
