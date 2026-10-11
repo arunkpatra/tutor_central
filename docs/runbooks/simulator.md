@@ -177,6 +177,31 @@ confirmed on screen (4) and in the database (7). For the register, the full run 
 restore, delete; add a class, move a student into it, archive the class. Keep the screenshots and put them in the
 pull request or the issue.
 
+## 11. Share to Tutor Central (Phase 13)
+
+The share extension (`Share/ShareViewController.swift`) writes one text or one image into the app group's `inbox/` and
+closes; the app reads the inbox when it next comes to the foreground signed in and opens "Check what was read" on the
+School tab (`ShellState.inboxHandoff`).
+
+- **A photo:** `xcrun simctl addmedia booted <file.png>`, then Photos → the picture → Share → Tutor Central in the sheet
+  (find the row from a settled screenshot; it can sit in the second row of apps or under More). The extension closes
+  by itself.
+- **A text:** `printf 'Dear Parents, …' | xcrun simctl pbcopy booted`, then Notes → a new note → Paste → select all →
+  Share → Tutor Central.
+- Then `xcrun simctl launch booted in.tutorcentral.app` (or tap the app): the app comes to the foreground and reads the
+  inbox. Wait 2 s before looking.
+- The proof the extension wrote: `find ~/Library/Developer/CoreSimulator/Devices/<udid>/data/Containers/Shared/AppGroup
+  -path '*inbox/*' -mmin -5` (the item's JSON and, for a photo, its image); after Add or Back the folder is empty.
+- Without the extension: Paste a message from the School tab's "+" reads the pasteboard (`simctl pbcopy` first).
+- "Check what was read": the checkbox at a card's left edge ticks or unticks the item; the card's title opens its
+  sheet; Add is the footer's button. The query that proves an item:
+
+```bash
+docker exec supabase_db_tutor_central psql -U postgres -c "select title, kind, date, end_date, class_level, student_id, source, photo_path, confirmed_at from school_items order by created_at desc limit 5"
+```
+
+The waits measured on the hand runs are added here (section 5's way) when the phase's documents are written.
+
 ## The proof run
 
 Session 7 followed sections 1 to 8 from a cold simulator against a freshly reset seed: signed in through the screens
