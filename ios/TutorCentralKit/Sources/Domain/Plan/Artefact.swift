@@ -346,3 +346,12 @@ public struct Artefact: Hashable, Sendable, Codable, Identifiable {
         "\(count) \(noun)\(count == 1 ? "" : "s")"
     }
 }
+
+public extension [Artefact] {
+    /// A regenerated artefact in its predecessor's place: the one another row names as `regeneratedFrom` is left out
+    /// (it stays in the record), as V1's Create again replaces its result.
+    func hidingRegenerated() -> [Artefact] {
+        let replaced = Set(compactMap(\.regeneratedFrom))
+        return filter { !replaced.contains($0.id) }
+    }
+}

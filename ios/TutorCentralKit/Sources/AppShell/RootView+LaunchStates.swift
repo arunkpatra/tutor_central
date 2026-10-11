@@ -50,7 +50,7 @@ extension RootView {
 
     /// The AI Assistant's states, all on the More tab's stack.
     nonisolated static let aiStates: Set<LaunchState> = [
-        .aiAssistant, .aiAssistantEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet,
+        .make, .makeEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet,
         .aiNote, .aiNoteStudent, .aiGenerating,
         .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
         .aiHistory,
@@ -109,7 +109,7 @@ extension RootView {
     static func aiRoutes(for state: LaunchState) -> [Route] {
         let note = FakeAIHistoryRepository.id(2)
         return switch state {
-        case .aiAssistant, .aiAssistantEmpty: [.make]
+        case .make, .makeEmpty: [.make]
         case .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiGenerating, .aiGenerateFailed:
             [.make, .aiForm(.paper)]
         case .aiHomework: [.make, .aiForm(.homework)]

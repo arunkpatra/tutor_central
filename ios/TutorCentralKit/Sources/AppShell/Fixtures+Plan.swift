@@ -86,6 +86,8 @@ extension Fixtures {
             return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts)
         case .mock, .mockKey:
             return FakePlansRepository(artefacts: [FakePlansRepository.boardMock])
+        case .make, .aiHistory:
+            return FakePlansRepository(artefacts: FakePlansRepository.madeRecent)
         case .closeCards, .todayRevision:
             // P13-Today-Revision: made on the board's moment from the exam nine days out.
             return FakePlansRepository()

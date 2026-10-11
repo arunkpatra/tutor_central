@@ -82,6 +82,13 @@ public final class SupabasePlansRepository: PlansRepository {
         return try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
     }
 
+    public func made(centre: UUID) async throws -> [Artefact] {
+        let response = try await client.from("artefacts").select(ArtefactRow.columns).eq("centre_id", value: centre)
+            .eq("made_from", value: "make").order("created_at", ascending: false).limit(50).execute()
+        return try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
+            .hidingRegenerated()
+    }
+
     public func setContent(_ content: ArtefactContent, artefact: UUID, centre: UUID) async throws {
         let json = try JSONDecoder().decode(AnyJSON.self, from: content.encoded())
         try await client.from("artefacts").update(["content": json]).eq("centre_id", value: centre)
@@ -164,7 +171,7 @@ public final class SupabasePlansRepository: PlansRepository {
     /// `keep_artefact(p_centre, p_artefact, p_plan, p_group_no, p_student, p_item_kind, p_school_item)`: the content in
     /// snake-case keys, no student for the group's material; an exam's artefact with no plan links no line.
     static func keepParams(_ artefact: NewArtefact, to link: ArtefactLink, centre: UUID) throws -> [String: AnyJSON] {
-        let content = try JSONDecoder().decode(AnyJSON.self, from: artefact.content.encoded())
+        let content = try JSONDecoder().decode(AnyJSON.self, from: artefact.content.encoded(madeFor: artefact.madeFor))
         var row: [String: AnyJSON] = [
             "kind": .string(artefact.kind.rawValue),
             "source": .string(artefact.source.rawValue),
@@ -180,7 +187,7 @@ public final class SupabasePlansRepository: PlansRepository {
         if let old = artefact.regeneratedFrom {
             row["regenerated_from"] = id(old)
         }
-        return [
+        var params: [String: AnyJSON] = [
             "p_centre": id(centre),
             "p_artefact": .object(row),
             "p_plan": link.plan.map(id) ?? .null,
@@ -189,6 +196,11 @@ public final class SupabasePlansRepository: PlansRepository {
             "p_item_kind": .string(link.itemKind.rawValue),
             "p_school_item": link.schoolItem.map(id) ?? .null,
         ]
+        // The plan's keeps send seven arguments, as before 0026.
+        if artefact.madeFor != nil {
+            params["p_made_from"] = .string("make")
+        }
+        return params
     }
 
     /// The written plan as a record: the draft's groups, the answer's ids matched to the draft's lines by student,

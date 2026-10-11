@@ -18,7 +18,7 @@ import Testing
     }
 
     @Test func theAIStoreIsReleasedWithItsResultHandlerInstalled() {
-        let deps = Fixtures.dependencies(for: .aiAssistant)
+        let deps = Fixtures.dependencies(for: .make)
         let shell = ShellState()
         weak var weakStore: AIStore?
         do {

@@ -6,8 +6,8 @@ import Testing
 struct MakeRulesTests: SchoolSamples {
     let plan = UUID(uuidString: "99999999-9999-9999-9999-999999999991")!
 
-    var devBook: MakeBook {
-        MakeBook(chapters: devChapters, skills: devSkills)
+    var devBook: RecordBook {
+        RecordBook(chapters: devChapters, skills: devSkills)
     }
 
     func classmate(_ name: String, level: ClassLevel?) -> Student {
@@ -63,9 +63,9 @@ struct MakeRulesTests: SchoolSamples {
     @Test func aBatchTakesItsMostCommonLevelAndItsMembersCurrentSkills() {
         let eights = (1 ... 3).map { classmate("Eight \($0)", level: .eight) }
         let fives = (1 ... 2).map { classmate("Five \($0)", level: .five) }
-        let book = MakeBook(chapters: devChapters, skills: devSkills)
+        let book = RecordBook(chapters: devChapters, skills: devSkills)
         var books = Dictionary(uniqueKeysWithValues: eights.map { ($0.id, book) })
-        let other = MakeBook(chapters: devChapters, skills: devSkills.map { skill in
+        let other = RecordBook(chapters: devChapters, skills: devSkills.map { skill in
             var moved = skill
             moved.state = skill.position == 3 && skill.chapterID == devChapters[0].id ? .secure : skill.state
             return moved
@@ -92,7 +92,7 @@ struct MakeRulesTests: SchoolSamples {
                 id: UUID(), chapterID: chapter.id, position: 1, name: "Skill \(index)", state: .taught,
                 stateAt: FakeClock.oct7at1635, lastCheckedAt: nil
             )
-            return (someone.id, MakeBook(chapters: [chapter], skills: [skill]))
+            return (someone.id, RecordBook(chapters: [chapter], skills: [skill]))
         })
         let roster = MakeRoster(students: many, classes: [evening], groups: [])
         #expect(MakeRules.skills(for: .batch(evening.id), subject: "Science", books: books, roster: roster).count == 6)

@@ -125,8 +125,10 @@ enum Route: Hashable {
     case payments
     /// Reports, from More.
     case reports
-    /// The AI Assistant, from More and from Today's Create row; its forms, results and History on the same stack.
+    /// Make something, from More and from Today's Create row; its forms, V1's forms and results, and History on the
+    /// same stack.
     case make
+    case makeForm(MakeKind)
     case aiForm(GenerationKind)
     case aiResult(UUID)
     case aiHistory

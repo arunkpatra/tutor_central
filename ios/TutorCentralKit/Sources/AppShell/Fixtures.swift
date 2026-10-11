@@ -49,7 +49,7 @@ public enum Fixtures {
             qrImages: MemoryQRImageStore(images: state == .paymentsQR ? [meeraWorkspace.centre.id: sampleQR()] : [:]),
             ai: ai(for: state),
             aiHistory: FakeAIHistoryRepository(
-                generations: [.aiAssistantEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
+                generations: [.makeEmpty, .aiHistoryEmpty].contains(state) ? [] : FakeAIHistoryRepository.seed
             ),
             account: FakeAccountRepository(),
             notifications: FakeNotificationCenter(permission: notificationPermission(for: state)),

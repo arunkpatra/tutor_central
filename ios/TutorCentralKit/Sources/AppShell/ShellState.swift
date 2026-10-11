@@ -67,6 +67,8 @@ struct AbsenceAsk: Identifiable, Hashable {
     @ObservationIgnored var checkPresets: [UUID: CheckPreset] = [:]
     /// One AI store per centre: a call outlives its screen, and Recent and History are read once.
     @ObservationIgnored var ai: AIStore?
+    /// Make something's store for the centre (Recent and History read once; Phase 15).
+    @ObservationIgnored var make: MakeStore?
     /// The visit of Check a paper in progress, by its routes' id.
     @ObservationIgnored var check: CheckVisit?
     /// The visit of Scan register in progress: its list lives until Add or Back (Phase 6's minor 1).
@@ -170,6 +172,7 @@ struct AbsenceAsk: Identifiable, Hashable {
         tasks = nil
         ai?.cancel()
         ai = nil
+        make = nil
         school = nil
         schoolItemsChanged = nil
         testTomorrow = nil

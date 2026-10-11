@@ -12,6 +12,8 @@ public protocol TextbooksRepository: Sendable {
     func copyChapters(of textbookID: UUID, to studentID: UUID, centre: UUID) async throws
     func chapters(student: UUID) async throws -> [Chapter]
     func skills(student: UUID) async throws -> [Skill]
+    /// Every listed student's chapters and skills in one read of each table (Reports' Progress, Make's choices).
+    func books(centre: UUID, students: [UUID]) async throws -> [UUID: RecordBook]
     func setState(skillID: UUID, _ state: SkillState) async throws
     /// `copy_textbook_to_class` (migration 0017): Keep copies the book to every active student of its school and
     /// class; the count copied to.

@@ -35,9 +35,21 @@ public protocol PlansRepository: Sendable {
     func nameGroup(plan: UUID, group: Int, chapter: String, skill: String, centre: UUID) async throws
     /// The students' weekly notes and can-now-dos kept since a moment, newest first (Phase 14).
     func notes(centre: UUID, students: [UUID], since: Date) async throws -> [Artefact]
+    /// What Make something made (`made_from = 'make'`), newest first, at most 50, a regenerated one in its
+    /// predecessor's place (Phase 15).
+    func made(centre: UUID) async throws -> [Artefact]
 }
 
 public extension PlansRepository {
+    /// `keep_artefact` for Make's material (the artefact carries its `madeFor`): no plan, group 0, the student for a
+    /// student's, the exam for a mock's.
+    func keepMade(_ artefact: NewArtefact, student: UUID?, exam: UUID?, centre: UUID) async throws -> Artefact {
+        try await keep(
+            artefact, to: ArtefactLink(plan: nil, group: 0, student: student, itemKind: .practise, schoolItem: exam),
+            centre: centre
+        )
+    }
+
     /// `keep_artefact` for a student's note: no plan, no exam, no line linked (as a gap report's keep).
     func keepNote(_ note: NewNote, centre: UUID) async throws -> Artefact {
         try await keep(note.artefact, to: note.link, centre: centre)
@@ -105,11 +117,14 @@ public struct NewArtefact: Hashable, Sendable {
     public let photoPath: String?
     public let generationID: UUID?
     public let regeneratedFrom: UUID?
+    /// Whom Make made it for; set, the artefact is kept with `made_from = 'make'` and the words in its content.
+    public let madeFor: MakeFor?
 
     public init(
         kind: ArtefactKind, source: ArtefactSource, title: String, content: ArtefactContent, photoPath: String?,
-        generationID: UUID?, regeneratedFrom: UUID?
+        generationID: UUID?, regeneratedFrom: UUID?, madeFor: MakeFor? = nil
     ) {
+        self.madeFor = madeFor
         self.kind = kind
         self.source = source
         self.title = title
@@ -117,6 +132,15 @@ public struct NewArtefact: Hashable, Sendable {
         self.photoPath = photoPath
         self.generationID = generationID
         self.regeneratedFrom = regeneratedFrom
+    }
+
+    /// The same artefact as Make keeps it.
+    public func made(for target: MakeFor) -> NewArtefact {
+        NewArtefact(
+            kind: kind, source: source, title: title, content: content, photoPath: photoPath,
+            generationID: generationID,
+            regeneratedFrom: regeneratedFrom, madeFor: target
+        )
     }
 }
 

@@ -31,6 +31,9 @@ import Foundation
     public var logs: [AbsenceLog]
     public var feeLogs: [FeeLog]
     public var nextError: (any Error)?
+    /// Tests: every read of a student's log fails with this (the page's reads run together, so a one-off error could
+    /// be taken by another read first).
+    public var messagesFailure: (any Error)?
     /// Tests: `entries(centre:since:)` answers what it held when asked, this long after (a slow read).
     public var entriesDelay: Duration?
     public private(set) var logged: [UUID] = []
@@ -110,6 +113,9 @@ import Foundation
 
     /// The absences and fee messages as entries, with the V2 entries, newest first.
     public func messages(centre _: UUID, student: UUID) async throws -> [MessageEntry] {
+        if let messagesFailure {
+            throw messagesFailure
+        }
         try takeError()
         let absences = logs.filter { $0.studentID == student }.map {
             MessageEntry(id: UUID(), kind: .absence, openedAt: $0.openedAt, language: nil)
