@@ -120,6 +120,15 @@ import Testing
         #expect(register.student(Self.dev)?.nextStep == nil)
     }
 
+    @Test func aStepWaitsWhileACloseThatTracksTheStudentIsStillToBeSent() async {
+        let world = World()
+        let store = await Self.detail(Self.dev, world)
+        store.closeWaits = { (_: UUID) in true }
+        #expect(await store.chooseStep(.stepBack) == false)
+        #expect(store.message == StudentDetailStore.closeWaitingWords)
+        #expect(world.repository.nextStepCalls.isEmpty)
+    }
+
     @Test func offlineTheChangeIsRefusedInWords() async {
         let store = await Self.detail(Self.dev, World(online: false))
         #expect(await store.chooseStep(.stepBack) == false && store.message == OfflineRefusal.words(for: .nextStep))

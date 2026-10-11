@@ -29,6 +29,15 @@ struct NoteWeekTests: ParentFixtures {
         #expect(facts.rows.map(\.symbol) == ["book.closed", "checkmark.circle", "pencil.line", "calendar"])
     }
 
+    @Test func aSkillTaughtEarlierThatMovedOnThisWeekIsNotToldAsTaught() {
+        var skills = parentSkills()
+        // Writing a word equation, taught weeks ago, made secure on Tuesday: it moved this week but was not taught.
+        skills[0] = parentSkill("11", "Writing a word equation", .secure, india(2026, 10, 6, 18, 30))
+        // The numbers in front, practising since September, checked again on Wednesday.
+        skills[3] = parentSkill("14", "The numbers in front of a formula", .practising, india(2026, 10, 7, 18, 30))
+        #expect(facts(skills: skills).taught == ["Balancing equations", "Types of reactions"])
+    }
+
     @Test func checksAndMarksOutsideTheWeekDoNotCount() {
         let facts = facts(checks: devChecks.map { moved($0, to: day(9, 28)) }, sessions: [], marks: [devMarks[0]])
         #expect(facts.right == nil && facts.rightLine == "No checks yet")

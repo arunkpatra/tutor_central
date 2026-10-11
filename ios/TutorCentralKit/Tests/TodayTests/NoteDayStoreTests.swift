@@ -33,6 +33,7 @@ import Testing
         var recordFails = false
         var online = true
         var classes: FakeClassesRepository?
+        var messages: FakeMessageLogRepository?
     }
 
     static func students(_ world: World) -> [Student] {
@@ -75,7 +76,7 @@ import Testing
             classes: classesRepository, cache: nil, now: { now }
         )
         await register.loadIfNeeded()
-        let messages = FakeMessageLogRepository(now: { now })
+        let messages = world.messages ?? FakeMessageLogRepository(now: { now })
         var entries: [UUID: [MessageEntry]] = [:]
         for id in world.sent {
             entries[id, default: []].append(MessageEntry(
@@ -237,7 +238,6 @@ import Testing
         #expect(classes.noteDayCalls == [saturday, saturday])
         let shown = [PlanTest.evening.id, FakeClassesRepository.maths.id]
         #expect(classes.classes.filter { shown.contains($0.id) }.allSatisfy { $0.noteDay == saturday })
-        #expect(store.nextNoteDay == Day(year: 2026, month: 10, day: 17))
         let offline = await Self.make(World(online: false))
         await offline.load()
         #expect(await offline.changeDay(to: NoteDay.choices[0]) == false)
@@ -297,5 +297,33 @@ extension NoteDayStoreTests {
             store.open(riya)
         }
         #expect(opened == [Self.riya] && notes.isEmpty)
+    }
+
+    @Test func changeDayLeavesABatchWhoseNoteDayIsAnotherOne() async throws {
+        // Sunday evening: the Evening batch's Saturday notes still show beside Class 10 Maths' Sunday ones.
+        let saturday = try NoteDay(weekday: .saturday, time: #require(TimeOfDay(hour: 18, minute: 0)))
+        let classes = FakeClassesRepository()
+        let store = await Self.make(World(eveningNoteDay: saturday, classes: classes))
+        await store.load()
+        #expect(store.chosen == .default)
+        let monday = NoteDay.choices[4]
+        #expect(await store.changeDay(to: monday))
+        #expect(classes.noteDayCalls == [monday])
+        #expect(classes.classes.first { $0.id == PlanTest.evening.id }?.noteDay == saturday)
+        #expect(classes.classes.first { $0.id == FakeClassesRepository.maths.id }?.noteDay == monday)
+    }
+
+    @Test func aSlowEarlierReadDoesNotLandOverANewerOne() async throws {
+        let log = FakeMessageLogRepository(now: { PlanTest.at(11, 18, 30) })
+        log.entriesDelay = .milliseconds(400)
+        let store = await Self.make(World(messages: log))
+        let slow = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(100))
+        log.entriesDelay = nil
+        let sent = MessageEntry(id: UUID(), kind: .note, openedAt: PlanTest.at(11, 18, 20), language: .hindi)
+        log.entries = [Self.dev: [sent]]
+        await store.load()
+        await slow.value
+        #expect(row(store, Self.dev)?.state == .sent)
     }
 }

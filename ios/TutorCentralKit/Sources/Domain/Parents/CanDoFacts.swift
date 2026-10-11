@@ -70,8 +70,7 @@ public enum CanDoWeek {
                 home = (area, max(0, min(current, area.steps.count) - 1))
             }
         }
-        let fallback = movedUp.first.map { _ in home } ?? home
-        let line = fallback.map { atHome(area: $0.area, step: $0.step) } ?? atHome(area: .reading, step: 0)
+        let line = home.map { atHome(area: $0.area, step: $0.step) } ?? atHome(area: .reading, step: 0)
         return CanDoFacts(movedUp: movedUp, canDo: Array(canDo.prefix(4)), atHome: line, next: Array(next.prefix(3)))
     }
 

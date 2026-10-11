@@ -18,7 +18,8 @@ extension MessagesStore {
                 continue
             }
             let from = NoteDay.sendsFrom(made).date(in: calendar)
-            let until = made.adding(days: 2, calendar: calendar).date(in: calendar)
+            // Up to the next note day: a note held on its day may be sent from Send now later that week.
+            let until = made.adding(days: 7, calendar: calendar).date(in: calendar)
             let sends = entries.filter {
                 [.note, .canDo].contains($0.kind) && $0.openedAt >= from && $0.openedAt < until && !used.contains($0.id)
             }

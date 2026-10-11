@@ -38,6 +38,7 @@ import Observation
 
     public static let maxPages = 2
     public static let tooManyPages = "Two pages at most. A report card is one; a marked test front and back is two."
+    public static let undoFailed = "The marks weren't taken back. Check your connection and try again."
     public static let nothingRead = "Couldn't read any marks from this photo. Try a flatter, brighter one."
     public let aiLine = "AI can make mistakes. Check each mark against the paper."
     public let footnote = "Each mark read appears here for you to check. Nothing is kept until you tap Save."

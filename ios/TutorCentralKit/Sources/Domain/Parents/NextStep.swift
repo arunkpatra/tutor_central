@@ -26,7 +26,7 @@ public enum NextStep: String, CaseIterable, Hashable, Sendable, Codable {
             guard let before else {
                 return "Nothing comes before it in the book, so it is taught again with the worked example"
             }
-            return "\(before), then \(Self.lowered(skill))"
+            return "\(before), then \(NoteWeek.lowered(skill))"
         case .addToChecks: return "Three questions on it, spaced over the next weeks"
         case .leave: return "The plan carries on; the status stays"
         }
@@ -52,13 +52,6 @@ public enum NextStep: String, CaseIterable, Hashable, Sendable, Codable {
         case .watch: .teachAgain
         case .onTrack, .notKnown: .leave
         }
-    }
-
-    /// "Balancing equations" → "balancing equations"; a name that starts with an acronym stays.
-    private static func lowered(_ text: String) -> String {
-        let characters = Array(text)
-        guard let first = characters.first, characters.count < 2 || !characters[1].isUppercase else { return text }
-        return first.lowercased() + String(characters.dropFirst())
     }
 }
 

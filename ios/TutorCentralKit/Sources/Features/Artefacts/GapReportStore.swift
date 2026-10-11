@@ -127,7 +127,8 @@ public struct GapDayRow: Identifiable, Hashable, Sendable {
         stage = .making
         let tallies = GapTallies.bySkill(CheckResult(questions: mark.questions ?? [], summary: ""), mock: content)
         let request = GapRequest(
-            studentID: studentID, classLevel: student.classLevel ?? .eight, subject: exam?.subject ?? mark.subject,
+            studentID: studentID, classLevel: student.classLevel ?? .messageFallback,
+            subject: exam?.subject ?? mark.subject,
             daysLeft: max(1, today.days(to: exam?.date ?? today)), bySkill: tallies
         )
         do {

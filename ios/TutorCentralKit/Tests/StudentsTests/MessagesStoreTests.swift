@@ -144,3 +144,15 @@ import Testing
         #expect(store.loadFailed && store.months.isEmpty)
     }
 }
+
+extension MessagesStoreTests {
+    @Test func aHeldNoteSentLaterInTheWeekIsOneRowReadingItsSend() async {
+        // Made Sunday the 11th, held, sent from Send now on Wednesday the 14th.
+        let store = await Self.make(
+            Self.dev, entries: [Self.entry(.note, 10, 14)], notes: [Self.thisWeeksNote], now: Self.at(10, 14, 19)
+        )
+        await store.load()
+        let notes = store.months.flatMap(\.rows).filter { $0.title == "Weekly note" }
+        #expect(notes.map(\.line) == ["Sun 11 Oct · Hindi · opened Wed"])
+    }
+}

@@ -16,6 +16,8 @@ import Foundation
     public var delay: Duration?
     /// A make waits this long more (the plan still being written: P10-Today-Planning).
     public var makeDelay: Duration?
+    /// Tests: `keep` waits this long first, and a cancelled task stops there (as a cancelled request does).
+    public var keepDelay: Duration?
     /// The time a make or keep is stamped with.
     public var now: Date
 
@@ -62,6 +64,9 @@ import Foundation
     }
 
     public func keep(_ artefact: NewArtefact, to link: ArtefactLink, centre _: UUID) async throws -> Artefact {
+        if let keepDelay {
+            try await Task.sleep(for: keepDelay)
+        }
         try await begin()
         kept.append(artefact)
         let made = Artefact(

@@ -115,7 +115,7 @@ public struct NoteView: View {
                     .buttonStyle(.quiet(emphasised: true))
                     .disabled(store.stage != .ready)
                 HStack(spacing: Tokens.tileGap) {
-                    CopyButton(onCopy: { Task { await store.copy() } }, text: { store.signedBody })
+                    CopyButton(copy: { Task { await store.copy() } })
                         .disabled(!store.canSend)
                     Button { sending = true } label: {
                         Label("Send on WhatsApp", systemImage: "message").typeStyle(Tokens.buttonStrong)

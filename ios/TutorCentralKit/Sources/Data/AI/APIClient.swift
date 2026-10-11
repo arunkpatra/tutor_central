@@ -114,8 +114,9 @@ public struct APIClient: AIRepository, AccountRepository {
         case 422: .refused(body?.error ?? APIFailure.service.message)
         // The API could not reach the database (D68): the tutor's connection words, never "sign in again".
         case 503: .offline
-        // A tutor-facing 400 (a mock no longer here, a photo refused) keeps its words; any other status (a stale
-        // API's 501, a 500) never shows the body.
+        // A tutor-facing 400 (a mock no longer here, a photo refused) keeps its words; a body the API found invalid
+        // (`reason: "invalid"`, the schema's words) and any other status (a stale API's 501, a 500) never show it.
+        case 400 where body?.reason == "invalid": .service
         case 400: body.map { .server($0.error) } ?? .service
         default: .service
         }

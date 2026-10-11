@@ -23,7 +23,7 @@ public enum NotOnTrackMessage {
 
     /// The facts from the status's reasons, the current skill, the skill before it and the step.
     public static func facts(reasons: [String], skill: Skill?, before: Skill?, step: NextStep) -> Facts {
-        let hard = skill.map { [NoteWeek.lowered($0.name)] } ?? ["keeping up this month"]
+        let hard = skill.map { [NoteWeek.lowered($0.name)] } ?? ["this month's work"]
         let doing = switch (step, skill, before) {
         case let (.stepBack, skill?, before?):
             "step back to \(NoteWeek.lowered(before.name)), then \(NoteWeek.lowered(skill.name))"

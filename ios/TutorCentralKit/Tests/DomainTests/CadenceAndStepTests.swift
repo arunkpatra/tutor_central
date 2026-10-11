@@ -163,7 +163,9 @@ struct NotOnTrackMessageTests: ParentFixtures {
             before: nil,
             step: .tellParent
         )
-        #expect(noSkill.hard == ["keeping up this month"])
+        #expect(noSkill.hard == ["this month's work"])
+        #expect(NotOnTrackMessage.body(studentName: "Dev Kumar", parentName: "Ramesh Kumar", facts: noSkill)
+            .hasPrefix("Hello Ramesh, Dev is finding this month's work hard"))
         #expect(noSkill.doing == "go over the last chapter again in the next class")
         let again = NotOnTrackMessage.facts(reasons: [], skill: balancing, before: nil, step: .tellParent)
         #expect(again.doing == "teach it again with a worked example in the next class")

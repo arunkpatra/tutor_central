@@ -141,6 +141,8 @@ extension RootView {
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
         )
         store.onStepChanged = { [shell] student in shell.schoolItemsChanged?([student]) }
+        let queue = centreQueue()
+        store.closeWaits = { [weak queue] student in queue?.pending.closeWaits(for: student) ?? false }
         return store
     }
 }
