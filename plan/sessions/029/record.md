@@ -3,7 +3,7 @@
 Model: Claude Fable 5.1 (D17), from `resume/027-phase-14-plan.md`, with `superpowers:writing-plans`. Outcome:
 `plan/phase-14-plan.md` (24 tasks, thirteen pull requests, tests first, the launch states, the hand runs, the cost run, the
 review focus, 30 decisions, D67 and D68 as tasks), seven Phase 14 boards drawn on row 24 of the canvas and mirrored into
-`docs/design/` awaiting the owner's approval, `plan/resume/028-phase-14-build.md` indexed, `STATE.md`, this record.
+`docs/design/`, both approved by the owner the same day, `plan/resume/028-phase-14-build.md` indexed, `STATE.md`, this record.
 Documents only, to `main` (D12). No code.
 
 ## What was done, in order
@@ -69,4 +69,5 @@ Reading only; headless Chrome for the boards; no `bun check` run (no code change
 
 ## Next
 
-The owner's word on the plan and the seven boards; the build on Opus 5.5 from `resume/028-phase-14-build.md`.
+The owner approved the plan and the seven boards the same day ("The plan is approved; the boards are approved too").
+Phase 14's build on Opus 5.5 from `resume/028-phase-14-build.md`.

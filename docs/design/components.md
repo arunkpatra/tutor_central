@@ -961,7 +961,7 @@ without a mark; after Use this plan the button reads "Plan in use" (feedback.md'
 adaptive row with the score in `numberRow` and the Below usual chip under it. 10.3's To parents rows are `ParentSendRow`s,
 the first Send primary.
 
-## Phase 14 parts (drawn 2026-10-11, session 29): marks from a photo, the paste well, the chip row, the window row
+## Phase 14 parts (approved 2026-10-11, session 29): marks from a photo, the paste well, the chip row, the window row
 
 **Mark read row:** a 24 pt checkbox (the Phase 13 confirm row's), "<subject> · <test>" as the title, the date in `footnote`
 `text2` (or "Date · not given" in `text3`), the score "14 of 25" in `numberRow`, a chevron; the row opens the mark's sheet.

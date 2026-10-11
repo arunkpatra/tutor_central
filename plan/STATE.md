@@ -7,9 +7,9 @@ short and true. History belongs in git and in the phase files, not here.
 (24 tasks, thirteen pull requests, tests first, the launch states, the hand runs, the cost run, the review focus, 30 decisions,
 D67 and D68 as tasks); seven Phase 14 boards drawn on row 24 of the canvas (`P14-Marks-Reading`, `P14-Marks-Confirm`, `-Light`,
 `P14-Marks-Edit`, `P14-School-Paste`, `P14-School-Student`, `P14-School-Item-Window`) and mirrored, awaiting the owner's
-approval; `resume/028-phase-14-build.md` indexed; the record in `plan/sessions/029/`. Documents only, to `main` (D12).
-**Next:** the owner's word on the plan and the seven boards; then Phase 14's build on Opus 5.5 from
-`resume/028-phase-14-build.md`. The owner installed 1.0.0 (24) and tests the builds together after the last phase (D68).
+approval, both approved by the owner the same day ("The plan is approved; the boards are approved too");
+`resume/028-phase-14-build.md` indexed; the record in `plan/sessions/029/`. Documents only, to `main` (D12).
+**Next:** Phase 14's build on Opus 5.5 from `resume/028-phase-14-build.md`. The owner installed 1.0.0 (24) and tests the builds together after the last phase (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -18,7 +18,7 @@ approval; `resume/028-phase-14-build.md` indexed; the record in `plan/sessions/0
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (drawn 2026-10-11, awaiting approval) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -32,7 +32,7 @@ approval; `resume/028-phase-14-build.md` indexed; the record in `plan/sessions/0
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
-| 14 Parents | Planned (session 29, 2026-10-11): `phase-14-plan.md` and the seven P14 boards await the owner's approval | Scope `phase-14-parents.md`; D67 and D68 are its tasks; the build from `resume/028-phase-14-build.md` |
+| 14 Parents | Planned (session 29, 2026-10-11): `phase-14-plan.md` and the seven P14 boards approved by the owner the same day | Scope `phase-14-parents.md`; D67 and D68 are its tasks; the build from `resume/028-phase-14-build.md` |
 | 15 and 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-15-make-and-polish.md`, `phase-16-release.md` |
 
 ## In flight

@@ -1255,10 +1255,10 @@ What the boards settle:
   "<the exam> · mock · <subject>" with the school and the day it was marked; with no marks the card holds the Kit's empty
   row "No marks yet" and "Marks from mocks and checked papers appear here.".
 
-## Phase 14 boards (drawn 2026-10-11, session 29): the states no earlier step drew
+## Phase 14 boards (approved 2026-10-11, session 29): the states no earlier step drew
 
 Row 24 of the canvas (y 51200; the title note at 50900); sources `mockups/P14-*`. Drawn with Phase 14's plan
-(`plan/phase-14-plan.md`, decision 30) for the owner's approval before PRs 11 and 12 build them. Content is illustrative
+(`plan/phase-14-plan.md`, decision 30) and approved by the owner the same day, before PRs 11 and 12 build them. Content is illustrative
 (Hemanth's report card of three subjects, one undated; Dev's items on the School tab; the Science unit test's sheet).
 
 | Board | Source |
