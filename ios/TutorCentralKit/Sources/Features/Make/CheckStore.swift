@@ -201,13 +201,15 @@ import Observation
         skipsScheme && saved
     }
 
-    /// Before any call: offline it is refused with the pages kept; a mock's marking needs the student's consent.
+    /// Before any call: offline it is refused with the pages kept; marking a student's paper needs their parent's
+    /// consent,
+    /// whatever the scheme (D62, spec section 8).
     func mayCheck() async -> Bool {
         guard await online() else {
             message = OfflineRefusal.words(for: .mark)
             return false
         }
-        if case .mock = scheme, let student, student.consent == nil {
+        if let student, student.consent == nil {
             stage = .failed(Self.waitsForConsent(student))
             return false
         }
@@ -230,14 +232,10 @@ import Observation
         saved = false
         let title = schemeTitle
         do {
-            // A mock's marking names the student: the API checks their consent (D62).
-            let named: UUID? = if case .mock = scheme {
-                student.id
-            } else {
-                nil
-            }
+            // The marking names the student: the API asks their parent's consent (D62, migration 0021).
             let answer = try await ai.checkPaper(
-                pages: pages, scheme: scheme, studentName: student.name, studentID: named, centre: workspace.centre.id
+                pages: pages, scheme: scheme, studentName: student.name, studentID: student.id,
+                centre: workspace.centre.id
             )
             guard !Task.isCancelled, stage == .checking else { return }
             result = answer.result

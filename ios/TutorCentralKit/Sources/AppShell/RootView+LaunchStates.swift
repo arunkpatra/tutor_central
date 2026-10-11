@@ -72,7 +72,7 @@ extension RootView {
         .checkIntro, .checkSchemeChooser, .checkPagesEmpty, .checkPages, .checkScheme, .checkSchemeTyped,
         .checkChecking,
         .checkResult, .checkMarkPicker,
-        .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed,
+        .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed, .checkConsentWaiting,
     ]
     static let checkVisit = UUID(uuidString: "eeeeeeee-0000-0000-0000-000000000001") ?? UUID()
 
@@ -84,7 +84,7 @@ extension RootView {
         case .checkPages, .checkPagesEmpty: [.checkPaper(id), .checkPages(id)]
         case .checkScheme, .checkSchemeTyped: [.checkPaper(id), .checkPages(id), .checkScheme(id)]
         case .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited, .checkResultScrolled, .checkSaved,
-             .checkFailed:
+             .checkFailed, .checkConsentWaiting:
             [.checkPaper(id), .checkPages(id), .checkScheme(id), .checkResult(id)]
         default: []
         }

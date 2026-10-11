@@ -283,7 +283,20 @@ extension Fixtures {
 extension Fixtures {
     /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
     static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
-        progressStates.contains(state) ? (progressStudents, FakeClassesRepository.withEvening) : boardRegister(state)
+        if progressStates.contains(state) {
+            return (progressStudents, FakeClassesRepository.withEvening)
+        }
+        // Check a paper's boards mark Hemanth's paper: his parent has agreed (D62).
+        let board = boardRegister(state)
+        let agreed = RootView.checkStates.contains(state) && state != .checkConsentWaiting
+        return agreed ? (board.students.map(agreeing), board.classes) : board
+    }
+
+    /// A student whose parent's consent is recorded (the boards' moment).
+    static func agreeing(_ student: Student) -> Student {
+        var agreed = student
+        agreed.consent = student.parentPhone.map { ConsentRecord(at: now, phone: $0, how: .whatsapp) }
+        return agreed
     }
 
     private static func boardRegister(_ state: LaunchState) -> (students: [Student], classes: [Classroom]) {
