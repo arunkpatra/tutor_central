@@ -33,7 +33,7 @@ public struct NoteView: View {
                 hero
                 if let ladder = store.ladder {
                     VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-                        SectionHeader("Moved up")
+                        SectionHeader(ladder.heading)
                         LadderStrip(area: ladder.area, steps: ladder.steps, current: ladder.current, line: ladder.line)
                     }
                 }

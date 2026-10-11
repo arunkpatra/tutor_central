@@ -9,6 +9,7 @@ import Foundation
 extension Fixtures {
     static let noteDayStates: Set<LaunchState> = [
         .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .note, .noteSend, .noteCanDo, .noteWriting,
+        .noteCanDoNoChange,
         .studentMessages,
     ]
 

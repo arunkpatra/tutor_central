@@ -69,7 +69,7 @@ extension RootView {
         let sunday = Day(year: 2026, month: 10, day: 11) ?? Day(Fixtures.now, calendar: DayHeading.india)
         return switch state {
         case .note, .noteSend, .noteWriting: [.note(FakeStudentsRepository.dev, sunday)]
-        case .noteCanDo: [.note(FakeStudentsRepository.sahil, sunday)]
+        case .noteCanDo, .noteCanDoNoChange: [.note(FakeStudentsRepository.sahil, sunday)]
         case .studentMessages: [.student(FakeStudentsRepository.dev), .studentMessages(FakeStudentsRepository.dev)]
         case .studentNotOnTrack, .studentNextStep, .studentTellParent: [.student(FakeStudentsRepository.dev)]
         case .marksReading, .marksConfirm, .marksEdit:

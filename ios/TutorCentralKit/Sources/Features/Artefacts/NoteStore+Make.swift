@@ -215,7 +215,9 @@ extension NoteStore {
         let area = can.movedUp.first?.area ?? .reading
         let step = can.movedUp.first.flatMap { area.steps.firstIndex(of: $0.step) }
             ?? ladderStep(area, record: record)
-        ladder = LadderModel(area: area.title, steps: area.steps, current: step, line: can.movedUpLine)
+        ladder = LadderModel(
+            heading: can.ladderHeading, area: area.title, steps: area.steps, current: step, line: can.movedUpLine
+        )
     }
 
     /// The highest secure step of an area, the first when none is.
