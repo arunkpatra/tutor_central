@@ -13,12 +13,14 @@ public enum CheckBoardState: Hashable, Sendable {
     case scrolled
 }
 
-/// Check a paper's intro (P6-Check-Intro), pushed from More: the student (a picker), the notice, Take photos (the
-/// document camera, up to six pages) and Choose from Photos. The consent sheet comes first for a centre that has not
-/// agreed. Pages chosen open the Answer sheet.
+/// Check a paper under Make (P10-Make-Check), pushed from More: the student (a picker), the scheme (the student's
+/// mocks, the papers made here, or typed: the Scheme tile opens the chooser), the notices, Take a photo (the document
+/// camera, up to six pages) and Choose from Photos. The consent sheet comes first for a centre that has not agreed.
+/// Pages chosen open the Answer sheet.
 public struct CheckIntroView: View {
     let store: CheckStore
     let openPages: () -> Void
+    let openSchemes: () -> Void
     @State private var picked: [PhotosPickerItem] = []
     @State private var scanning = false
     @State private var pickingStudent = false
@@ -28,41 +30,45 @@ public struct CheckIntroView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
-    public init(store: CheckStore, openPages: @escaping () -> Void) {
+    public init(store: CheckStore, openPages: @escaping () -> Void, openSchemes: @escaping () -> Void) {
         self.store = store
         self.openPages = openPages
+        self.openSchemes = openSchemes
     }
 
-    static let notice = NoticesCard.Notice(
-        symbol: "lock",
-        text: "The photos go to our AI service to be read. We keep no copy; the service normally deletes them "
-            + "within 30 days."
-    )
+    static let notices = [
+        NoticesCard.Notice(
+            symbol: "lock",
+            text: "The photos go to our AI service to be read. We keep no copy; the service normally deletes them "
+                + "within 30 days."
+        ),
+        NoticesCard.Notice(
+            symbol: "checkmark", text: "Nothing is saved until you have checked every mark and tapped Save."
+        ),
+    ]
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 BackRow(title: "Check a paper") { dismiss() }
                 IntroHero(
-                    symbol: "doc.text.magnifyingglass", title: "Suggested marks for an answer sheet",
-                    line: "Photograph each page of a student's answer sheet. With the marking scheme, we suggest a "
-                        + "mark for every question. You decide each mark before anything is saved."
+                    symbol: "doc.text", title: "Check a paper",
+                    line: "Photograph the answer sheet. We suggest a mark for each answer against the key; you decide "
+                        + "every one."
                 )
-                Card(.hero) {
-                    VStack(alignment: .leading, spacing: Tokens.fieldGap) {
-                        PickerTile(label: "Student", value: store.student?.name ?? "Choose a student") {
-                            pickingStudent = true
-                        }
-                        if let student = store.student {
-                            Text(store.register.classroom(student.classID)?.name ?? "No class")
-                                .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
-                                .padding(.horizontal, Tokens.fieldGap)
-                        }
+                VStack(alignment: .leading, spacing: Tokens.fieldGap) {
+                    PickerTile(label: "Student", value: store.student?.name ?? "Choose a student") {
+                        pickingStudent = true
                     }
+                    PickerTile(label: "Scheme", value: store.introSchemeTitle, action: openSchemes)
+                        .disabled(store.student == nil)
+                    Text("A mock or paper made here, with its key; or type a scheme.")
+                        .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                        .padding(.horizontal, Tokens.fieldGap)
                 }
-                NoticesCard([Self.notice])
+                NoticesCard(Self.notices)
                 VStack(spacing: Tokens.rowPaddingDense) {
-                    Button(action: takePhotos) { Label("Take photos", systemImage: "camera") }
+                    Button(action: takePhotos) { Label("Take a photo", systemImage: "camera") }
                         .buttonStyle(.primary(.card))
                     PhotosPicker(selection: $picked, maxSelectionCount: CheckStore.maxPages, matching: .images) {
                         Label("Choose from Photos", systemImage: "photo.on.rectangle")
@@ -83,7 +89,7 @@ public struct CheckIntroView: View {
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
-        .task { await store.prepare() }
+        .task { await store.loadSchemes() }
         .onChange(of: picked) { _, items in
             guard !items.isEmpty else { return }
             picked = []

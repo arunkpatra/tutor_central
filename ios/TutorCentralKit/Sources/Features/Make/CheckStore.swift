@@ -15,12 +15,30 @@ import Observation
     public static let maxPages = 6
 
     public internal(set) var stage: Stage = .intro
-    public var studentID: UUID?
+    public var studentID: UUID? {
+        didSet {
+            // A mock is the student's exam: another student's is cleared; a paper stays.
+            if studentID != oldValue, preset == nil, case .mock = scheme {
+                scheme = .typed(typedScheme)
+                chosenMark = nil
+                schemeChosenOnIntro = false
+            }
+        }
+    }
+
     public internal(set) var pages: [ImageUpload] = []
     public var scheme: SchemeSource = .typed("")
     /// The last typed scheme, kept while the tutor looks at the papers.
     public var typedScheme = ""
     public internal(set) var papers: [Generation] = []
+    /// The student's mocks (their exams' and Make's for them), newest first (Phase 15).
+    public internal(set) var mocks: [Artefact] = []
+    /// A scheme chosen on the intro's tile: the pages go straight to the marks.
+    public internal(set) var schemeChosenOnIntro = false
+    /// The mark a chosen mock writes (its exam and title).
+    @ObservationIgnored var chosenMark: MarkTarget?
+    /// The exams read with the mocks, for a mock's title and subject.
+    @ObservationIgnored var exams: [SchoolItem] = []
     public internal(set) var result: CheckResult?
     public internal(set) var saved = false
     public internal(set) var saving = false
@@ -40,6 +58,9 @@ import Observation
     let students: any StudentsRepository
     /// Where a saved check writes its mark (Phase 13); none before the record exists.
     let record: (any RecordRepository)?
+    /// The mocks a scheme can be (Phase 15): the plans' artefacts and the school's exams.
+    let plans: (any PlansRepository)?
+    let schoolItems: (any SchoolItemsRepository)?
     /// A mock's Mark from a photo: the student and the key set, the scheme step skipped.
     public let preset: CheckPreset?
     /// Whether the network is there (AppShell's connectivity); a test sets it.
@@ -60,9 +81,12 @@ import Observation
     public init(
         workspace: Workspace, register: any Register, ai: any AIRepository, history: any AIHistoryRepository,
         students: any StudentsRepository, centres: any CentreRepository, now: @escaping @Sendable () -> Date,
-        calendar: Calendar = DayHeading.india, record: (any RecordRepository)? = nil, preset: CheckPreset? = nil
+        calendar: Calendar = DayHeading.india, record: (any RecordRepository)? = nil, preset: CheckPreset? = nil,
+        plans: (any PlansRepository)? = nil, schoolItems: (any SchoolItemsRepository)? = nil
     ) {
         self.record = record
+        self.plans = plans
+        self.schoolItems = schoolItems
         self.preset = preset
         if let preset {
             studentID = preset.studentID
@@ -102,7 +126,7 @@ import Observation
         switch scheme {
         case let .paper(id): papers.first { $0.id == id }?.result.title ?? "Marking scheme"
         case .typed: "Typed scheme"
-        case .mock: preset?.mark.test ?? "The mock"
+        case let .mock(_, artefact): preset?.mark.test ?? mocks.first { $0.id == artefact }.map(mockTitle) ?? "The mock"
         }
     }
 
@@ -167,9 +191,9 @@ import Observation
         await run()
     }
 
-    /// A preset's pages go straight to checking: the key is the mock's.
+    /// A preset's pages go straight to checking (the key is the mock's), and so do a scheme chosen on the intro's.
     public var skipsScheme: Bool {
-        preset != nil
+        preset != nil || schemeChosenOnIntro
     }
 
     /// A mock's marks saved: Back goes back to where Mark from a photo started, not to the pages (hand run 9).
@@ -274,9 +298,15 @@ public extension CheckStore {
 }
 
 extension CheckStore {
-    /// "Question paper · Class 8 · 20 marks · Sun 11 Oct" (a paper made from a batch before names the batch); a set
-    /// names its questions.
+    /// "Question paper · Class 8 · 20 marks · Sun 11 Oct, 16:40" (a paper made from a batch before names the batch); a
+    /// set names its questions; the time tells two papers of one day apart (U22).
     func paperLine(_ paper: Generation) -> String {
+        Self.paperLine(paper, calendar: calendar) { self.register.classroom($0)?.name }
+    }
+
+    nonisolated static func paperLine(
+        _ paper: Generation, calendar: Calendar, batchName: (UUID?) -> String?
+    ) -> String {
         let size = switch paper.result {
         case let .paper(result): result.totalMarks == 1 ? "1 mark" : "\(result.totalMarks) marks"
         case let .homework(set), let .worksheet(set):
@@ -284,7 +314,7 @@ extension CheckStore {
         case .progressNote: ""
         }
         let day = Day(paper.createdAt, calendar: calendar).shortWeekdayText
-        let className = paper.className { self.register.classroom($0)?.name }
-        return [paper.kind.title, className, size, day].joined(separator: " · ")
+        let when = "\(day), \(QueuedChange.clock(paper.createdAt, calendar: calendar))"
+        return [paper.kind.title, paper.className(batchName: batchName), size, when].joined(separator: " · ")
     }
 }

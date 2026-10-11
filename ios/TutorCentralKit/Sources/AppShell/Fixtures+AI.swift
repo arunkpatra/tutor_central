@@ -41,9 +41,25 @@ extension Fixtures {
     /// A check state's visit as far as its board goes: Hemanth chosen, two drawn pages, the scheme read, the check run.
     @MainActor static func prepareCheck(_ store: CheckStore, for state: LaunchState) {
         guard RootView.checkStates.contains(state) else { return }
+        if state == .checkIntro || state == .checkSchemeChooser {
+            // P10-Make-Check: Dev, the mock of his Science unit test 3 offered first.
+            store.studentID = FakeStudentsRepository.dev
+            Task {
+                await store.loadSchemes()
+                if state == .checkIntro, let mock = store.schemeChoices.first(where: \.isMock) {
+                    store.choose(mock)
+                }
+            }
+            return
+        }
         store.studentID = FakeStudentsRepository.seed.first { $0.name == "Hemanth Reddy" }?.id
-        guard state != .checkIntro else { return }
         store.addPages([answerPage(lines: 8), answerPage(lines: 6)])
+        if state == .checkPagesEmpty {
+            // U23: every page removed.
+            store.removePage(at: 0)
+            store.removePage(at: 0)
+            return
+        }
         if state == .checkSchemeTyped {
             store.typedScheme = "Q1 (1) b\nQ2 (1) D = 16 − 24 = −8\nQ3 (1) k = 6\nQ4 (1) real and equal\n"
                 + "Q5 (2) x = 3, 4; 1 for factorising\nQ6 (2) x = √(2/3), both roots\nQ7 (2) k = ±6, 1 for one"

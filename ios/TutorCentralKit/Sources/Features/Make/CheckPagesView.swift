@@ -32,7 +32,7 @@ public struct CheckPagesView: View {
                 BackRow(title: "Answer sheet") { dismiss() }
                 VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
                     SectionHeader(
-                        store.pages.count == 1 ? "1 page" : "\(store.pages.count) pages",
+                        store.pagesHeading,
                         action: room > 0 ? ("From Photos", { pickingPhotos = true }) : nil
                     )
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Tokens.tileGap) {

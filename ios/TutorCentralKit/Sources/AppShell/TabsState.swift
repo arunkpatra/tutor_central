@@ -138,6 +138,8 @@ enum Route: Hashable {
     case checkPaper(UUID)
     case checkPages(UUID)
     case checkScheme(UUID)
+    /// The intro's Scheme tile: the Marking scheme screen as a chooser (Phase 15).
+    case checkSchemeChooser(UUID)
     case checkResult(UUID)
     /// School (Phase 13): "Check what was read" from a share, a photo, the pasteboard or by hand; an item's page; Ask
     /// parents to forward.

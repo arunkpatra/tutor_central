@@ -67,7 +67,9 @@ extension RootView {
 
     /// Check a paper's states, on the More tab's stack; one visit id for all of them.
     nonisolated static let checkStates: Set<LaunchState> = [
-        .checkIntro, .checkPages, .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker,
+        .checkIntro, .checkSchemeChooser, .checkPagesEmpty, .checkPages, .checkScheme, .checkSchemeTyped,
+        .checkChecking,
+        .checkResult, .checkMarkPicker,
         .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed,
     ]
     static let checkVisit = UUID(uuidString: "eeeeeeee-0000-0000-0000-000000000001") ?? UUID()
@@ -76,7 +78,8 @@ extension RootView {
         let id = checkVisit
         return switch state {
         case .checkIntro: [.checkPaper(id)]
-        case .checkPages: [.checkPaper(id), .checkPages(id)]
+        case .checkSchemeChooser: [.checkPaper(id), .checkSchemeChooser(id)]
+        case .checkPages, .checkPagesEmpty: [.checkPaper(id), .checkPages(id)]
         case .checkScheme, .checkSchemeTyped: [.checkPaper(id), .checkPages(id), .checkScheme(id)]
         case .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited, .checkResultScrolled, .checkSaved,
              .checkFailed:

@@ -69,13 +69,8 @@ extension Fixtures {
     }
 
     @MainActor static func plans(for state: LaunchState) -> FakePlansRepository {
-        if makeStates.contains(state) {
-            // Make's forms: today's plan for the groups, and Make's own artefacts.
-            let evening = FakePlansRepository.evening()
-            return FakePlansRepository(
-                plans: evening.plans, artefacts: FakePlansRepository.boardArtefacts + FakePlansRepository.madeRecent,
-                now: evening.now
-            )
+        if let make = makePlans(for: state) {
+            return make
         }
         switch state {
         case .studentMessages:
@@ -104,5 +99,22 @@ extension Fixtures {
         default:
             return FakePlansRepository()
         }
+    }
+
+    /// Make's states: today's plan for the groups and Make's own artefacts; Check a paper's intro: the exam's mock and
+    /// Make's.
+    @MainActor static func makePlans(for state: LaunchState) -> FakePlansRepository? {
+        if makeStates.contains(state) {
+            let evening = FakePlansRepository.evening()
+            return FakePlansRepository(
+                plans: evening.plans, artefacts: FakePlansRepository.boardArtefacts + FakePlansRepository.madeRecent,
+                now: evening.now
+            )
+        }
+        if state == .checkIntro || state == .checkSchemeChooser {
+            return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts + FakePlansRepository
+                .madeRecent)
+        }
+        return nil
     }
 }
