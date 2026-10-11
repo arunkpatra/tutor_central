@@ -38,6 +38,14 @@ import Observation
     let register: any Register
     let ai: any AIRepository
     let students: any StudentsRepository
+    /// Where a saved check writes its mark (Phase 13); none before the record exists.
+    let record: (any RecordRepository)?
+    /// A mock's Mark from a photo: the student and the key set, the scheme step skipped.
+    public let preset: CheckPreset?
+    /// Whether the network is there (AppShell's connectivity); a test sets it.
+    @ObservationIgnored public var online: () async -> Bool = { true }
+    /// The mark Save wrote, for Undo.
+    @ObservationIgnored var savedMarkID: UUID?
     private let history: any AIHistoryRepository
     private let centres: any CentreRepository
     let now: @Sendable () -> Date
@@ -52,8 +60,14 @@ import Observation
     public init(
         workspace: Workspace, register: any Register, ai: any AIRepository, history: any AIHistoryRepository,
         students: any StudentsRepository, centres: any CentreRepository, now: @escaping @Sendable () -> Date,
-        calendar: Calendar = DayHeading.india
+        calendar: Calendar = DayHeading.india, record: (any RecordRepository)? = nil, preset: CheckPreset? = nil
     ) {
+        self.record = record
+        self.preset = preset
+        if let preset {
+            studentID = preset.studentID
+            scheme = preset.scheme
+        }
         self.workspace = workspace
         self.register = register
         self.ai = ai
@@ -88,7 +102,7 @@ import Observation
         switch scheme {
         case let .paper(id): papers.first { $0.id == id }?.result.title ?? "Marking scheme"
         case .typed: "Typed scheme"
-        case .mock: "The mock"
+        case .mock: preset?.mark.test ?? "The mock"
         }
     }
 
@@ -148,9 +162,39 @@ import Observation
     /// Checking: the pages and the scheme to the API, the marks clamped on arrival. One at a time: a check while one
     /// runs is refused; an answer that arrives after Cancel is dropped.
     public func check() async {
-        guard canCheck else { return }
+        guard canCheck, await mayCheck() else { return }
         stage = .checking
         await run()
+    }
+
+    /// A preset's pages go straight to checking: the key is the mock's.
+    public var skipsScheme: Bool {
+        preset != nil
+    }
+
+    /// A mock's marks saved: Back goes back to where Mark from a photo started, not to the pages (hand run 9).
+    public var leavesVisitOnBack: Bool {
+        skipsScheme && saved
+    }
+
+    /// Before any call: offline it is refused with the pages kept; a mock's marking needs the student's consent.
+    func mayCheck() async -> Bool {
+        guard await online() else {
+            message = OfflineRefusal.words(for: .mark)
+            return false
+        }
+        if case .mock = scheme, let student, student.consent == nil {
+            stage = .failed(Self.waitsForConsent(student))
+            return false
+        }
+        return true
+    }
+
+    /// "Marking Dev's paper waits for Ramesh's consent. Record it on Dev's page."
+    static func waitsForConsent(_ student: Student) -> String {
+        let parent = student.parentName?.split(separator: " ").first.map { "\($0)'s" } ?? "their parent's"
+        let name = student.firstName
+        return "Marking \(name)'s paper waits for \(parent) consent. Record it on \(name)'s page."
     }
 
     var canCheck: Bool {
@@ -162,8 +206,14 @@ import Observation
         saved = false
         let title = schemeTitle
         do {
+            // A mock's marking names the student: the API checks their consent (D62).
+            let named: UUID? = if case .mock = scheme {
+                student.id
+            } else {
+                nil
+            }
             let answer = try await ai.checkPaper(
-                pages: pages, scheme: scheme, studentName: student.name, centre: workspace.centre.id
+                pages: pages, scheme: scheme, studentName: student.name, studentID: named, centre: workspace.centre.id
             )
             guard !Task.isCancelled, stage == .checking else { return }
             result = answer.result
@@ -188,10 +238,29 @@ public extension CheckStore {
     /// Checking in a task the store owns; refused while one runs.
     func begin() {
         guard canCheck else { return }
+        task = Task { [weak self] in
+            guard let self, await mayCheck() else { return }
+            stage = .checking
+            await run()
+        }
+    }
+
+    /// The pages step's Check with a preset (the scheme is the mock's key): checking starts in a task the store owns;
+    /// true when the result screen should open (checking, or refused for want of consent in its words), false when it
+    /// was refused offline (the pages stay).
+    func checkFromPages() async -> Bool {
+        guard canCheck else { return false }
+        guard await mayCheck() else {
+            if case .failed = stage {
+                return true
+            }
+            return false
+        }
         stage = .checking
         task = Task { [weak self] in
             await self?.run()
         }
+        return true
     }
 
     /// Cancel or Back while checking: the check is abandoned (its row stays on the server), back at the scheme.

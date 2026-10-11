@@ -257,6 +257,7 @@ extension Fixtures {
         case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
         case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
         case _ where planStates.contains(state): india(day: 7, hour: 16, minute: 35)
+        case _ where lastDaysStates.contains(state): india(day: 14, hour: 19, minute: 0)
         case .todayNoBatch: india(day: 10, hour: 9, minute: 30)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
         default: nil

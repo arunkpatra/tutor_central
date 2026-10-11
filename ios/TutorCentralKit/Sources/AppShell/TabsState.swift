@@ -132,4 +132,6 @@ enum Route: Hashable {
     case schoolRead(ReadSource)
     case schoolItem(UUID)
     case schoolAsk
+    /// A student's gap report for an exam (the exam, the student), made when first opened.
+    case schoolGapReport(UUID, UUID)
 }

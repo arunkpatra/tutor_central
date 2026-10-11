@@ -1,3 +1,5 @@
+import AITools
+import Artefacts
 import Data
 import Domain
 import Foundation
@@ -317,5 +319,58 @@ struct SchoolLaunchStateTests {
         let items = try await Fixtures.dependencies(for: .todayRevision).schoolItems
             .items(centre: Fixtures.meeraWorkspace.centre.id)
         #expect(items.map(\.id) == [exam] && (RootView.tab(for: .todayRevision) ?? .today) == .today)
+    }
+
+    /// P10-Mock and its key: the mock for Dev's own test opens on Today's stack.
+    @MainActor @Test func theMockStatesOpenTheBoardsMock() async throws {
+        for state in [LaunchState.mock, .mockKey] {
+            #expect(RootView.initialRoutes(for: state) == [.artefact(FakePlansRepository.boardMockID)])
+        }
+        #expect(RootView.artefactBoardState(.mockKey) == .key && RootView.artefactBoardState(.mock) == nil)
+        let kept = try await Fixtures.dependencies(for: .mock).plans
+            .artefact(id: FakePlansRepository.boardMockID, centre: Fixtures.meeraWorkspace.centre.id)
+        #expect(kept?.kind == .mock && kept?.schoolItemID == FakeSchoolItemsRepository.devsTest)
+    }
+
+    /// A mock's Mark from a photo becomes Check a paper's preset: the student, the key, the mark's target.
+    @Test func aMockMarkBecomesCheckAPapersPreset() throws {
+        let dev = try #require(FakeStudentsRepository.seed.first { $0.id == FakeStudentsRepository.dev })
+        let scheme = SchemeSource.mock(generationID: UUID(), artefactID: FakePlansRepository.boardMockID)
+        let mark = MockMark(
+            student: dev, scheme: scheme, subject: "Science", test: "Science unit test · mock",
+            schoolItemID: FakeSchoolItemsRepository.devsTest, artefactID: FakePlansRepository.boardMockID
+        )
+        let preset = CheckPreset(mark)
+        #expect(preset.studentID == dev.id && preset.scheme == scheme)
+        #expect(preset.mark == MarkTarget(
+            subject: "Science", test: "Science unit test · mock", schoolItemID: FakeSchoolItemsRepository.devsTest,
+            artefactID: FakePlansRepository.boardMockID
+        ))
+    }
+
+    /// P10-School-Exam-LastDays and P10-GapReport on Wednesday 14 October with the mock marked for Dev and Meher.
+    @MainActor @Test func theLastDaysStatesOpenTheExamAndDevsReport() async throws {
+        let exam = FakeSchoolItemsRepository.scienceTest3
+        #expect(RootView.initialRoutes(for: .schoolLastDays) == [.schoolItem(exam)])
+        #expect(RootView.initialRoutes(for: .gapReport) == [
+            .schoolItem(exam), .schoolGapReport(exam, FakeStudentsRepository.dev),
+        ])
+        let deps = Fixtures.dependencies(for: .gapReport)
+        let centre = Fixtures.meeraWorkspace.centre.id
+        #expect(try await deps.plans.mock(for: exam, centre: centre)?.id == FakePlansRepository.examMockID)
+        let marks = try await deps.record.marks(
+            centre: centre, students: [FakeStudentsRepository.dev, FakeStudentsRepository.meher]
+        )
+        #expect(marks.count == 2)
+    }
+
+    /// Hand run 9: after a mock's marks were saved, Back landed on the pages step (Check again) — a preset's visit is
+    /// left whole, back to where Mark from a photo started.
+    @Test func leavingAPresetsResultLeavesTheWholeCheck() {
+        let id = UUID()
+        #expect(RootView.leavingCheck(id, preset: true) == [
+            .checkResult(id), .checkScheme(id), .checkPages(id), .checkPaper(id),
+        ])
+        #expect(RootView.leavingCheck(id, preset: false) == [.checkResult(id), .checkScheme(id)])
     }
 }

@@ -7,17 +7,32 @@ import School
 extension Fixtures {
     static let schoolStates: Set<LaunchState> = [
         .schoolEmpty, .school, .schoolCalendar, .schoolAddMenu, .schoolReading, .schoolConfirm, .schoolConfirmEdit,
-        .schoolItem, .schoolItemEdit, .schoolItemDelete,
+        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport,
         .schoolItemHomework, .schoolItemHoliday, .schoolAsk, .schoolAskFailed,
         .schoolTestTomorrow,
     ]
 
     /// The exam's page (P10-School-Item, -Edit, -Delete): the Evening batch's five with the plan's statuses, so
     /// Preparation reads the Evening batch's days.
-    static let examPageStates: Set<LaunchState> = [.schoolItem, .schoolItemEdit, .schoolItemDelete]
+    static let examPageStates: Set<LaunchState> = [
+        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport,
+    ]
+
+    /// The last days' states: Wednesday 14 October after the class, the mock marked for Dev and Meher.
+    static let lastDaysStates: Set<LaunchState> = [.schoolLastDays, .gapReport]
 
     /// Dev's parent writes in Hindi and agreed (P10-TestTomorrow, P10-Today-AfterClose's "Dev's father · Hindi").
     static func withSchoolLanguages(_ students: [Student], for state: LaunchState) -> [Student] {
+        if lastDaysStates.contains(state) {
+            // P10-School-Exam-LastDays: Dev's and Meher's parents agreed; Nikhil's not yet.
+            return students.map { student in
+                guard [FakeStudentsRepository.dev, FakeStudentsRepository.meher].contains(student.id),
+                      let phone = student.parentPhone else { return student }
+                var changed = student
+                changed.consent = ConsentRecord(at: india(day: 1, hour: 17, minute: 0), phone: phone, how: .inPerson)
+                return changed
+            }
+        }
         guard [.schoolTestTomorrow, .todayAfterClose].contains(state) else { return students }
         return students.map { student in
             guard student.id == FakeStudentsRepository.dev, let phone = student.parentPhone else { return student }
@@ -65,7 +80,13 @@ extension RootView {
         switch state {
         case .schoolReading, .schoolConfirm, .schoolConfirmEdit:
             [.schoolRead(.pasted(FakeSchoolItemsRepository.boardMessage))]
-        case .schoolItem, .schoolItemEdit, .schoolItemDelete: [.schoolItem(FakeSchoolItemsRepository.scienceTest3)]
+        case .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays:
+            [.schoolItem(FakeSchoolItemsRepository.scienceTest3)]
+        case .gapReport:
+            [
+                .schoolItem(FakeSchoolItemsRepository.scienceTest3),
+                .schoolGapReport(FakeSchoolItemsRepository.scienceTest3, FakeStudentsRepository.dev),
+            ]
         case .schoolItemHomework: [.schoolItem(FakeSchoolItemsRepository.mathsHomework)]
         case .schoolItemHoliday: [.schoolItem(FakeSchoolItemsRepository.dasara)]
         case .schoolAsk, .schoolAskFailed: [.schoolAsk]

@@ -91,6 +91,13 @@ extension RootView {
         return made
     }
 
+    /// What the result's Back takes off the stack: back at the scheme for a check begun here; a mock's (a preset) is
+    /// left whole, back to where Mark from a photo started (hand run 9).
+    static func leavingCheck(_ id: UUID, preset: Bool) -> [Route] {
+        let routes: [Route] = [.checkResult(id), .checkScheme(id)]
+        return preset ? routes + [.checkPages(id), .checkPaper(id)] : routes
+    }
+
     /// One store per visit of Check a paper: its steps are pushed routes carrying the visit's id.
     func checkStore(_ id: UUID, in workspace: Workspace) -> CheckStore {
         if let visit = shell.check, visit.id == id {
@@ -98,10 +105,13 @@ extension RootView {
         }
         let made = CheckStore(
             workspace: workspace, register: register(for: workspace), ai: deps.ai, history: deps.aiHistory,
-            students: deps.students, centres: deps.centres, now: deps.now
+            students: deps.students, centres: deps.centres, now: deps.now, record: deps.record,
+            preset: shell.checkPresets[id]
         )
+        made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
         made.onStudentChanged = { [shell] in
+            shell.recordChanged += 1
             Task { await shell.register?.refresh() }
         }
         if let launch {
@@ -115,17 +125,29 @@ extension RootView {
     func checkView(_ route: Route, in workspace: Workspace) -> some View {
         switch route {
         case let .checkPages(id):
-            CheckPagesView(store: checkStore(id, in: workspace)) { shell.tabs.push(.checkScheme(id)) }
+            let store = checkStore(id, in: workspace)
+            CheckPagesView(store: store) {
+                shell.tabs.push(store.skipsScheme ? .checkResult(id) : .checkScheme(id))
+            }
         case let .checkScheme(id):
             CheckSchemeView(
                 store: checkStore(id, in: workspace), typed: launch == .checkSchemeTyped,
                 showsFocus: launch == .checkSchemeTyped
             ) { shell.tabs.push(.checkResult(id)) }
         case let .checkResult(id):
-            CheckResultView(store: checkStore(id, in: workspace), boardState: launch.flatMap(Self.checkBoardState)) {
-                shell.tabs.remove(.checkResult(id))
-                shell.tabs.remove(.checkScheme(id))
-            }
+            CheckResultView(
+                store: checkStore(id, in: workspace), boardState: launch.flatMap(Self.checkBoardState),
+                backToPages: {
+                    for route in Self.leavingCheck(id, preset: false) {
+                        shell.tabs.remove(route)
+                    }
+                },
+                leaveVisit: {
+                    for route in Self.leavingCheck(id, preset: true) {
+                        shell.tabs.remove(route)
+                    }
+                }
+            )
         case let .checkPaper(id):
             CheckIntroView(store: checkStore(id, in: workspace)) { shell.tabs.push(.checkPages(id)) }
         default:

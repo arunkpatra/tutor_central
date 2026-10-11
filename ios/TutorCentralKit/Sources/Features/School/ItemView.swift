@@ -14,14 +14,22 @@ public struct ItemActions {
     let openToday: (UUID) -> Void
     let openArtefact: (UUID) -> Void
     let testTomorrow: (TestTomorrowAsk) -> Void
+    /// The last days' Mark from a photo: Check a paper for the student with the mock's key.
+    let markPaper: (Student, Artefact, SchoolItem) -> Void
+    /// The last days' Gap report: the exam and the student.
+    let openGapReport: (UUID, UUID) -> Void
 
     public init(
         openToday: @escaping (UUID) -> Void, openArtefact: @escaping (UUID) -> Void,
-        testTomorrow: @escaping (TestTomorrowAsk) -> Void
+        testTomorrow: @escaping (TestTomorrowAsk) -> Void,
+        markPaper: @escaping (Student, Artefact, SchoolItem) -> Void = { _, _, _ in },
+        openGapReport: @escaping (UUID, UUID) -> Void = { _, _ in }
     ) {
         self.openToday = openToday
         self.openArtefact = openArtefact
         self.testTomorrow = testTomorrow
+        self.markPaper = markPaper
+        self.openGapReport = openGapReport
     }
 }
 
@@ -35,6 +43,7 @@ public struct ItemView: View {
     let back: () -> Void
     @State private var editing: ItemFormStore?
     @State private var deleting = false
+    @State private var choosingPaper = false
     @State private var topInset: CGFloat = 0
     @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
@@ -142,6 +151,23 @@ public struct ItemView: View {
             } else if !store.who.isEmpty {
                 WhoSection(rows: store.who)
             }
+            if let lastDays = store.lastDays, let item = store.item {
+                LastDaysSections(
+                    model: lastDays,
+                    openMock: { actions?.openArtefact($0) },
+                    mark: { markFromPhoto(lastDays, item: item) },
+                    openGapReport: { student in actions?.openGapReport(item.id, student) },
+                    testTomorrowLine: store.testTomorrowLine,
+                    testTomorrow: store.testTomorrowAsk.flatMap { ask in actions.map { actions in
+                        { actions.testTomorrow(ask) }
+                    } }
+                )
+                .confirmationDialog("Whose paper?", isPresented: $choosingPaper, titleVisibility: .visible) {
+                    ForEach(markable(lastDays)) { student in
+                        Button(student.name) { mark(student, lastDays, item) }
+                    }
+                }
+            }
             if !store.preparation.isEmpty {
                 PreparationSection(
                     rows: store.preparation,
@@ -162,6 +188,29 @@ public struct ItemView: View {
             .buttonStyle(.destructive(.card))
             .environment(\.buttonIconSize, Tokens.iconSmall)
         }
+    }
+
+    /// The exam's students whose parents agreed.
+    private func markable(_ model: LastDaysModel) -> [Student] {
+        let ids = Set(model.marked.filter(\.canMark).map(\.id))
+        return store.register.activeStudents.filter { ids.contains($0.id) }.sorted { $0.name < $1.name }
+    }
+
+    private func markFromPhoto(_ model: LastDaysModel, item: SchoolItem) {
+        let students = markable(model)
+        if students.count == 1, let only = students.first {
+            mark(only, model, item)
+        } else if students.isEmpty {
+            notices?
+                .show(model.marked.first?.consentLine.map { "\($0)." } ?? "No student of this exam can be marked yet.")
+        } else {
+            choosingPaper = true
+        }
+    }
+
+    private func mark(_ student: Student, _ model: LastDaysModel, _ item: SchoolItem) {
+        guard let mock = model.mock else { return }
+        actions?.markPaper(student, mock, item)
     }
 
     private func open(_ opens: PreparationOpen) {
