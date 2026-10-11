@@ -11,10 +11,11 @@ const PAGES: Record<string, string> = {
   "privacy.html": "How Tutor Central handles your records",
   "terms.html": "Terms of use",
   "support.html": "We are one email away",
+  "trust.html": "How Tutor Central treats your students",
   "404.html": "There is nothing at this address.",
 };
 
-test("the export holds the five pages with their titles and the commit", () => {
+test("the export holds the six pages with their titles and the commit", () => {
   for (const [file, words] of Object.entries(PAGES)) {
     if (!existsSync(join(OUT, file))) throw new Error(`${file} was not exported`);
     expect(page(file)).toContain(words);
@@ -23,7 +24,7 @@ test("the export holds the five pages with their titles and the commit", () => {
 });
 
 test("no legal page ships with a placeholder", () => {
-  for (const file of ["privacy.html", "terms.html"]) {
+  for (const file of ["privacy.html", "terms.html", "trust.html"]) {
     expect(page(file)).not.toContain("[OWNER:");
   }
 });

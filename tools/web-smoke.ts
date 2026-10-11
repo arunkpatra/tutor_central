@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
-/** bun tools/web-smoke.ts <origin> --commit <sha>: the deployed site serves the four pages from that commit, an unknown path
+/** bun tools/web-smoke.ts <origin> --commit <sha>: the deployed site serves the five pages from that commit, an unknown path
  *  and a capitalised one are the not-found page with a 404, http and www redirect to the apex, a trailing slash lands (D45). Retries while the alias
  *  moves. Exit 1 with the problems in words. */
-const PAGES = ["/", "/privacy", "/terms", "/support"];
+const PAGES = ["/", "/privacy", "/terms", "/support", "/trust"];
 const NOT_FOUND_WORDS = "There is nothing at this address.";
 const REDIRECTS = [301, 302, 307, 308];
 
@@ -34,7 +34,8 @@ export async function once(origin: string, commit: string, fetchLike: typeof fet
       problems.push("/privacy/ does not reach /privacy");
     const host = new URL(origin).host;
     const http = await get(`http://${host}/`);
-    if (!redirectsTo(http, (l) => l.startsWith("https://"))) problems.push(`http://${host}/ does not redirect to https`);
+    if (!redirectsTo(http, (l) => l.startsWith("https://")))
+      problems.push(`http://${host}/ does not redirect to https`);
     const www = await get(`https://www.${host}/`);
     if (!redirectsTo(www, (l) => l.startsWith(`${origin}/`)))
       problems.push(`https://www.${host}/ does not redirect to ${origin}/`);
@@ -70,5 +71,5 @@ if (import.meta.main) {
     console.error(`smoke of ${origin} failed:\n${problems.map((p) => `  - ${p}`).join("\n")}`);
     process.exit(1);
   }
-  console.log(`smoke of ${origin}: the four pages serve ${commit}; not found, http and www behave`);
+  console.log(`smoke of ${origin}: the five pages serve ${commit}; not found, http and www behave`);
 }

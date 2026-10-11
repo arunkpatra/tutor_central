@@ -6,6 +6,7 @@ import Home from "../../app/page";
 import Privacy from "../../app/privacy/page";
 import Support from "../../app/support/page";
 import Terms from "../../app/terms/page";
+import Trust from "../../app/trust/page";
 
 /** The app's banned words (ErrorWordsTests, D41); "database" is in INTERNAL below. */
 const BANNED = [
@@ -41,6 +42,7 @@ const PAGES: Record<string, () => string> = {
   privacy: () => renderToStaticMarkup(createElement(Privacy)),
   terms: () => renderToStaticMarkup(createElement(Terms)),
   support: () => renderToStaticMarkup(createElement(Support)),
+  trust: () => renderToStaticMarkup(createElement(Trust)),
 };
 
 /** Nothing internal on a public page (D50, the owner): no company that runs a part of the app other than the AI service the
