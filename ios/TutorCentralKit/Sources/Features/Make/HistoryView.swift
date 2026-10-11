@@ -2,28 +2,20 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// History (P6-History, -Empty), pushed from the Assistant's nav row and See all: every result by month, newest first;
-/// a row reopens it. Scans and checked papers are not listed.
+/// History (P6-History, -Empty), pushed from Make's nav row and See all: what Make made and V1's results by month,
+/// newest first; a row reopens it. Scans and checked papers are not listed.
 public struct HistoryView: View {
-    let store: AIStore
-    let actions: AIToolsActions
+    let store: MakeStore
+    let actions: MakeActions
     /// AppShell's: the offline or sync line under the title (D39).
     let status: RootStatus
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
-    public init(store: AIStore, actions: AIToolsActions, status: RootStatus = .online) {
+    public init(store: MakeStore, actions: MakeActions, status: RootStatus = .online) {
         self.store = store
         self.actions = actions
         self.status = status
-    }
-
-    /// The months, newest first, each with its results.
-    private var months: [(period: Period, items: [Generation])] {
-        let grouped = Dictionary(grouping: store.history) {
-            Period.containing($0.createdAt, in: store.calendar.timeZone)
-        }
-        return grouped.keys.sorted { $0.isoDay > $1.isoDay }.map { (period: $0, items: grouped[$0] ?? []) }
     }
 
     public var body: some View {
@@ -39,22 +31,20 @@ public struct HistoryView: View {
                         Spacer()
                         Button("Retry") { Task { await store.loadHistory() } }.buttonStyle(.quiet(emphasised: true))
                     }
-                } else if store.historyLoaded, store.history.isEmpty {
-                    Card { EmptyRow(symbol: "sparkles", title: AIWords.emptyTitle, line: AIWords.emptyLine) }
+                } else if store.showsEmpty {
+                    Card { EmptyRow(symbol: "sparkles", title: MakeWords.emptyTitle, line: MakeWords.emptyLine) }
                 } else if !store.historyLoaded {
                     Card { SkeletonRow() }
                 } else {
-                    ForEach(months, id: \.period) { month in
+                    ForEach(store.months, id: \.period) { month in
                         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
                             Eyebrow(month.period.monthName).padding(.horizontal, Tokens.rowGapInner)
                             Card {
                                 VStack(spacing: 0) {
-                                    ForEach(month.items) { generation in
-                                        ResultRow(
-                                            symbol: generation.kind.symbol,
-                                            title: generation.title(studentName: store.studentName),
-                                            line: generation.line(className: store.className, calendar: store.calendar)
-                                        ) { actions.openResult(generation.id) }
+                                    ForEach(month.rows) { row in
+                                        ResultRow(symbol: row.symbol, title: row.title, line: row.line) {
+                                            actions.open(row.opens)
+                                        }
                                     }
                                 }
                             }

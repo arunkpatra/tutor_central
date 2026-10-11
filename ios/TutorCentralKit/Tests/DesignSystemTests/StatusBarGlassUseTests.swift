@@ -11,7 +11,7 @@ struct StatusBarGlassUseTests {
     }
 
     static let pushedAIScreens = [
-        "Students/ScanReviewView", "Students/ScanRegisterView", "Make/AssistantView", "Make/GenerateFormView",
+        "Students/ScanReviewView", "Students/ScanRegisterView", "Make/MakeHomeView", "Make/GenerateFormView",
         "Make/ResultView", "Make/NoteResultView", "Make/HistoryView", "Make/CheckIntroView",
         "Make/CheckPagesView", "Make/CheckSchemeView", "Make/CheckResultView",
     ]

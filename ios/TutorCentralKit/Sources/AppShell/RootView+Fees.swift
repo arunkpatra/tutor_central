@@ -54,6 +54,7 @@ extension RootView {
         shell.today?.workspaceChanged(merged)
         shell.fees?.workspaceChanged(merged)
         shell.ai?.workspaceChanged(merged)
+        shell.make?.workspaceChanged(merged)
     }
 
     /// Remind or Mark paid from the Students tab (the detail, a student's fees): the Fees tab at that month with the

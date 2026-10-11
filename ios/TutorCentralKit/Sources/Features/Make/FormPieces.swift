@@ -90,15 +90,11 @@ struct ClassLevelTile: View {
 
 /// The words of the AI Assistant's screens (P6-*; components.md, Phase 6 parts).
 enum AIWords {
-    static let homeLead = "Say what you need; a draft arrives in under a minute. You check it before it reaches a "
-        + "student or a parent."
     static let homeLine = "AI can make mistakes. Check everything before you share it."
     static let resultLine = "AI can make mistakes. Check every question and answer before you share it."
     static let noteLine = "AI can make mistakes. Read the note as the parent will."
     static let creatingLine = "Usually under a minute. You can wait here or come back from History."
     static let offlineLine = "Check your connection and try again. Nothing was used up."
-    static let emptyTitle = "Nothing created yet"
-    static let emptyLine = "Papers, homework, worksheets and notes you create appear here, ready to open again."
 
     static func footnote(_ kind: GenerationKind, parentName: String?) -> String {
         switch kind {

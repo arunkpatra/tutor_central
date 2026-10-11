@@ -219,8 +219,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case reportsAttendance = "reports-attendance"
     case reportsExport = "reports-export"
     case reportsEmpty = "reports-empty"
-    case aiAssistant = "ai-assistant"
-    case aiAssistantEmpty = "ai-assistant-empty"
+    case make
+    case makeEmpty = "make-empty"
     case aiPaper = "ai-paper"
     /// The paper's Class tile open on the class wheel; the paper with nothing chosen yet (P12-Form-Paper-ClassWheel,
     /// -NoClass).

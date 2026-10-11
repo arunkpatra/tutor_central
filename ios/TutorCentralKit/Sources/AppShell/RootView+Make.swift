@@ -28,6 +28,20 @@ extension RootView {
         return made
     }
 
+    /// Make something's store: V1's results through the Assistant's store, Make's list with its copy on this iPhone.
+    func makeStore(for workspace: Workspace) -> MakeStore {
+        if let make = shell.make {
+            return make
+        }
+        let made = MakeStore(
+            workspace: workspace, register: register(for: workspace), plans: deps.plans, ai: aiStore(for: workspace),
+            now: deps.now
+        )
+        made.madeCache = cachedRead(workspace, "make-made")
+        shell.make = made
+        return made
+    }
+
     /// The result handler, holding its store weakly: the store owns the closure (Phase 6's minor 1).
     static func resultHandler(for store: AIStore, shell: ShellState) -> (Generation) -> Void {
         { [weak store, shell] generation in
@@ -155,14 +169,20 @@ extension RootView {
         }
     }
 
-    var aiToolsActions: AIToolsActions {
-        AIToolsActions(
+    /// A kind's form: V1's for the three V1 kinds (#122's forms, unchanged), Make's for the others.
+    nonisolated static func formRoute(for kind: MakeKind) -> Route {
+        kind.v1Kind.map(Route.aiForm) ?? .makeForm(kind)
+    }
+
+    var makeActions: MakeActions {
+        MakeActions(
             openStudent: { id in
                 shell.tabs.select(.students)
                 shell.tabs.paths[.students] = [.student(id)]
             },
             openResult: { shell.tabs.push(.aiResult($0)) },
-            openForm: { shell.tabs.push(.aiForm($0)) },
+            openArtefact: { shell.tabs.push(.artefact($0)) },
+            openForm: { shell.tabs.push(Self.formRoute(for: $0)) },
             openHistory: { shell.tabs.push(.aiHistory) }
         )
     }
@@ -184,16 +204,19 @@ extension RootView {
                         onMissing: { shell.tabs.remove(.aiResult(id)) }
                     )
                 case .aiHistory:
+                    let make = makeStore(for: workspace)
                     HistoryView(
-                        store: store, actions: aiToolsActions,
-                        status: rootStatus(savedAt: store.historySavedAt, offlineRead: store.historyOfflineRead)
+                        store: make, actions: makeActions,
+                        status: rootStatus(savedAt: make.savedAt, offlineRead: make.offlineRead)
                     )
                 case .scanRegister:
                     scanView(in: workspace)
                 case .checkPaper, .checkPages, .checkScheme, .checkResult:
                     checkView(route, in: workspace)
                 default:
-                    AssistantView(store: store, actions: aiToolsActions)
+                    MakeHomeView(
+                        store: makeStore(for: workspace), actions: makeActions, startsAtRecent: launch == .makeEmpty
+                    )
                 }
             }
             .onChange(of: store.message) { _, message in

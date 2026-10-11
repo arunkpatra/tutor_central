@@ -58,7 +58,7 @@ import Testing
         await register.loadIfNeeded()
         let log = FakeMessageLogRepository(entries: [student: entries], now: { now })
         if fails {
-            log.nextError = URLError(.notConnectedToInternet)
+            log.messagesFailure = URLError(.notConnectedToInternet)
         }
         return MessagesStore(
             student: student, centre: FakeCentreRepository.meeraWorkspace.centre.id, register: register, messages: log,
