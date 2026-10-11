@@ -10,8 +10,9 @@ cost run on the real models with the owner's yes (mock ₹3.94, marking ₹8.18,
 class of three); a fresh review on Fable 5.1 (no Critical, four Important fixed in #134, five minors deferred); deploy run
 38123899264; TestFlight 1.0.0 (24). The owner approved real AI calls in testing without asking (be judicious). "As built" in
 `phase-13-school.md`; the record and ledger in `plan/sessions/028/`.
-**Next:** the owner tries 1.0.0 (24) (T8: the share from WhatsApp); Phase 14's plan on Fable 5.1 from
-`resume/027-phase-14-plan.md`.
+**Next:** Phase 14's plan on Fable 5.1 from `resume/027-phase-14-plan.md`, its scope widened by the owner (D67: the model per
+kind of AI work set in one place; D68: Phase 13's U41 to U45, five minors and the lost-connection answer folded in, and a
+phase fixes what it finds). The owner installed 1.0.0 (24) and tests the builds together after the last phase.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -85,12 +86,13 @@ identity). The remote holds `main`,
 
 ## Open items
 
-- **Phase 13 review minors (deferred):** the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`; and,
-  noted: the API answers a lost Supabase connection as 401 "sign in again" (the verifier's rule since V1); a 501's words
+- **Phase 13 review minors (in Phase 14's scope, D68):** the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`;
+  and, also Phase 14's: the API answers a lost Supabase connection as 401 "sign in again" (the verifier's rule since V1); a 501's words
   reach the screen through `APIFailure` (seen once against a stale local API).
 - **CI warnings kept (the owner's ask, #127):** `VNDetectBarcodesRequestRevision1` (QRDecoder's deliberate fallback for
   the simulator and CI), the AuthorizationController underscored-module note (Apple's SDK), and the runner's Homebrew lines.
-- **The cost of marking:** ₹8.18 a paper on Opus (two pages) is most of an exam's cost; D64's price reads it.
+- **The cost of marking:** ₹8.18 a paper on Opus (two pages) is most of an exam's cost; D64's price reads it; D67 lets the
+  model per work type change without code.
 - **Phase 12 review minors (deferred):** eight of the ten `Final: minor (deferred)` lines of `plan/sessions/026/ledger.md`
   (two fold into Phase 13's tasks: a check's skill matched by name first, the 200-character line cut); the two rulings left
   open (an unnamed group, a new batch's first checks) are Phase 13's PR 10 (the owner, 2026-10-11).
@@ -119,7 +121,7 @@ identity). The remote holds `main`,
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
 - **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9; T1 to T3 for Phase 11 and T4 to T7 for Phase 12, T8 to T10
-  for Phase 13 wait for the tester); D1 to D8 were Phase 9's and now run on V2 before
+  for Phase 13 wait for the tester; the owner tests the builds together after the last phase, D68); D1 to D8 were Phase 9's and now run on V2 before
   Phase 15's round.
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.

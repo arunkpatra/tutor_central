@@ -3,7 +3,8 @@
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Fable 5.1
 (D17: plans on Fable, builds on Opus). Phase 14's boards are Phase 10's step 10.6 (approved) and the note day's list in
 step 10.3 (P10-Today-NoteDay, approved); marks from a photo has only its entry point drawn (Add from a photo on the student's
-Marks, P10-Student-Record). This session writes the plan and the build's resume prompt, then stops for the owner's review.
+Marks, P10-Student-Record). The owner widened the scope on 2026-10-11 (D67, D68). This session writes the plan and the
+build's resume prompt, then stops for the owner's review.
 
 ---
 
@@ -14,11 +15,11 @@ school's pattern and marked from a photo, the gap report sets the last days, Tes
 parents, and the student's page shows Marks (U36). Read, in this order, before doing anything:
 
 1. `CLAUDE.md`, then `ios/CLAUDE.md`, `api/CLAUDE.md`, `supabase/CLAUDE.md` (Phase 13 added rules to each).
-2. `plan/STATE.md`, `plan/SESSIONS.md`, `plan/README.md` (decisions D1 to D66), `plan/ui-polish.md` (U41 to U45 are new from
-   Phase 13; U40 is open on the student's page).
+2. `plan/STATE.md`, `plan/SESSIONS.md`, `plan/README.md` (decisions D1 to D68: D67 and D68 are this phase's), `plan/ui-polish.md`
+   (U41 to U45 are Phase 13's and this phase's to close).
 3. `docs/spec-v2.md` (the parent sections: the weekly note, can-now-do, the cadence, consent and what is held, marks from a
    photo, not on track and the next step, the signature; the models by kind; section 7's message rows and section 8's
-   cadence), `plan/phase-14-parents.md` (the scope), `plan/phase-13-school.md`'s "As built" (the messages to parents, the
+   cadence), `plan/phase-14-parents.md` (the scope, items 7 and 8 added by the owner), `plan/phase-13-school.md`'s "As built" (the messages to parents, the
    cadence as built, marking and marks, the cost measured, what was left open), and `plan/phase-11-record-and-close.md`'s
    "As built" (tracking statuses and their reasons, consent, the close).
 4. `docs/design/information-architecture.md`, "Phase 10 boards", step 10.6 (the note, can-now-do, the sent log, a held note,
@@ -34,10 +35,14 @@ parents, and the student's page shows Marks (U36). Read, in this order, before d
    (`Sources/Data/Messages/`, `message_log` and its kinds), `Sources/Domain/Record/TrackingRules.swift` and the student's
    page (`Sources/Features/Students/`), Check a paper's preset and marks (`Sources/Features/AITools/CheckStore*.swift`,
    `CheckPreset`, `MarkTarget`), `api/src/routes/v2.ts` and `prompts/` (test tomorrow's prompt is the pattern for a note in
-   the parent's language), V1's progress note (`/ai/generate` kind `progress_note`).
+   the parent's language), V1's progress note (`/ai/generate` kind `progress_note`), `api/src/models.ts` (the per-kind
+   table and `MARKING_MODEL`, which D67 replaces), `api/src/auth.ts` (a failed verifier answers 401 "sign in again"),
+   `ios/TutorCentralKit/Tests/DomainTests/PriceSheet.swift` (the test-side price sheet).
 
 **What is already true:** production holds migrations 0001 to 0022 and the API at `cfddfc5` (Phase 13's kinds live); TestFlight
-carries 1.0.0 (24), Phase 13, which the owner is trying (T8: the share from WhatsApp). The cadence rule, the two-language
+carries 1.0.0 (24), Phase 13; the owner installed it and tests the builds together after the last phase (D68), so the hand
+runs in the simulator against the local stack are the check of each phase until then: plan them to cover each new screen
+and each write. The cadence rule, the two-language
 sheet, consent per student and the WhatsApp log already exist; Phase 14 extends them to the weekly note rather than building
 them again. "Made with Tutor Central" is in no message yet. The owner approved real AI calls in testing without asking each
 time (be judicious; record what ran and what it cost).
@@ -54,14 +59,22 @@ card's marks read and saved), the cost of a week's notes measured for D64, the r
 happy path exercises: a student absent all week, a student with no checks yet, a parent of two students, a note edited past
 600 characters, the note day changed after notes were sent, a held suggestion that frees up mid-week, a report card with
 subjects the student has no book for). Marks from a photo has no board beyond its entry point: name the boards it needs (the
-reading and the marks to confirm) and get them approved on the canvas before their task, as Phase 13's row 23 was. Decide
-small things in the plan and list them; ask the owner one question at a time only for what is his. Two to put to him:
+reading and the marks to confirm) and get them approved on the canvas before their task, as Phase 13's row 23 was.
 
-- **The cost of reading a paper:** Phase 13 measured a marking on Opus at ₹8.18 for two pages, most of an exam's ₹30 for a
-  class of three; report cards add more readings. Keep Opus for reading handwriting, or try Sonnet for report cards (printed)
-  and measure both?
-- **What folds in:** Phase 13 left U41 to U45, five deferred minors and the API answering a lost database connection as "sign
-  in again". Which, if any, ride in this phase's pull requests (those touching the same files)?
+The owner's two rulings of 2026-10-11 are tasks of this plan, not questions:
+
+- **D67, the model per kind of AI work in one place.** One checked-in table of work type to model, with a class band where
+  it matters and marking a handwritten paper apart from reading a printed report card; an environment variable per work
+  type overrides it at deploy with no code change; `MARKING_MODEL` and `models.ts`' table fold into it; the price sheet and
+  the cost run read it; tests prove an override reaches the next call and its log. Measure reading a report card on Sonnet
+  and on Opus in the cost run and set the table's default from it (the owner approved real calls for testing).
+- **D68, what Phase 13 left, and what this phase finds.** Fold in U41 to U45 (a board first for any that changes what is seen
+  beyond an approved board: likely U41, U42 and U43; U44 matches P10-School-Item; U45 is the mock's prompt), the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`, and the API's answer to a lost
+  database connection ("sign in again" only when the token is refused). In the plan, the phase closes with no open finding
+  of its own: a hand-run fault, a review finding of any grade, or a polish item the phase's work brought is fixed in the
+  phase, each with a test that failed first. The review's minors are fixed in the fix pass too.
+
+Decide small things in the plan and list them; ask the owner one question at a time only for what is his.
 
 Then write `plan/resume/028-phase-14-build.md` for the build on Opus 5.5 and index both in `plan/resume/README.md`. Show
 the owner the plan before any build starts. Documents only, to `main` (D12).
@@ -70,5 +83,5 @@ the owner the plan before any build starts. Documents only, to `main` (D12).
 concrete reason when it is wrong (`docs/working/pushback.md`); be brief; decide small things and say what you decided; ask
 one question at a time; no technical words in anything a tutor reads (D41); plain voice in documents (no slogans, no
 "every"); the word is Students, and Batch on screen; nothing from V1 renamed in the model (D56); migrations additive (D26);
-no service-role key (D37, D60). Update `plan/STATE.md` before you stop; write `plan/sessions/029/record.md` (or the next
+no service-role key (D37, D60); nothing found in the phase is deferred (D68). Update `plan/STATE.md` before you stop; write `plan/sessions/029/record.md` (or the next
 number) at the end.
