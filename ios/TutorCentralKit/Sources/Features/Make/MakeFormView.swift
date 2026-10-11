@@ -72,6 +72,12 @@ public struct MakeFormView: View {
             }
         }
         .sheet(item: $sheet) { which in sheetContent(which) }
+        // A chooser over a typed field: the keyboard goes away as it opens (hand run 4), as the wheels' do.
+        .onChange(of: sheet) { _, opened in
+            if opened != nil {
+                Keyboard.dismiss()
+            }
+        }
     }
 
     @ViewBuilder private var below: some View {
