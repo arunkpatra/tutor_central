@@ -190,7 +190,9 @@ struct NoStudentsCard: View {
                 actions: (
                     .init("Add a student", emphasis: .primary, run: addStudent),
                     .init("Scan paper register", run: scanRegister)
-                )
+                ),
+                // P10-Students-Empty stacks the two at full width (U34).
+                stacked: true
             )
         }
     }

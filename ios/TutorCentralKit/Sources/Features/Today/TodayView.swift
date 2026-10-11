@@ -120,6 +120,10 @@ public struct TodayView: View {
                             .opacity(status.offline ? Tokens.opacityDisabled : 1)
                         }
                     }
+                    if Self.roomBelow(boardState) {
+                        // The boards draw Today scrolled past its end (U11, U19): a screen of room to scroll into.
+                        Color.clear.containerRelativeFrame(.vertical)
+                    }
                 }
                 .padding(.horizontal, Tokens.pageSide)
                 .padding(.top, max(0, Tokens.pageTop - topInset))
@@ -155,9 +159,14 @@ public struct TodayView: View {
                 if case let .noteHeld(student) = boardState {
                     held = store.noteDay?.held(for: student)
                 }
-                if boardState == .addingTask || boardState == .aiRow {
+                if Self.roomBelow(boardState) {
                     try? await Task.sleep(for: .seconds(Tokens.panel))
-                    proxy.scrollTo(Self.comingUpID, anchor: .top)
+                    // P4-Today-AddingTask: the Tasks header a fifth of the way down; P6-Today-AITools: Coming up on top.
+                    if boardState == .addingTask {
+                        proxy.scrollTo(Self.tasksID, anchor: UnitPoint(x: 0, y: Self.addingTaskAnchor))
+                    } else {
+                        proxy.scrollTo(Self.comingUpID, anchor: .top)
+                    }
                 }
             }
             .onChange(of: store.focusBatch) { _, batch in
@@ -296,4 +305,16 @@ public struct TodayView: View {
 /// The batch whose Change sheet is up.
 struct ChangingBatch: Identifiable, Hashable {
     let id: UUID
+}
+
+extension TodayView {
+    /// The launch states drawn scrolled down Today.
+    nonisolated static func roomBelow(_ state: TodayBoardState?) -> Bool {
+        state == .aiRow || state == .addingTask
+    }
+
+    /// P4-Today-AddingTask's Tasks header, 165 pt down the board's 852.
+    static var addingTaskAnchor: CGFloat {
+        0.12
+    }
 }
