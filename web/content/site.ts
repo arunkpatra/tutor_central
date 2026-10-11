@@ -6,7 +6,9 @@ export const ROUTES = {
   support: "/support",
   trust: "/trust",
 } as const;
-export const UPDATED = "12 October 2026";
+/** When the privacy page and the terms last changed: each its own day. */
+export const PRIVACY_UPDATED = "12 October 2026";
+export const TERMS_UPDATED = "9 October 2026";
 /** The trust page went live (Phase 15, before any tutor's student reaches the AI service in testing). */
 export const TRUST_UPDATED = "12 October 2026";
 export const PROMISE = "Made in India for tutors who run their own centre.";

@@ -217,7 +217,7 @@ test("archive_class detaches members and is refused to a non-member", async () =
   expect((await a.rpc("archive_class", { p_class: cls.data!.id })).error).toBeNull(); // idempotent
 });
 
-test("deleting a student cascades to invoices and marks and detaches message_log", async () => {
+test("deleting a student cascades to invoices, marks and the messages sent about them (0027)", async () => {
   const s = await a.from("students").insert({ centre_id: centreA, name: "Leaving", monthly_fee: 500 }).select("id").single();
   const session = await a.from("attendance_sessions").insert({ centre_id: centreA, date: "2026-10-06" }).select("id").single();
   expect((await a.from("fee_invoices").insert({ centre_id: centreA, student_id: s.data!.id, period: "2026-07-01", amount: 500 })).error).toBeNull();
@@ -226,8 +226,34 @@ test("deleting a student cascades to invoices and marks and detaches message_log
   expect((await a.from("students").delete().eq("id", s.data!.id)).error).toBeNull();
   expect((await a.from("fee_invoices").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
   expect((await a.from("attendance_marks").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
-  expect((await a.from("message_log").select("student_id").eq("id", log.data!.id)).data).toEqual([{ student_id: null }]);
+  expect((await a.from("message_log").select("id").eq("id", log.data!.id)).data).toEqual([]);
   expect((await a.from("attendance_sessions").select("id").eq("id", session.data!.id)).data?.length).toBe(1);
+});
+
+// The review's R-web-1 and R-web-3 (migration 0027): what was written about a student goes when the student is deleted,
+// and a V1 progress note waits for the parent's consent as the V2 note does (D62).
+test("a student's AI records go with the student, and a progress note needs the parent's consent", async () => {
+  const sql = new SQL(l.db);
+  try {
+    await a.from("centres").update({ ai_consent_at: new Date().toISOString() }).eq("id", centreA);
+    const s = await a.from("students").insert({ centre_id: centreA, name: "Noted Child" }).select("id").single();
+    if (!s.data) throw new Error(JSON.stringify(s.error));
+    const student = s.data.id;
+    const refused = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "progress_note", p_input: {}, p_model: "m", p_student: student });
+    expect(refused.error?.message).toContain("ai_consent_missing");
+    const unnamed = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "progress_note", p_input: {}, p_model: "m" });
+    expect(unnamed.error?.message).toContain("ai_consent_missing");
+    await sql`update public.students set consent_at = now(), consent_phone = '+919876500099', consent_how = 'in_person' where id = ${student}`;
+    const note = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "progress_note", p_input: {}, p_model: "m", p_student: student });
+    expect(note.error).toBeNull();
+    const rows = await sql`select student_id from public.ai_generations where id = ${note.data}`;
+    expect(rows[0]?.student_id).toBe(student);
+    expect((await a.from("students").delete().eq("id", student)).error).toBeNull();
+    expect((await sql`select id from public.ai_generations where id = ${note.data}`).length).toBe(0);
+  } finally {
+    await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+    await sql.close();
+  }
 });
 
 test("save_attendance makes the session and replaces its marks", async () => {
@@ -379,7 +405,7 @@ test("the limit counts only calls that did not fail, per kind group, over 24 hou
       values (${centreA}, 'paper', '{}', 'failed'), (${centreA}, 'paper', '{}', 'failed')`;
     await sql`insert into public.ai_generations (centre_id, kind, input, status, created_at)
       values (${centreA}, 'paper', '{}', 'ok', now() - interval '25 hours')`;
-    const thirtyNinth = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "progress_note", p_input: {}, p_model: "m" });
+    const thirtyNinth = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: {}, p_model: "m" });
     expect(thirtyNinth.error).toBeNull();
     const fortieth = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
     expect(fortieth.error).toBeNull();

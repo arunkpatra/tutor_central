@@ -320,6 +320,9 @@ test("a note takes the tutor's own words, at most 300", () => {
   expect(MakeInput.safeParse({ ...makeNote, tutorSays: "म".repeat(300) }).success).toBe(true);
   expect(MakeInput.safeParse({ ...makeNote, tutorSays: "x".repeat(301) }).success).toBe(false);
   expect(MakeInput.safeParse({ ...makeNote, tutorSays: "" }).success).toBe(false);
+  // The review's minor 5 and R-app-6: blank words are none; the limit counts characters as the app does (an emoji is one).
+  expect(MakeInput.safeParse({ ...makeNote, tutorSays: "   " }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...makeNote, tutorSays: `${"x".repeat(299)}😀` }).success).toBe(true);
 });
 
 test("a sheet, worked example, figure or brief from Make that names a student is a 400 (D62)", () => {

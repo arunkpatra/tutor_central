@@ -41,7 +41,7 @@ extension RootView {
             student: student, noteDay: noteDay, context: noteContext(workspace),
             effects: NoteStore.Effects(copy: { UIPasteboard.general.string = $0 }, open: { url in systemOpenURL(url) })
         )
-        store.tutorSays = shell.noteWords[student]
+        store.tutorSays = shell.takeNoteWords(for: student)
         return store
     }
 

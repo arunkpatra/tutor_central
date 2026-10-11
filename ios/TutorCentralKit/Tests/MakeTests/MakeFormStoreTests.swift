@@ -55,6 +55,15 @@ import Testing
         let kit = await Self.kit(.sheet, students: noLevel)
         kit.store.choose(.student(Self.riya))
         #expect(kit.store.level == nil && !kit.store.canMake)
+        // The review's R-app-2: the helper names the way out (P10-Make-Form has no Class tile).
+        #expect(kit.store.helper == "Riya has no class yet. Set it on their page, or choose a class in For.")
+        let group = await Self.kit(.workedExample, students: noLevel.map { student in
+            var changed = student
+            changed.classLevel = nil
+            return changed
+        }, plans: FakePlansRepository())
+        group.store.choose(.batch(FakeClassesRepository.evening.id))
+        #expect(group.store.helper == "No class is set for Evening batch's students. Choose a class in For.")
         kit.store.choose(.classLevel(.five))
         kit.store.subject = "Mathematics"
         #expect(!kit.store.canMake)

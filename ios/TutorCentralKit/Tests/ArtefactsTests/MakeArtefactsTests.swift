@@ -48,6 +48,9 @@ import Testing
         #expect(try await plans.made(centre: ArtefactTest.centre).first?.id == new.id)
     }
 
+    /// The review's R-app-3: "Key at the end" is "For you; left out of what you share" (P10-Make-Form): Print carries
+    /// the
+    /// key after the questions, Share as PDF on the Paper form never does.
     @Test func aMakeSheetWithKeyAtEndPrintsTheKeyAfterTheQuestions() async throws {
         let made = MakeFor(
             target: .classLevel(.eight), title: "Class 8", line: "Science · Balancing equations", level: .eight,
@@ -62,13 +65,22 @@ import Testing
             ).made(for: made), student: nil, exam: nil, centre: ArtefactTest.centre
         )
         let store = await sheet(plans, kept.id, ai: FakeAIRepository())
-        #expect(store.pdfSheet.blocks.contains {
-            if case .key = $0 {
-                true
-            } else {
-                false
+        let hasKey = { (sheet: PDFSheet) in
+            sheet.blocks.contains {
+                if case .key = $0 {
+                    true
+                } else {
+                    false
+                }
             }
-        })
+        }
+        #expect(hasKey(store.printSheet))
+        if case .key? = store.printSheet.blocks.last {} else {
+            Issue.record("the key is not last")
+        }
+        #expect(!hasKey(store.pdfSheet), "the shared PDF carries no key")
+        store.form = .key
+        #expect(hasKey(store.pdfSheet), "the Key form shares the key, as before")
     }
 
     @Test func makeItAgainOnAMakeBriefKeepsTheTarget() async throws {

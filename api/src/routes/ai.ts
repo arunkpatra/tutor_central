@@ -25,7 +25,10 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     const body = await parse(c, GenerateInput);
     if (!isParsed(body)) return body;
     const request = generateRequest(body.value);
-    return run(c, deps, body.centre, { kind: body.value.kind, input: body.value, request });
+    // A progress note is about one student: the gate asks their parent's consent (D62, migration 0027).
+    const student = body.value.kind === "progress_note" ? body.value.studentId : undefined;
+    const studentName = body.value.kind === "progress_note" ? body.value.studentName : undefined;
+    return run(c, deps, body.centre, { kind: body.value.kind, input: body.value, request, student, studentName });
   });
 
   routes.post("/scan-register", async (c) => {

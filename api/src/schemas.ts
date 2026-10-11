@@ -226,8 +226,14 @@ export const MakeInput = z.discriminatedUnion("kind", [
       coming: z.array(z.string().max(200)).max(3),
       attendance: z.string().max(80).optional(),
     }),
-    /** The tutor's own words from Make's note (Phase 15), in the note as they ask. */
-    tutorSays: z.string().min(1).max(300).optional(),
+    /** The tutor's own words from Make's note (Phase 15), in the note as they ask: trimmed, at most 300 characters
+     *  counted as the app counts them (an emoji is one, not two). */
+    tutorSays: z
+      .string()
+      .trim()
+      .min(1)
+      .refine((words) => [...words].length <= 300)
+      .optional(),
   }),
   z.object({
     ...V2,
