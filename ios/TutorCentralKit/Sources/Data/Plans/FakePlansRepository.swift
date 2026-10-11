@@ -18,6 +18,8 @@ import Foundation
     public var makeDelay: Duration?
     /// Tests: `keep` waits this long first, and a cancelled task stops there (as a cancelled request does).
     public var keepDelay: Duration?
+    /// Tests: `notes` answers this long after it is asked (a connection that hangs).
+    public var notesDelay: Duration?
     /// The time a make or keep is stamped with.
     public var now: Date
 
@@ -103,6 +105,9 @@ import Foundation
     }
 
     public func notes(centre _: UUID, students: [UUID], since: Date) async throws -> [Artefact] {
+        if let notesDelay {
+            try await Task.sleep(for: notesDelay)
+        }
         try await begin()
         return artefacts.filter { artefact in
             [.note, .canDo].contains(artefact.kind) && artefact.madeAt >= since
