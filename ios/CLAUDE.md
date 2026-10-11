@@ -12,7 +12,7 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   every screen for both (D13).
 - Tests: Swift Testing (`import Testing`, `@Test`, `#expect`; no bare `@Suite`, SwiftFormat removes it) in
   `Tests/DesignSystemTests`, `DomainTests`, `DataTests`, `AppShellTests`, `OnboardingTests`, `TodayTests`,
-  `SettingsTests`, `StudentsTests`, `AttendanceTests`, `ScheduleTests`, `FeesTests`; stores are tested against the
+  `SettingsTests`, `StudentsTests`, `AttendanceTests`, `ScheduleTests`, `FeesTests`, `ArtefactsTests`; stores are tested against the
   in-memory fakes. XCTest only in `SmokeTests` (the launch, and iPhone only). No UI test suites (D15). A new test target goes
   in `Package.swift` and in the scheme in `project.yml`.
 - The package is iOS only: build and test it with `xcodebuild` for the simulator (or `bun check`), not
@@ -133,6 +133,17 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - A store a launch state or a link opens before the register is read is built after `register.loadIfNeeded()` in a small
   screen (`TextbookScreen`), then kept in `@State`.
 - Hand runs: an iOS 26 switch in a card needs `tap` with `duration` 0.15 (the runbook's note); the instant tap can miss.
+
+- The plan (Phase 12): `PlanStore` keeps one run; a second `load` (a return to the app, a pull) leaves a live run alone and
+  `complete` cancels the run before it, or the material is made twice. A plan whose `sessionID` is set is closed: nothing
+  in it changes. Today starts the plans beside the counts' read, so offline each shows its copy at once.
+- Skills are per student: a group's checks name one student's skill ids, so the close records a check on the student's
+  own skill by id, else by name, and offers no row a student cannot keep.
+- `PlanCache` keeps the plan per batch and day and each student's book (`keepBook`), and finds an artefact in the plans
+  kept (`artefact(_:)`): the close and the artefact screens read them offline.
+- The figures are drawn in the Artefacts feature: DesignSystem does not import Domain (`FigureSpec`).
+- Hand runs: Postgres' `current_date` is UTC, so query a plan by the IST day; `bun shots` leaves the app on a launch state,
+  so relaunch it without one before driving it against the local stack.
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

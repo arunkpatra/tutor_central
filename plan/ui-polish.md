@@ -45,16 +45,17 @@ screen, several as a polish slice, or not at all.
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
 | U34 | 2026-10-10 | Students, the empty list (P10-Students-Empty) | Add a student and Scan paper register sit side by side (the Kit's empty state); the board stacks them at full width | Session 24 (Task 13) |
-| U35 | 2026-10-10 | A student's page, This week (P10-Student) | The section's quiet "Today" action is not built; Students cannot open Today's tab yet | Session 24 (Task 14); taken into Phase 12 (the owner, 2026-10-10) |
 | U36 | 2026-10-10 | A student's page, Marks | The record has no Marks section (the plan's decision 16 deferred it); it needs its board | Session 24 (Task 24); moved to Phase 13 (the owner, 2026-10-10) |
-| U37 | 2026-10-10 | The close, a student's card | The words "No book yet, so no checks. Add one from Bir's page." and the offline line "You're offline. The checks need a connection; mark attendance and homework, and Done still closes." are new sentences no board draws | Session 24 (Task 21, 22); taken into Phase 12 (the owner, 2026-10-10) |
-| U38 | 2026-10-10 | The close, a student's card while the checks are made | The eyebrow "Check · 3 questions" over a spinner; no board draws the wait (the checks take a second or two, longer on a slow line) | Session 24 (Task 21); taken into Phase 12 (the owner, 2026-10-10) |
-| U39 | 2026-10-10 | Pending changes, a waiting close | The row wears the attendance tick; a symbol of its own would tell a close from a save | Session 24 (run 9); taken into Phase 12 (the owner, 2026-10-10) |
+| U40 | 2026-10-11 | A student's page, scrolled | Scrolled under the status bar, the parent's row shows through the time without the glass the other pushed screens draw | Session 26, hand run 7's screenshot |
 
 ## Done
 
 | # | Done | Pull request | What changed |
 |---|---|---|---|
+| U35 | 2026-10-11 | #119 | This week's quiet Today, when the student's batch meets today, opens the Today tab at the batch's plan |
+| U37 | 2026-10-11 | #118 | The close card's no-book and offline states in the board's words and type (P12-Close-Cards) |
+| U38 | 2026-10-11 | #118 | The close card's wait: the eyebrow over a 16 pt ring and "Making the three questions. A second or two." (P12-Close-Cards); the close from a plan never waits |
+| U39 | 2026-10-11 | #118 | A waiting close wears the checklist symbol in Pending changes (P12-Pending-Close) |
 | U33 | 2026-10-09 | #86 | The toast is for Undo only; a success shows in place, a failed or refused write is the system alert, a field's failure is under it, a list with nothing loaded says so in its place (`docs/design/feedback.md`) |
 | U31 | 2026-10-09 | #85 | Home's phone is 240 × 520 at 360 px and below, inside the gutters |
 | U7 | 2026-10-09 | #79 | Edit event keeps its fields and the note's well whole with the keyboard up; Delete event scrolls under the keyboard (P8-Event-Edit-Keyboard) |

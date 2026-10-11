@@ -168,11 +168,13 @@ Sahil). `today` at 16:35 draws the batch hero with Start class over Class 10 Mat
 Phase 12's launch states (`plan/phase-12-plan.md`; the boards are 10.3, 10.4 and the two Phase 12 boards; the clock is
 Wednesday 7 October 16:35 unless the state says another): `today` (the batch hero over the plan's cards, both),
 `today-scrolled`, `today-planning`, `today-line-menu`, `today-plan-changed`, `today-plan-change`, `today-after-close`
-(18:40), `today-no-batch` (Saturday 10 October 09:30; `today-evening` and `today-no-class` retired); `sheet` (both),
-`sheet-key`, `sheet-board`, `sheet-regenerate`, `sheet-regenerating`, `sheet-own-menu`, `sheet-own`; `worked-example`;
-`figure-number-line`, `-fraction-bar`, `-place-value`, `-unit-circle`, `-triangle`, `-cell`, `-food-chain`; `brief`;
-`close` (from the plan, both), `close-scrolled`, `close-placement`, `close-cards` (17:05, no plan, both); `pending` (a
-waiting close); `student-record` (This week with the quiet Today).
+(18:40, the plan closed: no Change), `today-no-batch` (Saturday 10 October 09:30; `today-no-class` retired;
+`today-evening` kept for the Store-1 board until Phase 16); `sheet` (both), `sheet-key`, `sheet-board`, `sheet-regenerate`,
+`sheet-regenerating`, `sheet-own-menu`, `sheet-own`; `worked-example` (the second step shown); `brief`;
+`figure-number-line`, `-fraction-bar`, `-place-value`, `-unit-circle`, `-triangle`, `-cell`, `-food-chain` (each a one-group
+plan with its board's skill and class); `close` (from the plan, both), `close-scrolled`, `close-placement`, `close-cards`
+(17:05, no plan: Dev, Bir moved into the batch, Riya; both); `pending` (a waiting close); `student` (This week with the
+quiet Today; built in session 26).
 
 ## Phase 2 boards (step 0.3)
 

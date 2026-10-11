@@ -283,4 +283,9 @@ applies to every student of that school and class; Ask parents to forward is one
 held until the next note day; the tutor's own sends never count; the English beside a note is never sent; the note day is Sunday
 18:00 unless the batch sets another; tracking status is computed when the record changes and the next step is taken by the next
 plan unless changed. Phase 10 (step 10.7): a term follows the school's calendar (June to September, October to March; the state calendar for a state-board
-school); material made for a class level alone carries no student's data and needs no consent; the Kit's Phase 10 board is 2020 high.
+school); material made for a class level alone carries no student's data and needs no consent; the Kit's Phase 10 board is 2020 high. Phase 12 (the plan, as built): at most three groups a batch; a plan line's words at most 200 characters; at most four
+personal checks and twenty calls a plan; the class reminder's default is an hour before the batch ("In 1 hour · N students.
+Open for today's plan."); the plan's copy is kept per batch and day (`cache-<centre>-plan-<class>-<date>.json`, older days
+removed) and each student's book per student (`cache-<centre>-book-<student>.json`), both wiped with the centre's files; the
+tutor's own sheet photo is kept at `<centre>/own/<uuid>.jpg` in the `photos` bucket after the on-phone reduction; a typed own
+sheet keeps at most 4,000 characters and a regenerate's own words 200.

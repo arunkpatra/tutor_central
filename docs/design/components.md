@@ -738,6 +738,11 @@ sheet until Phase 12); the close's batch line follows P10-Close (the batch as th
 waits for Phase 14, and Delete is at the page's foot); two sentences no board draws are on `plan/ui-polish.md` (U37): the
 close's no-book line and its offline line.
 
+**As built in Phase 12** (session 26): the checklist rows are the plan's lines per group, one row per distinct line words of a
+kind, named for their students when not the whole group's ("Teach: Types of reactions (Meher)"); the close card's homework row
+reads "Homework given · sheet 1" from the plan's line; a student left out or whose check is skipped today has no check section;
+after the close Today's plan has no Change and its lines no menu. The line menu offers a Move row per other group.
+
 ## Phase 10 parts (step 10.4, approved 2026-10-10): the artefacts
 
 **Result footer, V2:** the Phase 6 result footer with the quiet "Make it again" and two secondary 46 buttons: Share as PDF
@@ -788,6 +793,14 @@ The texts:
 | The brief | "Your brief" · "Five minutes to read before the class · made today, 16:40" · What the chapter is about · Three common mistakes · The worked example to use · Words to say · "AI can make mistakes. Read it as a colleague's note, not a textbook." |
 | The mock | "Mock in the school's pattern" · "25 marks · 40 minutes · chapters 1 and 2 · made today, 16:40" · "as Vidya Niketan sets them" · Mark from a photo · "AI can make mistakes. Check every question before you give it. Marking from a photo uses this paper's key." |
 | The gap report | "After the mock" · "The test is on Thursday. Two days left." · By skill · The last two days · Use this plan · "Replaces the two days' lines in the plan. Leave it and the plan carries on as it was." |
+
+**As built in Phase 12** (session 26): the figures are drawn by the Artefacts feature (DesignSystem holds `FigureCard`, the
+PDF's image block and the board view); the figure screen's hero is the template's name ("Fraction bar") and the app's checked
+sentence ("4 equal parts, 3 shaded: 3/4.") is the figure's VoiceOver label; numbers read as decimals ("cos 60° = 0.5") and
+place value names Indian places (Lakhs); a triangle's labels name the sides opposite its angles and Pythagoras shows only when
+the sides keep it; a food chain wraps to two rows when one does not fit. The brief keeps the board's Make it again (one tap, no
+reason). The worked example's Show the next step is disabled once every step shows. The reasons and Use my own menus are the
+Phase 3 menu on the glass (`GlassMenu`). A sheet, worked example, brief or figure opens offline from the plan's copy.
 
 ## Phase 12 parts (approved 2026-10-10): the close's card states, the waiting close
 

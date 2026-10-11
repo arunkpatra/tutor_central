@@ -34,6 +34,8 @@
   state again only for a tap that changed. `record_placement` writes the placement's checks with no session.
 - `copy_textbook_chapters` deletes the book chapters a recapture dropped before it moves the student's own chapters
   behind the book's (the unique position would refuse them otherwise).
+- `current_date` and `now()` in a psql session are UTC: a hand run's query of the day's plan or session names the IST day
+  (`date = '2026-10-11'`) after 18:30 UTC.
 
 Commands: `bun check --only=db` (resets the local database, runs the tests, re-seeds);
 `cd supabase && bun test tests`.

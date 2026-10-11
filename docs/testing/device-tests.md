@@ -95,6 +95,15 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T2 | A student whose parent has WhatsApp → their page → Consent → Ask on WhatsApp → Open WhatsApp. | WhatsApp opens that parent's chat with the whole message typed in (what is kept, why, how to say no), signed with your name and centre. Back in the app the section reads "Asked", the parent's name and today. |
 | T3 | On mobile data, at a batch's time: Today → Start class; mark one absent; turn on Airplane mode before Done; Done. Turn Airplane mode off. | Done closes at once; Today's hero reads the batch's name with "saved on this iPhone"; Pending changes lists "Class closed" with the batch. Back online: "Sending 1 saved change…", then the hero reads "closed at" and the time. |
 
+### Phase 12: the plan (no overnight refresh, no reminder tap, no printer and no camera in the simulator)
+
+| Id | Do | Expect |
+|---|---|---|
+| T4 | The evening before a batch day, open the app once, then leave the iPhone on charge overnight. Next morning, open the app before the batch. | Today shows the batch's plan at once with its groups and their marks ticked, without "Planning today's class". If the card shows, note the time you opened and how long it took. |
+| T5 | Settings → Teacher reminders on. On a batch day, wait for the reminder (an hour before the batch by default); tap it. | "In 1 hour · N students. Open for today's plan." arrives on time; the tap opens Today at the plan. |
+| T6 | Today → a student's line → the homework sheet → Print → a real printer on the same Wi-Fi. | The printer is offered; the page prints on A4 with the questions and no key. Key → Print prints the answers as well. |
+| T7 | The same sheet → Use my own → Take a photo → a real printed or handwritten sheet. | The camera opens, the photo is taken in place of the made sheet ("Your sheet"); Share as PDF and Print carry the photo; Use the made sheet instead brings the made one back. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |
