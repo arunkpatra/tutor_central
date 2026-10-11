@@ -88,3 +88,15 @@ struct FigureSpecTests {
         #expect(FigureSpec.Kind.matching(skill: "Balance a chemical equation") == nil)
     }
 }
+
+struct FigureTemplateNameTests {
+    @Test func eachTemplateHasItsName() {
+        #expect(FigureSpec.Kind.allCases.map(\.title) == [
+            "Number line", "Fraction bar", "Place value", "Unit circle", "Triangle", "Labelled cell", "Food chain",
+        ])
+    }
+
+    @Test func aFigureTemplateMatchesASkillByName() {
+        #expect(FigureSpec.Kind.matching(skill: "Fractions on a bar") == .fractionBar)
+    }
+}

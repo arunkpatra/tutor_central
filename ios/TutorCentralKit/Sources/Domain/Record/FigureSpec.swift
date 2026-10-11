@@ -32,6 +32,19 @@ public enum FigureSpec: Hashable, Sendable {
             (.foodChain, ["food chain", "producer", "consumer"]),
         ]
 
+        /// The template's name, as Make's Template tile lists it.
+        public var title: String {
+            switch self {
+            case .numberLine: "Number line"
+            case .fractionBar: "Fraction bar"
+            case .placeValue: "Place value"
+            case .unitCircle: "Unit circle"
+            case .triangle: "Triangle"
+            case .labelledCell: "Labelled cell"
+            case .foodChain: "Food chain"
+            }
+        }
+
         /// The template a skill has, read from its name (case-insensitive); nil when it has none.
         public static func matching(skill: String) -> Kind? {
             let name = skill.lowercased()

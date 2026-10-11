@@ -72,3 +72,9 @@ struct OfflineRefusalSchoolTests {
         #expect(OfflineRefusal.words(for: .saveMarks).hasSuffix("They're still here."))
     }
 }
+
+struct MakeRefusalTests {
+    @Test func makesRefusalReadsOffline() {
+        #expect(OfflineRefusal.words(for: .make) == "You're offline. Making material needs a connection.")
+    }
+}
