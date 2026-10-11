@@ -374,3 +374,27 @@ struct SchoolLaunchStateTests {
         #expect(RootView.leavingCheck(id, preset: false) == [.checkResult(id), .checkScheme(id)])
     }
 }
+
+/// Phase 14's states (plan/phase-14-plan.md, "Launch states").
+struct LaunchStatePhase14Tests {
+    @Test func phase14sStatesParse() {
+        let names = [
+            "today-note-day", "today-note-held", "today-note-day-change", "note", "note-send", "note-can-do",
+            "note-writing", "student-messages", "student-not-on-track", "student-next-step", "student-tell-parent",
+            "today-not-on-track", "marks-reading", "marks-confirm", "marks-edit", "student-marks", "school-paste",
+            "school-student", "school-item-window",
+        ]
+        for name in names {
+            #expect(LaunchState(rawValue: name) != nil, "\(name)")
+        }
+    }
+
+    @MainActor @Test func theNoteDayStatesOpenTodayOnSundayEvening() {
+        for state in [LaunchState.todayNoteDay, .todayNoteHeld, .todayNoteDayChange] {
+            #expect(RootView.tab(for: state) == .today)
+            #expect(Fixtures.clock(for: state) == Fixtures.india(day: 11, hour: 18, minute: 30))
+        }
+        #expect(RootView.todayBoardState(.todayNoteHeld) == .noteHeld(FakeStudentsRepository.dev))
+        #expect(RootView.todayBoardState(.todayNoteDayChange) == .noteDayWheel)
+    }
+}

@@ -170,6 +170,7 @@ Radius grows with size. Nothing between 15 and 18 except where listed.
 |---|---|---|
 | `radiusChip` | 14 | Chips, pills (height 28) |
 | `radiusSegment` | 10 | A segment inside a track of 13 |
+| `radiusCompact` | 12 | A button 36 high in a row (the note day's Read) |
 | `radiusControl` | 15 | Buttons and fields 46–52 high |
 | `radiusTile` | 16 | Stat tiles, compact rows |
 | `radiusCard` | 18 | List cards (rows inside) |

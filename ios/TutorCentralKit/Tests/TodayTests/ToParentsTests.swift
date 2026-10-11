@@ -10,12 +10,22 @@ import Testing
     let devsTest = FakeSchoolItemsRepository.boardItems.first { $0.id == FakeSchoolItemsRepository.devsTest }!
     let exam16 = FakeSchoolItemsRepository.boardItems.first { $0.id == FakeSchoolItemsRepository.scienceTest3 }!
 
-    /// Dev's parent writes in Hindi (the board's).
+    /// Dev's parent writes in Hindi (the board's); Dev's, Meher's, Nikhil's and Sahil's parents agreed, Riya's not.
     var students: [Student] {
+        students()
+    }
+
+    func students(noConsent: Set<UUID> = [FakeStudentsRepository.riya], noNumber: Set<UUID> = []) -> [Student] {
         FakeStudentsRepository.eveningSeed.map { student in
             var changed = student
             if student.id == FakeStudentsRepository.dev {
                 changed.messageLanguage = .hindi
+            }
+            if !noConsent.contains(student.id), let phone = student.parentPhone {
+                changed.consent = ConsentRecord(at: PlanTest.at(1, 10, 0), phone: phone, how: .whatsapp)
+            }
+            if noNumber.contains(student.id) {
+                changed.parentPhone = nil
             }
             return changed
         }
@@ -26,9 +36,11 @@ import Testing
     }
 
     func makeStore(
-        items: [SchoolItem], closed: Bool, absent: Set<UUID> = [], messages: FakeMessageLogRepository? = nil
+        items: [SchoolItem], closed: Bool, absent: Set<UUID> = [], messages: FakeMessageLogRepository? = nil,
+        students: [Student]? = nil
     ) async -> TodayStore {
         let now = PlanTest.at1840
+        let students = students ?? self.students
         let register = RegisterStore(
             workspace: FakeCentreRepository.meeraWorkspace, students: FakeStudentsRepository(students: students),
             classes: FakeClassesRepository(classes: FakeClassesRepository.withEvening), cache: nil, now: { now }
@@ -108,5 +120,27 @@ import Testing
         let store = await makeStore(items: [devsTest], closed: true, messages: sent)
         await store.load()
         #expect(store.toParents.first?.state == .sent)
+    }
+
+    @Test func afterTheCloseTheLastRowCountsTheNotesWaitingAndNamesWhoWaitsForConsent() async {
+        let store = await makeStore(items: [], closed: true)
+        await store.load()
+        #expect(store.notesWaiting == "4 notes wait for the note day. Riya's waits for consent.")
+        #expect(store.notesWaitingTitle == "Weekly notes · Sunday")
+    }
+
+    @Test func theRowReadsOneNoteAndTwoWaitingForConsent() async {
+        let nikhil = FakeStudentsRepository.nikhil, riya = FakeStudentsRepository.riya
+        let store = await makeStore(items: [], closed: true, students: students(
+            noConsent: [riya, nikhil], noNumber: [FakeStudentsRepository.meher, FakeStudentsRepository.sahil]
+        ))
+        await store.load()
+        #expect(store.notesWaiting == "1 note waits for the note day. Two wait for consent.")
+    }
+
+    @Test func beforeTheCloseThereIsNoWeeklyNotesRow() async {
+        let store = await makeStore(items: [], closed: false)
+        await store.load()
+        #expect(store.notesWaiting == nil)
     }
 }

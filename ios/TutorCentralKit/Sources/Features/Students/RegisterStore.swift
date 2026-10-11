@@ -375,6 +375,12 @@ public extension RegisterStore {
 }
 
 extension RegisterStore: Register {
+    public func applyClassroom(_ classroom: Classroom) {
+        guard let index = classes.firstIndex(where: { $0.id == classroom.id }) else { return }
+        classes[index] = classroom
+        persist()
+    }
+
     public func applyTracking(_ track: [UUID: SessionClose.Track], at date: Date) {
         for (id, item) in track {
             guard var student = student(id) else { continue }

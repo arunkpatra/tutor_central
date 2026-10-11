@@ -88,6 +88,11 @@ import Observation
     @ObservationIgnored public var messages: (any MessageLogRepository)?
     /// The messages that go now after today's close (P10-Today-AfterClose).
     public internal(set) var toParents: [ParentRowModel] = []
+    /// The note day (Phase 14): AppShell's store, read with Today; nil shows none.
+    @ObservationIgnored public var noteDay: NoteDayStore?
+    /// After a close: the Weekly notes row (P10-Today-AfterClose), the closed batch's note weekday and the words.
+    public internal(set) var notesWaitingTitle = ""
+    public internal(set) var notesWaiting: String?
 
     public init(
         workspace: Workspace, counts: any CountsRepository, register: any Register,
@@ -231,6 +236,7 @@ import Observation
         }
         await readCloseCounts()
         await loadParents()
+        await noteDay?.load()
         if fresh {
             savedAt = nil
             cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())

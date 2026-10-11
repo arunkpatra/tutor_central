@@ -140,6 +140,33 @@ public enum LaunchState: String, CaseIterable, Sendable {
     /// The hero after the close over the plan's cards (P10-Today-AfterClose, without To parents): the Evening batch
     /// closed at 18:32.
     case todayAfterClose = "today-after-close"
+    /// Phase 14. Sunday 11 October 18:30: the note day's hero and Notes (P10-Today-NoteDay); Dev's note held with the
+    /// held sheet up (P10-Held); the note day's wheel (P10-NoteDay-Change).
+    case todayNoteDay = "today-note-day"
+    case todayNoteHeld = "today-note-held"
+    case todayNoteDayChange = "today-note-day-change"
+    /// Dev's weekly note in Hindi (P10-Note, -Light); the two-language sheet (P10-Note-Send); Sahil's can-now-do
+    /// (P10-CanNowDo); the note being written.
+    case note
+    case noteSend = "note-send"
+    case noteCanDo = "note-can-do"
+    case noteWriting = "note-writing"
+    /// Dev's sent log with Held (P10-Student-Messages).
+    case studentMessages = "student-messages"
+    /// Friday 9 October: Dev not on track (P10-Student-NotOnTrack), the next step (P10-NextStep), the message to the
+    /// parent (P10-NotOnTrack-Message), Today's caption (P10-Today-NotOnTrack).
+    case studentNotOnTrack = "student-not-on-track"
+    case studentNextStep = "student-next-step"
+    case studentTellParent = "student-tell-parent"
+    case todayNotOnTrack = "today-not-on-track"
+    /// Marks from a photo (P14-Marks-Reading, -Confirm, -Edit).
+    case marksReading = "marks-reading"
+    case marksConfirm = "marks-confirm"
+    case marksEdit = "marks-edit"
+    /// U41 to U43 (P14-School-Paste, -Student, -Item-Window).
+    case schoolPaste = "school-paste"
+    case schoolStudent = "school-student"
+    case schoolItemWindow = "school-item-window"
     /// Group 1's homework sheet (P10-Sheet, dark and light); its key; the board at question 3.
     case sheet
     case sheetKey = "sheet-key"

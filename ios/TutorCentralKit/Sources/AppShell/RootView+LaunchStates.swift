@@ -39,7 +39,7 @@ extension RootView {
              .tasks,
              .tasksEmpty:
             .more
-        case .todayAI: .today
+        case .todayAI, .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .todayNotOnTrack: .today
         case .scanSaved: .students
         default: Fixtures.offlineTab(state)
             ?? (aiStates.contains(state) || scanStates.contains(state) || checkStates.contains(state) ? .more : nil)
@@ -314,6 +314,8 @@ extension RootView {
         case .todayLineMenu: .lineMenu(FakeStudentsRepository.dev)
         case .todayPlanChange: .changeSheet
         case .todayPlanChanged: .planChanged
+        case .todayNoteHeld: .noteHeld(FakeStudentsRepository.dev)
+        case .todayNoteDayChange: .noteDayWheel
         default: nil
         }
     }
