@@ -1,3 +1,4 @@
+import Data
 import Domain
 import Foundation
 import Observation
@@ -139,4 +140,6 @@ enum Route: Hashable {
     case note(UUID, Day)
     /// A student's sent log, from the page's Messages See all.
     case studentMessages(UUID)
+    /// Marks from a photo: the student and the first page, from the page's Marks.
+    case readMarks(UUID, ImageUpload)
 }

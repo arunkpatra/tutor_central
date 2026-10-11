@@ -9,7 +9,17 @@ import UIKit
 /// Phase 14's screens: the weekly note (Artefacts), opened from Today's note day, the held sheet and the sent log.
 extension RootView {
     @ViewBuilder func parentsScreen(_ route: Route) -> some View {
-        if case let .ready(workspace) = session.state, case let .studentMessages(student) = route {
+        if case let .ready(workspace) = session.state, case let .readMarks(student, page) = route {
+            ReadMarksView(
+                store: ReadMarksStore(
+                    student: student, register: register(for: workspace), textbooks: deps.textbooks, ai: deps.ai,
+                    record: deps.record, online: { [connectivity = deps.connectivity] in await connectivity.isOnline },
+                    now: deps.now, page: page
+                ),
+                boardState: launch.flatMap(Self.readMarksBoardState),
+                onSaved: { shell.recordChanged += 1 }
+            )
+        } else if case let .ready(workspace) = session.state, case let .studentMessages(student) = route {
             MessagesScreen(
                 store: MessagesStore(
                     student: student, centre: workspace.centre.id, register: register(for: workspace),
@@ -62,6 +72,19 @@ extension RootView {
         case .noteCanDo: [.note(FakeStudentsRepository.sahil, sunday)]
         case .studentMessages: [.student(FakeStudentsRepository.dev), .studentMessages(FakeStudentsRepository.dev)]
         case .studentNotOnTrack, .studentNextStep, .studentTellParent: [.student(FakeStudentsRepository.dev)]
+        case .marksReading, .marksConfirm, .marksEdit:
+            [.student(FakeStudentsRepository.hemanth), .readMarks(FakeStudentsRepository.hemanth, Fixtures.marksPage)]
+        default: nil
+        }
+    }
+}
+
+extension RootView {
+    static func readMarksBoardState(_ state: LaunchState) -> ReadMarksBoardState? {
+        switch state {
+        case .marksReading: .reading
+        case .marksConfirm: .confirm
+        case .marksEdit: .edit
         default: nil
         }
     }

@@ -3,6 +3,23 @@ import Domain
 import SwiftUI
 
 extension StudentDetailView {
+    /// Phase 14's sheets over the page: what next, the message to the parent, a photo of marks.
+    func parentsSheets(_ page: some View) -> some View {
+        page
+            .sheet(isPresented: $choosingStep) { nextStepSheet }
+            .sheet(item: $tellingParent, onDismiss: { Task { await store.loadRecord() } }, content: { tell in
+                TellParentSheet(store: tell) { tellingParent = nil }
+            })
+            .photoPageChooser(isPresented: $addingMarks, purpose: "photograph a report card") { photo in
+                if let id = store.student?.id {
+                    actions.openReadMarks(id, photo)
+                }
+            }
+            .onChange(of: recordChanged) {
+                Task { await store.loadRecord() }
+            }
+    }
+
     /// The tracking card with Place or Change, and the tell-the-parent card while the parent has not been told.
     @ViewBuilder func tracking(_ student: Student) -> some View {
         if let tracking = store.tracking {

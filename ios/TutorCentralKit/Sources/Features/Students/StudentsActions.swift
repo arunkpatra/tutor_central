@@ -1,3 +1,4 @@
+import Data
 import Domain
 import Foundation
 
@@ -16,6 +17,8 @@ public struct StudentsActions {
     let openArtefact: (UUID) -> Void
     /// Messages' See all: the sent log (Phase 14).
     let openMessages: (UUID) -> Void
+    /// Marks' Add from a photo: the photo read on its screen (Phase 14).
+    let openReadMarks: (UUID, ImageUpload) -> Void
 
     public init(
         openScanRegister: @escaping () -> Void,
@@ -25,8 +28,10 @@ public struct StudentsActions {
         openFeeAction: @escaping (FeeAction) -> Void,
         openToday: @escaping (UUID) -> Void,
         openArtefact: @escaping (UUID) -> Void,
-        openMessages: @escaping (UUID) -> Void = { _ in }
+        openMessages: @escaping (UUID) -> Void = { _ in },
+        openReadMarks: @escaping (UUID, ImageUpload) -> Void = { _, _ in }
     ) {
+        self.openReadMarks = openReadMarks
         self.openMessages = openMessages
         self.openScanRegister = openScanRegister
         self.openStudentFees = openStudentFees
