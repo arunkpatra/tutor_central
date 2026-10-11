@@ -1,12 +1,12 @@
 import type { LegalPage } from "./legal";
-import { CITY, EMAIL, MAKER, NOTICE_PERIOD, ROUTES, UPDATED } from "./site";
+import { CITY, EMAIL, MAKER, NOTICE_PERIOD, ROUTES, TERMS_UPDATED } from "./site";
 
 /** /terms, from docs/design/mockups/P8-Terms.dc.html with the owner's answers (Owner step 0). Never moves: the app links it. */
 export const TERMS = {
   eyebrow: "Terms",
   title: "Terms of use",
   line: "The short agreement between you and us when you use Tutor Central. Plain words; no small print.",
-  updated: `Last changed ${UPDATED}.`,
+  updated: `Last changed ${TERMS_UPDATED}.`,
   sections: [
     {
       heading: "Who we are",
