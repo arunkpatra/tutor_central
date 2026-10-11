@@ -1,7 +1,7 @@
 import type { ClaudeRequest } from "../claude.js";
 import type { AIKind } from "../db.js";
 import type { DecodedImage } from "../images.js";
-import { CheckOutput, PaperOutput, QuestionSetOutput } from "../schemas.js";
+import { CheckOutput, MockOutput, PaperOutput, QuestionSetOutput } from "../schemas.js";
 import { VOICE } from "./shared.js";
 
 /** A photographed answer sheet marked against the scheme: a suggested mark and a note for every question. */
@@ -23,8 +23,8 @@ export function request(pages: DecodedImage[], scheme: string, studentName: stri
   };
 }
 
-/** The scheme text from a stored paper, homework or worksheet; null for any other kind or an output that no longer
- *  parses. */
+/** The scheme text from a stored paper, homework, worksheet or mock; null for any other kind or an output that no
+ *  longer parses. */
 export function schemeText(output: unknown, kind: AIKind): string | null {
   if (kind === "paper") {
     const paper = PaperOutput.safeParse(output);
@@ -33,6 +33,15 @@ export function schemeText(output: unknown, kind: AIKind): string | null {
       s.questions.map((q) => `Q${q.number} (${q.marks} ${q.marks === 1 ? "mark" : "marks"}) ${q.text} → ${q.answer}`),
     );
     return [paper.data.title, ...lines].join("\n");
+  }
+  if (kind === "mock") {
+    const mock = MockOutput.safeParse(output);
+    if (!mock.success) return null;
+    const lines = mock.data.sections.flatMap((s) => [
+      `${s.name} (${s.marksEach} ${s.marksEach === 1 ? "mark" : "marks"} each)`,
+      ...s.questions.map((q) => `Q${q.number} (${q.marks} ${q.marks === 1 ? "mark" : "marks"}) ${q.text} → ${q.answer}`),
+    ]);
+    return [mock.data.title, ...lines].join("\n");
   }
   if (kind === "homework" || kind === "worksheet") {
     const set = QuestionSetOutput.safeParse(output);

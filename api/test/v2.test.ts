@@ -82,7 +82,7 @@ test("make placement asks one question per chapter in the book's order", async (
 test("a check and a placement need no student's consent; the mock still answers 501", async () => {
   const db = fakeDb({ consent: false });
   expect((await post(app(undefined, db), "/ai/make", check)).status).toBe(200);
-  const mock = await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } });
+  const mock = await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } });
   expect(mock.status).toBe(501);
   expect(db.started).toHaveLength(1);
 });
@@ -148,6 +148,6 @@ test("no make kind of this phase takes a student; the mock and the personal kind
   const db = fakeDb({ consent: false });
   expect((await post(app(undefined, db), "/ai/make", sheet)).status).toBe(200);
   expect((await post(app(undefined, db), "/ai/make", { ...sheet, studentId: "11111111-1111-1111-1111-111111111111" })).status).toBe(400);
-  expect((await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } })).status).toBe(501);
+  expect((await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } })).status).toBe(501);
   expect((await post(app(undefined, db), "/ai/make", { kind: "note", centreId, studentId: "11111111-1111-1111-1111-111111111111", studentName: "Dev", tutorName: "Meera", language: "en", week: { taught: [], right: [], practise: [], coming: [] } })).status).toBe(501);
 });

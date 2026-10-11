@@ -9,6 +9,10 @@ import { request as planRequest } from "../src/prompts/plan.js";
 import { request as sheetRequest } from "../src/prompts/sheet.js";
 import { request as workedExampleRequest } from "../src/prompts/worked-example.js";
 import { PaperOutput } from "../src/schemas.js";
+import { request as gapReportRequest } from "../src/prompts/gap-report.js";
+import { request as mockRequest } from "../src/prompts/mock.js";
+import { request as parseSchoolRequest } from "../src/prompts/parse-school.js";
+import { request as testTomorrowRequest } from "../src/prompts/test-tomorrow.js";
 
 const request = { model: "claude-sonnet-5-5" as const, effort: "medium" as const, system: "s", text: "t", schema: PaperOutput };
 
@@ -55,4 +59,25 @@ test("kindOf tells the plan's five kinds apart and localScript answers each", ()
   expect(kindOf(planRequest({ centreId, classId: null, date: "2026-10-07", month: 10, groups: [{ groupNo: 1, classLevel: "8", subject: "Science" }] }))).toBe("plan");
   const figure = localScript(figureRequest("number_line", "3", "Mathematics", "Count on a number line"));
   expect((figure.answer as { figure: { kind: string } }).figure.kind).toBe("number_line");
+});
+
+test("kindOf tells the school kinds apart", () => {
+  expect(kindOf(parseSchoolRequest({ text: "x", image: null, today: "2026-10-07", schools: [], classLevels: [] }))).toBe("parse_school");
+  expect(kindOf(parseSchoolRequest({ text: null, image: { mediaType: "image/jpeg", base64: "AAAA", bytes: 3 }, today: "2026-10-07", schools: [], classLevels: [] }))).toBe("parse_school");
+  expect(kindOf(mockRequest({ kind: "mock", centreId: "c", classLevel: "8", subject: "Science", title: "T", portions: ["x"], pattern: { marks: 25, durationMinutes: 40 } }))).toBe("mock");
+  expect(kindOf(gapReportRequest({ kind: "gap_report", centreId: "c", studentId: "s", classLevel: "8", subject: "Science", daysLeft: 1, bySkill: [{ skill: "x", right: 1, of: 2 }] }))).toBe("gap_report");
+  expect(kindOf(testTomorrowRequest({ kind: "test_tomorrow", centreId: "c", studentId: "s", studentName: "D", tutorName: "M", centreName: "B", language: "hi", subject: "Science", title: "T", date: "2026-10-08" }))).toBe("test_tomorrow");
+});
+
+test("the local script reads a photo as two exams and a message as the board's three items", () => {
+  const photo = localScript(parseSchoolRequest({ text: null, image: { mediaType: "image/jpeg", base64: "AAAA", bytes: 3 }, today: "2026-10-07", schools: [], classLevels: [] }));
+  expect((photo.answer as { items: { kind: string }[] }).items.map((i) => i.kind)).toEqual(["exam", "exam"]);
+  const text = localScript(parseSchoolRequest({ text: "Dear Parents", image: null, today: "2026-10-07", schools: [], classLevels: [] }));
+  expect((text.answer as { items: { kind: string }[] }).items.map((i) => i.kind)).toEqual(["exam", "homework", "holiday"]);
+});
+
+test("the local mock's marks sum to the pattern asked for", () => {
+  const r = mockRequest({ kind: "mock", centreId: "c", classLevel: "8", subject: "Science", title: "T", portions: ["x"], pattern: { marks: 40, durationMinutes: 60 } });
+  const made = localScript(r).answer as { sections: { questions: { marks: number }[] }[] };
+  expect(made.sections.flatMap((s) => s.questions).reduce((n, q) => n + q.marks, 0)).toBe(40);
 });
