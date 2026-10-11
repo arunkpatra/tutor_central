@@ -54,6 +54,8 @@ const IOS_INPUTS = [
   "ios/TutorCentralKit/Package.resolved",
   // The token test reads the document (D25).
   "docs/design/design-tokens.md",
+  // The price sheet reads the model table (D67).
+  "api/models.json",
 ];
 
 export const STEPS: Step[] = [
@@ -88,6 +90,8 @@ export const STEPS: Step[] = [
       // store-shots.test reads the Store boards and the launch states they name.
       "docs/design/mockups/Store-*.dc.html",
       "ios/TutorCentralKit/Sources/AppShell/LaunchState.swift",
+      // cost.test prices by the model table (D67).
+      "api/models.json",
     ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
@@ -97,7 +101,7 @@ export const STEPS: Step[] = [
   {
     name: "api",
     // schemas.test parses the class 10 blueprints of the syllabus data.
-    inputs: ["api/src/**", "api/test/**", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**"],
+    inputs: ["api/src/**", "api/test/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**"],
     run: () => run("bun run check", "api"),
   },
   {

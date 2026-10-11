@@ -61,3 +61,13 @@ test("with APPLE_FAKE=1 the server starts without the Apple key (a local deletio
   const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
   expect(await proc.exited).toBe(0);
 });
+
+test("an unknown AI_MODEL value stops the entry, so the deploy's smoke fails and no tutor's call does (D67)", async () => {
+  const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS, AI_MODEL_NOTE: "claude-5" };
+  const bad = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
+  const stderr = await new Response(bad.stderr).text();
+  expect(await bad.exited).not.toBe(0);
+  expect(stderr).toContain("AI_MODEL_NOTE names an unknown model: claude-5");
+  const good = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env: { ...env, AI_MODEL_NOTE: "claude-sonnet-5-5" }, stdout: "pipe", stderr: "pipe" });
+  expect(await good.exited).toBe(0);
+});

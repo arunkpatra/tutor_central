@@ -8,7 +8,10 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
   `src/make-app.ts` builds the app from injected dependencies so tests run with a fake verifier.
 - Vercel runs the files as Node ES modules: relative imports end in `.js` (`./auth.js`). `tsc` runs with
   `NodeNext` and refuses an import without it. Bun does not mind, so trust `tsc`, not `bun test`.
-- Every `/ai/*` route passes `requireUser`: 401 "sign in again" for anything but a live Supabase user, never 500.
+- Every `/ai/*` route passes `requireUser`: 401 "sign in again" for a token that is not a live user's; 503 `{ reason:
+  "unreachable" }` when Supabase could not be asked (`src/verify.ts`: a 4xx is the token's; a thrown fetch, a 5xx or an
+  error with no status is unreachable, D68); never 500. A named student's missing consent is 403 `reason:
+  "student_consent"` in the student's words; the centre's notice keeps "consent".
 - Inputs are zod schemas in `src/schemas.ts`; a route validates first and answers 400 with the issue list.
 - `/health` answers `{ ok, commit }`; the commit is `TC_COMMIT`, set by the deploy workflow.
 - Secrets only in Vercel's environment variables and `api/.env.local` (ignored); `.env.example` lists names.
@@ -23,7 +26,10 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
   (`vercel.json`). Production: the repo variable `API_ORIGIN`. Vercel blocks deployments that carry a commit
   author it does not know, so never deploy from a local checkout.
 - Claude through `@anthropic-ai/sdk` (D35), the named `Anthropic` export (the default breaks Vercel's CommonJS type
-  check): `messages.parse` with `zodOutputFormat`, one model per route, no fallbacks. One deadline across both tries
+  check): `messages.parse` with `zodOutputFormat`, one model per work type, no fallbacks. The models are `models.json`
+  (D67): `modelFor(kind, classLevel?)` is the one place a prompt asks; `AI_MODEL_<WORK_TYPE>` (the table's keys
+  upper-cased) overrides one at deploy, and an unknown name stops the API at start. The app's price sheet and `bun cost`
+  read the same file. One deadline across both tries
   (`CLAUDE_DEADLINE_MS`, 110 s, under the app's 125 s); a timeout is a 502 and the row is marked failed.
 - `POST /account/revoke-apple` (D38) exchanges the app's Apple authorization code and revokes the refresh token with a
   client secret signed from `APPLE_SIGNIN_KEY` (ES256, `dsaEncoding: "ieee-p1363"`, five minutes). The three `APPLE_*`

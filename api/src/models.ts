@@ -1,32 +1,49 @@
-import type { ClaudeRequest } from "./claude.js";
-import type { V2Kind } from "./db.js";
+import table from "../models.json" with { type: "json" };
+import type { AIKind } from "./db.js";
 import type { ClassLevel } from "./schemas.js";
 
-type Model = ClaudeRequest<unknown>["model"];
+/** The model for each kind of AI work lives in one checked-in table, api/models.json (D67): the API, the app's price
+ *  sheet and `bun cost` read it. One model per work type, no fallbacks (D35, D63). An environment variable per work type,
+ *  AI_MODEL_<WORK_TYPE>, overrides it at deploy; a value that is not one of the table's models stops the API at start, so
+ *  the deploy's smoke fails rather than a tutor's call. */
+export type Model = keyof typeof table.models;
+export type WorkType = keyof typeof table.work;
 
-/** One model per V2 kind, no fallbacks (D35, D63; docs/spec-v2.md section 9): Haiku for the short and the personal
- *  kinds, Sonnet for what needs more reasoning; a sheet moves to Sonnet from class 6. */
-const MODELS: Record<Exclude<V2Kind, "sheet">, Model> = {
-  check: "claude-haiku-5-5",
-  placement: "claude-haiku-5-5",
-  note: "claude-haiku-5-5",
-  can_do: "claude-haiku-5-5",
-  test_tomorrow: "claude-haiku-5-5",
-  worked_example: "claude-sonnet-5-5",
-  figure: "claude-sonnet-5-5",
-  brief: "claude-sonnet-5-5",
-  mock: "claude-sonnet-5-5",
-  parse_school: "claude-sonnet-5-5",
-  parse_textbook: "claude-sonnet-5-5",
-  plan: "claude-sonnet-5-5",
-  gap_report: "claude-sonnet-5-5",
-};
+export const KNOWN_MODELS = Object.keys(table.models) as Model[];
+const DEFAULTS = table.work as Record<WorkType, Model>;
+let work: Record<WorkType, Model> = { ...DEFAULTS };
+
+/** A sheet moves from Haiku to Sonnet from class 6 (spec-v2 section 9). */
 const EARLY: readonly ClassLevel[] = ["lkg", "ukg", "1", "2", "3", "4", "5"];
 
-export function modelFor(kind: V2Kind, classLevel: ClassLevel): Model {
-  if (kind === "sheet") return EARLY.includes(classLevel) ? "claude-haiku-5-5" : "claude-sonnet-5-5";
-  return MODELS[kind];
+/** The work type a kind and class name: the kind itself, or a sheet's band. */
+export function workTypeOf(kind: AIKind, classLevel?: ClassLevel): WorkType {
+  if (kind === "sheet") return classLevel && !EARLY.includes(classLevel) ? "sheet_from_6" : "sheet_to_5";
+  return kind;
 }
 
-/** Marking a paper, a mock's included, is check-paper's (V1's model). */
-export const MARKING_MODEL: Model = "claude-opus-5-5";
+/** The model for a kind of work; a sheet needs the class. */
+export function modelFor(kind: AIKind, classLevel?: ClassLevel): Model {
+  return work[workTypeOf(kind, classLevel)];
+}
+
+/** Applies the environment's AI_MODEL_<WORK_TYPE> overrides to the table; throws naming the variable on a work type or a
+ *  model the table does not know. Called once at start. */
+export function applyModelOverrides(env: Record<string, string | undefined>): void {
+  const next = { ...work };
+  for (const [name, value] of Object.entries(env)) {
+    if (!name.startsWith("AI_MODEL_") || value === undefined) continue;
+    const type = name.slice("AI_MODEL_".length).toLowerCase();
+    if (!(type in DEFAULTS)) throw new Error(`${name} names no kind of work. Known: ${Object.keys(DEFAULTS).join(", ")}`);
+    if (!(KNOWN_MODELS as string[]).includes(value)) {
+      throw new Error(`${name} names an unknown model: ${value}. Known: ${KNOWN_MODELS.join(", ")}`);
+    }
+    next[type as WorkType] = value as Model;
+  }
+  work = next;
+}
+
+/** Tests only: back to the table's defaults. */
+export function resetModelOverrides(): void {
+  work = { ...DEFAULTS };
+}

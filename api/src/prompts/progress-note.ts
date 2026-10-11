@@ -1,4 +1,5 @@
 import type { ClaudeRequest } from "../claude.js";
+import { modelFor } from "../models.js";
 import { type NoteInput, NoteOutput } from "../schemas.js";
 import { VOICE } from "./shared.js";
 
@@ -8,7 +9,7 @@ const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
 export function request(input: NoteInput): ClaudeRequest<NoteOutput> {
   const tone = input.tone === "warm" ? "warm and encouraging, still honest" : "plain and factual, still kind";
   return {
-    model: "claude-sonnet-5-5",
+    model: modelFor("progress_note"),
     effort: "medium",
     system: [
       VOICE,

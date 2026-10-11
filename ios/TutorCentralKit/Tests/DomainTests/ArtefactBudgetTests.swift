@@ -80,7 +80,7 @@ struct ArtefactBudgetTests {
         #expect(requests.filter { $0.groupNo == 3 }.map(\.kindName) == ["checks", "sheet", "sheet", "workedExample"])
     }
 
-    @Test func aTwelveStudentBatchCostsWhatThreeGroupsCostPlusPersonalChecks() {
+    @Test func aTwelveStudentBatchCostsWhatThreeGroupsCostPlusPersonalChecks() throws {
         let twelve = draft(
             Array(repeating: .eight, count: 4) + Array(repeating: .five, count: 4) + Array(repeating: .two, count: 4),
             statuses: [.watch, .notOnTrack]
@@ -107,7 +107,7 @@ struct ArtefactBudgetTests {
         }
         #expect(big.count - personal.count == small.count)
         #expect(personal.count == 2)
-        #expect(PriceSheet.rupees(big) < 10)
+        #expect(try PriceSheet.rupees(big) < 10)
     }
 
     @Test func personalChecksAreCappedAtFourAndTheRestTakeTheGroups() {

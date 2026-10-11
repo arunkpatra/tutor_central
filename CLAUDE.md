@@ -84,6 +84,7 @@ change per pull request, described by what it does and how it was checked.
 | `bun shots <state> [--appearance dark\|light\|both]` | Screenshots of the app in the simulator at a launch state, both appearances by default, into `.shots/<state>/` |
 | `bun web-shots [--pages /,/privacy] [--widths 1280,390] [--appearance dark\|light\|both]` | Pictures of the website's export (build it first with `bun check --only=web`) by headless Chrome, full page at 2×, into `.shots/web/` (D46) |
 | `bun store-shots` | The App Store screenshots: the approved `Store-*` boards rendered with fresh simulator screens (dark, 9:41) at 1206 × 2622 JPEG into `docs/store/screenshots/` (D51); needs the `bun check` build. The listing's words are `docs/store/listing.md` |
+| `bun cost [--since 30m\|2h\|7d] [--kinds note,can_do]` | What the local AI calls cost, by kind and model, priced by `api/models.json` (D67) |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
 | `cd supabase && supabase start` | The local database stack (Docker) |
 | `cd api && bun run dev` | The API locally |

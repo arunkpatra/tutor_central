@@ -1,0 +1,33 @@
+{
+  "rupeesPerDollar": 85,
+  "models": {
+    "claude-haiku-5-5": { "inputUsdPerMillion": 0.1, "outputUsdPerMillion": 0.5 },
+    "claude-sonnet-5-5": { "inputUsdPerMillion": 2, "outputUsdPerMillion": 10 },
+    "claude-opus-5-5": { "inputUsdPerMillion": 4, "outputUsdPerMillion": 20 }
+  },
+  "work": {
+    "paper": "claude-sonnet-5-5",
+    "homework": "claude-sonnet-5-5",
+    "worksheet": "claude-sonnet-5-5",
+    "progress_note": "claude-sonnet-5-5",
+    "scan_register": "claude-opus-5-5",
+    "check_paper": "claude-opus-5-5",
+    "plan": "claude-sonnet-5-5",
+    "sheet_to_5": "claude-haiku-5-5",
+    "sheet_from_6": "claude-sonnet-5-5",
+    "worked_example": "claude-sonnet-5-5",
+    "figure": "claude-sonnet-5-5",
+    "brief": "claude-sonnet-5-5",
+    "mock": "claude-sonnet-5-5",
+    "gap_report": "claude-sonnet-5-5",
+    "parse_school": "claude-sonnet-5-5",
+    "parse_textbook": "claude-sonnet-5-5",
+    "check": "claude-haiku-5-5",
+    "placement": "claude-haiku-5-5",
+    "note": "claude-haiku-5-5",
+    "can_do": "claude-haiku-5-5",
+    "test_tomorrow": "claude-haiku-5-5",
+    "not_on_track": "claude-haiku-5-5",
+    "read_marks": "claude-sonnet-5-5"
+  }
+}
