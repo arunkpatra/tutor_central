@@ -51,6 +51,9 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
     private let photos: any PhotoStore
     let textbooks: (any TextbooksRepository)?
     let plans: (any PlansRepository)?
+    let record: (any RecordRepository)?
+    /// From the mock day to the test, the page leads with them (P10-School-Exam-LastDays).
+    public internal(set) var lastDays: LastDaysModel?
     private let now: @Sendable () -> Date
     let calendar: Calendar
     private let online: @Sendable () async -> Bool
@@ -59,8 +62,9 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
         itemID: UUID, workspace: Workspace, items: any SchoolItemsRepository, register: any Register,
         schools: any SchoolsRepository, photos: any PhotoStore, now: @escaping @Sendable () -> Date, calendar: Calendar,
         online: @escaping @Sendable () async -> Bool, textbooks: (any TextbooksRepository)? = nil,
-        plans: (any PlansRepository)? = nil
+        plans: (any PlansRepository)? = nil, record: (any RecordRepository)? = nil
     ) {
+        self.record = record
         self.itemID = itemID
         self.textbooks = textbooks
         self.plans = plans
@@ -103,13 +107,14 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
         guard let item else { return nil }
         return ItemHeroModel(
             eyebrow: eyebrow(item), kind: SchoolWords.kind(item.kind), title: item.title, dateLine: dateLine(item),
-            portionsLine: item.portions.map { "Portions: \($0)" }
+            portionsLine: lastDays == nil ? item.portions.map { "Portions: \($0)" } : nil
         )
     }
 
     /// The students the item reaches, by name, with their status and the record's first reason.
     public var who: [WhoRow] {
-        guard let item, item.kind != .holiday else { return [] }
+        // From the mock day the page leads with the last days, whose Marked names the students.
+        guard let item, item.kind != .holiday, lastDays == nil else { return [] }
         return SchoolItemRules.students(for: item, in: register.activeStudents).map { student in
             let reason = student.trackReasons.first.map { " · \($0)" } ?? ""
             return WhoRow(

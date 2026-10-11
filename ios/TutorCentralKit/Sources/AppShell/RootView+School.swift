@@ -1,3 +1,5 @@
+import AITools
+import Artefacts
 import Data
 import DesignSystem
 import Domain
@@ -60,7 +62,9 @@ extension RootView {
                     actions: ItemActions(
                         openToday: { shell.openToday(batch: $0) },
                         openArtefact: { shell.tabs.push(.artefact($0)) },
-                        testTomorrow: { shell.testTomorrow = $0 }
+                        testTomorrow: { shell.testTomorrow = $0 },
+                        markPaper: { student, mock, exam in markMock(student, mock: mock, exam: exam) },
+                        openGapReport: { exam, student in shell.tabs.push(.schoolGapReport(exam, student)) }
                     ),
                     back: { shell.tabs.remove(route) }
                 )
@@ -73,10 +77,39 @@ extension RootView {
                     ),
                     back: { shell.tabs.remove(route) }
                 )
+            case let .schoolGapReport(exam, student):
+                GapReportScreen(
+                    store: gapReportStore(exam: exam, student: student, workspace: workspace),
+                    actions: GapReportActions(openToday: { shell.openToday(batch: $0) })
+                )
             default:
                 EmptyView()
             }
         }
+    }
+
+    private func gapReportStore(exam: UUID, student: UUID, workspace: Workspace) -> GapReportStore {
+        let store = GapReportStore(
+            itemID: exam, studentID: student, workspace: workspace, register: register(for: workspace),
+            plans: deps.plans, ai: deps.ai, record: deps.record, schoolItems: deps.schoolItems, now: deps.now,
+            calendar: DayHeading.india
+        )
+        store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
+        store.onUsed = { [shell] student in shell.schoolItemsChanged?([student]) }
+        return store
+    }
+
+    /// The last days' Mark from a photo: Check a paper with the student and the mock's key.
+    private func markMock(_ student: Student, mock: Artefact, exam: SchoolItem) {
+        guard let generation = mock.generationID else { return }
+        let visit = UUID()
+        shell.checkPresets[visit] = CheckPreset(
+            studentID: student.id, scheme: .mock(generationID: generation, artefactID: mock.id),
+            mark: MarkTarget(
+                subject: exam.subject ?? "", test: "\(exam.title) · mock", schoolItemID: exam.id, artefactID: mock.id
+            )
+        )
+        shell.tabs.push(.checkPaper(visit))
     }
 
     private func readStore(_ source: ReadSource, workspace: Workspace) -> ReadStore {
@@ -98,7 +131,7 @@ extension RootView {
             itemID: id, workspace: workspace, items: deps.schoolItems, register: register(for: workspace),
             schools: deps.schools, photos: deps.photos, now: deps.now, calendar: DayHeading.india,
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, textbooks: deps.textbooks,
-            plans: deps.plans
+            plans: deps.plans, record: deps.record
         )
         store.onChanged = { students in
             shell.schoolItemsChanged?(students)
@@ -254,5 +287,20 @@ struct ItemScreen: View {
 
     var body: some View {
         ItemView(store: store, boardState: boardState, actions: actions, back: back)
+    }
+}
+
+/// A gap report pushed from the exam's last days, its store kept in `@State`.
+struct GapReportScreen: View {
+    @State private var store: GapReportStore
+    let actions: GapReportActions
+
+    init(store: GapReportStore, actions: GapReportActions) {
+        _store = State(initialValue: store)
+        self.actions = actions
+    }
+
+    var body: some View {
+        GapReportView(store: store, actions: actions)
     }
 }

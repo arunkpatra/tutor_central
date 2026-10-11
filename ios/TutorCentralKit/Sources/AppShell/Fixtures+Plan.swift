@@ -79,6 +79,8 @@ extension Fixtures {
             return FakePlansRepository.evening(ownSheet: ownSheet, photoPath: ownPhotoPath)
         case _ where figureStates[state] != nil:
             return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
+        case _ where lastDaysStates.contains(state):
+            return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts)
         case .mock, .mockKey:
             return FakePlansRepository(artefacts: [FakePlansRepository.boardMock])
         case .closeCards, .todayRevision:

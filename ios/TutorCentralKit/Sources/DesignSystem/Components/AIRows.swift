@@ -6,12 +6,15 @@ public struct ToolRow: View {
     let symbol: String
     let title: String
     let line: String
+    /// The exam's mock (P10-School-Exam-LastDays): the Ready chip before the chevron.
+    let ready: Bool
     let action: () -> Void
 
-    public init(symbol: String, title: String, line: String, action: @escaping () -> Void) {
+    public init(symbol: String, title: String, line: String, ready: Bool = false, action: @escaping () -> Void) {
         self.symbol = symbol
         self.title = title
         self.line = line
+        self.ready = ready
         self.action = action
     }
 
@@ -19,6 +22,9 @@ public struct ToolRow: View {
         ListRow(action: action) {
             IconTile(symbol: symbol)
             RowTitles(title: title, subtitle: line)
+            if ready {
+                Chip(.status(.ok, "Ready", symbol: "checkmark"), compact: true)
+            }
             Chevron()
         }
     }

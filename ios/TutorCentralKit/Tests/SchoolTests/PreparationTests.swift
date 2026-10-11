@@ -78,7 +78,8 @@ import Testing
     @Test func theDayBeforeOffersTestTomorrow() async {
         let store = await makeStore(FakeSchoolItemsRepository.scienceTest3, now: Self.at(15, 16, 35))
         await store.load()
-        #expect(store.preparation.map(\.date) == ["15 Oct"])
+        // The mock was Wednesday's: the last days lead, with the Test tomorrow row (P10-School-Exam-LastDays).
+        #expect(store.preparation.isEmpty && store.lastDays?.lastDays.map(\.date) == ["15 Oct", "16 Oct"])
         #expect(store.testTomorrowOffered)
         #expect(store.testTomorrowLine == "Test tomorrow goes to parents on Thursday evening")
         #expect(store.testTomorrowAsk?.student.id == FakeStudentsRepository.dev)

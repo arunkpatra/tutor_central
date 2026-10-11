@@ -17,7 +17,7 @@ extension RootView {
                     online: { [connectivity = deps.connectivity] in await connectivity.isOnline },
                     planCache: deps.cachesLists
                         ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil,
-                    schoolItems: deps.schoolItems, schools: deps.schools
+                    schoolItems: deps.schoolItems, schools: deps.schools, record: deps.record
                 ),
                 actions: ArtefactsActions(
                     openArtefact: { shell.tabs.push(.artefact($0)) },
@@ -25,7 +25,9 @@ extension RootView {
                         let visit = UUID()
                         shell.checkPresets[visit] = CheckPreset(mark)
                         shell.tabs.push(.checkPaper(visit))
-                    }
+                    },
+                    gapReport: GapReportActions(openToday: { shell.openToday(batch: $0) }),
+                    gapUsed: { student in shell.schoolItemsChanged?([student]) }
                 ),
                 boardState: launch.flatMap(Self.artefactBoardState)
             )

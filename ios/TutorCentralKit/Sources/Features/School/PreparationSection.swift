@@ -10,10 +10,11 @@ struct PreparationSection: View {
     let open: (PreparationOpen) -> Void
     let testTomorrowLine: String?
     let testTomorrow: (() -> Void)?
+    var title = "Preparation"
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Preparation", action: change.map { ("Change", $0) })
+            SectionHeader(title, action: change.map { ("Change", $0) })
             Card {
                 VStack(spacing: 0) {
                     ForEach(rows) { row in

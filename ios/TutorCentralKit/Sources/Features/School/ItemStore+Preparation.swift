@@ -46,6 +46,7 @@ extension ItemStore {
               let student = students.first(where: { $0.classID.flatMap(register.classroom) != nil }),
               let batch = student.classID.flatMap(register.classroom) else {
             preparation = []
+            lastDays = nil
             changeOpensToday = nil
             testTomorrowAsk = nil
             return
@@ -63,10 +64,18 @@ extension ItemStore {
             holidays: (all ?? []).filter { $0.kind == .holiday }, students: register.activeStudents,
             calendar: calendar
         )
-        let days = await ExamPreparation.days(
+        let split = await ExamPreparation.days(
             exam: item, student: student, chapters: chapters ?? [], skills: skills ?? [],
             context: context
-        ).filter { $0.day >= today && $0.kind != .exam }
+        )
+        if let mockDay = split.first(where: { $0.kind == .mock }), mockDay.day <= today, today < item.date {
+            // From the mock day the page leads with the last days.
+            preparation = []
+            lastDays = await lastDaysModel(item, split: split, students: students, mock: mock ?? nil)
+            return
+        }
+        lastDays = nil
+        let days = split.filter { $0.day >= today && $0.kind != .exam }
         let todaysPlan = days.contains { $0.day == today }
             ? try? await plans?.plan(centre: centre, classID: batch.id, date: today) : nil
         let made = await mock

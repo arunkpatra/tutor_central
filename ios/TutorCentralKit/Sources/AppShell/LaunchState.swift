@@ -35,6 +35,10 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case schoolItemEdit = "school-item-edit"
     case schoolItemDelete = "school-item-delete"
     case schoolItemHomework = "school-item-homework"
+    /// The exam's page on the mock day, leading with the last days (P10-School-Exam-LastDays), and Dev's gap report
+    /// (P10-GapReport).
+    case schoolLastDays = "school-last-days"
+    case gapReport = "gap-report"
     case schoolItemHoliday = "school-item-holiday"
     /// Ask parents to forward with two sent (P10-School-Ask).
     case schoolAsk = "school-ask"

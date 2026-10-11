@@ -347,4 +347,20 @@ struct SchoolLaunchStateTests {
             artefactID: FakePlansRepository.boardMockID
         ))
     }
+
+    /// P10-School-Exam-LastDays and P10-GapReport on Wednesday 14 October with the mock marked for Dev and Meher.
+    @MainActor @Test func theLastDaysStatesOpenTheExamAndDevsReport() async throws {
+        let exam = FakeSchoolItemsRepository.scienceTest3
+        #expect(RootView.initialRoutes(for: .schoolLastDays) == [.schoolItem(exam)])
+        #expect(RootView.initialRoutes(for: .gapReport) == [
+            .schoolItem(exam), .schoolGapReport(exam, FakeStudentsRepository.dev),
+        ])
+        let deps = Fixtures.dependencies(for: .gapReport)
+        let centre = Fixtures.meeraWorkspace.centre.id
+        #expect(try await deps.plans.mock(for: exam, centre: centre)?.id == FakePlansRepository.examMockID)
+        let marks = try await deps.record.marks(
+            centre: centre, students: [FakeStudentsRepository.dev, FakeStudentsRepository.meher]
+        )
+        #expect(marks.count == 2)
+    }
 }
