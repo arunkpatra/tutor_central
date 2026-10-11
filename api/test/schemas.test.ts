@@ -295,3 +295,11 @@ test("a message is at most 600 characters; read-marks takes one or two photos an
   expect(ReadMarksOutput.safeParse({ marks: Array(13).fill(row) }).success).toBe(false);
   expect(ReadMarksOutput.safeParse({ marks: [{ ...row, max: 0 }] }).success).toBe(false);
 });
+
+test("a message's English is the tutor's reading aid: it may run longer than the 600 the parent's message keeps to", () => {
+  // The cost run: a 520-character Hindi note whose English ran to 640 characters was refused whole.
+  const english = "a".repeat(640);
+  expect(MessageOutput.safeParse({ message: "म".repeat(520), english }).success).toBe(true);
+  expect(MessageOutput.safeParse({ message: "म".repeat(601), english: "a" }).success).toBe(false);
+  expect(MessageOutput.safeParse({ message: "म", english: "a".repeat(1001) }).success).toBe(false);
+});

@@ -328,3 +328,20 @@ test("test tomorrow no longer asks the model to sign (the app signs each message
   expect(claude.requests[0]?.system).toContain("no signature");
   expect(claude.requests[0]?.text).not.toContain("Signed:");
 });
+
+test("an unfit message is refused in words about the message, never about a topic, and the English's limit is asked", async () => {
+  const long = { message: "नमस्ते", english: "a".repeat(1001) };
+  for (const kind of ["note", "can_do", "not_on_track"] as const) {
+    const claude = fakeClaude({ answer: long });
+    const body =
+      kind === "note"
+        ? { kind, centreId, ...student, language: "hi", week }
+        : kind === "can_do"
+          ? { kind, centreId, ...student, classLevel: "2", language: "kn", ladder: { movedUp: [], canDo: ["Read short sentences"], atHome: "One page a day", next: ["Paragraphs"] } }
+          : { kind, centreId, ...student, language: "hi", hard: ["Balancing equations"], reasons: ["3 of 10 on the mock"], doing: "the worked example in the next class", atHome: "five equations a day" };
+    const r = await post(app(claude, fakeDb()), "/ai/make", body);
+    expect({ kind, status: r.status }).toEqual({ kind, status: 422 });
+    expect(await r.json()).toEqual({ error: "Couldn't write this message. Try again." });
+    expect(claude.requests[0]?.system).toContain("the English at most 700 characters");
+  }
+});

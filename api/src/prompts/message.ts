@@ -8,7 +8,7 @@ export const LANGUAGES: Record<Language, string> = { en: "English", hinglish: "H
 export const MESSAGE = [
   "You write a short WhatsApp message from a tutor to a parent, in the language asked (Hindi in Devanagari, Kannada in Kannada script, Hinglish in Latin letters, English in English).",
   "Use only the facts given; leave out any fact that is missing or empty, never invent one.",
-  "Polite, warm, at most 500 characters, sentence case, no exclamation marks.",
+  "Polite, warm, at most 500 characters, the English at most 700 characters, sentence case, no exclamation marks.",
   "Also give the same message in English for the tutor to read (for English, repeat it).",
   "End with the last sentence: no signature, no name, no sign-off (the app adds the signature).",
 ].join(" ");

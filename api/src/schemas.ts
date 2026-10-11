@@ -381,7 +381,9 @@ export type GapReportOutput = z.infer<typeof GapReportOutput>;
 
 /** A message to a parent in their language with the English beside it for the tutor (Test tomorrow, the note,
  *  can-now-do, not on track). 600 characters; the prompts ask for 500 and no signature (the app signs once). */
-export const MessageOutput = z.object({ message: z.string().min(1).max(600), english: z.string().min(1).max(600) });
+/** The message keeps to WhatsApp's 600 the app counts; the English is the tutor's reading aid, never sent, and a
+ *  translation can run longer than its source (the cost run: a Hindi note's English at 640). */
+export const MessageOutput = z.object({ message: z.string().min(1).max(600), english: z.string().min(1).max(1000) });
 export type MessageOutput = z.infer<typeof MessageOutput>;
 export const TestTomorrowOutput = MessageOutput;
 export type TestTomorrowOutput = MessageOutput;
