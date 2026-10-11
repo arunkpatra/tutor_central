@@ -40,7 +40,7 @@ extension Fixtures {
 
     /// A check state's visit as far as its board goes: Hemanth chosen, two drawn pages, the scheme read, the check run.
     @MainActor static func prepareCheck(_ store: CheckStore, for state: LaunchState) {
-        guard RootView.checkStates.contains(state) else { return }
+        guard RootView.checkStates.contains(state), state != .checkIntroMock else { return }
         if state == .checkIntro || state == .checkSchemeChooser {
             // P10-Make-Check: Dev, the mock of his Science unit test 3 offered first.
             store.studentID = FakeStudentsRepository.dev
@@ -70,6 +70,19 @@ extension Fixtures {
             store.scheme = .paper(generationID: FakeAIHistoryRepository.quadraticID)
             await store.check()
         }
+    }
+
+    /// Mark from a photo's preset (hand run 8): Dev with Science unit test 3's mock (P10-School-Exam-LastDays).
+    static func checkPreset(for state: LaunchState) -> CheckPreset? {
+        guard state == .checkIntroMock,
+              let mock = FakePlansRepository.lastDaysArtefacts.first(where: { $0.kind == .mock }),
+              let generation = mock.generationID else { return nil }
+        return CheckPreset(
+            studentID: FakeStudentsRepository.dev, scheme: .mock(generationID: generation, artefactID: mock.id),
+            mark: MarkTarget(
+                subject: "Science", test: "\(mock.title) · mock", schoolItemID: mock.schoolItemID, artefactID: mock.id
+            )
+        )
     }
 
     /// A drawn page of answers (P6-Check-Pages draws two).

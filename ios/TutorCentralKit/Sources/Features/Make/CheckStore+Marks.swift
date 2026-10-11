@@ -81,7 +81,7 @@ public extension CheckStore {
     }
 
     internal var markTarget: MarkTarget? {
-        if let mark = preset?.mark ?? chosenMark {
+        if let mark = presetInUse?.mark ?? chosenMark {
             return mark
         }
         guard case let .paper(id) = scheme, let paper = papers.first(where: { $0.id == id }),

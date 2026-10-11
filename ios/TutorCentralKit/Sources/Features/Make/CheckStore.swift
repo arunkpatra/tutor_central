@@ -126,8 +126,14 @@ import Observation
         switch scheme {
         case let .paper(id): papers.first { $0.id == id }?.result.title ?? "Marking scheme"
         case .typed: "Typed scheme"
-        case let .mock(_, artefact): preset?.mark.test ?? mocks.first { $0.id == artefact }.map(mockTitle) ?? "The mock"
+        case let .mock(_, artefact):
+            presetInUse?.mark.test ?? mocks.first { $0.id == artefact }.map(mockTitle) ?? "The mock"
         }
+    }
+
+    /// The preset while its scheme is the one in use: a scheme chosen in its place marks no exam.
+    var presetInUse: CheckPreset? {
+        preset.flatMap { $0.scheme == scheme ? $0 : nil }
     }
 
     /// The marks of the chosen paper ("Against Quadratic equations · 20 marks").
