@@ -1,3 +1,4 @@
+import Domain
 import Foundation
 
 /// Sign-out and deletion wipe the phone (D40): every file of the centre under Application Support/TutorCentral (the
@@ -8,7 +9,15 @@ public enum Wipe {
         "haptics", "appearance", "reminders", "reminders.asked", "lastMessageLanguage", "aiForm.paper",
         "aiForm.homework",
         "aiForm.worksheet",
-    ]
+        makeBriefKey,
+    ] + MakeKind.allCases.map(makeKey)
+
+    /// Make's last target of a kind (a student's id among them) and the brief's last class.
+    public static func makeKey(_ kind: MakeKind) -> String {
+        "make.\(kind.rawValue).target"
+    }
+
+    public static let makeBriefKey = "make.brief.class"
 
     public static func everything(centre: UUID, directory: URL? = nil, defaults: UserDefaults = .standard) {
         let folder = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
