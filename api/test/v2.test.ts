@@ -3,6 +3,7 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude, kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { MessageOutput } from "../src/schemas.js";
 import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
@@ -145,12 +146,12 @@ test("plan names a first topic per group on Sonnet, with no student in the recor
   expect(JSON.stringify(db.started[0])).not.toContain("studentId");
 });
 
-test("no group make kind takes a student; the mock answers and the note still answers 501", async () => {
+test("no group make kind takes a student; the mock answers; a note in Phase 10's skeleton shape is a 400", async () => {
   const db = fakeDb({ consent: false });
   expect((await post(app(undefined, db), "/ai/make", sheet)).status).toBe(200);
   expect((await post(app(undefined, db), "/ai/make", { ...sheet, studentId: "11111111-1111-1111-1111-111111111111" })).status).toBe(400);
   expect((await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } })).status).toBe(200);
-  expect((await post(app(undefined, db), "/ai/make", { kind: "note", centreId, studentId: "11111111-1111-1111-1111-111111111111", studentName: "Dev", tutorName: "Meera", language: "en", week: { taught: [], right: [], practise: [], coming: [] } })).status).toBe(501);
+  expect((await post(app(undefined, db), "/ai/make", { kind: "note", centreId, studentId: "11111111-1111-1111-1111-111111111111", studentName: "Dev", tutorName: "Meera", language: "en", week: { taught: [], right: [], practise: [], coming: [] } })).status).toBe(400);
 });
 
 const today = "2026-10-07";
@@ -210,11 +211,6 @@ test("make gap_report and test_tomorrow are personal: the student's consent is a
   expect(db.started[1]).toMatchObject({ kind: "test_tomorrow", student: centreId, model: "claude-haiku-5-5" });
 });
 
-test("the note and can_do still answer 501", async () => {
-  const r = await post(app(), "/ai/make", { kind: "can_do", centreId, studentId: centreId, studentName: "D", tutorName: "M", language: "en", ladder: {} });
-  expect(r.status).toBe(501);
-});
-
 test("AI_MODEL_TEST_TOMORROW reaches the next call and its record (D67)", async () => {
   applyModelOverrides({ AI_MODEL_TEST_TOMORROW: "claude-opus-5-5" });
   try {
@@ -228,4 +224,107 @@ test("AI_MODEL_TEST_TOMORROW reaches the next call and its record (D67)", async 
   } finally {
     resetModelOverrides();
   }
+});
+
+// ---- Phase 14: the parents' messages and marks from a photo ----
+const student = { studentId: "77777777-7777-7777-7777-777777777777", studentName: "Dev Kumar", tutorName: "Meera Nair", parentName: "Ramesh Kumar", centreName: "Bright Minds Tuition", classLevel: "8" };
+const week = { monday: "2026-10-05", taught: ["Balancing equations", "Types of reactions"], right: "8 of 12 checks · all of Section A on the mock", practise: ["The numbers in front of a formula"], coming: ["Acids, bases and salts", "the unit test on Fri 16 Oct"], attendance: "absent 2 of 3 classes" };
+const testTomorrowBody = { kind: "test_tomorrow", centreId, studentId: centreId, studentName: "Dev Kumar", tutorName: "Meera Nair", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2" };
+
+test("make note writes the week's note in the parent's language with the English beside it, on Haiku, with the student's consent", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.note });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week });
+  expect(r.status).toBe(200);
+  const body = (await r.json()) as { result: { message: string; english: string } };
+  expect(body.result.message).toMatch(/^नमस्ते/);
+  expect(body.result.english).toContain("Dev learnt to balance chemical equations");
+  expect(db.started[0]).toMatchObject({ kind: "note", model: "claude-haiku-5-5", student: student.studentId });
+  expect(claude.requests[0]?.text).toContain("Taught: Balancing equations, Types of reactions.");
+  expect(claude.requests[0]?.text).toContain("Attendance: absent 2 of 3 classes.");
+  expect(claude.requests[0]?.system).not.toContain("signed");
+});
+
+test("a note for a student whose parent has not agreed is refused before any call, in the student's words", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.note });
+  const r = await post(app(claude, fakeDb({ studentConsent: false })), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week });
+  expect(r.status).toBe(403);
+  expect(await r.json()).toEqual({ error: "Dev's parent hasn't agreed yet.", reason: "student_consent" });
+  expect(claude.requests).toHaveLength(0);
+});
+
+test("a note with no taught skills leaves that sentence out and keeps the attendance line", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.note });
+  await post(app(claude, fakeDb()), "/ai/make", { kind: "note", centreId, ...student, language: "en", week: { ...week, taught: [], right: undefined, attendance: "absent all week (3 classes)" } });
+  const text = claude.requests[0]?.text ?? "";
+  expect(text).not.toContain("Taught:");
+  expect(text).not.toContain("Got right:");
+  expect(text).toContain("Attendance: absent all week (3 classes).");
+  expect(claude.requests[0]?.system).toContain("leave out");
+});
+
+test("make can_do writes from the ladder, naming what moved up, what the student can do, what to do at home and what is next", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.can_do });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", {
+    kind: "can_do", centreId, ...student, studentName: "Sahil Verma", parentName: "Deepak Verma", classLevel: "2", language: "kn",
+    ladder: { movedUp: [{ area: "reading", step: "Sentences" }], canDo: ["Read short sentences", "Count to 99"], atHome: "One page a day from the picture book", next: ["Writing words", "Adding to 20"] },
+  });
+  expect(r.status).toBe(200);
+  expect(((await r.json()) as { result: { message: string } }).result.message).toMatch(/^ನಮಸ್ಕಾರ/);
+  expect(db.started[0]).toMatchObject({ kind: "can_do", model: "claude-haiku-5-5" });
+  expect(claude.requests[0]?.text).toContain("Moved up this week: reading to Sentences.");
+});
+
+test("make not_on_track writes what is hard, what we are doing and what helps at home, and asks for a talk", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.not_on_track });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", {
+    kind: "not_on_track", centreId, ...student, language: "hi",
+    hard: ["Balancing equations"], reasons: ["3 of 10 on the mock", "absent twice in four weeks"], doing: "the worked example in the next class", atHome: "ten minutes of practice each evening",
+  });
+  expect(r.status).toBe(200);
+  expect(db.started[0]).toMatchObject({ kind: "not_on_track", model: "claude-haiku-5-5", student: student.studentId });
+  expect(claude.requests[0]?.system).toContain("five minutes");
+});
+
+test("the three message kinds hold the model to 500 characters and the schema to 600, with no signature", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.note });
+  await post(app(claude, fakeDb()), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week });
+  expect(claude.requests[0]?.system).toContain("at most 500 characters");
+  expect(claude.requests[0]?.system).toContain("no signature");
+  expect(MessageOutput.safeParse({ message: "x".repeat(601), english: "y" }).success).toBe(false);
+});
+
+test("read-marks reads a report card into rows the tutor checks, records the pages and never the image, with the student's consent", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.read_marks });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/read-marks", { centreId, studentId: student.studentId, studentName: "Hemanth Reddy", pages: [image], subjects: ["Mathematics", "Science"] });
+  expect(r.status).toBe(200);
+  const body = (await r.json()) as { result: { marks: { subject: string; test: string; date: string | null; score: number; max: number }[] } };
+  expect(body.result.marks[0]).toEqual({ subject: "Mathematics", test: "Unit test 2", date: "2026-09-28", score: 14, max: 25 });
+  expect(body.result.marks[2]?.date).toBeNull();
+  expect(db.started[0]).toMatchObject({ kind: "read_marks", model: "claude-sonnet-5-5", student: student.studentId, input: { pages: 1, bytes: 8 } });
+  expect(JSON.stringify(db.started[0])).not.toContain(jpeg);
+  expect(claude.requests[0]?.system).toContain("report card");
+  expect(claude.requests[0]?.text).toContain("Subjects the student takes here: Mathematics, Science.");
+});
+
+test("read-marks refuses a photo with no marks in words, and a student without consent before any call", async () => {
+  const none = await post(app(fakeClaude({ answer: { marks: [] } }), fakeDb()), "/ai/read-marks", { centreId, studentId: student.studentId, studentName: "Hemanth", pages: [image] });
+  expect(none.status).toBe(422);
+  expect(await none.json()).toEqual({ error: "Couldn't read any marks from this photo. Try a flatter, brighter one." });
+  const claude = fakeClaude({ answer: SAMPLE.read_marks });
+  const refused = await post(app(claude, fakeDb({ studentConsent: false })), "/ai/read-marks", { centreId, studentId: student.studentId, studentName: "Hemanth", pages: [image] });
+  expect(refused.status).toBe(403);
+  expect(claude.requests).toHaveLength(0);
+  const three = await post(app(undefined, fakeDb()), "/ai/read-marks", { centreId, studentId: student.studentId, studentName: "Hemanth", pages: [image, image, image] });
+  expect(three.status).toBe(400);
+});
+
+test("test tomorrow no longer asks the model to sign (the app signs each message once)", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.test_tomorrow });
+  await post(app(claude, fakeDb()), "/ai/make", testTomorrowBody);
+  expect(claude.requests[0]?.system).toContain("no signature");
+  expect(claude.requests[0]?.text).not.toContain("Signed:");
 });
