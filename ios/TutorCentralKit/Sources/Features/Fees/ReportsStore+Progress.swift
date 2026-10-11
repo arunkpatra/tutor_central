@@ -17,6 +17,11 @@ public extension ReportsStore {
 
     /// The active students' rows, sorted; from this iPhone's copy while the network is away. An archived student is
     /// neither listed nor summed.
+    /// A centre with no students yet: the Reports card in Progress's words, not a hero of zeros (the review's R-app-9).
+    var showsNoStudents: Bool {
+        progressLoaded && register.activeStudents.isEmpty && error == nil
+    }
+
     var progressRows: [ProgressRow] {
         let active = register.activeStudents
         let rows: [ProgressRow] = if let progressCopy {
@@ -29,8 +34,10 @@ public extension ReportsStore {
         return ProgressRules.sorted(rows, by: sort)
     }
 
+    /// The hero once Progress itself has rows to sum (a month read for Fees does not count), and the centre has
+    /// students.
     var progressHero: ProgressHero? {
-        guard loaded else { return nil }
+        guard progressLoaded, !register.activeStudents.isEmpty else { return nil }
         return ProgressRules.hero(progressRows, span: progressSpan, now: Day(now(), calendar: calendar))
     }
 }
@@ -52,7 +59,7 @@ extension ReportsStore {
         if progressShown != key {
             // A span not on screen yet: its copy at once while the network answers (hand run 14), else no rows.
             let copy = cache?.progress(key).load()
-            (progressInputs, progressCopy, progressShown) = ([:], copy?.value, key)
+            (progressInputs, progressCopy, progressShown, progressLoaded) = ([:], copy?.value, key, copy != nil)
             if let copy {
                 (savedAt, loaded) = (copy.savedAt, true)
             }
@@ -64,17 +71,18 @@ extension ReportsStore {
             guard generation == loadGeneration else { return }
             progressInputs = read
             progressCopy = nil
-            (error, savedAt, offlineRead, loaded) = (nil, now(), false, true)
+            (error, savedAt, offlineRead, loaded, progressLoaded) = (nil, now(), false, true, true)
             cache?.progress(key).keep(progressRows, at: now())
         } catch {
             guard generation == loadGeneration else { return }
             if let copy = cache?.progress(key).load() {
                 progressCopy = copy.value
                 (self.error, savedAt, offlineRead, loaded) = (nil, copy.savedAt, TransportError.isOffline(error), true)
+                progressLoaded = true
             } else {
                 progressInputs = [:]
                 progressCopy = nil
-                (savedAt, offlineRead) = (nil, TransportError.isOffline(error))
+                (savedAt, offlineRead, progressLoaded) = (nil, TransportError.isOffline(error), false)
                 self.error = "Couldn't load the report. Check your connection and try again."
             }
         }

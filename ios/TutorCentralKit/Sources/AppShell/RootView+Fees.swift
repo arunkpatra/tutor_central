@@ -138,7 +138,7 @@ extension RootView {
         case .reportsAttendance: .attendance
         case .reportsExport: .export
         case .reportsEmpty: .november
-        case .reportsProgress: .progress
+        case .reportsProgress, .reportsProgressEmpty: .progress
         case .reportsProgressTerm: .progressTerm
         case .reportsProgressSort: .progressSort
         case .reportsProgressExport: .progressExport

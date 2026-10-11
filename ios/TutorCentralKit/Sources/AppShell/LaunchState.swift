@@ -218,10 +218,10 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case reports, reportsAttendance = "reports-attendance", reportsExport = "reports-export"
     case reportsEmpty = "reports-empty", reportsProgress = "reports-progress"
     case reportsProgressTerm = "reports-progress-term", reportsProgressSort = "reports-progress-sort"
-    case reportsProgressExport = "reports-progress-export", makeSheetNoClass = "make-sheet-no-class"
+    case reportsProgressExport = "reports-progress-export", reportsProgressEmpty = "reports-progress-empty"
     case make, makeEmpty = "make-empty", makeSheet = "make-sheet", makeFor = "make-for"
     case makeForStudent = "make-for-student", makeWorkedExample = "make-worked-example", makeFigure = "make-figure"
-    case aiPaper = "ai-paper"
+    case aiPaper = "ai-paper", makeSheetNoClass = "make-sheet-no-class"
     /// The paper's Class tile open on the class wheel; the paper with nothing chosen yet (P12-Form-Paper-ClassWheel,
     /// -NoClass).
     case aiPaperClassWheel = "ai-paper-class-wheel"

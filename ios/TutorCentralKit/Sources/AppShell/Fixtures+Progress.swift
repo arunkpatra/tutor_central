@@ -6,7 +6,7 @@ import Foundation
 /// not on track, Hemanth and Nikhil watch, Akshita and Ananya on track, Riya not known yet), the Evening batch's books.
 extension Fixtures {
     static let progressStates: Set<LaunchState> = [
-        .reportsProgress, .reportsProgressTerm, .reportsProgressSort, .reportsProgressExport,
+        .reportsProgress, .reportsProgressTerm, .reportsProgressSort, .reportsProgressExport, .reportsProgressEmpty,
     ]
 
     static let progressStudents: [Student] = FakeStudentsRepository.eveningSeed.map { student in
