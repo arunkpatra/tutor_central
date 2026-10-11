@@ -37,7 +37,8 @@ import Testing
         store.showCached()
         #expect(store.counts.students == 9 && store.savedAt == savedAt)
         await store.load()
-        #expect(store.counts == counts.counts && store.savedAt == nil && store.offlineRead == false)
+        #expect(store.counts == counts.counts && store.savedAt == FakeCountsRepository.fixedNow && store
+            .offlineRead == false)
         let kept = CachedRead<TodaySnapshot>(centre: centre, key: "today", directory: folder).load()
         #expect(kept?.value.counts == counts.counts)
     }
@@ -59,5 +60,16 @@ import Testing
         store.showCached()
         await store.load()
         #expect(store.savedAt == nil && store.offlineRead && store.error != nil)
+    }
+
+    /// Hand run 14: a reload that fails offline after a good read keeps the read's time; the line never says nothing
+    /// is saved over a list on screen.
+    @Test func aFailedReloadAfterAGoodReadKeepsTheReadsTime() async {
+        let counts = FakeCountsRepository(counts: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1))
+        let store = make(counts)
+        await store.load()
+        counts.nextError = URLError(.notConnectedToInternet)
+        await store.load()
+        #expect(store.savedAt == FakeCountsRepository.fixedNow && store.offlineRead && store.error == nil)
     }
 }

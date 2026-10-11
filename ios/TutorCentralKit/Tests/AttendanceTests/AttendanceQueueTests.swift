@@ -149,6 +149,6 @@ import Testing
         if case .reopened = store.phase {} else {
             Issue.record("not reopened: \(store.phase)")
         }
-        #expect(store.saved?.marks[FakeAttendanceRepository.hemanth] == .absent && store.savedAt == nil)
+        #expect(store.saved?.marks[FakeAttendanceRepository.hemanth] == .absent && !store.offlineRead)
     }
 }

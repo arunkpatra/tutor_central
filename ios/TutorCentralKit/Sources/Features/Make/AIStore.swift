@@ -137,7 +137,7 @@ import UIKit
         do {
             let loaded = try await historyRepository.generations(centre: workspace.centre.id)
             historyCache?.keep(loaded, at: now())
-            historySavedAt = nil
+            historySavedAt = now()
             historyOfflineRead = false
             let ids = Set(loaded.map(\.id))
             history = (Array(results.values.filter { !ids.contains($0.id) }) + loaded)

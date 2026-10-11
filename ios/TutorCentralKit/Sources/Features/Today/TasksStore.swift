@@ -104,7 +104,7 @@ import Observation
         do {
             tasks = try await repository.tasks(centre: workspace.centre.id)
             cache?.keep(tasks, at: now())
-            savedAt = nil
+            savedAt = now()
             offlineRead = false
             loaded = true
             error = nil

@@ -200,7 +200,7 @@ import Observation
                 (sessions, told) = (month, monthLogs)
                 loadedMonth = date.period
                 cache?(date.period).keep(AttendanceSnapshot(sessions: month, told: monthLogs), at: now())
-                savedAt = nil
+                savedAt = now()
                 offlineRead = false
                 error = nil
             } catch {

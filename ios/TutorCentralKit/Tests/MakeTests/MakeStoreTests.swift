@@ -181,4 +181,18 @@ import Testing
         await store.loadHistory()
         #expect(store.historyError == "Couldn't load History. Check your connection and try again.")
     }
+
+    /// Hand run 14: a reload that fails offline after a good read keeps the read's time; the line never says nothing
+    /// is saved over a list on screen.
+    @Test func aFailedReloadAfterAGoodReadKeepsTheReadsTime() async throws {
+        let plans = FakePlansRepository()
+        try await Self.keep(.sheet, "Balancing equations · sheet", at: 0, in: plans)
+        let history = FakeAIHistoryRepository(generations: FakeAIHistoryRepository.seed)
+        let store = await Self.make(plans: plans, history: history)
+        await store.loadHistory()
+        plans.nextError = URLError(.notConnectedToInternet)
+        history.nextError = URLError(.notConnectedToInternet)
+        await store.loadHistory()
+        #expect(store.savedAt == Self.now && store.offlineRead && store.historyError == nil)
+    }
 }

@@ -170,7 +170,7 @@ import Observation
             (events, sessions) = result
             readMonth = month
             cache?(month).keep(ScheduleSnapshot(events: result.0, sessions: result.1), at: now())
-            savedAt = nil
+            savedAt = now()
             offlineRead = false
             error = nil
         } catch {

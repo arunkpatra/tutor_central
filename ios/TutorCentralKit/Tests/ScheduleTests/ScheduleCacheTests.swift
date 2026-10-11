@@ -30,4 +30,24 @@ import Testing
         await offline.load()
         #expect(!offline.comingUp.isEmpty && offline.savedAt != nil && offline.offlineRead && offline.error == nil)
     }
+
+    /// Hand run 14: a reload that fails offline after a good read keeps the read's time; the line never says nothing
+    /// is saved over a list on screen.
+    @Test func aFailedReloadAfterAGoodReadKeepsTheReadsTime() async {
+        let events = FakeEventsRepository(events: FakeEventsRepository.seed)
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        let store = ScheduleStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, events: events,
+            attendance: FakeAttendanceRepository(), now: { FakeCountsRepository.fixedNow }
+        )
+        await store.load()
+        events.nextError = URLError(.notConnectedToInternet)
+        await store.load()
+        #expect(store.savedAt == FakeCountsRepository.fixedNow && store.offlineRead && store.error == nil)
+    }
 }
