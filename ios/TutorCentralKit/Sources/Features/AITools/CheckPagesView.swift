@@ -61,9 +61,22 @@ public struct CheckPagesView: View {
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             FooterButton {
-                Button("Next: the marking scheme", action: openScheme)
+                if store.skipsScheme {
+                    // A mock's marking: its key is the scheme, so Check goes straight to the marks.
+                    Button("Check the paper") {
+                        Task {
+                            if await store.checkFromPages() {
+                                openScheme()
+                            }
+                        }
+                    }
                     .buttonStyle(.primary(.card))
-                    .disabled(store.pages.isEmpty)
+                    .disabled(store.pages.isEmpty || store.stage == .checking)
+                } else {
+                    Button("Next: the marking scheme", action: openScheme)
+                        .buttonStyle(.primary(.card))
+                        .disabled(store.pages.isEmpty)
+                }
             }
         }
         .photosPicker(

@@ -1,3 +1,4 @@
+import AITools
 import Artefacts
 import Data
 import DesignSystem
@@ -18,7 +19,14 @@ extension RootView {
                         ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil,
                     schoolItems: deps.schoolItems, schools: deps.schools
                 ),
-                actions: ArtefactsActions(openArtefact: { shell.tabs.push(.artefact($0)) }),
+                actions: ArtefactsActions(
+                    openArtefact: { shell.tabs.push(.artefact($0)) },
+                    markPaper: { mark in
+                        let visit = UUID()
+                        shell.checkPresets[visit] = CheckPreset(mark)
+                        shell.tabs.push(.checkPaper(visit))
+                    }
+                ),
                 boardState: launch.flatMap(Self.artefactBoardState)
             )
         }

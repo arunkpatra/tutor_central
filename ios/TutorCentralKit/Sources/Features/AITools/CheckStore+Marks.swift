@@ -42,6 +42,12 @@ public extension CheckStore {
         saving = true
         defer { saving = false }
         do {
+            savedMarkID = try await writeMark(result, student: student)
+        } catch {
+            message = "Couldn't save \(student.firstName)'s marks. Check your connection and try again."
+            return false
+        }
+        do {
             let updated = try await students.updateNotes(id: student.id, notes: notes)
             notesNow[student.id] = updated.notes
             previousNotes = current
@@ -50,15 +56,47 @@ public extension CheckStore {
             onStudentChanged?()
             return true
         } catch {
+            await removeMark()
             message = "Couldn't save to \(student.firstName)'s notes. Check your connection and try again."
             return false
         }
+    }
+
+    /// The mark of a mock's check (the preset's target) or of a paper made here (its subject and title); a typed
+    /// scheme writes none.
+    internal func writeMark(_ result: CheckResult, student: Student) async throws -> UUID? {
+        guard let record, let target = markTarget else { return nil }
+        let mark = NewMark(
+            studentID: student.id, subject: target.subject, test: target.test, date: Day(now(), calendar: calendar),
+            score: result.total, max: result.outOf, schoolItemID: target.schoolItemID, artefactID: target.artefactID,
+            questions: result.questions
+        )
+        return try await record.addMark(mark, centre: workspace.centre.id).id
+    }
+
+    internal func removeMark() async {
+        guard let id = savedMarkID else { return }
+        try? await record?.deleteMark(id: id, centre: workspace.centre.id)
+        savedMarkID = nil
+    }
+
+    internal var markTarget: MarkTarget? {
+        if let preset {
+            return preset.mark
+        }
+        guard case let .paper(id) = scheme, let paper = papers.first(where: { $0.id == id }),
+              let subject = paper.request?.subject, !subject.isEmpty else { return nil }
+        return MarkTarget(subject: subject, test: title, schoolItemID: nil, artefactID: nil)
     }
 
     /// The toast's Undo: the notes exactly as they were (nil stays nil).
     func undoSave() async -> Bool {
         guard let student, saved else { return false }
         do {
+            if let id = savedMarkID {
+                try await record?.deleteMark(id: id, centre: workspace.centre.id)
+                savedMarkID = nil
+            }
             _ = try await students.updateNotes(id: student.id, notes: previousNotes)
             notesNow[student.id] = previousNotes
             saved = false
@@ -68,6 +106,18 @@ public extension CheckStore {
         } catch {
             message = "Couldn't undo. Check your connection and try again."
             return false
+        }
+    }
+}
+
+private extension GenerateRequest {
+    /// The subject a paper, homework or worksheet was made for; a progress note has none.
+    var subject: String? {
+        switch self {
+        case let .paper(form): form.subject
+        case let .homework(form): form.subject
+        case let .worksheet(form): form.subject
+        case .progressNote: nil
         }
     }
 }

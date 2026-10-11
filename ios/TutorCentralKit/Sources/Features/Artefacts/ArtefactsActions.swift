@@ -6,9 +6,9 @@ import Foundation
 public struct ArtefactsActions {
     let openArtefact: (UUID) -> Void
     /// A mock's Mark from a photo: Check a paper for the student with the mock's key.
-    let markPaper: ((Student, SchemeSource) -> Void)?
+    let markPaper: ((MockMark) -> Void)?
 
-    public init(openArtefact: @escaping (UUID) -> Void, markPaper: ((Student, SchemeSource) -> Void)? = nil) {
+    public init(openArtefact: @escaping (UUID) -> Void, markPaper: ((MockMark) -> Void)? = nil) {
         self.openArtefact = openArtefact
         self.markPaper = markPaper
     }

@@ -1,3 +1,5 @@
+import AITools
+import Artefacts
 import Data
 import Domain
 import Foundation
@@ -328,5 +330,21 @@ struct SchoolLaunchStateTests {
         let kept = try await Fixtures.dependencies(for: .mock).plans
             .artefact(id: FakePlansRepository.boardMockID, centre: Fixtures.meeraWorkspace.centre.id)
         #expect(kept?.kind == .mock && kept?.schoolItemID == FakeSchoolItemsRepository.devsTest)
+    }
+
+    /// A mock's Mark from a photo becomes Check a paper's preset: the student, the key, the mark's target.
+    @Test func aMockMarkBecomesCheckAPapersPreset() throws {
+        let dev = try #require(FakeStudentsRepository.seed.first { $0.id == FakeStudentsRepository.dev })
+        let scheme = SchemeSource.mock(generationID: UUID(), artefactID: FakePlansRepository.boardMockID)
+        let mark = MockMark(
+            student: dev, scheme: scheme, subject: "Science", test: "Science unit test · mock",
+            schoolItemID: FakeSchoolItemsRepository.devsTest, artefactID: FakePlansRepository.boardMockID
+        )
+        let preset = CheckPreset(mark)
+        #expect(preset.studentID == dev.id && preset.scheme == scheme)
+        #expect(preset.mark == MarkTarget(
+            subject: "Science", test: "Science unit test · mock", schoolItemID: FakeSchoolItemsRepository.devsTest,
+            artefactID: FakePlansRepository.boardMockID
+        ))
     }
 }

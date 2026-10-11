@@ -142,11 +142,13 @@ import Testing
         let store = await store(plans, mock.id)
         await store.load()
         #expect(store.students.map(\.name) == ["Dev Kumar", "Meher Shah", "Nikhil Das"])
-        var marked: (UUID, SchemeSource)?
-        store.onMark = { marked = ($0.id, $1) }
+        var marked: MockMark?
+        store.onMark = { marked = $0 }
         store.mark(store.students[1])
         let generation = try #require(mock.generationID)
-        #expect(marked?.0 == FakeStudentsRepository.meher)
-        #expect(marked?.1 == .mock(generationID: generation, artefactID: mock.id))
+        #expect(marked?.student.id == FakeStudentsRepository.meher)
+        #expect(marked?.scheme == .mock(generationID: generation, artefactID: mock.id))
+        #expect(marked?.subject == "Science" && marked?.test == "Science unit test 3 · mock")
+        #expect(marked?.schoolItemID == exam.id && marked?.artefactID == mock.id)
     }
 }

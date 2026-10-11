@@ -1,4 +1,5 @@
 import AITools
+import Artefacts
 import Attendance
 import Data
 import Domain
@@ -15,6 +16,18 @@ import Today
 struct CheckVisit {
     let id: UUID
     let store: CheckStore
+}
+
+extension CheckPreset {
+    /// A mock's Mark from a photo as Check a paper's preset.
+    init(_ mark: MockMark) {
+        self.init(
+            studentID: mark.student.id, scheme: mark.scheme,
+            mark: MarkTarget(
+                subject: mark.subject, test: mark.test, schoolItemID: mark.schoolItemID, artefactID: mark.artefactID
+            )
+        )
+    }
 }
 
 /// A visit of Scan register: its number (`TabsState.scanVisits` when it was pushed) and its store.
@@ -48,6 +61,8 @@ struct AbsenceAsk: Identifiable, Hashable {
     var absenceAlert: AbsenceAsk?
     /// What an added, changed or deleted item reached: Today makes an open plan again for those students (Task 17).
     @ObservationIgnored var schoolItemsChanged: (@MainActor (Set<UUID>) -> Void)?
+    /// A mock's Mark from a photo, by the Check a paper visit it opens.
+    @ObservationIgnored var checkPresets: [UUID: CheckPreset] = [:]
     /// One AI store per centre: a call outlives its screen, and Recent and History are read once.
     @ObservationIgnored var ai: AIStore?
     /// The visit of Check a paper in progress, by its routes' id.
@@ -158,6 +173,7 @@ struct AbsenceAsk: Identifiable, Hashable {
         testTomorrow = nil
         absenceAlert = nil
         check = nil
+        checkPresets = [:]
         scan = nil
         queue = nil
         runner = nil

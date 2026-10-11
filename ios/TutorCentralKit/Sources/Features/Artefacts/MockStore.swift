@@ -4,6 +4,29 @@ import Domain
 import Foundation
 import Observation
 
+/// Mark from a photo for one student: the mock's key, and the mark's subject, test, exam and mock (AppShell makes Check
+/// a
+/// paper's preset from it).
+public struct MockMark: Hashable, Sendable {
+    public let student: Student
+    public let scheme: SchemeSource
+    public let subject: String
+    public let test: String
+    public let schoolItemID: UUID?
+    public let artefactID: UUID
+
+    public init(
+        student: Student, scheme: SchemeSource, subject: String, test: String, schoolItemID: UUID?, artefactID: UUID
+    ) {
+        self.student = student
+        self.scheme = scheme
+        self.subject = subject
+        self.test = test
+        self.schoolItemID = schoolItemID
+        self.artefactID = artefactID
+    }
+}
+
 /// The mock (P10-Mock; plan/phase-13-plan.md decision 12): the artefact read by id (offline from the plan's copy), its
 /// exam for the hero and the pattern line, Paper or Key, Make it again kept with the exam, the PDF with the key only
 /// when asked, Mark from a photo for each of the exam's students.
@@ -20,7 +43,7 @@ import Observation
     /// The system alert's words for a refused or failed write (U33).
     public var message: String?
     /// Mark from a photo: AppShell opens Check a paper with the student and this mock's key.
-    @ObservationIgnored public var onMark: ((Student, SchemeSource) -> Void)?
+    @ObservationIgnored public var onMark: ((MockMark) -> Void)?
     @ObservationIgnored public var online: () async -> Bool = { true }
     @ObservationIgnored public var planCache: PlanCache?
     let artefactID: UUID
@@ -142,9 +165,14 @@ import Observation
         artefact?.generationID != nil
     }
 
+    /// "Science unit test 3 · mock": the mark's name on the student's page.
     public func mark(_ student: Student) {
         guard let artefact, let generation = artefact.generationID else { return }
-        onMark?(student, .mock(generationID: generation, artefactID: artefact.id))
+        onMark?(MockMark(
+            student: student, scheme: .mock(generationID: generation, artefactID: artefact.id),
+            subject: exam?.subject ?? "", test: "\(exam?.title ?? mock?.title ?? "Mock") · mock",
+            schoolItemID: artefact.schoolItemID ?? mock?.schoolItemID, artefactID: artefact.id
+        ))
     }
 
     // MARK: - Make it again

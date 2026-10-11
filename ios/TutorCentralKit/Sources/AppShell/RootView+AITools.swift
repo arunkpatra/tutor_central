@@ -98,8 +98,10 @@ extension RootView {
         }
         let made = CheckStore(
             workspace: workspace, register: register(for: workspace), ai: deps.ai, history: deps.aiHistory,
-            students: deps.students, centres: deps.centres, now: deps.now
+            students: deps.students, centres: deps.centres, now: deps.now, record: deps.record,
+            preset: shell.checkPresets[id]
         )
+        made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
         made.onStudentChanged = { [shell] in
             Task { await shell.register?.refresh() }
@@ -115,7 +117,10 @@ extension RootView {
     func checkView(_ route: Route, in workspace: Workspace) -> some View {
         switch route {
         case let .checkPages(id):
-            CheckPagesView(store: checkStore(id, in: workspace)) { shell.tabs.push(.checkScheme(id)) }
+            let store = checkStore(id, in: workspace)
+            CheckPagesView(store: store) {
+                shell.tabs.push(store.skipsScheme ? .checkResult(id) : .checkScheme(id))
+            }
         case let .checkScheme(id):
             CheckSchemeView(
                 store: checkStore(id, in: workspace), typed: launch == .checkSchemeTyped,
