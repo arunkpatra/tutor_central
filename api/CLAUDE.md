@@ -59,3 +59,7 @@ status -o env` on the command line); `bun run check` (tsc and tests);
 - Phase 13: the models overrun an output schema's string limits unless the prompt states them; state each limit in the
   system words and leave the schema a little room (the gap report's day lines: 160 asked, 200 allowed). A student's work
   goes to a model only with `studentId` and their consent (check-paper with a mock's key, gap_report, test_tomorrow).
+- Phase 14: a prompt asks only for the parts its facts hold (a part asked for and absent is invented); the English beside a
+  parent's message is the tutor's aid, never sent, and may run longer than the message (1,000; 700 asked). The message kinds
+  refuse in their own words. A validation 400 carries `reason: "invalid"`. The verifier treats 408, 429 and a retryable
+  fetch error as unreachable. `bun cost` counts every billed call (`tokens_in` set), a failed one included.

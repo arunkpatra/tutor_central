@@ -987,3 +987,9 @@ The texts:
 | Paste | "What the school sent" · Paste · "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do." |
 | The filtered tab | "Dev's items" · Show all · "What reaches Dev: his own items, his class's and his school's. Show all lists the centre's." |
 | The window | "Preparation" · "14 days before" · "Revision starts this many days before the test. 14 unless you change it." |
+
+As built in Phase 14 (session 30): `PagesWell` (the photo well, 56 × 72), `MarkReadRow`, `PasteWell` (the system
+`PasteButton` in a well), `FilterChipRow`, `ChoiceRowsSheet` (What next), `NoteWell`, `EnglishBlock`, `FactsCard`,
+`LadderStrip`, `NoteRow`, `HeldSheet`, `MessageLogRow`, `TellParentCard` (Students), the plan line's caption (`PlanLineRow`,
+`captionStrong` in `overdue`, its own tap) and `CopyButton(copy:)` for a caller that copies and logs. The window row is a
+`PickerTile` with the `WheelPopover` the note day uses.

@@ -242,6 +242,14 @@ the symbol named in `components.md`.
 
 ## Numbers in code
 
+Phase 14: a parent's message keeps to 600 counted on the body alone, the signature (the tutor's name, the centre, "Made
+with Tutor Central") outside it; the English beside it may run to 1,000. The note day is Sunday 18:00 unless a batch sets
+one of five (Friday 18:00, Saturday 18:00, Sunday 18:00, Sunday 20:00, Monday 08:00), on from its time to the end of the
+next day; a note sent counts for its note day from five days before it. Three suggested messages a week per parent across
+their students (Monday to Sunday); the fourth note is held; a hand send and a copy never count. The tutor's next step is
+kept until the status changes. A report card's photo is one or two pages, at most twelve rows; an exam's window is 3 to 60
+days (offered 7, 10, 14, 21), 14 when unset.
+
 Phase 13: an exam's window is 14 days, and its split runs from the day the item came; the mock is the last meeting day
 two days or more before the exam when there are three days or more; at most two exam groups when other students
 remain, else three; three suggested messages a parent a week (a hand send does not count); the forward ask is at most

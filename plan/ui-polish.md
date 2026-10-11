@@ -47,17 +47,18 @@ screen, several as a polish slice, or not at all.
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
 | U34 | 2026-10-10 | Students, the empty list (P10-Students-Empty) | Add a student and Scan paper register sit side by side (the Kit's empty state); the board stacks them at full width | Session 24 (Task 13) |
 | U40 | 2026-10-11 | A student's page, scrolled | Scrolled under the status bar, the parent's row shows through the time without the glass the other pushed screens draw | Session 26, hand run 7's screenshot |
-
-| U41 | 2026-10-11 | School, Paste a message | iOS asks "Allow Paste?" each time (the app reads the pasteboard); a PasteButton would not ask, but it changes what is seen (a board first) | Session 28, hand run 2 |
-| U42 | 2026-10-11 | A student's page, School's See all | Opens the School tab with every item, not the student's | Session 28, `plan/phase-13-plan.md`'s left-for-later |
-| U43 | 2026-10-11 | An exam's sheet | The window is 14 days for every exam; a per-exam window needs a field on the item's sheet (a board first) | `plan/phase-13-plan.md` decision 8 |
-| U44 | 2026-10-11 | An exam's page, Who | P10-School-Item draws a chevron on each student (to their page); the rows have none and do not open | Session 28, Task 18's pictures |
-| U45 | 2026-10-11 | The gap report, By skill; the last days' Marked | The real mock names a skill per question (20 rows), so By skill runs long and the weakest is a one-question skill ("Reading a balanced chemical equation 0 of 1"); asking the mock for the portions' skills would group them | Session 28, the cost run |
+| U46 | 2026-10-11 | Can now do, an unchanged week | The strip is headed "Moved up" while its line reads "No change this week" (P10-CanNowDo draws only the moved week) | Session 30, the cost run (Dhruv) |
+| U47 | 2026-10-11 | The note, offline, a note kept this week | For about 20 s the screen reads "Writing <name>'s note" while the server is tried before the copy opens | Session 30, hand run 15 |
 
 ## Done
 
 | # | Done | Pull request | What changed |
 |---|---|---|---|
+| U41 | 2026-10-11 | #146 | Paste a message waits for the system's Paste button: iOS asks nothing (P14-School-Paste) |
+| U42 | 2026-10-11 | #146 | The student page's School See all opens the School tab filtered to the student, with Show all (P14-School-Student) |
+| U43 | 2026-10-11 | #146 | A kept exam's sheet has Preparation, 7, 10, 14 or 21 days before (P14-School-Item-Window) |
+| U44 | 2026-10-11 | #146 | Who's rows on an item's page carry a chevron and open the student (P10-School-Item) |
+| U45 | 2026-10-11 | #137 | The mock names two to six skills across the paper, so By skill groups |
 | U35 | 2026-10-11 | #119 | This week's quiet Today, when the student's batch meets today, opens the Today tab at the batch's plan |
 | U37 | 2026-10-11 | #118 | The close card's no-book and offline states in the board's words and type (P12-Close-Cards) |
 | U38 | 2026-10-11 | #118 | The close card's wait: the eyebrow over a 16 pt ring and "Making the three questions. A second or two." (P12-Close-Cards); the close from a plan never waits |

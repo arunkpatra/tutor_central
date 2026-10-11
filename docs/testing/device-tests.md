@@ -112,6 +112,15 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T9 | In WhatsApp or Photos, share a photographed timetable or notice to Tutor Central. | The photo shows in the well while it is read; the items match the photo; after Add, the item's page shows the photo under What the school sent. |
 | T10 | Two days before an exam: the exam's page → Mark from a photo → a student whose parent agreed → Take photos of a real answered mock. | The marks suggested follow the paper; Save writes them; Back shows the student's score on the exam's page; Gap report opens with the last two days. |
 
+### Phase 14: Parents (no WhatsApp, no real camera in the simulator)
+
+| Id | Do | Expect |
+|---|---|---|
+| T11 | A student whose parent agreed → Marks → Add from a photo → Take a photo of a real printed report card. | The rows match the card (subject, test, date, score, out of); a row with no date stays unticked until one is set; Save shows them on the page; Undo takes them back. |
+| T12 | On the note day, Today → Read on a student whose parent writes in Kannada or Hindi → Send on WhatsApp → Open WhatsApp. | WhatsApp opens the parent's chat with the note in that script, ending with the tutor's name, the centre and "Made with Tutor Central"; back in the app the row reads Sent. |
+| T13 | A parent with two students in the centre, on the note day: send both notes, then the same week open a Test tomorrow for one of them. | Both notes send and count; the Test tomorrow is held as the fourth message ("held: three messages this week"). |
+| T14 | A student not on track whose parent writes in Hinglish → the page's Tell the parent → Open WhatsApp. | The message arrives readable in Hinglish (Latin letters) and says what is hard, what the class is doing and what helps at home, signed; the card under the tracking card is gone; Today's caption for the student is gone. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |

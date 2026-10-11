@@ -3,13 +3,14 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-11, session 29 (Phase 14 planned, on Fable 5.1). **Session 29:** `plan/phase-14-plan.md` written
-(24 tasks, thirteen pull requests, tests first, the launch states, the hand runs, the cost run, the review focus, 30 decisions,
-D67 and D68 as tasks); seven Phase 14 boards drawn on row 24 of the canvas (`P14-Marks-Reading`, `P14-Marks-Confirm`, `-Light`,
-`P14-Marks-Edit`, `P14-School-Paste`, `P14-School-Student`, `P14-School-Item-Window`) and mirrored, awaiting the owner's
-approval, both approved by the owner the same day ("The plan is approved; the boards are approved too");
-`resume/028-phase-14-build.md` indexed; the record in `plan/sessions/029/`. Documents only, to `main` (D12).
-**Next:** Phase 14's build on Opus 5.5 from `resume/028-phase-14-build.md`. The owner installed 1.0.0 (24) and tests the builds together after the last phase (D68).
+**Last updated:** 2026-10-11, session 30 (Phase 14 built, on Opus 5.5). **Session 30:** Phase 14 (Parents) built in fifteen
+pull requests (#135 to #149): the note day, the weekly note and can-now-do in the parent's language, the three-a-week
+cadence, the sent log, not on track with the next step and the message to the parent, marks from a photo, the signature,
+D67's model table and D68's leftovers (U41 to U45, the minors, the lost connection); hand runs 1 to 15 against the local
+stack; the cost run (15 real calls, ₹2.52); a fresh review on Fable 5.1 with every finding fixed or ruled (#148, #149); two
+deploys (0023 and 0024; 0025); TestFlight 1.0.0 (25). The record in `plan/sessions/030/`.
+**Next:** Phase 15's plan (`phase-15-make-and-polish.md`), on Fable 5.1 (D17), with the boards it needs. The owner tests the
+builds together after the last phase (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -32,16 +33,16 @@ approval, both approved by the owner the same day ("The plan is approved; the bo
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
-| 14 Parents | Planned (session 29, 2026-10-11): `phase-14-plan.md` and the seven P14 boards approved by the owner the same day | Scope `phase-14-parents.md`; D67 and D68 are its tasks; the build from `resume/028-phase-14-build.md` |
+| 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
 | 15 and 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-15-make-and-polish.md`, `phase-16-release.md` |
 
 ## In flight
 
-Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are); Phase 13's hand
-runs are in `plan/sessions/028/ledger.md`. A student link while
+Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are); Phase 13's and
+Phase 14's hand runs are in `plan/sessions/028/ledger.md` and `plan/sessions/030/ledger.md`. A student link while
 another student's page was open showed the first student: fixed in #121 (every pushed screen takes its route as its
 identity). The remote holds `main`,
-`pr-shots`, and the merged `phase-10/*` to `phase-13/*` and `fix/*` branches, the owner's to delete.
+`pr-shots`, and the merged `phase-10/*` to `phase-14/*` and `fix/*` branches, the owner's to delete.
 
 ## Production
 
@@ -50,10 +51,11 @@ identity). The remote holds `main`,
   `A @ 216.198.79.1`, `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and
   `api.tutorcentral.in` (a CNAME to Vercel, attached to `tutor-central-api`) untouched. `APP_STORE_URL` unset (Home shows the
   email call to action) until the app is in the App Store.
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0022: 0009 to 0013 by deploy run
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0025: 0009 to 0013 by deploy run
   38042680418, 0014 to 0016 by run 38046925061, 0017 by run 38052646487 (after #97), 0018 by run 38062264863 (after #108),
   0019 by run 38067327168 (after #110), 0020 by run 38075931282 (after #117), 0021 by run 38110074045 (after #124), 0022 by
-  run 38123899264 (after #134); nothing pending after. The
+  run 38123899264 (after #134), 0023 and 0024 by run 38137427740 (after #138 and #139), 0025 by run 38151333693 (after
+  #149); nothing pending after. The
   `photos` bucket (private, JPEG, 3 MB, add-only) is made by 0011. Migrations go up only through `deploy.yml`'s migrate job,
   before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
 - **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
@@ -61,8 +63,9 @@ identity). The remote holds `main`,
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `cfddfc5` (deploy run 38123899264, 2026-10-11: Phase 13's `/ai/parse-school`, `/ai/make` mock, gap report and
-  test tomorrow, check-paper with a mock's key and the student's consent); nothing pending in the database.
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `bc68758` (deploy run 38151333693, 2026-10-11: Phase 14's `/ai/make` note, can_do and not_on_track, `/ai/read-marks`,
+  the model table `api/models.json` with `AI_MODEL_<WORK_TYPE>` overrides (none set on Vercel), the 503 for a lost
+  connection); nothing pending in the database.
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
   `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.
@@ -72,7 +75,8 @@ identity). The remote holds `main`,
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (24) by run 38124050257 (Phase 13: the School tab, exam preparation, the mock, marks, the gap report, the
+  run number. 1.0.0 (25) by run 38151541726 (Phase 14: the note day, the weekly note and can-now-do, the cadence, the sent log,
+  not on track and the next step, marks from a photo, the School leftovers) on the internal group; 1.0.0 (24) by run 38124050257 (Phase 13: the School tab, exam preparation, the mock, marks, the gap report, the
   messages to parents) on the internal group; 1.0.0 (23) by run 38105466595 (the AI forms by class level, #122) on the internal group; 1.0.0 (22) by
   run 38100960937 (Phase 12 with the student-link fix #121) on the owner's iPhone, fine;
   1.0.0 (21) by run 38099197755 (Phase 12: the plan on Today, the material, the close from the plan) on the internal group;
@@ -84,9 +88,9 @@ identity). The remote holds `main`,
 
 ## Open items
 
-- **Phase 13's leftovers are Phase 14's tasks (D68):** the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`
-  (plan decision 15), the API's 401 for a lost Supabase connection and a 501's words reaching the screen (decision 14), U41 to U45
-  (decisions 16 and 4). Nothing stays open after Phase 14 closes.
+- **Phase 14 closed with nothing of its own open (D68).** Two review findings ruled, not changed (the not-on-track message
+  is not held by the cadence; a copy made offline is not logged), in `plan/sessions/030/ledger.md`; U46 and U47 on the polish
+  list for the owner. CI's run 38148815276 crashed once in SchoolTests after every suite passed (not reproduced; watch for it).
 - **CI warnings kept (the owner's ask, #127):** `VNDetectBarcodesRequestRevision1` (QRDecoder's deliberate fallback for
   the simulator and CI), the AuthorizationController underscored-module note (Apple's SDK), and the runner's Homebrew lines.
 - **The cost of marking:** ₹8.18 a paper on Opus (two pages) is most of an exam's cost; D64's price reads it; D67 lets the
@@ -119,7 +123,7 @@ identity). The remote holds `main`,
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
 - **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9; T1 to T3 for Phase 11 and T4 to T7 for Phase 12, T8 to T10
-  for Phase 13 wait for the tester; the owner tests the builds together after the last phase, D68); D1 to D8 were Phase 9's and now run on V2 before
+  for Phase 13 and T11 to T14 for Phase 14 wait for the tester; the owner tests the builds together after the last phase, D68); D1 to D8 were Phase 9's and now run on V2 before
   Phase 15's round.
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.

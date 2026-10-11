@@ -151,6 +151,16 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - `bun check --only=db` resets the local database, which ends the app's session (the API answers 401): sign out and in.
 - Request bodies keep within the API's schema limits on the app side (`MakeGapBody.weakest`): a refusal reads as a
   connection fault to the tutor.
+- Phase 14: a parent's message is signed by the app (`MessageSignature`), never by a model; its 600 counts the body alone.
+  The three-a-week cadence (`MessageCadence.suggested`) counts sends only: a copy and a hand send never count. A note held
+  for consent opens the student's page, never the cadence's held sheet.
+- A store whose reads can overlap keeps a generation (`NoteDayStore`, `ReadMarksStore`); a write whose call was paid for
+  (a note made) runs in a task of its own so leaving the screen does not lose it.
+- The tutor's next step belongs to the status it was chosen for: 0025 clears it on a status change and `applyTracking`
+  mirrors it; a choice waits while a queued close tracks the student (`PendingChanges.closeWaits`).
+- Request bodies are held to the API's limits on the app side (`NoteRequest.Week`); a 400 marked `reason: "invalid"` is the
+  schema's and never shown.
+- The simulator's screenshot tool at `scale` shrinks the image only: read tap points from the full frame (402 × 874).
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

@@ -42,3 +42,6 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
 
 - Phase 13: the seed's figures must satisfy the app's rules they are meant to show (Hemanth's Below usual needs two earlier
   marks); `name_plan_group` writes the group and its teach words, not the lines' skill ids.
+- Phase 14: a rule that must hold for every writer of a column (the close, the placement, a queued close) is a trigger in the
+  database (0025: a changed `track_status` clears `next_step` unless the same update sets it), with a test through the RPC
+  the product uses.

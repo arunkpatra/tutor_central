@@ -1287,3 +1287,11 @@ What the boards settle:
   the student (his own items, his class's and his school's).
 - **The window** is one setting row on an exam's sheet (not on a homework's or a holiday's); 14 unless changed; the plan,
   the split and the exam's page read it.
+
+As built in Phase 14 (session 30): the states above and the 10.6 and 10.3 states (`today-note-day`, `today-note-held`,
+`today-note-day-change`, `note` (both), `note-send`, `note-can-do`, `note-writing`, `student-messages`,
+`student-not-on-track`, `student-next-step`, `student-tell-parent`, `today-not-on-track`, `student-marks` (both)) are
+launch states with pictures in #141 to #146 and #149. Moved from the boards: the Paste button's label colour is the
+system's (Apple's secure button draws its own); the filtered tab's footnote is gender-neutral ("their own items"); the window
+row is on a kept exam's sheet only (a draft takes 14 until kept); a note held for consent opens the student's page rather
+than the held sheet (P10-Held draws three messages only).
