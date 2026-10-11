@@ -34,7 +34,8 @@ public enum Fixtures {
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
-            textbooks: noteDayStates.contains(state) ? noteDayTextbooks()
+            textbooks: state == .noteCanDoNoChange ? FakeTextbooksRepository.evening()
+                : noteDayStates.contains(state) ? noteDayTextbooks()
                 : notOnTrackStates.contains(state) ? FakeTextbooksRepository.notOnTrack()
                 : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
                 ? FakeTextbooksRepository.evening()

@@ -109,7 +109,7 @@ struct CanDoWeekTests: ParentFixtures {
         #expect(facts.canDo == ["Read short sentences", "Write letters", "Count to 99"])
         #expect(facts.atHome == "One page a day from the picture book")
         #expect(facts.next == ["Reading a paragraph", "Writing words", "Adding to 20"])
-        #expect(facts.movedUpLine == "Sentences · moved up this week")
+        #expect(facts.movedUpLine == "Sentences · moved up this week" && facts.ladderHeading == "Moved up")
         #expect(facts.rows.map(\.label) == ["Can now do", "At home", "Next"])
         #expect(facts.rows.first?.fact == "Read short sentences · write letters · count to 99")
     }
@@ -119,6 +119,8 @@ struct CanDoWeekTests: ParentFixtures {
             chapters: sahilLadder, skills: sahilSkills(movedThisWeek: false), week: week, calendar: calendar
         )
         #expect(facts.movedUp.isEmpty && facts.movedUpLine == "No change this week" && !facts.canDo.isEmpty)
+        // U46 (P14-CanNowDo-NoChange): a week no step moved is not headed "Moved up".
+        #expect(facts.ladderHeading == "On the ladder")
         #expect(facts.atHome == "One page a day from the picture book")
     }
 

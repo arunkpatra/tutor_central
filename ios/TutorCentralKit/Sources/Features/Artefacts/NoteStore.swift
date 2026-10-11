@@ -56,6 +56,8 @@ public struct NoteContext {
 
     /// "Moved up" (P10-CanNowDo): the area, its five steps, the step shown and its line.
     public struct LadderModel: Hashable, Sendable {
+        /// "Moved up", or "On the ladder" in a week no step moved (U46).
+        public let heading: String
         public let area: String
         public let steps: [String]
         public let current: Int

@@ -149,7 +149,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     /// (P10-CanNowDo); the note being written.
     case note
     case noteSend = "note-send"
-    case noteCanDo = "note-can-do"
+    /// `noteCanDoNoChange`: Sahil's can-now-do in a week no step moved (P14-CanNowDo-NoChange, U46).
+    case noteCanDo = "note-can-do", noteCanDoNoChange = "note-can-do-no-change"
     case noteWriting = "note-writing"
     /// Dev's sent log with Held (P10-Student-Messages).
     case studentMessages = "student-messages"

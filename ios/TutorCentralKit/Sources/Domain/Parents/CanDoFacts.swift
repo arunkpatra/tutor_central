@@ -26,6 +26,11 @@ public struct CanDoFacts: Hashable, Sendable {
     }
 
     /// "Sentences · moved up this week"; "No change this week".
+    /// The strip's heading: "Moved up" when a step moved this week, else "On the ladder" (P14-CanNowDo-NoChange, U46).
+    public var ladderHeading: String {
+        movedUp.isEmpty ? "On the ladder" : "Moved up"
+    }
+
     public var movedUpLine: String {
         movedUp.first.map { "\($0.step) · moved up this week" } ?? "No change this week"
     }
