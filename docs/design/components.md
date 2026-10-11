@@ -932,3 +932,21 @@ The texts:
 | For whom | "Today's groups. A sheet for a group is made at the group's level; for a class alone, at the class's." |
 | Check a paper | Scheme "A mock or paper made here, with its key; or type a scheme." |
 | Progress | "skills made secure" · "checks right" · "not on track" ("not on track at the end" for a term) · "3 skills secure · 41% right · 2 absences" · "Reading: Sentences · Numbers: To 99" · "Placed Wed 7 Oct · 2 checks so far" · Lowest first · "Term 1 · June to September" |
+
+## Phase 13 parts (drawn 2026-10-11, session 27): reading, the exam group, Marks
+
+**Reading card (School):** the Phase 6 creating card without a thumbnail for a text source (with the 56 × 72 thumbnail for a
+photo), in the items' place under the source well; the footer's primary disabled (opacity .45, no glow) while it reads.
+
+**Exam group head:** the Phase 10 group head with the exam's title as the chapter and "· the test in n days" on the class line;
+the ready marks Set, Sheet, Checks.
+
+**Marks empty row:** the Kit's empty row (symbol 22 `text3`, `rowTitle`, `footnote` `text2`) inside the section's card.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| Reading | "Reading what the school sent" · Cancel · "Usually under a minute. Tests, homework, notices and holidays are picked out for you to check." · Add (disabled) · "Each item read appears here for you to check. Nothing is kept until you tap Add." |
+| An exam group | "Group 1 · Science unit test 3" · "Class 8 Science · 3 students · the test in 9 days" · "Revise: Chemical reactions · part 1 of 3" · "Revision set 1 · Check 3 · Revision sheet 1" · "The mock · 25 marks · 40 minutes" |
+| Marks | "Maths unit test 3 · mock · Mathematics" · "Vidya Niketan · 14 Oct" · "26 of 40" · "No marks yet" · "Marks from mocks and checked papers appear here." |

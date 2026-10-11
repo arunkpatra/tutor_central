@@ -3,16 +3,16 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-11, session 26 (Phase 12's build, on Opus 5.5). **Session 26:** Phase 12 built from
-`plan/phase-12-plan.md`: migrations 0019 and 0020, PRs #110 to #119, the hand runs on #120 (eleven faults found, each fixed
-with a test that failed first), the cost run on the real API after the owner's yes (₹4.57 for the twelve-student batch,
-about ₹91 a month at twenty sessions), a fresh review on Fable 5.1 (Critical 1 and Important 2, 3, 5, 6 fixed in #119;
-Important 4 ruled; ten minors deferred), deploy 2, and TestFlight 1.0.0 (21) (run 38099197755). "As built" in `phase-12-class-plan.md`; the
-record, ledger and the owner's messages in `plan/sessions/026/`. Build 22 is on the owner's iPhone, fine ("Build 22 installed, app works", 2026-10-11). Then #122: the AI forms take
-the class by level, no batch (the owner found the class picker empty on a centre with no batches; boards row 22 approved;
-hand-run on the real API; reviewed); TestFlight 1.0.0 (23). The owner's pushback rule is `docs/working/pushback.md`.
-**Next:** Phase 13's plan
-(School) on Fable from `resume/025-phase-13-plan.md`, which carries his two questions left from Phase 12.
+**Last updated:** 2026-10-11, session 27 (Phase 13's plan, on Fable 5.1). **Session 27:** `plan/phase-13-plan.md` written
+(28 tasks, ten pull requests, 32 decisions, the review focus, the hand runs and the cost run); the owner ruled the two Phase 12
+leftovers in ("Agreed. proceed": an unnamed group named at the next open, a new batch's first checks from the named topic, PR
+10) and two of the ten deferred minors fold into their tasks; three Phase 13 boards drawn on row 23 of the canvas
+(P13-School-Reading, P13-Today-Revision and its light twin, P13-Student-Marks with its light twin and the empty row) and
+mirrored into `docs/design/`; `resume/026-phase-13-build.md` written. Session 26 before it: Phase 12 built (migrations 0019
+and 0020, PRs #110 to #119, hand runs #120, the cost ₹4.57 a batch, TestFlight 1.0.0 (21) then (22)); #122 the AI forms by
+class level, TestFlight 1.0.0 (23). The owner's pushback rule is `docs/working/pushback.md`.
+**Next:** the owner reviews `plan/phase-13-plan.md` and approves the three boards (row 23); then Phase 13's build on Opus 5.5
+from `resume/026-phase-13-build.md`. Nothing starts before both approvals.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -21,7 +21,7 @@ hand-run on the real API; reviewed); TestFlight 1.0.0 (23). The owner's pushback
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards, drawn 2026-10-11, awaiting approval |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -34,7 +34,8 @@ hand-run on the real API; reviewed); TestFlight 1.0.0 (23). The owner's pushback
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
-| 13 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-12-class-plan.md` to `phase-16-release.md` |
+| 13 School | Plan written (session 27, 2026-10-11), awaiting the owner's approval of the plan and the three boards | `phase-13-school.md`; `phase-13-plan.md`; resume 026 for the build |
+| 14 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-14-parents.md` to `phase-16-release.md` |
 
 ## In flight
 
@@ -83,9 +84,9 @@ identity). The remote holds `main`,
 
 ## Open items
 
-- **Phase 12 review minors (deferred):** the ten `Final: minor (deferred)` lines of `plan/sessions/026/ledger.md`; and the two
-  rulings left open: a group `/ai/plan` fails to name stays without material that day (Make the plan again names it), and
-  a new batch with no record has no checks at its first close (the owner's call for Phase 13).
+- **Phase 12 review minors (deferred):** eight of the ten `Final: minor (deferred)` lines of `plan/sessions/026/ledger.md`
+  (two fold into Phase 13's tasks: a check's skill matched by name first, the 200-character line cut); the two rulings left
+  open (an unnamed group, a new batch's first checks) are Phase 13's PR 10 (the owner, 2026-10-11).
 - **Phase 11 review minors (deferred):** the `Final: minor (deferred)` lines of `plan/sessions/024/ledger.md` (six), and its
   two noted minors (the page's Messages not refreshing after a consent ask; offline, Today's hero worked out again only after
   the counts' read gives up).

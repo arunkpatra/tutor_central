@@ -1216,3 +1216,33 @@ choice is what a tutor making the same class's papers expects); the subject is t
 its "From the class" helper goes; the AI is sent the class level ("Class 10"); History lists a paper as "Question paper ·
 Class 10 · Sun 11 Oct" (a paper made from a batch before keeps the batch's name). The Progress note is unchanged.
 
+
+## Phase 13 boards (drawn 2026-10-11, session 27): the three states no earlier step drew
+
+Row 23 of the canvas (y 49800; the title note at 49500); sources `mockups/P13-*`. Drawn with Phase 13's plan
+(`plan/phase-13-plan.md`, decision 31) for the owner's approval before PRs 5, 7 and 9 build them. Content is illustrative
+(the board's message read on Wednesday 7 October; the Evening batch's class 8 three on "Science unit test 3"; Hemanth's
+marks with a mock's row; Riya with none).
+
+| Board | Source |
+|---|---|
+| Check what was read while the message is read: the source well, the creating card, Add waiting | `P13-School-Reading` |
+| Today's plan with an exam group (dark and light): Group 1 is the exam with its countdown and Set · Sheet · Checks; each line Revise the day's portion, Revision set, Check 3, Revision sheet; no worked example or brief | `P13-Today-Revision`, `-Light` |
+| The student's page scrolled to Marks (dark and light) as Phase 13 builds it: a mock's row, the school tests, Below usual, no Add from a photo until Phase 14; and the empty row | `P13-Student-Marks`, `-Light`, `P13-Student-Marks-Empty` |
+
+Phase 13 builds these states (`plan/phase-13-plan.md` "Launch states" has the full list with the 10.5, 10.4 and 10.2
+boards'): `school-reading`; `today-revision` (both); `student-marks` (both; Hemanth's rows, and Riya's empty section).
+
+What the boards settle:
+
+- **Reading** is the Phase 6 creating card in the items' place ("Reading what the school sent", Cancel, "Usually under a
+  minute. Tests, homework, notices and holidays are picked out for you to check."), the source well above it, the footer's
+  Add disabled with "Each item read appears here for you to check. Nothing is kept until you tap Add."; a photo source
+  shows the card's thumbnail as the textbook's reading does.
+- **An exam group on Today** keeps the group card's shape: the head is the exam's title with "the test in n days" after
+  the class and count, the marks are Set, Sheet, Checks only; a line's teach words are "Revise: <the day's portion>" ("The
+  mock · 25 marks · 40 minutes" on the mock day), its rest "Revision set n · Check 3 · Revision sheet n"; a catch-up line
+  keeps its words with the portion after "then"; no brief row follows an exam group.
+- **Marks** is the 10.2 section without its quiet action until Phase 14 brings Add from a photo; a mock's row is titled
+  "<the exam> · mock · <subject>" with the school and the day it was marked; with no marks the card holds the Kit's empty
+  row "No marks yet" and "Marks from mocks and checked papers appear here.".

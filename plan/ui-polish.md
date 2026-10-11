@@ -45,7 +45,7 @@ screen, several as a polish slice, or not at all.
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
 | U34 | 2026-10-10 | Students, the empty list (P10-Students-Empty) | Add a student and Scan paper register sit side by side (the Kit's empty state); the board stacks them at full width | Session 24 (Task 13) |
-| U36 | 2026-10-10 | A student's page, Marks | The record has no Marks section (the plan's decision 16 deferred it); it needs its board | Session 24 (Task 24); moved to Phase 13 (the owner, 2026-10-10) |
+| U36 | 2026-10-10 | A student's page, Marks | The record has no Marks section (the plan's decision 16 deferred it); P10-Student-Record draws it with Phase 14's Add from a photo, so Phase 13's board P13-Student-Marks draws the section as built this phase, with its empty row (row 23 of the canvas, 2026-10-11, awaiting approval) | Session 24 (Task 24); moved to Phase 13 (the owner, 2026-10-10); `plan/phase-13-plan.md` Task 22 |
 | U40 | 2026-10-11 | A student's page, scrolled | Scrolled under the status bar, the parent's row shows through the time without the glass the other pushed screens draw | Session 26, hand run 7's screenshot |
 
 ## Done

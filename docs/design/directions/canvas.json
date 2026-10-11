@@ -2488,6 +2488,48 @@
    "w": 393,
    "h": 852,
    "title": "Phase 12 follow-up · No class chosen yet · light"
+  },
+  "P13-School-Reading.dc.html": {
+   "h": 852,
+   "title": "Phase 13 · Check what was read while the message is read: the source well, the creating card (\"Reading what the school sent\", Cancel), Add waiting; no 10.5 board drew this state",
+   "w": 393,
+   "x": 0,
+   "y": 49800
+  },
+  "P13-Today-Revision.dc.html": {
+   "h": 852,
+   "title": "Phase 13 · Today's plan with an exam group: Group 1 is the exam (its title, the test's countdown, Set · Sheet · Checks), each line Revise the day's portion, Revision set, Check 3, Revision sheet; no worked example or brief for an exam group; the other groups as before · dark",
+   "w": 393,
+   "x": 473,
+   "y": 49800
+  },
+  "P13-Today-Revision-Light.dc.html": {
+   "h": 852,
+   "title": "Phase 13 · Today's plan with an exam group · light",
+   "w": 393,
+   "x": 946,
+   "y": 49800
+  },
+  "P13-Student-Marks.dc.html": {
+   "h": 852,
+   "title": "Phase 13 · The student's page scrolled to Marks (U36) as this phase builds it: a mock's row, the school tests, Below usual; no Add from a photo until Phase 14 · dark",
+   "w": 393,
+   "x": 1419,
+   "y": 49800
+  },
+  "P13-Student-Marks-Light.dc.html": {
+   "h": 852,
+   "title": "Phase 13 · The student's page scrolled to Marks (U36) · light",
+   "w": 393,
+   "x": 1892,
+   "y": 49800
+  },
+  "P13-Student-Marks-Empty.dc.html": {
+   "h": 852,
+   "title": "Phase 13 · A student with no marks yet: the Marks section's empty row (No marks yet · Marks from mocks and checked papers appear here.) · dark",
+   "w": 393,
+   "x": 2365,
+   "y": 49800
   }
  },
  "createdOnFiles": {
@@ -2682,6 +2724,14 @@
    "x": 0,
    "y": 48100,
    "text": "Phase 12 follow-up · The AI forms take the class by level, not a batch (the owner, 2026-10-11): Question paper, Homework and Worksheet"
+  },
+  "p13_1": {
+   "kind": "title1",
+   "maxW": 2800,
+   "text": "Phase 13 · School — the three boards no earlier step drew: Check what was read while it is read, Today's plan with an exam group (revision lines), the student page's Marks section as built this phase (U36) with its empty row",
+   "w": 240,
+   "x": 0,
+   "y": 49500
   }
  },
  "order": [
@@ -3036,7 +3086,13 @@
   "P12-Form-Paper-ClassWheel.dc.html",
   "P12-Form-Paper-ClassWheel-Light.dc.html",
   "P12-Form-Paper-NoClass.dc.html",
-  "P12-Form-Paper-NoClass-Light.dc.html"
+  "P12-Form-Paper-NoClass-Light.dc.html",
+  "P13-School-Reading.dc.html",
+  "P13-Today-Revision.dc.html",
+  "P13-Today-Revision-Light.dc.html",
+  "P13-Student-Marks.dc.html",
+  "P13-Student-Marks-Light.dc.html",
+  "P13-Student-Marks-Empty.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
