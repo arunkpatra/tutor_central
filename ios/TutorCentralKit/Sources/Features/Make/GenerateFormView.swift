@@ -10,6 +10,8 @@ public enum AIBoardState: Hashable, Sendable {
     case classWheel
     /// The result with Copy in its done state (U33-Result-Copied).
     case copied
+    /// The centre's consent sheet over the note's form (P15-Consent-Note, U20).
+    case consent
 }
 
 /// A form (P6-Form-Paper, -Homework, -Worksheet, -ProgressNote), pushed: one card of fields, a footnote, and Create in
@@ -40,6 +42,7 @@ public struct GenerateFormView: View {
         _worksheet = State(initialValue: Self.worksheet(draft))
         _note = State(initialValue: Self.note(draft))
         _pickingStudent = State(initialValue: boardState == .studentPicker)
+        _consent = State(initialValue: boardState == .consent)
     }
 
     private static func paper(_ draft: GenerateRequest) -> PaperForm {
@@ -133,7 +136,7 @@ public struct GenerateFormView: View {
             }
         }
         .sheet(isPresented: $consent) {
-            ConsentSheet(centreName: store.workspace.centre.name) {
+            ConsentSheet(kind: kind == .progressNote ? .note : .photo, centreName: store.workspace.centre.name) {
                 let agreed = await store.recordConsent()
                 if agreed {
                     consent = false
@@ -208,7 +211,7 @@ public struct GenerateFormView: View {
         }
         MultilineWell(
             label: "What you have seen", text: $note.observations, placeholder: "",
-            limit: NoteForm.observationsLimit, showsFocus: showsFocus
+            limit: NoteForm.observationsLimit, showsFocus: showsFocus, slashed: true
         )
         Labelled(label: "Tone") {
             Segmented(options: Tone.allCases.map { ($0, $0.title) }, selection: $note.tone)

@@ -15,6 +15,8 @@ public struct MessageSheet: View {
     let canOpen: Bool
     let open: () async -> Void
     let close: () -> Void
+    /// How much of the screen the sheet takes: the boards' own (P6-ProgressNote-Send's top sits under the nav row).
+    let fraction: CGFloat
     @State private var opening = false
     public static var avatarSize: CGFloat {
         56
@@ -25,10 +27,18 @@ public struct MessageSheet: View {
         0.88
     }
 
+    /// P6-ProgressNote-Send: the sheet's top 100 pt down, under the nav row, measured against the floating sheet's
+    /// inset (U18).
+    public static var underNavRow: CGFloat {
+        0.97
+    }
+
     public init(
         title: String, name: String, heading: String? = nil, parentLine: String, text: String, note: String,
-        canOpen: Bool, open: @escaping () async -> Void, close: @escaping () -> Void
+        canOpen: Bool, fraction: CGFloat = Self.boardFraction, open: @escaping () async -> Void,
+        close: @escaping () -> Void
     ) {
+        self.fraction = fraction
         self.title = title
         self.name = name
         self.heading = heading
@@ -90,7 +100,7 @@ public struct MessageSheet: View {
         .padding(.horizontal, Tokens.pageSide)
         .padding(.bottom, Tokens.groupGap)
         .modifier(SheetToasts())
-        .presentationDetents([.fraction(Self.boardFraction), .large])
+        .presentationDetents([.fraction(fraction), .large])
         .presentationDragIndicator(.hidden)
         .presentationCornerRadius(Tokens.radiusSheet)
         .presentationBackground(Tokens.surface1.color)
@@ -101,6 +111,10 @@ public struct MessageSheet: View {
 /// the footnote with the centre's name, and "I agree, continue" (loading while the agreement is written). Shown before
 /// the first photo or the first progress note of a centre, by Students and AITools alike.
 public struct ConsentSheet: View {
+    /// What asked for the consent: the sheet's words follow it; the record is the same (`ai_consent_at`).
+    public enum Kind: Sendable { case photo, note }
+
+    let kind: Kind
     let centreName: String
     let agree: () async -> Bool
     let close: () -> Void
@@ -115,7 +129,25 @@ public struct ConsentSheet: View {
         + "deletes it within 30 days and never uses it for training. "
         + "Make sure the parents are fine with their details being kept in Tutor Central."
 
-    public init(centreName: String, agree: @escaping () async -> Bool, close: @escaping () -> Void) {
+    /// P15-Consent-Note's words, with the photo sheet's retention clause: "our servers" (D41) and "not stored there"
+    /// (the service keeps a request up to 30 days) are left out.
+    public static let noteText = "A note about a student carries their name and what you have seen of their work. It "
+        + "is sent to our AI service (Claude, by Anthropic) only to be put into words. The service normally deletes it "
+        + "within 30 days and never uses it for training. "
+        + "Make sure the parents are fine with their details being kept in Tutor Central."
+
+    public static func title(_ kind: Kind) -> String {
+        kind == .note ? "Before the first note" : "Before the first photo"
+    }
+
+    public static func text(_ kind: Kind) -> String {
+        kind == .note ? noteText : text
+    }
+
+    public init(
+        kind: Kind = .photo, centreName: String, agree: @escaping () async -> Bool, close: @escaping () -> Void
+    ) {
+        self.kind = kind
         self.centreName = centreName
         self.agree = agree
         self.close = close
@@ -123,8 +155,8 @@ public struct ConsentSheet: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-            SheetHeader(title: "Before the first photo", cancel: ("Cancel", close))
-            Text(Self.text)
+            SheetHeader(title: Self.title(kind), cancel: ("Cancel", close))
+            Text(Self.text(kind))
                 .typeStyle(Tokens.subhead)
                 .foregroundStyle(Tokens.text2.color)
                 .fixedSize(horizontal: false, vertical: true)

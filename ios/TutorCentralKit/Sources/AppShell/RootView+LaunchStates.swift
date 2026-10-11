@@ -55,7 +55,8 @@ extension RootView {
         .makeMock, .makeNote, .makeMaking, .makeMade, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework,
         .aiWorksheet,
         .aiNote, .aiNoteStudent, .aiGenerating,
-        .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
+        .aiGenerateFailed, .aiHomeworkFailed, .aiNoteConsent, .aiResultPaper, .aiResultCopied, .aiResultRegenerating,
+        .aiResultNote, .aiNoteSend,
         .aiHistory,
         .aiHistoryEmpty,
     ]
@@ -126,9 +127,9 @@ extension RootView {
         case .make, .makeEmpty, _ where Fixtures.makeStates.contains(state): makeRoutes(for: state)
         case .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiGenerating, .aiGenerateFailed:
             [.make, .aiForm(.paper)]
-        case .aiHomework: [.make, .aiForm(.homework)]
+        case .aiHomework, .aiHomeworkFailed: [.make, .aiForm(.homework)]
         case .aiWorksheet: [.make, .aiForm(.worksheet)]
-        case .aiNote, .aiNoteStudent: [.make, .aiForm(.progressNote)]
+        case .aiNote, .aiNoteStudent, .aiNoteConsent: [.make, .aiForm(.progressNote)]
         case .aiResultPaper, .aiResultCopied, .aiResultRegenerating:
             [.make, .aiResult(FakeAIHistoryRepository.quadraticID)]
         case .aiResultNote, .aiNoteSend: [.make, .aiResult(note)]
@@ -141,7 +142,8 @@ extension RootView {
         switch state {
         case .aiNoteStudent: .studentPicker
         case .aiGenerating: .generating
-        case .aiGenerateFailed: .failed
+        case .aiGenerateFailed, .aiHomeworkFailed: .failed
+        case .aiNoteConsent: .consent
         case .aiResultRegenerating: .regenerating
         case .aiNoteSend: .noteSend
         case .aiResultCopied: .copied

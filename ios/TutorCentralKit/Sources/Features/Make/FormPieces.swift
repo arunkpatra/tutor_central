@@ -111,8 +111,8 @@ enum AIWords {
     static func failedTitle(_ kind: GenerationKind) -> String {
         switch kind {
         case .paper: "Couldn't create the paper."
-        case .homework: "Couldn't create the homework."
-        case .worksheet: "Couldn't create the worksheet."
+        case .homework: "Couldn't create it."
+        case .worksheet: "Couldn't create it."
         case .progressNote: "Couldn't write the note."
         }
     }

@@ -245,6 +245,8 @@ public struct MultilineWell: View {
     let minHeight: CGFloat
     let showsFocus: Bool
     let counter: Bool
+    /// "135 / 2000" (P6-Form-ProgressNote) rather than the Kit's "80 of 2,000" (U17).
+    let slashed: Bool
     @FocusState private var focused: Bool
     public static var minHeight: CGFloat {
         96
@@ -254,7 +256,7 @@ public struct MultilineWell: View {
     /// the ring for a board.
     public init(
         label: String, text: Binding<String>, placeholder: String, limit: Int, minHeight: CGFloat = Self.minHeight,
-        showsFocus: Bool = false, counter: Bool = true
+        showsFocus: Bool = false, counter: Bool = true, slashed: Bool = false
     ) {
         self.label = label
         _text = text
@@ -263,6 +265,12 @@ public struct MultilineWell: View {
         self.minHeight = minHeight
         self.showsFocus = showsFocus
         self.counter = counter
+        self.slashed = slashed
+    }
+
+    /// The counter's words: the count as the database counts it, over the limit.
+    nonisolated static func counterText(_ count: Int, limit: Int, slashed: Bool) -> String {
+        slashed ? "\(count) / \(limit)" : "\(count) of \(limit.formatted())"
     }
 
     public var body: some View {
@@ -285,7 +293,7 @@ public struct MultilineWell: View {
                 .overlay(alignment: .bottomTrailing) {
                     if counter {
                         // Counted as the database counts, as Domain's limits are (D48: `storedCount`).
-                        Text("\(text.unicodeScalars.count) of \(limit.formatted())")
+                        Text(Self.counterText(text.unicodeScalars.count, limit: limit, slashed: slashed))
                             .typeStyle(Tokens.caption)
                             .foregroundStyle(Tokens.text3.color)
                             .padding(.bottom, Tokens.tileGap)

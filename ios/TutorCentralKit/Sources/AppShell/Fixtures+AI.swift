@@ -11,7 +11,7 @@ extension Fixtures {
         let ai = FakeAIRepository(now: { clock(for: state) })
         switch state {
         case .aiGenerating, .aiResultRegenerating: ai.delay = .seconds(3600)
-        case .aiGenerateFailed, .scanFailed, .checkFailed: ai.script = .failure(.offline)
+        case .aiGenerateFailed, .aiHomeworkFailed, .scanFailed, .checkFailed: ai.script = .failure(.offline)
         case .scanReading, .checkChecking, .textbookReading, .schoolReading: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
         case .sheetRegenerating, .makeMaking: ai.delayByKind[.sheet] = .seconds(3600)

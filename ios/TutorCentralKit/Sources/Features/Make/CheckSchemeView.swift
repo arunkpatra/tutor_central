@@ -47,7 +47,8 @@ public struct CheckSchemeView: View {
                     VStack(alignment: .leading, spacing: Tokens.fieldGap) {
                         MultilineWell(
                             label: "Marking scheme", text: $store.typedScheme, placeholder: "",
-                            limit: SchemeSource.typedLimit, minHeight: Self.wellHeight, showsFocus: showsFocus
+                            limit: SchemeSource.typedLimit, minHeight: Self.wellHeight, showsFocus: showsFocus,
+                            slashed: true
                         )
                         footnote("One line per question with its marks: what earns full marks and what earns part.")
                     }
