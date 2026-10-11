@@ -226,6 +226,8 @@ export const MakeInput = z.discriminatedUnion("kind", [
       coming: z.array(z.string().max(200)).max(3),
       attendance: z.string().max(80).optional(),
     }),
+    /** The tutor's own words from Make's note (Phase 15), in the note as they ask. */
+    tutorSays: z.string().min(1).max(300).optional(),
   }),
   z.object({
     ...V2,

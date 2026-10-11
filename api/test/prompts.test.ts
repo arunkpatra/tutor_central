@@ -240,3 +240,20 @@ test("reading marks asks for names within the output's limits and leaves the sch
   const row = { subject: "s".repeat(80), test: "t".repeat(120), date: null, score: 1, max: 2 };
   expect(ReadMarksOutput.safeParse({ marks: [row] }).success).toBe(true);
 });
+
+test("the note's prompt carries the tutor's own words and asks for them last", () => {
+  const input = { ...parent, kind: "note", week: { monday: "2026-10-05", taught: ["Angles"], practise: [], coming: [] }, tutorSays: "Ask him to show you the balancing steps." } as unknown as WeeklyNoteInput;
+  const r = weeklyNoteRequest(input);
+  expect(r.text).toContain("The tutor adds: Ask him to show you the balancing steps.");
+  expect(r.text).toContain("what was taught and what the tutor adds.");
+});
+
+test("a note without the tutor's words asks nothing of them", () => {
+  const input = { ...parent, kind: "note", week: { monday: "2026-10-05", taught: ["Angles"], practise: [], coming: [] } } as unknown as WeeklyNoteInput;
+  expect(weeklyNoteRequest(input).text).not.toMatch(/tutor adds/);
+});
+
+test("a quiet week with the tutor's words asks for the words alone", () => {
+  const input = { ...parent, kind: "note", week: { monday: "2026-10-05", taught: [], practise: [], coming: [] }, tutorSays: "Please send the fee by Friday." } as unknown as WeeklyNoteInput;
+  expect(weeklyNoteRequest(input).text).toContain("Write the week's note: what the tutor adds.");
+});
