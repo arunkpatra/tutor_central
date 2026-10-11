@@ -36,6 +36,7 @@ struct ChapterRow: Decodable {
 
 /// A student's `skills` row.
 struct SkillRow: Decodable {
+    static let columns = "id, chapter_id, position, name, state, state_at, last_checked_at"
     let id: UUID
     let chapterId: UUID
     let position: Int

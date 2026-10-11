@@ -50,6 +50,8 @@ public struct ExamMaterial: Sendable {
 public enum ArtefactBudget {
     public static let maxPersonalChecks = 4
     public static let maxCalls = 20
+    /// A line's "Check 3".
+    public static let checksPerClass = 3
     public static let setQuestions = 10
     public static let homeworkQuestions = 10
     public static let lightHomeworkQuestions = 5
@@ -82,11 +84,13 @@ public enum ArtefactBudget {
     ) -> [ArtefactRequest] {
         let level = classLevel(of: group, students: students)
         let spaced = spacedPair(group, spacedSkills: spacedSkills)
+        // Three questions a class: the day's skill fills the places the spaced queue leaves (a new batch has none).
+        let fill = max(0, checksPerClass - 1 - spaced.count)
+        let teachIDs = group.skillID.map { Array(repeating: $0, count: 1 + fill) } ?? []
         var requests: [ArtefactRequest] = [
             .checks(
-                group: group.number, skills: [group.skill] + spaced.map(\.name),
-                skillIDs: (group.skillID.map { [$0] } ?? []) + spaced.map(\.id), classLevel: level,
-                subject: group.subject
+                group: group.number, skills: Array(repeating: group.skill, count: 1 + fill) + spaced.map(\.name),
+                skillIDs: teachIDs + spaced.map(\.id), classLevel: level, subject: group.subject
             ),
             .sheet(
                 group: group.number, skills: [group.skill], classLevel: level, subject: group.subject,

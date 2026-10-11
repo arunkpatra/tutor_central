@@ -144,6 +144,22 @@ struct ArtefactBudgetTests {
         }
     }
 
+    /// A new batch's first checks (the owner, 2026-10-11): with no spaced skill yet, the group's checks are three on
+    /// the
+    /// day's skill, so each line's "Check 3" has three questions.
+    @Test func aGroupWithNoSpacedSkillsChecksTheDaysSkillThreeTimes() {
+        let built = draft([.eight])
+        let requests = ArtefactBudget.requests(
+            for: built.draft, students: built.students, spacedSkills: [:], briefsMade: []
+        )
+        guard case let .checks(_, skills, ids, _, _)? = requests.first else {
+            Issue.record("no checks")
+            return
+        }
+        let skill = built.draft.groups[0].skill
+        #expect(skills == [skill, skill, skill] && ids.count == 3 && Set(ids).count == 1)
+    }
+
     @Test func homeworkIsFiveQuestionsUpToClassFive() {
         let built = draft([.five])
         let (plan, students, spaced) = (built.draft, built.students, built.spaced)

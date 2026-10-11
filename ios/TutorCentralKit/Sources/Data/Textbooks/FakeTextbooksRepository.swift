@@ -16,6 +16,8 @@ import Supabase
     public var nextError: (any Error)?
     /// Every read fails with this, as through a stopped gateway.
     public var failure: (any Error)?
+    /// Refuses the chapter and skill writes alone.
+    public var writeFailure: (any Error)?
     public private(set) var copyToClassCalls: [UUID] = []
     public private(set) var copyAllCalls: [UUID] = []
     public private(set) var ladderCalls: [UUID] = []
@@ -105,6 +107,9 @@ import Supabase
     public func addChapter(student: UUID, subject: String, name: String, skills: [String], centre _: UUID)
         async throws -> Chapter {
         try begin()
+        if let writeFailure {
+            throw writeFailure
+        }
         let last = chaptersByStudent[student, default: []].filter { $0.subject == subject }.map(\.position).max() ?? 0
         let chapter = Chapter(id: UUID(), subject: subject, position: last + 1, name: name)
         chaptersByStudent[student, default: []].append(chapter)
@@ -120,6 +125,20 @@ import Supabase
             )
         }
         return chapter
+    }
+
+    public func addSkill(_ name: String, chapter: UUID, student: UUID, centre _: UUID) async throws -> Skill {
+        try begin()
+        if let writeFailure {
+            throw writeFailure
+        }
+        let last = skillsByStudent[student, default: []].filter { $0.chapterID == chapter }.map(\.position).max() ?? 0
+        let skill = Skill(
+            id: UUID(), chapterID: chapter, position: last + 1, name: name, state: .notStarted, stateAt: now(),
+            lastCheckedAt: nil
+        )
+        skillsByStudent[student, default: []].append(skill)
+        return skill
     }
 
     public func ensureLadder(student: UUID, centre _: UUID) async throws {

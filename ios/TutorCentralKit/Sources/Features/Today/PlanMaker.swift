@@ -97,6 +97,7 @@ public final class PlanMaker: Sendable {
         }
         var draft = PlanRules.plan(input(batch, record, choices))
         draft = await named(draft, members: members, centre: centre)
+        draft = await writeNamedSkills(draft, record: record, centre: centre)
         let briefs = await (try? plans.briefChapters(centre: centre)) ?? []
         draft = draft.addingBriefs(for: briefs)
         guard !Task.isCancelled else { return }

@@ -22,6 +22,8 @@ public protocol TextbooksRepository: Sendable {
     /// A chapter of the tutor's own, after the subject's last, with its skills in order.
     func addChapter(student: UUID, subject: String, name: String, skills: [String], centre: UUID) async throws
         -> Chapter
+    /// A skill added to the end of one of the student's chapters (a group /ai/plan named, Phase 13).
+    func addSkill(_ name: String, chapter: UUID, student: UUID, centre: UUID) async throws -> Skill
     /// The ladder's three chapters (Reading, Writing, Numbers) with their five steps, for a student of LKG to class 3
     /// who has none yet; nothing when they exist.
     func ensureLadder(student: UUID, centre: UUID) async throws

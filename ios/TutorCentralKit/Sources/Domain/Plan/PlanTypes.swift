@@ -123,6 +123,14 @@ public struct PlanLine: Hashable, Sendable, Codable {
         self.personalChecks = personalChecks
     }
 
+    /// The line with a student's own skill (a group /ai/plan named, once their chapter and skill are written).
+    public func with(skillID: UUID) -> PlanLine {
+        PlanLine(
+            studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
+            personalChecks: personalChecks
+        )
+    }
+
     func with(words: String) -> PlanLine {
         PlanLine(
             studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
