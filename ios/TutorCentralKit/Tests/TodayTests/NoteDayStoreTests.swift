@@ -278,3 +278,20 @@ import Testing
         #expect(row(store, Self.dev)?.state == .read)
     }
 }
+
+extension NoteDayStoreTests {
+    @Test func aRowHeldForConsentOpensTheStudentNotTheCadenceSheet() async {
+        let store = await Self.make(World())
+        await store.load()
+        var opened: [UUID] = []
+        var notes: [UUID] = []
+        store.onOpenStudent = { opened.append($0) }
+        store.onOpenNote = { student, _ in notes.append(student) }
+        #expect(store.held(for: Self.riya) == nil)
+        let riya = try? #require(row(store, Self.riya))
+        if let riya {
+            store.open(riya)
+        }
+        #expect(opened == [Self.riya] && notes.isEmpty)
+    }
+}

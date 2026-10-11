@@ -30,6 +30,8 @@ import Observation
         /// "Held since Sun 11 Oct · Ramesh had three messages that week".
         public let line: String
         public let noteDay: Day
+        /// Held for consent: Send now goes back to the student's page, where it is recorded.
+        public let waitsForConsent: Bool
     }
 
     public private(set) var months: [Month] = []
@@ -98,6 +100,6 @@ import Observation
 
     /// The held note's student and note day, for the note's route.
     public func sendNow() -> (UUID, Day)? {
-        held.map { (studentID, $0.noteDay) }
+        held.flatMap { $0.waitsForConsent ? nil : (studentID, $0.noteDay) }
     }
 }

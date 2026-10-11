@@ -58,6 +58,8 @@ public struct MessagesScreen: View {
             MessageLogRow(symbol: "clock", title: held.title, line: held.line, held: {
                 if let send = store.sendNow() {
                     openNote(send.0, send.1)
+                } else if held.waitsForConsent {
+                    dismiss()
                 }
             })
         }

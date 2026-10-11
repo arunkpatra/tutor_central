@@ -58,6 +58,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     public var message: String?
     /// Read and Send it now: AppShell opens the note (Artefacts) for the student and the note day.
     @ObservationIgnored public var onOpenNote: ((UUID, Day) -> Void)?
+    /// A row held for consent: the student's page, where the consent is recorded (AppShell's).
+    @ObservationIgnored public var onOpenStudent: ((UUID) -> Void)?
     /// Each listed student's parent's suggested messages this week, for the held sheet.
     private var parentWeek: [UUID: [MessageEntry]] = [:]
 
@@ -180,7 +182,12 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     }
 
     /// Read on a row, and the held sheet's Send it now (the send counts as one more, by the tutor's hand).
+    /// Read: the note; a row held for consent opens the student's page instead (no note is made without it).
     public func open(_ row: NoteRowModel) {
+        if case .held(.consent) = row.state {
+            onOpenStudent?(row.id)
+            return
+        }
         onOpenNote?(row.id, row.noteDay)
     }
 
@@ -190,7 +197,7 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
 
     /// The held sheet for a held row, nil for any other.
     public func held(for student: UUID) -> HeldNote? {
-        guard let row = rows.first(where: { $0.id == student }), case .held = row.state,
+        guard let row = rows.first(where: { $0.id == student }), case .held(.threeThisWeek) = row.state,
               let person = register.student(student) else { return nil }
         let entries = (parentWeek[student] ?? []).sorted { $0.openedAt < $1.openedAt }
         let next = row.noteDay.adding(days: 7, calendar: calendar)
