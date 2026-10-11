@@ -228,4 +228,20 @@ import Testing
         try await Task.sleep(for: .milliseconds(450))
         #expect(world.plans.kept.count == 1)
     }
+
+    @Test func aKeptCopyOpensAtOnceWhileTheServerIsSlow() async throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        let cache = NotesCache(centre: FakeCentreRepository.meeraWorkspace.centre.id, directory: directory)
+        let made = await Self.make(Self.dev, World(notesCache: cache))
+        await made.load()
+        // U47: the connection hangs (the server read takes 20 s offline); the copy on this iPhone shows meanwhile.
+        let world = World(notesCache: cache)
+        world.plans.notesDelay = .seconds(2)
+        let store = await Self.make(Self.dev, world)
+        let opening = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(200))
+        #expect(store.stage == .ready && store.message == made.message)
+        opening.cancel()
+        #expect(world.ai.noteCalls.isEmpty)
+    }
 }

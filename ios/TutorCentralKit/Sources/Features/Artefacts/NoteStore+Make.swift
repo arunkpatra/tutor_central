@@ -3,7 +3,8 @@ import Domain
 import Foundation
 
 extension NoteStore {
-    /// The note kept this week (the plans, else the copy on this iPhone), else a new one made.
+    /// The note kept this week: the copy on this iPhone at once (U47: a connection that hangs takes 20 s to give up),
+    /// then the plans' (the newer when both), else a new one made.
     public func load() async {
         // A link or a launch state can open the note before the register is read.
         await context.register.loadIfNeeded()
@@ -11,7 +12,13 @@ extension NoteStore {
             stage = .failed("This student is no longer here.")
             return
         }
-        if let found = await keptNote() {
+        let copy = copiedNote()
+        if let copy {
+            show(copy)
+        }
+        let served = await servedNote()
+        guard !Task.isCancelled else { return }
+        if let found = served ?? copy {
             if found.kind == .canDo, let record = try? await context.reader.read(
                 [student], centre: context.workspace.centre.id, from: week.lowerBound, to: noteDay,
                 calendar: context.calendar
@@ -76,20 +83,26 @@ extension NoteStore {
         isLadder ? .canDo : .note
     }
 
-    private func keptNote() async -> Artefact? {
+    private func ofThisWeek(_ artefact: Artefact) -> Bool {
+        guard artefact.studentID == studentID, case let .note(content) = artefact.content else { return false }
+        return content.weekMonday == week.lowerBound
+    }
+
+    /// This week's note in the copy on this iPhone.
+    private func copiedNote() -> Artefact? {
+        context.notesCache?.read().sorted { $0.madeAt > $1.madeAt }.first(where: ofThisWeek)
+    }
+
+    /// This week's note in the plans; nil offline or when the read fails.
+    private func servedNote() async -> Artefact? {
+        guard await context.online() else { return nil }
         let since = week.lowerBound.date(in: context.calendar)
-        let monday = week.lowerBound
-        let ofThisWeek = { (artefact: Artefact) -> Bool in
-            guard artefact.studentID == self.studentID, case let .note(content) = artefact.content else { return false }
-            return content.weekMonday == monday
-        }
-        if await context.online(),
-           let read = try? await context.plans.notes(
-               centre: context.workspace.centre.id, students: [studentID], since: since
-           ) {
-            return read.first(where: ofThisWeek)
-        }
-        return context.notesCache?.read().sorted { $0.madeAt > $1.madeAt }.first(where: ofThisWeek)
+        let read = try? await context.plans.notes(
+            centre: context.workspace.centre.id,
+            students: [studentID],
+            since: since
+        )
+        return read?.first(where: ofThisWeek)
     }
 
     private func show(_ artefact: Artefact) {
