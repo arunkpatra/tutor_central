@@ -34,7 +34,8 @@ public enum Fixtures {
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
-            textbooks: state == .noteCanDoNoChange || makeStates.contains(state) ? FakeTextbooksRepository.evening()
+            textbooks: state == .noteCanDoNoChange || makeStates.contains(state) || progressStates.contains(state)
+                ? FakeTextbooksRepository.evening()
                 : noteDayStates.contains(state) ? noteDayTextbooks()
                 : notOnTrackStates.contains(state) ? FakeTextbooksRepository.notOnTrack()
                 : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
@@ -211,7 +212,8 @@ public enum Fixtures {
              .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone, .eventDeleteConfirm, .todayEvening,
              .reports,
              .reportsAttendance,
-             .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
+             .reportsExport, .reportsEmpty,
+             _ where progressStates.contains(state): FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         case .todayAfterClose: FakeAttendanceRepository.seedWithEveningClosed
         case _ where noteDayStates.contains(state): noteDaySessions
@@ -281,6 +283,10 @@ extension Fixtures {
 extension Fixtures {
     /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
     static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
+        progressStates.contains(state) ? (progressStudents, FakeClassesRepository.withEvening) : boardRegister(state)
+    }
+
+    private static func boardRegister(_ state: LaunchState) -> (students: [Student], classes: [Classroom]) {
         switch state {
         case .studentsEmpty, .classesEmpty, .attendanceEmpty, .todayEmpty: ([], [])
         case .studentsFew: (FakeStudentsRepository.few, [])

@@ -9,11 +9,25 @@ import Observation
     public enum Segment: Hashable, Sendable, CaseIterable {
         case fees
         case attendance
+        case progress
 
         public var title: String {
             switch self {
             case .fees: "Fees"
             case .attendance: "Attendance"
+            case .progress: "Progress"
+            }
+        }
+    }
+
+    /// Progress by month or by the school's term (P10-Reports-Progress, -Term).
+    public enum Span: Hashable, Sendable, CaseIterable {
+        case month, term
+
+        public var title: String {
+            switch self {
+            case .month: "Month"
+            case .term: "Term"
             }
         }
     }
@@ -58,25 +72,43 @@ import Observation
 
     public private(set) var month: Period
     public var segment: Segment = .fees
+    public var span: Span = .month
+    public var sort: ProgressSort = .lowestFirst
+    /// The term Progress shows: the centre's calendar's current term until the tutor steps.
+    public internal(set) var term: Term
+    @ObservationIgnored var termMoved = false
     public private(set) var loading = false
-    public private(set) var loaded = false
-    public private(set) var error: String?
-    private var invoices: [FeeInvoice] = []
-    private var sessions: [AttendanceSession] = []
-    private var logs: [FeeLog] = []
-    private var loadGeneration = 0
-    private let workspace: Workspace
-    private let register: any Register
+    public internal(set) var loaded = false
+    public internal(set) var error: String?
+    /// When the report on screen was saved on this iPhone, until the network replaces it (U26).
+    public internal(set) var savedAt: Date?
+    public internal(set) var offlineRead = false
+    var invoices: [FeeInvoice] = []
+    var sessions: [AttendanceSession] = []
+    var logs: [FeeLog] = []
+    /// Each active student's record for the span (Progress).
+    var progressInputs: [UUID: ProgressInput] = [:]
+    /// The rows from this iPhone's copy, shown while the network is away.
+    var progressCopy: [ProgressRow]?
+    var loadGeneration = 0
+    let workspace: Workspace
+    let register: any Register
+    let progressReader: ProgressReader?
+    let cache: ReportsCache?
     private let fees: any FeesRepository
     private let attendance: any AttendanceRepository
     private let messages: any MessageLogRepository
-    private let calendar: Calendar
-    private let now: @Sendable () -> Date
+    let calendar: Calendar
+    let now: @Sendable () -> Date
 
     public init(
         workspace: Workspace, register: any Register, fees: any FeesRepository, attendance: any AttendanceRepository,
-        messages: any MessageLogRepository, now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india
+        messages: any MessageLogRepository, now: @escaping @Sendable () -> Date, calendar: Calendar = DayHeading.india,
+        progress: ProgressReader? = nil, cache: ReportsCache? = nil
     ) {
+        progressReader = progress
+        self.cache = cache
+        term = Term.containing(Day(now(), calendar: calendar), calendar: .standard)
         self.workspace = workspace
         self.register = register
         self.fees = fees
@@ -143,7 +175,11 @@ import Observation
     }
 
     public var studentsTitle: String {
-        let count = segment == .fees ? feeLines.count : attendanceLines.count
+        let count = switch segment {
+        case .fees: feeLines.count
+        case .attendance: attendanceLines.count
+        case .progress: progressRows.count
+        }
         return count == 1 ? "1 student" : "\(count) students"
     }
 
@@ -156,6 +192,11 @@ import Observation
             if generation == loadGeneration {
                 loading = false
             }
+        }
+        followCentreCalendar()
+        if segment == .progress {
+            await loadProgress(generation)
+            return
         }
         let centre = workspace.centre.id
         let month = month
@@ -170,24 +211,51 @@ import Observation
             invoices = readInvoices
             sessions = readSessions
             logs = readLogs
-            error = nil
-            loaded = true
+            cache?.month(month).keep(
+                MonthCopy(invoices: readInvoices, sessions: readSessions, logs: readLogs),
+                at: now()
+            )
+            (error, savedAt, offlineRead, loaded) = (nil, nil, false, true)
         } catch {
             guard generation == loadGeneration else { return }
-            invoices = []
-            sessions = []
-            logs = []
-            self.error = "Couldn't load the report. Check your connection and try again."
+            showMonthCopy(month, failure: error)
         }
     }
 
+    /// This iPhone's copy of the month when the network is away; else the error line (U26).
+    private func showMonthCopy(_ month: Period, failure: any Error) {
+        if let copy = cache?.month(month).load() {
+            invoices = copy.value.invoices
+            sessions = copy.value.sessions
+            logs = copy.value.logs
+            (error, savedAt, offlineRead, loaded) = (nil, copy.savedAt, TransportError.isOffline(failure), true)
+            return
+        }
+        invoices = []
+        sessions = []
+        logs = []
+        (savedAt, offlineRead) = (nil, TransportError.isOffline(failure))
+        error = "Couldn't load the report. Check your connection and try again."
+    }
+
+    /// The month back, or on Progress by term the term back.
     public func previous() async {
-        month = month.previous
+        if segment == .progress, span == .term {
+            term = term.previous
+            termMoved = true
+        } else {
+            month = month.previous
+        }
         await load()
     }
 
     public func next() async {
-        month = month.next
+        if segment == .progress, span == .term {
+            term = term.next
+            termMoved = true
+        } else {
+            month = month.next
+        }
         await load()
     }
 
@@ -195,48 +263,12 @@ import Observation
         await load()
     }
 
-    public func export(_ segment: Segment) -> Export {
-        switch segment {
-        case .fees:
-            let rows = invoices.map { invoice in
-                let student = register.student(invoice.studentID)
-                let reminded = logs.first { $0.kind == .reminder && $0.studentID == invoice.studentID }
-                return FeesCSVRow(
-                    student: student?.name ?? "", className: className(student), amount: invoice.amount,
-                    state: invoice.state(current: current), paidOn: invoice.paidOn(calendar: calendar),
-                    paidBy: invoice.paidMethod, remindedOn: reminded.map { Day($0.openedAt, calendar: calendar) }
-                )
-            }
-            .sorted { $0.student.localizedStandardCompare($1.student) == .orderedAscending }
-            return Export(fileName: FeesCSV.fileName(month), text: FeesCSV.make(rows))
-        case .attendance:
-            let rows = attendanceLines.map { line in
-                AttendanceCSVRow(
-                    student: line.name, className: line.className, present: line.present ?? 0, absent: line.absent ?? 0
-                )
-            }
-            return Export(fileName: AttendanceCSV.fileName(month), text: AttendanceCSV.make(rows))
-        }
-    }
-
-    /// The CSV in the temporary directory, for the share sheet; nil when it cannot be written.
-    public func exportFile(_ segment: Segment) -> URL? {
-        let file = export(segment)
-        let url = FileManager.default.temporaryDirectory.appending(path: file.fileName)
-        do {
-            try file.text.write(to: url, atomically: true, encoding: .utf8)
-            return url
-        } catch {
-            return nil
-        }
-    }
-
     /// The month it is now: a due fee of an earlier month is overdue.
-    private var current: Period {
+    var current: Period {
         Period.containing(now(), in: calendar.timeZone)
     }
 
-    private func className(_ student: Student?) -> String {
+    func className(_ student: Student?) -> String {
         register.classroom(student?.classID)?.name ?? ""
     }
 }
