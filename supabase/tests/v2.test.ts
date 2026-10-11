@@ -832,3 +832,26 @@ test("read_marks and not_on_track count in the month's allowance, as the other V
   expect(capped.error?.message).toContain("ai_limit_reached");
   expect(capped.error?.details).toBe("600");
 });
+
+test("the close that changes a student's status clears the tutor's step; one that keeps it leaves the step", async () => {
+  const cls = (await a.from("classes").insert({ centre_id: centre, name: "Stepped batch", meeting_days: [1] }).select("id").single()).data!;
+  const moved = (await a.from("students").insert({ centre_id: centre, name: "Moved", class_id: cls.id, track_status: "not_on_track", next_step: "step_back" }).select("id").single()).data!;
+  const kept = (await a.from("students").insert({ centre_id: centre, name: "Kept", class_id: cls.id, track_status: "not_on_track", next_step: "leave" }).select("id").single()).data!;
+  const r = await a.rpc("close_session", {
+    p_centre: centre, p_class: cls.id, p_date: "2026-10-19",
+    p_marks: { [moved.id]: "present", [kept.id]: "present" }, p_checks: [], p_homework: [],
+    p_track: { [moved.id]: { status: "watch", reasons: [] }, [kept.id]: { status: "not_on_track", reasons: [] } },
+  });
+  expect(r.error).toBeNull();
+  const steps = (await a.from("students").select("name, next_step").in("id", [moved.id, kept.id]).order("name")).data;
+  expect(steps).toEqual([{ name: "Kept", next_step: "leave" }, { name: "Moved", next_step: null }]);
+});
+
+test("start_ai_generation refuses a student of another centre, so no centre reads another's consent", async () => {
+  const c = await userClient(l, `v2-p14-cross-${stamp}@example.com`);
+  const own = (await c.rpc("create_centre", { p_name: "Cross 14", p_whatsapp: null })).data as string;
+  const theirs = (await a.from("students").insert({ centre_id: centre, name: "Not yours", consent_at: new Date().toISOString(), consent_phone: "+919876500009", consent_how: "whatsapp" }).select("id").single()).data!;
+  const r = await c.rpc("start_ai_generation", { p_centre: own, p_kind: "note", p_input: {}, p_model: "m", p_student: theirs.id });
+  expect(r.error).not.toBeNull();
+  expect(r.data).toBeNull();
+});

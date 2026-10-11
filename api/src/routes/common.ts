@@ -68,7 +68,7 @@ export async function parse<T>(c: C, schema: ZodType<T>): Promise<Parsed<T> | Re
   const issues = [...(parsed.success ? [] : parsed.error.issues), ...(centre.success ? [] : centre.error.issues)];
   if (!parsed.success || !centre.success) {
     const words = issues.map((i) => (i.path.length ? `${i.path.join(".")}: ${i.message}` : i.message));
-    return c.json({ error: words.join("; ") }, 400);
+    return c.json({ error: words.join("; "), reason: "invalid" }, 400);
   }
   return { value: parsed.data, centre: centre.data.centreId };
 }

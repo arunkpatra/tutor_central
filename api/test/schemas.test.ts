@@ -303,3 +303,11 @@ test("a message's English is the tutor's reading aid: it may run longer than the
   expect(MessageOutput.safeParse({ message: "म".repeat(601), english: "a" }).success).toBe(false);
   expect(MessageOutput.safeParse({ message: "म", english: "a".repeat(1001) }).success).toBe(false);
 });
+
+test("the parents' messages need no tutor's name: the app signs them, the models never do", () => {
+  const body = { kind: "note", centreId: "11111111-1111-1111-1111-111111111111", studentId: "22222222-2222-2222-2222-222222222222", studentName: "Dev", centreName: "Bright Minds", classLevel: "8", language: "hi", week: { monday: "2026-10-05", taught: [], practise: [], coming: [] } };
+  expect(MakeInput.safeParse(body).success).toBe(true);
+  // A build that still sends it is not refused: the field is dropped.
+  const old = MakeInput.safeParse({ ...body, tutorName: "Meera" });
+  expect(old.success && !("tutorName" in old.data)).toBe(true);
+});

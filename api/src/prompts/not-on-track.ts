@@ -13,7 +13,7 @@ export function request(input: NotOnTrackInput): ClaudeRequest<MessageOutput> {
     system: [
       VOICE,
       MESSAGE,
-      "Say what is hard, what we are doing in class, what helps at home, and ask for five minutes to talk this week; kind and plain, never blaming the student.",
+      `Say what is hard, what we are doing in class, ${input.atHome ? "what helps at home, " : ""}and ask for five minutes to talk this week; kind and plain, never blaming the student.`,
     ].join(" "),
     text: [
       ...whoLines(input),

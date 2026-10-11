@@ -1,9 +1,8 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type NoteInput, NoteOutput } from "../schemas.js";
+import { first } from "./message.js";
 import { VOICE } from "./shared.js";
-
-const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
 
 /** A progress note to the parent, in the tutor's voice, from what the tutor has seen. The app adds the signature. */
 export function request(input: NoteInput): ClaudeRequest<NoteOutput> {
@@ -20,7 +19,7 @@ export function request(input: NoteInput): ClaudeRequest<NoteOutput> {
       "End with the last sentence of the note: no signature, no name, no sign-off (the app adds the signature).",
     ].join(" "),
     text: [
-      `Parent: ${input.parentName ? firstName(input.parentName) : "the parent (no name given: start with Hello)"}.`,
+      `Parent: ${input.parentName ? first(input.parentName) : "the parent (no name given: start with Hello)"}.`,
       `Student: ${input.studentName}, ${input.classLevel}, ${input.subject}.`,
       input.attendanceLine ? `This month: ${input.attendanceLine}.` : null,
       `What the tutor has seen: ${input.observations}`,

@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 /** bun cost [--since 30m|2h|1d|7d] [--kinds a,b]: what the local AI calls cost, by kind and model, priced by
- *  api/models.json (D67). Reads the local database's ai_generations (status ok) with psql; DATABASE_URL names another. */
+ *  api/models.json (D67). Reads the local database's ai_generations with psql (each billed call: a failed one that
+ *  carries tokens was billed too); DATABASE_URL names another. */
 import table from "../api/models.json" with { type: "json" };
 import { must } from "./lib/sh";
 
@@ -31,27 +32,40 @@ export function costTable(rows: Generation[], prices: Table): CostRow[] {
 
 const UNITS: Record<string, string> = { m: "minutes", h: "hours", d: "days" };
 
+/** The rows a cost run reads: every call Claude billed (it carries tokens, whatever its status) in the window. */
+export function costWhere(since: string, kinds: string[]): string {
+  const match = /^(\d+)([mhd])$/.exec(since);
+  if (!match) throw new Error(`--since takes a number and m, h or d (30m, 2h, 7d), not ${since}`);
+  if (kinds.some((k) => !/^[a-z_0-9]+$/.test(k))) throw new Error("--kinds takes kind names, such as note,can_do");
+  const where = [`tokens_in is not null`, `created_at > now() - interval '${match[1]} ${UNITS[match[2] as string]}'`];
+  if (kinds.length > 0) where.push(`kind::text in (${kinds.map((k) => `'${k}'`).join(", ")})`);
+  return where.join(" and ");
+}
+
+/** "15 calls since 30m: ₹2.52", and how many calls the table could not price. */
+export function totalLine(priced: CostRow[], since: string): string {
+  const total = priced.reduce((sum, r) => sum + (r.rupees ?? 0), 0);
+  const calls = priced.reduce((n, r) => n + r.calls, 0);
+  const unpriced = priced.filter((r) => r.rupees === null).reduce((n, r) => n + r.calls, 0);
+  const note = unpriced > 0 ? ` (${unpriced} ${unpriced === 1 ? "call" : "calls"} not priced)` : "";
+  return `${calls} calls since ${since}: ₹${total.toFixed(2)}${note}`;
+}
+
 async function main(args: string[]) {
   const flag = (name: string) => {
     const i = args.indexOf(name);
     return i >= 0 ? args[i + 1] : undefined;
   };
   const since = flag("--since") ?? "30m";
-  const match = /^(\d+)([mhd])$/.exec(since);
-  if (!match) throw new Error(`--since takes a number and m, h or d (30m, 2h, 7d), not ${since}`);
   const kinds = flag("--kinds")?.split(",").filter(Boolean) ?? [];
-  if (kinds.some((k) => !/^[a-z_0-9]+$/.test(k))) throw new Error("--kinds takes kind names, such as note,can_do");
   const url = process.env.DATABASE_URL ?? "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
-  const where = [`status = 'ok'`, `created_at > now() - interval '${match[1]} ${UNITS[match[2] as string]}'`];
-  if (kinds.length > 0) where.push(`kind::text in (${kinds.map((k) => `'${k}'`).join(", ")})`);
-  const query = `select coalesce(json_agg(json_build_object('kind', kind, 'model', model, 'tokens_in', tokens_in, 'tokens_out', tokens_out)), '[]') from public.ai_generations where ${where.join(" and ")}`;
+  const query = `select coalesce(json_agg(json_build_object('kind', kind, 'model', model, 'tokens_in', tokens_in, 'tokens_out', tokens_out)), '[]') from public.ai_generations where ${costWhere(since, kinds)}`;
   const rows = JSON.parse(await must(["psql", url, "-Atc", query])) as Generation[];
   const priced = costTable(rows, table);
   for (const r of priced) {
     console.log([r.kind.padEnd(16), r.model.padEnd(18), String(r.calls).padStart(4), String(r.tokensIn).padStart(9), String(r.tokensOut).padStart(9), r.rupees === null ? "  no price" : `₹${r.rupees.toFixed(2)}`.padStart(10)].join(" "));
   }
-  const total = priced.reduce((sum, r) => sum + (r.rupees ?? 0), 0);
-  console.log(`${priced.reduce((n, r) => n + r.calls, 0)} calls since ${since}: ₹${total.toFixed(2)}`);
+  console.log(totalLine(priced, since));
 }
 
 if (import.meta.main) {

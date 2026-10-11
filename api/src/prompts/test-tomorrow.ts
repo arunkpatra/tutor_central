@@ -4,7 +4,6 @@ import { type TestTomorrowInput, TestTomorrowOutput } from "../schemas.js";
 import { MESSAGE, spokenDay, whoLines } from "./message.js";
 import { VOICE } from "./shared.js";
 
-export { spokenDay };
 
 /** Test tomorrow in the parent's language (P10-TestTomorrow), with the English beside it for the tutor. The student
  *  is named, so the call needs their consent (start_ai_generation). The app signs it (Phase 14). */

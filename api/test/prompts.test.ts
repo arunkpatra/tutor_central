@@ -15,6 +15,11 @@ import { request as gapReportRequest } from "../src/prompts/gap-report.js";
 import { request as mockRequest } from "../src/prompts/mock.js";
 import { request as parseSchoolRequest } from "../src/prompts/parse-school.js";
 import { request as testTomorrowRequest } from "../src/prompts/test-tomorrow.js";
+import { request as weeklyNoteRequest } from "../src/prompts/note.js";
+import { request as readMarksRequest } from "../src/prompts/read-marks.js";
+import { ReadMarksOutput } from "../src/schemas.js";
+import { request as notOnTrackRequest } from "../src/prompts/not-on-track.js";
+import type { NotOnTrackInput, WeeklyNoteInput } from "../src/schemas.js";
 
 test("a paper asks Sonnet at medium effort for sections, marks and answers that add up", () => {
   const input = GenerateInput.parse({ kind: "paper", subject: "Mathematics", classLevel: "Class 10 Maths", topic: "Quadratic equations" });
@@ -178,7 +183,7 @@ test("the gap report asks for one line per day left, from the tallies", () => {
 });
 
 test("test tomorrow writes in the parent's language with the English beside, on Haiku, signed by the tutor", () => {
-  const r = testTomorrowRequest({ kind: "test_tomorrow", centreId: "c", studentId: "s", studentName: "Dev Kumar", tutorName: "Meera Nair", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2", revise: "balancing equations" });
+  const r = testTomorrowRequest({ kind: "test_tomorrow", centreId: "c", studentId: "s", studentName: "Dev Kumar", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2", revise: "balancing equations" });
   expect(r.model).toBe("claude-haiku-5-5");
   expect(r.text).toContain("Hindi");
   expect(r.text).toContain("Thursday 8 October");
@@ -205,4 +210,33 @@ test("the mock asks for two to six skills across the paper so By skill groups (U
   const skills = new Set(SAMPLE.mock.sections.flatMap((s) => s.questions.map((q) => q.skill)));
   expect(skills.size).toBeGreaterThanOrEqual(2);
   expect(skills.size).toBeLessThanOrEqual(6);
+});
+
+const parent = { kind: "", centreId: "c", studentId: "s", studentName: "Dev Kumar", tutorName: "Meera Nair", parentName: "Ramesh Kumar", centreName: "Bright Minds", classLevel: "8", language: "hi" };
+
+test("the note asks only for what its facts hold: a week with nothing taught says so, and no taught line is asked for", () => {
+  const empty = { ...parent, kind: "note", week: { monday: "2026-10-05", taught: [], practise: [], coming: ["Shapes and angles"] } } as unknown as WeeklyNoteInput;
+  const r = weeklyNoteRequest(empty);
+  expect(r.text).toContain("Taught: nothing new this week.");
+  expect(r.text).not.toContain("what was taught");
+  expect(r.text).not.toContain("what the student got right");
+  expect(r.text).toContain("what is coming");
+  const full = { ...empty, week: { monday: "2026-10-05", taught: ["Angles"], right: "4 of 5 checks", practise: ["Naming angles"], coming: [] } } as unknown as WeeklyNoteInput;
+  const f = weeklyNoteRequest(full).text;
+  expect(f).toContain("what was taught, what the student got right and what to practise at home");
+  expect(f).not.toContain("what is coming");
+});
+
+test("the not-on-track message asks for what helps at home only when the phone gave it", () => {
+  const without = { ...parent, kind: "not_on_track", hard: ["Balancing equations"], reasons: [], doing: "the worked example in the next class" } as unknown as NotOnTrackInput;
+  expect(notOnTrackRequest(without).system).not.toContain("what helps at home");
+  expect(notOnTrackRequest({ ...without, atHome: "five equations a day" }).system).toContain("what helps at home");
+});
+
+test("reading marks asks for names within the output's limits and leaves the schema room (api/CLAUDE.md)", () => {
+  const system = readMarksRequest([], "Diya Pillai", ["Mathematics"]).system;
+  expect(system).toContain("a test's name at most 100 characters");
+  expect(system).toContain("a subject at most 60 characters");
+  const row = { subject: "s".repeat(80), test: "t".repeat(120), date: null, score: 1, max: 2 };
+  expect(ReadMarksOutput.safeParse({ marks: [row] }).success).toBe(true);
 });

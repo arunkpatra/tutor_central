@@ -1,4 +1,5 @@
 import type { AIKind, V1Kind } from "./db.js";
+import { first } from "./prompts/message.js";
 
 /** The one answer shape for a failure: a status the app maps to its board's words, and the words themselves. */
 export type ApiError = { status: 400 | 401 | 403 | 422 | 429 | 502 | 503; body: Record<string, unknown> };
@@ -23,7 +24,7 @@ export const errors = {
   consent: (): ApiError => ({ status: 403, body: { error: "Agree to the notice before the first photo.", reason: "consent" } }),
   studentConsent: (studentName?: string): ApiError => ({
     status: 403,
-    body: { error: studentName ? `${studentName.trim().split(/\s+/)[0]}'s parent hasn't agreed yet.` : "The parent hasn't agreed yet.", reason: "student_consent" },
+    body: { error: studentName ? `${first(studentName)}'s parent hasn't agreed yet.` : "The parent hasn't agreed yet.", reason: "student_consent" },
   }),
   member: (): ApiError => ({ status: 403, body: { error: "sign in again", reason: "member" } }),
   /** V1's kinds have a daily limit; the V2 kinds share the centre's monthly allowance (migration 0013). */

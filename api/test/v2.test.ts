@@ -253,11 +253,12 @@ test("a note for a student whose parent has not agreed is refused before any cal
   expect(claude.requests).toHaveLength(0);
 });
 
-test("a note with no taught skills leaves that sentence out and keeps the attendance line", async () => {
+test("a note with no taught skills says nothing new (decision 2), asks for no taught line and keeps the attendance", async () => {
   const claude = fakeClaude({ answer: SAMPLE.note });
   await post(app(claude, fakeDb()), "/ai/make", { kind: "note", centreId, ...student, language: "en", week: { ...week, taught: [], right: undefined, attendance: "absent all week (3 classes)" } });
   const text = claude.requests[0]?.text ?? "";
-  expect(text).not.toContain("Taught:");
+  expect(text).toContain("Taught: nothing new this week.");
+  expect(text).not.toContain("what was taught");
   expect(text).not.toContain("Got right:");
   expect(text).toContain("Attendance: absent all week (3 classes).");
   expect(claude.requests[0]?.system).toContain("leave out");
@@ -344,4 +345,10 @@ test("an unfit message is refused in words about the message, never about a topi
     expect(await r.json()).toEqual({ error: "Couldn't write this message. Try again." });
     expect(claude.requests[0]?.system).toContain("the English at most 700 characters");
   }
+});
+
+test("a body the schema refuses is a 400 marked invalid, so the app never shows the schema's words", async () => {
+  const r = await post(app(), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week: { ...week, right: "x".repeat(121) } });
+  expect(r.status).toBe(400);
+  expect(((await r.json()) as { reason?: string }).reason).toBe("invalid");
 });

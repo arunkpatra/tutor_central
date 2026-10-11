@@ -71,7 +71,7 @@ test("kindOf tells the school kinds apart", () => {
   expect(kindOf(parseSchoolRequest({ text: null, image: { mediaType: "image/jpeg", base64: "AAAA", bytes: 3 }, today: "2026-10-07", schools: [], classLevels: [] }))).toBe("parse_school");
   expect(kindOf(mockRequest({ kind: "mock", centreId: "c", classLevel: "8", subject: "Science", title: "T", portions: ["x"], pattern: { marks: 25, durationMinutes: 40 } }))).toBe("mock");
   expect(kindOf(gapReportRequest({ kind: "gap_report", centreId: "c", studentId: "s", classLevel: "8", subject: "Science", daysLeft: 1, bySkill: [{ skill: "x", right: 1, of: 2 }] }))).toBe("gap_report");
-  expect(kindOf(testTomorrowRequest({ kind: "test_tomorrow", centreId: "c", studentId: "s", studentName: "D", tutorName: "M", centreName: "B", language: "hi", subject: "Science", title: "T", date: "2026-10-08" }))).toBe("test_tomorrow");
+  expect(kindOf(testTomorrowRequest({ kind: "test_tomorrow", centreId: "c", studentId: "s", studentName: "D", centreName: "B", language: "hi", subject: "Science", title: "T", date: "2026-10-08" }))).toBe("test_tomorrow");
 });
 
 test("the local script reads a photo as two exams and a message as the board's three items", () => {
