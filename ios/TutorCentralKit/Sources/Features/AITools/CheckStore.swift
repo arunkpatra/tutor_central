@@ -172,6 +172,11 @@ import Observation
         preset != nil
     }
 
+    /// A mock's marks saved: Back goes back to where Mark from a photo started, not to the pages (hand run 9).
+    public var leavesVisitOnBack: Bool {
+        skipsScheme && saved
+    }
+
     /// Before any call: offline it is refused with the pages kept; a mock's marking needs the student's consent.
     func mayCheck() async -> Bool {
         guard await online() else {

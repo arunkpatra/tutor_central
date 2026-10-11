@@ -168,4 +168,22 @@ import Testing
         offline.addPages([Self.page])
         #expect(await !offline.checkFromPages() && offline.stage == .pages)
     }
+
+    /// Hand run 9: once a mock's marks are saved, Back leaves the whole visit; before Save, or for a check begun here,
+    /// Back is one step.
+    @Test func backLeavesTheVisitOnceAMocksMarksAreSaved() async {
+        let store = await Self.make()
+        store.addPages([Self.page])
+        await store.check()
+        #expect(!store.leavesVisitOnBack)
+        #expect(await store.save())
+        #expect(store.leavesVisitOnBack)
+        let own = await Self.make(preset: nil)
+        own.studentID = FakeStudentsRepository.dev
+        own.addPages([Self.page])
+        own.scheme = .typed("Q1 (1) b")
+        await own.check()
+        #expect(await own.save())
+        #expect(!own.leavesVisitOnBack)
+    }
 }

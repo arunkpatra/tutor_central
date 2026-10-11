@@ -27,7 +27,10 @@ extension RootView {
                         shell.tabs.push(.checkPaper(visit))
                     },
                     gapReport: GapReportActions(openToday: { shell.openToday(batch: $0) }),
-                    gapUsed: { student in shell.schoolItemsChanged?([student]) }
+                    gapUsed: { student in
+                        shell.recordChanged += 1
+                        shell.schoolItemsChanged?([student])
+                    }
                 ),
                 boardState: launch.flatMap(Self.artefactBoardState)
             )

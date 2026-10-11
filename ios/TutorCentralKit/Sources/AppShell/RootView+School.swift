@@ -66,6 +66,7 @@ extension RootView {
                         markPaper: { student, mock, exam in markMock(student, mock: mock, exam: exam) },
                         openGapReport: { exam, student in shell.tabs.push(.schoolGapReport(exam, student)) }
                     ),
+                    recordChanged: shell.recordChanged,
                     back: { shell.tabs.remove(route) }
                 )
             case .schoolAsk:
@@ -95,7 +96,10 @@ extension RootView {
             calendar: DayHeading.india
         )
         store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
-        store.onUsed = { [shell] student in shell.schoolItemsChanged?([student]) }
+        store.onUsed = { [shell] student in
+            shell.recordChanged += 1
+            shell.schoolItemsChanged?([student])
+        }
         return store
     }
 
@@ -276,17 +280,24 @@ struct ItemScreen: View {
     @State private var store: ItemStore
     let boardState: ItemBoardState?
     let actions: ItemActions
+    /// A mark saved or a gap report used while the page sat under it: it reads itself again.
+    let recordChanged: Int
     let back: () -> Void
 
-    init(store: ItemStore, boardState: ItemBoardState?, actions: ItemActions, back: @escaping () -> Void) {
+    init(
+        store: ItemStore, boardState: ItemBoardState?, actions: ItemActions, recordChanged: Int,
+        back: @escaping () -> Void
+    ) {
         _store = State(initialValue: store)
         self.boardState = boardState
         self.actions = actions
+        self.recordChanged = recordChanged
         self.back = back
     }
 
     var body: some View {
         ItemView(store: store, boardState: boardState, actions: actions, back: back)
+            .onChange(of: recordChanged) { Task { await store.load() } }
     }
 }
 

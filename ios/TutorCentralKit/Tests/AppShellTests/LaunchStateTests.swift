@@ -363,4 +363,14 @@ struct SchoolLaunchStateTests {
         )
         #expect(marks.count == 2)
     }
+
+    /// Hand run 9: after a mock's marks were saved, Back landed on the pages step (Check again) — a preset's visit is
+    /// left whole, back to where Mark from a photo started.
+    @Test func leavingAPresetsResultLeavesTheWholeCheck() {
+        let id = UUID()
+        #expect(RootView.leavingCheck(id, preset: true) == [
+            .checkResult(id), .checkScheme(id), .checkPages(id), .checkPaper(id),
+        ])
+        #expect(RootView.leavingCheck(id, preset: false) == [.checkResult(id), .checkScheme(id)])
+    }
 }

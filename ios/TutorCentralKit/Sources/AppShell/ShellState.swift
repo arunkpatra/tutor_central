@@ -61,6 +61,8 @@ struct AbsenceAsk: Identifiable, Hashable {
     var absenceAlert: AbsenceAsk?
     /// What an added, changed or deleted item reached: Today makes an open plan again for those students (Task 17).
     @ObservationIgnored var schoolItemsChanged: (@MainActor (Set<UUID>) -> Void)?
+    /// Marks saved or undone and gap reports used: an exam's page on the stack reads itself again (hand run 9).
+    var recordChanged = 0
     /// A mock's Mark from a photo, by the Check a paper visit it opens.
     @ObservationIgnored var checkPresets: [UUID: CheckPreset] = [:]
     /// One AI store per centre: a call outlives its screen, and Recent and History are read once.

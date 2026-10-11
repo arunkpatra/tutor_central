@@ -19,10 +19,17 @@ public struct CheckResultView: View {
     @Environment(ToastCenter.self) private var toasts: ToastCenter?
     @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
-    public init(store: CheckStore, boardState: CheckBoardState? = nil, backToPages: @escaping () -> Void) {
+    /// Back once a mock's marks are saved: the whole visit off the stack (AppShell's).
+    let leaveVisit: (() -> Void)?
+
+    public init(
+        store: CheckStore, boardState: CheckBoardState? = nil, backToPages: @escaping () -> Void,
+        leaveVisit: (() -> Void)? = nil
+    ) {
         self.store = store
         self.boardState = boardState
         self.backToPages = backToPages
+        self.leaveVisit = leaveVisit
     }
 
     public var body: some View {
@@ -110,7 +117,13 @@ public struct CheckResultView: View {
     }
 
     @ViewBuilder private var marks: some View {
-        BackRow(title: "Suggested marks", action: ("Share", { sharing = true })) { dismiss() }
+        BackRow(title: "Suggested marks", action: ("Share", { sharing = true })) {
+            if store.leavesVisitOnBack, let leaveVisit {
+                leaveVisit()
+            } else {
+                dismiss()
+            }
+        }
         if let result = store.result {
             Card(.hero) {
                 VStack(alignment: .leading, spacing: Tokens.tileGap) {
