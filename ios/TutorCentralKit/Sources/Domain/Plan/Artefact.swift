@@ -296,14 +296,20 @@ public struct Artefact: Hashable, Sendable, Codable, Identifiable {
     public let generationID: UUID?
     /// The exam it serves (the mock, a gap report).
     public let schoolItemID: UUID?
+    /// "make" for material made from Make something (migration 0026); nil for the plan's.
+    public let madeFrom: String?
+    /// Whom Make made it for, from the content's `made_for`.
+    public let madeFor: MakeFor?
 
     public init(
         id: UUID, kind: ArtefactKind, source: ArtefactSource, title: String, content: ArtefactContent,
         photoPath: String?, studentID: UUID?, planID: UUID?, regeneratedFrom: UUID?, madeAt: Date,
-        generationID: UUID? = nil, schoolItemID: UUID? = nil
+        generationID: UUID? = nil, schoolItemID: UUID? = nil, madeFrom: String? = nil, madeFor: MakeFor? = nil
     ) {
         self.generationID = generationID
         self.schoolItemID = schoolItemID
+        self.madeFrom = madeFrom
+        self.madeFor = madeFor
         self.id = id
         self.kind = kind
         self.source = source
@@ -314,6 +320,11 @@ public struct Artefact: Hashable, Sendable, Codable, Identifiable {
         self.planID = planID
         self.regeneratedFrom = regeneratedFrom
         self.madeAt = madeAt
+    }
+
+    /// Made from Make something rather than by the plan.
+    public var isMade: Bool {
+        madeFrom == "make"
     }
 
     /// "8 questions", "4 steps", nil. "8 questions · for Dev, Meher and Nikhil · made today, 16:40" needs the names:
