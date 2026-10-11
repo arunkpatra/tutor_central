@@ -38,6 +38,11 @@ extension CloseStore {
         if bookFailures[id] != nil {
             await keep(readBook(id))
         }
+        // A student the plan has takes its checks again, with no call.
+        if planChecks(id) != nil {
+            takePlanChecks(index)
+            return
+        }
         await makeChecks([index])
     }
 

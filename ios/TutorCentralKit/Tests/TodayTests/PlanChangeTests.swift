@@ -54,6 +54,21 @@ import Testing
         #expect(after.first { $0.kind == .homework }?.artefactID == groupOne.sheet)
     }
 
+    @Test func afterTheCloseThePlanCannotBeChanged() async throws {
+        var board = FakePlansRepository.boardPlan(changed: false, done: true)
+        board.sessionID = UUID()
+        let plans = FakePlansRepository(plans: [board], artefacts: FakePlansRepository.boardArtefacts)
+        let ai = FakeAIRepository()
+        let store = await PlanStoreTests().store(plans: plans, ai: ai)
+        #expect(store.isClosed)
+        await store.move(student: FakeStudentsRepository.riya, to: 1)
+        await store.skipHomework(student: FakeStudentsRepository.nikhil)
+        await store.useToday(choices: PlanChoices(groups: 2, subjects: [:]))
+        let after = try await plan(plans)
+        #expect(after.items == board.items)
+        #expect(ai.sheets.isEmpty && plans.made.isEmpty)
+    }
+
     @Test func skipHomeworkStrikesTheBitAndSaysSkippedToday() async throws {
         let store = await PlanStoreTests().store()
         await store.skipHomework(student: FakeStudentsRepository.nikhil)

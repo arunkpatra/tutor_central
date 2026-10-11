@@ -112,6 +112,55 @@ import Testing
         #expect(dev.checks == .skipped && dev.homeworkGiven)
     }
 
+    @Test func aHomeworkSkippedTodayClosesWithNoneGiven() async throws {
+        let plans = FakePlansRepository.evening()
+        let plan = try #require(try await plans.plan(id: FakePlansRepository.planID, centre: Self.centre))
+        let item = try #require(plan.items.first { $0.studentID == FakeStudentsRepository.dev && $0.kind == .homework })
+        try await plans.skip(item: item.id, centre: Self.centre)
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let store = await tests.store(attendance: attendance, plans: plans)
+        let dev = try #require(student(store, FakeStudentsRepository.dev))
+        #expect(!dev.homeworkGiven)
+        guard case .rows = dev.checks else {
+            Issue.record("Dev keeps his checks")
+            return
+        }
+        #expect(await store.done())
+        #expect(attendance.closes.last?.homework.contains { $0.studentID == FakeStudentsRepository.dev } == false)
+    }
+
+    @Test func aStudentWithNoBookIsNotOfferedChecksTheirTapsCouldNotKeep() async throws {
+        let store = await tests.store(plans: .evening())
+        let nikhil = try #require(student(store, FakeStudentsRepository.nikhil))
+        #expect(nikhil.checks == .none)
+        guard case .rows = try #require(student(store, FakeStudentsRepository.dev)).checks else {
+            Issue.record("Dev has his book and his checks")
+            return
+        }
+    }
+
+    @Test func offlineWithNoCopyOfTheBookThePlansChecksSayTheyNeedTheConnection() async throws {
+        let textbooks = FakeTextbooksRepository.evening()
+        textbooks.failure = URLError(.notConnectedToInternet)
+        let store = await tests.store(textbooks: textbooks, plans: .evening())
+        #expect(try #require(student(store, FakeStudentsRepository.meher)).checks == .failed(CloseStore.offlineWords))
+    }
+
+    @Test func tryAgainBackOnlineTakesThePlansChecksWithNoCall() async throws {
+        let textbooks = FakeTextbooksRepository.evening()
+        textbooks.failure = URLError(.notConnectedToInternet)
+        let ai = FakeAIRepository()
+        let store = await tests.store(ai: ai, textbooks: textbooks, plans: .evening())
+        textbooks.failure = nil
+        let meher = try #require(store.students.firstIndex { $0.id == FakeStudentsRepository.meher })
+        await store.retryChecks(for: meher)
+        guard case .rows = store.students[meher].checks else {
+            Issue.record("the plan's checks after Try again")
+            return
+        }
+        #expect(ai.checkCalls.isEmpty)
+    }
+
     @Test func aCloseFromACachedPlanMakesNoCall() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         let cache = PlanCache(centre: Self.centre, directory: directory)

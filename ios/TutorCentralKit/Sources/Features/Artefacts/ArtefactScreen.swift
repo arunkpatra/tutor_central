@@ -13,11 +13,13 @@ public struct ArtefactsContext {
     let now: @Sendable () -> Date
     let calendar: Calendar
     let online: () async -> Bool
+    /// The plans kept on this iPhone: offline the material opens from them.
+    let planCache: PlanCache?
 
     public init(
         workspace: Workspace, register: any Register, plans: any PlansRepository, ai: any AIRepository,
         photos: any PhotoStore, now: @escaping @Sendable () -> Date, calendar: Calendar,
-        online: @escaping () async -> Bool
+        online: @escaping () async -> Bool, planCache: PlanCache? = nil
     ) {
         self.workspace = workspace
         self.register = register
@@ -27,6 +29,7 @@ public struct ArtefactsContext {
         self.now = now
         self.calendar = calendar
         self.online = online
+        self.planCache = planCache
     }
 }
 
@@ -54,20 +57,11 @@ public struct ArtefactScreen: View {
             case .sheet?:
                 SheetView(store: sheetStore(), actions: actions, boardState: boardState)
             case .workedExample?:
-                WorkedExampleView(
-                    store: WorkedExampleStore(
-                        artefactID: artefactID, workspace: context.workspace, register: context.register,
-                        plans: context.plans
-                    ),
-                    showsTwo: boardState == .secondStep
-                )
+                WorkedExampleView(store: exampleStore(), showsTwo: boardState == .secondStep)
             case .brief?:
                 BriefView(store: briefStore())
             case .figure?:
-                FigureScreen(store: FigureStore(
-                    artefactID: artefactID, workspace: context.workspace, register: context.register,
-                    plans: context.plans
-                ))
+                FigureScreen(store: figureStore())
             case nil where gone:
                 SheetView(store: sheetStore(), actions: actions, boardState: nil)
             default:
@@ -75,10 +69,28 @@ public struct ArtefactScreen: View {
             }
         }
         .task {
-            let found = try? await context.plans.artefact(id: artefactID, centre: context.workspace.centre.id)
-            kind = found?.kind
+            let found = try? await ArtefactRead.read(
+                artefactID, centre: context.workspace.centre.id, plans: context.plans, cache: context.planCache
+            )
+            kind = found?.artefact.kind
             gone = found == nil
         }
+    }
+
+    private func exampleStore() -> WorkedExampleStore {
+        let store = WorkedExampleStore(
+            artefactID: artefactID, workspace: context.workspace, register: context.register, plans: context.plans
+        )
+        store.planCache = context.planCache
+        return store
+    }
+
+    private func figureStore() -> FigureStore {
+        let store = FigureStore(
+            artefactID: artefactID, workspace: context.workspace, register: context.register, plans: context.plans
+        )
+        store.planCache = context.planCache
+        return store
     }
 
     private func briefStore() -> BriefStore {
@@ -87,6 +99,7 @@ public struct ArtefactScreen: View {
             ai: context.ai, now: context.now, calendar: context.calendar
         )
         store.online = context.online
+        store.planCache = context.planCache
         return store
     }
 
@@ -96,6 +109,7 @@ public struct ArtefactScreen: View {
             ai: context.ai, photos: context.photos, now: context.now, calendar: context.calendar
         )
         store.online = context.online
+        store.planCache = context.planCache
         return store
     }
 }

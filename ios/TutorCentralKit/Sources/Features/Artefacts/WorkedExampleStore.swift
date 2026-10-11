@@ -14,6 +14,7 @@ import Observation
     /// The steps shown, the first to start ("1 of 4").
     public private(set) var shown = 1
     public private(set) var loadFailed: String?
+    @ObservationIgnored public var planCache: PlanCache?
     let artefactID: UUID?
     let workspace: Workspace?
     let register: (any Register)?
@@ -40,16 +41,14 @@ import Observation
         let centre = workspace.centre.id
         await register?.loadIfNeeded()
         do {
-            guard let found = try await plans.artefact(id: artefactID, centre: centre),
-                  case let .workedExample(example) = found.content else {
+            guard let found = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache),
+                  case let .workedExample(example) = found.artefact.content else {
                 loadFailed = "This worked example isn't here any more."
                 return
             }
-            artefact = found
+            artefact = found.artefact
             self.example = example
-            if let planID = found.planID {
-                plan = try await plans.plan(id: planID, centre: centre)
-            }
+            plan = found.plan
             loadFailed = nil
         } catch {
             loadFailed = "Couldn't load the worked example. Check your connection and try again."

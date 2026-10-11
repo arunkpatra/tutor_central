@@ -75,4 +75,27 @@ import Testing
         let store = try await store(plans: plans, artefact: riyas.id)
         #expect(store.line.contains("for Riya"))
     }
+
+    @Test func offlineTheSheetOpensFromThePlansCopy() async throws {
+        let evening = FakePlansRepository.evening()
+        let plan = try #require(try await ArtefactTest.plan(evening))
+        let cache = PlanCache(
+            centre: ArtefactTest.centre,
+            directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        )
+        cache.keep(plan, at: .now)
+        let plans = FakePlansRepository()
+        plans.nextError = URLError(.notConnectedToInternet)
+        let id = try #require(plan.artefact(group: 1, kind: .sheet, homework: true)?.id)
+        let store = await SheetStore(
+            artefactID: id, workspace: FakeCentreRepository.meeraWorkspace, register: ArtefactTest.register(),
+            plans: plans, ai: FakeAIRepository(), photos: FakePhotoStore(), now: { ArtefactTest.at1640 },
+            calendar: DayHeading.india
+        )
+        store.planCache = cache
+        await store.load()
+        #expect(store.loadFailed == nil)
+        #expect(store.sheet?.questions.count == 8)
+        #expect(store.line == "8 questions · for Dev, Meher and Nikhil · made today, 16:40")
+    }
 }

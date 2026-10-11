@@ -17,6 +17,7 @@ import Observation
     /// The system alert's words for a refused or failed write (U33).
     public var message: String?
     @ObservationIgnored public var online: () async -> Bool = { true }
+    @ObservationIgnored public var planCache: PlanCache?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -52,11 +53,13 @@ import Observation
     public func load() async {
         await register.loadIfNeeded()
         do {
-            guard let found = try await plans.artefact(id: artefactID, centre: centre) else {
+            guard let found = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache)
+            else {
                 loadFailed = "This brief isn't here any more."
                 return
             }
-            await show(found)
+            artefact = found.artefact
+            plan = found.plan
             loadFailed = nil
         } catch {
             loadFailed = "Couldn't load the brief. Check your connection and try again."

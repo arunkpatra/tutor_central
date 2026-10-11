@@ -126,10 +126,17 @@ public extension PlanStore {
         }
     }
 
+    /// The batch closed from this plan: its lines are the record now, so nothing in it changes (Change and the line
+    /// menus go).
+    var isClosed: Bool {
+        record?.sessionID != nil
+    }
+
     // MARK: - Helpers
 
-    /// Online, or refused in words.
+    /// Online and not yet closed; offline refused in words.
     private func allowed() async -> Bool {
+        guard !isClosed else { return false }
         guard await online() else {
             message = OfflineRefusal.words(for: .changePlan)
             return false

@@ -90,6 +90,9 @@ public enum ClosePhase: Hashable, Sendable {
     var history: [CheckRecord] = []
     var homeworkHistory: [HomeworkRecord] = []
     var sessions: [AttendanceSession] = []
+    /// The students' books are read (or their copies): a plan's check row then stands only on a skill of the student's
+    /// own.
+    var booksRead = false
     /// Today's session of the batch when it was already closed (opened again).
     var closedSession: AttendanceSession?
 
@@ -177,6 +180,7 @@ public enum ClosePhase: Hashable, Sendable {
         async let sessionsRead: Void = readSessions()
         async let recordsRead: Void = readRecords(members.map(\.id))
         _ = await (planRead, sessionsRead, recordsRead)
+        booksRead = true
         refreshPlanChecks()
         closedSession = sessions.first { $0.date == day && $0.classID == classID && $0.closedAt != nil }
         var kept = closedSession.map { session in history.filter { $0.sessionID == session.id } } ?? []

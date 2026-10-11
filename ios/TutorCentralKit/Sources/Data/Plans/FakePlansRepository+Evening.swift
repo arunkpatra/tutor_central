@@ -166,7 +166,8 @@ public extension FakePlansRepository {
         }
         return PlanRecord(
             id: planID, classID: FakeClassesRepository.evening.id, date: Day(year: 2026, month: 10, day: 7)!,
-            madeAt: madeAt, groups: boardGroups, items: items, artefacts: [], sessionID: nil
+            madeAt: madeAt, groups: boardGroups, items: items, artefacts: [],
+            sessionID: done ? UUID(uuidString: "abababab-0000-0000-0000-000000000099") : nil
         )
     }
 
