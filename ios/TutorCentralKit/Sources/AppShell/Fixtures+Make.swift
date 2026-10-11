@@ -9,7 +9,7 @@ extension Fixtures {
     static let makeForms: [LaunchState: MakeKind] = [
         .makeSheet: .sheet, .makeFor: .sheet, .makeForStudent: .sheet, .makeMaking: .sheet,
         .makeWorkedExample: .workedExample, .makeFigure: .figure, .makeBrief: .brief, .makeMock: .mock,
-        .makeNote: .noteToParent,
+        .makeNote: .noteToParent, .makeSheetNoClass: .sheet,
     ]
 
     /// The states that read the Evening batch's register, books and plan.
@@ -43,6 +43,9 @@ extension Fixtures {
         case .makeMock:
             form.studentID = dev
             form.exam = form.exams.first { $0.id == FakeSchoolItemsRepository.scienceTest3 }.map(ExamChoice.item)
+        case .makeSheetNoClass:
+            // The review's R-app-2: Riya before her class is set; the helper names the way out.
+            form.choose(.student(FakeStudentsRepository.riya))
         case .makeNote:
             form.studentID = dev
             form.tutorSays = "Ask him to show you the balancing steps"
