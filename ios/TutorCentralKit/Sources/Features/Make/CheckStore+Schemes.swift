@@ -75,9 +75,9 @@ public extension CheckStore {
         schemeChosenOnIntro = scheme.isValid
     }
 
-    /// The tile's value: "Science unit test 3 · the mock", a paper's title, "Type a scheme".
+    /// The tile's value: "Science unit test 3 · the mock", a paper's title, a preset's mock, "Type a scheme".
     var introSchemeTitle: String {
-        guard schemeChosenOnIntro else { return "Type a scheme" }
+        guard skipsScheme else { return "Type a scheme" }
         if case .typed = scheme {
             return "Typed scheme"
         }

@@ -70,6 +70,24 @@ import Testing
         #expect(ai.checks == [Self.preset.scheme] && ai.checkStudents == [FakeStudentsRepository.dev])
     }
 
+    /// Hand run 8: Mark from a photo opens the intro with the mock's key as the scheme, not "Type a scheme".
+    @Test func thePresetsMockNamesTheIntrosSchemeTile() async {
+        let store = await Self.make()
+        #expect(store.introSchemeTitle == "Science unit test · mock")
+    }
+
+    /// Hand run 8: a paper chosen in place of the preset's mock marks no exam and is named for itself.
+    @Test func anotherSchemeChosenOverThePresetLeavesTheExamAlone() async throws {
+        let store = await Self.make()
+        await store.loadPapers()
+        let paper = try #require(store.papers.first)
+        store.choose(SchemeChoice(
+            id: paper.id, title: "Quadratic equations", line: "", scheme: .paper(generationID: paper.id), mark: nil
+        ))
+        #expect(store.markTarget?.schoolItemID == nil && store.markTarget?.artefactID == nil)
+        #expect(store.introSchemeTitle != "Science unit test · mock")
+    }
+
     @Test func saveWritesTheMarkWithItsQuestionsAndTheNotesLine() async throws {
         let record = FakeRecordRepository(marks: [])
         let students = FakeStudentsRepository(students: Self.students())
