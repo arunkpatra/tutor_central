@@ -49,11 +49,42 @@ public struct MakeFor: Hashable, Sendable, Codable {
     public let title: String
     /// "Class 8 Science · Balancing equations", "Class 8 · Science", "Science".
     public let line: String
+    /// What it was made from, so Make it again asks the same: the level, the subject, the skills (a brief's chapter).
+    public let level: ClassLevel?
+    public let subject: String?
+    public let skills: [String]?
+    /// A sheet's "Key at the end": the key prints after the questions when shared.
+    public let keyAtEnd: Bool?
 
-    public init(target: MakeTarget, title: String, line: String) {
+    public init(
+        target: MakeTarget, title: String, line: String, level: ClassLevel? = nil, subject: String? = nil,
+        skills: [String]? = nil, keyAtEnd: Bool? = nil
+    ) {
         self.target = target
         self.title = title
         self.line = line
+        self.level = level
+        self.subject = subject
+        self.skills = skills
+        self.keyAtEnd = keyAtEnd
+    }
+
+    /// The same words with the sheet's key choice.
+    public func keepingKey(_ key: Bool) -> MakeFor {
+        MakeFor(target: target, title: title, line: line, level: level, subject: subject, skills: skills, keyAtEnd: key)
+    }
+
+    /// The same words for another level, subject and skill (a form's choice).
+    public func making(level: ClassLevel?, subject: String, skills: [String]) -> MakeFor {
+        MakeFor(
+            target: target,
+            title: title,
+            line: line,
+            level: level,
+            subject: subject,
+            skills: skills,
+            keyAtEnd: keyAtEnd
+        )
     }
 
     public var eyebrow: String {

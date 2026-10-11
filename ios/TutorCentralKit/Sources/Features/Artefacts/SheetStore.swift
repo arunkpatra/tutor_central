@@ -112,6 +112,9 @@ import UIKit
 
     /// "Group 1 · Class 8 Science · Chemical reactions".
     public var eyebrow: String {
+        if group == nil, let madeFor = artefact?.madeFor {
+            return ArtefactWords.eyebrow(madeFor: madeFor)
+        }
         guard let group else { return "Sheet" }
         return ["Group \(group.number)", ArtefactWords.classSubject(group, register: register), group.chapter]
             .compactMap(\.self).filter { !$0.isEmpty }.joined(separator: " · ")
@@ -156,8 +159,13 @@ import UIKit
         let answers = sheet.questions.map { PDFLine(number: $0.number, text: $0.answer, marks: nil) }
         return PDFSheet(
             title: title, instructions: sheet.instructions,
-            blocks: [.section(title: nil, lines: questions)] + (form == .key ? [.key(answers)] : [])
+            blocks: [.section(title: nil, lines: questions)] + (showsKeyInPDF ? [.key(answers)] : [])
         )
+    }
+
+    /// The key with Key, and on a Make sheet made with "Key at the end".
+    private var showsKeyInPDF: Bool {
+        form == .key || artefact?.madeFor?.keyAtEnd == true
     }
 
     public var boardQuestion: SheetQuestion? {

@@ -34,7 +34,7 @@ public enum Fixtures {
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
-            textbooks: state == .noteCanDoNoChange ? FakeTextbooksRepository.evening()
+            textbooks: state == .noteCanDoNoChange || makeStates.contains(state) ? FakeTextbooksRepository.evening()
                 : noteDayStates.contains(state) ? noteDayTextbooks()
                 : notOnTrackStates.contains(state) ? FakeTextbooksRepository.notOnTrack()
                 : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
@@ -295,7 +295,7 @@ extension Fixtures {
         case _ where notOnTrackStates.contains(state): (
                 notOnTrackStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
-        case _ where noteDayStates.contains(state) || closeStates.contains(state): (
+        case _ where noteDayStates.contains(state) || closeStates.contains(state) || makeStates.contains(state): (
                 FakeStudentsRepository.eveningSeed,
                 FakeClassesRepository.withEvening
             )

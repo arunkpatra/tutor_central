@@ -88,6 +88,9 @@ import Observation
 
     /// "Class 8 Science · Chemical reactions".
     public var eyebrow: String {
+        if group == nil, let madeFor = artefact?.madeFor {
+            return ArtefactWords.eyebrow(madeFor: madeFor)
+        }
         guard let group else { return "Brief" }
         return [ArtefactWords.classSubject(group, register: register), group.chapter].compactMap(\.self)
             .filter { !$0.isEmpty }.joined(separator: " · ")
@@ -148,6 +151,10 @@ import Observation
     /// A new brief for the chapter, in this one's place in the plan; offline it is refused in words; a failure keeps
     /// this one and says so.
     public func makeAgain() async {
+        if let artefact, artefact.isMade {
+            await makeAgainMade(artefact)
+            return
+        }
         guard !making, let artefact, let group, let item else { return }
         guard await online() else {
             message = OfflineRefusal.words(for: .regenerate)
@@ -167,6 +174,35 @@ import Observation
                     generationID: made.generationID, regeneratedFrom: artefact.id
                 ),
                 to: ArtefactLink(plan: planID, group: item.groupNo, student: nil, itemKind: .brief), centre: centre
+            )
+            await show(kept)
+        } catch {
+            message = Self.againFailed
+        }
+    }
+
+    /// A Make brief made again for its class, subject and chapter, kept as Make's (`made_from`, the target).
+    private func makeAgainMade(_ artefact: Artefact) async {
+        guard !making, let made = artefact.madeFor, let level = made.level, let chapter = made.skills?.first else {
+            return
+        }
+        guard await online() else {
+            message = OfflineRefusal.words(for: .regenerate)
+            return
+        }
+        making = true
+        defer { making = false }
+        do {
+            let answer = try await ai.makeBrief(
+                classLevel: level, subject: made.subject ?? "", chapter: chapter, centre: centre
+            )
+            guard !Task.isCancelled else { return }
+            let new = NewArtefact(
+                kind: .brief, source: .made, title: artefact.title, content: .brief(answer.brief), photoPath: nil,
+                generationID: answer.generationID, regeneratedFrom: artefact.id
+            )
+            let kept = try await plans.keep(
+                ArtefactWords.carrying(new, from: artefact), to: ArtefactWords.madeLink(artefact), centre: centre
             )
             await show(kept)
         } catch {

@@ -73,6 +73,9 @@ import Observation
 
     /// "Balancing equations · Class 8 Science": the group's skill and class, from the plan line it serves.
     public var eyebrow: String {
+        if let madeFor = artefact?.madeFor, artefact?.planID == nil {
+            return ArtefactWords.eyebrow(madeFor: madeFor)
+        }
         guard let artefact, let plan, let register,
               let number = plan.items.first(where: { $0.artefactID == artefact.id })?.groupNo,
               let group = plan.groups.first(where: { $0.number == number })

@@ -110,6 +110,9 @@ public struct MockMark: Hashable, Sendable {
 
     /// "Science unit test 3 · Fri 16 Oct"; a student's own exam starts with their name.
     public var eyebrow: String {
+        if exam == nil, let madeFor = artefact?.madeFor {
+            return ArtefactWords.eyebrow(madeFor: madeFor)
+        }
         guard let exam else { return mock?.title ?? "Mock test" }
         var parts: [String] = []
         if case let .student(id) = exam.audience, let student = register.student(id) {
@@ -151,10 +154,14 @@ public struct MockMark: Hashable, Sendable {
 
     // MARK: - Mark from a photo
 
-    /// The exam's students by name; without the exam, the group's members whose lines the mock serves.
+    /// The exam's students by name; without the exam, the group's members whose lines the mock serves, or the student
+    /// Make made it for.
     public var students: [Student] {
         if let exam {
             return SchoolItemRules.students(for: exam, in: register.activeStudents).sorted { $0.name < $1.name }
+        }
+        if let student = artefact?.studentID.flatMap(register.student), plan == nil {
+            return [student]
         }
         let ids = Set(plan?.items.filter { $0.artefactID == artefactID }.compactMap(\.studentID) ?? [])
         return register.activeStudents.filter { ids.contains($0.id) }.sorted { $0.name < $1.name }
@@ -187,19 +194,22 @@ public struct MockMark: Hashable, Sendable {
         }
         making = true
         defer { making = false }
-        let level = students.compactMap(\.classLevel).max() ?? .eight
+        let level = artefact.madeFor?.level ?? students.compactMap(\.classLevel).max() ?? .eight
         let request = MockRequest(
-            classLevel: level, subject: exam?.subject ?? "", title: mock.title, portions: mock.portions,
+            classLevel: level, subject: exam?.subject ?? artefact.madeFor?.subject ?? "", title: mock.title,
+            portions: mock.portions,
             pattern: mock.pattern, schoolItemID: artefact.schoolItemID ?? mock.schoolItemID
         )
         do {
             let made = try await ai.makeMock(request, centre: centre)
+            let new = NewArtefact(
+                kind: .mock, source: .made, title: artefact.title, content: .mock(made.content), photoPath: nil,
+                generationID: made.generationID, regeneratedFrom: artefact.id
+            )
             let kept = try await plans.keep(
-                NewArtefact(
-                    kind: .mock, source: .made, title: artefact.title, content: .mock(made.content), photoPath: nil,
-                    generationID: made.generationID, regeneratedFrom: artefact.id
-                ),
-                to: link(item: request.schoolItemID), centre: centre
+                ArtefactWords.carrying(new, from: artefact),
+                to: artefact.isMade ? ArtefactWords.madeLink(artefact) : link(item: request.schoolItemID),
+                centre: centre
             )
             self.artefact = kept
             if let planID = kept.planID {

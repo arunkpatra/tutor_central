@@ -14,10 +14,17 @@ public extension FakePlansRepository {
             india.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 16, minute: minute)) ?? Date()
         }
         let group = MakeFor(
-            target: .group(plan: planID, number: 1), title: "Group 1", line: "Class 8 Science · Balancing equations"
+            target: .group(plan: planID, number: 1), title: "Group 1", line: "Class 8 Science · Balancing equations",
+            level: .eight, subject: "Science", skills: ["Balancing equations"]
         )
-        let dev = MakeFor(target: .student(FakeStudentsRepository.dev), title: "For Dev", line: "Class 8 Science")
-        let level = MakeFor(target: .classLevel(.eight), title: "Class 8", line: "Science · Chemical reactions")
+        let dev = MakeFor(
+            target: .student(FakeStudentsRepository.dev), title: "For Dev", line: "Class 8 Science", level: .eight,
+            subject: "Science", skills: ["Chemical reactions"]
+        )
+        let level = MakeFor(
+            target: .classLevel(.eight), title: "Class 8", line: "Science · Chemical reactions", level: .eight,
+            subject: "Science", skills: ["Chemical reactions"]
+        )
         let mock = MockRequest(
             classLevel: .eight, subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions"],
             pattern: .default(for: .eight), schoolItemID: nil

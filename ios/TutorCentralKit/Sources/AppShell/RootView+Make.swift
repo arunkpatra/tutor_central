@@ -169,6 +169,48 @@ extension RootView {
         }
     }
 
+    /// A Make kind's form with its own store (kept in the view's `@State`), the launch state's fields, and the outcome
+    /// shown: the artefact's screen when the form or Make's home is on top, else it waits in Recent.
+    func makeFormView(_ kind: MakeKind, in workspace: Workspace) -> some View {
+        let make = makeStore(for: workspace)
+        let context = MakeContext(
+            workspace: workspace, register: register(for: workspace), plans: deps.plans, textbooks: deps.textbooks,
+            schoolItems: deps.schoolItems, ai: deps.ai,
+            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, now: deps.now,
+            calendar: DayHeading.india, defaults: deps.cachesRegister ? .standard : nil
+        )
+        return MakeFormView(
+            store: MakeFormStore(kind: kind, context: context, make: make),
+            boardState: launch.flatMap(Fixtures.makeBoardState),
+            setUp: launch.map { state in { Fixtures.prepareMakeForm($0, for: state) } },
+            onOutcome: { outcome, form in showMade(outcome, form: form, kind: kind) }
+        )
+    }
+
+    private func showMade(_ outcome: MakeOutcome, form: MakeFormStore, kind: MakeKind) {
+        let top = shell.tabs.paths[shell.tabs.selected]?.last
+        let onTop = top == .makeForm(kind) || top == .make
+        switch outcome {
+        case let .made(artefact):
+            if onTop {
+                shell.tabs.push(.artefact(artefact.id))
+            }
+        case let .opensExisting(id):
+            if onTop {
+                shell.tabs.push(.artefact(id))
+            }
+        case let .opensNote(student, noteDay, words):
+            shell.noteWords[student] = words
+            shell.tabs.push(.note(student, noteDay))
+        case .refused:
+            if let alert = form.alert {
+                notices.show(alert)
+            }
+        default:
+            break
+        }
+    }
+
     /// A kind's form: V1's for the three V1 kinds (#122's forms, unchanged), Make's for the others.
     nonisolated static func formRoute(for kind: MakeKind) -> Route {
         kind.v1Kind.map(Route.aiForm) ?? .makeForm(kind)
@@ -194,6 +236,8 @@ extension RootView {
             let board = launch.flatMap(Self.aiBoardState)
             Group {
                 switch route {
+                case let .makeForm(kind):
+                    makeFormView(kind, in: workspace)
                 case let .aiForm(kind):
                     GenerateFormView(
                         store: store, kind: kind, boardState: board, showsFocus: launch.map(Self.showsFocus) ?? false

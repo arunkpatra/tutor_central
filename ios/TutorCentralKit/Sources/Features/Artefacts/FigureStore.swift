@@ -60,6 +60,9 @@ import Observation
 
     /// "Fractions as parts of a whole · Class 5 Mathematics".
     public var eyebrow: String {
+        if group == nil, let madeFor = artefact?.madeFor {
+            return ArtefactWords.eyebrow(madeFor: madeFor)
+        }
         let skill = group?.skill ?? artefact?.title
         return [skill, group.flatMap { ArtefactWords.classSubject($0, register: register) }].compactMap(\.self)
             .filter { !$0.isEmpty }.joined(separator: " · ")

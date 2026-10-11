@@ -32,6 +32,8 @@ import Foundation
     /// A delay for one kind of the plan's calls only (a sheet still on its way while the rest have landed).
     public var delayByKind: [Call: Duration] = [:]
     public private(set) var sheets: [[String]] = []
+    /// Every sheet asked for, whole (Make's form sends the level, the subject and the skills only).
+    public private(set) var sheetRequests: [SheetRequest] = []
     public private(set) var reasons: [String?] = []
     public private(set) var examples: [String] = []
     public private(set) var figures: [FigureSpec.Kind] = []
@@ -125,6 +127,7 @@ import Foundation
 
     public func makeSheet(_ request: SheetRequest, centre _: UUID) async throws(APIFailure) -> MadeSheet {
         sheets.append(request.skills)
+        sheetRequests.append(request)
         reasons.append(request.reason)
         try await answer(.sheet)
         let light = request.forHomework && request.classLevel.homeworkIsLight

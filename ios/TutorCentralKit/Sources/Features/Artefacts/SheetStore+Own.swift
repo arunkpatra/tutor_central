@@ -47,6 +47,10 @@ public extension SheetStore {
             message = OfflineRefusal.words(for: .ownSheet)
             return
         }
+        if let own = artefact, own.isMade {
+            await keepMadeAgain(made, over: own)
+            return
+        }
         do {
             try await plans.link(items: items.map(\.id), to: made, centre: centre)
             if let sheet = try await plans.artefact(id: made, centre: centre) {
@@ -73,8 +77,28 @@ public extension SheetStore {
         return artefact != nil
     }
 
+    /// A Make sheet has no plan line: the made one is kept again over the tutor's own, so Recent shows it.
+    private func keepMadeAgain(_ made: UUID, over own: Artefact) async {
+        do {
+            guard let sheet = try await plans.artefact(id: made, centre: centre) else {
+                message = Self.ownFailed
+                return
+            }
+            let again = NewArtefact(
+                kind: .sheet, source: .made, title: sheet.title, content: sheet.content, photoPath: nil,
+                generationID: sheet.generationID, regeneratedFrom: own.id
+            )
+            let kept = try await plans.keep(
+                ArtefactWords.carrying(again, from: own), to: ArtefactWords.madeLink(own), centre: centre
+            )
+            await reload(kept)
+        } catch {
+            message = Self.ownFailed
+        }
+    }
+
     private func keepOwn(_ content: OwnContent, photoPath: String?) async {
-        guard let artefact, let link = link() else {
+        guard let artefact, let link = artefact.isMade ? ArtefactWords.madeLink(artefact) : link() else {
             message = Self.ownFailed
             return
         }
@@ -84,13 +108,11 @@ public extension SheetStore {
         // Replacing the tutor's own sheet keeps its title, which already names the made one.
         let title = isOwn ? artefact.title : "Your sheet · \(base.lowercased())"
         do {
-            let kept = try await plans.keep(
-                NewArtefact(
-                    kind: .sheet, source: .own, title: title, content: .own(content),
-                    photoPath: photoPath, generationID: nil, regeneratedFrom: made
-                ),
-                to: link, centre: centre
+            let own = NewArtefact(
+                kind: .sheet, source: .own, title: title, content: .own(content), photoPath: photoPath,
+                generationID: nil, regeneratedFrom: made
             )
+            let kept = try await plans.keep(ArtefactWords.carrying(own, from: artefact), to: link, centre: centre)
             await reload(kept)
         } catch {
             message = Self.ownFailed

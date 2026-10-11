@@ -88,6 +88,9 @@ public struct NoteContext {
     public internal(set) var canRetry = false
     var kept: Artefact?
     var content: NoteContent?
+    /// The tutor's own words from Make's note (Phase 15): in the request and kept in the note; with a note already kept
+    /// this week, a new one is written with them.
+    public var tutorSays: String?
     let studentID: UUID
     let noteDay: Day
     let context: NoteContext

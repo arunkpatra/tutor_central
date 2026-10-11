@@ -119,26 +119,26 @@ public enum MakeRules {
         }
     }
 
-    /// The target's words for the artefact's eyebrow and Recent.
+    /// The target's words for the artefact's eyebrow and Recent, with what it is made from.
     public static func forWords(_ target: MakeTarget, roster: MakeRoster, subject: String, skill: String?) -> MakeFor {
         let level = level(for: target, roster: roster)
         let topic = skill.flatMap { $0.isEmpty ? nil : $0 }
-        let joined = { (parts: [String?]) in
-            parts.compactMap { $0?.isEmpty == false ? $0 : nil }.joined(separator: " · ")
-        }
-        let levelSubject = [level?.title, subject.isEmpty ? nil : subject].compactMap(\.self).joined(separator: " ")
-        switch target {
-        case let .student(id):
-            let name = roster.student(id)?.firstName ?? "a student"
-            return MakeFor(target: target, title: "For \(name)", line: joined([levelSubject, topic]))
-        case let .group(_, number):
-            return MakeFor(target: target, title: "Group \(number)", line: joined([levelSubject, topic]))
+        let levelSubject = joined([level?.title, subject], by: " ")
+        let words: (title: String, line: String) = switch target {
+        case let .student(id): ("For \(roster.student(id)?.firstName ?? "a student")", joined([levelSubject, topic]))
+        case let .group(_, number): ("Group \(number)", joined([levelSubject, topic]))
         case let .batch(id):
-            let name = roster.classes.first { $0.id == id }?.name ?? "A batch"
-            return MakeFor(target: target, title: name, line: joined([level?.title, subject, topic]))
-        case let .classLevel(level):
-            return MakeFor(target: target, title: level.title, line: joined([subject, topic]))
+            (roster.classes.first { $0.id == id }?.name ?? "A batch", joined([level?.title, subject, topic]))
+        case let .classLevel(level): (level.title, joined([subject, topic]))
         }
+        return MakeFor(
+            target: target, title: words.title, line: words.line, level: level, subject: subject,
+            skills: topic.map { [$0] } ?? []
+        )
+    }
+
+    private static func joined(_ parts: [String?], by separator: String = " · ") -> String {
+        parts.compactMap { $0?.isEmpty == false ? $0 : nil }.joined(separator: separator)
     }
 
     private static func current(_ book: RecordBook?, subject: String) -> String? {

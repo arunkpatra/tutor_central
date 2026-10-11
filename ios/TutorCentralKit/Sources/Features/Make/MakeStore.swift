@@ -34,6 +34,11 @@ import Observation
     private var madeError: String?
     /// The list's copy on this iPhone (AppShell's).
     public var madeCache: CachedRead<[Artefact]>?
+    /// The call running, its kind and the creating card's title (Make's one call at a time).
+    public internal(set) var running: Running?
+    /// The last call's failure, for its form's error row.
+    public internal(set) var failure: Failure?
+    @ObservationIgnored var task: Task<Artefact?, Never>?
 
     let register: any Register
     let plans: any PlansRepository
