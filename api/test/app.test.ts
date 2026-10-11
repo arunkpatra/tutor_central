@@ -28,13 +28,15 @@ test("an unknown route → 404 in words", async () => {
   expect(await r.json()).toEqual({ error: "no such route" });
 });
 
-test("the V2 routes of a later phase validate, then answer 501 until it", async () => {
+test("the parents' kinds are live (Phase 14): a whole body reaches Claude, a skeleton one is a 400", async () => {
   const centreId = "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718";
   const studentId = "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60719";
   const path = "/ai/make";
-  const body = { centreId, kind: "can_do", studentId, studentName: "Anu", tutorName: "Meera", language: "en", ladder: {} };
+  const ladder = { movedUp: [], canDo: ["Read short sentences"], atHome: "One page a day", next: [] };
+  const body = { centreId, kind: "can_do", studentId, studentName: "Anu", tutorName: "Meera", centreName: "Bright Minds", classLevel: "2", language: "en", ladder };
   const r = await post(path, JSON.stringify(body));
-  expect({ status: r.status, body: await r.json() }).toEqual({ status: 501, body: { error: "not yet", route: path } });
+  expect(r.status).toBe(422); // this app's fake refuses every call: the body reached Claude
+  expect((await post(path, JSON.stringify({ ...body, ladder: {} }))).status).toBe(400);
   const bad = await post(path, JSON.stringify({ centreId }));
   expect(bad.status).toBe(400);
   const anon = await app.request(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });

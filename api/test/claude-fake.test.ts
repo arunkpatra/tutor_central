@@ -8,11 +8,16 @@ import { request as placementRequest } from "../src/prompts/placement.js";
 import { request as planRequest } from "../src/prompts/plan.js";
 import { request as sheetRequest } from "../src/prompts/sheet.js";
 import { request as workedExampleRequest } from "../src/prompts/worked-example.js";
-import { PaperOutput } from "../src/schemas.js";
+import { MessageOutput, PaperOutput, ReadMarksOutput } from "../src/schemas.js";
 import { request as gapReportRequest } from "../src/prompts/gap-report.js";
 import { request as mockRequest } from "../src/prompts/mock.js";
 import { request as parseSchoolRequest } from "../src/prompts/parse-school.js";
 import { request as testTomorrowRequest } from "../src/prompts/test-tomorrow.js";
+import { request as canDoRequest } from "../src/prompts/can-do.js";
+import { request as checkPaperRequest } from "../src/prompts/check-paper.js";
+import { request as noteRequest } from "../src/prompts/note.js";
+import { request as notOnTrackRequest } from "../src/prompts/not-on-track.js";
+import { request as readMarksRequest } from "../src/prompts/read-marks.js";
 
 const request = { model: "claude-sonnet-5-5" as const, effort: "medium" as const, system: "s", text: "t", schema: PaperOutput };
 
@@ -80,4 +85,23 @@ test("the local mock's marks sum to the pattern asked for", () => {
   const r = mockRequest({ kind: "mock", centreId: "c", classLevel: "8", subject: "Science", title: "T", portions: ["x"], pattern: { marks: 40, durationMinutes: 60 } });
   const made = localScript(r).answer as { sections: { questions: { marks: number }[] }[] };
   expect(made.sections.flatMap((s) => s.questions).reduce((n, q) => n + q.marks, 0)).toBe(40);
+});
+
+test("the fake tells the four parents' kinds apart by their words, and its samples fit their schemas", () => {
+  const who = { kind: "note" as const, centreId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718", studentId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60719", studentName: "Dev Kumar", tutorName: "Meera", centreName: "Bright Minds", classLevel: "8" as const, language: "hi" as const };
+  const note = noteRequest({ ...who, week: { monday: "2026-10-05", taught: ["Balancing equations"], practise: [], coming: [] } });
+  const canDo = canDoRequest({ ...who, kind: "can_do", ladder: { movedUp: [], canDo: ["Read short sentences"], atHome: "One page a day", next: [] } });
+  const notOnTrack = notOnTrackRequest({ ...who, kind: "not_on_track", hard: ["Balancing equations"], reasons: [], doing: "the worked example" });
+  const page = { mediaType: "image/jpeg" as const, base64: "AAAA", bytes: 3 };
+  expect(kindOf(note)).toBe("note");
+  expect(kindOf(canDo)).toBe("can_do");
+  expect(kindOf(notOnTrack)).toBe("not_on_track");
+  expect(kindOf(readMarksRequest([page], "Hemanth", []))).toBe("read_marks");
+  expect(kindOf(checkPaperRequest([page], "scheme", "Dev"))).toBe("check_paper");
+  expect(MessageOutput.safeParse(SAMPLE.note).success).toBe(true);
+  expect(MessageOutput.safeParse(SAMPLE.can_do).success).toBe(true);
+  expect(MessageOutput.safeParse(SAMPLE.not_on_track).success).toBe(true);
+  expect(ReadMarksOutput.safeParse(SAMPLE.read_marks).success).toBe(true);
+  expect(MessageOutput.safeParse(SAMPLE.test_tomorrow).success).toBe(true);
+  expect(SAMPLE.test_tomorrow.message).not.toContain("Meera");
 });
