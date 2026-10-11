@@ -87,6 +87,15 @@ struct NextStepTests: ParentFixtures {
             == "Step back to Counting atoms in a formula, then Balancing equations.")
     }
 
+    @Test func steppingBackFromTheBooksFirstSkillSaysItIsTaughtAgain() {
+        let skill = "Name the steps of crop production"
+        #expect(NextStep.stepBack.meaning(language: .hindi, skill: skill, before: nil)
+            == "Nothing comes before it in the book, so it is taught again with the worked example")
+        let line = "Nothing comes before Name the steps of crop production in the book; teach it again with the "
+            + "worked example."
+        #expect(NextStep.stepBack.nextLine(skill: skill, before: nil) == line)
+    }
+
     @Test func aStudentCachedBeforePhase14ReadsWithNoStep() throws {
         let data = try JSONEncoder().encode(dev)
         var object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])

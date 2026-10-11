@@ -21,7 +21,12 @@ public enum NextStep: String, CaseIterable, Hashable, Sendable, Codable {
         switch self {
         case .tellParent: return "A message in \(language.title); the worked example in the next class"
         case .teachAgain: return "\(skill) in the next class, a set after"
-        case .stepBack: return "\(before ?? "What comes before"), then \(Self.lowered(skill))"
+        case .stepBack:
+            // The book's first skill has nothing before it: the plan teaches it again (PlanRules.teachWords).
+            guard let before else {
+                return "Nothing comes before it in the book, so it is taught again with the worked example"
+            }
+            return "\(before), then \(Self.lowered(skill))"
         case .addToChecks: return "Three questions on it, spaced over the next weeks"
         case .leave: return "The plan carries on; the status stays"
         }
@@ -32,7 +37,9 @@ public enum NextStep: String, CaseIterable, Hashable, Sendable, Codable {
         switch self {
         case .tellParent: "Tell the parent, then teach again with the worked example."
         case .teachAgain: "Teach again with the worked example."
-        case .stepBack: "Step back to \(before ?? "what comes before"), then \(skill ?? "the skill")."
+        case .stepBack:
+            before.map { "Step back to \($0), then \(skill ?? "the skill")." }
+                ?? "Nothing comes before \(skill ?? "it") in the book; teach it again with the worked example."
         case .addToChecks: "Add \(skill ?? "it") to the checks."
         case .leave: "Leave it for now; the plan carries on."
         }
