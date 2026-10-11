@@ -198,19 +198,43 @@ struct HomeworkSection: View {
     }
 }
 
-/// School (P10-Student-End): the empty row until Phase 13 brings the school's items.
+/// School (P10-Student-End): the student's next five items, See all opening the School tab; the empty row when there
+/// is none.
 struct SchoolSection: View {
     let line: String
+    let rows: [StudentDetailStore.SchoolLine]
+    let seeAll: () -> Void
+    let open: (UUID) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("School")
+            SectionHeader("School", action: rows.isEmpty ? nil : ("See all", seeAll))
             Card {
-                EmptyRow(
-                    symbol: "building.columns", title: line,
-                    line: "Tests, homework and notices from the school arrive here in a later build."
-                )
+                if rows.isEmpty {
+                    EmptyRow(
+                        symbol: "building.columns", title: line,
+                        line: "Tests, homework and notices from the school appear here."
+                    )
+                } else {
+                    VStack(spacing: 0) {
+                        ForEach(rows) { row in
+                            SchoolRow(
+                                day: row.day, date: row.date, title: row.title, line: row.line, kind: kind(row.kind)
+                            ) { open(row.id) }
+                                .rowDivider(row.id != rows.last?.id)
+                        }
+                    }
+                }
             }
+        }
+    }
+
+    private func kind(_ kind: SchoolItemKind) -> KindChipKind {
+        switch kind {
+        case .exam: .exam
+        case .homework: .homework
+        case .notice: .notice
+        case .holiday: .holiday
         }
     }
 }

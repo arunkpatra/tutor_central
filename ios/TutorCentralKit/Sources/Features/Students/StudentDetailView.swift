@@ -91,7 +91,10 @@ public struct StudentDetailView: View {
                         ChecksSection(lines: checks)
                     }
                     HomeworkSection(rows: store.homework, open: actions.openArtefact, set: setHomework)
-                    SchoolSection(line: store.schoolEmptyLine)
+                    SchoolSection(
+                        line: store.schoolEmptyLine, rows: store.schoolRows, seeAll: navigation.openSchool,
+                        open: navigation.openSchoolItem
+                    )
                     MessagesSection(rows: store.messages).id(Anchor.end)
                     if consentAgreed {
                         consentSection

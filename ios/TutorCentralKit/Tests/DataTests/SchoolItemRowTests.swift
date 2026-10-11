@@ -49,6 +49,28 @@ struct SchoolItemRowTests {
         #expect(rows.compactMap(\.item).isEmpty)
     }
 
+    @Test func aSharedDraftWritesWhenItWasShared() throws {
+        var draft = SchoolItemDraft(
+            kind: .notice, audience: .school(UUID()), title: "PTM", subject: nil, date: Day(
+                year: 2026,
+                month: 10,
+                day: 9
+            ),
+            source: .sharedText
+        )
+        draft.receivedAt = Date(timeIntervalSince1970: 0)
+        let json = try #require(String(
+            bytes: JSONEncoder().encode(SchoolItemWrite(
+                draft: draft,
+                photoPath: nil,
+                centre: UUID(),
+                confirmedAt: Date()
+            )),
+            encoding: .utf8
+        ))
+        #expect(json.contains("\"received_at\":\"1970-01-01T00:00:00Z\""))
+    }
+
     @Test func aDraftWritesItsAudienceAsColumns() throws {
         let vidya = try #require(UUID(uuidString: "44444444-4444-4444-4444-444444444441"))
         let draft = SchoolItemDraft(

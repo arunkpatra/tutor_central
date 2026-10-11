@@ -9,6 +9,8 @@ public enum DeepLink: Equatable, Sendable {
     case fees(month: String?)
     case attendance(date: String?, classID: UUID?)
     case event(UUID)
+    /// An item on the School tab (`tutorcentral://school/<id>`, Phase 13).
+    case school(UUID)
     case authCallback
 
     public init?(url: URL) {
@@ -24,6 +26,7 @@ public enum DeepLink: Equatable, Sendable {
         case ("fees", _): self = .fees(month: value("month"))
         case ("attendance", _): self = .attendance(date: value("date"), classID: value("class").flatMap(UUID.init))
         case let ("event", id?): self = .event(id)
+        case let ("school", id?): self = .school(id)
         case ("auth-callback", _): self = .authCallback
         default: return nil
         }
@@ -35,6 +38,7 @@ public enum DeepLink: Equatable, Sendable {
         case .today, .authCallback: .today
         case .student: .students
         case .fees: .fees
+        case .school: .school
         case .attendance, .event: .more
         }
     }

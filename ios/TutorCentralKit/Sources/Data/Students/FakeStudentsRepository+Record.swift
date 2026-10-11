@@ -3,7 +3,8 @@ import Foundation
 
 extension FakeStudentsRepository {
     /// The V2 record of the fixtures (plan decision 19, the 10.2 boards): Hemanth, Akshita and Ananya in class 10 at
-    /// Vidya Niketan (CBSE), Hemanth on watch since Friday 2 October; Dev, Meher and Nikhil in class 8; Riya in class 5
+    /// Vidya Niketan (CBSE), Hemanth on watch since Friday 2 October; Dev, Meher and Nikhil in class 8 there; Riya in
+    /// class 5
     /// at Vidya Niketan, joined Monday 5 October, not known yet; Sahil in class 2 on the ladder. Bir Bikram Singh and
     /// Lakshmi Menon stay as V1 made them.
     nonisolated static func withRecord(_ student: Student) -> Student {
@@ -29,6 +30,8 @@ extension FakeStudentsRepository {
             changed.trackSince = at(2, 18)
         case "Dev Kumar", "Meher Shah", "Nikhil Das":
             changed.classLevel = .eight
+            // Phase 13's boards: class 8 at Vidya Niketan (P10-School-List, -Confirm).
+            changed.schoolID = FakeSchoolsRepository.vidya.id
         case "Riya Sharma":
             changed.classLevel = .five
             changed.schoolID = FakeSchoolsRepository.vidya.id

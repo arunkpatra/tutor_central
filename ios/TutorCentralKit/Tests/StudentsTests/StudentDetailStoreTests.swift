@@ -140,3 +140,29 @@ import Testing
         #expect(devDetail.showsFeeButtons)
     }
 }
+
+@MainActor struct StudentDetailSchoolTests {
+    @Test func theSchoolSectionListsTheStudentsNextFiveItems() async {
+        let register = RegisterStore(
+            workspace: FakeCentreRepository.meeraWorkspace,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed),
+            classes: FakeClassesRepository(classes: FakeClassesRepository.seed), cache: nil,
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await register.load()
+        let dev = StudentDetailStore(
+            id: FakeStudentsRepository.dev, register: register, attendance: FakeAttendanceRepository(),
+            messages: FakeMessageLogRepository(),
+            schoolItems: FakeSchoolItemsRepository(items: FakeSchoolItemsRepository.boardItems),
+            now: { FakeCountsRepository.fixedNow }
+        )
+        await dev.load()
+        // Dev's own test, the class 8 homework and exam, Dasara; not the class 10 PTM.
+        #expect(dev.schoolRows.map(\.title) == [
+            "Science unit test", "Maths Ex 3.2, Q1 to 10", "Science unit test 3", "Dasara holidays",
+        ])
+        #expect(dev.schoolRows[0].line == "Thu 8 Oct · chapters 1 and 2")
+        #expect(dev.schoolRows[3].line == "Mon 19 to Wed 21 Oct")
+        #expect(dev.schoolRows[0].day == "Thu" && dev.schoolRows[0].date == "8 Oct")
+    }
+}

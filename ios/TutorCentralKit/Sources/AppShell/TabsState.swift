@@ -1,6 +1,7 @@
 import Domain
 import Foundation
 import Observation
+import School
 import SwiftUI
 
 /// Where the tutor is in the tabs: the selected tab and each tab's own stack (information-architecture.md, "Tabs").
@@ -69,6 +70,9 @@ import SwiftUI
         case let .student(id):
             paths[link.tab] = [.student(id)]
             return true
+        case let .school(id):
+            paths[link.tab] = [.schoolItem(id)]
+            return true
         case .fees: return true
         }
     }
@@ -123,4 +127,9 @@ enum Route: Hashable {
     case checkPages(UUID)
     case checkScheme(UUID)
     case checkResult(UUID)
+    /// School (Phase 13): "Check what was read" from a share, a photo, the pasteboard or by hand; an item's page; Ask
+    /// parents to forward.
+    case schoolRead(ReadSource)
+    case schoolItem(UUID)
+    case schoolAsk
 }

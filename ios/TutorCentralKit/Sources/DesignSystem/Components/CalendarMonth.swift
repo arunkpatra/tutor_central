@@ -1,5 +1,21 @@
 import SwiftUI
 
+/// A school item's dot on the calendar (components.md 10.5): an exam `overdue`, homework `accentText`, a holiday `ok`,
+/// a
+/// notice `text3`.
+public enum CalendarDot: Hashable, Sendable, CaseIterable {
+    case exam, homework, holiday, notice
+
+    var color: ColorToken {
+        switch self {
+        case .exam: Tokens.overdue
+        case .homework: Tokens.accentText
+        case .holiday: Tokens.ok
+        case .notice: Tokens.text3
+        }
+    }
+}
+
 /// Weekday initials caption text3; day numbers subhead 600, 40 high; today in a 36 accent disc with textOnAccent 700;
 /// a chosen day (not today) in a surface2 disc; a day with classes or events carries a 4 pt accentText dot under the
 /// number; other months' days hidden. In a card: padding 12 14, radiusCard. The month title headline with chevron
@@ -9,6 +25,8 @@ public struct CalendarMonth: View {
     let today: Date
     @Binding var selected: Date?
     let marked: Set<Date>
+    /// The School tab's dots by day (start of day), drawn in place of `marked`'s accent dot.
+    var dotsByDay: [Date: [CalendarDot]] = [:]
     let calendar: Calendar
     /// The month and week forms draw their own card; the schedule's sits in a card with its month header.
     let framed: Bool
@@ -33,6 +51,27 @@ public struct CalendarMonth: View {
             marked: marked,
             calendar: calendar
         )
+    }
+
+    /// The School tab's month (P10-School-Calendar): one 4 pt dot per kind of item on a day, exam first, three at most;
+    /// no card of its own (it sits in the caller's with the month header, as the schedule's does).
+    public init(month: Date, today: Date, selected: Binding<Date?>, dots: [Date: [CalendarDot]], calendar: Calendar) {
+        self.init(
+            days: Self.monthDays(month, calendar),
+            today: today,
+            selected: selected,
+            marked: [],
+            calendar: calendar,
+            framed: false
+        )
+        dotsByDay = Dictionary(dots.map { (calendar.startOfDay(for: $0.key), $0.value) }) { first, second in
+            first + second
+        }
+    }
+
+    /// One dot per kind in the kinds' order (exam, homework, holiday, notice), three at most.
+    nonisolated static func dots(for kinds: [CalendarDot]) -> [CalendarDot] {
+        Array(CalendarDot.allCases.filter(kinds.contains).prefix(3))
     }
 
     /// The Monday-to-Sunday week that holds `week`.
@@ -121,7 +160,14 @@ public struct CalendarMonth: View {
                             Circle().fill(Tokens.surface2.color)
                         }
                     }
-                if marked.contains(calendar.startOfDay(for: day)), !isToday, !isSelected {
+                let kinds = Self.dots(for: dotsByDay[calendar.startOfDay(for: day)] ?? [])
+                if !kinds.isEmpty, !isToday, !isSelected {
+                    HStack(spacing: Self.dot / 2) {
+                        ForEach(kinds, id: \.self) { kind in
+                            Circle().fill(kind.color.color).frame(width: Self.dot, height: Self.dot)
+                        }
+                    }
+                } else if marked.contains(calendar.startOfDay(for: day)), !isToday, !isSelected {
                     Circle().fill(Tokens.accentText.color).frame(width: Self.dot, height: Self.dot)
                 }
             }

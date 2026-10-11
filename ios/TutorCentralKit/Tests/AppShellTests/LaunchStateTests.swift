@@ -114,7 +114,6 @@ struct LaunchStateTests {
             #expect(Fixtures.initialState(for: state) == .ready(Fixtures.meeraWorkspace))
             #expect(RootView.tab(for: state) == .more && RootView.initialRoutes(for: state) == [.attendance])
         }
-        #expect(RootView.tab(for: .laterSchool) == .school)
         #expect(RootView.attendanceBoardState(.attendanceClassMenu) == .classMenu)
         #expect(RootView.attendanceBoardState(.attendanceAlert) == .alert)
         let centre = Fixtures.meeraWorkspace.centre.id
@@ -274,5 +273,27 @@ struct LaunchStateTests {
         for state in [LaunchState.attendanceSaveFailed, .eventGone, .feesLoadFailed, .aiResultCopied] {
             #expect(Fixtures.initialState(for: state) != .signedOut)
         }
+    }
+}
+
+struct SchoolLaunchStateTests {
+    @MainActor @Test func theSchoolStatesOpenTheSchoolTab() throws {
+        #expect(LaunchState(rawValue: "later-school") == nil)
+        for name in [
+            "school-empty",
+            "school",
+            "school-calendar",
+            "school-add-menu",
+            "school-reading",
+            "school-confirm",
+            "school-confirm-edit",
+            "school-item-homework",
+            "school-item-holiday",
+        ] {
+            let state = try #require(LaunchState(rawValue: name))
+            #expect(RootView.tab(for: state) == .school, "\(name)")
+        }
+        #expect(RootView.initialRoutes(for: .schoolItemHoliday) == [.schoolItem(FakeSchoolItemsRepository.dasara)])
+        #expect(Fixtures.initialState(for: .schoolEmpty) == .ready(Fixtures.meeraWorkspace))
     }
 }

@@ -22,6 +22,14 @@ struct DeepLinkTests {
         #expect(try link("tutorcentral://auth-callback?code=x") == .authCallback)
     }
 
+    @MainActor @Test func schoolOpensTheItem() throws {
+        let id = UUID()
+        #expect(try link("tutorcentral://school/\(id)") == .school(id))
+        #expect(DeepLink.school(id).tab == .school)
+        let tabs = TabsState()
+        #expect(tabs.open(.school(id)) && tabs.selected == .school && tabs.paths[.school] == [.schoolItem(id)])
+    }
+
     @Test func anythingElseIsNil() throws {
         for text in [
             "https://example.com/today",

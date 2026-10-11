@@ -16,6 +16,7 @@ import Testing
             attendance: FakeAttendanceRepository(),
             messages: FakeMessageLogRepository(),
             schools: FakeSchoolsRepository(),
+            schoolItems: FakeSchoolItemsRepository(items: []),
             textbooks: FakeTextbooksRepository(),
             record: FakeRecordRepository(),
             plans: FakePlansRepository(),

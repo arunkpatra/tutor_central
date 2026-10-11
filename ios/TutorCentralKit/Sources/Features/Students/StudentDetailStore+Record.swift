@@ -276,6 +276,7 @@ extension StudentDetailStore {
         async let checksRead = try? record?.checks(centre: centre, students: [id], since: since)
         async let homeworkRead = try? record?.homework(centre: centre, students: [id], since: since)
         async let messagesRead = try? messageLog.messages(centre: centre, student: id)
+        async let itemsRead = try? schoolItems?.items(centre: centre)
         if let read = await chaptersRead {
             chapters = read
         }
@@ -290,6 +291,9 @@ extension StudentDetailStore {
         }
         if let read = await messagesRead {
             entries = read
+        }
+        if let read = await itemsRead {
+            items = read
         }
         recordLoaded = true
     }

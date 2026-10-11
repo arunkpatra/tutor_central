@@ -2,7 +2,7 @@
 import PackageDescription
 
 let features = [
-    "Today", "Students", "Fees", "Attendance", "Schedule", "AITools", "Settings", "Onboarding", "Artefacts",
+    "Today", "Students", "Fees", "Attendance", "Schedule", "AITools", "Settings", "Onboarding", "Artefacts", "School",
 ]
 
 let package = Package(
@@ -48,6 +48,8 @@ let package = Package(
             .testTarget(name: "AIToolsTests", dependencies: ["AITools", "Students"]),
             // A real register (Students) under the sheet's names; the feature itself sees only `Register`.
             .testTarget(name: "ArtefactsTests", dependencies: ["Artefacts", "Students"]),
+            // A real register (Students) under the School tab; the feature itself sees only `Register`.
+            .testTarget(name: "SchoolTests", dependencies: ["School", "Students"]),
         ],
     swiftLanguageModes: [.v6]
 )

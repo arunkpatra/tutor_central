@@ -81,7 +81,8 @@ import Testing
     @Test func aSchoolAddedFromTheFormJoinsTheListAndTheCountsAreRead() async throws {
         let store = make(textbooks: FakeTextbooksRepository())
         await store.load()
-        #expect(store.schoolCounts[FakeSchoolsRepository.vidya.id] == 4)
+        #expect(store
+            .schoolCounts[FakeSchoolsRepository.vidya.id] == 7) // Dev, Meher and Nikhil are there too (Phase 13)
         let made = try #require(await store.addSchool(name: "  DPS Bangalore "))
         #expect(made.name == "DPS Bangalore" && store.schools.contains(made))
     }

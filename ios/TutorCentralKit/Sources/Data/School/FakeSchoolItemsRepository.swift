@@ -31,7 +31,7 @@ import Foundation
                 id: UUID(), kind: draft.kind, audience: audience, title: draft.title, subject: draft.subject,
                 date: date,
                 endDate: draft.endDate, portions: draft.portions, sourceText: draft.sourceText, photoPath: photoPath,
-                source: draft.source, receivedAt: now, confirmedAt: now
+                source: draft.source, receivedAt: draft.receivedAt ?? now, confirmedAt: now
             )
         }
         stored += added
