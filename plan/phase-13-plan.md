@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
 > superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-Written 2026-10-11 (session 27, Fable 5.1) from `phase-13-school.md`, `docs/spec-v2.md` and the approved Phase 10 boards
+Written 2026-10-11 (session 27, Fable 5.1), approved by the owner the same day with the three Phase 13 boards ("The plan is approved; the boards are approved too"), from `phase-13-school.md`, `docs/spec-v2.md` and the approved Phase 10 boards
 (step 10.5, with the mock and the gap report of 10.4 and the student page's Marks of 10.2), plus the three Phase 13 boards
 drawn by this session for approval (row 23 of the canvas, `P13-*`). Ticked as it goes. The build runs on Opus 5.5 from
 `resume/026-phase-13-build.md`, inline, task by task, with one ledger as sessions 22, 24 and 26 kept.

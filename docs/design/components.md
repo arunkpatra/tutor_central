@@ -933,7 +933,7 @@ The texts:
 | Check a paper | Scheme "A mock or paper made here, with its key; or type a scheme." |
 | Progress | "skills made secure" · "checks right" · "not on track" ("not on track at the end" for a term) · "3 skills secure · 41% right · 2 absences" · "Reading: Sentences · Numbers: To 99" · "Placed Wed 7 Oct · 2 checks so far" · Lowest first · "Term 1 · June to September" |
 
-## Phase 13 parts (drawn 2026-10-11, session 27): reading, the exam group, Marks
+## Phase 13 parts (approved 2026-10-11, session 27): reading, the exam group, Marks
 
 **Reading card (School):** the Phase 6 creating card without a thumbnail for a text source (with the 56 × 72 thumbnail for a
 photo), in the items' place under the source well; the footer's primary disabled (opacity .45, no glow) while it reads.

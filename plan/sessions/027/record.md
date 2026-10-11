@@ -75,5 +75,5 @@ Reading only; `bun check` green from its cache (web ran, 3.6 s). No simulator ru
 
 ## Next
 
-The owner reviews the plan and the three boards. Approved, Phase 13's build on Opus 5.5 from
-`resume/026-phase-13-build.md`.
+The owner approved the plan and the three boards the same day ("The plan is approved; the boards are approved too").
+Phase 13's build on Opus 5.5 from `resume/026-phase-13-build.md`.

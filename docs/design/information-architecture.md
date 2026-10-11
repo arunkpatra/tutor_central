@@ -1217,10 +1217,10 @@ its "From the class" helper goes; the AI is sent the class level ("Class 10"); H
 Class 10 · Sun 11 Oct" (a paper made from a batch before keeps the batch's name). The Progress note is unchanged.
 
 
-## Phase 13 boards (drawn 2026-10-11, session 27): the three states no earlier step drew
+## Phase 13 boards (approved 2026-10-11, session 27): the three states no earlier step drew
 
 Row 23 of the canvas (y 49800; the title note at 49500); sources `mockups/P13-*`. Drawn with Phase 13's plan
-(`plan/phase-13-plan.md`, decision 31) for the owner's approval before PRs 5, 7 and 9 build them. Content is illustrative
+(`plan/phase-13-plan.md`, decision 31) and approved by the owner the same day, before PRs 5, 7 and 9 build them. Content is illustrative
 (the board's message read on Wednesday 7 October; the Evening batch's class 8 three on "Science unit test 3"; Hemanth's
 marks with a mock's row; Riya with none).
 

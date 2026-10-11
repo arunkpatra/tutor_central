@@ -8,11 +8,10 @@ short and true. History belongs in git and in the phase files, not here.
 leftovers in ("Agreed. proceed": an unnamed group named at the next open, a new batch's first checks from the named topic, PR
 10) and two of the ten deferred minors fold into their tasks; three Phase 13 boards drawn on row 23 of the canvas
 (P13-School-Reading, P13-Today-Revision and its light twin, P13-Student-Marks with its light twin and the empty row) and
-mirrored into `docs/design/`; `resume/026-phase-13-build.md` written. Session 26 before it: Phase 12 built (migrations 0019
+mirrored into `docs/design/`; `resume/026-phase-13-build.md` written. The owner approved the plan and the boards the same day ("The plan is approved; the boards are approved too"). Session 26 before it: Phase 12 built (migrations 0019
 and 0020, PRs #110 to #119, hand runs #120, the cost ₹4.57 a batch, TestFlight 1.0.0 (21) then (22)); #122 the AI forms by
 class level, TestFlight 1.0.0 (23). The owner's pushback rule is `docs/working/pushback.md`.
-**Next:** the owner reviews `plan/phase-13-plan.md` and approves the three boards (row 23); then Phase 13's build on Opus 5.5
-from `resume/026-phase-13-build.md`. Nothing starts before both approvals.
+**Next:** Phase 13's build on Opus 5.5 from `resume/026-phase-13-build.md` (the plan and the three boards approved 2026-10-11).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -21,7 +20,7 @@ from `resume/026-phase-13-build.md`. Nothing starts before both approvals.
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards, drawn 2026-10-11, awaiting approval |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -34,7 +33,7 @@ from `resume/026-phase-13-build.md`. Nothing starts before both approvals.
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
-| 13 School | Plan written (session 27, 2026-10-11), awaiting the owner's approval of the plan and the three boards | `phase-13-school.md`; `phase-13-plan.md`; resume 026 for the build |
+| 13 School | Plan and boards approved by the owner (2026-10-11, session 27); the build is next | `phase-13-school.md`; `phase-13-plan.md`; resume 026 for the build |
 | 14 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-14-parents.md` to `phase-16-release.md` |
 
 ## In flight

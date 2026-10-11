@@ -1,6 +1,6 @@
 # Phase 13: School
 
-**Status:** Not started. **Depends on:** Phase 12; boards 10.5.
+**Status:** Plan written and approved (session 27, 2026-10-11): `phase-13-plan.md`; the three Phase 13 boards (row 23) approved the same day. The build is next. **Depends on:** Phase 12; boards 10.5, 10.4's mock and gap report, 10.2's Marks, 10.3's To parents, the Phase 13 boards.
 
 ## Goal
 

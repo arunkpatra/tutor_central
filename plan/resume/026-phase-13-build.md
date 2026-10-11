@@ -2,8 +2,7 @@
 
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Opus 5.5
 (D17: plans on Fable, builds on Opus). The plan and the three Phase 13 boards (P13-School-Reading, P13-Today-Revision,
-P13-Student-Marks with their twins, row 23 of the canvas) must be approved by the owner before this starts; `STATE.md` says
-whether they are.
+P13-Student-Marks with their twins, row 23 of the canvas) were approved by the owner on 2026-10-11 ("The plan is approved; the boards are approved too").
 
 ---
 
