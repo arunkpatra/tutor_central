@@ -69,6 +69,74 @@ extension SchoolSamples {
         return item
     }
 
+    /// The Evening batch: Monday to Friday, 17:00 to 18:30.
+    var evening: Classroom {
+        Classroom(
+            id: UUID(uuidString: "33333333-3333-3333-3333-333333333333")!, name: "Evening batch", subject: "Science",
+            monthlyFee: nil, meetingDays: [.monday, .tuesday, .wednesday, .thursday, .friday],
+            startTime: TimeOfDay(hour: 17, minute: 0), endTime: TimeOfDay(hour: 18, minute: 30), archivedAt: nil
+        )
+    }
+
+    /// "Science unit test 3" for class 8 at Vidya Niketan on Friday 16 October, portions chapters 1 and 2.
+    var exam16: SchoolItem {
+        var item = SchoolItem.fixture(
+            kind: .exam, audience: .schoolClass(school: vidya.id, level: .eight), date: Day(
+                year: 2026,
+                month: 10,
+                day: 16
+            )!,
+            title: "Science unit test 3", portions: "Ch 1 Chemical reactions · Ch 2 Acids, bases and salts"
+        )
+        item.subject = "Science"
+        return item
+    }
+
+    /// Dev's Science chapters: Chemical reactions and Acids, bases and salts, four skills each.
+    var devChapters: [Chapter] {
+        [
+            Chapter(
+                id: UUID(uuidString: "77777777-7777-7777-7777-777777777771")!,
+                subject: "Science",
+                position: 1,
+                name: "Chemical reactions"
+            ),
+            Chapter(
+                id: UUID(uuidString: "77777777-7777-7777-7777-777777777772")!,
+                subject: "Science",
+                position: 2,
+                name: "Acids, bases and salts"
+            ),
+        ]
+    }
+
+    /// Chapter 1: two secure, "Balance a chemical equation" to revisit, one practising; chapter 2: taught, then not
+    /// started.
+    var devSkills: [Skill] {
+        let names = [
+            "Spot a chemical change", "Write a word equation", "Balance a chemical equation",
+            "Name the types of reactions",
+            "Use indicators", "Reactions with metals", "Make a salt", "pH in daily life",
+        ]
+        let states: [SkillState] = [
+            .secure,
+            .secure,
+            .revisit,
+            .practising,
+            .taught,
+            .notStarted,
+            .notStarted,
+            .notStarted,
+        ]
+        return names.enumerated().map { index, name in
+            Skill(
+                id: UUID(uuidString: String(format: "88888888-8888-8888-8888-%012d", index + 1))!,
+                chapterID: devChapters[index / 4].id, position: index % 4 + 1, name: name, state: states[index],
+                stateAt: FakeClock.oct7at1635, lastCheckedAt: nil
+            )
+        }
+    }
+
     private func sample(_ letter: Character, _ name: String, level: ClassLevel?, school: UUID?) -> Student {
         let id = UUID(uuidString: "55555555-5555-5555-5555-55555555555\(letter)")!
         return Student(
@@ -79,10 +147,12 @@ extension SchoolSamples {
 }
 
 extension SchoolItem {
-    static func fixture(kind: SchoolItemKind, audience: ItemAudience, date: Day, title: String? = nil) -> SchoolItem {
+    static func fixture(
+        kind: SchoolItemKind, audience: ItemAudience, date: Day, title: String? = nil, portions: String? = nil
+    ) -> SchoolItem {
         SchoolItem(
             id: UUID(), kind: kind, audience: audience, title: title ?? kind.rawValue.capitalized, subject: nil,
-            date: date, endDate: nil, portions: nil, sourceText: nil, photoPath: nil, source: .typed,
+            date: date, endDate: nil, portions: portions, sourceText: nil, photoPath: nil, source: .typed,
             receivedAt: FakeClock.oct7at1635, confirmedAt: FakeClock.oct7at1635
         )
     }
