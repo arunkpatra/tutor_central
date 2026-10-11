@@ -49,8 +49,9 @@ rewritten here); what Phases 12 to 14 built in their "As built" and `plan/sessio
 
 - No board, no approval, no code for anything seen (rule 1). Each state a board draws gets a `LaunchState` and its
   pictures in the pull request, both appearances where the board has both (D7). What no board redraws stays as Phases 11
-  to 14 built it. The one new board this phase needs (the website's trust page, decision 24) is drawn in the build session
-  and built only once approved; a polish row that changes what is seen beyond an approved board has its board first.
+  to 14 built it. The two new boards this phase needs
+  (the website's trust page, decision 24; U20's consent words, decision 22) are drawn in the build session's first step and
+  built only once approved; a polish row that changes what is seen beyond an approved board has its board first.
 - Nothing from V1 is renamed, dropped or narrowed in the model (D56, D26). Migration 0026 is additive: one nullable column
   and a function parameter with a default, so build 25's calls still resolve. `types.ts` regenerated and committed with it.
 - A replaced function: `security invoker`, `set search_path = ''`, `revoke all … from public, anon`, `grant execute … to
@@ -216,10 +217,9 @@ Small decisions, written here so they are not re-decided. The owner's are marked
     chooser`, `reports-progress`, `reports-progress-term`, `reports-progress-sort`, `reports-export` (with Progress),
     `kit-phase10` (both). `ai-assistant` and `ai-assistant-empty` retire (`make`, `make-empty`); the other `ai-*` states keep
     their names (V1's forms and results, unchanged). `today-ai`'s Create row opens Make.
-22. **The polish rows** the owner picks are tasks of PR 11 (one pull request per screen group), by `plan/ui-polish.md`'s
-    "How it works": a board first where what is seen changes beyond an approved board. The proposal is in "Owner's
-    questions" below; the rows this phase's own work touches are taken with their screens (U22 and U23 in PR 8, U26 in PR 9)
-    unless the owner says not to.
+22. **The polish rows** the owner took (2026-10-11): U17, U18, U20, U21, U22, U23, U26, U32, U40, U34, U11 and U19, as Task 12
+    lays them out (U22 and U23 in PR 8, U26 in PR 9, the rest in three pull requests by screen group); U20's new words get a
+    small board (P15-Consent-Note) drawn with the trust page's and approved first.
 23. **U36 is misfiled** under Open (its row reads like a Done row: "#133", built in Phase 13). Task 23 moves it to Done
     with #133.
 24. **The trust page** (spec sections 8 and 9: "the trust page on tutorcentral.in … updated in the phase that first sends a
@@ -275,10 +275,8 @@ Small decisions, written here so they are not re-decided. The owner's are marked
 | U34 Students' empty card's buttons side by side | stack them at full width (the board) | no (P10-Students-Empty) |
 | U40 The student page's parent row under the status bar | `statusBarGlass()` on the page | no (U32's pattern) |
 
-   Proposed: take U17, U18, U20, U21 (the note and the forms Make touches), U22, U23 (Check a paper, in PR 8), U26 (Reports,
-   in PR 9), U32 and U40 (one modifier on each pushed screen, no board), U34 (the board is approved), U11 and U19 (fixtures).
-   Leave the ones needing a board (U10, U14, U15, U20's words, U28, U30) to the owner's pick, and the rest (U5, U8, U13,
-   U25, U27, U29) for a later slice unless he adds them.
+   **Answered 2026-10-11:** "U17, U18, U20, U21, U22, U23, U26, U32, U40, U34, U11 and U19 are in scope of phase 15." Task 12
+   carries them. U5, U8, U10, U13, U14, U15, U25, U27, U28, U29 and U30 stay open for a later slice.
 2. **When the round starts relative to the build.** Proposed: the Phase 15 build goes to TestFlight after the review; the
    owner tests the builds together (D68) in the days after; the tester's device checks run on that build in the internal
    group the same week; Beta App Review is submitted once the owner's own test passes; the tutors are invited the day the
@@ -391,7 +389,7 @@ Each state the 10.7 boards name and the ones this plan adds, with the fixtures' 
 | 8 | 9 | `phase-15/check-under-make` | Check a paper under Make: the Scheme tile and the chooser with mocks; U22, U23 | `check-intro`, `check-scheme-chooser`, `check-pages-empty` |
 | 9 | 10 | `phase-15/reports-progress` | Reports' Progress by month and by term, the sort, the CSV; `ProgressReader`; U26 | `reports-progress`, `reports-progress-term`, `reports-progress-sort`, `reports-export` |
 | 10 | 11 | `phase-15/kit-phase10` | The Kit's Phase 10 rows | `kit-phase10` (both) |
-| 11 | 12 | `phase-15/polish-<group>` | The polish rows the owner picked, one pull request per screen group | each row's states, both appearances |
+| 11 | 12 | `phase-15/polish-note-forms`, `-glass`, `-states` | The polish rows the owner took: U17, U18, U20, U21; U32, U40; U34, U11, U19 (U22, U23 in PR 8; U26 in PR 9) | each row's states, both appearances |
 | 12 | 13 | `phase-15/web-trust` | The website's trust page and the privacy page's consent facts (after the board's approval) | `bun web-shots --pages /trust,/privacy` at 1280 and 390, both |
 | main | | | `gh workflow run deploy-web` after PR 12 (Task 16) | |
 | 13+ | 14, 15, 16, 20, 21 | `phase-15/fix-<what>`, `phase-15/F<n>-<slug>` | The hand runs', the cost run's, the review's and the round's fixes | each changed state |
@@ -1060,14 +1058,45 @@ public struct ProgressHero: View { init(skillsSecure:, rightText:, notOnTrack:, 
 
 ---
 
-### Task 12: The polish rows the owner picked (PR 11, one per screen group)
+### Task 12: The polish rows the owner took (PR 11, three pull requests by screen group)
 
-For each row the owner takes (question 1), by `plan/ui-polish.md`'s "How it works": a board first where what is seen changes
-beyond an approved board (approved on the canvas, mirrored); a test where there is logic; `bun shots` of each changed state,
-both appearances; the row to Done with the pull request. The proposed set and what each takes are in the question's table;
-the task is written out in the ledger per row when the owner's answer comes, in this shape:
+The owner's answer (2026-10-11): U17, U18, U20, U21, U22, U23, U26, U32, U40, U34, U11 and U19. U22 and U23 are PR 8's (Task
+9); U26 is PR 9's (Task 10). The nine others, by `plan/ui-polish.md`'s "How it works": a test where there is logic, the
+pictures of each changed state in both appearances, the row to Done with its pull request (Task 17).
 
-- [ ] **U<n>:** the failing test (or the picture that shows the fault, for a layout row); the change; the states; the pull request.
+**PR 11a `phase-15/polish-note-forms` (after PR 7): U17, U18, U20, U21**
+
+- [ ] **U17:** the progress note's observations counter reads "135 / 2000" as P6-Form-ProgressNote draws it, not "80 of 2,000".
+  Failing test: `NotesWellTests.theCounterReadsSlashAndNoGroupingAtTheNotesLimit` (`NotesWell.counterText(135, limit: 2000)
+  == "135 / 2000"`); the Kit's own counter for the shorter wells is unchanged. State `ai-note` (both). No board (the board's own text).
+- [ ] **U18:** the Send the note sheet sits under the nav row as P6-ProgressNote-Send draws it. The sheet's `boardDetents`
+  fraction from the board's top (a number, in the view with its source line). State `ai-note-send`. No board.
+- [ ] **U20:** the centre's consent sheet reached from a note speaks of a note, not a photo: a `ConsentSheet(kind: .note)` with
+  the sentences "Before the first note" and "What you write about the student goes to our AI service to be put into words
+  …" in the shape of the photo's. New words change what is seen: a small board P15-Consent-Note (the consent sheet with the
+  note's sentences, dark) drawn with the trust page's board in the build session's first step and approved before this
+  pull request. Failing test: `AIStoreTests.theConsentSheetForANoteSpeaksOfNotes`. State `ai-note-consent`.
+- [ ] **U21:** "Couldn't create the homework." and "Couldn't create the worksheet." fit one line as the board's "the paper."
+  does: the failure row's title shortened to "Couldn't create it." for the two longer kinds (the line under it names the
+  reason), or the row given the width the board gives it; whichever keeps the board's two-line shape at the default size.
+  Failing test: `AIStoreGenerateTests.aFailedHomeworkTitleFitsTheRow` (the title's count at or under "Couldn't create the
+  paper."'s). State `ai-generate-failed` with the homework kind.
+
+**PR 11b `phase-15/polish-glass` (any time after PR 1): U32, U40**
+
+- [ ] **U32, U40:** `statusBarGlass()` on every pushed screen that scrolls (Attendance History, a student's month, Schedule,
+  Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes, and the
+  student's page's parent row), U24's pattern. Failing test: `AppShellTests.StatusBarGlassUseTests` reads the sources of the
+  pushed screens for the modifier (as `CalendarPopoverUseTests` holds the popover). States `history`, `student-record`
+  scrolled, `reports`, `account` (one picture each, scrolled, dark). No board (U24's).
+
+**PR 11c `phase-15/polish-states` (after PR 7): U34, U11, U19**
+
+- [ ] **U34:** the Students tab's empty card stacks Add a student and Scan paper register at full width as P10-Students-Empty
+  draws them (the Kit's empty state keeps its side-by-side form elsewhere). State `students-empty` (both).
+- [ ] **U11, U19:** the launch states `today-adding-task` and `today-ai` scroll to their sections as the boards draw them (a
+  `ScrollViewReader` anchor set by the launch state in the fixtures; no change for a tutor). States `today-adding-task`,
+  `today-ai`.
 
 ---
 

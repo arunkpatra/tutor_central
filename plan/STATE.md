@@ -6,10 +6,10 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-11, session 31 (Phase 15 planned, on Fable 5.1). **Session 31:** `plan/phase-15-plan.md` written
 (23 tasks, twelve pull requests plus fixes, tests first, 30 decisions, ten review-focus lines, the launch states, the fifteen
 hand runs, the cost run, the trust page as this phase's, the tutor round's set-up, weeks and triage by Phase 9's method);
-`plan/resume/030-phase-15-build.md` indexed; the record in `plan/sessions/031/`. Two questions are the owner's and are open:
-which polish rows to take (the plan's table proposes a set) and when the round starts relative to the build (the plan proposes
+`plan/resume/030-phase-15-build.md` indexed; the record in `plan/sessions/031/`. The owner took U17, U18, U20, U21, U22, U23, U26,
+U32, U40, U34, U11 and U19 (Task 12). One question is open: when the round starts relative to the build (the plan proposes
 the owner's own test first, the invitations about 21 October). Documents only; no code.
-**Next:** the owner's two answers, then Phase 15's build on Opus 5.5 from `resume/030-phase-15-build.md` (the trust page's board
+**Next:** the owner's answer on the round's start, then Phase 15's build on Opus 5.5 from `resume/030-phase-15-build.md` (the trust page's board
 drawn and approved in that session's first step; PR 12 waits on it, nothing else does). The owner tests the builds together
 after the last phase (D68).
 

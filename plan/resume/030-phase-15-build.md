@@ -42,11 +42,11 @@ and what it cost). Scan register stays in Students (D36).
 **Your work, in order:**
 
 1. The session's setup as `plan/SESSIONS.md` says (reality against `STATE.md`; `bun check` from green). Open the ledger
-   `plan/sessions/032/ledger.md` (the shape of `plan/sessions/030/ledger.md`); write the polish rows the owner took as Task
-   12's items in it.
-2. Draw the trust page's board (Task 13, step 1: P15-Web-Trust at 1280 and 390, dark and light, in P8's page pattern, from the
-   privacy page's board and the consent sheet's words; D50's rules), publish it to row 25 of the canvas, mirror it, and show
-   the owner. Do not build PR 12 before his approval; the other pull requests do not wait on it.
+   `plan/sessions/032/ledger.md` (the shape of `plan/sessions/030/ledger.md`).
+2. Draw the two boards (Task 13, step 1: P15-Web-Trust at 1280 and 390, dark and light, in P8's page pattern, from the
+   privacy page's board and the consent sheet's words, D50's rules; Task 12's P15-Consent-Note, the centre's consent sheet with
+   a note's sentences), publish them to row 25 of the canvas, mirror them, and show the owner. Do not build PR 12 or PR 11a
+   before his approval; the other pull requests do not wait on them.
 3. Execute `plan/phase-15-plan.md` with `superpowers:executing-plans`, inline, task by task, tests first: PRs 1 to 12 in order
    (the rename; migration 0026 with the seed's checks; the API's `tutorSays`; the deploy; Domain; Progress' rules; Make's home;
    the forms with the For sheet; Check a paper under Make with U22 and U23; Reports' Progress with U26; the Kit; the polish
