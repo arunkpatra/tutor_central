@@ -1,3 +1,4 @@
+import Artefacts
 import Attendance
 import Data
 import DesignSystem
@@ -159,7 +160,7 @@ public struct RootView: View {
     @ViewBuilder private var content: some View {
         #if DEBUG
             if let section = Self.kitSection(launch) {
-                KitView(startAt: section)
+                KitView(startAt: section) { AnyView(FigurePreviews.grid) }
             } else {
                 gate
             }

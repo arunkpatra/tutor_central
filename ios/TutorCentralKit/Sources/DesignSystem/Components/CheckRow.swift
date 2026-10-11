@@ -38,7 +38,7 @@ public struct CheckRow: View {
 
     /// Right or Wrong set; the same one again clears.
     public nonisolated static func toggled(_ current: Bool?, tapping right: Bool) -> Bool? {
-        current == right ? nil : right
+        RightWrongPair.toggled(current, tapping: right)
     }
 
     public var body: some View {
@@ -53,21 +53,38 @@ public struct CheckRow: View {
                     .typeStyle(Tokens.footnote)
                     .foregroundStyle(Tokens.text3.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                pair
+                RightWrongPair(tap: $tap, about: question)
             }
         }
         .padding(.vertical, Tokens.rowPaddingDense)
         .padding(.horizontal, Tokens.rowPaddingHorizontal)
     }
+}
 
-    private var pair: some View {
+/// The Right | Wrong pair (components.md "Check row"): a `well` track 150 wide, Right on `ok`, Wrong on `overdue`;
+/// tapping the lit segment again clears it.
+public struct RightWrongPair: View {
+    @Binding var tap: Bool?
+    /// What the pair is about, for VoiceOver ("Right, Which is bigger…").
+    let about: String
+
+    public init(tap: Binding<Bool?>, about: String) {
+        _tap = tap
+        self.about = about
+    }
+
+    public nonisolated static func toggled(_ current: Bool?, tapping right: Bool) -> Bool? {
+        current == right ? nil : right
+    }
+
+    public var body: some View {
         HStack(spacing: 0) {
             segment("Right", right: true, tone: .ok)
             segment("Wrong", right: false, tone: .overdue)
         }
-        .padding(Self.trackPadding)
-        .frame(width: Self.trackWidth)
-        .background(Tokens.well.color, in: .rect(cornerRadius: Self.trackRadius, style: .continuous))
+        .padding(CheckRow.trackPadding)
+        .frame(width: CheckRow.trackWidth)
+        .background(Tokens.well.color, in: .rect(cornerRadius: CheckRow.trackRadius, style: .continuous))
         .sensoryFeedback(.selection, trigger: tap)
     }
 
@@ -79,12 +96,12 @@ public struct CheckRow: View {
             Text(label)
                 .typeStyle(on ? Tokens.buttonStrong : Tokens.buttonSecondary)
                 .foregroundStyle((on ? tone.ink : Tokens.text2).color)
-                .frame(maxWidth: .infinity, minHeight: Self.segmentHeight)
-                .background(on ? tone.color.color : .clear, in: .rect(cornerRadius: Self.segmentRadius))
+                .frame(maxWidth: .infinity, minHeight: CheckRow.segmentHeight)
+                .background(on ? tone.color.color : .clear, in: .rect(cornerRadius: CheckRow.segmentRadius))
                 .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(label), \(question)")
+        .accessibilityLabel("\(label), \(about)")
         .accessibilityAddTraits(on ? .isSelected : [])
     }
 }
