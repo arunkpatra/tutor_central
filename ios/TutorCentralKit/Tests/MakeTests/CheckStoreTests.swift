@@ -10,9 +10,16 @@ import Testing
     static let page = ImageUpload(data: Data([0xFF, 0xD8, 0xFF, 1]), mediaType: "image/jpeg")
     static let hemanth = FakeStudentsRepository.seed.first { $0.name == "Hemanth Reddy" }?.id ?? UUID()
 
+    /// The seed with each parent's consent recorded: marking waits for it (D62).
+    static let consented: [Student] = FakeStudentsRepository.seed.map { student in
+        var agreed = student
+        agreed.consent = student.parentPhone.map { ConsentRecord(at: now, phone: $0, how: .whatsapp) }
+        return agreed
+    }
+
     static func make(
         ai: FakeAIRepository = FakeAIRepository(),
-        students: FakeStudentsRepository = FakeStudentsRepository(students: FakeStudentsRepository.seed),
+        students: FakeStudentsRepository = FakeStudentsRepository(students: consented),
         workspace: Workspace = FakeCentreRepository.meeraWorkspaceConsented
     ) async -> CheckStore {
         let register = RegisterStore(
@@ -62,7 +69,7 @@ import Testing
     }
 
     @Test func saveAppendsAndUndoRestoresExactly() async throws {
-        let students = FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        let students = FakeStudentsRepository(students: Self.consented)
         let store = await Self.make(students: students)
         store.addPages([Self.page])
         store.scheme = .typed("Q1 (1) b")
@@ -88,7 +95,7 @@ import Testing
     }
 
     @Test func aSecondSaveAppendsToTheSavedNotesAndConsentIsAskedFirst() async {
-        let students = FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        let students = FakeStudentsRepository(students: Self.consented)
         let store = await Self.make(students: students)
         store.addPages([Self.page])
         store.scheme = .typed("Q1 (1) b")

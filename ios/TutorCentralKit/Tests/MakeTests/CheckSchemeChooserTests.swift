@@ -121,3 +121,37 @@ import Testing
         return Generation(id: UUID(), kind: seed.kind, createdAt: date, request: seed.request, result: seed.result)
     }
 }
+
+/// D62, spec section 8 (found writing the trust page): marking a student's paper waits for their parent's consent with
+/// any scheme, and the call names the student so the gate asks it.
+@MainActor struct CheckConsentTests {
+    @Test func aPapersMarkingWaitsForTheStudentsConsentToo() async {
+        let ai = FakeAIRepository()
+        let store = await CheckStoreTests.make(
+            ai: ai,
+            students: FakeStudentsRepository(students: FakeStudentsRepository.seed)
+        )
+        await store.loadPapers()
+        store.scheme = .paper(generationID: FakeAIHistoryRepository.quadraticID)
+        store.addPages([CheckStoreTests.page])
+        await store.check()
+        #expect(store
+            .stage == .failed("Marking Hemanth's paper waits for Lakshmi's consent. Record it on Hemanth's page."))
+        #expect(ai.checks.isEmpty)
+    }
+
+    @Test func aTypedSchemesMarkingNamesTheStudent() async {
+        let ai = FakeAIRepository()
+        let consented = FakeStudentsRepository.seed.map { student in
+            var agreed = student
+            agreed.consent = student.parentPhone
+                .map { ConsentRecord(at: CheckStoreTests.now, phone: $0, how: .whatsapp) }
+            return agreed
+        }
+        let store = await CheckStoreTests.make(ai: ai, students: FakeStudentsRepository(students: consented))
+        store.scheme = .typed("Q1 (1) b")
+        store.addPages([CheckStoreTests.page])
+        await store.check()
+        #expect(ai.checkStudents.last == CheckStoreTests.hemanth)
+    }
+}
