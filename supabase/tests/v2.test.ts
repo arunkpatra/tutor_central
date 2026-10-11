@@ -755,3 +755,70 @@ test("name_plan_group names a group the app wrote with its own keys (number, mem
   const groups = (await a.from("plans").select("groups").eq("id", plan).single()).data!.groups as { number: number; chapter: string; skill: string }[];
   expect(groups[0]).toMatchObject({ number: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" });
 });
+
+// ---- Phase 14: the note day, the next step, the exam's window, the parents' kinds ----
+test("a batch keeps its note day; none by default (the app reads Sunday 18:00); the weekday is 1 to 7", async () => {
+  const { cls } = await batchWithTwo();
+  const before = await a.from("classes").select("note_weekday, note_time").eq("id", cls.id).single();
+  expect(before.data).toEqual({ note_weekday: null, note_time: null });
+  expect((await a.from("classes").update({ note_weekday: 6, note_time: "18:00" }).eq("id", cls.id)).error).toBeNull();
+  const bad = await a.from("classes").update({ note_weekday: 8 }).eq("id", cls.id);
+  expect(bad.error?.message).toContain("check");
+});
+
+test("a student's next step is one of five, or null for the plan's own", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Stepped" }).select("id").single()).data!;
+  for (const step of ["tell_parent", "teach_again", "step_back", "add_to_checks", "leave", null]) {
+    const { error } = await a.from("students").update({ next_step: step }).eq("id", st.id);
+    expect({ step, error }).toEqual({ step, error: null });
+  }
+  expect((await a.from("students").update({ next_step: "shout" }).eq("id", st.id)).error?.message).toContain("check");
+});
+
+test("an exam's window is 3 to 60 days, or null for 14", async () => {
+  const exam = (await a.from("school_items").insert({ centre_id: centre, kind: "exam", title: "Window test", subject: "Science", date: "2026-10-16" }).select("id, window_days").single()).data!;
+  expect(exam.window_days).toBeNull();
+  expect((await a.from("school_items").update({ window_days: 7 }).eq("id", exam.id)).error).toBeNull();
+  expect((await a.from("school_items").update({ window_days: 2 }).eq("id", exam.id)).error?.message).toContain("check");
+});
+
+test("a not-on-track message and a copied note are logged with their kind and channel", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Logged" }).select("id").single()).data!;
+  const sent = await a.from("message_log").insert({ centre_id: centre, student_id: st.id, kind: "not_on_track", language: "hi", body: "…" }).select("kind, channel").single();
+  expect(sent.error).toBeNull();
+  expect(sent.data).toEqual({ kind: "not_on_track", channel: "whatsapp_link" });
+  const copied = await a.from("message_log").insert({ centre_id: centre, student_id: st.id, kind: "note", channel: "copied", language: "kn", body: "…" }).select("channel").single();
+  expect(copied.data).toEqual({ channel: "copied" });
+});
+
+test("start_ai_generation asks the student's consent for read_marks and not_on_track, as for a note", async () => {
+  // A centre of its own: an earlier test fills the shared centre's month.
+  const c = await userClient(l, `v2-p14-consent-${stamp}@example.com`);
+  const own = (await c.rpc("create_centre", { p_name: "Consent 14", p_whatsapp: null })).data as string;
+  const without = (await c.from("students").insert({ centre_id: own, name: "Not agreed" }).select("id").single()).data!;
+  const agreed = (await c.from("students").insert({ centre_id: own, name: "Agreed parent", consent_at: new Date().toISOString(), consent_phone: "+919876500002", consent_how: "whatsapp" }).select("id").single()).data!;
+  for (const kind of ["read_marks", "not_on_track", "note", "can_do"]) {
+    const refused = await c.rpc("start_ai_generation", { p_centre: own, p_kind: kind, p_input: {}, p_model: "m", p_student: without.id });
+    expect({ kind, error: refused.error?.message }).toEqual({ kind, error: "ai_consent_missing" });
+    const allowed = await c.rpc("start_ai_generation", { p_centre: own, p_kind: kind, p_input: {}, p_model: "m", p_student: agreed.id });
+    expect({ kind, error: allowed.error }).toEqual({ kind, error: null });
+  }
+  const noStudent = await c.rpc("start_ai_generation", { p_centre: own, p_kind: "read_marks", p_input: {}, p_model: "m" });
+  expect(noStudent.error?.message).toContain("ai_consent_missing");
+});
+
+test("read_marks and not_on_track count in the month's allowance, as the other V2 kinds do", async () => {
+  const c = await userClient(l, `v2-p14-cap-${stamp}@example.com`);
+  const centreC = (await c.rpc("create_centre", { p_name: "Cap 14", p_whatsapp: null })).data as string;
+  const sql = new (await import("bun")).SQL(l.db);
+  try {
+    await sql`insert into public.ai_generations (centre_id, kind, input, model, status)
+              select ${centreC}::uuid, (case when g % 2 = 0 then 'read_marks' else 'not_on_track' end)::public.ai_kind, '{}', 'm', 'ok'
+                from generate_series(1, 600) g`;
+  } finally {
+    await sql.close();
+  }
+  const capped = await c.rpc("start_ai_generation", { p_centre: centreC, p_kind: "plan", p_input: {}, p_model: "m" });
+  expect(capped.error?.message).toContain("ai_limit_reached");
+  expect(capped.error?.details).toBe("600");
+});

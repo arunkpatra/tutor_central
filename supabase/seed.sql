@@ -69,6 +69,13 @@ insert into public.students (centre_id, class_id, name, parent_name, parent_phon
   ('22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333', 'Dhruv Patel', 'Hema Patel', '+919876500010', '2', null, 'hi'),
   ('22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333', 'Myra Singh', 'Gurpreet Singh', '+919876500011', '2', null, 'en'),
   ('22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333', 'Zoya Khan', 'Farah Khan', '+919876500012', '2', null, 'en');
+-- Phase 14: three parents agreed, so the note runs in Hindi, Kannada and Hinglish need no psql.
+update public.students set consent_at = now() - interval '20 days', consent_phone = parent_phone, consent_how = 'whatsapp'
+ where centre_id = '22222222-2222-2222-2222-222222222222' and name = 'Diya Pillai';
+update public.students set consent_at = now() - interval '18 days', consent_phone = parent_phone, consent_how = 'in_person'
+ where centre_id = '22222222-2222-2222-2222-222222222222' and name = 'Kavya Nair';
+update public.students set consent_at = now() - interval '15 days', consent_phone = parent_phone, consent_how = 'call'
+ where centre_id = '22222222-2222-2222-2222-222222222222' and name = 'Rohan Gupta';
 -- Two books at Vidya Niketan, copied to their classes (the class 5 book reaches Riya too).
 insert into public.textbooks (id, centre_id, school_id, class_level, subject, title, chapters) values
   ('55555555-5555-5555-5555-555555555551', '22222222-2222-2222-2222-222222222222', '44444444-4444-4444-4444-444444444441', '8', 'Science', 'Science 8',
