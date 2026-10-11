@@ -11,7 +11,7 @@ struct PlaceValueFigure: View {
         let times: String
     }
 
-    static let places = ["Ones", "Tens", "Hundreds", "Thousands", "Ten thousands", "Lakhs", "Ten lakhs"]
+    nonisolated static let places = ["Ones", "Tens", "Hundreds", "Thousands", "Ten thousands", "Lakhs", "Ten lakhs"]
 
     let number: Int
 

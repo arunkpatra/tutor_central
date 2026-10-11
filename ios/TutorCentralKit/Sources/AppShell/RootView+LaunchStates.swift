@@ -46,7 +46,7 @@ extension RootView {
     }
 
     /// The AI Assistant's states, all on the More tab's stack.
-    static let aiStates: Set<LaunchState> = [
+    nonisolated static let aiStates: Set<LaunchState> = [
         .aiAssistant, .aiAssistantEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet,
         .aiNote, .aiNoteStudent, .aiGenerating,
         .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
@@ -61,7 +61,7 @@ extension RootView {
     ]
 
     /// Check a paper's states, on the More tab's stack; one visit id for all of them.
-    static let checkStates: Set<LaunchState> = [
+    nonisolated static let checkStates: Set<LaunchState> = [
         .checkIntro, .checkPages, .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker,
         .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed,
     ]

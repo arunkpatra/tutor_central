@@ -88,7 +88,7 @@ public struct DialogView: View {
     }
 
     /// The typed name matches ignoring case and the spaces around it ("akshita " confirms "Akshita").
-    public static func confirms(typed: String, name: String) -> Bool {
+    public nonisolated static func confirms(typed: String, name: String) -> Bool {
         typed.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare(name) == .orderedSame
     }
 }

@@ -22,16 +22,19 @@ public struct PendingRow: View {
         self.discard = discard
     }
 
+    private var status: Text {
+        Text(failure == nil ? "Waiting" : "Failed")
+            .foregroundStyle((failure == nil ? Tokens.text3 : Tokens.overdue).color)
+            .fontWeight(.semibold)
+    }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: Tokens.inline) {
             HStack(spacing: Tokens.rowPaddingDense) {
                 IconTile(symbol: symbol)
                 VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                     Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                    (Text(failure == nil ? "Waiting" : "Failed")
-                        .foregroundStyle((failure == nil ? Tokens.text3 : Tokens.overdue).color)
-                        .fontWeight(.semibold)
-                        + Text(" · \(line)").foregroundStyle(Tokens.text2.color))
+                    Text("\(status)\(Text(" · \(line)").foregroundStyle(Tokens.text2.color))")
                         .typeStyle(Tokens.footnote)
                         .monospacedDigit()
                         .fixedSize(horizontal: false, vertical: true)

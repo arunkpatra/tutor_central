@@ -42,7 +42,7 @@ struct CachedReadTests {
 @MainActor struct ConnectivityTests {
     @Test func theFakeAnnouncesChanges() async {
         let monitor = FakeConnectivity(online: true)
-        #expect(await monitor.isOnline)
+        #expect(monitor.isOnline)
         let stream = monitor.changes()
         let first = Task {
             for await online in stream {
@@ -53,6 +53,6 @@ struct CachedReadTests {
         try? await Task.sleep(for: .milliseconds(20))
         monitor.set(online: false)
         #expect(await first.value == false)
-        #expect(await monitor.isOnline == false)
+        #expect(monitor.isOnline == false)
     }
 }
