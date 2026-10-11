@@ -1,13 +1,14 @@
 import type { ClaudeRequest } from "../claude.js";
 import type { AIKind } from "../db.js";
 import type { DecodedImage } from "../images.js";
+import { modelFor } from "../models.js";
 import { CheckOutput, MockOutput, PaperOutput, QuestionSetOutput } from "../schemas.js";
 import { VOICE } from "./shared.js";
 
 /** A photographed answer sheet marked against the scheme: a suggested mark and a note for every question. */
 export function request(pages: DecodedImage[], scheme: string, studentName: string): ClaudeRequest<CheckOutput> {
   return {
-    model: "claude-opus-5-5",
+    model: modelFor("check_paper"),
     effort: "high",
     system: [
       VOICE,

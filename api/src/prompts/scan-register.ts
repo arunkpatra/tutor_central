@@ -1,12 +1,13 @@
 import type { ClaudeRequest } from "../claude.js";
 import type { DecodedImage } from "../images.js";
+import { modelFor } from "../models.js";
 import { ScanOutput } from "../schemas.js";
 import { VOICE } from "./shared.js";
 
 /** One photographed page of a paper register read into rows. Phones and fees as written; the API normalises. */
 export function request(image: DecodedImage): ClaudeRequest<ScanOutput> {
   return {
-    model: "claude-opus-5-5",
+    model: modelFor("scan_register"),
     effort: "high",
     system: [
       VOICE,
