@@ -212,10 +212,8 @@ public enum GenerateRequest: Hashable, Sendable, Codable {
         }
     }
 
-    /// Create is enabled: a class level chosen (or, from before, a batch), a subject and a topic typed (trimmed, within
-    /// their limits), or a
-    /// student
-    /// chosen and observations typed (1 to 2000).
+    /// Create is enabled: a class level chosen (or, from before, a batch), a subject and a topic typed (trimmed,
+    /// within their limits), or a student chosen and observations typed (1 to 2000).
     public var isValid: Bool {
         switch self {
         case let .paper(form): Self.isValid(form.classLevel, form.classID, subject: form.subject, topic: form.topic)
