@@ -24,7 +24,7 @@ extension Fixtures {
         // P10-Student-Consent-Waiting: Riya's parent asked today.
         let asked = state == .studentConsentWaiting
             ? [FakeStudentsRepository.riya: [riyaAsked(at: clock(for: state))]]
-            : [:]
+            : forwardAsked(for: state)
         return FakeMessageLogRepository(
             logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed, entries: asked,
             now: { clock(for: state) }

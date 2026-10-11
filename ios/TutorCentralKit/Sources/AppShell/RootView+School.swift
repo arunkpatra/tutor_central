@@ -58,6 +58,15 @@ extension RootView {
                     boardState: nil,
                     back: { shell.tabs.remove(route) }
                 )
+            case .schoolAsk:
+                AskScreen(
+                    store: AskStore(
+                        workspace: workspace, register: register(for: workspace), messages: deps.messages,
+                        open: { url in systemOpenURL(url) }, now: deps.now,
+                        online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+                    ),
+                    back: { shell.tabs.remove(route) }
+                )
             default:
                 EmptyView()
             }
@@ -119,6 +128,21 @@ struct ReadScreen: View {
 
     var body: some View {
         ReadView(store: store, boardState: boardState, leave: leave, done: done)
+    }
+}
+
+/// Ask parents to forward with its store kept for the life of the push.
+struct AskScreen: View {
+    @State private var store: AskStore
+    let back: () -> Void
+
+    init(store: AskStore, back: @escaping () -> Void) {
+        _store = State(initialValue: store)
+        self.back = back
+    }
+
+    var body: some View {
+        AskView(store: store, back: back)
     }
 }
 

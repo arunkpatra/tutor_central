@@ -7,8 +7,15 @@ import School
 extension Fixtures {
     static let schoolStates: Set<LaunchState> = [
         .schoolEmpty, .school, .schoolCalendar, .schoolAddMenu, .schoolReading, .schoolConfirm, .schoolConfirmEdit,
-        .schoolItemHomework, .schoolItemHoliday,
+        .schoolItemHomework, .schoolItemHoliday, .schoolAsk,
     ]
+
+    /// P10-School-Ask: Dev's and Meher's parents asked already.
+    static func forwardAsked(for state: LaunchState) -> [UUID: [MessageEntry]] {
+        guard state == .schoolAsk else { return [:] }
+        let asked = { MessageEntry(id: UUID(), kind: .forwardAsk, openedAt: clock(for: state), language: nil) }
+        return [FakeStudentsRepository.dev: [asked()], FakeStudentsRepository.meher: [asked()]]
+    }
 
     @MainActor static func schoolItems(for state: LaunchState) -> FakeSchoolItemsRepository {
         FakeSchoolItemsRepository(
@@ -25,6 +32,7 @@ extension RootView {
             [.schoolRead(.pasted(FakeSchoolItemsRepository.boardMessage))]
         case .schoolItemHomework: [.schoolItem(FakeSchoolItemsRepository.mathsHomework)]
         case .schoolItemHoliday: [.schoolItem(FakeSchoolItemsRepository.dasara)]
+        case .schoolAsk: [.schoolAsk]
         default: nil
         }
     }

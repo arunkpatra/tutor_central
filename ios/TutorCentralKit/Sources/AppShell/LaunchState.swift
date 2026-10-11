@@ -32,6 +32,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case schoolConfirmEdit = "school-confirm-edit"
     case schoolItemHomework = "school-item-homework"
     case schoolItemHoliday = "school-item-holiday"
+    /// Ask parents to forward with two sent (P10-School-Ask).
+    case schoolAsk = "school-ask"
     case settings
     case studentsEmpty = "students-empty"
     case studentsFew = "students-few"
