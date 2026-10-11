@@ -8,6 +8,7 @@ import { fakeClaude, localScript } from "./claude-fake.js";
 import { makeDb } from "./db.js";
 import { env } from "./env.js";
 import { makeApp } from "./make-app.js";
+import { makeVerify } from "./verify.js";
 
 /** Read at start: a deployment without them fails to boot, so /health and the deploy's smoke fail, instead of every
  *  tutor being told to sign in again. AI_FAKE=1 (local runs only, never in Vercel) answers from the fake, so a hand
@@ -27,15 +28,8 @@ const apple =
         clientId: "in.tutorcentral.app",
       });
 
-/** Verifies a Supabase access token by asking Supabase for its user. One call per request; a JWKS cache is a later
- *  optimisation. */
-const verify = async (token: string) => {
-  const client = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { data, error } = await client.auth.getUser(token);
-  return error || !data.user ? null : { id: data.user.id };
-};
+/** A 4xx from Supabase is the token's (sign in again); a lost connection is "unreachable" (D68). */
+const verify = makeVerify(() => createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false, autoRefreshToken: false } }));
 
 /** Vercel's Hono preset and `bun --hot` both serve this default export. The preset takes as its entry the first of
  *  app, index, server, src/app, src/index, src/server that imports "hono": this file (test/entry.test.ts). */

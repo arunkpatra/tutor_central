@@ -3,6 +3,7 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { makeVerify } from "../src/verify.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
@@ -122,4 +123,26 @@ test("check-paper marks against a mock's key read from its generation, names the
   const gone = await post(app(claude, fakeDb()), "/ai/check-paper", body);
   expect(gone.status).toBe(400);
   expect(await gone.json()).toEqual({ error: "That mock is no longer here. Type the scheme instead." });
+});
+
+test("the verifier tells a 4xx (sign in again) from a network failure or a 5xx (unreachable) (D68)", async () => {
+  const answering = (answer: unknown) => makeVerify(() => ({ auth: { getUser: async () => answer } }) as never);
+  expect(await answering({ data: { user: null }, error: { status: 401, message: "expired" } })("t")).toBeNull();
+  expect(await answering({ data: { user: null }, error: { status: 403, message: "bad jwt" } })("t")).toBeNull();
+  expect(await answering({ data: { user: null }, error: { status: 502, message: "bad gateway" } })("t")).toBe("unreachable");
+  expect(await answering({ data: { user: null }, error: { message: "fetch failed" } })("t")).toBe("unreachable");
+  const failed = makeVerify(() => ({ auth: { getUser: async () => { throw new TypeError("fetch failed"); } } }) as never);
+  expect(await failed("t")).toBe("unreachable");
+  expect(await answering({ data: { user: { id: "u1" } }, error: null })("t")).toEqual({ id: "u1" });
+});
+
+test("a named student's missing consent answers in the student's words, the centre's missing consent in the centre's (D68)", async () => {
+  const MOCK_ID = "11111111-1111-1111-1111-111111111111";
+  const generations = { [MOCK_ID]: { kind: "mock" as const, output: JSON.stringify(SAMPLE.mock) } };
+  const body = { centreId, pages: [image], scheme: { kind: "mock", generationId: MOCK_ID }, studentName: "Diya Pillai", studentId: "77777777-7777-7777-7777-777777777777" };
+  const r = await post(app(undefined, fakeDb({ studentConsent: false, generations })), "/ai/check-paper", body);
+  expect(r.status).toBe(403);
+  expect(await r.json()).toEqual({ error: "Diya's parent hasn't agreed yet.", reason: "student_consent" });
+  const centre = await post(app(undefined, fakeDb({ consent: false })), "/ai/scan-register", { centreId, ...image });
+  expect(await centre.json()).toEqual({ error: "Agree to the notice before the first photo.", reason: "consent" });
 });

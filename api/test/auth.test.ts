@@ -27,10 +27,14 @@ test("an expired, unknown or deleted user's token → 401, never 500", async () 
   expect(await r.json()).toEqual({ error: "sign in again" });
 });
 
-test("a verifier that throws → 401, not 500", async () => {
-  const failing = makeApp({ verify: async () => { throw new Error("network"); }, ...deps });
-  const r = await failing.request("/ai/generate", { method: "POST", body: "{}", headers: { authorization: "Bearer x" } });
-  expect(r.status).toBe(401);
+test("an unreachable Supabase answers 503 in connection words, not 401 'sign in again' (D68)", async () => {
+  const down = makeApp({ verify: async () => "unreachable", ...deps });
+  const r = await down.request("/ai/generate", { method: "POST", body: "{}", headers: { authorization: "Bearer good" } });
+  expect(r.status).toBe(503);
+  expect(await r.json()).toEqual({ error: "Couldn't reach the service. Try again.", reason: "unreachable" });
+  const failing = makeApp({ verify: async () => { throw new Error("fetch failed"); }, ...deps });
+  const thrown = await failing.request("/ai/generate", { method: "POST", body: "{}", headers: { authorization: "Bearer x" } });
+  expect(thrown.status).toBe(503);
 });
 
 test("a good token reaches the route", async () => {

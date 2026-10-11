@@ -197,3 +197,12 @@ test("the gap report asks for lines within the output's limits", () => {
   expect(r.system).toContain("at most 160 characters");
   expect(r.system).toContain("summary at most 180 characters");
 });
+
+test("the mock asks for two to six skills across the paper so By skill groups (U45)", () => {
+  const r = mockRequest({ kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions", "Acids, bases and salts"], pattern: { marks: 25, durationMinutes: 40 } });
+  expect(r.system).toContain("two to six skills across the paper");
+  expect(r.system).toContain("several questions share a skill");
+  const skills = new Set(SAMPLE.mock.sections.flatMap((s) => s.questions.map((q) => q.skill)));
+  expect(skills.size).toBeGreaterThanOrEqual(2);
+  expect(skills.size).toBeLessThanOrEqual(6);
+});

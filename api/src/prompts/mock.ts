@@ -4,8 +4,8 @@ import { type MockInput, MockOutput } from "../schemas.js";
 import { VOICE } from "./shared.js";
 
 /** A mock two days before a school test (P10-Mock): the school's pattern (the board's blueprint, or the app's default by
- *  class), each question on one skill of the portions and naming it (the gap report tallies by skill), a key for the
- *  tutor. Portions and a class only; no student is named. */
+ *  class), two to six skills across the paper with each question naming one (the gap report tallies by skill, U45), a
+ *  key for the tutor. Portions and a class only; no student is named. */
 export function request(input: MockInput): ClaudeRequest<MockOutput> {
   const { marks, durationMinutes, sections } = input.pattern;
   return {
@@ -14,7 +14,8 @@ export function request(input: MockInput): ClaudeRequest<MockOutput> {
     system: [
       VOICE,
       "You set a mock test in the pattern the school uses: exactly the marks given, sections as given (or sensible sections when none).",
-      "Each question tests one skill from the portions and names it in the skill field.",
+      "Choose two to six skills across the paper, each one of the portions' skills (a chapter's main ideas, not one per question);",
+      "each question names one of them in its skill field, so several questions share a skill.",
       "A key with a short answer per question. No text copied from a textbook.",
       "Questions a student of that class can answer in the minutes given. Number the questions from 1 across the sections.",
     ].join(" "),

@@ -21,7 +21,7 @@ export function fakeDb(
     finished,
     async start(token, args) {
       if (!consent && CONSENT_KINDS.includes(args.kind)) throw new DbFailure("consent");
-      if (args.student && options.studentConsent === false) throw new DbFailure("consent");
+      if (args.student && options.studentConsent === false) throw new DbFailure("student_consent");
       if (started.length >= limit) throw new DbFailure("limit", limit);
       started.push({ token, ...args });
       return `gen-${started.length}`;
