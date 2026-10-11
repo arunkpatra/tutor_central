@@ -24,8 +24,11 @@ struct MakeNoteBody: Encodable {
     let classLevel: String
     let language: String
     let week: Week
+    /// Left out of the body when nil (Make's note only).
+    let tutorSays: String?
 
     init(_ request: NoteRequest, centre: UUID) {
+        tutorSays = request.tutorSays
         centreId = centre.uuidString.lowercased()
         studentId = request.studentID.uuidString.lowercased()
         studentName = String(request.studentName.prefix(80))

@@ -11,6 +11,8 @@ import Supabase
     public private(set) var textbooks: [Textbook]
     public var chaptersByStudent: [UUID: [Chapter]]
     public var skillsByStudent: [UUID: [Skill]]
+    /// How many times `books` was asked (one read for every student).
+    public private(set) var bookReads = 0
     /// The register the class-wide copies read (the database reads `students`).
     public var students: [Student] = []
     public var nextError: (any Error)?
@@ -170,6 +172,17 @@ import Supabase
     public func skills(student: UUID) async throws -> [Skill] {
         try begin()
         return skillsByStudent[student, default: []].sorted { $0.position < $1.position }
+    }
+
+    public func books(centre _: UUID, students: [UUID]) async throws -> [UUID: RecordBook] {
+        try begin()
+        bookReads += 1
+        return Dictionary(uniqueKeysWithValues: students.map { student in
+            (student, RecordBook(
+                chapters: chaptersByStudent[student, default: []].sorted { $0.position < $1.position },
+                skills: skillsByStudent[student, default: []].sorted { $0.position < $1.position }
+            ))
+        })
     }
 
     public func setState(skillID: UUID, _ state: SkillState) async throws {

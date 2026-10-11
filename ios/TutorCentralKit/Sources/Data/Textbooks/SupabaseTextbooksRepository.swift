@@ -45,6 +45,23 @@ public final class SupabaseTextbooksRepository: TextbooksRepository {
         return try Self.decoder.decode([SkillRow].self, from: response.data).map(\.skill)
     }
 
+    public func books(centre: UUID, students: [UUID]) async throws -> [UUID: RecordBook] {
+        guard !students.isEmpty else { return [:] }
+        let ids = students.map(\.uuidString)
+        async let chaptersRead = client.from("chapters").select("student_id, id, subject, position, name, ladder")
+            .eq("centre_id", value: centre).in("student_id", values: ids).order("position").execute()
+        async let skillsRead = client.from("skills").select("student_id, " + SkillRow.columns)
+            .eq("centre_id", value: centre).in("student_id", values: ids).order("position").execute()
+        let chapters = try await Self.decoder.decode([Owned<ChapterRow>].self, from: chaptersRead.data)
+        let skills = try await Self.decoder.decode([Owned<SkillRow>].self, from: skillsRead.data)
+        return Dictionary(uniqueKeysWithValues: students.map { student in
+            (student, RecordBook(
+                chapters: chapters.filter { $0.studentId == student }.map(\.row.chapter),
+                skills: skills.filter { $0.studentId == student }.map(\.row.skill)
+            ))
+        })
+    }
+
     public func setState(skillID: UUID, _ state: SkillState) async throws {
         // "now" is Postgres's word for the server's clock, as saved_at is.
         try await client.from("skills").update(["state": AnyJSON.string(state.rawValue), "state_at": .string("now")])

@@ -57,9 +57,11 @@ struct ArtefactRow: Decodable {
     let createdAt: Date
     let generationId: UUID?
     let schoolItemId: UUID?
+    /// "make" for Make's material (0026); absent on a row read before it.
+    let madeFrom: String?
 
     static let columns = "id, kind, source, title, content, photo_path, student_id, plan_id, regenerated_from, "
-        + "created_at, generation_id, school_item_id"
+        + "created_at, generation_id, school_item_id, made_from"
 
     var artefact: Artefact? {
         guard let kind = ArtefactKind(rawValue: kind) else { return nil }
@@ -69,7 +71,8 @@ struct ArtefactRow: Decodable {
         return Artefact(
             id: id, kind: kind, source: source, title: title, content: decoded, photoPath: photoPath,
             studentID: studentId, planID: planId, regeneratedFrom: regeneratedFrom, madeAt: createdAt,
-            generationID: generationId, schoolItemID: schoolItemId
+            generationID: generationId, schoolItemID: schoolItemId, madeFrom: madeFrom,
+            madeFor: MakeFor.read(fromContent: json)
         )
     }
 }

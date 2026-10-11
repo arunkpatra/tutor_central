@@ -57,3 +57,16 @@ struct SkillRow: Decodable {
 struct PositionRow: Decodable {
     let position: Int
 }
+
+/// A row read with its `student_id` beside its own columns (a read across students).
+struct Owned<Row: Decodable>: Decodable {
+    let studentId: UUID
+    let row: Row
+
+    private enum Keys: String, CodingKey { case studentId }
+
+    init(from decoder: any Decoder) throws {
+        studentId = try decoder.container(keyedBy: Keys.self).decode(UUID.self, forKey: .studentId)
+        row = try Row(from: decoder)
+    }
+}

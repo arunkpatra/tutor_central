@@ -108,6 +108,8 @@ import Supabase
     public var delay: Duration?
     public private(set) var saves: [Save] = []
     public private(set) var closes: [SessionClose] = []
+    /// The months `sessions` was asked for, in order.
+    public private(set) var monthsRead: [Period] = []
     private let now: () -> Date
 
     public init(sessions: [AttendanceSession] = [], now: @escaping () -> Date = { FakeCountsRepository.fixedNow }) {
@@ -117,6 +119,7 @@ import Supabase
 
     public func sessions(centre _: UUID, month: Period) async throws -> [AttendanceSession] {
         try await begin()
+        monthsRead.append(month)
         return AttendanceStats.sessions(sessions, in: month).sorted { $0.date > $1.date }
     }
 

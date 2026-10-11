@@ -39,11 +39,14 @@ public struct NoteRequest: Hashable, Sendable {
     public let language: MessageLanguage
     public let weekMonday: Day
     public let week: Week
+    /// The tutor's own words from Make's note (Phase 15), at most 300 scalars; nil when none.
+    public let tutorSays: String?
 
     public init(
         studentID: UUID, studentName: String, parentName: String?, tutorName: String, centreName: String,
-        classLevel: ClassLevel, language: MessageLanguage, weekMonday: Day, week: Week
+        classLevel: ClassLevel, language: MessageLanguage, weekMonday: Day, week: Week, tutorSays: String? = nil
     ) {
+        self.tutorSays = tutorSays
         self.studentID = studentID
         self.studentName = studentName
         self.parentName = parentName
@@ -53,6 +56,17 @@ public struct NoteRequest: Hashable, Sendable {
         self.language = language
         self.weekMonday = weekMonday
         self.week = week
+    }
+
+    /// The same request with the tutor's words, trimmed and held to the API's 300 (blank is none).
+    public func saying(_ words: String) -> NoteRequest {
+        let trimmed = words.trimmingCharacters(in: .whitespacesAndNewlines)
+        let kept = trimmed.isEmpty ? nil : String(String.UnicodeScalarView(trimmed.unicodeScalars.prefix(300)))
+        return NoteRequest(
+            studentID: studentID, studentName: studentName, parentName: parentName, tutorName: tutorName,
+            centreName: centreName, classLevel: classLevel, language: language, weekMonday: weekMonday, week: week,
+            tutorSays: kept
+        )
     }
 }
 

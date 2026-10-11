@@ -10,6 +10,8 @@ import Foundation
     public private(set) var statusChanges: [StatusChange] = []
     public private(set) var marks: [MarkRecord]
     public var nextError: (any Error)?
+    /// How many times `checks` was asked.
+    public private(set) var checkReads = 0
 
     /// One homework status written.
     public struct StatusChange: Hashable, Sendable {
@@ -50,6 +52,7 @@ import Foundation
 
     public func checks(centre _: UUID, students: [UUID], since: Date) async throws -> [CheckRecord] {
         try begin()
+        checkReads += 1
         return checks.filter { students.contains($0.studentID) && $0.at >= since }.sorted { $0.at < $1.at }
     }
 

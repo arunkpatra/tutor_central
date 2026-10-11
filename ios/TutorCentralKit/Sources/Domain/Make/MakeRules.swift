@@ -13,8 +13,8 @@ public struct TodayGroup: Hashable, Sendable {
     }
 }
 
-/// A student's chapters and skills, as Make reads them for the Skill tile.
-public struct MakeBook: Hashable, Sendable {
+/// A student's chapters and skills, as Make reads them for the Skill tile and Progress for its rows.
+public struct RecordBook: Hashable, Sendable {
     public let chapters: [Chapter]
     public let skills: [Skill]
 
@@ -82,7 +82,7 @@ public enum MakeRules {
     /// The Skill tile's choices from the record: a student's current skill in the subject; a group's teach skill; a
     /// batch's members' current skills (distinct, at most six); nothing for a class level (a topic is typed).
     public static func skills(
-        for target: MakeTarget, subject: String, books: [UUID: MakeBook], roster: MakeRoster
+        for target: MakeTarget, subject: String, books: [UUID: RecordBook], roster: MakeRoster
     ) -> [String] {
         switch target {
         case let .student(id):
@@ -105,7 +105,7 @@ public enum MakeRules {
 
     /// The Subject tile's choices: the subjects of the student's books, the group's subject, the batch's members'
     /// subjects after the batch's own; none for a class level (typed).
-    public static func subjects(for target: MakeTarget, books: [UUID: MakeBook], roster: MakeRoster) -> [String] {
+    public static func subjects(for target: MakeTarget, books: [UUID: RecordBook], roster: MakeRoster) -> [String] {
         switch target {
         case let .student(id):
             return subjects(of: [books[id]])
@@ -141,13 +141,13 @@ public enum MakeRules {
         }
     }
 
-    private static func current(_ book: MakeBook?, subject: String) -> String? {
+    private static func current(_ book: RecordBook?, subject: String) -> String? {
         guard let book else { return nil }
         let chapters = book.chapters.filter { $0.subject == subject }
         return TrackingRules.currentSkill(skills: book.skills, chapters: chapters)?.name
     }
 
-    private static func subjects(of books: [MakeBook?]) -> [String] {
+    private static func subjects(of books: [RecordBook?]) -> [String] {
         distinct(books.compactMap(\.self).flatMap { $0.chapters.sorted { $0.position < $1.position }.map(\.subject) })
     }
 

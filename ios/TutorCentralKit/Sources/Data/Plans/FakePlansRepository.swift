@@ -75,7 +75,8 @@ import Foundation
             id: UUID(), kind: artefact.kind, source: artefact.source, title: artefact.title, content: artefact.content,
             photoPath: artefact.photoPath, studentID: link.student, planID: link.plan,
             regeneratedFrom: artefact.regeneratedFrom,
-            madeAt: now, generationID: artefact.generationID, schoolItemID: link.schoolItem
+            madeAt: now, generationID: artefact.generationID, schoolItemID: link.schoolItem,
+            madeFrom: artefact.madeFor == nil ? nil : "make", madeFor: artefact.madeFor
         )
         artefacts.append(made)
         if let index = plans.firstIndex(where: { $0.id == link.plan }) {
@@ -113,6 +114,11 @@ import Foundation
             [.note, .canDo].contains(artefact.kind) && artefact.madeAt >= since
                 && artefact.studentID.map(students.contains) == true
         }.reversed()
+    }
+
+    public func made(centre _: UUID) async throws -> [Artefact] {
+        try await begin()
+        return Array(artefacts.filter(\.isMade).sorted { $0.madeAt > $1.madeAt }.prefix(50)).hidingRegenerated()
     }
 
     public func setContent(_ content: ArtefactContent, artefact: UUID, centre _: UUID) async throws {
