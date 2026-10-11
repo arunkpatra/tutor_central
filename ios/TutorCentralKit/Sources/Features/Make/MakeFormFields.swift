@@ -75,7 +75,7 @@ extension MakeFormView {
 
     private var forTile: some View {
         helped(MakeWords.forHelper) {
-            PickerTile(label: "For", value: form.targetTitle ?? "Choose") { sheet = .forWhom(.student) }
+            PickerTile(label: "For", value: form.targetTitle ?? "Choose") { sheet = .forWhom(form.forSegment) }
         }
     }
 

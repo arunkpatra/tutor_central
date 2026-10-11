@@ -170,6 +170,11 @@ import Observation
     }
 
     /// The For sheet's store over the same reads.
+    /// The For sheet opens on the chosen target's segment.
+    public var forSegment: ForStore.Segment {
+        ForStore.Segment(for: target)
+    }
+
     public func forStore() -> ForStore {
         ForStore(context: context, chosen: target)
     }
