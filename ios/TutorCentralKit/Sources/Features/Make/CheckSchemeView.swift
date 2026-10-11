@@ -4,18 +4,25 @@ import Domain
 import SwiftUI
 
 /// The marking scheme (P6-Check-Scheme, -Typed): a paper created here (its answer key and marks) or typed (4000).
-/// Check N pages runs the check and opens the marks.
+/// Check N pages runs the check and opens the marks. As the intro's chooser (P10-Make-Check), its first segment is "A
+/// mock or paper made here" with the student's mocks first, and the footer is Use this scheme.
 public struct CheckSchemeView: View {
     @Bindable var store: CheckStore
     let showsFocus: Bool
+    let chooser: Bool
     let openResult: () -> Void
     @State private var typing: Bool
+    @State private var picked: SchemeChoice.ID?
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
-    public init(store: CheckStore, typed: Bool = false, showsFocus: Bool = false, openResult: @escaping () -> Void) {
+    public init(
+        store: CheckStore, typed: Bool = false, showsFocus: Bool = false, chooser: Bool = false,
+        openResult: @escaping () -> Void
+    ) {
         self.store = store
         self.showsFocus = showsFocus
+        self.chooser = chooser
         self.openResult = openResult
         _typing = State(initialValue: typed)
     }
@@ -32,7 +39,10 @@ public struct CheckSchemeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 BackRow(title: "Marking scheme") { dismiss() }
-                Segmented(options: [(false, "A paper I created"), (true, "Type it")], selection: $typing)
+                Segmented(
+                    options: [(false, chooser ? "A mock or paper made here" : "A paper I created"), (true, "Type it")],
+                    selection: $typing
+                )
                 if typing {
                     VStack(alignment: .leading, spacing: Tokens.fieldGap) {
                         MultilineWell(
@@ -41,6 +51,18 @@ public struct CheckSchemeView: View {
                         )
                         footnote("One line per question with its marks: what earns full marks and what earns part.")
                     }
+                } else if chooser {
+                    Card {
+                        VStack(spacing: 0) {
+                            ForEach(store.schemeChoices) { choice in
+                                PaperChoiceRow(title: choice.title, line: choice.line, chosen: chosenID == choice.id) {
+                                    picked = choice.id
+                                }
+                                .rowDivider(choice.id != store.schemeChoices.last?.id)
+                            }
+                        }
+                    }
+                    footnote("A mock's key and marks, or a paper's, are the scheme.")
                 } else {
                     Card {
                         VStack(spacing: 0) {
@@ -66,7 +88,34 @@ public struct CheckSchemeView: View {
         .background(Tokens.ground.color)
         .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
-        .safeAreaInset(edge: .bottom) {
+        .safeAreaInset(edge: .bottom) { footer }
+        .task {
+            if chooser {
+                await store.loadSchemes()
+            } else {
+                await store.loadPapers()
+            }
+        }
+        .onChange(of: typing) { apply() }
+        .onChange(of: store.typedScheme) { apply() }
+        .onAppear(perform: apply)
+    }
+
+    @ViewBuilder private var footer: some View {
+        if chooser {
+            FooterButton {
+                Button("Use this scheme") {
+                    if typing {
+                        store.chooseTyped()
+                    } else if let choice = store.schemeChoices.first(where: { $0.id == chosenID }) {
+                        store.choose(choice)
+                    }
+                    openResult()
+                }
+                .buttonStyle(.primary(.card))
+                .disabled(typing ? !SchemeSource.typed(store.typedScheme).isValid : chosenID == nil)
+            }
+        } else {
             FooterButton {
                 Button {
                     store.begin()
@@ -78,10 +127,11 @@ public struct CheckSchemeView: View {
                 .disabled(!source.isValid || store.pages.isEmpty)
             }
         }
-        .task { await store.loadPapers() }
-        .onChange(of: typing) { apply() }
-        .onChange(of: store.typedScheme) { apply() }
-        .onAppear(perform: apply)
+    }
+
+    /// The row ticked: the one tapped here, else the scheme already chosen, else the first.
+    private var chosenID: SchemeChoice.ID? {
+        picked ?? store.schemeChoices.first { $0.scheme == store.scheme }?.id ?? store.schemeChoices.first?.id
     }
 
     private var source: SchemeSource {
@@ -89,6 +139,7 @@ public struct CheckSchemeView: View {
     }
 
     private func apply() {
+        guard !chooser else { return }
         if typing {
             store.scheme = .typed(store.typedScheme)
         } else if case .typed = store.scheme, let first = store.papers.first {

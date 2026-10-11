@@ -38,7 +38,8 @@ public extension FakePlansRepository {
             Artefact(
                 id: madeMockID, kind: .mock, source: .made, title: "Science unit test 3 · mock",
                 content: .mock(AISamples.mock(mock)), photoPath: nil, studentID: FakeStudentsRepository.dev,
-                planID: nil, regeneratedFrom: nil, madeAt: at(35), madeFrom: "make", madeFor: dev
+                planID: nil, regeneratedFrom: nil, madeAt: at(35),
+                generationID: UUID(uuidString: "abababab-0000-0000-0015-000000000012"), madeFrom: "make", madeFor: dev
             ),
             Artefact(
                 id: madeBriefID, kind: .brief, source: .made, title: "Chemical reactions",

@@ -120,7 +120,7 @@ extension RootView {
         let made = CheckStore(
             workspace: workspace, register: register(for: workspace), ai: deps.ai, history: deps.aiHistory,
             students: deps.students, centres: deps.centres, now: deps.now, record: deps.record,
-            preset: shell.checkPresets[id]
+            preset: shell.checkPresets[id], plans: deps.plans, schoolItems: deps.schoolItems
         )
         made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
@@ -163,7 +163,14 @@ extension RootView {
                 }
             )
         case let .checkPaper(id):
-            CheckIntroView(store: checkStore(id, in: workspace)) { shell.tabs.push(.checkPages(id)) }
+            CheckIntroView(
+                store: checkStore(id, in: workspace), openPages: { shell.tabs.push(.checkPages(id)) },
+                openSchemes: { shell.tabs.push(.checkSchemeChooser(id)) }
+            )
+        case let .checkSchemeChooser(id):
+            CheckSchemeView(store: checkStore(id, in: workspace), chooser: true) {
+                shell.tabs.remove(.checkSchemeChooser(id))
+            }
         default:
             EmptyView()
         }
@@ -255,7 +262,7 @@ extension RootView {
                     )
                 case .scanRegister:
                     scanView(in: workspace)
-                case .checkPaper, .checkPages, .checkScheme, .checkResult:
+                case .checkPaper, .checkPages, .checkScheme, .checkSchemeChooser, .checkResult:
                     checkView(route, in: workspace)
                 default:
                     MakeHomeView(
