@@ -8,20 +8,29 @@ public enum OfflineRefusal {
         case generateFees, waiveFee, remind, note
         case consent, textbook, placement, homeworkStatus, addChapter
         case regenerate, changePlan, ownSheet
+        case schoolItem, readSchool, forwardAsk, mark, gapReport
     }
 
     public static func words(for write: Write) -> String {
-        switch write {
-        case .remind: "You're offline. Reminders need a connection to be noted on the fee."
-        case .generateFees: "You're offline. Creating the month's fees needs a connection; nothing was created."
-        case .placement: "You're offline. The placement's questions need a connection."
-        case .homeworkStatus: "You're offline. Marking homework needs a connection; nothing was changed."
-        case .regenerate: "You're offline. Making it again needs a connection; the sheet you have is still here."
-        case .changePlan: "You're offline. Changing the plan needs a connection; nothing was changed."
-        case .ownSheet: "You're offline. Using your own sheet needs a connection; nothing was changed."
-        default: "You're offline. \(action(write)) needs a connection; nothing was saved."
-        }
+        whole[write] ?? "You're offline. \(action(write)) needs a connection; nothing was saved."
     }
+
+    /// The writes whose words say more than what was not saved.
+    private static let whole: [Write: String] = [
+        .remind: "You're offline. Reminders need a connection to be noted on the fee.",
+        .generateFees: "You're offline. Creating the month's fees needs a connection; nothing was created.",
+        .placement: "You're offline. The placement's questions need a connection.",
+        .homeworkStatus: "You're offline. Marking homework needs a connection; nothing was changed.",
+        .regenerate: "You're offline. Making it again needs a connection; the sheet you have is still here.",
+        .changePlan: "You're offline. Changing the plan needs a connection; nothing was changed.",
+        .ownSheet: "You're offline. Using your own sheet needs a connection; nothing was changed.",
+        .schoolItem: "You're offline. Keeping what the school sent needs a connection; nothing was kept.",
+        .readSchool:
+            "You're offline. Reading what the school sent needs a connection; it waits here until you're back online.",
+        .forwardAsk: "You're offline. Sending needs a connection to note who was asked.",
+        .mark: "You're offline. Marking needs a connection; the photos are still here.",
+        .gapReport: "You're offline. The gap report needs a connection.",
+    ]
 
     private static let actions: [Write: String] = [
         .addStudent: "Adding a student", .editStudent: "Editing a student", .addClass: "Adding a class",

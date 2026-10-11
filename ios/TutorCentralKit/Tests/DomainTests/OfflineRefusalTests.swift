@@ -38,3 +38,21 @@ struct OfflineRefusalTests {
             == "You're offline. Using your own sheet needs a connection; nothing was changed.")
     }
 }
+
+struct OfflineRefusalSchoolTests {
+    @Test func theSchoolRefusalsNameWhatWaits() {
+        #expect(OfflineRefusal.words(for: .schoolItem)
+            == "You're offline. Keeping what the school sent needs a connection; nothing was kept.")
+        #expect(OfflineRefusal.words(for: .readSchool)
+            ==
+            "You're offline. Reading what the school sent needs a connection; it waits here until you're back online.")
+        #expect(OfflineRefusal.words(for: .forwardAsk)
+            == "You're offline. Sending needs a connection to note who was asked.")
+        #expect(OfflineRefusal
+            .words(for: .mark) == "You're offline. Marking needs a connection; the photos are still here.")
+        #expect(OfflineRefusal.words(for: .gapReport) == "You're offline. The gap report needs a connection.")
+        for write in [OfflineRefusal.Write.schoolItem, .readSchool, .forwardAsk, .mark, .gapReport] {
+            #expect(!ErrorWordsTests.banned.contains { OfflineRefusal.words(for: write).lowercased().contains($0) })
+        }
+    }
+}

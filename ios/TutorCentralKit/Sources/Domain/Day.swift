@@ -61,6 +61,21 @@ public struct Day: Hashable, Sendable, Comparable, Codable {
         formatted("d MMMM")
     }
 
+    /// "Mon 19": a day in a run whose month is written once.
+    public var weekdayDayText: String {
+        formatted("EEE d")
+    }
+
+    /// "Oct".
+    public var shortMonthText: String {
+        formatted("MMM")
+    }
+
+    /// Whole days from this day to another (negative before it), counted on the calendar, not in hours.
+    public func days(to other: Day) -> Int {
+        Self.utc.dateComponents([.day], from: date(in: Self.utc), to: other.date(in: Self.utc)).day ?? 0
+    }
+
     /// "Mon 5 Oct".
     public var shortWeekdayText: String {
         formatted("EEE d MMM")
