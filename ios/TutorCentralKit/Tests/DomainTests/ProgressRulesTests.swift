@@ -161,6 +161,12 @@ struct ProgressRulesTests: SchoolSamples {
         let sessions = [session(1, absent: true), session(2, absent: true), session(5, absent: true)]
         let made = ProgressRules.row(input(status(dev, .onTrack), sessions: sessions), className: "Class 8 Science")
         #expect(made.line == "No checks yet · 3 absences" && made.percentText == "–" && made.checks == 0)
+        // The review's R-app-4: a skill made secure in a month with no checks keeps its count before "No checks yet".
+        let secured = ProgressRules.row(
+            input(status(dev, .onTrack), skills: [skill(.secure, at: FakeClock.at(2026, 10, 2, 18, 0))]),
+            className: "Class 8 Science"
+        )
+        #expect(secured.line == "1 skill secure · No checks yet")
     }
 
     @Test func theHeroSumsTheRowsAndCountsNotOnTrack() {

@@ -181,7 +181,9 @@ public enum ProgressRules {
             let count = given == 0 ? "No checks yet" : "\(counted(given, "check")) so far"
             return placed.map { "Placed \(Day($0, calendar: input.calendar).shortWeekdayText) · \(count)" } ?? count
         }
-        guard let percent, checks > 0 else { return "No checks yet" }
+        guard let percent, checks > 0 else {
+            return secure > 0 ? "\(counted(secure, "skill")) secure · No checks yet" : "No checks yet"
+        }
         return "\(counted(secure, "skill")) secure · \(percent)% right"
     }
 

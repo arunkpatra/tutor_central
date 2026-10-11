@@ -100,6 +100,19 @@ public struct ReportsView: View {
     }
 
     @ViewBuilder private var progress: some View {
+        if store.showsNoStudents {
+            Card {
+                EmptyRow(
+                    symbol: "chart.bar", title: "No students yet",
+                    line: "Each student's progress appears here once you add students."
+                )
+            }
+        } else {
+            progressRowsSection
+        }
+    }
+
+    @ViewBuilder private var progressRowsSection: some View {
         if let hero = store.progressHero {
             ProgressHeroCard(
                 skillsSecure: hero.skillsSecure, rightText: hero.rightText, notOnTrack: hero.notOnTrack,

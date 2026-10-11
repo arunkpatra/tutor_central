@@ -284,7 +284,8 @@ extension Fixtures {
     /// The register each state starts with: nothing; the first three with no class; the seed's ten and two classes.
     static func register(for state: LaunchState) -> (students: [Student], classes: [Classroom]) {
         if progressStates.contains(state) {
-            return (progressStudents, FakeClassesRepository.withEvening)
+            // The review's R-app-9: a centre before its first student.
+            return state == .reportsProgressEmpty ? ([], []) : (progressStudents, FakeClassesRepository.withEvening)
         }
         // Check a paper's boards mark Hemanth's paper: his parent has agreed (D62).
         let board = boardRegister(state)

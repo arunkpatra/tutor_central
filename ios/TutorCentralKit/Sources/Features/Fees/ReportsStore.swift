@@ -92,6 +92,8 @@ import Observation
     var progressCopy: [ProgressRow]?
     /// The span and the month the figures on screen belong to: a new one shows its copy at once, else nothing.
     var progressShown: String?
+    /// Progress has its rows for the span on screen, from the read or the copy.
+    var progressLoaded = false
     var monthShown: Period?
     var loadGeneration = 0
     let workspace: Workspace

@@ -193,6 +193,29 @@ import Testing
         fees.cancel()
     }
 
+    /// The review's R-app-10: switching to Progress after a month was read draws no hero of zeros while Progress reads.
+    @Test func theHeroWaitsForProgressItself() async throws {
+        let online = await Self.kit()
+        let (store, attendance) = Self.slowStore(online, cache: nil, delay: nil)
+        store.segment = .fees
+        await store.load()
+        attendance.delay = .seconds(5)
+        store.segment = .progress
+        let read = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(200))
+        #expect(store.progressHero == nil && store.loading)
+        read.cancel()
+    }
+
+    /// The review's R-app-9: a centre with no students yet reads the Reports card's words for Progress, not a hero of
+    /// zeros.
+    @Test func noStudentsYetShowsTheEmptyCard() async {
+        let kit = await Self.kit(students: [])
+        #expect(kit.store.showsNoStudents && kit.store.progressHero == nil)
+        let some = await Self.kit()
+        #expect(!some.store.showsNoStudents)
+    }
+
     /// A span with no copy shows no rows while it is read, never the last span's.
     @Test func aNewSpanNeverShowsTheLastSpansRows() async throws {
         let online = await Self.kit()
