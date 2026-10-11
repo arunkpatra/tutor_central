@@ -138,7 +138,10 @@ public enum ArtefactBudget {
             let group = draft.groups.first { $0.number == line.groupNo }
             let level = student.classLevel ?? group.map { classLevel(of: $0, students: students) } ?? .five
             // Nothing taught in the subject: the spaced queue has nothing to pick, so the student is placed.
-            let picked = Array((spacedSkills[student.id] ?? []).prefix(SpacedQueue.count))
+            // "Add it to the checks" puts the current skill first (Phase 14).
+            let heads = draft.personalCheckSkills[student.id] ?? []
+            let rest = (spacedSkills[student.id] ?? []).filter { skill in !heads.contains { $0.id == skill.id } }
+            let picked = Array((heads + rest).prefix(SpacedQueue.count))
             guard !picked.isEmpty else { return .placement(studentID: student.id, classLevel: level) }
             return .personalChecks(
                 studentID: student.id, skills: picked.map(\.name), skillIDs: picked.map(\.id), classLevel: level,

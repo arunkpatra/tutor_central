@@ -182,6 +182,53 @@ extension ParentFixtures {
         }
     }
 
+    // MARK: The cadence and the next step.
+
+    var riyaWithParent: Student {
+        var student = riya
+        student.parentName = "Neha Sharma"
+        student.parentPhone = PhoneNumber(e164: "+919811122233")
+        student.messageLanguage = .hindi
+        return student
+    }
+
+    /// A message logged on a day of October at 18:00.
+    func entry(_ kind: MessageKind, day date: Int) -> MessageEntry {
+        MessageEntry(id: UUID(), kind: kind, openedAt: india(2026, 10, date, 18, 0), language: .hindi)
+    }
+
+    var stepChapter: Chapter {
+        Chapter(id: fixed("73"), subject: "Science", position: 1, name: "Chemical reactions")
+    }
+
+    var countingAtoms: Skill {
+        Skill(
+            id: fixed("31"), chapterID: stepChapter.id, position: 1, name: "Counting atoms in a formula",
+            state: .secure, stateAt: india(2026, 9, 20), lastCheckedAt: nil
+        )
+    }
+
+    var balancing: Skill {
+        Skill(
+            id: fixed("32"), chapterID: stepChapter.id, position: 2, name: "Balancing equations", state: .practising,
+            stateAt: india(2026, 10, 1), lastCheckedAt: nil
+        )
+    }
+
+    /// Dev alone in the Evening batch on Friday 9 October, at a status and a step, not on track since a day.
+    func planInput(dev status: TrackStatus, step: NextStep?, since: Day? = nil, told: Set<UUID> = []) -> PlanInput {
+        var student = devWithParent
+        student.classID = evening.id
+        student.trackStatus = status
+        student.nextStep = step
+        student.trackSince = since?.date(in: calendar).addingTimeInterval(3600 * 17)
+        return PlanInput(
+            classroom: evening, date: day(10, 9), students: [student], chapters: [student.id: [stepChapter]],
+            skills: [student.id: [countingAtoms, balancing]], sessions: [], schoolItems: [],
+            now: india(2026, 10, 9, 16, 35), calendar: calendar, groupCount: nil, subjects: [:], told: told
+        )
+    }
+
     func fixed(_ tail: String) -> UUID {
         UUID(uuidString: "00000000-0000-0000-0000-0000000000\(tail)")!
     }

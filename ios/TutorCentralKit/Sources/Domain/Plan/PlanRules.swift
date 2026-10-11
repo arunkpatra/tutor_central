@@ -23,12 +23,16 @@ public struct PlanInput: Sendable {
     public let revisions: [UUID: RevisionLine]
     /// Students on holiday today: left out (Phase 13).
     public let holidays: Set<UUID>
+    /// Students not on track whose parent has been told since (a `not_on_track` message logged): no caption (Phase 14).
+    public let told: Set<UUID>
 
     public init(
         classroom: Classroom, date: Day, students: [Student], chapters: [UUID: [Chapter]], skills: [UUID: [Skill]],
         sessions: [AttendanceSession], schoolItems: [SchoolItemHint], now: Date, calendar: Calendar,
-        groupCount: Int?, subjects: [Int: String], revisions: [UUID: RevisionLine] = [:], holidays: Set<UUID> = []
+        groupCount: Int?, subjects: [Int: String], revisions: [UUID: RevisionLine] = [:], holidays: Set<UUID> = [],
+        told: Set<UUID> = []
     ) {
+        self.told = told
         self.revisions = revisions
         self.holidays = holidays
         self.classroom = classroom
@@ -122,7 +126,7 @@ public enum PlanRules {
         return PlanDraft(
             classID: input.classroom.id, date: input.date, groups: planned,
             lines: lines.map { $0.with(words: cut($0.words)) },
-            leftOut: away
+            leftOut: away, personalCheckSkills: checkHeads(present, input: input)
         )
     }
 
@@ -276,14 +280,16 @@ public enum PlanRules {
         let skills = (input.skills[student.id] ?? []).filter { ids.contains($0.chapterID) }
         let own = chapters.isEmpty ? nil : teachSkill(for: student, subject: group.subject, input: input)
         let skillName = own?.name ?? group.skill
-        let skillID = own?.id ?? group.skillID
         let placement = !chapters.isEmpty && skills.allSatisfy { $0.state == .notStarted }
         let again = !chapters.isEmpty && !placement && [.watch, .notOnTrack].contains(student.trackStatus)
+        let before = own.flatMap { skillBefore($0, chapters: chapters, skills: skills) }
+        let step = again ? student.effectiveStep : .leave
+        let teachID = step == .stepBack ? before?.id ?? own?.id : own?.id ?? group.skillID
         let missed = catchUp(for: student, input: input)
         let line = { (kind: PlanLineKind, words: String, personal: Bool) in
             PlanLine(
-                studentID: student.id, groupNo: group.number, kind: kind, skillID: skillID, words: words,
-                personalChecks: personal
+                studentID: student.id, groupNo: group.number, kind: kind, skillID: own?.id ?? group.skillID,
+                words: words, personalChecks: personal
             )
         }
         var lines: [PlanLine] = []
@@ -291,10 +297,11 @@ public enum PlanRules {
             let then = skillName.isEmpty ? "" : " · then \(skillName)"
             lines.append(line(.catchUp, missed + then, false))
         }
-        let teach = skillName.isEmpty
-            ? withTheGroup
-            : again ? "Teach again: \(skillName), with the worked example" : "Teach: \(skillName)"
-        lines.append(line(.teach, teach, false))
+        let teach = skillName.isEmpty ? withTheGroup : teachWords(skillName, step: step, before: before?.name)
+        lines.append(PlanLine(
+            studentID: student.id, groupNo: group.number, kind: .teach, skillID: teachID, words: teach,
+            caption: caption(student, step: step, input: input)
+        ))
         lines.append(line(.practise, "Practise set 1", false))
         let personal = !chapters.isEmpty && (placement || again || missed != nil)
         lines.append(line(.check, placement ? "Placement, \(pronoun(student)) first checks" : "Check 3", personal))

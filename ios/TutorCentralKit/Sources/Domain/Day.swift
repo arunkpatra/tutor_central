@@ -76,6 +76,11 @@ public struct Day: Hashable, Sendable, Comparable, Codable {
         Self.utc.dateComponents([.day], from: date(in: Self.utc), to: other.date(in: Self.utc)).day ?? 0
     }
 
+    /// "Sunday".
+    public var weekdayName: String {
+        formatted("EEEE")
+    }
+
     /// "Wed".
     public var shortWeekday: String {
         formatted("EEE")
