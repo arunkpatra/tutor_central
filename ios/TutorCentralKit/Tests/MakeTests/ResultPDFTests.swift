@@ -4,7 +4,7 @@ import Domain
 import Foundation
 import PDFKit
 import Testing
-@testable import AITools
+@testable import Make
 
 @MainActor struct ResultPDFTests {
     @Test func aPaperBecomesAPDFFileNamedAfterIt() throws {

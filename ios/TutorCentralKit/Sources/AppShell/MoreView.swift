@@ -26,7 +26,7 @@ struct MoreView: View {
                     SettingRow(symbol: "chart.bar", label: "Reports", action: { open(.reports) })
                 }
                 group("Make") {
-                    SettingRow(symbol: "sparkles", label: "Make something", action: { open(.aiAssistant) })
+                    SettingRow(symbol: "sparkles", label: "Make something", action: { open(.make) })
                         .rowDivider()
                     SettingRow(
                         symbol: "doc.text.magnifyingglass", label: "Check a paper",

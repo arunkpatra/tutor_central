@@ -76,7 +76,7 @@ struct TabsView<
         case .schedule, .event, .tasks: plannerDestination(route)
         case let .close(id): close(id)
         case let .artefact(id): artefact(id)
-        case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
+        case .make, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
              .checkResult: tools(route)
         case .schoolRead, .schoolItem, .schoolAsk, .schoolGapReport: schoolScreen(route)
         case .note, .studentMessages, .readMarks: parents(route)

@@ -3,7 +3,7 @@ import Domain
 import Foundation
 import Students
 import Testing
-@testable import AITools
+@testable import Make
 
 @MainActor struct AIStoreTests {
     nonisolated static let now = FakeCountsRepository.fixedNow

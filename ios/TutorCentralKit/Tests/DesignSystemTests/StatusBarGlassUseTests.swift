@@ -11,9 +11,9 @@ struct StatusBarGlassUseTests {
     }
 
     static let pushedAIScreens = [
-        "Students/ScanReviewView", "Students/ScanRegisterView", "AITools/AssistantView", "AITools/GenerateFormView",
-        "AITools/ResultView", "AITools/NoteResultView", "AITools/HistoryView", "AITools/CheckIntroView",
-        "AITools/CheckPagesView", "AITools/CheckSchemeView", "AITools/CheckResultView",
+        "Students/ScanReviewView", "Students/ScanRegisterView", "Make/AssistantView", "Make/GenerateFormView",
+        "Make/ResultView", "Make/NoteResultView", "Make/HistoryView", "Make/CheckIntroView",
+        "Make/CheckPagesView", "Make/CheckSchemeView", "Make/CheckResultView",
     ]
 
     @Test(arguments: pushedAIScreens) func thePushedAIScreenDrawsTheGlass(_ name: String) throws {
