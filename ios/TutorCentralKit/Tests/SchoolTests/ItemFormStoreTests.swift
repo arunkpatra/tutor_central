@@ -74,4 +74,18 @@ import Testing
         #expect(form.forValue == "Class 8 at Vidya Niketan")
         #expect(form.forNote == "Dev, Meher and Nikhil are in class 8 there. Or one student.")
     }
+
+    /// Hand run 7: the calendar opened on today with nothing chosen, and tapping today set nothing.
+    @Test func openingADayPickerChoosesTheDayItShows() async {
+        let form = await makeForm()
+        form.openDay()
+        #expect(form.date == Day(year: 2026, month: 10, day: 7))
+        form.date = Day(year: 2026, month: 10, day: 19)
+        form.openEndDay()
+        #expect(form.endDate == Day(year: 2026, month: 10, day: 19))
+        form.date = Day(year: 2026, month: 10, day: 20)
+        form.openDay()
+        form.openEndDay()
+        #expect(form.date == Day(year: 2026, month: 10, day: 20) && form.endDate == Day(year: 2026, month: 10, day: 19))
+    }
 }

@@ -40,6 +40,17 @@ public struct ForOption: Identifiable, Hashable, Sendable {
     let schools: [School]
     let today: Day
 
+    /// The day picker opened: it chooses the day it shows (today) when none is chosen, so tapping today needs no
+    /// other day first (hand run 7).
+    public func openDay() {
+        date = date ?? today
+    }
+
+    /// The To picker opened: it starts on the From day.
+    public func openEndDay() {
+        endDate = endDate ?? date ?? today
+    }
+
     public init(draft: SchoolItemDraft?, students: [Student], schools: [School], today: Day) {
         kind = draft?.kind ?? .exam
         title = draft?.title ?? ""

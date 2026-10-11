@@ -97,6 +97,7 @@ public struct ItemFormSheet: View {
             Text(SchoolWords.dateLabel(store.kind)).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             HStack(spacing: Tokens.inline) {
                 PickerTile(label: store.kind == .holiday ? "From" : "Day", value: store.date?.fullText ?? "Choose") {
+                    store.openDay()
                     picksDate = true
                 }
                 .popover(isPresented: $picksDate) {
@@ -105,16 +106,19 @@ public struct ItemFormSheet: View {
                         .calendarPopover(timeZone: calendar.timeZone)
                 }
                 if store.kind == .holiday {
-                    PickerTile(label: "To", value: store.endDate?.fullText ?? "Choose") { picksEnd = true }
-                        .popover(isPresented: $picksEnd) {
-                            DatePicker(
-                                "To",
-                                selection: dayBinding(\.endDate, calendar: calendar),
-                                displayedComponents: .date
-                            )
-                            .datePickerStyle(.graphical)
-                            .calendarPopover(timeZone: calendar.timeZone)
-                        }
+                    PickerTile(label: "To", value: store.endDate?.fullText ?? "Choose") {
+                        store.openEndDay()
+                        picksEnd = true
+                    }
+                    .popover(isPresented: $picksEnd) {
+                        DatePicker(
+                            "To",
+                            selection: dayBinding(\.endDate, calendar: calendar),
+                            displayedComponents: .date
+                        )
+                        .datePickerStyle(.graphical)
+                        .calendarPopover(timeZone: calendar.timeZone)
+                    }
                 }
             }
         }
