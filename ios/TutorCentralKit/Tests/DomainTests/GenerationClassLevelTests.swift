@@ -34,7 +34,8 @@ struct GenerationClassLevelTests {
             id: UUID(), kind: .paper, createdAt: at,
             request: .paper(PaperForm(classLevel: .ten, subject: "Mathematics", topic: "T")), result: result
         )
-        #expect(byLevel.line(className: { _ in "Class 10 Maths" }, calendar: DayHeading.india).hasPrefix(
+        let today = Day(at, calendar: DayHeading.india)
+        #expect(byLevel.line(className: { _ in "Class 10 Maths" }, today: today, calendar: DayHeading.india).hasPrefix(
             "Question paper · Class 10 · "
         ))
         let batch = UUID()
@@ -42,8 +43,12 @@ struct GenerationClassLevelTests {
             id: UUID(), kind: .paper, createdAt: at,
             request: .paper(PaperForm(classID: batch, subject: "Mathematics", topic: "T")), result: result
         )
-        #expect(byBatch.line(className: { $0 == batch ? "Class 10 Maths" : nil }, calendar: DayHeading.india)
-            .hasPrefix("Question paper · Class 10 Maths · "))
+        #expect(byBatch.line(
+            className: { $0 == batch ? "Class 10 Maths" : nil },
+            today: today,
+            calendar: DayHeading.india
+        )
+        .hasPrefix("Question paper · Class 10 Maths · "))
     }
 
     @Test func theResultsHeroNamesTheClassLevelAndTheTypedSubject() {
