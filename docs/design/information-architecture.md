@@ -1196,3 +1196,22 @@ What the boards settle:
   states, item kinds, the material's marks, a chapter row open with skill rows, the plan line, the check row with the line
   checklist and the right-or-wrong pair in both states, the ladder, the trend, the seven figure templates (the validators'
   previews), the board view type.
+
+## Phase 12 follow-up boards (approved 2026-10-11): the AI forms' class by level
+
+Row 22 of the canvas (y 48400; the title note at 48100); sources `mockups/P12-Form-Paper-Class`, `-ClassWheel`, `-NoClass`,
+each with `-Light`. The owner found the Question paper form's class picker opening nothing on a centre with no batches (build
+22): the form took its class from a batch, a V1 leftover from before students had a class level. The owner's ruling: the AI
+forms take the class by level, with no batch.
+
+| Board | Source |
+|---|---|
+| Question paper with Class as a level (LKG to 10) and Subject typed (dark and light) | `P12-Form-Paper-Class`, `-Light` |
+| The Class tile open: New student's class wheel (P10-NewStudent-ClassPicker) | `P12-Form-Paper-ClassWheel`, `-Light` |
+| Nothing to start from: Class reads Choose, Subject empty with its placeholder, Create the paper waiting | `P12-Form-Paper-NoClass`, `-Light` |
+
+What the boards settle: Question paper, Homework and Worksheet take the same Class tile; the form starts on the class most of
+the centre's students are in, else the last one chosen; the subject is typed, remembered for the next form of its kind, and
+its "From the class" helper goes; the AI is sent the class level ("Class 10"); History lists a paper as "Question paper ·
+Class 10 · Sun 11 Oct" (a paper made from a batch before keeps the batch's name). The Progress note is unchanged.
+

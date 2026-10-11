@@ -2446,6 +2446,48 @@
    "w": 393,
    "h": 852,
    "title": "Phase 12 · Pending changes with a waiting close (U39): the close wears its own symbol, a checklist, so it is told from an attendance save; its line reads who came, the checks and when it was made here"
+  },
+  "P12-Form-Paper-Class.dc.html": {
+   "x": 0,
+   "y": 48400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 follow-up · Question paper with the class by level (LKG to 10), no batch: Class shows the level the form starts on (the centre's most common class, else the last chosen), Subject is typed; Homework and Worksheet take the same Class tile · dark"
+  },
+  "P12-Form-Paper-Class-Light.dc.html": {
+   "x": 473,
+   "y": 48400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 follow-up · Question paper, the class by level · light"
+  },
+  "P12-Form-Paper-ClassWheel.dc.html": {
+   "x": 946,
+   "y": 48400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 follow-up · The Class tile open: the class wheel of New student (P10-NewStudent-ClassPicker), LKG to class 10 · dark"
+  },
+  "P12-Form-Paper-ClassWheel-Light.dc.html": {
+   "x": 1419,
+   "y": 48400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 follow-up · The class wheel · light"
+  },
+  "P12-Form-Paper-NoClass.dc.html": {
+   "x": 1892,
+   "y": 48400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 follow-up · Nothing to start from (no student has a class yet): Class reads Choose, Subject is empty with its placeholder, Create the paper waits until both are filled · dark"
+  },
+  "P12-Form-Paper-NoClass-Light.dc.html": {
+   "x": 2365,
+   "y": 48400,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 12 follow-up · No class chosen yet · light"
   }
  },
  "createdOnFiles": {
@@ -2632,6 +2674,14 @@
    "w": 240,
    "x": 0,
    "y": 46700
+  },
+  "p12_2": {
+   "kind": "title1",
+   "maxW": 2800,
+   "w": 240,
+   "x": 0,
+   "y": 48100,
+   "text": "Phase 12 follow-up · The AI forms take the class by level, not a batch (the owner, 2026-10-11): Question paper, Homework and Worksheet"
   }
  },
  "order": [
@@ -2980,7 +3030,13 @@
   "P10-Kit-Light.dc.html",
   "P12-Close-Cards.dc.html",
   "P12-Close-Cards-Light.dc.html",
-  "P12-Pending-Close.dc.html"
+  "P12-Pending-Close.dc.html",
+  "P12-Form-Paper-Class.dc.html",
+  "P12-Form-Paper-Class-Light.dc.html",
+  "P12-Form-Paper-ClassWheel.dc.html",
+  "P12-Form-Paper-ClassWheel-Light.dc.html",
+  "P12-Form-Paper-NoClass.dc.html",
+  "P12-Form-Paper-NoClass-Light.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
