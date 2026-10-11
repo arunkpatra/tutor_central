@@ -3,25 +3,30 @@ import type { Vars } from "../auth.js";
 import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
-import { decodeImage } from "../images.js";
 import { request as briefRequest } from "../prompts/brief.js";
+import { request as canDoRequest } from "../prompts/can-do.js";
 import { request as checkRequest } from "../prompts/check.js";
 import { request as figureRequest } from "../prompts/figure.js";
 import { request as gapReportRequest } from "../prompts/gap-report.js";
 import { request as mockRequest } from "../prompts/mock.js";
+import { request as notOnTrackRequest } from "../prompts/not-on-track.js";
+import { request as noteRequest } from "../prompts/note.js";
 import { request as textbookRequest } from "../prompts/parse-textbook.js";
 import { request as placementRequest } from "../prompts/placement.js";
 import { request as planRequest } from "../prompts/plan.js";
+import { request as readMarksRequest } from "../prompts/read-marks.js";
 import { request as sheetRequest } from "../prompts/sheet.js";
 import { request as testTomorrowRequest } from "../prompts/test-tomorrow.js";
 import { request as workedExampleRequest } from "../prompts/worked-example.js";
-import { MakeInput, mockMarks, ParseTextbookInput, PlanInput } from "../schemas.js";
-import { answer, isParsed, notYet, parse, run } from "./common.js";
+import { type DecodedImage, decodeImage } from "../images.js";
+import { MakeInput, mockMarks, ParseTextbookInput, PlanInput, ReadMarksInput } from "../schemas.js";
+import { answer, isParsed, parse, run } from "./common.js";
 
-/** The V2 routes that are live (docs/spec-v2.md section 9): the textbook's contents page, `/plan` (a first topic for a
- *  group whose record names none), and `/make` for the group material (sheet, worked example, figure, brief, check), the
- *  placement, the mock, the gap report and Test tomorrow; the note and can_do answer 501 until Phase 14. The photo is never stored: the record's
- *  input holds the page count, the bytes, the class and the subject. */
+/** The V2 routes (docs/spec-v2.md section 9): the textbook's contents page, `/plan` (a first topic for a group whose
+ *  record names none), `/make` for the group material (sheet, worked example, figure, brief, check), the placement, the
+ *  mock, the gap report and the parents' messages (Test tomorrow, the note, can-now-do, not on track), and
+ *  `/read-marks` (a report card's marks, Phase 14). A photo is never stored: the record's input holds the page count
+ *  and the bytes. */
 export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
   const routes = new Hono<Vars>();
   routes.post("/parse-textbook", async (c) => {
@@ -69,9 +74,27 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
         return run(c, deps, body.centre, { kind: "gap_report", input: v, request: gapReportRequest(v), student: v.studentId });
       case "test_tomorrow":
         return run(c, deps, body.centre, { kind: "test_tomorrow", input: v, request: testTomorrowRequest(v), student: v.studentId, studentName: v.studentName });
-      default:
-        return notYet(c, "/ai/make");
+      case "note":
+        return run(c, deps, body.centre, { kind: "note", input: v, request: noteRequest(v), student: v.studentId, studentName: v.studentName });
+      case "can_do":
+        return run(c, deps, body.centre, { kind: "can_do", input: v, request: canDoRequest(v), student: v.studentId, studentName: v.studentName });
+      case "not_on_track":
+        return run(c, deps, body.centre, { kind: "not_on_track", input: v, request: notOnTrackRequest(v), student: v.studentId, studentName: v.studentName });
     }
+  });
+  routes.post("/read-marks", async (c) => {
+    const body = await parse(c, ReadMarksInput);
+    if (!isParsed(body)) return body;
+    const pages: DecodedImage[] = [];
+    for (const page of body.value.pages) {
+      const image = decodeImage(page);
+      if (typeof image === "string") return answer(c, errors.badImage(image));
+      pages.push(image);
+    }
+    const { studentId, studentName, subjects } = body.value;
+    const input = { kind: "read_marks", pages: pages.length, bytes: pages.reduce((n, p) => n + p.bytes, 0), studentName };
+    const request = readMarksRequest(pages, studentName, subjects ?? []);
+    return run(c, deps, body.centre, { kind: "read_marks", input, request, student: studentId, studentName, empty: (read) => read.marks.length === 0 });
   });
   return routes;
 }

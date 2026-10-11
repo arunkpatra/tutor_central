@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test";
 import {
+  MessageOutput,
+  ReadMarksInput,
+  ReadMarksOutput,
   CheckOutput,
   CheckPaperInput,
   GenerateInput,
@@ -127,11 +130,17 @@ test("MakeInput accepts each kind with its fields and nothing else", () => {
   expect(MakeInput.safeParse({ ...c, kind: "check", classLevel: "6", subject: "Science", skills: ["A", "B", "C", "D"] }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "placement", classLevel: "7", subject: "English", chapters: ["Chapter 1", "Chapter 2"] }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "mock", classLevel: "10", subject: "Science", title: "Science pre-board", portions: ["Light", "Electricity"], pattern: { marks: 40, durationMinutes: 90 } }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "kn", week: { taught: ["Halves"], right: ["Halves"], practise: ["Quarters"], coming: [] }, tutorName: "Meera" }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "can_do", studentId, studentName: "Anu", language: "en", ladder: { reading: "words", writing: "letters", numbers: "to_99" }, tutorName: "Meera" }).success).toBe(true);
+  const parent = { parentName: "Ramesh Kumar", centreName: "Bright Minds", classLevel: "8" };
+  expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "kn", week: { monday: "2026-10-05", taught: ["Halves"], right: "8 of 12 checks", practise: ["Quarters"], coming: [], attendance: "absent 1 of 3 classes" }, tutorName: "Meera", ...parent }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "kn", week: { monday: "2026-10-05", taught: [], practise: [], coming: [] }, tutorName: "Meera", ...parent }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "kn", week: { taught: ["Halves"], right: ["Halves"], practise: ["Quarters"], coming: [] }, tutorName: "Meera", ...parent }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "can_do", studentId, studentName: "Anu", language: "en", ladder: { movedUp: [{ area: "reading", step: "Words" }], canDo: ["Read words"], atHome: "One page a day", next: ["Sentences"] }, tutorName: "Meera", ...parent, classLevel: "1" }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "can_do", studentId, studentName: "Anu", language: "en", ladder: { movedUp: [{ area: "drawing", step: "Lines" }], canDo: ["Draw"], atHome: "x", next: [] }, tutorName: "Meera", ...parent }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "not_on_track", studentId, studentName: "Dev", language: "hi", hard: ["Balancing equations"], reasons: ["3 of 10 on the mock"], doing: "the worked example", tutorName: "Meera", ...parent }).success).toBe(true);
+  expect(MakeInput.safeParse({ ...c, kind: "not_on_track", studentId, studentName: "Dev", language: "hi", hard: [], reasons: [], doing: "x", tutorName: "Meera", ...parent }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "test_tomorrow", studentId, studentName: "Anu", language: "hinglish", subject: "Science", title: "Science test", date: "2026-11-02", portions: "Chapters 1 to 3", tutorName: "Meera", centreName: "Bright Minds" }).success).toBe(true);
   expect(MakeInput.safeParse({ ...c, kind: "gap_report", studentId, classLevel: "8", subject: "Science", daysLeft: 2, bySkill: [{ skill: "Balancing equations", right: 2, of: 5, note: "Sign error" }] }).success).toBe(true);
-  expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "ta", week: { taught: [], right: [], practise: [], coming: [] }, tutorName: "Meera" }).success).toBe(false);
+  expect(MakeInput.safeParse({ ...c, kind: "note", studentId, studentName: "Dev", language: "ta", week: { monday: "2026-10-05", taught: ["Halves"], right: "8 of 12 checks", practise: ["Quarters"], coming: [], attendance: "absent 1 of 3 classes" }, tutorName: "Meera", ...parent }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "sheet", classLevel: "11", subject: "Mathematics", skills: ["Halves"] }).success).toBe(false);
   expect(MakeInput.safeParse({ ...c, kind: "poem", classLevel: "5" }).success).toBe(false);
 });
@@ -271,4 +280,18 @@ test("a gap report day line may run to the plan's 200 characters", () => {
   const day = { title: "Monday", line: "x".repeat(200) };
   expect(GapReportOutput.safeParse({ summary: "s", days: [day] }).success).toBe(true);
   expect(GapReportOutput.safeParse({ summary: "s", days: [{ ...day, line: "x".repeat(201) }] }).success).toBe(false);
+});
+
+test("a message is at most 600 characters; read-marks takes one or two photos and answers at most twelve rows", () => {
+  expect(MessageOutput.safeParse({ message: "x".repeat(600), english: "y" }).success).toBe(true);
+  expect(MessageOutput.safeParse({ message: "x".repeat(601), english: "y" }).success).toBe(false);
+  const page = { imageBase64: "AAAA", mediaType: "image/jpeg" };
+  const read = { centreId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60718", studentId: "7a5f1b3e-9c2d-4e8f-a1b2-c3d4e5f60719", studentName: "Hemanth" };
+  expect(ReadMarksInput.safeParse({ ...read, pages: [page, page] }).success).toBe(true);
+  expect(ReadMarksInput.safeParse({ ...read, pages: [] }).success).toBe(false);
+  expect(ReadMarksInput.safeParse({ ...read, pages: [page, page, page] }).success).toBe(false);
+  const row = { subject: "Hindi", test: "Unit test 2", date: null, score: 11, max: 25 };
+  expect(ReadMarksOutput.safeParse({ marks: [row] }).success).toBe(true);
+  expect(ReadMarksOutput.safeParse({ marks: Array(13).fill(row) }).success).toBe(false);
+  expect(ReadMarksOutput.safeParse({ marks: [{ ...row, max: 0 }] }).success).toBe(false);
 });

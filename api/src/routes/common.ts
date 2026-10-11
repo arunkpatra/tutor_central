@@ -23,11 +23,6 @@ export type Call<T> = {
 // What every AI route shares (moved from routes/ai.ts for routes/v2.ts): start the record (consent, the limit), call
 // Claude, finish the record, answer `{ id, result }` or an error in words (src/errors.ts); the body's validation.
 
-/** A route whose phase has not come. */
-export function notYet(c: C, route: string) {
-  return c.json({ error: "not yet", route }, 501);
-}
-
 export async function run<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centre: string, call: Call<T>) {
   const token = c.get("token");
   let id: string;
