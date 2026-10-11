@@ -373,22 +373,34 @@ isOneToOne: false
                   ]
                 },"marks": {
                   Row: {
-                    "centre_id": string,"created_at": string,"date": string,"id": string,"max": number,"photo_path": string | null,"score": number,"student_id": string,"subject": string,"test": string,"updated_at": string
+                    "artefact_id": string | null,"centre_id": string,"created_at": string,"date": string,"id": string,"max": number,"photo_path": string | null,"questions": Json | null,"school_item_id": string | null,"score": number,"student_id": string,"subject": string,"test": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"created_at"?: string,"date": string,"id"?: string,"max": number,"photo_path"?: string | null,"score": number,"student_id": string,"subject": string,"test": string,"updated_at"?: string
+                    "artefact_id"?: string | null,"centre_id": string,"created_at"?: string,"date": string,"id"?: string,"max": number,"photo_path"?: string | null,"questions"?: Json | null,"school_item_id"?: string | null,"score": number,"student_id": string,"subject": string,"test": string,"updated_at"?: string
                   }
                   Update: {
-                    "centre_id"?: string,"created_at"?: string,"date"?: string,"id"?: string,"max"?: number,"photo_path"?: string | null,"score"?: number,"student_id"?: string,"subject"?: string,"test"?: string,"updated_at"?: string
+                    "artefact_id"?: string | null,"centre_id"?: string,"created_at"?: string,"date"?: string,"id"?: string,"max"?: number,"photo_path"?: string | null,"questions"?: Json | null,"school_item_id"?: string | null,"score"?: number,"student_id"?: string,"subject"?: string,"test"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "marks_centre_id_artefact_id_fkey"
+      columns: ["centre_id","artefact_id"]
+isOneToOne: false
+      referencedRelation: "artefacts"
+      referencedColumns: ["centre_id","id"]
+    },{
       foreignKeyName: "marks_centre_id_fkey"
       columns: ["centre_id"]
 isOneToOne: false
       referencedRelation: "centres"
       referencedColumns: ["id"]
+    },{
+      foreignKeyName: "marks_centre_id_school_item_id_fkey"
+      columns: ["centre_id","school_item_id"]
+isOneToOne: false
+      referencedRelation: "school_items"
+      referencedColumns: ["centre_id","id"]
     },{
       foreignKeyName: "marks_centre_id_student_id_fkey"
       columns: ["centre_id","student_id"]
@@ -515,14 +527,14 @@ isOneToOne: false
                   ]
                 },"school_items": {
                   Row: {
-                    "centre_id": string,"class_level": string | null,"confirmed_at": string | null,"created_at": string,"date": string,"id": string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path": string | null,"portions": string | null,"school_id": string | null,"source_text": string | null,"student_id": string | null,"subject": string | null,"updated_at": string
+                    "centre_id": string,"class_level": string | null,"confirmed_at": string | null,"created_at": string,"date": string,"end_date": string | null,"id": string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path": string | null,"portions": string | null,"received_at": string,"school_id": string | null,"source": string,"source_text": string | null,"student_id": string | null,"subject": string | null,"title": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date": string,"id"?: string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"school_id"?: string | null,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"updated_at"?: string
+                    "centre_id": string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date": string,"end_date"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "centre_id"?: string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"school_id"?: string | null,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"updated_at"?: string
+                    "centre_id"?: string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date"?: string,"end_date"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -726,10 +738,13 @@ isOneToOne: false
 { Args: { "c": string }; Returns: boolean
                            },
 "keep_artefact":
-{ Args: { "p_artefact": Json,"p_centre": string,"p_group_no": number,"p_item_kind": Database["public"]['Enums']["plan_item_kind"],"p_plan": string,"p_student": string }; Returns: string
+{ Args: { "p_artefact": Json,"p_centre": string,"p_group_no": number,"p_item_kind": Database["public"]['Enums']["plan_item_kind"],"p_plan": string,"p_school_item"?: string,"p_student": string }; Returns: string
                            },
 "make_plan":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_groups": Json,"p_items": Json,"p_subjects": Json }; Returns: Json
+                           },
+"name_plan_group":
+{ Args: { "p_centre": string,"p_chapter": string,"p_group_no": number,"p_plan": string,"p_skill": string }; Returns: undefined
                            },
 "photo_centre":
 { Args: { "p_name": string }; Returns: string
@@ -745,7 +760,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper"|"plan"|"sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report"|"parse_school"|"parse_textbook","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","message_channel": "whatsapp_link","message_kind": "reminder"|"receipt"|"absence"|"progress"|"note"|"can_do"|"test_tomorrow"|"homework"|"consent","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up"|"worked_example"|"figure","school_item_kind": "exam"|"homework"|"notice"|"holiday","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
+            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper"|"plan"|"sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report"|"parse_school"|"parse_textbook","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","message_channel": "whatsapp_link","message_kind": "reminder"|"receipt"|"absence"|"progress"|"note"|"can_do"|"test_tomorrow"|"homework"|"consent"|"forward_ask","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up"|"worked_example"|"figure","school_item_kind": "exam"|"homework"|"notice"|"holiday","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -865,7 +880,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper", "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report", "parse_school", "parse_textbook"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"message_channel": ["whatsapp_link"],"message_kind": ["reminder", "receipt", "absence", "progress", "note", "can_do", "test_tomorrow", "homework", "consent"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up", "worked_example", "figure"],"school_item_kind": ["exam", "homework", "notice", "holiday"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
+            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper", "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report", "parse_school", "parse_textbook"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"message_channel": ["whatsapp_link"],"message_kind": ["reminder", "receipt", "absence", "progress", "note", "can_do", "test_tomorrow", "homework", "consent", "forward_ask"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up", "worked_example", "figure"],"school_item_kind": ["exam", "homework", "notice", "holiday"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
           }
         }
 } as const

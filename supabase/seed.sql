@@ -134,3 +134,22 @@ from public.attendance_sessions a join public.students s on s.class_id = a.class
 insert into public.tasks (centre_id, title, due_date) values
   ('22222222-2222-2222-2222-222222222222', 'Buy chalk and dusters', null),
   ('22222222-2222-2222-2222-222222222222', 'Call Dev''s father about Saturday', current_date + 2);
+
+-- Phase 13: what Vidya Niketan sent, for the hand runs (the list, the exam's page, the preparation, the Marks section).
+insert into public.school_items (id, centre_id, school_id, class_level, kind, title, subject, date, portions, source, source_text, received_at, confirmed_at) values
+  ('66666666-6666-6666-6666-666666666661', '22222222-2222-2222-2222-222222222222', '44444444-4444-4444-4444-444444444441', '8',
+   'exam', 'Science unit test 3', 'Science', current_date + 9, 'Ch 3 Chemical reactions · Ch 4 Force and pressure', 'shared_text',
+   'Dear Parents, Science Unit Test 3 for Class 8 will be held on ' || to_char(current_date + 9, 'FMDay DDth Mon') || '. Portions: Ch 3 Chemical Reactions, Ch 4 Force and Pressure. Regards, Class Teacher, VIII B',
+   now() - interval '1 hour', now() - interval '1 hour'),
+  ('66666666-6666-6666-6666-666666666662', '22222222-2222-2222-2222-222222222222', '44444444-4444-4444-4444-444444444441', '8',
+   'homework', 'Maths Ex 3.2, Q1 to 10', 'Mathematics', current_date + 5, null, 'shared_text', null, now() - interval '1 hour', now() - interval '1 hour'),
+  ('66666666-6666-6666-6666-666666666663', '22222222-2222-2222-2222-222222222222', '44444444-4444-4444-4444-444444444441', null,
+   'holiday', 'Dasara holidays', null, current_date + 12, null, 'shared_text', null, now() - interval '1 hour', now() - interval '1 hour'),
+  ('66666666-6666-6666-6666-666666666664', '22222222-2222-2222-2222-222222222222', '44444444-4444-4444-4444-444444444441', '10',
+   'notice', 'PTM, 10:00', null, current_date + 2, null, 'typed', null, now() - interval '1 hour', now() - interval '1 hour');
+update public.school_items set end_date = current_date + 14 where id = '66666666-6666-6666-6666-666666666663';
+-- Hemanth's marks (P10-Student-Record): unit test 2 below his usual.
+insert into public.marks (centre_id, student_id, subject, test, date, score, max)
+select s.centre_id, s.id, 'Mathematics', t.test, t.date, t.score, 25
+  from public.students s, (values ('Unit test 1', current_date - 44, 19), ('Unit test 2', current_date - 9, 14)) as t(test, date, score)
+ where s.centre_id = '22222222-2222-2222-2222-222222222222' and s.name = 'Hemanth Reddy';
