@@ -38,18 +38,33 @@ public extension CheckStore {
             return
         }
         let centre = workspace.centre.id
-        exams = await (try? schoolItems?.items(centre: centre)) ?? []
-        let theirs = exams.filter { $0.kind == .exam && SchoolItemRules.reaches($0, student) }
-        var found: [Artefact] = []
-        for exam in theirs {
-            if let mock = await (try? plans.mock(for: exam.id, centre: centre)) ?? nil {
-                found.append(mock)
+        do {
+            // The exams and Make's mocks together, then each exam's mock together (the review's R-app-7).
+            async let itemsRead = schoolItems?.items(centre: centre) ?? []
+            async let madeRead = plans.made(centre: centre)
+            exams = try await itemsRead
+            let made = try await madeRead
+            let theirs = exams.filter { $0.kind == .exam && SchoolItemRules.reaches($0, student) }.map(\.id)
+            var found = try await withThrowingTaskGroup(of: Artefact?.self) { group in
+                for exam in theirs {
+                    group.addTask { try await plans.mock(for: exam, centre: centre) }
+                }
+                var all: [Artefact] = []
+                for try await mock in group {
+                    if let mock {
+                        all.append(mock)
+                    }
+                }
+                return all
             }
+            found += made.filter { $0.kind == .mock && $0.studentID == student.id }
+            var seen = Set<UUID>()
+            mocks = found.filter { seen.insert($0.id).inserted && $0.generationID != nil }
+                .sorted { $0.madeAt > $1.madeAt }
+            schemesFailed = nil
+        } catch {
+            schemesFailed = "Couldn't load the mocks. Check your connection and try again."
         }
-        let made = await (try? plans.made(centre: centre)) ?? []
-        found += made.filter { $0.kind == .mock && $0.studentID == student.id }
-        var seen = Set<UUID>()
-        mocks = found.filter { seen.insert($0.id).inserted && $0.generationID != nil }.sorted { $0.madeAt > $1.madeAt }
     }
 
     var schemeChoices: [SchemeChoice] {

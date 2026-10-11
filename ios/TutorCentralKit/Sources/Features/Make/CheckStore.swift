@@ -60,6 +60,8 @@ import Observation
     let record: (any RecordRepository)?
     /// The mocks a scheme can be (Phase 15): the plans' artefacts and the school's exams.
     let plans: (any PlansRepository)?
+    /// The chooser's mocks could not be read: said in their place, with Try Again (U33).
+    public internal(set) var schemesFailed: String?
     let schoolItems: (any SchoolItemsRepository)?
     /// A mock's Mark from a photo: the student and the key set, the scheme step skipped.
     public let preset: CheckPreset?
