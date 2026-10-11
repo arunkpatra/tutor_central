@@ -54,6 +54,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         case made(PlanRecord)
         case offline
         case failed(String)
+        /// Every member is on holiday today (plan/phase-13-plan.md decision 17): no plan, no card.
+        case holiday
     }
 
     public private(set) var state: State = .none
@@ -162,7 +164,39 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             show(.none)
             return
         }
+        guard await !wholeBatchOnHoliday(classroom) else {
+            show(.holiday)
+            return
+        }
         await make(choices: nil)
+    }
+
+    /// Today's plan made again when an item changed for one of its members (a holiday, an exam): only while the batch
+    /// meets today and its session is not closed; a batch wholly on holiday then has no plan.
+    public func remake(for students: Set<UUID>) async {
+        let today = today
+        guard register.members(of: classID).contains(where: { students.contains($0.id) }),
+              let classroom = register.classroom(classID),
+              classroom.meetingDays.contains(today.weekday(in: calendar)) else { return }
+        if let current = try? await plans.plan(centre: centre, classID: classID, date: today),
+           current.sessionID != nil {
+            return
+        }
+        guard await !maker.closed(classID: classID, date: today, centre: centre) else { return }
+        guard await !wholeBatchOnHoliday(classroom) else {
+            generation += 1
+            run?.cancel()
+            run = nil
+            show(.holiday)
+            return
+        }
+        await make(choices: nil)
+    }
+
+    private func wholeBatchOnHoliday(_ classroom: Classroom) async -> Bool {
+        await maker.wholeBatchOnHoliday(
+            PlanBatch(classroom: classroom, members: register.members(of: classID), date: today, centre: centre)
+        )
     }
 
     /// Makes the day's plan (again): the run before it is cancelled and its late answers dropped.
@@ -193,14 +227,16 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
 
     /// The material the plan is still missing (a refresh that iOS stopped part-way), made into the plan as it is.
     private func complete(_ plan: PlanRecord) async {
+        guard let classroom = register.classroom(classID) else { return }
         generation += 1
         let mine = generation
         run?.cancel()
-        let members = register.members(of: classID)
-        let centre = centre
+        let batch = PlanBatch(
+            classroom: classroom, members: register.members(of: classID), date: plan.date, centre: centre
+        )
         let report = reporter(mine)
         let task = Task { [maker] in
-            await maker.complete(plan, members: members, centre: centre, progress: report)
+            await maker.complete(plan, batch: batch, progress: report)
         }
         run = task
         await task.value

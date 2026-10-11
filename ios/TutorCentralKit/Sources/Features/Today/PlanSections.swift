@@ -24,7 +24,7 @@ struct PlanSection: View {
 
     @ViewBuilder private var content: some View {
         switch store.state {
-        case .none, .offline:
+        case .none, .offline, .holiday:
             EmptyView()
         case let .failed(words):
             section(change: nil) { failed(words) }

@@ -4,6 +4,8 @@ import Foundation
 /// the window form a group of their own, nearest exam first, with revision lines from the day's portion.
 public extension PlanRules {
     static let revisionPrefix = "Revise: "
+    /// The set's line on the mock day: the mock is the set.
+    static let mockLine = "The mock"
     /// `plan_items.words`' limit.
     static let wordsLimit = 200
 
@@ -74,7 +76,7 @@ extension PlanRules {
         }
         lines.append(line(.teach, revisionTeach(revision)))
         let mockDay = revision.day.kind == .mock
-        lines.append(line(.practise, mockDay ? "The mock" : "Revision set \(revision.setNumber)"))
+        lines.append(line(.practise, mockDay ? mockLine : "Revision set \(revision.setNumber)"))
         lines.append(line(.check, "Check 3"))
         if !mockDay {
             lines.append(line(.homework, "Revision sheet \(revision.setNumber)"))

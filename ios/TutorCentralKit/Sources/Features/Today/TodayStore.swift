@@ -260,6 +260,15 @@ import Observation
         }
     }
 
+    /// An item added, changed or deleted reached these students (decision 16): each of today's plans with one of them
+    /// is made again, and To parents reads the items again.
+    public func remakePlans(for students: Set<UUID>) async {
+        for store in plans.values {
+            await store.remake(for: students)
+        }
+        await loadParents()
+    }
+
     static func students(_ count: Int) -> String {
         count == 1 ? "1 student" : "\(count) students"
     }

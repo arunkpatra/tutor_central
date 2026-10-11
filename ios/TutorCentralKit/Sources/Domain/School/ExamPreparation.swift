@@ -89,6 +89,14 @@ public enum ExamPreparation {
         return numbers
     }
 
+    /// Where the split starts when it is read again each day: the day the item came, or the window's first day when it
+    /// came earlier, never after `today`. Read from today, the mock day would move away as the days pass.
+    public static func start(of exam: SchoolItem, today: Day, calendar: Calendar) -> Day {
+        let windowStart = exam.date.adding(days: -windowDays, calendar: calendar)
+        let came = Day(exam.receivedAt, calendar: calendar)
+        return min(today, max(windowStart, came))
+    }
+
     public static func isWithinWindow(_ exam: SchoolItem, today: Day, calendar _: Calendar) -> Bool {
         let days = today.days(to: exam.date)
         return exam.kind == .exam && days >= 0 && days <= windowDays
