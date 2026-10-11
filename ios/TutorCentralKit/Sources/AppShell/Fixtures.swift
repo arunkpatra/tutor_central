@@ -29,7 +29,8 @@ public enum Fixtures {
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
-            textbooks: closeStates.contains(state) || planStates.contains(state) ? FakeTextbooksRepository.evening()
+            textbooks: closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
+                ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),
             plans: plans(for: state), photos: photos(for: state),
@@ -273,7 +274,7 @@ extension Fixtures {
         case .scanSaved: (FakeStudentsRepository.seed + scannedSeven, FakeClassesRepository.seed)
         // P12-Form-Paper-NoClass: no student has a class yet and there is no batch, so the paper starts on none.
         case .aiPaperNoClass: (FakeStudentsRepository.seed.map(withoutClass), [])
-        case _ where planStates.contains(state) || state == .todayNoBatch: (
+        case _ where planStates.contains(state) || examPageStates.contains(state) || state == .todayNoBatch: (
                 planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
         case .closeCards: (cardStudents, FakeClassesRepository.withEvening)

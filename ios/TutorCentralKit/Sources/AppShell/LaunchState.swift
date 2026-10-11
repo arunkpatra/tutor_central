@@ -30,10 +30,16 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case schoolReading = "school-reading"
     case schoolConfirm = "school-confirm"
     case schoolConfirmEdit = "school-confirm-edit"
+    /// The exam's page nine days out with Who and Preparation (P10-School-Item), its edit sheet and delete dialog.
+    case schoolItem = "school-item"
+    case schoolItemEdit = "school-item-edit"
+    case schoolItemDelete = "school-item-delete"
     case schoolItemHomework = "school-item-homework"
     case schoolItemHoliday = "school-item-holiday"
     /// Ask parents to forward with two sent (P10-School-Ask).
     case schoolAsk = "school-ask"
+    /// Today's plan made with Group 1 as the exam group and its revision lines (P13-Today-Revision).
+    case todayRevision = "today-revision"
     /// Ask parents to forward when who was asked could not be read (feedback.md, a list that could not load).
     case schoolAskFailed = "school-ask-failed"
     /// Test tomorrow in Hindi with the English beside, over Dev's exam (P10-TestTomorrow).

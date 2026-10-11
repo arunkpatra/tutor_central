@@ -232,4 +232,15 @@ import Testing
         let dev = store.record?.items.first { $0.studentID == FakeStudentsRepository.dev && $0.kind == .teach }
         #expect(dev?.words.hasPrefix(PlanRules.revisionPrefix) == true)
     }
+
+    /// P13-Today-Revision: the exam group's head counts down to the test; its marks are Set, Sheet and Checks.
+    @Test func anExamGroupsCardCountsDownToTheTest() async throws {
+        let exam = try #require(FakeSchoolItemsRepository.boardItems
+            .first { $0.id == FakeSchoolItemsRepository.scienceTest3 })
+        let store = await store(items: FakeSchoolItemsRepository(items: [exam]))
+        let card = try #require(store.groups.first)
+        #expect(card.title == "Group 1 · Science unit test 3")
+        #expect(card.line == "Class 8 Science · 3 students · the test in 9 days")
+        #expect(card.marks.map(\.name) == ["Set", "Sheet", "Checks"])
+    }
 }

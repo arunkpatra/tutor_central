@@ -56,7 +56,12 @@ extension RootView {
             case let .schoolItem(id):
                 ItemScreen(
                     store: itemStore(id, workspace: workspace),
-                    boardState: nil,
+                    boardState: Self.itemBoardState(launch),
+                    actions: ItemActions(
+                        openToday: { shell.openToday(batch: $0) },
+                        openArtefact: { shell.tabs.push(.artefact($0)) },
+                        testTomorrow: { shell.testTomorrow = $0 }
+                    ),
                     back: { shell.tabs.remove(route) }
                 )
             case .schoolAsk:
@@ -92,7 +97,8 @@ extension RootView {
         let store = ItemStore(
             itemID: id, workspace: workspace, items: deps.schoolItems, register: register(for: workspace),
             schools: deps.schools, photos: deps.photos, now: deps.now, calendar: DayHeading.india,
-            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, textbooks: deps.textbooks,
+            plans: deps.plans
         )
         store.onChanged = { students in
             shell.schoolItemsChanged?(students)
@@ -236,15 +242,17 @@ struct AskScreen: View {
 struct ItemScreen: View {
     @State private var store: ItemStore
     let boardState: ItemBoardState?
+    let actions: ItemActions
     let back: () -> Void
 
-    init(store: ItemStore, boardState: ItemBoardState?, back: @escaping () -> Void) {
+    init(store: ItemStore, boardState: ItemBoardState?, actions: ItemActions, back: @escaping () -> Void) {
         _store = State(initialValue: store)
         self.boardState = boardState
+        self.actions = actions
         self.back = back
     }
 
     var body: some View {
-        ItemView(store: store, boardState: boardState, back: back)
+        ItemView(store: store, boardState: boardState, actions: actions, back: back)
     }
 }

@@ -78,6 +78,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     let calendar: Calendar
     /// Each member's subjects (their chapters'), for the Change sheet's menus; read when it opens.
     @ObservationIgnored var subjects: [UUID: [String]] = [:]
+    /// The exams' dates, by item, for an exam group's countdown (read with the plan).
+    @ObservationIgnored var examDates: [UUID: Day] = [:]
     @ObservationIgnored var generation = 0
     @ObservationIgnored var run: Task<Void, Never>?
 
@@ -136,6 +138,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
         // A run still making the plan keeps going: a second open (a return to the app, a pull) makes nothing twice.
         guard run == nil else { return }
+        await readExamDates()
         if record == nil, let copy = cache?.load(classID: classID, date: today) {
             show(.made(copy.value))
         }
@@ -183,6 +186,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             return
         }
         guard await !maker.closed(classID: classID, date: today, centre: centre) else { return }
+        await readExamDates()
         guard await !wholeBatchOnHoliday(classroom) else {
             generation += 1
             run?.cancel()
@@ -191,6 +195,11 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             return
         }
         await make(choices: nil)
+    }
+
+    private func readExamDates() async {
+        guard let items = try? await maker.schoolItems.items(centre: centre) else { return }
+        examDates = Dictionary(items.filter { $0.kind == .exam }.map { ($0.id, $0.date) }) { first, _ in first }
     }
 
     private func wholeBatchOnHoliday(_ classroom: Classroom) async -> Bool {

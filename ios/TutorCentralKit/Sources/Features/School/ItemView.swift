@@ -9,20 +9,41 @@ public enum ItemBoardState: Sendable {
     case delete
 }
 
+/// Where an exam's page leads (AppShell's routes): Today at a batch's plan, an artefact, the Test tomorrow sheet.
+public struct ItemActions {
+    let openToday: (UUID) -> Void
+    let openArtefact: (UUID) -> Void
+    let testTomorrow: (TestTomorrowAsk) -> Void
+
+    public init(
+        openToday: @escaping (UUID) -> Void, openArtefact: @escaping (UUID) -> Void,
+        testTomorrow: @escaping (TestTomorrowAsk) -> Void
+    ) {
+        self.openToday = openToday
+        self.openArtefact = openArtefact
+        self.testTomorrow = testTomorrow
+    }
+}
+
 /// An item's page (P10-School-Item; a homework's or notice's has no Preparation, a holiday's says the batch days it
-/// covers): the kind as the title with Edit, the hero, Who, what the school sent, Delete this item.
+/// covers): the kind as the title with Edit, the hero, Who, an exam's Preparation, what the school sent, Delete this
+/// item.
 public struct ItemView: View {
     @Bindable var store: ItemStore
     let boardState: ItemBoardState?
+    let actions: ItemActions?
     let back: () -> Void
     @State private var editing: ItemFormStore?
     @State private var deleting = false
     @State private var topInset: CGFloat = 0
     @Environment(NoticeCenter.self) private var notices: NoticeCenter?
 
-    public init(store: ItemStore, boardState: ItemBoardState? = nil, back: @escaping () -> Void) {
+    public init(
+        store: ItemStore, boardState: ItemBoardState? = nil, actions: ItemActions? = nil, back: @escaping () -> Void
+    ) {
         self.store = store
         self.boardState = boardState
+        self.actions = actions
         self.back = back
     }
 
@@ -121,12 +142,32 @@ public struct ItemView: View {
             } else if !store.who.isEmpty {
                 WhoSection(rows: store.who)
             }
+            if !store.preparation.isEmpty {
+                PreparationSection(
+                    rows: store.preparation,
+                    change: store.changeOpensToday.flatMap { batch in actions.map { actions in
+                        { actions.openToday(batch) }
+                    } },
+                    open: open,
+                    testTomorrowLine: store.testTomorrowLine,
+                    testTomorrow: store.testTomorrowAsk.flatMap { ask in actions.map { actions in
+                        { actions.testTomorrow(ask) }
+                    } }
+                )
+            }
             SourceSection(store: store)
             Button { deleting = true } label: {
                 Label("Delete this item", systemImage: "trash").frame(maxWidth: .infinity)
             }
             .buttonStyle(.destructive(.card))
             .environment(\.buttonIconSize, Tokens.iconSmall)
+        }
+    }
+
+    private func open(_ opens: PreparationOpen) {
+        switch opens {
+        case let .today(batch): actions?.openToday(batch)
+        case let .artefact(id): actions?.openArtefact(id)
         }
     }
 
