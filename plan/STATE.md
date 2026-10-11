@@ -3,16 +3,15 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-11, session 30 (Phase 14 built, on Opus 5.5). **Session 30:** Phase 14 (Parents) built in fifteen
-pull requests (#135 to #149): the note day, the weekly note and can-now-do in the parent's language, the three-a-week
-cadence, the sent log, not on track with the next step and the message to the parent, marks from a photo, the signature,
-D67's model table and D68's leftovers (U41 to U45, the minors, the lost connection); hand runs 1 to 15 against the local
-stack; the cost run (15 real calls, ₹2.52); a fresh review on Fable 5.1 with every finding fixed or ruled (#148, #149); two
-deploys (0023 and 0024; 0025); TestFlight 1.0.0 (25). The record in `plan/sessions/030/`.
-After the close the owner approved the review's two rulings and took U46 and U47 (#150, #151; U46's board
-P14-CanNowDo-NoChange approved); `main` is ahead of build 25 by those two.
-**Next:** Phase 15's plan from `resume/029-phase-15-plan.md`, on Fable 5.1 (D17). The owner tests the builds together after
-the last phase (D68).
+**Last updated:** 2026-10-11, session 31 (Phase 15 planned, on Fable 5.1). **Session 31:** `plan/phase-15-plan.md` written
+(23 tasks, twelve pull requests plus fixes, tests first, 30 decisions, ten review-focus lines, the launch states, the fifteen
+hand runs, the cost run, the trust page as this phase's, the tutor round's set-up, weeks and triage by Phase 9's method);
+`plan/resume/030-phase-15-build.md` indexed; the record in `plan/sessions/031/`. Two questions are the owner's and are open:
+which polish rows to take (the plan's table proposes a set) and when the round starts relative to the build (the plan proposes
+the owner's own test first, the invitations about 21 October). Documents only; no code.
+**Next:** the owner's two answers, then Phase 15's build on Opus 5.5 from `resume/030-phase-15-build.md` (the trust page's board
+drawn and approved in that session's first step; PR 12 waits on it, nothing else does). The owner tests the builds together
+after the last phase (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -36,7 +35,8 @@ the last phase (D68).
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
 | 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
-| 15 and 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-15-make-and-polish.md`, `phase-16-release.md` |
+| 15 Make and polish | Planned (session 31, 2026-10-11) | `phase-15-plan.md`; the build and the round from `resume/030-phase-15-build.md` |
+| 16 Release | Not started | Scope file `phase-16-release.md`; depends on Phase 15's round |
 
 ## In flight
 
@@ -117,18 +117,21 @@ identity). The remote holds `main`,
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
-- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34, U40 to U45
-  open; U1 to U4, U6, U7, U9, U12, U16, U24, U31, U33, U35 to U39 done. Rows for screens V2 rebuilds are taken or closed as Phase 11 on touch those screens.
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34, U40 open (U36 sits under
+  Open but was built in #133: the Phase 15 build moves it to Done); U1 to U4, U6, U7, U9, U12, U16, U24, U31, U33, U35 to U39, U41 to
+  U47 done. Phase 15 takes the rows the owner picks (`phase-15-plan.md`, question 1).
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
-- **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9; T1 to T3 for Phase 11 and T4 to T7 for Phase 12, T8 to T10
-  for Phase 13 and T11 to T14 for Phase 14 wait for the tester; the owner tests the builds together after the last phase, D68); D1 to D8 were Phase 9's and now run on V2 before
-  Phase 15's round.
+- **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9; T1 to T14 wait for the tester; the owner tests the builds
+  together after the last phase, D68); D1 to D8 were Phase 9's and run on the Phase 15 build before the round, with T1 to T14 and
+  the C, A, N and W tests on their V2 paths (`phase-15-plan.md` Task 20).
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.
-- Crash reporting: no decision yet (D18 leaves it open); TestFlight's crash reports until Phase 15's round.
+- Crash reporting: no decision yet (D18 leaves it open); TestFlight's crash reports through Phase 15's round.
+- **The trust page** (spec section 9: the phase that first sends a student's data to testers) is Phase 15's PR 12, after its
+  board; per-student export (D62) stays for later (`phase-15-plan.md` decision 25).
 - After App Store approval (a later slice): `APP_STORE_URL` on Vercel's `tutor-central-web`, then `gh workflow run deploy-web`
   for Home's badge (D47).
 

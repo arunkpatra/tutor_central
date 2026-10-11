@@ -33,7 +33,7 @@ Always:
 | 12 | The plan: groups, subject choice, lines, sheets, worked examples, figures, the brief, the budget, the reminder, the offline close, the cost measured | `phase-12-class-plan.md` | Done (2026-10-11): plan (session 25), build (session 26): migrations 0019 and 0020, PRs #110 to #119; hand runs #120; the cost ₹4.57 for a twelve-student batch |
 | 13 | School: the share extension, items from photos and text, the calendar, test tomorrow, exam preparation | `phase-13-school.md` | Done (2026-10-11): plan (session 27), build (session 28): migrations 0021 and 0022, PRs #123 to #126 and #128 to #134; hand runs 1 to 15; the cost ₹12.55 for a mock, a marking and a gap report (about ₹30 an exam for a class of three) |
 | 14 | Parents: the note, can-now-do, the cadence, marks from a photo, not on track with the next step; D67's model table; Phase 13's leftovers (D68) | `phase-14-parents.md` | Done (session 30, 2026-10-11), PRs #135 to #149; "As built" in `phase-14-parents.md`; device tests T11 to T14 |
-| 15 | Make and polish: Make something, Check a paper in Make, Reports, the polish rows the owner picks, a second round of tutor testing | `phase-15-make-and-polish.md` | Not started |
+| 15 | Make and polish: Make something, Check a paper in Make, Reports, the polish rows the owner picks, a second round of tutor testing | `phase-15-make-and-polish.md` | Planned (session 31, 2026-10-11): `phase-15-plan.md`; the build and the round from `resume/030-phase-15-build.md` |
 | 16 | Release: the subscription and the allowance, the website's V2 text, the App Store listing, submission | `phase-16-release.md` | Not started |
 
 A phase starts with its plan file (`phase-NN-plan.md`: tasks, order, tests first, PR boundaries), written and
