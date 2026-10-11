@@ -3,8 +3,8 @@ import Foundation
 
 /// The price sheet the budget is tested against (plan decision 6): the models and their prices are api/models.json's
 /// (D67), read from the source tree as TokenDocumentTests reads the tokens' document; the typical tokens per kind are
-/// as the cost runs measured them (session 026, the twelve-student Evening batch: 13 calls, ₹4.57; the mock from
-/// session 028's, ₹3.94 on Sonnet); the figure, not asked in either run, keeps its estimate.
+/// as the cost runs measured them (session 032, Phase 15's: two batches' plans and Make's kinds, 30 calls, ₹22.54; the
+/// worked example, which moved under a tenth, keeps session 026's).
 struct PriceSheet: Decodable {
     typealias Price = ModelPrice
 
@@ -45,12 +45,12 @@ struct PriceSheet: Decodable {
     struct Typical { let tokensIn: Int; let tokensOut: Int }
     static func typical(_ request: ArtefactRequest) -> Typical {
         switch request {
-        case .checks, .personalChecks, .placement: Typical(tokensIn: 762, tokensOut: 746)
-        case .sheet: Typical(tokensIn: 710, tokensOut: 876)
+        case .checks, .personalChecks, .placement: Typical(tokensIn: 769, tokensOut: 651)
+        case .sheet: Typical(tokensIn: 714, tokensOut: 996)
         case .workedExample: Typical(tokensIn: 756, tokensOut: 400)
-        case .figure: Typical(tokensIn: 700, tokensOut: 200)
-        case .brief: Typical(tokensIn: 1205, tokensOut: 1231)
-        case .mock: Typical(tokensIn: 1166, tokensOut: 4399)
+        case .figure: Typical(tokensIn: 2531, tokensOut: 91)
+        case .brief: Typical(tokensIn: 1209, tokensOut: 979)
+        case .mock: Typical(tokensIn: 1216, tokensOut: 3882)
         }
     }
 
