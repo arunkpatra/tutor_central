@@ -45,3 +45,7 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
 - Phase 14: a rule that must hold for every writer of a column (the close, the placement, a queued close) is a trigger in the
   database (0025: a changed `track_status` clears `next_step` unless the same update sets it), with a test through the RPC
   the product uses.
+- Phase 15: 0026 adds `artefacts.made_from` (null or 'make') and `keep_artefact`'s eighth parameter `p_made_from`; the seed
+  keeps three weeks of checks at the Evening batch's closes (the dates relative to `current_date`). 0027: what was written
+  about a student goes with them (`ai_generations.student_id` and `message_log` cascade on the student's delete), and a
+  progress note needs the parent's consent. A test that inserts into centre A runs before `delete_account`'s test.

@@ -14,7 +14,8 @@ The tester writes results in the log at the end.
 ## How to run
 
 - Install the newest TestFlight build of Tutor Central and sign in with a test centre, not a real one. The AI tools run
-  against production and every call counts against the centre's daily limit (40 creations, 20 scans, 20 checks).
+  against production and every call counts against the centre's limits: the V1 kinds' daily limit (40 creations, 20 scans,
+  20 checks) and V2's monthly allowance (600) for the plan, Make's kinds and the parents' messages.
 - Use made-up students. If you photograph a real register or answer sheet, use one you may share: it is sent to the AI
   service to be read and is not kept.
 - For each test, write a line in the log: the date, the build number, the test id, Pass or Fail, and what you saw. A
@@ -35,18 +36,18 @@ The tester writes results in the log at the end.
 | S5 | Choose from Photos, a photo of a register taken with the iPhone Camera app (full size). | It reads as S1, within about 10 s on Wi-Fi. |
 | S6 | Turn the camera off: Settings → Privacy & Security → Camera → Tutor Central off. Back in the app: Take a photo. | A message saying the camera is off, with Open Settings, which opens Tutor Central's settings. Turning it back on and returning works. |
 
-### Check a paper (More → Check a paper)
+### Check a paper (More → Check a paper; under Make since Phase 15)
 
 | Id | Do | Expect |
 |---|---|---|
 | C1 | Choose a student, Take photos: photograph two pages of a real or hand-written answer sheet. Type it: a short scheme ("Q1 2 marks: x = 3 or 4. Q2 1 mark: roots equal."). Check 2 pages. | Suggested marks within about 30 s, each with a short reason that matches the sheet. The total is the sum of the rows. |
-| C2 | Use A paper I created as the scheme: create a question paper in AI Assistant first, write answers to it on paper, photograph them, check against that paper. | Marks out of the paper's total; reasons refer to its questions. |
+| C2 | Use A paper I created as the scheme: create a question paper in Make something first, write answers to it on paper, photograph them, check against that paper. | Marks out of the paper's total; reasons refer to its questions. |
 | C3 | Six pages (the most). Check on mobile data, not Wi-Fi. | It sends and answers, maybe slower. No "too many pages" message for six ordinary photos. |
 | C4 | Change two marks (tap a mark, pick another), Save to the student's notes. Open the student's page. Then go back and tap Undo on the toast. | The notes end with one line: date, scheme, total (with the changed marks). Undo takes the line away and leaves the notes exactly as they were. |
 | C5 | Start a check, tap Cancel while it says Checking. Start it again. | Cancel goes back to the scheme with nothing shown; the second check answers normally. |
 | C6 | Start a check and lock the phone or switch to another app for a minute, then come back. | The marks are there, or a clear failure with Retry. Never a spinner that does not end. |
 
-### AI Assistant (Today → Create with AI, or More → AI Assistant)
+### Make something (Today → Create, or More → Make something; the AI Assistant before Phase 15)
 
 | Id | Do | Expect |
 |---|---|---|
@@ -120,6 +121,7 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T12 | On the note day, Today → Read on a student whose parent writes in Kannada or Hindi → Send on WhatsApp → Open WhatsApp. | WhatsApp opens the parent's chat with the note in that script, ending with the tutor's name, the centre and "Made with Tutor Central"; back in the app the row reads Sent. |
 | T13 | A parent with two students in the centre, on the note day: send both notes, then the same week open a Test tomorrow for one of them. | Both notes send and count; the Test tomorrow is held as the fourth message ("held: three messages this week"). |
 | T14 | A student not on track whose parent writes in Hinglish → the page's Tell the parent → Open WhatsApp. | The message arrives readable in Hinglish (Latin letters) and says what is hard, what the class is doing and what helps at home, signed; the card under the tracking card is gone; Today's caption for the student is gone. |
+| T15 | More → Make something → Sheet → For → a group of today's plan → Make the sheet → Print, to a real printer (or Save to Files as PDF). Then Share as PDF to yourself on WhatsApp. | The printout has the questions with the key after them ("Key at the end" on); the shared PDF has the questions and no key. Both fit A4 with nothing cut. |
 
 ## Log
 

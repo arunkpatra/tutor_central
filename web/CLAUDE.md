@@ -22,4 +22,7 @@ server code, no client JavaScript of its own.
 - `next-env.d.ts` is written by `next typegen` and the build and is not committed (Next 16's imports `.next/types`);
   `.next/`, `out/` and `*.tsbuildinfo` are not either.
 
+- `/trust` (Phase 15): each sentence states something the app does, checked against the code; a change in what the app sends or
+  keeps changes this page in the same phase. The privacy page and the terms each keep their own "Last changed" constant.
+
 Commands: `bun run dev` (local on :3000); `bun run check`; `bun check --only=web`; `bun web-shots`; `gh workflow run deploy-web`.

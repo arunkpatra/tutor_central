@@ -425,7 +425,7 @@ The shape is fixed; the dates follow the owner's answer to question 2. Today is 
 - Consumes: nothing new.
 - Produces: the module `Make` every later task imports; `Route.make`.
 
-- [ ] **Step 1: the move**, with git so history follows:
+- [x] **Step 1: the move**, with git so history follows:
 
 ```bash
 git checkout -b phase-15/make-module main
@@ -435,16 +435,16 @@ git mv ios/TutorCentralKit/Sources/AppShell/RootView+AITools.swift ios/TutorCent
 grep -rl 'AITools' ios/TutorCentralKit/Sources ios/TutorCentralKit/Tests ios/TutorCentralKit/Package.swift ios/project.yml
 ```
 
-- [ ] **Step 2: the names.** In `Package.swift`'s feature list `"AITools"` → `"Make"` and the test target
+- [x] **Step 2: the names.** In `Package.swift`'s feature list `"AITools"` → `"Make"` and the test target
   `.testTarget(name: "MakeTests", dependencies: ["Make", "Students"])`; in `project.yml` the scheme's
   `package: TutorCentralKit/MakeTests`; each `import AITools` → `import Make`; `Route.aiAssistant` → `Route.make` and its
   uses (`aiRoutes`, `TabsView`, `MoreView`'s row, Today's Create row). The file-level comments that say "AI Assistant" stay
   until PR 6 replaces the home. `bun gen`.
 
-- [ ] **Step 3: prove nothing changed.** `bun check --only=format,lint,ios` green; `bun shots ai-assistant` and `bun shots
+- [x] **Step 3: prove nothing changed.** `bun check --only=format,lint,ios` green; `bun shots ai-assistant` and `bun shots
   ai-paper` match the pictures before the move (compare by eye; the state names are kept until PR 6).
 
-- [ ] **Step 4: commit and open the pull request** ("`AITools` becomes `Make`: a rename, nothing seen changes"); merge when
+- [x] **Step 4: commit and open the pull request** ("`AITools` becomes `Make`: a rename, nothing seen changes"); merge when
   green. No pictures (rule 2 applies to a change in what is seen; the description says so and names the two states compared).
 
 ---
@@ -459,7 +459,7 @@ grep -rl 'AITools' ios/TutorCentralKit/Sources ios/TutorCentralKit/Tests ios/Tut
 - Produces: `artefacts.made_from`; `keep_artefact(p_centre, p_artefact, p_plan, p_group_no, p_student, p_item_kind,
   p_school_item default null, p_made_from text default null)`.
 
-- [ ] **Step 1: the failing tests** (`supabase/tests/v2.test.ts`, a `describe("make")` block; the file's own fresh centre and
+- [x] **Step 1: the failing tests** (`supabase/tests/v2.test.ts`, a `describe("make")` block; the file's own fresh centre and
   users, as Phase 14's block does):
 
 ```ts
@@ -489,7 +489,7 @@ describe("make", () => {
   `sheet(title)` is `{ kind: "sheet", source: "made", title, content: { title, questions: [], for_homework: false, light: false } }`.
   Run: `cd supabase && bun test tests/v2.test.ts`. Expected: four fail (the parameter does not exist; the column does not exist).
 
-- [ ] **Step 2: the migration**, in full:
+- [x] **Step 2: the migration**, in full:
 
 ```sql
 -- Phase 15: material made from Make something (plan/phase-15-plan.md decision 4). Additive (D26): one nullable column; the
@@ -527,7 +527,7 @@ grant execute on function public.keep_artefact(uuid, jsonb, uuid, integer, uuid,
 create index artefacts_made_from_idx on public.artefacts (centre_id, created_at desc) where made_from = 'make';
 ```
 
-- [ ] **Step 3: the seed's checks** (decision 20), after the attendance block:
+- [x] **Step 3: the seed's checks** (decision 20), after the attendance block:
 
 ```sql
 -- Phase 15: three weeks of checks at the Evening batch's closes (and Hemanth's at Class 10 Maths), three a session on
@@ -554,7 +554,7 @@ select s.centre_id, s.id, k.id, 'placement', jsonb_build_object('question', k.na
   reset`: `select s.name, count(*) filter (where c.correct) as right, count(*) as checks from checks c join students s on s.id =
   c.student_id group by s.name order by s.name` prints a row per Evening student and Hemanth. These figures are hand run 9's.
 
-- [ ] **Step 4:** `supabase gen types typescript --local > types.ts`; `bun check --only=db` green (the catalogue test sees the
+- [x] **Step 4:** `supabase gen types typescript --local > types.ts`; `bun check --only=db` green (the catalogue test sees the
   column; the RLS test passes). Commit, open PR 2, merge when green.
 
 ---
@@ -565,7 +565,7 @@ select s.centre_id, s.id, k.id, 'placement', jsonb_build_object('question', k.na
 - Modify: `api/src/schemas.ts`, `api/src/prompts/note.ts`, `api/src/claude-fake.ts`, `api/test/schemas.test.ts`,
   `api/test/prompts.test.ts`, `api/test/v2.test.ts`
 
-- [ ] **Step 1: the failing tests:**
+- [x] **Step 1: the failing tests:**
 
 ```ts
 // schemas.test.ts
@@ -595,12 +595,12 @@ test("a note with tutorSays reaches the fake and is recorded with it", async () 
 
   Run: `cd api && bun test`. Expected: the four new ones fail.
 
-- [ ] **Step 2: the change.** `schemas.ts`: the note object gains `tutorSays: z.string().min(1).max(300).optional()`.
+- [x] **Step 2: the change.** `schemas.ts`: the note object gains `tutorSays: z.string().min(1).max(300).optional()`.
   `prompts/note.ts`: after the attendance line, `input.tutorSays ? `The tutor adds: ${input.tutorSays}` : ""`; `ask()`
   gains the part `"what the tutor adds"` when present, placed last. `claude-fake.ts`: the note sample ends with the tutor's
   words when the text holds "The tutor adds:" (so the hand run shows them). `bun run check` green (tsc and tests).
 
-- [ ] **Step 3: commit, PR 3, merge; then `gh workflow run deploy`** (Task 16, step 1): 0026 pushed, the API at `main`'s head.
+- [x] **Step 3: commit, PR 3, merge; then `gh workflow run deploy`** (Task 16, step 1): 0026 pushed, the API at `main`'s head.
 
 ---
 
@@ -658,7 +658,7 @@ public struct Term: Hashable, Sendable {
   line", "Fraction bar", "Place value", "Unit circle", "Triangle", "Labelled cell", "Food chain") and `Kind.matching(skill:)`
   (the plan's own matcher, made public); `Artefact.madeFrom: String?`, `Artefact.madeFor: MakeFor?` (read from `content.made_for`).
 
-- [ ] **Step 1: the failing tests** (the names the review focus pins; `SchoolSamples`' students and groups):
+- [x] **Step 1: the failing tests** (the names the review focus pins; `SchoolSamples`' students and groups):
 
 ```swift
 @Test func aStudentWithNoBookHasNoSkillsAndNoLevel() {
@@ -699,11 +699,11 @@ public struct Term: Hashable, Sendable {
 
   Run the Domain tests (`.superpowers/sdd/.../xt.sh DomainTests`). Expected: all fail to compile.
 
-- [ ] **Step 2: write Domain** to the interfaces above. `Term`: April and May belong to the year before's second term in both
+- [x] **Step 2: write Domain** to the interfaces above. `Term`: April and May belong to the year before's second term in both
   calendars (nothing is in session; the standard calendar's gap months). `made_for` is written beside the kind's own content
   keys (the content object gains one key; the kind's decoder ignores it; `Artefact.madeFor` reads it).
 
-- [ ] **Step 3:** tests green; `ErrorWordsTests` green on the new sentences. Commit, PR 4, merge.
+- [x] **Step 3:** tests green; `ErrorWordsTests` green on the new sentences. Commit, PR 4, merge.
 
 ---
 
@@ -737,7 +737,7 @@ public enum ProgressRules {
 public enum ProgressCSV { public static func fileName(_ span: ProgressSpan) -> String; public static func make(_ rows: [ProgressRow]) -> String }
 ```
 
-- [ ] **Step 1: the failing tests** (October 2026, `DayHeading.india`; a student's skills with `stateAt` inside and outside the
+- [x] **Step 1: the failing tests** (October 2026, `DayHeading.india`; a student's skills with `stateAt` inside and outside the
   span; checks dated inside and outside; sessions with marks):
 
 ```swift
@@ -763,11 +763,11 @@ public enum ProgressCSV { public static func fileName(_ span: ProgressSpan) -> S
 }
 ```
 
-- [ ] **Step 2: write the rules** to the interfaces. The ladder line: for a student whose chapters include ladder areas, each
+- [x] **Step 2: write the rules** to the interfaces. The ladder line: for a student whose chapters include ladder areas, each
   area's current step (`Ladder.currentStep` over the area's skill states) named when it is beyond the first; the absences
   follow. The CSV uses `CSV.make` as `FeesCSV` does (BOM, CRLF).
 
-- [ ] **Step 3:** tests green. Commit, PR 5, merge.
+- [x] **Step 3:** tests green. Commit, PR 5, merge.
 
 ---
 
@@ -802,17 +802,17 @@ public struct ProgressReader: Sendable {
 }
 ```
 
-- [ ] **Step 1: the failing tests:** `PlanRowsTests.aRowWithMadeFromAndMadeForDecodes`; `FakePlansRepositoryMakeTests.keepMadeIsListedByMadeNewestFirst`,
+- [x] **Step 1: the failing tests:** `PlanRowsTests.aRowWithMadeFromAndMadeForDecodes`; `FakePlansRepositoryMakeTests.keepMadeIsListedByMadeNewestFirst`,
   `.aRegenerateReplacesItsPredecessorInMade` (the fake's `made` hides a row another row's `regeneratedFrom` names);
   `APIBodiesParentsTests.aNoteBodyCarriesTutorSaysOnlyWhenGiven`; `ProgressReaderTests.readsEveryStudentsSkillsChecksAndSessionsTogether`
   (the fakes record one call per table, not per student) and `.aFailedSkillsReadThrows`.
 
-- [ ] **Step 2: write Data.** `SupabasePlansRepository.made` selects `artefacts` where `made_from = 'make'` ordered by
+- [x] **Step 2: write Data.** `SupabasePlansRepository.made` selects `artefacts` where `made_from = 'make'` ordered by
   `created_at desc` limit 50 and hides regenerated predecessors on the phone (`Artefact.hidingRegenerated()`); `keepMade`
   calls `keep_artefact` with `p_made_from: "make"` and `content.made_for`; the Supabase textbooks reads filter `student_id in
   (…)` by centre. `ProgressReader` reads the four together (`async let`) as `NoteRecordReader` does.
 
-- [ ] **Step 3: the write proofs** against the local stack (a throwaway test with an in-memory session, `ios/CLAUDE.md`'s rule):
+- [x] **Step 3: the write proofs** against the local stack (a throwaway test with an in-memory session, `ios/CLAUDE.md`'s rule):
   `keepMade` inserts a row with `made_from = 'make'` and reads back through `made`; the seven-argument path still works
   (the plan's own `keep`). Tests green; commit; PR 6 is Tasks 6 and 7 together (the home needs the reads).
 
@@ -832,7 +832,7 @@ public struct ProgressReader: Sendable {
   `MakeRow` (`id`, `kind: MakeKind?`, `symbol`, `title`, `line`, `opens: .artefact(UUID) | .generation(UUID)`),
   `MakeActions` (`openForm(MakeKind)`, `openArtefact(UUID)`, `openResult(UUID)`, `openHistory`, `openV1Form(GenerationKind)`).
 
-- [ ] **Step 1: the failing tests:**
+- [x] **Step 1: the failing tests:**
 
 ```swift
 @Test func recentListsMakesArtefactsAndV1ResultsTogetherNewestFirstThree() async { … a Make sheet 16:40, a V1 paper 16:35, a Make brief 16:30, a Make mock 16:20 → three rows: sheet, paper, brief }
@@ -844,14 +844,14 @@ public struct ProgressReader: Sendable {
 @Test func moreOpensMakeAndTodaysCreateRowOpensMake() { #expect(RootView.aiRoutes(for: .make) == [.make]); #expect(RootView.todayAIRoutes == [.make]) }
 ```
 
-- [ ] **Step 2: the home** (P10-Make): `BackRow("Make something", action: ("History", …))`, the intro `Text` in `intro`
+- [x] **Step 2: the home** (P10-Make): `BackRow("Make something", action: ("History", …))`, the intro `Text` in `intro`
   `text2`, the section "For a student or a group" (`Card` of five `ToolRow`s by `MakeKind`), "For you" (four), Recent (the
   Phase 6 Recent card with `ResultRow`s and See all, or the empty row), the AI line (`MakeWords.homeLine`, V1's words). Each
   row opens `.makeForm(kind)`; the V1 three open `.aiForm(v1Kind)` (their forms unchanged). The home reads
   `store.loadHistory()` on appear (`prepare()` reads the register first, as V1's). `MoreView`'s row opens `.make`; Today's
   Create row opens `.make`.
 
-- [ ] **Step 3: the launch states** `make` (both), `make-empty`, `today-ai`, `more`; `ai-assistant` and `ai-assistant-empty`
+- [x] **Step 3: the launch states** `make` (both), `make-empty`, `today-ai`, `more`; `ai-assistant` and `ai-assistant-empty`
   removed from `LaunchState` and `tools/shots.ts`'s list if it has one; `LaunchStateTests` updated. `bun shots make`, `make-empty`,
   `today-ai`, `more` → the pictures; compare with the boards; `bun pr-shots`. Commit, PR 6, merge.
 
@@ -886,7 +886,7 @@ public struct ProgressReader: Sendable {
 @MainActor @Observable public final class ForStore { public var segment: ForSegment; public var groups: [ForGroupRow]; public var batches: [ForBatchRow]; public var levels: [ClassLevel]; public func load() async }
 ```
 
-- [ ] **Step 1: the failing tests:**
+- [x] **Step 1: the failing tests:**
 
 ```swift
 @Test func makeWaitsForALevelAndATopic() { … Riya (no level), no skill → canMake false; level set, skill typed → true }
@@ -921,7 +921,7 @@ public struct ProgressReader: Sendable {
 @Test func theTutorsWordsGoInTheRequestAndAreKept() async { #expect(ai.noteRequests.last?.tutorSays == "Ask him to read aloud."); content.tutorSays == … }
 ```
 
-- [ ] **Step 2: the form** (P10-Make-Form): `BackRow(kind.title)`, the hero card with the kind's tiles: For (`PickerTile`,
+- [x] **Step 2: the form** (P10-Make-Form): `BackRow(kind.title)`, the hero card with the kind's tiles: For (`PickerTile`,
   "Group 1 · Dev, Meher, Nikhil"; helper "A student, a group, a batch, or a class on its own."), Subject (`PickerTile` with
   the chooser of the target's subjects, or typed), Skill or topic (`PickerTile` → `SkillChooserSheet`: the record's skills
   then "Type a topic"; helper "From the record, or type a topic."), Length (`Segmented`), Level (`Segmented`), Key at the end
@@ -934,12 +934,12 @@ public struct ProgressReader: Sendable {
   rows "Group 1 · Chemical reactions" / "Dev, Meher, Nikhil · Class 8 Science · today's plan"; the batches; the levels), the
   footnote "Today's groups. A sheet for a group is made at the group's level; for a class alone, at the class's."
 
-- [ ] **Step 3: the made artefact's screen.** `MakeOutcome.made` → AppShell pushes `.artefact(id)` (the Artefacts screen by
+- [x] **Step 3: the made artefact's screen.** `MakeOutcome.made` → AppShell pushes `.artefact(id)` (the Artefacts screen by
   kind); `.opensNote` → `.note(student, noteDay)` with the words handed through `NoteContext.tutorSays`; `.opensExisting` →
   `.artefact(id)`. The Artefacts stores read `madeFor` for the eyebrow when `plan` is nil; `SheetStore+Again` passes `madeFor`
   and `madeFrom` to `keepMade` on a regenerate.
 
-- [ ] **Step 4: the launch states** `make-sheet`, `make-for`, `make-for-student`, `make-worked-example`, `make-figure`,
+- [x] **Step 4: the launch states** `make-sheet`, `make-for`, `make-for-student`, `make-worked-example`, `make-figure`,
   `make-brief`, `make-mock`, `make-note`, `make-making`, and `sheet` opened on a Make sheet for the eyebrow picture; the
   pictures; `ErrorWordsTests` on the new sentences. Commit, PR 7, merge.
 
@@ -966,7 +966,7 @@ extension CheckStore {
 }
 ```
 
-- [ ] **Step 1: the failing tests:**
+- [x] **Step 1: the failing tests:**
 
 ```swift
 @Test func theChooserListsTheStudentsMocksThenThePapers() async { … Dev: exam16's mock first ("Science unit test 3 · the mock"), then the papers }
@@ -978,7 +978,7 @@ extension CheckStore {
 @Test func withNoSchemeChosenThePagesStepStillLeadsToTheScheme() { … V1's path kept }
 ```
 
-- [ ] **Step 2: the intro** (P10-Make-Check): the hero's title and line from the board; the card: Student `PickerTile`, the
+- [x] **Step 2: the intro** (P10-Make-Check): the hero's title and line from the board; the card: Student `PickerTile`, the
   class line, Scheme `PickerTile` (helper "A mock or paper made here, with its key; or type a scheme."); the notice (the
   board's words: "The photos go to our AI service to be read. We keep no copy; the service deletes them within 30 days."
   and "Nothing is saved until you have checked every mark and tapped Save."); Take a photo, Choose from Photos; the AI line.
@@ -986,7 +986,7 @@ extension CheckStore {
   paper made here", its rows `PaperChoiceRow`s with U22's lines, the typed well under "Type it", the footer "Use this scheme"
   which pops back to the intro). `CheckPagesView`'s Check goes to `.checkResult` when a scheme is chosen, else `.checkScheme`.
 
-- [ ] **Step 3: the states** `check-intro` (Dev, the mock chosen), `check-scheme-chooser`, `check-pages-empty`; the pictures;
+- [x] **Step 3: the states** `check-intro` (Dev, the mock chosen), `check-scheme-chooser`, `check-pages-empty`; the pictures;
   `plan/ui-polish.md`'s U22 and U23 move to Done in Task 17. Commit, PR 8, merge.
 
 ---
@@ -1013,7 +1013,7 @@ public struct ProgressRow: View { init(initials:, name:, status: StatusWord.Trac
 public struct ProgressHero: View { init(skillsSecure:, rightText:, notOnTrack:, notOnTrackLabel:) }
 ```
 
-- [ ] **Step 1: the failing tests:**
+- [x] **Step 1: the failing tests:**
 
 ```swift
 @Test func progressReadsEveryActiveStudentTogetherAndSumsTheRows() async { … the fakes' reads counted; hero.skillsSecure == rows sum }
@@ -1028,7 +1028,7 @@ public struct ProgressHero: View { init(skillsSecure:, rightText:, notOnTrack:, 
 @Test func theNumbersMatchTheSeed() { /* documented, not a unit test: hand run 9 */ }
 ```
 
-- [ ] **Step 2: the screen** (P10-Reports-Progress, -Term): `Segmented` Fees | Attendance | Progress; under Progress a second
+- [x] **Step 2: the screen** (P10-Reports-Progress, -Term): `Segmented` Fees | Attendance | Progress; under Progress a second
   `Segmented` Month | Term; the `MonthHeader` shows the month or "Term 1 · June to September" and steps by the segment;
   `ProgressHero` (the Kit's hero card with three `numberTile` columns in `ok`, `text`, `overdue`); the section header
   "10 students" with the sort menu on the right ("Lowest first", the Students list's menu pattern); the `Card` of
@@ -1037,7 +1037,7 @@ public struct ProgressHero: View { init(skillsSecure:, rightText:, notOnTrack:, 
   status, skills secure, checks, right, absences"). U26: the three reports keep a copy per segment and span
   (`CachedRead`, `cache-<centre>-reports-<segment>-<span>.json`); offline the copy shows with the status line.
 
-- [ ] **Step 3: the states** `reports-progress`, `reports-progress-term`, `reports-progress-sort`, `reports-export`; the
+- [x] **Step 3: the states** `reports-progress`, `reports-progress-term`, `reports-progress-sort`, `reports-export`; the
   fixtures' students with the statuses the boards show (decision 20); the pictures. Commit, PR 9, merge.
 
 ---
@@ -1051,7 +1051,7 @@ public struct ProgressHero: View { init(skillsSecure:, rightText:, notOnTrack:, 
 - Test: `Tests/DesignSystemTests/KitPhase10Tests.swift` (the section exists and takes the figures), `AppShellTests/KitFiguresTests.swift`
   (the seven previews are the seven templates, each passing `validate()`)
 
-- [ ] **Step 1: the failing tests**, then the section: each group under its eyebrow as 10.7 lists them (decision 19), built
+- [x] **Step 1: the failing tests**, then the section: each group under its eyebrow as 10.7 lists them (decision 19), built
   from the existing parts (`Chip`, `StatusWord`, `StateMark`, `KindChip`, `ChapterRow` open with `SkillRow`s, `PlanLineRow`,
   `CheckRow` with `PlanChecklistRow`s and the pair in both states, `LadderRow`, `TrendCard`, the figures handed in, the board
   view's type sample). `kit-phase10` both appearances; the pictures against P10-Kit-Dark and -Light. Commit, PR 10, merge.
@@ -1066,15 +1066,15 @@ pictures of each changed state in both appearances, the row to Done with its pul
 
 **PR 11a `phase-15/polish-note-forms` (after PR 7): U17, U18, U20, U21**
 
-- [ ] **U17:** the progress note's observations counter reads "135 / 2000" as P6-Form-ProgressNote draws it, not "80 of 2,000".
+- [x] **U17:** the progress note's observations counter reads "135 / 2000" as P6-Form-ProgressNote draws it, not "80 of 2,000".
   Failing test: `NotesWellTests.theCounterReadsSlashAndNoGroupingAtTheNotesLimit` (`NotesWell.counterText(135, limit: 2000)
   == "135 / 2000"`); the Kit's own counter for the shorter wells is unchanged. State `ai-note` (both). No board (the board's own text).
-- [ ] **U18:** the Send the note sheet sits under the nav row as P6-ProgressNote-Send draws it. The sheet's `boardDetents`
+- [x] **U18:** the Send the note sheet sits under the nav row as P6-ProgressNote-Send draws it. The sheet's `boardDetents`
   fraction from the board's top (a number, in the view with its source line). State `ai-note-send`. No board.
-- [ ] **U20:** the centre's consent sheet reached from a note speaks of a note, not a photo: a `ConsentSheet(kind: .note)` with
+- [x] **U20:** the centre's consent sheet reached from a note speaks of a note, not a photo: a `ConsentSheet(kind: .note)` with
   the sentences "Before the first note" and "What you write about the student goes to our AI service to be put into words
   …" in the shape of the photo's. The words are P15-Consent-Note's (row 25, approved 2026-10-11). Failing test: `AIStoreTests.theConsentSheetForANoteSpeaksOfNotes`. State `ai-note-consent`.
-- [ ] **U21:** "Couldn't create the homework." and "Couldn't create the worksheet." fit one line as the board's "the paper."
+- [x] **U21:** "Couldn't create the homework." and "Couldn't create the worksheet." fit one line as the board's "the paper."
   does: the failure row's title shortened to "Couldn't create it." for the two longer kinds (the line under it names the
   reason), or the row given the width the board gives it; whichever keeps the board's two-line shape at the default size.
   Failing test: `AIStoreGenerateTests.aFailedHomeworkTitleFitsTheRow` (the title's count at or under "Couldn't create the
@@ -1082,7 +1082,7 @@ pictures of each changed state in both appearances, the row to Done with its pul
 
 **PR 11b `phase-15/polish-glass` (any time after PR 1): U32, U40**
 
-- [ ] **U32, U40:** `statusBarGlass()` on every pushed screen that scrolls (Attendance History, a student's month, Schedule,
+- [x] **U32, U40:** `statusBarGlass()` on every pushed screen that scrolls (Attendance History, a student's month, Schedule,
   Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes, and the
   student's page's parent row), U24's pattern. Failing test: `AppShellTests.StatusBarGlassUseTests` reads the sources of the
   pushed screens for the modifier (as `CalendarPopoverUseTests` holds the popover). States `history`, `student-record`
@@ -1090,9 +1090,9 @@ pictures of each changed state in both appearances, the row to Done with its pul
 
 **PR 11c `phase-15/polish-states` (after PR 7): U34, U11, U19**
 
-- [ ] **U34:** the Students tab's empty card stacks Add a student and Scan paper register at full width as P10-Students-Empty
+- [x] **U34:** the Students tab's empty card stacks Add a student and Scan paper register at full width as P10-Students-Empty
   draws them (the Kit's empty state keeps its side-by-side form elsewhere). State `students-empty` (both).
-- [ ] **U11, U19:** the launch states `today-adding-task` and `today-ai` scroll to their sections as the boards draw them (a
+- [x] **U11, U19:** the launch states `today-adding-task` and `today-ai` scroll to their sections as the boards draw them (a
   `ScrollViewReader` anchor set by the launch state in the fixtures; no change for a tutor). States `today-adding-task`,
   `today-ai`.
 
@@ -1107,8 +1107,8 @@ pictures of each changed state in both appearances, the row to Done with its pul
   table row), `web/content/privacy.ts` (the consent facts), `web/content/site.ts` (the nav), `web/test/unit/pages.test.ts`,
   `words.test.ts`, `web/test/export/*`, `tools/web-smoke.ts` (five pages)
 
-- [ ] **Step 1: the board** `P15-Web-Trust*` (row 25, approved 2026-10-11, the claims table in `information-architecture.md`).
-- [ ] **Step 2: the failing tests** (`pages.test.ts`: `/trust` exports with its heading and the `tc-commit` meta; `words.test.ts`:
+- [x] **Step 1: the board** `P15-Web-Trust*` (row 25, approved 2026-10-11, the claims table in `information-architecture.md`).
+- [x] **Step 2: the failing tests** (`pages.test.ts`: `/trust` exports with its heading and the `tc-commit` meta; `words.test.ts`:
   no banned word, no vendor name on `/trust`; the privacy page's new paragraph present), then the page and the content,
   `bun check --only=web` green, `bun web-shots --pages /trust,/privacy`, the pictures by `bun pr-shots`. Commit, PR 12, merge;
   `gh workflow run deploy-web` (Task 16); the smoke finds five pages.
@@ -1144,34 +1144,34 @@ meets Monday to Friday; on a weekend move its `meeting_days` by psql and put it 
 
 ### Task 15: The cost run (D64) and the price sheet (main)
 
-- [ ] **Step 1 (after PR 9 and the hand runs; the owner's standing approval; about ₹20):** `supabase db reset`; the local API
+- [x] **Step 1 (after PR 9 and the hand runs; the owner's standing approval; about ₹20):** `supabase db reset`; the local API
   **without** `AI_FAKE`; Make: a sheet for Group 1 (class 8, Sonnet) and a sheet for Group 3 (class 2, Haiku), a worked
   example, a figure (fraction bar), a brief, a mock for Dev's exam, a note for Diya with What to say (Haiku), a question
   paper for class 8 (V1, Sonnet), then Check a paper with the mock's key on two photographed pages (Opus). `bun cost
   --since 1h`; the figures per kind into the record's table, and `PriceSheet.typical`'s rows updated where a kind's average
   moved (a test reads it).
-- [ ] **Step 2:** the record writes calls, tokens and rupees per kind, what a tutor's ad hoc sheet costs against the plan's,
+- [x] **Step 2:** the record writes calls, tokens and rupees per kind, what a tutor's ad hoc sheet costs against the plan's,
   and the figure for the "As built".
 
 ---
 
 ### Task 16: The deploys, the review, TestFlight (main)
 
-- [ ] **Step 1 (after PR 3):** `gh workflow run deploy`; the summary shows 0026 pending, pushed, nothing after; the smoke green;
+- [x] **Step 1 (after PR 3):** `gh workflow run deploy`; the summary shows 0026 pending, pushed, nothing after; the smoke green;
   the run id into `STATE.md`'s Production.
-- [ ] **Step 2 (after PR 12):** `gh workflow run deploy-web`; `tools/web-smoke.ts` finds the five pages at the commit.
-- [ ] **Step 3: the review:** a reviewer pass over the merged pull requests with `superpowers:requesting-code-review` on
+- [x] **Step 2 (after PR 12):** `gh workflow run deploy-web`; `tools/web-smoke.ts` finds the five pages at the commit.
+- [x] **Step 3: the review:** a reviewer pass over the merged pull requests with `superpowers:requesting-code-review` on
   Fable 5.1 (fresh context; two reviewers: the app; the API, database, web and tools), with this plan's Review focus and the
   ledger's rulings. Each finding of any grade (D68) is fixed with a test that failed first, in a fix pull request before the
   TestFlight build; none is deferred.
-- [ ] **Step 4:** `gh workflow run testflight` (the hosted database has nothing pending); the build number from the run; it
+- [x] **Step 4:** `gh workflow run testflight` (the hosted database has nothing pending); the build number from the run; it
   is the round's candidate (decision 27); the owner installs it with the other builds (D68).
 
 ---
 
 ### Task 17: The documents of the build (main)
 
-- [ ] One commit to `main` (D12) when the build is reviewed: `plan/phase-15-make-and-polish.md` "As built, the build" (Make,
+- [x] One commit to `main` (D12) when the build is reviewed: `plan/phase-15-make-and-polish.md` "As built, the build" (Make,
   Check a paper under Make, Progress, the Kit, the polish rows done, the trust page, the cost measured, where the build moved
   from this plan and why); `plan/ui-polish.md` (the rows taken to Done with their pull requests; U36 to Done with #133;
   anything seen); `docs/design/information-architecture.md` ("Phase 15 boards": the trust page; 10.7's launch states as built;

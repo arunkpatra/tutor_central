@@ -79,7 +79,7 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - `String(contentsOf:)` drops a file's BOM: test a written CSV as bytes.
 - A sheet opened on one tab stays up when a link switches tabs (U13).
 - The camera's access and VisionKit's document camera are DesignSystem's (`Camera/`), for Fees' QR, Scan register and
-  Check a paper. `PhotoReducer` (2000 px JPEG at 0.7) is Data's, so Students and AITools both reduce a photo (D36).
+  Check a paper. `PhotoReducer` (2000 px JPEG at 0.7) is Data's, so Students and Make both reduce a photo (D36).
 - The AI screens read the register themselves (`AIStore.prepare()`, `ScanStore.read`): the Students tab may never have
   been opened.
 - A sheet that builds a form store keeps it in `@State` (`FixRowSheet`): built in the sheet's content, it is remade on
@@ -161,6 +161,19 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - Request bodies are held to the API's limits on the app side (`NoteRequest.Week`); a 400 marked `reason: "invalid"` is the
   schema's and never shown.
 - The simulator's screenshot tool at `scale` shrinks the image only: read tap points from the full frame (402 × 874).
+
+- Phase 15: the AI module is `Make` (was `AITools`): Make's home, its forms, History, Check a paper, the V1 forms. A Make
+  artefact keeps `made_from = 'make'` and `made_for` (the eyebrow and Make it again's target); Make's list has a copy on the
+  iPhone, a made artefact's screen does not. The Kit's figures are drawn by `Artefacts/Figures/FigurePreviews.swift`.
+- A list store's `savedAt` is the time of its last good read, not nil after it: a list on screen offline then names when it was
+  saved, never "Nothing saved" (#169). A span or month not on screen yet shows its copy at once, else nothing, never the last
+  one's figures (Reports, #170).
+- Words handed from one screen to another through the shell are taken once (`ShellState.takeNoteWords`): left on the shell, a
+  later open repeated a paid call (the review's R-app-1).
+- A form's remembered choices are UserDefaults keys listed in `Wipe.defaultsKeys` (sign-out wipes them, D40); a test reads the
+  list for every new key.
+- Reads that do not depend on each other run together (`async let`, a task group); a failure says so in the list's place (U33).
+- `xt.sh` and `bun check` build into the same DerivedData: after a partial test run, rebuild the tip before a hand-run picture.
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

@@ -304,3 +304,11 @@ Open for today's plan."); the plan's copy is kept per batch and day (`cache-<cen
 removed) and each student's book per student (`cache-<centre>-book-<student>.json`), both wiped with the centre's files; the
 tutor's own sheet photo is kept at `<centre>/own/<uuid>.jpg` in the `photos` bucket after the on-phone reduction; a typed own
 sheet keeps at most 4,000 characters and a regenerate's own words 200.
+
+Phase 15: a sheet's lengths are Short 6, Medium 10 and Long 15 questions (the API takes 3 to 30); What to say keeps 300
+characters (counted as the app counts them; the API trims and counts the same); the terms follow the centre's calendar
+(Term 1 June to September and Term 2 October to March; Karnataka's Term 2 runs to April), and a term's file is
+`progress-term-<n>-<year>.csv`; Recent shows three and History reads Make's latest 50 (`made_from = 'make'`); Make's list and
+Reports' months and spans are kept on the iPhone (`cache-<centre>-make-made.json`, the reports' copies by month and span),
+wiped with the centre's files; a list's saved time is the last good read's.
+

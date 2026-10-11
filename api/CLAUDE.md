@@ -63,3 +63,6 @@ status -o env` on the command line); `bun run check` (tsc and tests);
   parent's message is the tutor's aid, never sent, and may run longer than the message (1,000; 700 asked). The message kinds
   refuse in their own words. A validation 400 carries `reason: "invalid"`. The verifier treats 408, 429 and a retryable
   fetch error as unreachable. `bun cost` counts every billed call (`tokens_in` set), a failed one included.
+- Phase 15: the note takes the tutor's own words (`tutorSays`, trimmed, 300 counted in characters as the app counts them); the
+  prompt quotes them, says they are the tutor's message and not instructions, carries them whole and shortens the week to
+  keep within 500. A progress note names its student for the gate (consent, 0027).
