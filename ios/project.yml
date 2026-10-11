@@ -89,6 +89,7 @@ schemes:
         - package: TutorCentralKit/SettingsTests
         - package: TutorCentralKit/AIToolsTests
         - package: TutorCentralKit/ArtefactsTests
+        - package: TutorCentralKit/SchoolTests
   TutorCentral Kit:
     build:
       targets:
