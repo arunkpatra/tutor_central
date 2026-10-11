@@ -9,13 +9,13 @@ extension Fixtures {
         .schoolEmpty, .school, .schoolCalendar, .schoolAddMenu, .schoolReading, .schoolConfirm, .schoolConfirmEdit,
         .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport,
         .schoolItemHomework, .schoolItemHoliday, .schoolAsk, .schoolAskFailed,
-        .schoolTestTomorrow,
+        .schoolTestTomorrow, .schoolPaste, .schoolStudent, .schoolItemWindow,
     ]
 
     /// The exam's page (P10-School-Item, -Edit, -Delete): the Evening batch's five with the plan's statuses, so
     /// Preparation reads the Evening batch's days.
     static let examPageStates: Set<LaunchState> = [
-        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport,
+        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport, .schoolItemWindow,
     ]
 
     /// The last days' states: Wednesday 14 October after the class, the mock marked for Dev and Meher.
@@ -82,7 +82,8 @@ extension RootView {
         switch state {
         case .schoolReading, .schoolConfirm, .schoolConfirmEdit:
             [.schoolRead(.pasted(FakeSchoolItemsRepository.boardMessage))]
-        case .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays:
+        case .schoolPaste: [.schoolRead(.pasteWaiting)]
+        case .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .schoolItemWindow:
             [.schoolItem(FakeSchoolItemsRepository.scienceTest3)]
         case .gapReport:
             [
@@ -100,7 +101,7 @@ extension RootView {
     /// The exam page's edit sheet and delete dialog (P10-School-Item-Edit, -Delete).
     static func itemBoardState(_ state: LaunchState?) -> ItemBoardState? {
         switch state {
-        case .schoolItemEdit: .edit
+        case .schoolItemEdit, .schoolItemWindow: .edit
         case .schoolItemDelete: .delete
         default: nil
         }
@@ -110,6 +111,7 @@ extension RootView {
         switch state {
         case .schoolAddMenu: .addMenu
         case .schoolCalendar: .calendar(FakeSchoolItemsRepository.day(16))
+        case .schoolStudent: .filtered(FakeStudentsRepository.dev)
         default: nil
         }
     }

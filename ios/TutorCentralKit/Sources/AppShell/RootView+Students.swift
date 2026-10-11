@@ -35,7 +35,12 @@ extension RootView {
             },
             openTextbook: { shell.tabs.push(.textbook(student: $0, subject: $1)) },
             openPlacement: { shell.tabs.push(.placement($0)) },
-            openSchool: { shell.tabs.select(.school) },
+            openSchool: { student in
+                guard case let .ready(workspace) = session.state else { return }
+                schoolStore(for: workspace).filter = student
+                shell.tabs.paths[.school] = []
+                shell.tabs.selected = .school
+            },
             openSchoolItem: { id in
                 shell.tabs.selected = .school
                 shell.tabs.paths[.school] = [.schoolItem(id)]

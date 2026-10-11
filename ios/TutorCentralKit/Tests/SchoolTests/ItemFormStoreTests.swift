@@ -88,4 +88,25 @@ import Testing
         form.openEndDay()
         #expect(form.date == Day(year: 2026, month: 10, day: 20) && form.endDate == Day(year: 2026, month: 10, day: 19))
     }
+
+    @Test func aKeptExamsPreparationIsFourteenUnlessChosenAndTheItemCarriesIt() async throws {
+        let register = await SchoolFixtures.register()
+        let exam = try #require(SchoolFixtures.boardItems.first { $0.id == FakeSchoolItemsRepository.scienceTest3 })
+        let form = try ItemFormStore(
+            item: exam, students: register.activeStudents, schools: [vidya], today: #require(Day(
+                year: 2026,
+                month: 10,
+                day: 7
+            ))
+        )
+        #expect(form.showsWindow && form.windowTitle == "14 days before" && form.windowChoices == [7, 10, 14, 21])
+        form.windowDays = 7
+        #expect(form.windowTitle == "7 days before" && form.item(from: exam).windowDays == 7)
+        form.windowDays = 14
+        #expect(form.item(from: exam).windowDays == nil)
+        form.kind = .homework
+        #expect(!form.showsWindow && form.item(from: exam).windowDays == nil)
+        let draft = await makeForm()
+        #expect(!draft.showsWindow)
+    }
 }

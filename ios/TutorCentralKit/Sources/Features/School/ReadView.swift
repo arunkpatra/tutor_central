@@ -35,7 +35,11 @@ public struct ReadView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 BackRow(title: "Check what was read", back: back)
-                if store.sourceText != nil || store.sourceImage != nil {
+                if store.stage == .pasteWaiting {
+                    PasteWell(label: "What the school sent", line: store.pasteLine) { text in
+                        Task { await store.paste(text) }
+                    }
+                } else if store.sourceText != nil || store.sourceImage != nil {
                     SourceWell(label: "What the school sent", text: store.sourceText, image: store.sourceImage)
                 }
                 if store.stage == .reading {
@@ -43,7 +47,7 @@ public struct ReadView: View {
                         title: SchoolWords.readingTitle, line: SchoolWords.readingLine, thumbnail: store.sourceImage,
                         cancel: { leaveNow() }
                     )
-                } else {
+                } else if store.stage != .pasteWaiting {
                     drafts
                 }
             }

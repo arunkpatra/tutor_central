@@ -8,7 +8,13 @@ import UIKit
 /// sent read by `/ai/parse-school` into drafts the tutor ticks, opens and adds. Nothing is kept before Add; the
 /// inbox item is removed once its items are added or the screen is left.
 @MainActor @Observable public final class ReadStore {
-    public enum Stage: Hashable, Sendable { case reading, read, adding, added([SchoolItem]), failed(String) }
+    public enum Stage: Hashable, Sendable {
+        case reading, read, adding, added([SchoolItem]), failed(String)
+        /// Paste a message: nothing read until the Paste button hands the text over (U41, P14-School-Paste).
+        case pasteWaiting
+    }
+
+    public let pasteLine = "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do."
 
     public private(set) var stage: Stage = .reading
     public let source: ReadSource
@@ -28,6 +34,8 @@ import UIKit
     let calendar: Calendar
     public private(set) var schools: [School] = []
     private var left = false
+    /// The text the Paste button handed over.
+    private var pastedText: String?
 
     public init(
         source: ReadSource, workspace: Workspace, items: any SchoolItemsRepository, ai: any AIRepository,
@@ -57,6 +65,7 @@ import UIKit
         switch source {
         case let .pasted(text): text
         case let .shared(read): read.text
+        case .pasteWaiting: pastedText
         case .photo, .typed: nil
         }
     }
@@ -65,7 +74,7 @@ import UIKit
         switch source {
         case let .photo(upload): UIImage(data: upload.data)
         case let .shared(read): read.image.flatMap { UIImage(data: $0.data) }
-        case .pasted, .typed: nil
+        case .pasted, .typed, .pasteWaiting: nil
         }
     }
 
@@ -97,13 +106,17 @@ import UIKit
         if let read = try? await schoolsRepository.schools(centre: workspace.centre.id) {
             schools = read
         }
+        if source == .pasteWaiting, pastedText == nil {
+            stage = .pasteWaiting
+            return
+        }
         guard let parse = parseSource else {
             stage = .read
             return
         }
         guard await online() else {
-            message = OfflineRefusal.words(for: .readSchool)
-            stage = .read
+            message = OfflineRefusal.words(for: offlineRefusal)
+            stage = source == .pasteWaiting ? .pasteWaiting : .read
             return
         }
         stage = .reading
@@ -113,11 +126,38 @@ import UIKit
                 parse, today: today, schools: schools.map(\.name), classLevels: levels, centre: workspace.centre.id
             )
             drafts = reading.items.map {
-                DraftResolver.resolve($0, source: source, schools: schools, students: register.activeStudents)
+                // A message pasted on this screen is kept as a pasted one.
+                DraftResolver.resolve(
+                    $0, source: pastedText.map(ReadSource.pasted) ?? source, schools: schools,
+                    students: register.activeStudents
+                )
             }
             stage = .read
         } catch {
             stage = .failed(Self.words(error))
+        }
+    }
+
+    /// The Paste button's text, read as a pasted message; nothing pasted is said and the screen keeps waiting.
+    public func paste(_ text: String) async {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            message = SchoolWords.pasteNothing
+            return
+        }
+        pastedText = String(trimmed.prefix(4000))
+        await read()
+        if stage == .pasteWaiting {
+            pastedText = nil
+        }
+    }
+
+    /// What waits offline, by what was read: shared, pasted or photographed.
+    private var offlineRefusal: OfflineRefusal.Write {
+        switch source {
+        case .shared: .readShared
+        case .photo: .readPhoto
+        case .pasted, .pasteWaiting, .typed: .readPasted
         }
     }
 
@@ -149,8 +189,8 @@ import UIKit
             return false
         }
         stage = .adding
+        var path: String?
         do {
-            var path: String?
             if let upload = imageUpload {
                 path = try await photos.add(upload.data, centre: workspace.centre.id, kind: "item")
             }
@@ -159,6 +199,10 @@ import UIKit
             removeInbox()
             return true
         } catch {
+            // The photo went up but the items did not: it is taken away again; the next Add uploads it afresh.
+            if let path {
+                try? await photos.remove(path: path)
+            }
             stage = .read
             message = "That didn't go through. Check your connection and try again. What was read is still here."
             return false
@@ -181,6 +225,7 @@ import UIKit
         case let .photo(upload): .image(upload)
         case let .pasted(text): .text(text)
         case let .shared(read): read.image.map(SchoolSource.image) ?? read.text.map(SchoolSource.text)
+        case .pasteWaiting: pastedText.map(SchoolSource.text)
         case .typed: nil
         }
     }
@@ -189,7 +234,7 @@ import UIKit
         switch source {
         case let .photo(upload): upload
         case let .shared(read): read.image
-        case .pasted, .typed: nil
+        case .pasted, .typed, .pasteWaiting: nil
         }
     }
 }

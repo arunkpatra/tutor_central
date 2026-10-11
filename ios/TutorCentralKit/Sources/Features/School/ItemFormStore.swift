@@ -32,6 +32,10 @@ public struct ForOption: Identifiable, Hashable, Sendable {
     public var date: Day?
     public var endDate: Day?
     public var portions: String
+    /// An exam's preparation window in days (U43, P14-School-Item-Window): 14 unless chosen.
+    public var windowDays: Int
+    /// A kept item: its window is chosen on its sheet; a draft takes 14 until it is kept.
+    private let kept: Bool
     private let draftID: UUID
     private let sourceText: String?
     private let source: SchoolItemSource
@@ -51,7 +55,12 @@ public struct ForOption: Identifiable, Hashable, Sendable {
         endDate = endDate ?? date ?? today
     }
 
-    public init(draft: SchoolItemDraft?, students: [Student], schools: [School], today: Day) {
+    public init(
+        draft: SchoolItemDraft?, students: [Student], schools: [School], today: Day, kept: Bool = false,
+        windowDays: Int? = nil
+    ) {
+        self.kept = kept
+        self.windowDays = windowDays ?? ExamPreparation.windowDays
         kind = draft?.kind ?? .exam
         title = draft?.title ?? ""
         audience = draft?.audience
@@ -75,7 +84,28 @@ public struct ForOption: Identifiable, Hashable, Sendable {
             date: item.date, endDate: item.endDate, portions: item.portions, sourceText: item.sourceText,
             source: item.source
         )
-        self.init(draft: draft, students: students, schools: schools, today: today)
+        self.init(
+            draft: draft,
+            students: students,
+            schools: schools,
+            today: today,
+            kept: true,
+            windowDays: item.windowDays
+        )
+    }
+
+    public var showsWindow: Bool {
+        kept && kind == .exam
+    }
+
+    /// 7, 10, 14 and 21 days, and the window the item has when it is another.
+    public var windowChoices: [Int] {
+        Array(Set([7, 10, 14, 21, windowDays])).sorted()
+    }
+
+    /// "14 days before".
+    public var windowTitle: String {
+        "\(windowDays) days before"
     }
 
     /// "54 of 500".
@@ -122,6 +152,8 @@ public struct ForOption: Identifiable, Hashable, Sendable {
         }
         item.endDate = draft.endDate
         item.portions = draft.portions
+        // 14 is the rule, kept as null (the column's default).
+        item.windowDays = showsWindow && windowDays != ExamPreparation.windowDays ? windowDays : nil
         return item
     }
 
