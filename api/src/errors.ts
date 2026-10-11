@@ -1,7 +1,7 @@
 import type { AIKind, V1Kind } from "./db.js";
 
 /** The one answer shape for a failure: a status the app maps to its board's words, and the words themselves. */
-export type ApiError = { status: 400 | 401 | 403 | 422 | 429 | 502; body: Record<string, unknown> };
+export type ApiError = { status: 400 | 401 | 403 | 422 | 429 | 502 | 503; body: Record<string, unknown> };
 
 const REFUSED: Partial<Record<AIKind, string>> = {
   scan_register: "Couldn't read this photo. Try another.",
@@ -14,7 +14,12 @@ const REFUSED: Partial<Record<AIKind, string>> = {
 const V1_KINDS: readonly AIKind[] = ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"] satisfies V1Kind[];
 
 export const errors = {
+  /** The centre's notice (V1's photos), or a named student's parent (D62): each in its own words. */
   consent: (): ApiError => ({ status: 403, body: { error: "Agree to the notice before the first photo.", reason: "consent" } }),
+  studentConsent: (studentName?: string): ApiError => ({
+    status: 403,
+    body: { error: studentName ? `${studentName.trim().split(/\s+/)[0]}'s parent hasn't agreed yet.` : "The parent hasn't agreed yet.", reason: "student_consent" },
+  }),
   member: (): ApiError => ({ status: 403, body: { error: "sign in again", reason: "member" } }),
   /** V1's kinds have a daily limit; the V2 kinds share the centre's monthly allowance (migration 0013). */
   limit: (kind: AIKind, limit: number): ApiError => ({

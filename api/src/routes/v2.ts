@@ -68,7 +68,7 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
       case "gap_report":
         return run(c, deps, body.centre, { kind: "gap_report", input: v, request: gapReportRequest(v), student: v.studentId });
       case "test_tomorrow":
-        return run(c, deps, body.centre, { kind: "test_tomorrow", input: v, request: testTomorrowRequest(v), student: v.studentId });
+        return run(c, deps, body.centre, { kind: "test_tomorrow", input: v, request: testTomorrowRequest(v), student: v.studentId, studentName: v.studentName });
       default:
         return notYet(c, "/ai/make");
     }

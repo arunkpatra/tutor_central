@@ -201,6 +201,7 @@ test("make gap_report and test_tomorrow are personal: the student's consent is a
   expect(db.started[0]).toMatchObject({ kind: "gap_report", student: centreId, model: "claude-sonnet-5-5" });
   const refused = await post(app(undefined, fakeDb({ studentConsent: false })), "/ai/make", report);
   expect(refused.status).toBe(403);
+  expect(((await refused.json()) as { reason: string }).reason).toBe("student_consent");
   const message = { kind: "test_tomorrow", centreId, studentId: centreId, studentName: "Dev Kumar", tutorName: "Meera Nair", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2" };
   const sent = await post(app(fakeClaude({ answer: SAMPLE.test_tomorrow }), db), "/ai/make", message);
   expect(sent.status).toBe(200);
