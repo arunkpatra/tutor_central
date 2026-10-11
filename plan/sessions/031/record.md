@@ -3,7 +3,8 @@
 Model: Claude Fable 5.1 (D17), from `resume/029-phase-15-plan.md`, with `superpowers:writing-plans`. Outcome:
 `plan/phase-15-plan.md` (23 tasks, twelve pull requests plus fixes, tests first, 30 decisions, ten review-focus lines, the
 file structure, the launch states, the fifteen hand runs, the cost run, the round's set-up, weeks and triage), `plan/resume/
-030-phase-15-build.md` indexed, `STATE.md`, this record. Documents only, to `main` (D12). No code, no board drawn.
+030-phase-15-build.md` indexed, `STATE.md`, this record. Five boards drawn on row 25 of the canvas (the trust page at 1280 and 390, dark and light;
+the consent sheet from a note, U20) and mirrored. Documents only, to `main` (D12). No code.
 
 ## What was done, in order
 
@@ -26,7 +27,12 @@ file structure, the launch states, the fifteen hand runs, the cost run, the roun
    the cost run; the deploys, review and TestFlight; the build's documents; the round's notes and checklist; the V2 guide
    written out and the findings file; the owner's App Store Connect steps and the tester's checks; the readings, fixes and
    builds; the close; the round's documents), the self-review.
-3. Wrote resume 030 and indexed it; set Phase 15's status in the scope file, `plan/README.md` and `STATE.md`; this record and
+3. The owner took twelve polish rows (Task 12) and asked for the boards before the plan's tasks: drew the trust page from
+   the privacy page's board and the consent sheet's words (D50), and the consent sheet from a note from P6-Scan-Consent over
+   P6-Form-ProgressNote, by script; rendered them with headless Chrome (a 390 page inside a frame, since Chrome's window
+   will not go below about 500 px), checked them, published them to row 25 (note `p15_1`), mirrored them, wrote the IA's
+   "Phase 15 boards" with the claims table and the components' texts.
+4. Wrote resume 030 and indexed it; set Phase 15's status in the scope file, `plan/README.md` and `STATE.md`; this record and
    the owner's messages.
 
 ## Why things are as they are
@@ -65,14 +71,12 @@ file structure, the launch states, the fifteen hand runs, the cost run, the roun
 - A `Features/Make` module beside `AITools` (two modules for one screen family): the spec names one.
 - Per-student term spans by each school's board: one report with mixed spans could not be summed honestly.
 - A `made` flag inside the content JSON: a list query on a JSON key with no index, and the kind decoders would carry it.
-- Drawing the trust page's board in this session: the brief scoped the session to the plan and the resume; the build session
-  draws it first and nothing but PR 12 waits.
 
 ## Machine
 
-Reading only; no `bun check` run (no code changed); no simulator run; no real AI call.
+Headless Chrome for the boards; no `bun check` run (no code changed); no simulator run; no real AI call.
 
 ## Next
 
-The owner's two answers (the polish rows; when the round starts), then Phase 15's build on Opus 5.5 from
+The owner's approval of the two boards and his answer on the round's start, then Phase 15's build on Opus 5.5 from
 `resume/030-phase-15-build.md`.

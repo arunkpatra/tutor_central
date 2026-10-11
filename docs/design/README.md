@@ -39,6 +39,8 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 
 | 13 Phase 13, the three states no earlier step drew (reading, the exam group on Today, Marks with its empty row) | Approved by the owner 2026-10-11 ("the boards are approved too"): 6 boards in row 23 of the canvas (`mockups/P13-School-Reading`, `P13-Today-Revision`, `-Light`, `P13-Student-Marks`, `-Light`, `P13-Student-Marks-Empty`); the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 13 boards"); the parts and the texts in `components.md` |
 
+| 15 Phase 15, the two states no earlier step drew (the website's trust page; the consent sheet reached from a progress note, U20) | Drawn by session 31 (2026-10-11): 5 boards in row 25 of the canvas (`mockups/P15-Web-Trust`, `-Light`, `-Phone`, `-Phone-Light`, `P15-Consent-Note`); the list, what the boards settle and the claims table in `information-architecture.md` ("Phase 15 boards"); the texts in `components.md`. Awaiting the owner's approval |
+
 | 14 Phase 14, the states no earlier step drew (marks from a photo: the reading, the marks to check, a mark's sheet; U41's paste well, U42's filtered tab, U43's window row) | Approved by the owner 2026-10-11 ("the boards are approved too"): 7 boards in row 24 of the canvas (`mockups/P14-Marks-Reading`, `P14-Marks-Confirm`, `-Light`, `P14-Marks-Edit`, `P14-School-Paste`, `P14-School-Student`, `P14-School-Item-Window`); the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 14 boards"); the parts and the texts in `components.md` |
 
 ## The three directions (step 0.1, decided: A)

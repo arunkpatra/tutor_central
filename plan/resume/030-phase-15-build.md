@@ -3,7 +3,7 @@
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Opus 5.5
 (D17: plans on Fable, builds on Opus). The plan is `plan/phase-15-plan.md`, approved by the owner with his answers to its
 two questions (the polish rows taken; when the round starts); the boards are Phase 10's step 10.7 (approved 2026-10-10) and
-the website's trust page, drawn in this session's first step and built only once approved. This session builds the phase's
+the two Phase 15 boards of row 25 (the trust page; the consent sheet from a note), approved before the build. This session builds the phase's
 pull requests, runs the hand runs and the cost run, has the work reviewed, ships the TestFlight build, then sets the tutor
 round up and runs its readings over its three weeks (one session per reading or fix; this prompt is pasted again at each).
 
@@ -43,10 +43,8 @@ and what it cost). Scan register stays in Students (D36).
 
 1. The session's setup as `plan/SESSIONS.md` says (reality against `STATE.md`; `bun check` from green). Open the ledger
    `plan/sessions/032/ledger.md` (the shape of `plan/sessions/030/ledger.md`).
-2. Draw the two boards (Task 13, step 1: P15-Web-Trust at 1280 and 390, dark and light, in P8's page pattern, from the
-   privacy page's board and the consent sheet's words, D50's rules; Task 12's P15-Consent-Note, the centre's consent sheet with
-   a note's sentences), publish them to row 25 of the canvas, mirror them, and show the owner. Do not build PR 12 or PR 11a
-   before his approval; the other pull requests do not wait on them.
+2. The two Phase 15 boards (row 25: `P15-Web-Trust*`, `P15-Consent-Note`) were drawn and approved before the build; their
+   approval is the ledger's first line. PR 12 and PR 11a build to them.
 3. Execute `plan/phase-15-plan.md` with `superpowers:executing-plans`, inline, task by task, tests first: PRs 1 to 12 in order
    (the rename; migration 0026 with the seed's checks; the API's `tutorSays`; the deploy; Domain; Progress' rules; Make's home;
    the forms with the For sheet; Check a paper under Make with U22 and U23; Reports' Progress with U26; the Kit; the polish

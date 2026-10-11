@@ -8,9 +8,10 @@ short and true. History belongs in git and in the phase files, not here.
 hand runs, the cost run, the trust page as this phase's, the tutor round's set-up, weeks and triage by Phase 9's method);
 `plan/resume/030-phase-15-build.md` indexed; the record in `plan/sessions/031/`. The owner took U17, U18, U20, U21, U22, U23, U26,
 U32, U40, U34, U11 and U19 (Task 12). One question is open: when the round starts relative to the build (the plan proposes
-the owner's own test first, the invitations about 21 October). Documents only; no code.
-**Next:** the owner's answer on the round's start, then Phase 15's build on Opus 5.5 from `resume/030-phase-15-build.md` (the trust page's board
-drawn and approved in that session's first step; PR 12 waits on it, nothing else does). The owner tests the builds together
+the owner's own test first, the invitations about 21 October). Five boards drawn on row 25 of the canvas (the trust page at 1280 and 390,
+dark and light; the consent sheet from a note, U20) and mirrored; they await the owner's approval. Documents only; no code.
+**Next:** the owner's approval of the two boards and his answer on the round's start, then Phase 15's build on Opus 5.5 from
+`resume/030-phase-15-build.md`. The owner tests the builds together
 after the last phase (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
@@ -20,7 +21,7 @@ after the last phase (D68).
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (drawn 2026-10-11, awaiting approval) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |

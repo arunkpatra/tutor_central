@@ -1297,3 +1297,47 @@ launch states with pictures in #141 to #146 and #149. Moved from the boards: the
 system's (Apple's secure button draws its own); the filtered tab's footnote is gender-neutral ("their own items"); the window
 row is on a kept exam's sheet only (a draft takes 14 until kept); a note held for consent opens the student's page rather
 than the held sheet (P10-Held draws three messages only).
+
+## Phase 15 boards (session 31, 2026-10-11): the two states no earlier step drew
+
+Row 25 of the canvas (y 52600; the title note at 52300); sources `mockups/P15-Web-Trust*` (fluid pages at 1280 and 390, dark
+and light, in the Phase 8 page pattern) and `P15-Consent-Note` (dark). Drawn by the plan session before the plan's tasks that
+build them; approved by the owner before PR 12 and PR 11a start.
+
+| Board | Source |
+|---|---|
+| `/trust`: who is responsible, what is kept about a student, what the AI service never needs consent for, what goes only after the parent agrees, how consent is asked and recorded, what a parent can ask for, where it is kept and who can see it, changes | `P15-Web-Trust`, `-Light`, `-Phone`, `-Phone-Light` |
+| U20: the centre's consent sheet reached from a progress note, "Before the first note" with a note's sentences, over the form | `P15-Consent-Note` |
+
+Phase 15 builds them (`plan/phase-15-plan.md`, Tasks 12 and 13): the trust page has no launch state (proven by `bun web-shots
+--pages /trust,/privacy`); the consent sheet's state is `ai-note-consent`.
+
+What the boards settle:
+
+- **The trust page** is the privacy page's shape (the eyebrow "Trust", the page title, the lead, "Last changed", h2 sections of
+  body paragraphs, the site's frame) with no fourth link in the header: it is reached from the privacy page's "Children's
+  details" paragraph, the app's consent sheet and the tester's guide. Its sentences follow D50 (no vendor named but the AI
+  service, Claude by Anthropic, as the consent sheet names it) and D41, and each states something the app does (the table
+  below). The privacy page's "Children's details" paragraph gains two sentences and the link; its layout does not change, so
+  P8-Privacy is not redrawn (the Phase 8 rule: the board settles the layout, the page's words are the owner's).
+- **The consent sheet from a note** is the Phase 6 sheet with the title "Before the first note" and the body "A note about a
+  student carries their name and what you have seen of their work. It is sent to our AI service (Claude, by Anthropic) only to
+  be put into words, and is not stored there or on our servers. Make sure the parents are fine with their details being kept in
+  Tutor Central."; the footnote and the button are the photo sheet's. One consent per centre (`ai_consent_at`): the sheet's
+  words follow what asked for it (a photo or a note), the record is the same.
+
+Where each claim on `/trust` comes from:
+
+| Claim | Source |
+|---|---|
+| The tutor is responsible for a student's details; the app keeps them for the tutor | D62 ("recorded consent kept for the tutor, who is responsible for the student's data under the DPDP Act") |
+| What the tutor enters: name, class, school, board, parent's name and phone, message language | `students` columns (0009) |
+| The record: chapters and skills with states, checks right or wrong, attendance, homework, marks, school items, messages sent | `chapters`, `skills`, `checks`, `attendance_*`, `homework`, `marks`, `school_items`, `message_log` (0009 to 0011) |
+| No textbook text, only chapter and skill names | D58 |
+| Sheets, questions, examples, figures, briefs and mocks from a class level and skill names, nothing about a student | D62; the `.strict()` group kinds in `api/src/schemas.ts`; `plan/phase-15-plan.md` decision 3 |
+| The weekly note, a marked paper's photo and a report card's photo go only after consent | `start_ai_generation`'s student consent (0021, 0024); Phase 13's marking rule; Phase 14's note and read-marks |
+| Claude by Anthropic, outside India, never trained on, deleted within 30 days; no copy of a photo kept | D35; `AI_RETENTION`; `ai_generations.input` holds counts and bytes (`api/CLAUDE.md`) |
+| The consent message, the reply recorded with the day and number, in person or on a call too | `ConsentMessage`; `students.consent_at`, `consent_phone`, `consent_how` (0009) |
+| Until then no note and no marking for that student; the page says consent is waiting | Phase 14's held reason; P10-Student-Consent-Waiting |
+| A parent can see, change, remove, withdraw consent, have the student deleted | The student's page, edit, delete (V1); consent removed on the page (Phase 11) |
+| Kept in India; one tutor never reads another's; shared only with the services that run the app and, after consent, the AI service | D50; RLS (rule 6) |

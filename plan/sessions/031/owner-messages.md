@@ -6,4 +6,9 @@
 2. On the plan's question 1 (the polish rows): "U17, U18, U20, U21, U22, U23, U26, U32, U40, U34, U11 and U19 are in scope of
    phase 15."
 
-The answer to question 2 (when the round starts relative to the build) is recorded here when it comes.
+3. "You are not giving me your recommendation with reasons, that was the standing instructions. Also boards need to be created
+   first, approval secured and then plan to be written. You were specifically instructed to keep chatter to a minimum possible
+   and take small decisions yourself."
+
+The answer to question 2 (when the round starts relative to the build) and the boards' approval are recorded here when they
+come.

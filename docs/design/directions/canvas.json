@@ -2586,6 +2586,45 @@
    "x": 3311,
    "y": 51200,
    "title": "Phase 14 · Can now do in a week no step moved (U46): the strip headed \"On the ladder\", \"No change this week\", the current step marked · dark"
+  },
+  "P15-Web-Trust.dc.html": {
+   "expand": "fill",
+   "h": 2607,
+   "w": 1280,
+   "x": 0,
+   "y": 52600,
+   "title": "Phase 15 · tutorcentral.in/trust · what is kept about a student, what reaches the AI service and when, how consent is asked and recorded, what a parent can ask for · dark · desktop 1280"
+  },
+  "P15-Web-Trust-Light.dc.html": {
+   "expand": "fill",
+   "h": 2607,
+   "w": 1280,
+   "x": 1360,
+   "y": 52600,
+   "title": "Phase 15 · tutorcentral.in/trust · light · desktop 1280"
+  },
+  "P15-Web-Trust-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3567,
+   "w": 390,
+   "x": 2720,
+   "y": 52600,
+   "title": "Phase 15 · tutorcentral.in/trust · dark · phone 390"
+  },
+  "P15-Web-Trust-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3567,
+   "w": 390,
+   "x": 3190,
+   "y": 52600,
+   "title": "Phase 15 · tutorcentral.in/trust · light · phone 390"
+  },
+  "P15-Consent-Note.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 3660,
+   "y": 52600,
+   "title": "Phase 15 · The consent sheet reached from a progress note (U20): \"Before the first note\" and the note's sentences over the form, in the Phase 6 sheet · dark"
   }
  },
  "createdOnFiles": {
@@ -2796,6 +2835,14 @@
    "x": 0,
    "y": 50900,
    "text": "Phase 14 · Parents — the states no earlier step drew: marks from a photo (the reading, the marks to check, a mark's sheet) and three Phase 13 leftovers (Paste without the prompt, U41; the tab filtered to a student, U42; the exam's preparation window, U43)"
+  },
+  "p15_1": {
+   "kind": "title1",
+   "maxW": 4100,
+   "w": 240,
+   "x": 0,
+   "y": 52300,
+   "text": "Phase 15 · Make and polish — the two states no earlier step drew: the website's trust page (what reaches the AI service and when, how a parent's consent is asked and kept, what a parent can ask for) and the consent sheet reached from a progress note (U20)"
   }
  },
  "order": [
@@ -3164,7 +3211,12 @@
   "P14-School-Paste.dc.html",
   "P14-School-Student.dc.html",
   "P14-School-Item-Window.dc.html",
-  "P14-CanNowDo-NoChange.dc.html"
+  "P14-CanNowDo-NoChange.dc.html",
+  "P15-Web-Trust.dc.html",
+  "P15-Web-Trust-Light.dc.html",
+  "P15-Web-Trust-Phone.dc.html",
+  "P15-Web-Trust-Phone-Light.dc.html",
+  "P15-Consent-Note.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

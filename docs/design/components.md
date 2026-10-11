@@ -993,3 +993,14 @@ As built in Phase 14 (session 30): `PagesWell` (the photo well, 56 × 72), `Mark
 `LadderStrip`, `NoteRow`, `HeldSheet`, `MessageLogRow`, `TellParentCard` (Students), the plan line's caption (`PlanLineRow`,
 `captionStrong` in `overdue`, its own tap) and `CopyButton(copy:)` for a caller that copies and logs. The window row is a
 `PickerTile` with the `WheelPopover` the note day uses.
+
+## Phase 15 parts (session 31, 2026-10-11): the trust page, the consent sheet from a note
+
+No new part: the trust page uses the Phase 8 web parts (the page title, h2, body); the consent sheet is the Phase 6 sheet.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| The trust page | "Trust" · "How Tutor Central treats your students’ information" · the lead · "Last changed …" · the eight sections as `mockups/P15-Web-Trust.dc.html` holds them (the words live once, in `web/content/trust.ts` when built) |
+| The consent sheet from a note | "Before the first note" · "A note about a student carries their name and what you have seen of their work. It is sent to our AI service (Claude, by Anthropic) only to be put into words, and is not stored there or on our servers. Make sure the parents are fine with their details being kept in Tutor Central." · "Asked once for <centre>, and recorded with the date." · I agree, continue |

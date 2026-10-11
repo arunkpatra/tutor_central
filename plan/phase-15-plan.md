@@ -50,8 +50,8 @@ rewritten here); what Phases 12 to 14 built in their "As built" and `plan/sessio
 - No board, no approval, no code for anything seen (rule 1). Each state a board draws gets a `LaunchState` and its
   pictures in the pull request, both appearances where the board has both (D7). What no board redraws stays as Phases 11
   to 14 built it. The two new boards this phase needs
-  (the website's trust page, decision 24; U20's consent words, decision 22) are drawn in the build session's first step and
-  built only once approved; a polish row that changes what is seen beyond an approved board has its board first.
+  (the website's trust page, decision 24; U20's consent words, decision 22) were drawn by the plan session (row 25 of the
+  canvas, `P15-*`) and are built only once the owner approves them; a polish row that changes what is seen beyond an approved board has its board first.
 - Nothing from V1 is renamed, dropped or narrowed in the model (D56, D26). Migration 0026 is additive: one nullable column
   and a function parameter with a default, so build 25's calls still resolve. `types.ts` regenerated and committed with it.
 - A replaced function: `security invoker`, `set search_path = ''`, `revoke all … from public, anon`, `grant execute … to
@@ -218,16 +218,16 @@ Small decisions, written here so they are not re-decided. The owner's are marked
     `kit-phase10` (both). `ai-assistant` and `ai-assistant-empty` retire (`make`, `make-empty`); the other `ai-*` states keep
     their names (V1's forms and results, unchanged). `today-ai`'s Create row opens Make.
 22. **The polish rows** the owner took (2026-10-11): U17, U18, U20, U21, U22, U23, U26, U32, U40, U34, U11 and U19, as Task 12
-    lays them out (U22 and U23 in PR 8, U26 in PR 9, the rest in three pull requests by screen group); U20's new words get a
-    small board (P15-Consent-Note) drawn with the trust page's and approved first.
+    lays them out (U22 and U23 in PR 8, U26 in PR 9, the rest in three pull requests by screen group); U20's new words have their
+    board, P15-Consent-Note (row 25), drawn by the plan session; approved first.
 23. **U36 is misfiled** under Open (its row reads like a Done row: "#133", built in Phase 13). Task 23 moves it to Done
     with #133.
 24. **The trust page** (spec sections 8 and 9: "the trust page on tutorcentral.in … updated in the phase that first sends a
     student's data to testers") is this phase's, before any tutor is invited: `/trust` on the site (D50's rules: no vendor
-    named but the AI service as the consent sheet names it), with the privacy page's consent facts added. It needs a board
-    first (P15-Web-Trust at 1280 and 390, dark and light, in P8's page pattern), drawn in the build session's first step
-    from the privacy page's board and the consent sheet's words, approved by the owner, then built (PR 12) and deployed by
-    `deploy-web` before Owner step 4. The App Privacy answers are Phase 16's listing work.
+    named but the AI service as the consent sheet names it), with the privacy page's consent facts added. Its boards (P15-Web-Trust at 1280
+    and 390, dark and light, in P8's page pattern) were drawn by the plan session from the privacy page's board and the
+    consent sheet's words (`information-architecture.md`, "Phase 15 boards", with the claims table); approved by the owner,
+    then built (PR 12) and deployed by `deploy-web` before Owner step 4. The App Privacy answers are Phase 16's listing work.
 25. **Per-student export** (D62 names it) stays for later: no scope line, no board. Named to the owner here, not built.
 26. **The tutor round's files:** `plan/phase-15-findings.md` (the Phase 9 skeleton: Testers, Readings, Findings, Later),
     `plan/phase-15-findings/` for pictures; `docs/testing/tester-guide.md` rewritten for V2 (Task 19's text); the release
@@ -1073,9 +1073,8 @@ pictures of each changed state in both appearances, the row to Done with its pul
   fraction from the board's top (a number, in the view with its source line). State `ai-note-send`. No board.
 - [ ] **U20:** the centre's consent sheet reached from a note speaks of a note, not a photo: a `ConsentSheet(kind: .note)` with
   the sentences "Before the first note" and "What you write about the student goes to our AI service to be put into words
-  …" in the shape of the photo's. New words change what is seen: a small board P15-Consent-Note (the consent sheet with the
-  note's sentences, dark) drawn with the trust page's board in the build session's first step and approved before this
-  pull request. Failing test: `AIStoreTests.theConsentSheetForANoteSpeaksOfNotes`. State `ai-note-consent`.
+  …" in the shape of the photo's. The words are P15-Consent-Note's (row 25, drawn by session 31), approved before this pull
+  request. Failing test: `AIStoreTests.theConsentSheetForANoteSpeaksOfNotes`. State `ai-note-consent`.
 - [ ] **U21:** "Couldn't create the homework." and "Couldn't create the worksheet." fit one line as the board's "the paper."
   does: the failure row's title shortened to "Couldn't create it." for the two longer kinds (the line under it names the
   reason), or the row given the width the board gives it; whichever keeps the board's two-line shape at the default size.
@@ -1109,12 +1108,8 @@ pictures of each changed state in both appearances, the row to Done with its pul
   table row), `web/content/privacy.ts` (the consent facts), `web/content/site.ts` (the nav), `web/test/unit/pages.test.ts`,
   `words.test.ts`, `web/test/export/*`, `tools/web-smoke.ts` (five pages)
 
-- [ ] **Step 1: the board** (the build session's first documents step): `/trust` in P8's page pattern, from the privacy
-  page's board: the title "How Tutor Central treats your students' information", sections What is kept, What the AI service
-  sees (only after the parent agrees; what is sent for a note, a marking, a report card; nothing for a sheet made for a
-  class), How consent is recorded (the message, the reply, the date and number kept by the tutor), What a parent can ask
-  (to see it, to have it removed), Where it is kept (India), and the AI service named as the consent sheet names it (D50).
-  Published to row 25 of the canvas, mirrored, approved by the owner before Step 2.
+- [ ] **Step 1: the board** is drawn (session 31: `P15-Web-Trust*`, row 25, mirrored, the claims table in
+  `information-architecture.md`); the owner's approval is recorded in the ledger before Step 2.
 - [ ] **Step 2: the failing tests** (`pages.test.ts`: `/trust` exports with its heading and the `tc-commit` meta; `words.test.ts`:
   no banned word, no vendor name on `/trust`; the privacy page's new paragraph present), then the page and the content,
   `bun check --only=web` green, `bun web-shots --pages /trust,/privacy`, the pictures by `bun pr-shots`. Commit, PR 12, merge;
@@ -1430,9 +1425,9 @@ the round starts (question 2). Spec 9's trust page in the phase that first sends
 Task 13. Spec 8's "material made from a skill at a level needs no consent" → decision 3 and Review focus 6.
 
 **Placeholder scan:** no "TBD", no "similar to Task N" without the content; the views are specified by their Kit parts and
-the boards' texts, as this repository's plans do; the migration, the guide and the notes are written out. Three things wait
-on the owner and are marked: the polish rows (question 1), the round's start (question 2), and the trust page's board
-(decision 24, drawn in the build session's first step). Task 12's rows are written into the ledger when question 1 is
+the boards' texts, as this repository's plans do; the migration, the guide and the notes are written out. Two things wait
+on the owner and are marked: the round's start (question 2) and the two boards' approval (decisions 22 and 24, drawn by
+this session). Task 12's rows are written into the ledger when question 1 is
 answered, in the shape given.
 
 **Type consistency:** `MakeKind`, `MakeTarget`, `MakeFor`, `MakeRules`, `Term`, `ProgressSpan`, `OfflineRefusal.Write.make`,
