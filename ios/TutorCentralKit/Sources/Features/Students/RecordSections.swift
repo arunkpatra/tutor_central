@@ -138,6 +138,49 @@ struct ChecksSection: View {
     }
 }
 
+/// Marks (U36; P13-Student-Marks, -Empty): mocks and checked papers, newest first, Below usual; no add from a photo
+/// yet.
+struct MarksSection: View {
+    let rows: [MarkRow]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+            SectionHeader("Marks")
+            Card {
+                if rows.isEmpty {
+                    EmptyRow(
+                        symbol: "chart.bar", title: StudentDetailStore.noMarks.title,
+                        line: StudentDetailStore.noMarks.line
+                    )
+                } else {
+                    VStack(spacing: 0) {
+                        ForEach(rows) { row in
+                            AdaptiveRow {
+                                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                                    Text(row.title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                                    Text(row.line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                                }
+                                AdaptiveSpacer()
+                                VStack(alignment: .trailing, spacing: Tokens.rowGapInner) {
+                                    Text(row.score).typeStyle(Tokens.numberRow).monospacedDigit()
+                                        .foregroundStyle(Tokens.text.color)
+                                    if row.belowUsual {
+                                        Chip(.status(.due, "Below usual", symbol: "clock"), compact: true)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, Tokens.rowPaddingDense)
+                            .padding(.horizontal, Tokens.rowPaddingHorizontal)
+                            .accessibilityElement(children: .combine)
+                            .rowDivider(row.id != rows.last?.id)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /// Homework (P10-Student-End): one row per homework given, its status as a chip that opens Done, Partial, Not done.
 struct HomeworkSection: View {
     let rows: [StudentDetailStore.HomeworkLine]

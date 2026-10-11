@@ -10,6 +10,8 @@ public enum StudentDetailBoardState: Sendable {
     /// Scrolled to the record with the current chapter open (P10-Student-Record); to the end (P10-Student-End).
     case record
     case end
+    /// Scrolled to Checks and Marks (P13-Student-Marks).
+    case marks
     /// The consent ask's sheet (P10-Consent-Ask); the Parent agreed sheet (P10-Consent-Record).
     case consentAsk
     case consentRecord
@@ -87,9 +89,7 @@ public struct StudentDetailView: View {
                         addChapter: { addingChapter = AddingChapter(subject: $0) }
                     )
                     .id(Anchor.record)
-                    if let checks = store.checks {
-                        ChecksSection(lines: checks)
-                    }
+                    checksAndMarks
                     HomeworkSection(rows: store.homework, open: actions.openArtefact, set: setHomework)
                     SchoolSection(
                         line: store.schoolEmptyLine, rows: store.schoolRows, seeAll: navigation.openSchool,
@@ -313,5 +313,17 @@ extension StudentDetailView {
 
     func setHomework(_ id: UUID, _ status: HomeworkStatus) {
         Task { await store.setHomework(id, status) }
+    }
+}
+
+extension StudentDetailView {
+    /// Checks, then Marks (U36), as P13-Student-Marks orders them.
+    @ViewBuilder var checksAndMarks: some View {
+        if let checks = store.checks {
+            ChecksSection(lines: checks).id(Anchor.marks)
+        }
+        if store.marksLoaded {
+            MarksSection(rows: store.markRows)
+        }
     }
 }
