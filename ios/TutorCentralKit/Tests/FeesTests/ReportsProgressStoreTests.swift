@@ -151,6 +151,63 @@ import Testing
         #expect(kit.store.savedAt == Self.now && !kit.store.offlineRead)
     }
 
+    /// A store over `online`'s register and the cache whose attendance answers after `delay`.
+    static func slow(_ online: Kit, cache: ReportsCache?, delay: Duration? = .seconds(5)) -> ReportsStore {
+        slowStore(online, cache: cache, delay: delay).store
+    }
+
+    static func slowStore(
+        _ online: Kit, cache: ReportsCache?, delay: Duration?
+    ) -> (store: ReportsStore, attendance: FakeAttendanceRepository) {
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithToday)
+        attendance.delay = delay
+        let store = ReportsStore(
+            workspace: FakeCentreRepository.meeraWorkspace, register: online.register,
+            fees: FakeFeesRepository(invoices: FakeFeesRepository.seed), attendance: attendance,
+            messages: FakeMessageLogRepository(logs: [], feeLogs: []), now: { now },
+            progress: ProgressReader(textbooks: online.textbooks, record: online.record, attendance: attendance),
+            cache: cache
+        )
+        return (store, attendance)
+    }
+
+    /// Hand run 14: offline the report showed "0 students" for the twenty seconds of the read; its copy shows at once.
+    @Test func theCopyShowsAtOnceWhileTheReadIsUnderWay() async throws {
+        let folder = FileManager.default.temporaryDirectory.appending(path: "reports-\(UUID().uuidString)")
+        let cache = ReportsCache(centre: FakeCentreRepository.meeraWorkspace.centre.id, directory: folder)
+        let online = await Self.kit(cache: cache)
+        let rows = online.store.progressRows
+        online.store.segment = .fees
+        await online.store.load()
+        let lines = online.store.feeLines
+        let store = Self.slow(online, cache: cache)
+        store.segment = .progress
+        let progress = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(200))
+        #expect(store.progressRows == rows && store.savedAt == Self.now && store.loading)
+        progress.cancel()
+        store.segment = .fees
+        let fees = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(200))
+        #expect(store.feeLines == lines && store.loading)
+        fees.cancel()
+    }
+
+    /// A span with no copy shows no rows while it is read, never the last span's.
+    @Test func aNewSpanNeverShowsTheLastSpansRows() async throws {
+        let online = await Self.kit()
+        let (store, attendance) = Self.slowStore(online, cache: nil, delay: nil)
+        store.segment = .progress
+        await store.load()
+        #expect(!store.progressRows.isEmpty)
+        attendance.delay = .seconds(5)
+        store.span = .term
+        let read = Task { await store.load() }
+        try await Task.sleep(for: .milliseconds(200))
+        #expect(store.progressRows.isEmpty && store.loading)
+        read.cancel()
+    }
+
     @Test func theFeesMonthOpensFromItsCopyOffline() async {
         let folder = FileManager.default.temporaryDirectory.appending(path: "reports-\(UUID().uuidString)")
         let cache = ReportsCache(centre: FakeCentreRepository.meeraWorkspace.centre.id, directory: folder)

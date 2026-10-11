@@ -49,6 +49,14 @@ extension ReportsStore {
         guard let progressReader else { return }
         let span = progressSpan
         let key = span.fileStem
+        if progressShown != key {
+            // A span not on screen yet: its copy at once while the network answers (hand run 14), else no rows.
+            let copy = cache?.progress(key).load()
+            (progressInputs, progressCopy, progressShown) = ([:], copy?.value, key)
+            if let copy {
+                (savedAt, loaded) = (copy.savedAt, true)
+            }
+        }
         do {
             let read = try await progressReader.read(
                 register.activeStudents, span: span, centre: workspace.centre.id, calendar: calendar
