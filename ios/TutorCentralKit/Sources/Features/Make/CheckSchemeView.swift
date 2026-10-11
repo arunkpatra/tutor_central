@@ -63,7 +63,15 @@ public struct CheckSchemeView: View {
                             }
                         }
                     }
-                    footnote("A mock's key and marks, or a paper's, are the scheme.")
+                    if let failed = store.schemesFailed {
+                        HStack(alignment: .firstTextBaseline) {
+                            footnote(failed)
+                            Spacer(minLength: Tokens.inline)
+                            Button("Try Again") { Task { await store.loadSchemes() } }.buttonStyle(.quiet)
+                        }
+                    } else {
+                        footnote("A mock's key and marks, or a paper's, are the scheme.")
+                    }
                 } else {
                     Card {
                         VStack(spacing: 0) {

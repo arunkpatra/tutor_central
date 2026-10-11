@@ -157,6 +157,28 @@ import Testing
         #expect(!store.rows.contains { $0.opens == .artefact(first.id) })
     }
 
+    /// The review's test gap (ios/CLAUDE.md: a call the tutor can leave): Cancel stops waiting and a late answer is
+    /// dropped; Recent is untouched and the next call may start.
+    @Test func cancelDropsALateAnswerAndLeavesRecentAlone() async throws {
+        let store = await Self.make()
+        let late = try await FakePlansRepository().keepMade(
+            Self.artefact(.sheet, title: "Late · sheet").made(for: Self.groupOne), student: nil, exam: nil,
+            centre: Self.centre
+        )
+        let task = try #require(store.run(.sheet) {
+            // An answer that ignores the cancel and lands afterwards, as a network reply can.
+            await withCheckedContinuation { done in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { done.resume() }
+            }
+            return late
+        })
+        store.cancel()
+        #expect(store.running == nil)
+        #expect(await task.value == nil)
+        #expect(store.made.isEmpty && store.failure == nil)
+        #expect(store.run(.sheet) { late } != nil, "the next call may start")
+    }
+
     @Test func historyGroupsBothByMonth() async throws {
         let plans = FakePlansRepository()
         try await Self.keep(.sheet, "Balancing equations · sheet", at: 0, in: plans)
@@ -167,6 +189,13 @@ import Testing
         #expect(months.first?.period == Period(year: 2026, month: 10))
         #expect(months.first?.rows.first?.title == "Balancing equations · sheet")
         #expect(months.last?.rows.contains { $0.title == "Fractions · sheet" } == true)
+    }
+
+    /// The review's R-app-8: Make's notes are kept on the student's page, not in Recent, so the empty row does not
+    /// promise them.
+    @Test func theEmptyRowPromisesOnlyWhatRecentLists() {
+        #expect(!MakeWords.emptyLine.contains("notes"))
+        #expect(MakeWords.emptyLine.hasPrefix("Sheets, examples, figures, mocks and papers you make appear here"))
     }
 
     @Test func theEmptyRowShowsOnlyOnceHistoryHasLoaded() async {

@@ -41,6 +41,7 @@ public extension MakeFormStore {
         let words = tutorSays.trimmingCharacters(in: .whitespacesAndNewlines)
         let kept = words
             .isEmpty ? nil : String(String.UnicodeScalarView(words.unicodeScalars.prefix(MakeRules.tutorSaysLimit)))
+        remember()
         return .opensNote(student.id, noteDay, tutorSays: kept)
     }
 

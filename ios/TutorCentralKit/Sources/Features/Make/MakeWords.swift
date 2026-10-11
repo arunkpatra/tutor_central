@@ -6,7 +6,7 @@ enum MakeWords {
     static let homeLead = "Anything the plan makes, made on its own: for a student, a group, a class or just a topic. "
         + "You check it before it reaches anyone."
     static let emptyTitle = "Nothing made yet"
-    static let emptyLine = "Sheets, examples, figures, mocks, notes and papers you make appear here, ready to open "
+    static let emptyLine = "Sheets, examples, figures, mocks and papers you make appear here, ready to open "
         + "again."
     static let failedTitle = "Couldn't make it."
     static let forHelper = "A student, a group, a batch, or a class on its own."

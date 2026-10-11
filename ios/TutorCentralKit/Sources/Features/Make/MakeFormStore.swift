@@ -59,8 +59,12 @@ import Observation
         groups = await TodayGroups.read(context)
         books = await booksRead ?? [:]
         items = await itemsRead ?? []
-        if target == nil, let remembered, stands(remembered) {
-            choose(remembered)
+        if let remembered, stands(remembered) {
+            if usesStudent, studentID == nil, case let .student(id) = remembered {
+                studentID = id
+            } else if !usesStudent, target == nil {
+                choose(remembered)
+            }
         }
         if kind == .brief, classLevel == nil, let last = rememberedBrief {
             (classLevel, subject) = (last.level, last.subject)
@@ -222,8 +226,14 @@ import Observation
            let data = try? JSONEncoder().encode(BriefDefaults(level: classLevel, subject: subject)) {
             context.defaults?.set(data, forKey: briefKey)
         }
-        guard let target, let data = try? JSONEncoder().encode(target) else { return }
+        let kept = usesStudent ? studentID.map(MakeTarget.student) : target
+        guard let kept, let data = try? JSONEncoder().encode(kept) else { return }
         context.defaults?.set(data, forKey: defaultsKey)
+    }
+
+    /// The mock and the note are for one student, chosen on their own tile rather than For.
+    private var usesStudent: Bool {
+        kind == .mock || kind == .noteToParent
     }
 
     /// The brief has no target: its last class and subject, as V1's forms keep theirs.

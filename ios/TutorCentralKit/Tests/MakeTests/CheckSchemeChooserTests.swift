@@ -102,6 +102,18 @@ import Testing
         #expect(line(late).hasSuffix("Wed 7 Oct, 18:30"))
     }
 
+    /// The review's R-app-7: a failed read of the mocks says so in the chooser's place (U33), never a chooser that only
+    /// lacks them; a read that works again clears it.
+    @Test func mocksThatCouldNotLoadSaySo() async throws {
+        let store = await Self.make()
+        let plans = try #require(store.plans as? FakePlansRepository)
+        plans.nextError = URLError(.notConnectedToInternet)
+        await store.loadSchemes()
+        #expect(store.schemesFailed == "Couldn't load the mocks. Check your connection and try again.")
+        await store.loadSchemes()
+        #expect(store.schemesFailed == nil && store.schemeChoices.contains(where: \.isMock))
+    }
+
     @Test func noPagesReadsNoPagesAndTheFooterIsOff() async {
         let store = await Self.make()
         store.addPages([Self.page, Self.page])

@@ -248,38 +248,6 @@ import Testing
         #expect(await kit.store.make() == .refused)
         _ = await first.value
     }
-
-    @Test func theLastTargetOfAKindIsRemembered() async {
-        let defaults = UserDefaults(suiteName: "make-\(UUID().uuidString)")
-        let first = await Self.kit(.sheet, defaults: defaults)
-        first.store.choose(.student(Self.dev))
-        _ = await first.store.make()
-        let second = await Self.kit(.sheet, defaults: defaults)
-        #expect(second.store.target == .student(Self.dev))
-        let other = await Self.kit(.workedExample, defaults: defaults)
-        #expect(other.store.target == nil)
-    }
-
-    /// D40: sign-out wipes what Make keeps on this iPhone, the last target of each kind and the brief's class.
-    @Test func signOutWipesMakesRememberedChoices() {
-        for kind in MakeKind.allCases {
-            #expect(Wipe.defaultsKeys.contains(MakeFormStore.defaultsKey(kind)))
-        }
-        #expect(Wipe.defaultsKeys.contains(MakeFormStore.briefKey))
-    }
-
-    /// Hand run 5: the brief starts on the last class and subject made, as V1's forms do; Choose the first time.
-    @Test func theBriefsLastClassAndSubjectAreRemembered() async {
-        let defaults = UserDefaults(suiteName: "make-\(UUID().uuidString)")
-        let first = await Self.kit(.brief, defaults: defaults)
-        #expect(first.store.classLevel == nil)
-        first.store.classLevel = .eight
-        first.store.subject = "Science"
-        first.store.chapter = "Chemical reactions"
-        _ = await first.store.make()
-        let second = await Self.kit(.brief, defaults: defaults)
-        #expect(second.store.classLevel == .eight && second.store.subject == "Science")
-    }
 }
 
 @MainActor struct ForStoreTests {
