@@ -57,18 +57,24 @@ struct TabsView<
     }
 
     /// A pushed screen, by the tab it belongs to.
-    @ViewBuilder private func destination(_ route: Route) -> some View {
+    /// A pushed screen is its route: a link that puts another student (or class, or month) in the same place makes a
+    /// new
+    /// screen, not the last one with its store kept in `@State`.
+    private func destination(_ route: Route) -> some View {
+        screen(route).id(route)
+    }
+
+    @ViewBuilder private func screen(_ route: Route) -> some View {
         switch route {
         case .student, .classes, .classroom, .studentFees, .textbook, .placement: studentsDestination(route)
         case .attendance, .history, .historyStudent: attendanceDestination(route)
         case .settings, .account, .deleteAccount, .help, .pendingChanges, .reminders: settings(route)
         case .payments, .reports: moreDestination(route)
         case .schedule: schedule(nil)
-        // A newer link in the same place is a new screen, not the last one's state.
-        case let .event(id): schedule(id).id(id)
+        case let .event(id): schedule(id)
         case .tasks: tasks()
         case let .close(id): close(id)
-        case let .artefact(id): artefact(id).id(id)
+        case let .artefact(id): artefact(id)
         case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
              .checkResult: tools(route)
         }
