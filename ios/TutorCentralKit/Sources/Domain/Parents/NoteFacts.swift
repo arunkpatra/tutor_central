@@ -202,7 +202,7 @@ public enum NoteWeek {
     }
 
     /// "Balancing equations" → "balancing equations"; a name that starts with an acronym stays.
-    static func lowered(_ text: String) -> String {
+    public static func lowered(_ text: String) -> String {
         let characters = Array(text)
         guard let first = characters.first, characters.count < 2 || !characters[1].isUppercase else { return text }
         return first.lowercased() + String(characters.dropFirst())

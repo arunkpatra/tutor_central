@@ -57,7 +57,7 @@ extension TodayStore {
                           student
                       ) })
                       .min(by: { $0.title < $1.title }) else { continue }
-                let theirs = log.filter { sameParent($0.studentID, student) }.map(\.entry)
+                let theirs = log.filter { register.sameParent($0.studentID, student) }.map(\.entry)
                 let sent = log.contains {
                     $0.studentID == student.id && $0.entry.kind == .testTomorrow && $0.entry.openedAt >= startOfToday
                 }
@@ -86,11 +86,5 @@ extension TodayStore {
             detail: "\(student.firstName)'s parent · \(student.messageLanguage.title) · \(what)",
             state: sent ? .sent : .send
         )
-    }
-
-    /// A message about another student of the same parent (the same number).
-    private func sameParent(_ id: UUID, _ student: Student) -> Bool {
-        guard let number = student.parentPhone?.e164 else { return id == student.id }
-        return id == student.id || register.student(id)?.parentPhone?.e164 == number
     }
 }

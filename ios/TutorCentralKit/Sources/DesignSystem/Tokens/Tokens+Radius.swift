@@ -5,6 +5,7 @@ import SwiftUI
 public extension Tokens {
     static let radiusChip: CGFloat = 14
     static let radiusSegment: CGFloat = 10
+    static let radiusCompact: CGFloat = 12
     static let radiusSegmentTrack: CGFloat = 13
     static let radiusControl: CGFloat = 15
     static let radiusTile: CGFloat = 16
@@ -19,7 +20,10 @@ public extension Tokens {
     }
 
     static let radii: [(String, CGFloat)] = [
-        ("radiusChip", radiusChip), ("radiusSegment", radiusSegment), ("radiusSegmentTrack", radiusSegmentTrack),
+        ("radiusChip", radiusChip), ("radiusSegment", radiusSegment), ("radiusCompact", radiusCompact), (
+            "radiusSegmentTrack",
+            radiusSegmentTrack
+        ),
         ("radiusControl", radiusControl), ("radiusTile", radiusTile), ("radiusCard", radiusCard),
         ("radiusHero", radiusHero), ("radiusSheet", radiusSheet), ("radiusBar", radiusBar),
         ("radiusBarItem", radiusBarItem), ("radiusFull", radiusFull), ("radiusAvatar", 0),

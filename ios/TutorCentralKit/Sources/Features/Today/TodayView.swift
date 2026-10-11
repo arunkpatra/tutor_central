@@ -13,6 +13,10 @@ public enum TodayBoardState: Hashable, Sendable {
     case lineMenu(UUID)
     /// The Change sheet up (P10-Today-Plan-Change).
     case changeSheet
+    /// The note day's held sheet up for a student (P10-Held).
+    case noteHeld(UUID)
+    /// The note day's wheel open (P10-NoteDay-Change).
+    case noteDayWheel
     /// Scrolled to Group 1, its moved and skipped lines (P10-Today-Plan-Changed).
     case planChanged
 }
@@ -30,6 +34,8 @@ public struct TodayView: View {
     @State private var topInset: CGFloat = 0
     /// The batch whose Change sheet is up.
     @State private var changing: ChangingBatch?
+    /// The note day's held sheet.
+    @State private var held: HeldNote?
 
     /// `ticks` runs the minute clock (live); the fixtures hold their moment. `status` is AppShell's: the offline or
     /// sync line under the greeting, and whether the AI row is live.
@@ -63,6 +69,10 @@ public struct TodayView: View {
                     }
                     if let hero = store.hero {
                         BatchHeroCard(hero: hero, openClose: actions.openClose)
+                    }
+                    if let noteDay = store.noteDay, noteDay.isOn {
+                        NoteDaySection(store: noteDay, openHeld: { held = $0 }, showsWheel: boardState == .noteDayWheel)
+                            .id(Self.notesID)
                     }
                     if !store.toParents.isEmpty {
                         ToParentsSection(rows: store.toParents, send: actions.sendToParent)
@@ -110,6 +120,11 @@ public struct TodayView: View {
             .scrollDismissesKeyboard(.interactively)
             .background(Tokens.ground.color)
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(item: $held) { note in
+                if let noteDay = store.noteDay {
+                    HeldNoteSheet(held: note, store: noteDay) { held = nil }
+                }
+            }
             .sheet(item: $changing) { batch in
                 if let plan = store.plans[batch.id] {
                     PlanChangeSheet(store: plan, weekday: store.today.weekday(in: store.calendar)) { changing = nil }
@@ -126,6 +141,9 @@ public struct TodayView: View {
                     setUpAddingTask()
                 }
                 await setUpPlanBoard(proxy)
+                if case let .noteHeld(student) = boardState {
+                    held = store.noteDay?.held(for: student)
+                }
                 if boardState == .addingTask || boardState == .aiRow {
                     try? await Task.sleep(for: .seconds(Tokens.panel))
                     proxy.scrollTo(Self.comingUpID, anchor: .top)
@@ -164,6 +182,7 @@ public struct TodayView: View {
     }
 
     private static let comingUpID = "coming-up"
+    static let notesID = "notes"
 
     static func planID(_ batch: UUID) -> String {
         "plan-\(batch.uuidString)"

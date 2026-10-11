@@ -4,9 +4,15 @@ import SwiftUI
 /// footers; 44 inside a list row (Kit-Surfaces board).
 public enum ButtonSize: CGFloat, Sendable {
     var radius: CGFloat {
-        self == .row ? Tokens.radiusChip : Tokens.radiusControl
+        switch self {
+        case .compact: Tokens.radiusCompact
+        case .row: Tokens.radiusChip
+        default: Tokens.radiusControl
+        }
     }
 
+    /// The note day's Read in a row: 36, radius 12 (components.md, the note row).
+    case compact = 36
     /// Inside a row (a fee row's Remind and Mark paid) and quiet sheet actions: 44, radius 14, label 15.
     case row = 44
     case form = 46
@@ -30,7 +36,7 @@ public struct PrimaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         let pressed = configuration.isPressed || showsPressed
         return ButtonFace(label: configuration.label, size: size, loading: loading, ink: Tokens.textOnAccent)
-            .typeStyle(size == .row ? Tokens.buttonStrong : Tokens.button)
+            .typeStyle(size == .row || size == .compact ? Tokens.buttonStrong : Tokens.button)
             .background(
                 (pressed ? Tokens.accentPressed : Tokens.accent).color,
                 in: .rect(cornerRadius: size.radius, style: .continuous)
