@@ -122,7 +122,11 @@ public struct TestTomorrowAsk: Hashable, Sendable, Identifiable {
         )
         do {
             let made = try await ai.makeTestTomorrow(request, centre: workspace.centre.id)
-            message = made.message
+            // The model does not sign (Phase 14): the app appends the one signature, as the template has it.
+            message = MessageSignature.signed(
+                made.message.trimmingCharacters(in: .whitespacesAndNewlines),
+                tutorName: workspace.profile.displayName, centreName: workspace.centre.name
+            )
             english = made.english
             stage = .ready
         } catch {

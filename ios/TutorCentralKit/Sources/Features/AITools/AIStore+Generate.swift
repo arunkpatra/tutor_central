@@ -55,9 +55,10 @@ public extension AIStore {
     /// The Send the note sheet: the student, the parent and their number, the note with the signature, the link.
     func noteMessage(_ generation: Generation, text: String) -> NoteMessage? {
         guard let student = generation.studentID.flatMap(register.student) else { return nil }
-        let signature = [workspace.profile.displayName, workspace.centre.name].compactMap(\.self)
-            .joined(separator: "\n")
-        let full = "\(text.trimmingCharacters(in: .whitespacesAndNewlines))\n\n\(signature)"
+        let full = MessageSignature.signed(
+            text.trimmingCharacters(in: .whitespacesAndNewlines), tutorName: workspace.profile.displayName,
+            centreName: workspace.centre.name
+        )
         let parent = [student.parentName, student.parentPhone?.display].compactMap(\.self).joined(separator: " · ")
         return NoteMessage(
             studentID: student.id, name: student.name, firstName: student.firstName, parentLine: parent, text: full,

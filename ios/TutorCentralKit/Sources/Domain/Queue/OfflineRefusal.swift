@@ -9,6 +9,8 @@ public enum OfflineRefusal {
         case consent, textbook, placement, homeworkStatus, addChapter
         case regenerate, changePlan, ownSheet
         case schoolItem, readSchool, forwardAsk, mark, gapReport, testTomorrow
+        case readShared, readPasted, readPhoto
+        case weeklyNote, readMarks, notOnTrack, noteDay, nextStep, saveMarks
     }
 
     public static func words(for write: Write) -> String {
@@ -31,6 +33,15 @@ public enum OfflineRefusal {
         .mark: "You're offline. Marking needs a connection; the photos are still here.",
         .gapReport: "You're offline. The gap report needs a connection.",
         .testTomorrow: "You're offline. Sending needs a connection to note it on the student's page.",
+        .readShared: "You're offline. What was shared waits here until you're back online.",
+        .readPasted: "You're offline. Reading what you pasted needs a connection. Try again when you're back online.",
+        .readPhoto: "You're offline. Reading the photo needs a connection. Try again when you're back online.",
+        .weeklyNote: "You're offline. The note is written from this week's record and needs a connection.",
+        .readMarks: "You're offline. Reading the marks needs a connection.",
+        .notOnTrack: "You're offline. Sending needs a connection to note it on the student's page.",
+        .noteDay: "You're offline. Changing the note day needs a connection.",
+        .nextStep: "You're offline. Changing the next step needs a connection.",
+        .saveMarks: "You're offline. Saving the marks needs a connection. They're still here.",
     ]
 
     private static let actions: [Write: String] = [

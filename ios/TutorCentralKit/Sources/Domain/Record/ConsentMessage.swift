@@ -1,5 +1,5 @@
-/// The consent ask the tutor sends on WhatsApp (P10-Consent-Ask; `components.md` "The consent message"), signed as the
-/// absence alert is.
+/// The consent ask the tutor sends on WhatsApp (P10-Consent-Ask; `components.md` "The consent message"), with the app's
+/// signature (`MessageSignature`).
 public enum ConsentMessage {
     public static func text(
         parentFirstName: String, childFirstName: String, gender: Gender?, tutorName: String, centreName: String?
@@ -15,7 +15,6 @@ public enum ConsentMessage {
             "marks and work may be read by an AI service (Claude, by Anthropic). It keeps nothing for training and",
             "deletes what it reads within 30 days. Please reply YES if you agree. Thank you.",
         ].joined(separator: " ")
-        let signature = [tutorName, centreName].compactMap(\.self).filter { !$0.isEmpty }.joined(separator: "\n")
-        return "\(body)\n\n\(signature)"
+        return MessageSignature.signed(body, tutorName: tutorName, centreName: centreName)
     }
 }

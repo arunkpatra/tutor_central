@@ -36,8 +36,7 @@ public struct TestTomorrowMessage: Hashable, Sendable {
         let first = "\(greeting) \(child)'s \(lowered(title)) is tomorrow (\(date.weekdayLongText))\(from)."
         let evening = revise.map { "This evening, let \(pronoun) go over \($0) once." }
             ?? "This evening, a short revision will help."
-        let signature = [tutorName, centreName].compactMap(\.self).joined(separator: "\n")
-        return "\(first) \(evening) Thank you.\n\n\(signature)"
+        return MessageSignature.signed("\(first) \(evening) Thank you.", tutorName: tutorName, centreName: centreName)
     }
 
     /// The portions as a list ("Chemical reactions and Acids, bases and salts"), or as written when they do not split.

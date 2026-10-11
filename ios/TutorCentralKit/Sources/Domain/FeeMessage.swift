@@ -1,8 +1,8 @@
 import Foundation
 
 /// The parent-facing texts behind Remind and the receipt (P5-Remind, P5-Receipt; components.md, Phase 5 parts): plain
-/// and polite, the child, the month, the amount, the UPI id or link at the end, the tutor and the centre as the
-/// signature (as the absence alert). `AbsenceMessage.whatsAppURL` carries it.
+/// and polite, the child, the month, the amount, the UPI id or link at the end, then the app's signature
+/// (`MessageSignature`). `AbsenceMessage.whatsAppURL` carries it.
 public struct FeeMessage: Hashable, Sendable {
     public enum Kind: Hashable, Sendable {
         case reminder
@@ -37,7 +37,6 @@ public struct FeeMessage: Hashable, Sendable {
     public var text: String {
         let greeting = parentName.flatMap { $0.split(separator: " ").first }.map { "Hello \($0)," } ?? "Hello,"
         let child = studentName.split(separator: " ").first.map(String.init) ?? studentName
-        let signature = [tutorName, centreName].compactMap(\.self).joined(separator: "\n")
         let body: String
         switch kind {
         case .reminder:
@@ -62,6 +61,6 @@ public struct FeeMessage: Hashable, Sendable {
             let what = "\(child)'s \(month.monthName) fee"
             body = "\(greeting) received \(amount.formatted)\(by) on \(day.shortText) for \(what). Thank you."
         }
-        return "\(body)\n\n\(signature)"
+        return MessageSignature.signed(body, tutorName: tutorName, centreName: centreName)
     }
 }

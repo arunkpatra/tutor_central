@@ -205,6 +205,7 @@ import Testing
 
         Meera Nair
         Bright Minds Tuition
+        Made with Tutor Central
         """)
         #expect(sheet.note == "Opens WhatsApp with the message ready to send. We note the date on the fee. "
             + "The text is copied too, in case WhatsApp can't open.")

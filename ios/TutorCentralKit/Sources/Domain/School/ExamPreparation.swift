@@ -92,14 +92,21 @@ public enum ExamPreparation {
     /// Where the split starts when it is read again each day: the day the item came, or the window's first day when it
     /// came earlier, never after `today`. Read from today, the mock day would move away as the days pass.
     public static func start(of exam: SchoolItem, today: Day, calendar: Calendar) -> Day {
-        let windowStart = exam.date.adding(days: -windowDays, calendar: calendar)
+        let windowStart = exam.date.adding(days: -window(exam), calendar: calendar)
         let came = Day(exam.receivedAt, calendar: calendar)
         return min(today, max(windowStart, came))
     }
 
-    public static func isWithinWindow(_ exam: SchoolItem, today: Day, calendar _: Calendar) -> Bool {
-        let days = today.days(to: exam.date)
-        return exam.kind == .exam && days >= 0 && days <= windowDays
+    /// The exam's own window (U43), else 14 days.
+    public static func window(_ exam: SchoolItem) -> Int {
+        exam.windowDays ?? windowDays
+    }
+
+    /// From the window's first day to the exam day, counted in the calendar given.
+    public static func isWithinWindow(_ exam: SchoolItem, today: Day, calendar: Calendar) -> Bool {
+        guard exam.kind == .exam else { return false }
+        let first = exam.date.adding(days: -window(exam), calendar: calendar)
+        return today >= first && today <= exam.date
     }
 
     /// The student's weakest skill among the names: one to revisit, then practising, then taught; none when every

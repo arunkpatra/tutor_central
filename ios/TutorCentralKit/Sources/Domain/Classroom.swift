@@ -16,11 +16,13 @@ public struct Classroom: Hashable, Sendable, Identifiable, Codable {
     public var planGroups: Int?
     /// The kept choices per weekday (`classes.plan_pattern`, "Keep this for Wednesdays").
     public var planPattern: [Weekday: PlanPattern]
+    /// The batch's note day (`classes.note_weekday`, `note_time`); nil reads as Sunday 18:00 (`effectiveNoteDay`).
+    public var noteDay: NoteDay?
 
     public init(
         id: UUID, name: String, subject: String?, monthlyFee: Money?, meetingDays: Set<Weekday>,
         startTime: TimeOfDay?, endTime: TimeOfDay?, archivedAt: Date?, planGroups: Int? = nil,
-        planPattern: [Weekday: PlanPattern] = [:]
+        planPattern: [Weekday: PlanPattern] = [:], noteDay: NoteDay? = nil
     ) {
         self.id = id
         self.name = name
@@ -32,9 +34,11 @@ public struct Classroom: Hashable, Sendable, Identifiable, Codable {
         self.archivedAt = archivedAt
         self.planGroups = planGroups
         self.planPattern = planPattern
+        self.noteDay = noteDay
     }
 
-    /// A batch cached by build 20 has no plan keys: it reads with no count and no pattern.
+    /// A batch cached by build 20 has no plan keys: it reads with no count and no pattern; one cached before Phase 14
+    /// has no note day.
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         try self.init(
@@ -47,7 +51,8 @@ public struct Classroom: Hashable, Sendable, Identifiable, Codable {
             endTime: c.decodeIfPresent(TimeOfDay.self, forKey: .endTime),
             archivedAt: c.decodeIfPresent(Date.self, forKey: .archivedAt),
             planGroups: c.decodeIfPresent(Int.self, forKey: .planGroups),
-            planPattern: c.decodeIfPresent([Weekday: PlanPattern].self, forKey: .planPattern) ?? [:]
+            planPattern: c.decodeIfPresent([Weekday: PlanPattern].self, forKey: .planPattern) ?? [:],
+            noteDay: c.decodeIfPresent(NoteDay.self, forKey: .noteDay)
         )
     }
 

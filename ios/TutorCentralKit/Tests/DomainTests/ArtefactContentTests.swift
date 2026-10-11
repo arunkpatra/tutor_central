@@ -86,4 +86,20 @@ struct ArtefactContentTests {
         )
         #expect(copy == .mock(mock))
     }
+
+    @Test func aNoteRoundTripsWithItsFactsAndWeek() throws {
+        let note = try NoteContent(
+            message: "नमस्ते…", english: "Hello Ramesh…", language: .hindi,
+            weekMonday: #require(Day(year: 2026, month: 10, day: 5)),
+            facts: [.init(label: "Taught", fact: "Chemical reactions: balancing equations", symbol: "book.closed")],
+            generationID: UUID()
+        )
+        let content = ArtefactContent.note(note)
+        let data = try content.encoded()
+        #expect(String(bytes: data, encoding: .utf8)?.contains("\"week_monday\":\"2026-10-05\"") == true)
+        #expect(try ArtefactContent.decode(kind: .note, json: data) == content)
+        #expect(try ArtefactContent.decode(kind: .canDo, json: data) == content)
+        let tagged = try JSONDecoder().decode(ArtefactContent.self, from: JSONEncoder().encode(content))
+        #expect(tagged == content)
+    }
 }

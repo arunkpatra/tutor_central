@@ -31,6 +31,7 @@ struct FeeMessageTests {
 
         Meera Nair
         Bright Minds Tuition
+        Made with Tutor Central
         """)
         #expect(Self.reminder(link: "https://pay.example/meera").text.contains(
             "You can pay by UPI to meera@okhdfcbank or through this link: https://pay.example/meera. Thank you."
@@ -47,9 +48,8 @@ struct FeeMessageTests {
 
     @Test func theReceiptNamesTheMethodAndDay() throws {
         let upi = try Self.receipt(.upi, parent: "Ramesh Kumar", tutor: nil)
-        #expect(upi
-            .text ==
-            "Hello Ramesh, received ₹1,000 by UPI on 7 Oct for Dev's October fee. Thank you.\n\nBright Minds Tuition")
+        let receipt = "Hello Ramesh, received ₹1,000 by UPI on 7 Oct for Dev's October fee. Thank you."
+        #expect(upi.text == receipt + "\n\nBright Minds Tuition\nMade with Tutor Central")
         let cash = try Self.receipt(.cash, parent: "Ramesh Kumar", tutor: "Meera Nair")
         #expect(cash.text.hasPrefix("Hello Ramesh, received ₹1,000 by cash on 7 Oct for Dev's October fee."))
         let other = try Self.receipt(.other, parent: nil, tutor: nil)

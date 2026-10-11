@@ -27,6 +27,8 @@ public struct Student: Hashable, Sendable, Identifiable, Codable {
     public var trackSince: Date?
     /// When the student was added (`created_at`): the not-known card's "joined on".
     public var joinedAt: Date?
+    /// The next step the tutor chose (`students.next_step`); nil: the plan's own (`effectiveStep`).
+    public var nextStep: NextStep?
 
     public init(
         id: UUID, name: String, classID: UUID?, monthlyFee: Money?, parentName: String?, parentPhone: PhoneNumber?,
@@ -34,7 +36,7 @@ public struct Student: Hashable, Sendable, Identifiable, Codable {
         classLevel: ClassLevel? = nil, schoolID: UUID? = nil, board: Board? = nil,
         messageLanguage: MessageLanguage = .default, consent: ConsentRecord? = nil,
         trackStatus: TrackStatus = .notKnown, trackReasons: [String] = [], trackSince: Date? = nil,
-        joinedAt: Date? = nil
+        joinedAt: Date? = nil, nextStep: NextStep? = nil
     ) {
         self.id = id
         self.name = name
@@ -56,11 +58,13 @@ public struct Student: Hashable, Sendable, Identifiable, Codable {
         self.trackReasons = trackReasons
         self.trackSince = trackSince
         self.joinedAt = joinedAt
+        self.nextStep = nextStep
     }
 
     private enum CodingKeys: String, CodingKey {
         case id, name, classID, monthlyFee, parentName, parentPhone, dateOfBirth, gender, notes, archivedAt, thisMonth
         case classLevel, schoolID, board, messageLanguage, consent, trackStatus, trackReasons, trackSince, joinedAt
+        case nextStep
     }
 
     /// A register cached by a build before V2 has none of the V2 keys: they read as a V1 student's.
@@ -86,7 +90,8 @@ public struct Student: Hashable, Sendable, Identifiable, Codable {
             trackStatus: c.decodeIfPresent(TrackStatus.self, forKey: .trackStatus) ?? .notKnown,
             trackReasons: c.decodeIfPresent([String].self, forKey: .trackReasons) ?? [],
             trackSince: c.decodeIfPresent(Date.self, forKey: .trackSince),
-            joinedAt: c.decodeIfPresent(Date.self, forKey: .joinedAt)
+            joinedAt: c.decodeIfPresent(Date.self, forKey: .joinedAt),
+            nextStep: c.decodeIfPresent(NextStep.self, forKey: .nextStep)
         )
     }
 

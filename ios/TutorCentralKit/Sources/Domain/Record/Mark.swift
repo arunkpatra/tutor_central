@@ -83,3 +83,21 @@ public enum MarkRules {
         return mean - mark.percentage > belowUsualPoints
     }
 }
+
+/// A row read from a photo of a report card or a marked test (P14-Marks-Confirm), checked by the tutor before a mark is
+/// written; a row with no date stays unticked until one is set.
+public struct ReadMark: Hashable, Sendable, Codable {
+    public var subject: String
+    public var test: String
+    public var date: Day?
+    public var score: Int
+    public var max: Int
+
+    public init(subject: String, test: String, date: Day?, score: Int, max: Int) {
+        self.subject = subject
+        self.test = test
+        self.date = date
+        self.score = score
+        self.max = max
+    }
+}

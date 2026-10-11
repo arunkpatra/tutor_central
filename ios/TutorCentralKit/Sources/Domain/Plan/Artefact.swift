@@ -175,6 +175,8 @@ public struct OwnContent: Hashable, Sendable, Codable {
 public enum ArtefactContent: Hashable, Sendable {
     case sheet(SheetContent), workedExample(WorkedExample), figure(FigureContent), brief(Brief), check(CheckContent)
     case mock(MockContent), gapReport(GapReportContent)
+    /// A weekly note or a can-now-do (Phase 14).
+    case note(NoteContent)
     case own(OwnContent), other
 
     /// The content as the API and `keep_artefact` write it (snake-case keys).
@@ -190,18 +192,23 @@ public enum ArtefactContent: Hashable, Sendable {
             if source == .own {
                 return try .own(decoder.decode(OwnContent.self, from: json))
             }
-            switch kind {
-            case .sheet: return try .sheet(decoder.decode(SheetContent.self, from: json))
-            case .workedExample: return try .workedExample(decoder.decode(WorkedExample.self, from: json))
-            case .figure: return try .figure(decoder.decode(FigureContent.self, from: json))
-            case .brief: return try .brief(decoder.decode(Brief.self, from: json))
-            case .check, .placement: return try .check(decoder.decode(CheckContent.self, from: json))
-            case .mock: return try .mock(decoder.decode(MockContent.self, from: json))
-            case .gapReport: return try .gapReport(decoder.decode(GapReportContent.self, from: json))
-            default: return .other
-            }
+            return try made(kind: kind, json: json, decoder: decoder)
         } catch is DecodingError {
             return .other
+        }
+    }
+
+    private static func made(kind: ArtefactKind, json: Data, decoder: JSONDecoder) throws -> ArtefactContent {
+        switch kind {
+        case .sheet: try .sheet(decoder.decode(SheetContent.self, from: json))
+        case .workedExample: try .workedExample(decoder.decode(WorkedExample.self, from: json))
+        case .figure: try .figure(decoder.decode(FigureContent.self, from: json))
+        case .brief: try .brief(decoder.decode(Brief.self, from: json))
+        case .check, .placement: try .check(decoder.decode(CheckContent.self, from: json))
+        case .mock: try .mock(decoder.decode(MockContent.self, from: json))
+        case .gapReport: try .gapReport(decoder.decode(GapReportContent.self, from: json))
+        case .note, .canDo: try .note(decoder.decode(NoteContent.self, from: json))
+        default: .other
         }
     }
 
@@ -219,6 +226,7 @@ public enum ArtefactContent: Hashable, Sendable {
         case let .check(value): return try encoder.encode(value)
         case let .mock(value): return try encoder.encode(value)
         case let .gapReport(value): return try encoder.encode(value)
+        case let .note(value): return try encoder.encode(value)
         case let .own(value): return try encoder.encode(value)
         case .other: return Data("{}".utf8)
         }
@@ -228,7 +236,7 @@ public enum ArtefactContent: Hashable, Sendable {
 /// The plan's copy on the iPhone keeps the content tagged by its case.
 extension ArtefactContent: Codable {
     private enum Keys: String,
-        CodingKey { case sheet, workedExample, figure, brief, check, mock, gapReport, own, other }
+        CodingKey { case sheet, workedExample, figure, brief, check, mock, gapReport, note, own, other }
 
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: Keys.self)
@@ -246,6 +254,8 @@ extension ArtefactContent: Codable {
             self = .mock(value)
         } else if let value = try c.decodeIfPresent(GapReportContent.self, forKey: .gapReport) {
             self = .gapReport(value)
+        } else if let value = try c.decodeIfPresent(NoteContent.self, forKey: .note) {
+            self = .note(value)
         } else if let value = try c.decodeIfPresent(OwnContent.self, forKey: .own) {
             self = .own(value)
         } else {
@@ -263,6 +273,7 @@ extension ArtefactContent: Codable {
         case let .check(value): try c.encode(value, forKey: .check)
         case let .mock(value): try c.encode(value, forKey: .mock)
         case let .gapReport(value): try c.encode(value, forKey: .gapReport)
+        case let .note(value): try c.encode(value, forKey: .note)
         case let .own(value): try c.encode(value, forKey: .own)
         case .other: try c.encode(true, forKey: .other)
         }

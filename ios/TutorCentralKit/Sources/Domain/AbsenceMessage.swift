@@ -29,9 +29,8 @@ public struct AbsenceMessage: Hashable, Sendable {
         let child = studentName.split(separator: " ").first.map(String.init) ?? studentName
         let what = className.map { "absent from \($0)" } ?? "absent from class"
         let when = day == today ? "today, \(day.weekdayLongText)" : "on \(day.weekdayLongText)"
-        let signature = [tutorName, centreName].compactMap(\.self).joined(separator: "\n")
         let body = "\(greeting) \(child) was \(what) \(when). Please let me know if everything is all right."
-        return "\(body)\n\n\(signature)"
+        return MessageSignature.signed(body, tutorName: tutorName, centreName: centreName)
     }
 
     /// `https://wa.me/<digits>?text=<encoded>`. URLComponents leaves "&" and "," alone in a query value; WhatsApp
