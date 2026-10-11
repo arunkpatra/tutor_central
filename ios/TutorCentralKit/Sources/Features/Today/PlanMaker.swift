@@ -131,6 +131,12 @@ public final class PlanMaker: Sendable {
             await progress(.finished(plan))
             return
         }
+        let unnamed = plan
+        let plan = await nameUnnamed(plan, batch: batch, record: record)
+        if plan.groups != unnamed.groups {
+            // The groups now have names: the plan on screen takes them before its material lands.
+            await progress(.written(plan))
+        }
         let draft = plan.asDraft
         let briefs = await (try? plans.briefChapters(centre: centre)) ?? []
         let missing = ArtefactBudget.requests(
@@ -261,7 +267,7 @@ public final class PlanMaker: Sendable {
 
     /// The groups whose record names no skill, named by /ai/plan for the month; a failure leaves them unnamed (their
     /// material is made at the next open).
-    private func named(_ draft: PlanDraft, members: [Student], centre: UUID) async -> PlanDraft {
+    func named(_ draft: PlanDraft, members: [Student], centre: UUID) async -> PlanDraft {
         let unnamed = draft.groups.filter(\.skill.isEmpty)
         guard !unnamed.isEmpty else { return draft }
         let levels = Dictionary(uniqueKeysWithValues: members.map { ($0.id, $0.classLevel) })

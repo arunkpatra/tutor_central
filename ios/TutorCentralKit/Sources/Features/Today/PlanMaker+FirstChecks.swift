@@ -54,4 +54,31 @@ extension PlanMaker {
             return nil
         }
     }
+
+    /// A group the make could not name (/ai/plan away) is named at the next open (the owner, 2026-10-11): the name
+    /// written to the plan (`name_plan_group`: the group and its teach lines) and each member's chapter and skill, then
+    /// the plan read again so its material is made; a second failure leaves it as it was, with nothing written.
+    func nameUnnamed(_ plan: PlanRecord, batch: PlanBatch, record: Record) async -> PlanRecord {
+        guard plan.sessionID == nil,
+              plan.groups.contains(where: { $0.skill.isEmpty && $0.examItemID == nil }) else { return plan }
+        let draft = plan.asDraft
+        let named = await named(draft, members: batch.members, centre: batch.centre)
+        var wrote = false
+        for group in named.groups {
+            guard let before = draft.groups.first(where: { $0.number == group.number }), before.skill.isEmpty,
+                  !group.skill.isEmpty,
+                  await (try? plans.nameGroup(
+                      plan: plan.id, group: group.number, chapter: group.chapter, skill: group.skill,
+                      centre: batch.centre
+                  )) != nil else { continue }
+            wrote = true
+        }
+        guard wrote else { return plan }
+        _ = await writeNamedSkills(named, record: record, centre: batch.centre)
+        let read = await (try? plans.plan(id: plan.id, centre: batch.centre)) ?? nil
+        if let read {
+            cache?.keep(read, at: now())
+        }
+        return read ?? plan
+    }
 }

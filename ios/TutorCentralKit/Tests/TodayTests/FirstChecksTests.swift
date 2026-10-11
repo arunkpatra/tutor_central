@@ -74,4 +74,48 @@ import Testing
         #expect(teach?.words == "Teach: \(made.groups[0].skill)" && teach?.skillID == nil)
         #expect(textbooks.chaptersByStudent[nikhil.id]?.isEmpty ?? true)
     }
+
+    // MARK: - Task 24: an unnamed group named at the next open
+
+    func unnamedPlan(_ plans: FakePlansRepository, _ ai: FakeAIRepository, textbooks: FakeTextbooksRepository) async {
+        ai.scriptByKind[.topics] = .failure(.offline)
+        await PlanTest.maker(plans: plans, ai: ai, textbooks: textbooks)
+            .make(PlanTest.batch([nikhil]), choices: nil) { _ in }
+    }
+
+    @Test func completeNamesAnUnnamedGroupAndMakesItsMaterial() async throws {
+        let plans = FakePlansRepository(), ai = FakeAIRepository(), textbooks = FakeTextbooksRepository.evening()
+        await unnamedPlan(plans, ai, textbooks: textbooks)
+        let before = try await plan(plans)
+        #expect(before.groups[0].skill.isEmpty && before.artefact(group: 1, kind: .sheet, homework: false) == nil)
+        ai.scriptByKind[.topics] = nil
+        let maker = PlanTest.maker(plans: plans, ai: ai, textbooks: textbooks)
+        await maker.complete(before, batch: PlanTest.batch([nikhil])) { _ in }
+        let after = try await plan(plans)
+        let skill = after.groups[0].skill
+        #expect(!skill.isEmpty && after.items(of: nikhil.id).first { $0.kind == .teach }?.words == "Teach: \(skill)")
+        #expect(after.artefact(group: 1, kind: .sheet, homework: false) != nil)
+        #expect(after.artefact(group: 1, kind: .sheet, homework: true) != nil)
+        #expect(after.artefact(group: 1, kind: .check) != nil)
+        #expect(textbooks.skillsByStudent[nikhil.id]?.map(\.name) == [skill])
+    }
+
+    @Test func completeLeavesANamedGroupAlone() async throws {
+        let plans = FakePlansRepository(), ai = FakeAIRepository()
+        let maker = PlanTest.maker(plans: plans, ai: ai)
+        await maker.make(PlanTest.batch([nikhil]), choices: nil) { _ in }
+        let asked = ai.topics.count
+        try await maker.complete(plan(plans), batch: PlanTest.batch([nikhil])) { _ in }
+        #expect(ai.topics.count == asked)
+    }
+
+    @Test func aSecondFailureLeavesTheGroupUnnamedWithoutAWrite() async throws {
+        let plans = FakePlansRepository(), ai = FakeAIRepository(), textbooks = FakeTextbooksRepository.evening()
+        await unnamedPlan(plans, ai, textbooks: textbooks)
+        let maker = PlanTest.maker(plans: plans, ai: ai, textbooks: textbooks)
+        try await maker.complete(plan(plans), batch: PlanTest.batch([nikhil])) { _ in }
+        let after = try await plan(plans)
+        #expect(after.groups[0].skill.isEmpty && ai.topics.count == 2)
+        #expect(textbooks.chaptersByStudent[nikhil.id]?.isEmpty ?? true)
+    }
 }
