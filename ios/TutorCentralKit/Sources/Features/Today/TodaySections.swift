@@ -170,3 +170,26 @@ struct StartHereCard: View {
         }
     }
 }
+
+/// To parents after the close (P10-Today-AfterClose): one row per message that goes now, Send primary on the first.
+struct ToParentsSection: View {
+    let rows: [ParentRowModel]
+    let send: (ParentRowModel) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+            SectionHeader("To parents")
+            Card {
+                VStack(spacing: 0) {
+                    ForEach(rows) { row in
+                        ParentSendRow(
+                            initials: row.initials, name: row.title, line: row.detail,
+                            state: row.state == .sent ? .sent : .send, primary: row.id == rows.first?.id
+                        ) { send(row) }
+                            .rowDivider(row.id != rows.last?.id)
+                    }
+                }
+            }
+        }
+    }
+}

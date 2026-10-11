@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import School
 import SwiftUI
+import Today
 
 /// The School tab's wiring (Phase 13): the root, "Check what was read", an item's page. The share hand-off is
 /// `ShellState.inboxHandoff`.
@@ -58,6 +59,15 @@ extension RootView {
                     boardState: nil,
                     back: { shell.tabs.remove(route) }
                 )
+            case .schoolAsk:
+                AskScreen(
+                    store: AskStore(
+                        workspace: workspace, register: register(for: workspace), messages: deps.messages,
+                        open: { url in systemOpenURL(url) }, now: deps.now,
+                        online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+                    ),
+                    back: { shell.tabs.remove(route) }
+                )
             default:
                 EmptyView()
             }
@@ -91,6 +101,76 @@ extension RootView {
         return store
     }
 
+    /// Test tomorrow's sheet and the absence alert over whichever tab asked.
+    func schoolSheets(_ tabs: some View) -> some View {
+        tabs
+            .sheet(item: $shell.testTomorrow, onDismiss: refreshToday, content: testTomorrowSheet)
+            .sheet(item: $shell.absenceAlert) { ask in
+                if case let .ready(workspace) = session.state {
+                    absenceSheet(ask, workspace: workspace)
+                }
+            }
+    }
+
+    private func refreshToday() {
+        Task { await shell.today?.load() }
+    }
+
+    @ViewBuilder private func testTomorrowSheet(_ ask: TestTomorrowAsk) -> some View {
+        if case let .ready(workspace) = session.state {
+            TestTomorrowScreen(store: testTomorrowStore(ask, workspace: workspace), close: { shell.testTomorrow = nil })
+        }
+    }
+
+    /// To parents' Send: Test tomorrow's sheet for the student and the exam, or the absence alert.
+    func sendToParent(_ row: ParentRowModel, workspace: Workspace) {
+        guard let student = register(for: workspace).student(row.studentID) else { return }
+        switch row.kind {
+        case let .testTomorrow(item): shell.testTomorrow = TestTomorrowAsk(item: item, student: student)
+        case .absentToday: shell.absenceAlert = AbsenceAsk(id: student.id)
+        }
+    }
+
+    func testTomorrowStore(_ ask: TestTomorrowAsk, workspace: Workspace) -> TestTomorrowStore {
+        TestTomorrowStore(
+            ask: ask, workspace: workspace, ai: deps.ai, messages: deps.messages, textbooks: deps.textbooks,
+            open: { url in systemOpenURL(url) }, now: deps.now, calendar: DayHeading.india,
+            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+        )
+    }
+
+    /// The absence alert (V1's message) for a student marked absent today, logged before WhatsApp opens.
+    @ViewBuilder func absenceSheet(_ ask: AbsenceAsk, workspace: Workspace) -> some View {
+        if let student = register(for: workspace).student(ask.id) {
+            let today = Day(deps.now(), calendar: DayHeading.india)
+            let text = AbsenceMessage(
+                parentName: student.parentName, studentName: student.name,
+                className: register(for: workspace).classroom(student.classID)?.name, day: today, today: today,
+                tutorName: workspace.profile.displayName, centreName: workspace.centre.name
+            ).text
+            MessageSheet(
+                title: "Absence alert", name: student.name,
+                parentLine: [student.parentName, student.parentPhone?.display].compactMap(\.self)
+                    .joined(separator: " · "),
+                text: text,
+                note: "Opens WhatsApp with the message ready to send. We note it on \(student.firstName)'s page.",
+                canOpen: student.parentPhone != nil,
+                open: {
+                    guard let phone = student.parentPhone else { return }
+                    _ = try? await deps.messages.logAbsence(
+                        centre: workspace.centre.id,
+                        studentID: student.id,
+                        about: today
+                    )
+                    systemOpenURL(AbsenceMessage.whatsAppURL(phone: phone, text: text))
+                    shell.absenceAlert = nil
+                    await shell.today?.load()
+                },
+                close: { shell.absenceAlert = nil }
+            )
+        }
+    }
+
     /// Items added on "Check what was read": the tab reads them, and the plan hears whom they reach (decision 16).
     private func schoolItemsAdded(_ items: [SchoolItem], workspace: Workspace) {
         let students = register(for: workspace).activeStudents
@@ -119,6 +199,36 @@ struct ReadScreen: View {
 
     var body: some View {
         ReadView(store: store, boardState: boardState, leave: leave, done: done)
+    }
+}
+
+/// Test tomorrow's sheet with its store kept while it is up.
+struct TestTomorrowScreen: View {
+    @State private var store: TestTomorrowStore
+    let close: () -> Void
+
+    init(store: TestTomorrowStore, close: @escaping () -> Void) {
+        _store = State(initialValue: store)
+        self.close = close
+    }
+
+    var body: some View {
+        TestTomorrowSheet(store: store, close: close)
+    }
+}
+
+/// Ask parents to forward with its store kept for the life of the push.
+struct AskScreen: View {
+    @State private var store: AskStore
+    let back: () -> Void
+
+    init(store: AskStore, back: @escaping () -> Void) {
+        _store = State(initialValue: store)
+        self.back = back
+    }
+
+    var body: some View {
+        AskView(store: store, back: back)
     }
 }
 

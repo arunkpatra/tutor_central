@@ -27,7 +27,8 @@ extension RootView {
                     openFeesDue: { openFeesDue(in: workspace) },
                     openAI: { shell.tabs.push(.aiAssistant) },
                     openScanRegister: { shell.tabs.push(.scanRegister) },
-                    openArtefact: { shell.tabs.push(.artefact($0)) }
+                    openArtefact: { shell.tabs.push(.artefact($0)) },
+                    sendToParent: { row in sendToParent(row, workspace: workspace) }
                 ),
                 ticks: !deps.fixedClock,
                 boardState: launch.flatMap(Self.todayBoardState),
@@ -37,6 +38,8 @@ extension RootView {
                 if shell.today == nil {
                     shell.today = store
                 }
+                store.schoolItems = deps.schoolItems
+                store.messages = deps.messages
                 if store.makePlanStore == nil {
                     store.makePlanStore = planStoreMaker(workspace, register: register(for: workspace))
                 }

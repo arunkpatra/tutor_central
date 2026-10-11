@@ -7,6 +7,8 @@ import SwiftUI
 public struct TwoLanguageMessageSheet: View {
     let title: String
     let name: String
+    /// The line beside the avatar ("Dev's test is tomorrow"); the name when nil.
+    let heading: String?
     let parentLine: String
     let languageTitle: String
     @Binding var message: String
@@ -19,11 +21,13 @@ public struct TwoLanguageMessageSheet: View {
     @State private var opening = false
 
     public init(
-        title: String, name: String, parentLine: String, languageTitle: String, message: Binding<String>,
+        title: String, name: String, heading: String? = nil, parentLine: String, languageTitle: String,
+        message: Binding<String>,
         english: String?, note: String, canOpen: Bool, open: @escaping () async -> Void, close: @escaping () -> Void
     ) {
         self.title = title
         self.name = name
+        self.heading = heading
         self.parentLine = parentLine
         self.languageTitle = languageTitle
         _message = message
@@ -44,7 +48,7 @@ public struct TwoLanguageMessageSheet: View {
                     HStack(spacing: Tokens.cardPaddingCompact) {
                         Avatar(name: name, size: MessageSheet.avatarSize)
                         VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                            Text(name).typeStyle(Tokens.emptyTitle).foregroundStyle(Tokens.text.color)
+                            Text(heading ?? name).typeStyle(Tokens.emptyTitle).foregroundStyle(Tokens.text.color)
                             Text(parentLine).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
                         }
                     }

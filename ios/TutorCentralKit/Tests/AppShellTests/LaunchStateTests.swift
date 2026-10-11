@@ -296,4 +296,12 @@ struct SchoolLaunchStateTests {
         #expect(RootView.initialRoutes(for: .schoolItemHoliday) == [.schoolItem(FakeSchoolItemsRepository.dasara)])
         #expect(Fixtures.initialState(for: .schoolEmpty) == .ready(Fixtures.meeraWorkspace))
     }
+
+    /// U33's list that could not load on Ask parents (hand run 15): who was asked is not read.
+    @MainActor @Test func schoolAskFailedOpensAskWithWhoWasAskedNotRead() async {
+        #expect(RootView.initialRoutes(for: .schoolAskFailed) == [.schoolAsk])
+        let messages = Fixtures.dependencies(for: .schoolAskFailed).messages
+        let first = try? await messages.forwardAsked(centre: Fixtures.meeraWorkspace.centre.id)
+        #expect(first == nil)
+    }
 }

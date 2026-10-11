@@ -83,6 +83,11 @@ import Observation
     public private(set) var plans: [UUID: PlanStore] = [:]
     /// The batch whose plan card Today scrolls to (a student page's "Today", U35).
     public var focusBatch: UUID?
+    /// What the schools sent and the message log (Phase 13): To parents after the close.
+    @ObservationIgnored public var schoolItems: (any SchoolItemsRepository)?
+    @ObservationIgnored public var messages: (any MessageLogRepository)?
+    /// The messages that go now after today's close (P10-Today-AfterClose).
+    public internal(set) var toParents: [ParentRowModel] = []
 
     public init(
         workspace: Workspace, counts: any CountsRepository, register: any Register,
@@ -225,6 +230,7 @@ import Observation
             events = read
         }
         await readCloseCounts()
+        await loadParents()
         if fresh {
             savedAt = nil
             cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
@@ -276,6 +282,8 @@ public struct TodayActions {
     let openScanRegister: () -> Void
     /// A plan line's artefact: the sheet, the checks, the brief (the Artefacts feature, through AppShell's route).
     let openArtefact: (UUID) -> Void
+    /// To parents' Send: Test tomorrow's sheet (School's) or the absence alert, through AppShell.
+    let sendToParent: (ParentRowModel) -> Void
 
     public init(
         openSettings: @escaping () -> Void,
@@ -287,8 +295,10 @@ public struct TodayActions {
         openFeesDue: @escaping () -> Void,
         openAI: @escaping () -> Void,
         openScanRegister: @escaping () -> Void,
-        openArtefact: @escaping (UUID) -> Void = { _ in }
+        openArtefact: @escaping (UUID) -> Void = { _ in },
+        sendToParent: @escaping (ParentRowModel) -> Void = { _ in }
     ) {
+        self.sendToParent = sendToParent
         self.openSettings = openSettings
         self.openTab = openTab
         self.openSchedule = openSchedule

@@ -23,6 +23,11 @@ struct ScanVisit {
     let store: ScanStore
 }
 
+/// The student whose absence alert To parents opens.
+struct AbsenceAsk: Identifiable, Hashable {
+    let id: UUID
+}
+
 @MainActor @Observable final class ShellState {
     var tabs: TabsState
     var today: TodayStore?
@@ -37,6 +42,10 @@ struct ScanVisit {
     @ObservationIgnored var tasks: TasksStore?
     /// One School tab per centre, so a tab switch keeps the segment and the chosen day.
     @ObservationIgnored var school: SchoolStore?
+    /// Test tomorrow's sheet, over whichever tab asked (Today's To parents, an exam's page).
+    var testTomorrow: TestTomorrowAsk?
+    /// The absence alert's sheet for a student, from Today's To parents.
+    var absenceAlert: AbsenceAsk?
     /// What an added, changed or deleted item reached: Today makes an open plan again for those students (Task 17).
     @ObservationIgnored var schoolItemsChanged: (@MainActor (Set<UUID>) -> Void)?
     /// One AI store per centre: a call outlives its screen, and Recent and History are read once.
@@ -146,6 +155,8 @@ struct ScanVisit {
         ai = nil
         school = nil
         schoolItemsChanged = nil
+        testTomorrow = nil
+        absenceAlert = nil
         check = nil
         scan = nil
         queue = nil
