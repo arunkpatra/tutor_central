@@ -148,8 +148,8 @@ insert into public.school_items (id, centre_id, school_id, class_level, kind, ti
   ('66666666-6666-6666-6666-666666666664', '22222222-2222-2222-2222-222222222222', '44444444-4444-4444-4444-444444444441', '10',
    'notice', 'PTM, 10:00', null, current_date + 2, null, 'typed', null, now() - interval '1 hour', now() - interval '1 hour');
 update public.school_items set end_date = current_date + 14 where id = '66666666-6666-6666-6666-666666666663';
--- Hemanth's marks (P10-Student-Record): unit test 2 below his usual.
+-- Hemanth's marks (P10-Student-Record): unit test 2 below his usual (two earlier marks make his usual).
 insert into public.marks (centre_id, student_id, subject, test, date, score, max)
 select s.centre_id, s.id, 'Mathematics', t.test, t.date, t.score, 25
-  from public.students s, (values ('Unit test 1', current_date - 44, 19), ('Unit test 2', current_date - 9, 14)) as t(test, date, score)
+  from public.students s, (values ('Class test', current_date - 80, 18), ('Unit test 1', current_date - 44, 19), ('Unit test 2', current_date - 9, 14)) as t(test, date, score)
  where s.centre_id = '22222222-2222-2222-2222-222222222222' and s.name = 'Hemanth Reddy';
