@@ -90,6 +90,9 @@ import Observation
     public internal(set) var toParents: [ParentRowModel] = []
     /// The note day (Phase 14): AppShell's store, read with Today; nil shows none.
     @ObservationIgnored public var noteDay: NoteDayStore?
+    /// After a close: the Weekly notes row (P10-Today-AfterClose), the closed batch's note weekday and the words.
+    public internal(set) var notesWaitingTitle = ""
+    public internal(set) var notesWaiting: String?
 
     public init(
         workspace: Workspace, counts: any CountsRepository, register: any Register,

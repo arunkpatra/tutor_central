@@ -8,9 +8,10 @@ public struct ToolRow: View {
     let line: String
     /// The exam's mock (P10-School-Exam-LastDays): the Ready chip before the chevron.
     let ready: Bool
-    let action: () -> Void
+    /// Nil: a row that only reads (the Weekly notes row before the note day), with no chevron.
+    let action: (() -> Void)?
 
-    public init(symbol: String, title: String, line: String, ready: Bool = false, action: @escaping () -> Void) {
+    public init(symbol: String, title: String, line: String, ready: Bool = false, action: (() -> Void)?) {
         self.symbol = symbol
         self.title = title
         self.line = line
@@ -25,7 +26,9 @@ public struct ToolRow: View {
             if ready {
                 Chip(.status(.ok, "Ready", symbol: "checkmark"), compact: true)
             }
-            Chevron()
+            if action != nil {
+                Chevron()
+            }
         }
     }
 }

@@ -175,6 +175,9 @@ struct StartHereCard: View {
 struct ToParentsSection: View {
     let rows: [ParentRowModel]
     let send: (ParentRowModel) -> Void
+    /// The Weekly notes row (Phase 14): its title and words; `openNotes` scrolls to the Notes card on the note day.
+    let notes: (title: String, line: String)?
+    let openNotes: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
@@ -186,7 +189,10 @@ struct ToParentsSection: View {
                             initials: row.initials, name: row.title, line: row.detail,
                             state: row.state == .sent ? .sent : .send, primary: row.id == rows.first?.id
                         ) { send(row) }
-                            .rowDivider(row.id != rows.last?.id)
+                            .rowDivider(row.id != rows.last?.id || notes != nil)
+                    }
+                    if let notes {
+                        ToolRow(symbol: "bubble.left", title: notes.title, line: notes.line, action: openNotes)
                     }
                 }
             }

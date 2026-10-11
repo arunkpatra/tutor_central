@@ -34,6 +34,7 @@ extension TodayStore {
     /// suggested messages this week are spent), Absent today for those marked absent; each Sent once logged today.
     func loadParents() async {
         let closedToday = sessions.filter { $0.date == today && $0.closedAt != nil }
+        weeklyNotes(closedToday)
         guard !closedToday.isEmpty, let messages else {
             toParents = []
             return
@@ -86,5 +87,33 @@ extension TodayStore {
             detail: "\(student.firstName)'s parent · \(student.messageLanguage.title) · \(what)",
             state: sent ? .sent : .send
         )
+    }
+
+    /// The last row of To parents after a close (plan/phase-14-plan.md decision 20): the closed batches' students with
+    /// a
+    /// parent's number, those agreed counted, those not named.
+    func weeklyNotes(_ closed: [AttendanceSession]) {
+        let batches = closed.compactMap { register.classroom($0.classID) }
+        let students = batches.flatMap { register.members(of: $0.id) }.filter { $0.parentPhone != nil }
+        guard let batch = batches.first, !students.isEmpty else {
+            notesWaiting = nil
+            return
+        }
+        notesWaitingTitle = "Weekly notes · \(batch.effectiveNoteDay.weekday.name)"
+        let agreed = students.filter { $0.consent != nil }.count
+        let waiting = students.filter { $0.consent == nil }.sorted { $0.name < $1.name }
+        let notes = agreed == 1 ? "1 note waits for the note day." : "\(agreed) notes wait for the note day."
+        let consent: String? = switch waiting.count {
+        case 0: nil
+        case 1: "\(waiting[0].firstName)'s waits for consent."
+        default: "\(Self.number(waiting.count)) wait for consent."
+        }
+        notesWaiting = [notes, consent].compactMap(\.self).joined(separator: " ")
+    }
+
+    /// "Two" to "Nine", then the figure.
+    static func number(_ count: Int) -> String {
+        let words = ["Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]
+        return (2 ... 9).contains(count) ? words[count - 2] : "\(count)"
     }
 }

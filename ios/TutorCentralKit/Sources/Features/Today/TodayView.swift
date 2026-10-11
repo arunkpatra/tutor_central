@@ -67,15 +67,25 @@ public struct TodayView: View {
                             openStudents: { actions.openTab(.students) }, openScanRegister: actions.openScanRegister
                         )
                     }
-                    if let hero = store.hero {
+                    // On the note day with no batch today the note day's hero takes the hero's place
+                    // (P10-Today-NoteDay).
+                    if let hero = store.hero, hero.kind != .upcoming || store.noteDay?.isOn != true {
                         BatchHeroCard(hero: hero, openClose: actions.openClose)
                     }
                     if let noteDay = store.noteDay, noteDay.isOn {
                         NoteDaySection(store: noteDay, openHeld: { held = $0 }, showsWheel: boardState == .noteDayWheel)
                             .id(Self.notesID)
                     }
-                    if !store.toParents.isEmpty {
-                        ToParentsSection(rows: store.toParents, send: actions.sendToParent)
+                    if !store.toParents.isEmpty || store.notesWaiting != nil {
+                        ToParentsSection(
+                            rows: store.toParents, send: actions.sendToParent,
+                            notes: store.notesWaiting.map { (store.notesWaitingTitle, $0) },
+                            openNotes: store.noteDay?.isOn == true ? {
+                                withAnimation(ReducedMotion.animation(.default, reduce: reduceMotion)) {
+                                    proxy.scrollTo(Self.notesID, anchor: .top)
+                                }
+                            } : nil
+                        )
                     }
                     ForEach(store.planBatches) { batch in
                         if let plan = store.plans[batch.id] {

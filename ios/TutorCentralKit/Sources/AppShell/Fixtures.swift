@@ -15,7 +15,11 @@ public enum Fixtures {
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
         let (auth, centres) = session(for: state)
         let counts = FakeCountsRepository(counts: counts(for: state))
-        let students = FakeStudentsRepository(students: withSchoolLanguages(register(for: state).students, for: state))
+        let listed = withSchoolLanguages(register(for: state).students, for: state)
+        let students = FakeStudentsRepository(
+            students: noteDayStates
+                .contains(state) || state == .todayAfterClose ? withParents(listed, for: state) : listed
+        )
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
         let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
         scriptFailures(for: state, counts: counts, students: students, fees: fees, attendance: attendance)
@@ -30,6 +34,7 @@ public enum Fixtures {
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
             textbooks: closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
+                || noteDayStates.contains(state)
                 ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),
@@ -206,6 +211,7 @@ public enum Fixtures {
              .reportsExport, .reportsEmpty: FakeAttendanceRepository.seedWithToday
         case .historyEmpty: []
         case .todayAfterClose: FakeAttendanceRepository.seedWithEveningClosed
+        case _ where noteDayStates.contains(state): noteDaySessions
         default: FakeAttendanceRepository.seed
         }
     }
@@ -233,6 +239,7 @@ public enum Fixtures {
             TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case _ where planStates.contains(state): TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoBatch: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
+        case _ where noteDayStates.contains(state): TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         default: .zero
         }
     }
@@ -260,6 +267,7 @@ extension Fixtures {
         case _ where lastDaysStates.contains(state): india(day: 14, hour: 19, minute: 0)
         case .todayNoBatch: india(day: 10, hour: 9, minute: 30)
         case .todayEvening: india(day: 7, hour: 19, minute: 30)
+        case _ where noteDayStates.contains(state): noteDayClock
         default: nil
         }
     }
@@ -279,6 +287,10 @@ extension Fixtures {
                 planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
         case .closeCards: (cardStudents, FakeClassesRepository.withEvening)
+        case _ where noteDayStates.contains(state): (
+                FakeStudentsRepository.eveningSeed,
+                FakeClassesRepository.withEvening
+            )
         case _ where closeStates.contains(state): (
                 FakeStudentsRepository.eveningSeed,
                 FakeClassesRepository.withEvening

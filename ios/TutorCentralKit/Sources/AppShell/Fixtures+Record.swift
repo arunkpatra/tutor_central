@@ -24,7 +24,7 @@ extension Fixtures {
         // P10-Student-Consent-Waiting: Riya's parent asked today.
         let asked = state == .studentConsentWaiting
             ? [FakeStudentsRepository.riya: [riyaAsked(at: clock(for: state))]]
-            : forwardAsked(for: state)
+            : noteDayStates.contains(state) ? noteDayEntries(for: state) : forwardAsked(for: state)
         let log = FakeMessageLogRepository(
             logs: FakeMessageLogRepository.seed, feeLogs: FakeMessageLogRepository.feeSeed, entries: asked,
             now: { clock(for: state) }
@@ -65,6 +65,9 @@ extension Fixtures {
         }
         if lastDaysStates.contains(state) {
             return FakeRecordRepository(marks: FakeRecordRepository.lastDaysMarks)
+        }
+        if noteDayStates.contains(state) {
+            return FakeRecordRepository(checks: noteDayChecks, homework: [], marks: [])
         }
         guard state == .todayAfterClose else { return FakeRecordRepository() }
         let session = FakeAttendanceRepository.seedWithEveningClosed[0]

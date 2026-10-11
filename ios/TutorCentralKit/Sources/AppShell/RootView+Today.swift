@@ -46,6 +46,9 @@ extension RootView {
                 if store.makePlanStore == nil {
                     store.makePlanStore = planStoreMaker(workspace, register: register(for: workspace))
                 }
+                if store.noteDay == nil {
+                    store.noteDay = noteDayStore(workspace)
+                }
                 // A close kept on this iPhone reads closed on the hero before it is sent (D39).
                 store.queue = centreQueue()
             }
@@ -73,5 +76,15 @@ extension RootView {
             store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
             return store
         }
+    }
+
+    /// The note day (Phase 14): the register, the record and the log as the user; Read opens the note (Artefacts).
+    func noteDayStore(_ workspace: Workspace) -> NoteDayStore {
+        NoteDayStore(
+            workspace: workspace, register: register(for: workspace), textbooks: deps.textbooks, record: deps.record,
+            attendance: deps.attendance, messages: deps.messages, schoolItems: deps.schoolItems, classes: deps.classes,
+            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, now: deps.now,
+            calendar: DayHeading.india
+        )
     }
 }
