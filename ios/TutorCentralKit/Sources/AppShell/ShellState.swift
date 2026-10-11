@@ -69,6 +69,8 @@ struct AbsenceAsk: Identifiable, Hashable {
     @ObservationIgnored var ai: AIStore?
     /// Make something's store for the centre (Recent and History read once; Phase 15).
     @ObservationIgnored var make: MakeStore?
+    /// The tutor's words from Make's note, for the note screen it opens (taken when the screen is built).
+    @ObservationIgnored var noteWords: [UUID: String] = [:]
     /// The visit of Check a paper in progress, by its routes' id.
     @ObservationIgnored var check: CheckVisit?
     /// The visit of Scan register in progress: its list lives until Add or Back (Phase 6's minor 1).
@@ -173,6 +175,7 @@ struct AbsenceAsk: Identifiable, Hashable {
         ai?.cancel()
         ai = nil
         make = nil
+        noteWords = [:]
         school = nil
         schoolItemsChanged = nil
         testTomorrow = nil

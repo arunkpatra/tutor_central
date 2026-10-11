@@ -69,10 +69,17 @@ extension Fixtures {
     }
 
     @MainActor static func plans(for state: LaunchState) -> FakePlansRepository {
-        if state == .studentMessages {
-            return FakePlansRepository(artefacts: devNotes, now: noteDayClock)
+        if makeStates.contains(state) {
+            // Make's forms: today's plan for the groups, and Make's own artefacts.
+            let evening = FakePlansRepository.evening()
+            return FakePlansRepository(
+                plans: evening.plans, artefacts: FakePlansRepository.boardArtefacts + FakePlansRepository.madeRecent,
+                now: evening.now
+            )
         }
         switch state {
+        case .studentMessages:
+            return FakePlansRepository(artefacts: devNotes, now: noteDayClock)
         case .todayPlanning:
             // P10-Today-Planning: the plan is still being written.
             let plans = FakePlansRepository()
@@ -84,10 +91,11 @@ extension Fixtures {
             return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
         case _ where lastDaysStates.contains(state):
             return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts)
-        case .mock, .mockKey:
-            return FakePlansRepository(artefacts: [FakePlansRepository.boardMock])
-        case .make, .aiHistory:
-            return FakePlansRepository(artefacts: FakePlansRepository.madeRecent)
+        case .mock, .mockKey, .make, .aiHistory:
+            return FakePlansRepository(
+                artefacts: [.mock, .mockKey].contains(state) ? [FakePlansRepository.boardMock] : FakePlansRepository
+                    .madeRecent
+            )
         case .closeCards, .todayRevision:
             // P13-Today-Revision: made on the board's moment from the exam nine days out.
             return FakePlansRepository()

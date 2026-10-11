@@ -23,11 +23,14 @@ public struct NoteContent: Hashable, Sendable, Codable {
     public let weekMonday: Day
     public let facts: [FactRow]
     public let generationID: UUID?
+    /// The tutor's own words from Make's note (Phase 15), kept so Write again carries them.
+    public let tutorSays: String?
 
     public init(
         message: String, english: String?, language: MessageLanguage, weekMonday: Day, facts: [FactRow],
-        generationID: UUID?
+        generationID: UUID?, tutorSays: String? = nil
     ) {
+        self.tutorSays = tutorSays
         self.message = message
         self.english = english
         self.language = language
@@ -37,7 +40,7 @@ public struct NoteContent: Hashable, Sendable, Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case message, english, language, weekMonday, facts
+        case message, english, language, weekMonday, facts, tutorSays
         case generationID = "generationId"
     }
 
@@ -54,7 +57,8 @@ public struct NoteContent: Hashable, Sendable, Codable {
             language: c.decode(MessageLanguage.self, forKey: .language),
             weekMonday: day,
             facts: c.decodeIfPresent([FactRow].self, forKey: .facts) ?? [],
-            generationID: c.decodeIfPresent(UUID.self, forKey: .generationID)
+            generationID: c.decodeIfPresent(UUID.self, forKey: .generationID),
+            tutorSays: c.decodeIfPresent(String.self, forKey: .tutorSays)
         )
     }
 
@@ -66,5 +70,6 @@ public struct NoteContent: Hashable, Sendable, Codable {
         try c.encode(weekMonday.iso, forKey: .weekMonday)
         try c.encode(facts, forKey: .facts)
         try c.encodeIfPresent(generationID, forKey: .generationID)
+        try c.encodeIfPresent(tutorSays, forKey: .tutorSays)
     }
 }

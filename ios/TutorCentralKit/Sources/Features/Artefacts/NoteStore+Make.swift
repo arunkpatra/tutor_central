@@ -18,6 +18,11 @@ extension NoteStore {
         }
         let served = await servedNote()
         guard !Task.isCancelled else { return }
+        if let found = served ?? copy, tutorSays != nil {
+            show(found)
+            await make(student: student, from: found.id)
+            return
+        }
         if let found = served ?? copy {
             if found.kind == .canDo, let record = try? await context.reader.read(
                 [student], centre: context.workspace.centre.id, from: week.lowerBound, to: noteDay,
@@ -126,11 +131,7 @@ extension NoteStore {
             prepareFacts(record)
         }
         guard student.consent != nil else {
-            let parent = student.parentName.flatMap { $0.split(separator: " ").first.map(String.init) }
-            stage = .failed(
-                "\(student.firstName)'s note waits for \(parent.map { "\($0)'s" } ?? "the parent's") consent. "
-                    + "Record it on \(student.firstName)'s page first."
-            )
+            stage = .failed(NoteConsent.waiting(student))
             return
         }
         guard await context.online() else {
@@ -143,11 +144,12 @@ extension NoteStore {
         }
         stage = .writing
         canRetry = false
+        let words = isLadder ? nil : tutorSays ?? content?.tutorSays
         do {
-            let made = try await call(record, student: student)
+            let made = try await call(record, student: student, saying: words)
             let note = NoteContent(
                 message: made.message, english: language == .english ? nil : made.english, language: language,
-                weekMonday: week.lowerBound, facts: facts, generationID: made.generationID
+                weekMonday: week.lowerBound, facts: facts, generationID: made.generationID, tutorSays: words
             )
             let title = isLadder ? "\(student.firstName) can now do" : "\(student.firstName)'s week"
             let new = NewNote(
@@ -170,7 +172,9 @@ extension NoteStore {
         }
     }
 
-    private func call(_ record: NoteRecord, student: Student) async throws(APIFailure) -> MadeMessage {
+    private func call(
+        _ record: NoteRecord, student: Student, saying words: String?
+    ) async throws(APIFailure) -> MadeMessage {
         let workspace = context.workspace
         let tutor = workspace.profile.displayName ?? workspace.centre.name
         let level = student.classLevel ?? .messageFallback
@@ -187,14 +191,12 @@ extension NoteStore {
             )
         }
         let facts = NoteWeek.facts(record, week: week, calendar: context.calendar)
-        return try await context.ai.makeNote(
-            NoteRequest(
-                studentID: student.id, studentName: student.name, parentName: student.parentName, tutorName: tutor,
-                centreName: workspace.centre.name, classLevel: level, language: language, weekMonday: week.lowerBound,
-                week: NoteRequest.Week(facts)
-            ),
-            centre: workspace.centre.id
+        let request = NoteRequest(
+            studentID: student.id, studentName: student.name, parentName: student.parentName, tutorName: tutor,
+            centreName: workspace.centre.name, classLevel: level, language: language, weekMonday: week.lowerBound,
+            week: NoteRequest.Week(facts)
         )
+        return try await context.ai.makeNote(words.map(request.saying) ?? request, centre: workspace.centre.id)
     }
 
     /// The facts the screen shows while the note is written, and "Moved up" for the ladder.

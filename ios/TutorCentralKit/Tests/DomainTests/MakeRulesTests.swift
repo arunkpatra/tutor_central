@@ -112,11 +112,19 @@ struct MakeRulesTests: SchoolSamples {
         }
         let roster = MakeRoster(students: members, classes: [evening], groups: [groupOne])
         #expect(MakeRules.forWords(.student(dev.id), roster: roster, subject: "Science", skill: "Balancing equations")
-            == MakeFor(target: .student(dev.id), title: "For Dev", line: "Class 8 Science · Balancing equations"))
+            .words == [
+                "For Dev",
+                "Class 8 Science · Balancing equations",
+            ])
         #expect(MakeRules.forWords(.group(plan: plan, number: 1), roster: roster, subject: "Science", skill: nil)
-            == MakeFor(target: .group(plan: plan, number: 1), title: "Group 1", line: "Class 8 Science"))
-        #expect(MakeRules.forWords(.batch(evening.id), roster: roster, subject: "Science", skill: nil)
-            == MakeFor(target: .batch(evening.id), title: "Evening batch", line: "Class 8 · Science"))
+            .words == [
+                "Group 1",
+                "Class 8 Science",
+            ])
+        #expect(MakeRules.forWords(.batch(evening.id), roster: roster, subject: "Science", skill: nil).words == [
+            "Evening batch",
+            "Class 8 · Science",
+        ])
         let level = MakeRules.forWords(.classLevel(.eight), roster: roster, subject: "Science", skill: nil)
         #expect(level.title == "Class 8" && level.line == "Science")
         #expect(level.eyebrow == "Class 8 · Science")
@@ -138,5 +146,47 @@ struct MakeRulesTests: SchoolSamples {
             let json = try JSONEncoder().encode(made)
             #expect(try JSONDecoder().decode(MakeFor.self, from: json) == made)
         }
+    }
+}
+
+extension MakeFor {
+    /// The title and line, as the eyebrow reads them.
+    var words: [String] {
+        [title, line]
+    }
+}
+
+struct MakeForFactsTests: SchoolSamples {
+    @Test func theForWordsKeepTheLevelSubjectAndSkillForMakeItAgain() {
+        let roster = MakeRoster(students: [dev], classes: [], groups: [])
+        let made = MakeRules.forWords(
+            .student(dev.id),
+            roster: roster,
+            subject: "Science",
+            skill: "Balancing equations"
+        )
+        #expect(made.level == .eight && made.subject == "Science" && made.skills == ["Balancing equations"])
+        #expect(made.keepingKey(true).keyAtEnd == true && made.keepingKey(true).title == made.title)
+    }
+
+    @Test func aStudentsNoteWaitsForTheParentsConsentInWords() {
+        var someone = dev
+        someone.parentName = "Ramesh Kumar"
+        #expect(NoteConsent.waiting(someone) == "Dev's note waits for Ramesh's consent. Record it on Dev's page first.")
+        someone.parentName = nil
+        #expect(NoteConsent
+            .waiting(someone) == "Dev's note waits for the parent's consent. Record it on Dev's page first.")
+    }
+
+    @Test func aNoteKeepsTheTutorsWords() throws {
+        let note = NoteContent(
+            message: "m", english: nil, language: .english, weekMonday: sampleToday, facts: [], generationID: nil,
+            tutorSays: "Ask him to read aloud."
+        )
+        let json = try ArtefactContent.note(note).encoded()
+        #expect(String(bytes: json, encoding: .utf8)?.contains("\"tutor_says\"") == true)
+        guard case let .note(read) = try ArtefactContent.decode(kind: .note, json: json)
+        else { Issue.record("not a note"); return }
+        #expect(read.tutorSays == "Ask him to read aloud.")
     }
 }

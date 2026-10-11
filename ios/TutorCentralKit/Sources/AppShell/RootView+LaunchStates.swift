@@ -50,7 +50,9 @@ extension RootView {
 
     /// The AI Assistant's states, all on the More tab's stack.
     nonisolated static let aiStates: Set<LaunchState> = [
-        .make, .makeEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet,
+        .make, .makeEmpty, .makeSheet, .makeFor, .makeForStudent, .makeWorkedExample, .makeFigure, .makeBrief,
+        .makeMock, .makeNote, .makeMaking, .makeMade, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework,
+        .aiWorksheet,
         .aiNote, .aiNoteStudent, .aiGenerating,
         .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
         .aiHistory,
@@ -105,11 +107,19 @@ extension RootView {
         scanBoardStates[state]
     }
 
+    /// Make something's stack: the home, a form, or a Make sheet's screen.
+    static func makeRoutes(for state: LaunchState) -> [Route] {
+        if state == .makeMade {
+            return [.make, .artefact(FakePlansRepository.madeSheetID)]
+        }
+        return [.make] + (Fixtures.makeForms[state].map { [Route.makeForm($0)] } ?? [])
+    }
+
     /// The AI Assistant's stack for each of its states.
     static func aiRoutes(for state: LaunchState) -> [Route] {
         let note = FakeAIHistoryRepository.id(2)
         return switch state {
-        case .make, .makeEmpty: [.make]
+        case .make, .makeEmpty, _ where Fixtures.makeStates.contains(state): makeRoutes(for: state)
         case .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiGenerating, .aiGenerateFailed:
             [.make, .aiForm(.paper)]
         case .aiHomework: [.make, .aiForm(.homework)]

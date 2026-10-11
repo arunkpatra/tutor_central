@@ -107,6 +107,30 @@ import Testing
         #expect(world.ai.noteCalls.count == 1)
     }
 
+    @Test func theTutorsWordsGoInTheRequestAndAreKept() async {
+        let world = World()
+        let store = await Self.make(Self.dev, world)
+        store.tutorSays = "Ask him to read aloud."
+        await store.load()
+        #expect(world.ai.noteCalls.last?.tutorSays == "Ask him to read aloud.")
+        guard case let .note(content)? = world.plans.artefacts.last?.content else { Issue.record("no note"); return }
+        #expect(content.tutorSays == "Ask him to read aloud.")
+        await store.writeAgain()
+        #expect(world.ai.noteCalls.last?.tutorSays == "Ask him to read aloud.")
+    }
+
+    @Test func theTutorsWordsWithANoteKeptThisWeekMakeANewOne() async {
+        let world = World()
+        let first = await Self.make(Self.dev, world)
+        await first.load()
+        let kept = world.plans.artefacts.first?.id
+        let again = await Self.make(Self.dev, World(ai: world.ai, plans: world.plans))
+        again.tutorSays = "Please send the fee by Friday."
+        await again.load()
+        #expect(world.ai.noteCalls.count == 2 && world.ai.noteCalls.last?.tutorSays == "Please send the fee by Friday.")
+        #expect(world.plans.kept.last?.regeneratedFrom == kept)
+    }
+
     @Test func writeAgainMakesAFreshDraftAndKeepsTheOldOne() async {
         let world = World()
         let store = await Self.make(Self.dev, world)

@@ -1,3 +1,4 @@
+import Data
 import Domain
 import Foundation
 
@@ -32,6 +33,27 @@ enum ArtefactWords {
         case 2, 3: firstNames.dropLast().joined(separator: ", ") + " and " + (firstNames.last ?? "")
         default: firstNames.prefix(3).joined(separator: ", ") + " and \(firstNames.count - 3) more"
         }
+    }
+
+    /// A Make artefact's eyebrow with no plan: "For Dev · Class 8 Science · Balancing equations" (decision 6).
+    static func eyebrow(madeFor: MakeFor) -> String {
+        madeFor.eyebrow
+    }
+
+    /// Where Make it again keeps a Make artefact: no plan, its student and exam, `made_from` kept.
+    static func madeLink(_ artefact: Artefact) -> ArtefactLink {
+        ArtefactLink(
+            plan: nil,
+            group: 0,
+            student: artefact.studentID,
+            itemKind: .practise,
+            schoolItem: artefact.schoolItemID
+        )
+    }
+
+    /// The new artefact as Make keeps it when the old one was Make's.
+    static func carrying(_ new: NewArtefact, from old: Artefact) -> NewArtefact {
+        old.madeFor.map(new.made(for:)) ?? new
     }
 
     /// "made today, 16:40"; "made Mon 5 Oct, 16:40".

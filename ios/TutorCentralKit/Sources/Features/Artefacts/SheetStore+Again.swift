@@ -14,26 +14,26 @@ extension SheetStore {
             message = OfflineRefusal.words(for: .regenerate)
             return
         }
-        guard let link = link() else {
+        guard let link = artefact.isMade ? ArtefactWords.madeLink(artefact) : link() else {
             message = Self.againFailed
             return
         }
         again = .making(reason)
         defer { again = .idle }
         do {
+            let made = artefact.madeFor
             let request = SheetRequest(
-                classLevel: classLevel, subject: group?.subject ?? "", skills: [group?.skill ?? sheet.title],
-                questions: max(sheet.questions.count, 3), forHomework: sheet.forHomework, reason: reason.words
+                classLevel: made?.level ?? classLevel, subject: made?.subject ?? group?.subject ?? "",
+                skills: made?.skills ?? [group?.skill ?? sheet.title], questions: max(sheet.questions.count, 3),
+                forHomework: sheet.forHomework, reason: reason.words
             )
-            let made = try await ai.makeSheet(request, centre: centre)
+            let answer = try await ai.makeSheet(request, centre: centre)
             guard !Task.isCancelled else { return }
-            let kept = try await plans.keep(
-                NewArtefact(
-                    kind: .sheet, source: .made, title: artefact.title, content: .sheet(made.content), photoPath: nil,
-                    generationID: made.generationID, regeneratedFrom: artefact.id
-                ),
-                to: link, centre: centre
+            let new = NewArtefact(
+                kind: .sheet, source: .made, title: artefact.title, content: .sheet(answer.content), photoPath: nil,
+                generationID: answer.generationID, regeneratedFrom: artefact.id
             )
+            let kept = try await plans.keep(ArtefactWords.carrying(new, from: artefact), to: link, centre: centre)
             await reload(kept)
         } catch {
             message = Self.againFailed

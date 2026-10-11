@@ -14,7 +14,7 @@ extension Fixtures {
         case .aiGenerateFailed, .scanFailed, .checkFailed: ai.script = .failure(.offline)
         case .scanReading, .checkChecking, .textbookReading, .schoolReading: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
-        case .sheetRegenerating: ai.delayByKind[.sheet] = .seconds(3600)
+        case .sheetRegenerating, .makeMaking: ai.delayByKind[.sheet] = .seconds(3600)
         case .closeCards:
             // Dev's science checks still being made; Riya's mathematics placement offline.
             ai.delay = .seconds(3600)

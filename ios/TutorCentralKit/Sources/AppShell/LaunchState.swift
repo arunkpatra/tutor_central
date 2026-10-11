@@ -219,8 +219,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case reportsAttendance = "reports-attendance"
     case reportsExport = "reports-export"
     case reportsEmpty = "reports-empty"
-    case make
-    case makeEmpty = "make-empty"
+    case make, makeEmpty = "make-empty", makeSheet = "make-sheet", makeFor = "make-for"
+    case makeForStudent = "make-for-student", makeWorkedExample = "make-worked-example", makeFigure = "make-figure"
     case aiPaper = "ai-paper"
     /// The paper's Class tile open on the class wheel; the paper with nothing chosen yet (P12-Form-Paper-ClassWheel,
     /// -NoClass).
@@ -237,8 +237,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case aiResultRegenerating = "ai-result-regenerating"
     case aiResultNote = "ai-result-note"
     case aiNoteSend = "ai-note-send"
-    case aiHistory = "ai-history"
-    case aiHistoryEmpty = "ai-history-empty"
+    case aiHistory = "ai-history", aiHistoryEmpty = "ai-history-empty", makeMade = "make-made"
+    case makeBrief = "make-brief", makeMock = "make-mock", makeNote = "make-note", makeMaking = "make-making"
     case todayAI = "today-ai"
     case scanIntro = "scan-intro"
     case scanConsent = "scan-consent"

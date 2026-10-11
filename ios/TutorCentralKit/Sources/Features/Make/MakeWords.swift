@@ -8,6 +8,12 @@ enum MakeWords {
     static let emptyTitle = "Nothing made yet"
     static let emptyLine = "Sheets, examples, figures, mocks, notes and papers you make appear here, ready to open "
         + "again."
+    static let failedTitle = "Couldn't make it."
+    static let forHelper = "A student, a group, a batch, or a class on its own."
+    static let skillHelper = "From the record, or type a topic."
+    static let keyLine = "For you; left out of what you share"
+    static let sayPlaceholder = "The week, or anything you want to say, in their language"
+    static let figureRefused = "That figure didn't come out right, so it wasn't kept. Try again."
     static let historyFailed = "Couldn't load History. Check your connection and try again."
 
     /// The kind as Recent's line names it.

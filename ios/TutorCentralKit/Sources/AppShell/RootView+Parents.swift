@@ -29,16 +29,20 @@ extension RootView {
             )
         } else if case let .ready(workspace) = session.state, case let .note(student, noteDay) = route {
             NoteView(
-                store: NoteStore(
-                    student: student, noteDay: noteDay, context: noteContext(workspace),
-                    effects: NoteStore.Effects(
-                        copy: { UIPasteboard.general.string = $0 },
-                        open: { url in systemOpenURL(url) }
-                    )
-                ),
+                store: noteStore(student, noteDay: noteDay, in: workspace),
                 boardState: launch.flatMap(Self.noteBoardState)
             )
         }
+    }
+
+    /// The note's store, with the tutor's words when Make opened it (decision 7).
+    private func noteStore(_ student: UUID, noteDay: Day, in workspace: Workspace) -> NoteStore {
+        let store = NoteStore(
+            student: student, noteDay: noteDay, context: noteContext(workspace),
+            effects: NoteStore.Effects(copy: { UIPasteboard.general.string = $0 }, open: { url in systemOpenURL(url) })
+        )
+        store.tutorSays = shell.noteWords[student]
+        return store
     }
 
     func noteContext(_ workspace: Workspace) -> NoteContext {
