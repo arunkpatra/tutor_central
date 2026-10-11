@@ -26,6 +26,9 @@ public enum FeeActionKind: Sendable {
     let messageLog: any MessageLogRepository
     let textbooks: (any TextbooksRepository)?
     let record: (any RecordRepository)?
+    /// What the schools sent (Phase 13): the page's School section.
+    let schoolItems: (any SchoolItemsRepository)?
+    var items: [SchoolItem] = []
     let now: @Sendable () -> Date
     let online: @Sendable () async -> Bool
     var sessions: [AttendanceSession] = []
@@ -47,8 +50,10 @@ public enum FeeActionKind: Sendable {
     public init(
         id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository,
         textbooks: (any TextbooksRepository)? = nil, record: (any RecordRepository)? = nil,
+        schoolItems: (any SchoolItemsRepository)? = nil,
         now: @escaping @Sendable () -> Date = Date.init, online: @escaping @Sendable () async -> Bool = { true }
     ) {
+        self.schoolItems = schoolItems
         consent = ConsentStore(
             studentID: id, register: register, messages: messages, tutorName: register.workspace.profile.displayName,
             centreName: register.workspace.centre.name, now: now, online: online

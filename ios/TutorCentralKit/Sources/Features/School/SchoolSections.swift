@@ -17,7 +17,8 @@ struct SchoolEmptyCard: View {
                     actions: (
                         .init("Ask parents to forward", emphasis: .primary, run: askParents),
                         .init("Add from a photo", run: fromPhoto)
-                    )
+                    ),
+                    stacked: true
                 )
             }
             Text(SchoolWords.emptyFootnote).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)

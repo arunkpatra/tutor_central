@@ -2,7 +2,8 @@ import SwiftUI
 
 /// Inside the card it belongs to: symbol 28 in text3, title headline, one line subhead text2 (at most 280 wide), and
 /// when there is an action a secondary button (primary when it is the only thing to do); two actions sit side by side
-/// at equal widths, 10 apart (P3-Students-Empty). Centred, padding 24 18.
+/// at equal widths, 10 apart (P3-Students-Empty), or one over the other at full width when their words are long
+/// (P10-School-Empty). Centred, padding 24 18.
 public struct EmptyState: View {
     /// `card` sits among other sections; `screen` is the one card of a root with nothing else to show
     /// (P4-Attendance-Empty): padding 40 24, its button 220 wide.
@@ -34,6 +35,7 @@ public struct EmptyState: View {
     let line: String
     let actions: [Action]
     let size: Size
+    var stacked = false
     static var symbolSize: CGFloat {
         28
     }
@@ -56,13 +58,14 @@ public struct EmptyState: View {
         self.size = size
     }
 
-    /// Two ways to start, side by side: the first is usually the primary.
-    public init(symbol: String, title: String, line: String, actions: (Action, Action)) {
+    /// Two ways to start, side by side (or one over the other, `stacked`): the first is usually the primary.
+    public init(symbol: String, title: String, line: String, actions: (Action, Action), stacked: Bool = false) {
         self.symbol = symbol
         self.title = title
         self.line = line
         self.actions = [actions.0, actions.1]
         size = .card
+        self.stacked = stacked
     }
 
     public var body: some View {
@@ -81,6 +84,13 @@ public struct EmptyState: View {
                 button(actions[0], fills: true).frame(maxWidth: Self.screenButtonWidth).padding(.top, Tokens.inline)
             } else if actions.count == 1 {
                 button(actions[0]).fixedSize().padding(.top, Tokens.inline)
+            } else if stacked {
+                VStack(spacing: Tokens.tileGap) {
+                    ForEach(actions.indices, id: \.self) { index in
+                        button(actions[index], fills: true)
+                    }
+                }
+                .padding(.top, Tokens.inline)
             } else if !actions.isEmpty {
                 HStack(spacing: Tokens.tileGap) {
                     ForEach(actions.indices, id: \.self) { index in

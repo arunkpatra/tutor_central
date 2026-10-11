@@ -34,6 +34,9 @@ public struct StudentsNavigation {
     let openTextbook: (UUID, String?) -> Void
     /// A student's placement (V2).
     let openPlacement: (UUID) -> Void
+    /// The School tab, and one of its items (Phase 13).
+    let openSchool: () -> Void
+    let openSchoolItem: (UUID) -> Void
 
     /// `showUnassigned` goes back to the list with the "No class" filter on.
     public init(
@@ -42,8 +45,12 @@ public struct StudentsNavigation {
         openClass: @escaping (UUID) -> Void,
         showUnassigned: @escaping () -> Void,
         openTextbook: @escaping (UUID, String?) -> Void = { _, _ in },
-        openPlacement: @escaping (UUID) -> Void = { _ in }
+        openPlacement: @escaping (UUID) -> Void = { _ in },
+        openSchool: @escaping () -> Void = {},
+        openSchoolItem: @escaping (UUID) -> Void = { _ in }
     ) {
+        self.openSchool = openSchool
+        self.openSchoolItem = openSchoolItem
         self.openTextbook = openTextbook
         self.openPlacement = openPlacement
         self.openStudent = openStudent

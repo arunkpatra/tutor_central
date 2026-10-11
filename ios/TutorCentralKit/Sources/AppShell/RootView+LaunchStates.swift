@@ -31,7 +31,7 @@ extension RootView {
              .attendanceSaved,
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .more
-        case .laterSchool: .school
+        case _ where Fixtures.schoolStates.contains(state): .school
         case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .more
         case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone,
              .eventDeleteConfirm,
@@ -141,7 +141,7 @@ extension RootView {
     /// What a launch state opens on its tab's stack: Settings, or Akshita's detail.
     static func initialRoutes(for state: LaunchState) -> [Route] {
         if let routes = settingsRoutes(for: state) ?? attendanceRoutes(for: state) ?? studentPageRoutes(for: state)
-            ?? closeRoutes(for: state) ?? artefactRoutes(for: state) {
+            ?? closeRoutes(for: state) ?? artefactRoutes(for: state) ?? schoolRoutes(for: state) {
             return routes
         }
         return switch state {

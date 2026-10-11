@@ -117,7 +117,7 @@ import UIKit
             }
             stage = .read
         } catch {
-            stage = .failed(error.words)
+            stage = .failed(Self.words(error))
         }
     }
 
@@ -194,8 +194,9 @@ import UIKit
     }
 }
 
-private extension Error {
-    var words: String {
-        (self as? APIFailure)?.words ?? "That didn't go through. Check your connection and try again."
+extension ReadStore {
+    /// The API's words for a failed reading, else a lost connection's.
+    nonisolated static func words(_ error: any Error) -> String {
+        (error as? APIFailure)?.message ?? "That didn't go through. Check your connection and try again."
     }
 }

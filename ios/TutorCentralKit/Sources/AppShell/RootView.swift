@@ -101,6 +101,7 @@ public struct RootView: View {
                         await shell.register?.refresh()
                         replanReminders()
                         await shell.refreshScreens()
+                        shell.inboxHandoff(SharedInbox.live(), signedIn: session.isReady)
                     }
                 }
                 if phase == .background, launch == nil {
@@ -115,6 +116,9 @@ public struct RootView: View {
                 if session.isReady {
                     Task { await runQueue() }
                     replanReminders()
+                    if launch == nil {
+                        shell.inboxHandoff(SharedInbox.live(), signedIn: true)
+                    }
                     NotificationDelegate.shared.onOpen = { openLink($0) }
                 } else {
                     NotificationDelegate.shared.onOpen = nil
@@ -207,7 +211,8 @@ public struct RootView: View {
                 payments: { paymentsView },
                 reports: { reportsView },
                 tools: { toolsView($0) },
-                school: { SchoolLaterView(build: deps.bundleVersion) },
+                school: { schoolView },
+                schoolScreen: { schoolScreen($0) },
                 textbook: { textbookView(student: $0, subject: $1) },
                 placement: { placementView($0) },
                 close: { closeView($0) },

@@ -9,8 +9,8 @@ import SwiftUI
 struct TabsView<
     Today: View, Students: View, StudentDetail: View, Classes: View, ClassDetail: View, Settings: View,
     Attendance: View, History: View, StudentMonth: View, Schedule: View, Tasks: View, Fees: View, StudentFees: View,
-    Payments: View, Reports: View, Tools: View, School: View, Textbook: View, Placement: View, Close: View,
-    Artefact: View
+    Payments: View, Reports: View, Tools: View, School: View, SchoolScreen: View, Textbook: View, Placement: View,
+    Close: View, Artefact: View
 >: View {
     @Bindable var state: TabsState
     let toasts: ToastCenter
@@ -32,8 +32,9 @@ struct TabsView<
     let reports: () -> Reports
     /// The AI tools' screens (the Assistant, its forms, results and History).
     let tools: (Route) -> Tools
-    /// The School tab's root: the Later card until Phase 13.
+    /// The School tab's root (Phase 13), and its pushed screens: what was read, an item, Ask parents to forward.
     let school: () -> School
+    let schoolScreen: (Route) -> SchoolScreen
     /// Add a textbook (V2).
     let textbook: (UUID, String?) -> Textbook
     /// A student's placement (V2).
@@ -70,13 +71,12 @@ struct TabsView<
         case .attendance, .history, .historyStudent: attendanceDestination(route)
         case .settings, .account, .deleteAccount, .help, .pendingChanges, .reminders: settings(route)
         case .payments, .reports: moreDestination(route)
-        case .schedule: schedule(nil)
-        case let .event(id): schedule(id)
-        case .tasks: tasks()
+        case .schedule, .event, .tasks: plannerDestination(route)
         case let .close(id): close(id)
         case let .artefact(id): artefact(id)
         case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
              .checkResult: tools(route)
+        case .schoolRead, .schoolItem, .schoolAsk: schoolScreen(route)
         }
     }
 
@@ -88,6 +88,14 @@ struct TabsView<
         case let .textbook(student, subject): textbook(student, subject)
         case let .placement(student): placement(student)
         default: classes()
+        }
+    }
+
+    @ViewBuilder private func plannerDestination(_ route: Route) -> some View {
+        switch route {
+        case let .event(id): schedule(id)
+        case .tasks: tasks()
+        default: schedule(nil)
         }
     }
 

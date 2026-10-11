@@ -5,6 +5,7 @@ import Domain
 import Fees
 import Foundation
 import Observation
+import School
 import Students
 import Today
 
@@ -34,6 +35,10 @@ struct ScanVisit {
     @ObservationIgnored var fees: FeesStore?
     /// One tasks store per centre, shared by Today's Tasks card and the Tasks screen.
     @ObservationIgnored var tasks: TasksStore?
+    /// One School tab per centre, so a tab switch keeps the segment and the chosen day.
+    @ObservationIgnored var school: SchoolStore?
+    /// What an added, changed or deleted item reached: Today makes an open plan again for those students (Task 17).
+    @ObservationIgnored var schoolItemsChanged: (@MainActor (Set<UUID>) -> Void)?
     /// One AI store per centre: a call outlives its screen, and Recent and History are read once.
     @ObservationIgnored var ai: AIStore?
     /// The visit of Check a paper in progress, by its routes' id.
@@ -81,7 +86,33 @@ struct ScanVisit {
         async let tasks: Void? = tasks?.load()
         async let fees: Void? = fees?.reload()
         async let attendance: Void? = attendance?.reload()
-        _ = await (today, tasks, fees, attendance)
+        async let school: Void? = school?.refresh()
+        _ = await (today, tasks, fees, attendance, school)
+    }
+
+    /// The share hand-off (plan/phase-13-plan.md decision 25): the first item in the inbox opens "Check what was read"
+    /// on the School tab once signed in; one at a time, never over a read screen already up. A photo that cannot be
+    /// read is passed over (removed).
+    func inboxHandoff(_ inbox: SharedInbox?, signedIn: Bool) {
+        guard signedIn, let inbox, let item = try? inbox.items().first else { return }
+        let reading = tabs.paths.values.contains { path in
+            path.contains {
+                if case .schoolRead = $0 {
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+        guard !reading else { return }
+        let image = item.kind == .image ? inbox.image(of: item).flatMap(PhotoReducer.reduce) : nil
+        guard item.text != nil || image != nil else {
+            try? inbox.remove(item)
+            return
+        }
+        let read = SharedRead(id: item.id, text: item.text, image: image, receivedAt: item.receivedAt)
+        tabs.selected = .school
+        tabs.paths[.school] = [.schoolRead(.shared(read))]
     }
 
     /// `files` is where the centre's queue file lives (nil: Application Support).
@@ -113,6 +144,8 @@ struct ScanVisit {
         tasks = nil
         ai?.cancel()
         ai = nil
+        school = nil
+        schoolItemsChanged = nil
         check = nil
         scan = nil
         queue = nil

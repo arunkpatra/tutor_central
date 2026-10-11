@@ -66,6 +66,12 @@ public struct SharedInbox: Sendable {
         }
     }
 
+    /// The item with this id and its image, when it is still there (a screen that read it was left or added).
+    public func remove(id: String) throws {
+        guard let item = try items().first(where: { $0.id == id }) else { return }
+        try remove(item)
+    }
+
     /// The bytes of the image beside an item, whatever their format (HEIC included); nil for a text.
     public func image(of item: Item) -> Data? {
         guard let file = item.file else { return nil }

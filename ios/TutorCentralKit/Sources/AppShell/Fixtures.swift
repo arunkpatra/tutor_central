@@ -18,21 +18,7 @@ public enum Fixtures {
         let students = FakeStudentsRepository(students: register(for: state).students)
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
         let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
-        if state == .feesLoadFailed {
-            // U33-Fees-LoadFailed: the month does not load, and there is nothing saved to show.
-            fees.nextError = URLError(.badServerResponse)
-        }
-        if state == .attendanceSaveFailed {
-            // U33-Attendance-SaveFailed: the save is refused (not a lost connection, which would keep it here).
-            attendance.saveError = URLError(.badServerResponse)
-        }
-        if offlineStates.contains(state) {
-            // The boards' offline screens: every read fails for the network; the copies on this iPhone show.
-            counts.nextError = URLError(.notConnectedToInternet)
-            students.nextError = URLError(.notConnectedToInternet)
-            fees.nextError = URLError(.notConnectedToInternet)
-            attendance.nextError = URLError(.notConnectedToInternet)
-        }
+        scriptFailures(for: state, counts: counts, students: students, fees: fees, attendance: attendance)
         return Dependencies(
             auth: auth,
             centres: centres,
@@ -42,6 +28,7 @@ public enum Fixtures {
             attendance: attendance,
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
+            schoolItems: schoolItems(for: state),
             textbooks: closeStates.contains(state) || planStates.contains(state) ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),
@@ -66,6 +53,28 @@ public enum Fixtures {
             fixedClock: true,
             bundleVersion: "1.0 (14)"
         )
+    }
+
+    /// The failures a board draws: a month that does not load, a refused save, every read offline.
+    @MainActor static func scriptFailures(
+        for state: LaunchState, counts: FakeCountsRepository, students: FakeStudentsRepository,
+        fees: FakeFeesRepository, attendance: FakeAttendanceRepository
+    ) {
+        if state == .feesLoadFailed {
+            // U33-Fees-LoadFailed: the month does not load, and there is nothing saved to show.
+            fees.nextError = URLError(.badServerResponse)
+        }
+        if state == .attendanceSaveFailed {
+            // U33-Attendance-SaveFailed: the save is refused (not a lost connection, which would keep it here).
+            attendance.saveError = URLError(.badServerResponse)
+        }
+        if offlineStates.contains(state) {
+            // The boards' offline screens: every read fails for the network; the copies on this iPhone show.
+            counts.nextError = URLError(.notConnectedToInternet)
+            students.nextError = URLError(.notConnectedToInternet)
+            fees.nextError = URLError(.notConnectedToInternet)
+            attendance.nextError = URLError(.notConnectedToInternet)
+        }
     }
 
     /// The signed-in tutor and her centre for a state, with the failures a board draws.
@@ -155,53 +164,10 @@ public enum Fixtures {
     public static func initialState(for state: LaunchState) -> SessionStore.State {
         switch state {
         case .onboarding: .needsOnboarding(FakeAuthRepository.meera)
-        case .todayEmpty, .laterStudents, .laterAttendance, .laterSchool, .laterMore, .settings, .studentsEmpty,
-             .studentsFew,
-             .students, .studentsSearching, .studentsFiltered, .studentsAddMenu, .studentNew, .studentNewFilled,
-             .studentNewInvalid, .studentNewNewClass, .studentNewClassMade, .studentNewClass9, .studentNewClassPicker,
-             .studentNewSchool, .studentNewEnd, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder,
-             .studentConsentAsk,
-             .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
-             .textbookChapterEdit, .placement, .student,
-             .studentArchived,
-             .studentArchiveConfirm, .studentDeleteConfirm,
-             .studentEdit, .classesEmpty, .classes, .classNew, .classEdit, .classArchiveConfirm,
-             .classDetail, .classAddMembers, .attendance, .attendanceClassMenu, .attendanceExceptions,
-             .attendanceSaveFailed,
-             .attendanceSaved, .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent,
-             .historyStudent, .historyEmpty, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard,
-             .eventGone,
-             .eventDeleteConfirm, .tasks, .tasksEmpty, .today, .todayScrolled, .todayPlanning,
-             .todayLineMenu, .todayPlanChanged, .todayPlanChange, .todayNoBatch, .todayEvening, .todayAddingTask,
-             .sheet, .sheetKey, .sheetBoard, .sheetRegenerate, .sheetRegenerating, .sheetOwnMenu, .sheetOwn,
-             .workedExample, .brief, .figureNumberLine, .figureFractionBar, .figurePlaceValue, .figureUnitCircle,
-             .figureTriangle, .figureCell, .figureFoodChain,
-             .todayAfterClose,
-             .close, .closeScrolled, .closePlacement, .closeCards, .more, .feesEmpty, .fees,
-             .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee,
-             .feesGenerate,
-             .feesGenerateNothing, .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind,
-             .feesWaive, .studentFeesDue, .studentFees, .paymentsEmpty, .payments,
-             .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty, .todayAI, .aiAssistant,
-             .aiAssistantEmpty, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiHomework, .aiWorksheet, .aiNote,
-             .aiNoteStudent, .aiGenerating,
-             .aiGenerateFailed, .aiResultPaper, .aiResultCopied, .aiResultRegenerating, .aiResultNote, .aiNoteSend,
-             .aiHistory,
-             .aiHistoryEmpty, .scanIntro, .scanConsent, .scanCameraRefused, .scanReading, .scanReview,
-             .scanReviewScrolled, .scanReviewEdit,
-             .scanReviewRemoved, .scanReviewLeave, .scanNothing, .scanFailed, .scanSaved, .checkIntro, .checkPages,
-             .checkScheme, .checkSchemeTyped, .checkChecking, .checkResult, .checkMarkPicker, .checkResultEdited,
-             .checkResultScrolled,
-             .checkSaved, .checkFailed, .settingsEnd, .settingsSaveFailed, .help, .helpAnswer, .account,
-             .accountPassword, .accountPasswordFailed, .accountPasswordSaved, .accountSignOut, .accountSignOutPending,
-             .deleteAccount, .deleteAccountTyped, .deleteAccountDeleting, .deleteAccountFailed, .offlineToday,
-             .offlineStudents, .offlineFees, .offlineNoCache, .offlineWriteRefused, .offlineAttendanceSaved,
-             .offlineFeeMarked, .syncSending, .syncSent, .syncFailed, .pending, .pendingDiscard, .remindersNotAsked,
-             .reminders, .remindersAllOff, .remindersRefused, .remindersDayPicker:
-            .ready(workspace(for: state))
         case .placeholder, .kit, .kitFields, .kitSurfaces, .kitPatterns, .kitDialog, .kitPhase7, .signin, .signinEmail,
-             .signinCode,
-             .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
+             .signinCode, .signinCodeWrong, .signinPassword, .signinDeleted: .signedOut
+        // Every other state is a signed-in centre's screen.
+        default: .ready(workspace(for: state))
         }
     }
 

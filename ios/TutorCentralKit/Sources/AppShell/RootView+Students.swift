@@ -31,7 +31,12 @@ extension RootView {
                 shell.register?.filter = .unassigned
             },
             openTextbook: { shell.tabs.push(.textbook(student: $0, subject: $1)) },
-            openPlacement: { shell.tabs.push(.placement($0)) }
+            openPlacement: { shell.tabs.push(.placement($0)) },
+            openSchool: { shell.tabs.select(.school) },
+            openSchoolItem: { id in
+                shell.tabs.selected = .school
+                shell.tabs.paths[.school] = [.schoolItem(id)]
+            }
         )
     }
 }
@@ -92,7 +97,7 @@ extension RootView {
             StudentDetailView(
                 store: StudentDetailStore(
                     id: id, register: register, attendance: deps.attendance, messages: deps.messages,
-                    textbooks: deps.textbooks, record: deps.record, now: deps.now,
+                    textbooks: deps.textbooks, record: deps.record, schoolItems: deps.schoolItems, now: deps.now,
                     online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
                 ),
                 register: register,
