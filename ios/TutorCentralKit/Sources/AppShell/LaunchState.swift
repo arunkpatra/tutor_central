@@ -215,10 +215,10 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case paymentsEmpty = "payments-empty"
     case payments
     case paymentsQR = "payments-qr"
-    case reports
-    case reportsAttendance = "reports-attendance"
-    case reportsExport = "reports-export"
-    case reportsEmpty = "reports-empty"
+    case reports, reportsAttendance = "reports-attendance", reportsExport = "reports-export"
+    case reportsEmpty = "reports-empty", reportsProgress = "reports-progress"
+    case reportsProgressTerm = "reports-progress-term", reportsProgressSort = "reports-progress-sort"
+    case reportsProgressExport = "reports-progress-export"
     case make, makeEmpty = "make-empty", makeSheet = "make-sheet", makeFor = "make-for"
     case makeForStudent = "make-for-student", makeWorkedExample = "make-worked-example", makeFigure = "make-figure"
     case aiPaper = "ai-paper"

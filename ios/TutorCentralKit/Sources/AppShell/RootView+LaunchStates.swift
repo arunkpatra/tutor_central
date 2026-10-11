@@ -35,7 +35,8 @@ extension RootView {
              .attendanceAlert, .attendancePast, .attendanceEmpty, .history, .historyByStudent, .historyStudent,
              .historyEmpty: .more
         case _ where Fixtures.schoolStates.contains(state): .school
-        case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty: .more
+        case .paymentsEmpty, .payments, .paymentsQR, .reports, .reportsAttendance, .reportsExport, .reportsEmpty,
+             _ where Fixtures.progressStates.contains(state): .more
         case .laterMore, .more, .schedule, .scheduleDay, .eventNew, .eventEdit, .eventEditKeyboard, .eventGone,
              .eventDeleteConfirm,
              .tasks,
@@ -211,7 +212,9 @@ extension RootView {
         case .studentFeesDue: [.student(FakeAttendanceRepository.hemanth)]
         case .studentFees: [.student(FakeAttendanceRepository.hemanth), .studentFees(FakeAttendanceRepository.hemanth)]
         case .paymentsEmpty, .payments, .paymentsQR: [.settings, .payments]
-        case .reports, .reportsAttendance, .reportsExport, .reportsEmpty: [.reports]
+        case .reports, .reportsAttendance, .reportsExport, .reportsEmpty,
+             _ where Fixtures.progressStates.contains(state):
+            [.reports]
         default: aiRoutes(for: state)
         }
     }
@@ -307,15 +310,6 @@ extension RootView {
         case .paymentsEmpty: .empty
         case .payments: .saved
         case .paymentsQR: .fromQR
-        default: nil
-        }
-    }
-
-    static func reportsBoardState(_ state: LaunchState) -> ReportsBoardState? {
-        switch state {
-        case .reportsAttendance: .attendance
-        case .reportsExport: .export
-        case .reportsEmpty: .november
         default: nil
         }
     }

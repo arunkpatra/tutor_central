@@ -1,3 +1,4 @@
+import Data
 import DesignSystem
 import Domain
 import Fees
@@ -112,11 +113,36 @@ extension RootView {
             ReportsView(
                 store: ReportsStore(
                     workspace: workspace, register: register(for: workspace), fees: deps.fees,
-                    attendance: deps.attendance, messages: deps.messages, now: deps.now
+                    attendance: deps.attendance, messages: deps.messages, now: deps.now,
+                    progress: ProgressReader(
+                        textbooks: deps.textbooks,
+                        record: deps.record,
+                        attendance: deps.attendance
+                    ),
+                    cache: deps.cachesLists || deps.filesDirectory != nil
+                        ? ReportsCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil
                 ),
                 boardState: launch.flatMap(Self.reportsBoardState),
+                status: { rootStatus(savedAt: $0.savedAt, offlineRead: $0.offlineRead) },
+                openStudent: { id in
+                    shell.tabs.select(.students)
+                    shell.tabs.paths[.students] = [.student(id)]
+                },
                 onMessage: { notices.show($0) }
             )
+        }
+    }
+
+    static func reportsBoardState(_ state: LaunchState) -> ReportsBoardState? {
+        switch state {
+        case .reportsAttendance: .attendance
+        case .reportsExport: .export
+        case .reportsEmpty: .november
+        case .reportsProgress: .progress
+        case .reportsProgressTerm: .progressTerm
+        case .reportsProgressSort: .progressSort
+        case .reportsProgressExport: .progressExport
+        default: nil
         }
     }
 

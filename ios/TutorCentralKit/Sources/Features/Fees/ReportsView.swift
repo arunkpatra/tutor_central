@@ -2,11 +2,13 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// What a launch state sets up on Reports: the Attendance segment, the Share as CSV sheet, or November (nothing yet).
+/// What a launch state sets up on Reports: the Attendance segment, the Share as CSV sheet, November (nothing yet), or
+/// Progress by month, by term, with its sort menu open, or shared.
 public enum ReportsBoardState: Hashable, Sendable {
     case attendance
     case export
     case november
+    case progress, progressTerm, progressSort, progressExport
 }
 
 /// Reports (P5-Reports-Fees dark and light, -Attendance, -Empty), pushed from More: the month, Fees | Attendance, the
@@ -16,13 +18,23 @@ public struct ReportsView: View {
     @State private var store: ReportsStore
     private let boardState: ReportsBoardState?
     private let onMessage: (String) -> Void
+    /// AppShell's: the offline line when the report is this iPhone's copy (U26).
+    private let status: (ReportsStore) -> RootStatus
+    private let openStudent: (UUID) -> Void
     @State private var exporting = false
+    @State private var sorting = false
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
 
-    public init(store: ReportsStore, boardState: ReportsBoardState? = nil, onMessage: @escaping (String) -> Void) {
+    public init(
+        store: ReportsStore, boardState: ReportsBoardState? = nil,
+        status: @escaping (ReportsStore) -> RootStatus = { _ in .online },
+        openStudent: @escaping (UUID) -> Void = { _ in }, onMessage: @escaping (String) -> Void
+    ) {
         _store = State(initialValue: store)
         self.boardState = boardState
+        self.status = status
+        self.openStudent = openStudent
         self.onMessage = onMessage
     }
 
@@ -30,18 +42,26 @@ public struct ReportsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.sectionGap) {
                 BackRow(title: "Reports", action: ("Share", { exporting = true })) { dismiss() }
+                if let line = status(store).line {
+                    StatusLine(line)
+                }
                 MonthHeader(
-                    title: store.monthTitle,
+                    title: store.spanTitle,
                     previous: { Task { await store.previous() } },
                     next: { Task { await store.next() } }
                 )
                 .padding(.horizontal, Tokens.rowGapInner)
                 Segmented(options: ReportsStore.Segment.allCases.map { ($0, $0.title) }, selection: $store.segment)
+                if store.segment == .progress {
+                    Segmented(options: ReportsStore.Span.allCases.map { ($0, $0.title) }, selection: $store.span)
+                }
                 if let error = store.error {
                     FeesErrorLine(error) { Task { await store.retryLast() } }
                 }
                 Group {
-                    if store.isEmpty {
+                    if store.segment == .progress {
+                        progress
+                    } else if store.isEmpty {
                         Card {
                             EmptyRow(
                                 symbol: "chart.bar", title: "Nothing for \(store.month.monthName) yet",
@@ -68,8 +88,83 @@ public struct ReportsView: View {
             ExportSheet(store: store, initial: store.segment, onMessage: onMessage) { exporting = false }
         }
         .task {
-            await store.load()
             await setUpBoardState()
+            await store.load()
+            if boardState == .progressSort {
+                sorting = true
+            }
+        }
+        .onChange(of: store.segment) { Task { await store.load() } }
+        .onChange(of: store.span) { Task { await store.load() } }
+    }
+
+    @ViewBuilder private var progress: some View {
+        if let hero = store.progressHero {
+            ProgressHeroCard(
+                skillsSecure: hero.skillsSecure, rightText: hero.rightText, notOnTrack: hero.notOnTrack,
+                notOnTrackLabel: hero.notOnTrackLabel
+            )
+        }
+        let rows = store.progressRows
+        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(store.studentsTitle).typeStyle(Tokens.headline).foregroundStyle(Tokens.text.color)
+                    .accessibilityAddTraits(.isHeader)
+                Spacer()
+                Menu {
+                    Picker("Sort by", selection: $store.sort) {
+                        ForEach(ProgressSort.allCases, id: \.self) { Text($0.title).tag($0) }
+                    }
+                } label: {
+                    Text(store.sort.title).typeStyle(Tokens.buttonSecondary).foregroundStyle(Tokens.accentText.color)
+                }
+                .accessibilityLabel("Sort by \(store.sort.title)")
+                .popover(isPresented: $sorting) { sortChoices }
+            }
+            .padding(.horizontal, Tokens.rowGapInner)
+            Card {
+                VStack(spacing: 0) {
+                    ForEach(rows) { row in
+                        StudentProgressRow(
+                            initials: row.initials, name: row.name, status: Self.kind(row.status),
+                            statusWord: row.status.title, line: row.line, percent: row.percentText
+                        ) { openStudent(row.id) }
+                            .rowDivider(row.id != rows.last?.id)
+                    }
+                }
+            }
+        }
+    }
+
+    /// The sort menu as a launch state draws it open (the system menu takes no injected tap).
+    private var sortChoices: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(ProgressSort.allCases, id: \.self) { sort in
+                Button {
+                    store.sort = sort
+                    sorting = false
+                } label: {
+                    HStack {
+                        Image(systemName: "checkmark").opacity(store.sort == sort ? 1 : 0).accessibilityHidden(true)
+                        Text(sort.title).typeStyle(Tokens.body)
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.vertical, Tokens.rowPaddingDense)
+                    .padding(.horizontal, Tokens.rowPaddingHorizontal)
+                    .contentShape(.rect)
+                }
+                .foregroundStyle(Tokens.text.color)
+            }
+        }
+        .presentationCompactAdaptation(.popover)
+    }
+
+    nonisolated static func kind(_ status: TrackStatus) -> TrackKind {
+        switch status {
+        case .notOnTrack: .notOnTrack
+        case .watch: .watch
+        case .onTrack: .onTrack
+        case .notKnown: .notKnown
         }
     }
 
@@ -123,6 +218,15 @@ public struct ReportsView: View {
         case .attendance: store.segment = .attendance
         case .export: exporting = true
         case .november: await store.next()
+        case .progress, .progressSort: store.segment = .progress
+        case .progressTerm:
+            store.segment = .progress
+            store.span = .term
+            await store.load()
+            await store.previous()
+        case .progressExport:
+            store.segment = .progress
+            exporting = true
         case nil: break
         }
     }

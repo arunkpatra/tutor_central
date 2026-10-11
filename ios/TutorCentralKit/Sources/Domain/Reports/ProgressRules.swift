@@ -66,7 +66,7 @@ public struct ProgressInput: Hashable, Sendable {
 }
 
 /// A row of Progress (P10-Reports-Progress) and of its CSV.
-public struct ProgressRow: Hashable, Sendable, Identifiable {
+public struct ProgressRow: Hashable, Sendable, Identifiable, Codable {
     public let id: UUID
     public let name: String
     public let initials: String
