@@ -39,3 +39,6 @@
 
 Commands: `bun check --only=db` (resets the local database, runs the tests, re-seeds);
 `cd supabase && bun test tests`.
+
+- Phase 13: the seed's figures must satisfy the app's rules they are meant to show (Hemanth's Below usual needs two earlier
+  marks); `name_plan_group` writes the group and its teach words, not the lines' skill ids.

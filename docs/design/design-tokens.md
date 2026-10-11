@@ -241,6 +241,12 @@ the symbol named in `components.md`.
 
 ## Numbers in code
 
+Phase 13: an exam's window is 14 days, and its split runs from the day the item came; the mock is the last meeting day
+two days or more before the exam when there are three days or more; at most two exam groups when other students
+remain, else three; three suggested messages a parent a week (a hand send does not count); the forward ask is at most
+600 characters; a mark is below usual more than ten points under the mean of two or more earlier marks in the subject;
+a gap report sends the twelve weakest skills, three days at most, notes of 300; a group's checks are three questions.
+
 Values the code needs that are not visual tokens: the "in N min" threshold for "next class" is 90 min before start to
 the end of the class; a task falls off Today one day after it is done; a toast with undo stays 8 s, and Undo on a
 fee written to the server reverses it with a second write (Phase 5: money is written at once, never held back);

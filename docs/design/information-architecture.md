@@ -1233,6 +1233,14 @@ marks with a mock's row; Riya with none).
 Phase 13 builds these states (`plan/phase-13-plan.md` "Launch states" has the full list with the 10.5, 10.4 and 10.2
 boards'): `school-reading`; `today-revision` (both); `student-marks` (both; Hemanth's rows, and Riya's empty section).
 
+**As built in Phase 13** (session 28): the launch states are `school-empty`, `school`, `school-calendar`, `school-add-menu`,
+`school-reading`, `school-confirm`, `school-confirm-edit`, `school-item`, `school-item-edit`, `school-item-delete`,
+`school-item-homework`, `school-item-holiday`, `school-ask`, `school-ask-failed` (who was asked not read: the list-could-not-
+load view, feedback.md's row), `school-test-tomorrow`, `school-last-days`, `today-revision`, `today-after-close` (To
+parents), `mock`, `mock-key`, `gap-report`, `student-marks` and `student-marks-empty`. `later-school` is retired (the tab's
+content is built). The figures follow the data: class 8's default mock is 40 marks in 60 minutes where the boards draw 25
+and 40; Hemanth has a class test before his unit tests so Below usual shows by the rule.
+
 What the boards settle:
 
 - **Reading** is the Phase 6 creating card in the items' place ("Reading what the school sent", Cancel, "Usually under a

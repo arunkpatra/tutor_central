@@ -23,6 +23,7 @@ screen, several as a polish slice, or not at all.
 
 | # | Seen | Screen | What is seen | Source |
 |---|---|---|---|---|
+| U36 | 2026-10-11 | #133 | The student's page has Marks after Checks: mocks and checked papers, Below usual, "No marks yet" (P13-Student-Marks, -Empty) |
 | U5 | 2026-10-08 | More | The rows are 56 pt high (SettingRow's minimum); P4-More draws them at 50 | Session 9, comparing with the board (PR #42) |
 | U8 | 2026-10-08 | Date pickers in a popover | Picking the day the calendar already shows leaves the popover open (tap outside to close); the system calendar starts the week on Sunday where the app's month starts on Monday | Session 9's hand run |
 | U10 | 2026-10-08 | Attendance mark | A slow or failing read shows nothing for up to 20 s (no spinner by the date), and "Everyone starts present…" stays beside the error line | Session 9's follow-up hand run |
@@ -45,8 +46,13 @@ screen, several as a polish slice, or not at all.
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U32 | 2026-10-09 | Pushed screens other than the AI and scan screens (Attendance History, a student's month, Schedule, Tasks, Classes, a class, a student, a student's fees, Payments, Reports, Account, Delete account, Pending changes) | Content scrolls under the status bar with no glass; U24 put it on the AI and scan screens only, the others have no board for it | Session 17 (Task 11's source check) |
 | U34 | 2026-10-10 | Students, the empty list (P10-Students-Empty) | Add a student and Scan paper register sit side by side (the Kit's empty state); the board stacks them at full width | Session 24 (Task 13) |
-| U36 | 2026-10-10 | A student's page, Marks | The record has no Marks section (the plan's decision 16 deferred it); P10-Student-Record draws it with Phase 14's Add from a photo, so Phase 13's board P13-Student-Marks draws the section as built this phase, with its empty row (row 23 of the canvas, approved 2026-10-11) | Session 24 (Task 24); moved to Phase 13 (the owner, 2026-10-10); `plan/phase-13-plan.md` Task 22 |
 | U40 | 2026-10-11 | A student's page, scrolled | Scrolled under the status bar, the parent's row shows through the time without the glass the other pushed screens draw | Session 26, hand run 7's screenshot |
+
+| U41 | 2026-10-11 | School, Paste a message | iOS asks "Allow Paste?" each time (the app reads the pasteboard); a PasteButton would not ask, but it changes what is seen (a board first) | Session 28, hand run 2 |
+| U42 | 2026-10-11 | A student's page, School's See all | Opens the School tab with every item, not the student's | Session 28, `plan/phase-13-plan.md`'s left-for-later |
+| U43 | 2026-10-11 | An exam's sheet | The window is 14 days for every exam; a per-exam window needs a field on the item's sheet (a board first) | `plan/phase-13-plan.md` decision 8 |
+| U44 | 2026-10-11 | An exam's page, Who | P10-School-Item draws a chevron on each student (to their page); the rows have none and do not open | Session 28, Task 18's pictures |
+| U45 | 2026-10-11 | The gap report, By skill; the last days' Marked | The real mock names a skill per question (20 rows), so By skill runs long and the weakest is a one-question skill ("Reading a balanced chemical equation 0 of 1"); asking the mock for the portions' skills would group them | Session 28, the cost run |
 
 ## Done
 

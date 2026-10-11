@@ -104,6 +104,14 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T6 | Today → a student's line → the homework sheet → Print → a real printer on the same Wi-Fi. | The printer is offered; the page prints on A4 with the questions and no key. Key → Print prints the answers as well. |
 | T7 | The same sheet → Use my own → Take a photo → a real printed or handwritten sheet. | The camera opens, the photo is taken in place of the made sheet ("Your sheet"); Share as PDF and Print carry the photo; Use the made sheet instead brings the made one back. |
 
+### Phase 13: School (no WhatsApp, no real camera in the simulator)
+
+| Id | Do | Expect |
+|---|---|---|
+| T8 | In WhatsApp, long-press a school's message (a test date and portions) → Forward → Share → Tutor Central. Open the app. | The School tab opens on "Check what was read" with the message in the well and the items read; Add keeps them under their week. |
+| T9 | In WhatsApp or Photos, share a photographed timetable or notice to Tutor Central. | The photo shows in the well while it is read; the items match the photo; after Add, the item's page shows the photo under What the school sent. |
+| T10 | Two days before an exam: the exam's page → Mark from a photo → a student whose parent agreed → Take photos of a real answered mock. | The marks suggested follow the paper; Save writes them; Back shows the student's score on the exam's page; Gap report opens with the last two days. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |

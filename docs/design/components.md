@@ -950,3 +950,13 @@ The texts:
 | Reading | "Reading what the school sent" · Cancel · "Usually under a minute. Tests, homework, notices and holidays are picked out for you to check." · Add (disabled) · "Each item read appears here for you to check. Nothing is kept until you tap Add." |
 | An exam group | "Group 1 · Science unit test 3" · "Class 8 Science · 3 students · the test in 9 days" · "Revise: Chemical reactions · part 1 of 3" · "Revision set 1 · Check 3 · Revision sheet 1" · "The mock · 25 marks · 40 minutes" |
 | Marks | "Maths unit test 3 · mock · Mathematics" · "Vidya Niketan · 14 Oct" · "26 of 40" · "No marks yet" · "Marks from mocks and checked papers appear here." |
+
+**As built in Phase 13** (session 28): 10.5's item card, School row, Preparation row, source well and kind chip are
+DesignSystem's; the calendar's dots sit in the caller's card (no frame of its own); the empty School card stacks its two
+actions. Preparation's rows run from today to the day before the test (the hero gives the test's day); the Test tomorrow row
+ends the section from the day before. The last days' mock row is the AI tool row with the Ready chip; whose paper is the
+system's confirmation dialog on the exam's page and the artefact screens' glass menu on the mock. 10.4's mock is Paper and
+Key with the result footer (Make it again, Share as PDF, Mark from a photo); the gap report's day lines are Preparation rows
+without a mark; after Use this plan the button reads "Plan in use" (feedback.md's success row). 10.2's Marks row is the
+adaptive row with the score in `numberRow` and the Below usual chip under it. 10.3's To parents rows are `ParentSendRow`s,
+the first Send primary.

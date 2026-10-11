@@ -49,3 +49,7 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
 Commands: `bun run dev` (local on :3000, needs `api/.env.local`, and `SUPABASE_URL=… SUPABASE_ANON_KEY=…` from `supabase
 status -o env` on the command line); `bun run check` (tsc and tests);
 `bun check --only=api`; `gh workflow run deploy`.
+
+- Phase 13: the models overrun an output schema's string limits unless the prompt states them; state each limit in the
+  system words and leave the schema a little room (the gap report's day lines: 160 asked, 200 allowed). A student's work
+  goes to a model only with `studentId` and their consent (check-paper with a mock's key, gap_report, test_tomorrow).

@@ -144,6 +144,13 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - The figures are drawn in the Artefacts feature: DesignSystem does not import Domain (`FigureSpec`).
 - Hand runs: Postgres' `current_date` is UTC, so query a plan by the IST day; `bun shots` leaves the app on a launch state,
   so relaunch it without one before driving it against the local stack.
+- Phase 13: an exam's split starts at `ExamPreparation.start` (the day the item came), never today, in the maker and the page
+  alike. Two plans share one mock (`PlanMaker.sharedMock`, the `MockRuns` actor), and a plan read takes the artefacts its
+  lines link that another plan kept. A screen that sits under a write (an exam's page under Check a paper) reads itself
+  again from a shell counter (`ShellState.recordChanged`): `onAppear` does not fire for a page that never left the stack.
+- `bun check --only=db` resets the local database, which ends the app's session (the API answers 401): sign out and in.
+- Request bodies keep within the API's schema limits on the app side (`MakeGapBody.weakest`): a refusal reads as a
+  connection fault to the tutor.
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

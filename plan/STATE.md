@@ -3,15 +3,14 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-11, session 27 (Phase 13's plan, on Fable 5.1). **Session 27:** `plan/phase-13-plan.md` written
-(28 tasks, ten pull requests, 32 decisions, the review focus, the hand runs and the cost run); the owner ruled the two Phase 12
-leftovers in ("Agreed. proceed": an unnamed group named at the next open, a new batch's first checks from the named topic, PR
-10) and two of the ten deferred minors fold into their tasks; three Phase 13 boards drawn on row 23 of the canvas
-(P13-School-Reading, P13-Today-Revision and its light twin, P13-Student-Marks with its light twin and the empty row) and
-mirrored into `docs/design/`; `resume/026-phase-13-build.md` written. The owner approved the plan and the boards the same day ("The plan is approved; the boards are approved too"). Session 26 before it: Phase 12 built (migrations 0019
-and 0020, PRs #110 to #119, hand runs #120, the cost ₹4.57 a batch, TestFlight 1.0.0 (21) then (22)); #122 the AI forms by
-class level, TestFlight 1.0.0 (23). The owner's pushback rule is `docs/working/pushback.md`.
-**Next:** Phase 13's build on Opus 5.5 from `resume/026-phase-13-build.md` (the plan and the three boards approved 2026-10-11).
+**Last updated:** 2026-10-11, session 28 (Phase 13 built, on Opus 5.5). **Session 28:** Phase 13 built from
+`plan/phase-13-plan.md`: migrations 0021 and 0022; PRs #123 to #126 and #128 to #134 (#127 the compiler's warnings, the
+owner's ask); hand runs 1 to 15 against the local stack, eleven defects found and fixed with tests that failed first; the
+cost run on the real models with the owner's yes (mock ₹3.94, marking ₹8.18, gap report ₹0.43: about ₹30 an exam for a
+class of three); a fresh review on Fable 5.1 (no Critical, four Important fixed in #134, five minors deferred); deploy run
+38123899264; TestFlight 1.0.0 (24). The owner approved real AI calls in testing without asking (be judicious). "As built" in
+`phase-13-school.md`; the record and ledger in `plan/sessions/028/`.
+**Next:** the owner tries 1.0.0 (24) (T8: the share from WhatsApp); Phase 14 (parents) needs its plan.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -33,15 +32,16 @@ class level, TestFlight 1.0.0 (23). The owner's pushback rule is `docs/working/p
 | 10 V2 design and foundation | Done (sessions 21 and 22, 2026-10-10) | Part A: 96 boards in rows 14 to 20 (`docs/design/mockups/P10-*`); Part B: PRs #90 to #96; "As built" in `phase-10-v2-design-and-foundation.md` |
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
-| 13 School | Plan and boards approved by the owner (2026-10-11, session 27); the build is next | `phase-13-school.md`; `phase-13-plan.md`; resume 026 for the build |
+| 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
 | 14 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-14-parents.md` to `phase-16-release.md` |
 
 ## In flight
 
-Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are). A student link while
+Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are); Phase 13's hand
+runs are in `plan/sessions/028/ledger.md`. A student link while
 another student's page was open showed the first student: fixed in #121 (every pushed screen takes its route as its
 identity). The remote holds `main`,
-`pr-shots`, and the merged `phase-10/*`, `phase-11/*`, `phase-12/*` and `fix/*` branches, the owner's to delete.
+`pr-shots`, and the merged `phase-10/*` to `phase-13/*` and `fix/*` branches, the owner's to delete.
 
 ## Production
 
@@ -50,9 +50,10 @@ identity). The remote holds `main`,
   `A @ 216.198.79.1`, `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and
   `api.tutorcentral.in` (a CNAME to Vercel, attached to `tutor-central-api`) untouched. `APP_STORE_URL` unset (Home shows the
   email call to action) until the app is in the App Store.
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0020: 0009 to 0013 by deploy run
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0022: 0009 to 0013 by deploy run
   38042680418, 0014 to 0016 by run 38046925061, 0017 by run 38052646487 (after #97), 0018 by run 38062264863 (after #108),
-  0019 by run 38067327168 (after #110), 0020 by run 38075931282 (after #117); nothing pending after. The
+  0019 by run 38067327168 (after #110), 0020 by run 38075931282 (after #117), 0021 by run 38110074045 (after #124), 0022 by
+  run 38123899264 (after #134); nothing pending after. The
   `photos` bucket (private, JPEG, 3 MB, add-only) is made by 0011. Migrations go up only through `deploy.yml`'s migrate job,
   before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
 - **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
@@ -60,9 +61,8 @@ identity). The remote holds `main`,
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `6a23563` (deploy run 38075931282,
-  2026-10-11: `/plan` and `/make` for sheet, worked example, figure, brief, check and placement live; mock and the personal
-  kinds answer 501); nothing pending in the database.
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `cfddfc5` (deploy run 38123899264, 2026-10-11: Phase 13's `/ai/parse-school`, `/ai/make` mock, gap report and
+  test tomorrow, check-paper with a mock's key and the student's consent); nothing pending in the database.
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
   `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.
@@ -72,7 +72,8 @@ identity). The remote holds `main`,
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (23) by run 38105466595 (the AI forms by class level, #122) on the internal group; 1.0.0 (22) by
+  run number. 1.0.0 (24) by run 38124050257 (Phase 13: the School tab, exam preparation, the mock, marks, the gap report, the
+  messages to parents) on the internal group; 1.0.0 (23) by run 38105466595 (the AI forms by class level, #122) on the internal group; 1.0.0 (22) by
   run 38100960937 (Phase 12 with the student-link fix #121) on the owner's iPhone, fine;
   1.0.0 (21) by run 38099197755 (Phase 12: the plan on Today, the material, the close from the plan) on the internal group;
   1.0.0 (20) by run 38062450111 (Phase 11: the five tabs, the V2 student, consent, the textbook, the placement,
@@ -83,6 +84,12 @@ identity). The remote holds `main`,
 
 ## Open items
 
+- **Phase 13 review minors (deferred):** the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`; and,
+  noted: the API answers a lost Supabase connection as 401 "sign in again" (the verifier's rule since V1); a 501's words
+  reach the screen through `APIFailure` (seen once against a stale local API).
+- **CI warnings kept (the owner's ask, #127):** `VNDetectBarcodesRequestRevision1` (QRDecoder's deliberate fallback for
+  the simulator and CI), the AuthorizationController underscored-module note (Apple's SDK), and the runner's Homebrew lines.
+- **The cost of marking:** ₹8.18 a paper on Opus (two pages) is most of an exam's cost; D64's price reads it.
 - **Phase 12 review minors (deferred):** eight of the ten `Final: minor (deferred)` lines of `plan/sessions/026/ledger.md`
   (two fold into Phase 13's tasks: a check's skill matched by name first, the 200-character line cut); the two rulings left
   open (an unnamed group, a new batch's first checks) are Phase 13's PR 10 (the owner, 2026-10-11).
@@ -104,14 +111,14 @@ identity). The remote holds `main`,
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
-- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34, U36 (Phase 13), U40
-  open; U1 to U4, U6, U7, U9, U12, U16, U24, U31, U33, U35, U37 to U39 done. Rows for screens V2 rebuilds are taken or closed as Phase 11 on touch those screens.
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U11, U13 to U15, U17 to U23, U25 to U30, U32, U34, U40 to U45
+  open; U1 to U4, U6, U7, U9, U12, U16, U24, U31, U33, U35 to U39 done. Rows for screens V2 rebuilds are taken or closed as Phase 11 on touch those screens.
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
   label moves to Ubuntu 26 from 19 October 2026.
 - The four brew tools are unpinned in CI (Homebrew cannot pin a formula; the toolchain salt makes drift loud).
-- **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9; T1 to T3 for Phase 11 and T4 to T7 for Phase 12
-  wait for the tester); D1 to D8 were Phase 9's and now run on V2 before
+- **Device tests:** `docs/testing/device-tests.md` (S1 passed on build 9; T1 to T3 for Phase 11 and T4 to T7 for Phase 12, T8 to T10
+  for Phase 13 wait for the tester); D1 to D8 were Phase 9's and now run on V2 before
   Phase 15's round.
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.
