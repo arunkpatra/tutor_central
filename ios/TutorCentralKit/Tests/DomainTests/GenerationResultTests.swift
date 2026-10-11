@@ -39,9 +39,11 @@ struct GenerationResultTests {
             result: result
         )
         #expect(generation.title(studentName: { _ in nil }) == "Quadratic equations")
-        let line = generation.line(className: { $0 == Self.maths ? "Class 10 Maths" : nil }, calendar: DayHeading.india)
-        #expect(line == "Question paper · Class 10 Maths · Tue 6 Oct")
         let seventh = try #require(Day(year: 2026, month: 10, day: 7))
+        let line = generation.line(
+            className: { $0 == Self.maths ? "Class 10 Maths" : nil }, today: seventh, calendar: DayHeading.india
+        )
+        #expect(line == "Question paper · Class 10 Maths · Tue 6 Oct, 18:32")
         #expect(generation.heroLine(today: seventh, calendar: DayHeading.india)
             == "3 questions · 6 marks · Medium · created Tue 6 Oct, 18:32")
         let sixth = try #require(Day(year: 2026, month: 10, day: 6))
@@ -53,12 +55,13 @@ struct GenerationResultTests {
             result: .progressNote(NoteResult(note: "n"))
         )
         #expect(note.title(studentName: { _ in "Hemanth Reddy" }) == "Hemanth Reddy")
-        #expect(note.line(className: { _ in "Class 10 Maths" }, calendar: DayHeading.india)
-            == "Progress note · Class 10 Maths · Tue 6 Oct")
+        #expect(note.line(className: { _ in "Class 10 Maths" }, today: sixth, calendar: DayHeading.india)
+            == "Progress note · Class 10 Maths · today, 18:32")
         let orphan = Generation(
             id: UUID(), kind: .homework, createdAt: Self.sixOct, request: nil,
             result: .homework(QuestionSetResult(title: "Fractions", instructions: nil, questions: []))
         )
-        #expect(orphan.line(className: { _ in nil }, calendar: DayHeading.india) == "Homework · No class · Tue 6 Oct")
+        #expect(orphan.line(className: { _ in nil }, today: seventh, calendar: DayHeading.india)
+            == "Homework · No class · Tue 6 Oct, 18:32")
     }
 }

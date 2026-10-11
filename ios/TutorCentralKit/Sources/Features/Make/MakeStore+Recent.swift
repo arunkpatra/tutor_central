@@ -8,7 +8,9 @@ public extension MakeStore {
         let results = ai.history.map { generation in
             Row(
                 symbol: generation.kind.symbol, title: generation.title(studentName: ai.studentName),
-                line: generation.line(className: ai.className, calendar: calendar),
+                line: generation.line(
+                    className: ai.className, today: Day(now(), calendar: calendar), calendar: calendar
+                ),
                 opens: .generation(generation.id), at: generation.createdAt
             )
         }

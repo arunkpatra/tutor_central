@@ -33,11 +33,12 @@ import Testing
         #expect(store.historyLoaded && store.history.count == 6 && store.recent.count == 3)
         #expect(store.history.first?.title(studentName: store.studentName) == "Quadratic equations")
         #expect(store.history[1].title(studentName: store.studentName) == "Hemanth Reddy", "the note names its student")
-        #expect(store.history.first?.line(className: store.className, calendar: DayHeading.india)
-            == "Question paper · Class 10 Maths · Tue 6 Oct")
+        let today = Day(Self.now, calendar: DayHeading.india)
+        #expect(store.history.first?.line(className: store.className, today: today, calendar: DayHeading.india)
+            == "Question paper · Class 10 Maths · Tue 6 Oct, 18:32")
         #expect(
-            store.history[1].line(className: store.className, calendar: DayHeading.india)
-                == "Progress note · Class 10 Maths · Mon 5 Oct",
+            store.history[1].line(className: store.className, today: today, calendar: DayHeading.india)
+                == "Progress note · Class 10 Maths · Mon 5 Oct, 19:05",
             "a note's line names its student's class"
         )
     }

@@ -94,6 +94,8 @@ import Testing
         #expect(store.rows[2].line == "Brief · today, 18:28")
         #expect(store.rows[0].symbol == "doc.text" && store.rows[0].opens == .artefact(store.made[0].id))
         #expect(store.rows[3].opens == .generation(FakeAIHistoryRepository.quadraticID))
+        // Hand run 12: V1's results read the day and time as Make's rows do (P10-Make), not "Mon 12 Oct" for today.
+        #expect(store.rows[3].line == "Question paper · Class 10 Maths · Tue 6 Oct, 18:32")
     }
 
     @Test func makeItAgainFromRecentReplacesTheRowAndKeepsTheRecord() async throws {
