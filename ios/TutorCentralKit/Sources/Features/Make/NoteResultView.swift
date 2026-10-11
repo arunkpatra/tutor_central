@@ -93,7 +93,7 @@ struct NoteResultView: View {
         .safeAreaInset(edge: .bottom) { footer }
         .sheet(isPresented: $sending) { sendSheet }
         .sheet(isPresented: $consent) {
-            ConsentSheet(centreName: store.workspace.centre.name) {
+            ConsentSheet(kind: .note, centreName: store.workspace.centre.name) {
                 let agreed = await store.recordConsent()
                 if agreed {
                     consent = false
@@ -137,7 +137,7 @@ struct NoteResultView: View {
             MessageSheet(
                 title: "Send the note", name: message.name, parentLine: message.parentLine, text: message.text,
                 note: message.url == nil ? "Add the parent's number first." : sendNote(message.firstName),
-                canOpen: message.url != nil
+                canOpen: message.url != nil, fraction: MessageSheet.underNavRow
             ) {
                 await store.openNote(generation, text: text)
                 sending = false

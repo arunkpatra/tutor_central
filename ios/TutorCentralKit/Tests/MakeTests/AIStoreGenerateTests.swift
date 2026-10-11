@@ -119,3 +119,13 @@ import Testing
         #expect(form.classID == nil && form.classLevel != nil && form.subject.isEmpty && form.topic.isEmpty)
     }
 }
+
+/// U21: the failure row's title fits one line as the board's "Couldn't create the paper." does.
+struct FailedTitleTests {
+    @Test func aFailedHomeworkTitleFitsTheRow() {
+        let paper = AIWords.failedTitle(.paper).count
+        #expect(AIWords.failedTitle(.homework).count <= paper)
+        #expect(AIWords.failedTitle(.worksheet).count <= paper)
+        #expect(AIWords.failedTitle(.homework) == "Couldn't create it.")
+    }
+}
