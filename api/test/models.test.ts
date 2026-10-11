@@ -48,3 +48,10 @@ test("the prices are the three models' and the rupee is 85", () => {
   expect(table.rupeesPerDollar).toBe(85);
   expect(Object.keys(table.models)).toEqual(["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
 });
+
+test("applying the overrides starts from the table, so a second call does not keep the first one's", () => {
+  applyModelOverrides({ AI_MODEL_NOTE: "claude-sonnet-5-5" });
+  applyModelOverrides({ AI_MODEL_READ_MARKS: "claude-opus-5-5" });
+  expect(modelFor("note")).toBe("claude-haiku-5-5");
+  expect(modelFor("read_marks")).toBe("claude-opus-5-5");
+});

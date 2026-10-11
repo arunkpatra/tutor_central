@@ -153,7 +153,8 @@ const Day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const Subject = z.string().min(1).max(80);
 const Name = z.string().min(1).max(200);
 const Skills = z.array(Name);
-const Student = { studentId: z.guid(), studentName: z.string().min(1).max(80), tutorName: z.string().min(1).max(80) };
+/** A named student. No tutor's name: the app adds the signature (MessageSignature) and no prompt reads it. */
+const Student = { studentId: z.guid(), studentName: z.string().min(1).max(80) };
 const V2 = { ...CentreInput.shape };
 /** Who a parent's message is for and in what words (Phase 14's note, can-now-do and not-on-track message). */
 const Parent = { parentName: z.string().max(80).optional(), centreName: z.string().max(120), language: Language, classLevel: ClassLevel };

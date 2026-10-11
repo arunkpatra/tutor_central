@@ -137,6 +137,15 @@ test("the verifier tells a 4xx (sign in again) from a network failure or a 5xx (
   expect(await answering({ data: { user: { id: "u1" } }, error: null })("t")).toEqual({ id: "u1" });
 });
 
+test("a rate limit, a timeout or a proxy's page is not the token's fault: unreachable, never 'sign in again' (D68)", async () => {
+  const answering = (answer: unknown) => makeVerify(() => ({ auth: { getUser: async () => answer } }) as never);
+  expect(await answering({ data: { user: null }, error: { status: 429, message: "rate limited" } })("t")).toBe("unreachable");
+  expect(await answering({ data: { user: null }, error: { status: 408, message: "timeout" } })("t")).toBe("unreachable");
+  // supabase-js wraps a non-JSON body (a proxy's HTML 4xx) as AuthRetryableFetchError with that status.
+  const proxy = { status: 404, message: "Not Found", name: "AuthRetryableFetchError" };
+  expect(await answering({ data: { user: null }, error: proxy })("t")).toBe("unreachable");
+});
+
 test("a named student's missing consent answers in the student's words, the centre's missing consent in the centre's (D68)", async () => {
   const MOCK_ID = "11111111-1111-1111-1111-111111111111";
   const generations = { [MOCK_ID]: { kind: "mock" as const, output: JSON.stringify(SAMPLE.mock) } };

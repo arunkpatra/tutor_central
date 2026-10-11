@@ -30,7 +30,7 @@ export function modelFor(kind: AIKind, classLevel?: ClassLevel): Model {
 /** Applies the environment's AI_MODEL_<WORK_TYPE> overrides to the table; throws naming the variable on a work type or a
  *  model the table does not know. Called once at start. */
 export function applyModelOverrides(env: Record<string, string | undefined>): void {
-  const next = { ...work };
+  const next = { ...DEFAULTS };
   for (const [name, value] of Object.entries(env)) {
     if (!name.startsWith("AI_MODEL_") || value === undefined) continue;
     const type = name.slice("AI_MODEL_".length).toLowerCase();
