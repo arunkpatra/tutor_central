@@ -260,4 +260,25 @@ import Testing
         #expect(named.allSatisfy { !$0.skill.isEmpty })
         #expect(again.groups.filter { unnamed.contains($0.id) }.allSatisfy { $0.title.contains(" · ") })
     }
+
+    /// Review Important 2: a plan made before the whole batch went on holiday is not shown again when reopened.
+    @Test func aBatchWhollyOnHolidayStaysWithoutAPlanWhenReopened() async throws {
+        var vidya = classEightHoliday(on: FakeSchoolItemsRepository.day(30))
+        vidya.audience = .school(FakeSchoolsRepository.vidya.id)
+        // Sahil's own holiday, an item of its own (the PTM's row made a holiday).
+        var sahil = try #require(FakeSchoolItemsRepository.boardItems.first { $0.id == FakeSchoolItemsRepository.ptm })
+        sahil.kind = .holiday
+        sahil.audience = .student(FakeStudentsRepository.sahil)
+        sahil.date = FakeSchoolItemsRepository.day(30)
+        let plans = FakePlansRepository()
+        let items = FakeSchoolItemsRepository(items: [vidya, sahil])
+        let first = await store(plans: plans, items: items)
+        #expect(first.record != nil)
+        vidya.date = PlanTest.wednesday
+        sahil.date = PlanTest.wednesday
+        _ = try await items.update(vidya)
+        _ = try await items.update(sahil)
+        let again = await store(plans: plans, items: items)
+        #expect(again.state == .holiday && again.groups.isEmpty)
+    }
 }

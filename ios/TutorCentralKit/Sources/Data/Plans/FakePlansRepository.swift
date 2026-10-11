@@ -179,7 +179,8 @@ import Foundation
 
     private func withArtefacts(_ plan: PlanRecord) -> PlanRecord {
         var record = plan
-        record.artefacts = artefacts.filter { $0.planID == plan.id }
+        let linked = Set(plan.items.compactMap(\.artefactID))
+        record.artefacts = artefacts.filter { $0.planID == plan.id || linked.contains($0.id) }
         return record.keepingLinkedArtefacts()
     }
 

@@ -76,7 +76,10 @@ struct MakeGapBody: Encodable {
         let share = { (tally: GapReportContent.Tally) in Double(tally.right) / Double(max(tally.of, 1)) }
         let kept = Set(
             tallies.enumerated()
-                .sorted { share($0.element) != share($1.element) ? share($0.element) < share($1.element) : $0.offset < $1.offset }
+                .sorted {
+                    share($0.element) != share($1.element) ? share($0.element) < share($1.element) : $0.offset < $1
+                        .offset
+                }
                 .prefix(maxSkills).map(\.offset)
         )
         return tallies.enumerated().filter { kept.contains($0.offset) }.map { _, tally in
