@@ -370,6 +370,8 @@ extension RootView {
             case .kitPatterns: .patterns
             case .kitDialog: .dialog
             case .kitPhase7: .phase7
+            case .kitPhase10: .phase10
+            case .kitPhase10Figures: .phase10Figures
             default: nil
             }
         }

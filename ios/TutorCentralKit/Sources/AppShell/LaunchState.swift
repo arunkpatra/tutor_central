@@ -10,7 +10,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case kitSurfaces = "kit-surfaces"
     case kitPatterns = "kit-patterns"
     case kitDialog = "kit-dialog"
-    case kitPhase7 = "kit-phase7"
+    case kitPhase7 = "kit-phase7", kitPhase10 = "kit-phase10", kitPhase10Figures = "kit-phase10-figures"
     case signin
     case signinEmail = "signin-email"
     case signinCode = "signin-code"

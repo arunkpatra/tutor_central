@@ -12,12 +12,17 @@
             case patterns
             case dialog
             case phase7
+            case phase10
+            case phase10Figures
         }
 
         let startAt: Section
+        /// The figure templates, drawn by Artefacts and handed in by AppShell (DesignSystem does not import Domain).
+        let figures: (() -> AnyView)?
 
-        public init(startAt: Section = .controls) {
+        public init(startAt: Section = .controls, figures: (() -> AnyView)? = nil) {
             self.startAt = startAt
+            self.figures = figures
         }
 
         public var body: some View {
@@ -27,6 +32,7 @@
                         KitControls()
                         KitSurfaces()
                         KitPhase7()
+                        KitPhase10(figures: figures)
                     }
                     .padding(.horizontal, Tokens.pageSide)
                     .padding(.top, Tokens.heroInset)
