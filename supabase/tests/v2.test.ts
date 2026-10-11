@@ -775,6 +775,16 @@ test("a student's next step is one of five, or null for the plan's own", async (
   expect((await a.from("students").update({ next_step: "shout" }).eq("id", st.id)).error?.message).toContain("check");
 });
 
+test("a changed status clears the tutor's next step; the same status or a chosen step keeps it", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Step cleared", track_status: "not_on_track", next_step: "step_back" }).select("id").single()).data!;
+  await a.from("students").update({ track_status: "not_on_track", name: "Step kept" }).eq("id", st.id);
+  expect((await a.from("students").select("next_step").eq("id", st.id).single()).data).toEqual({ next_step: "step_back" });
+  await a.from("students").update({ track_status: "watch" }).eq("id", st.id);
+  expect((await a.from("students").select("next_step").eq("id", st.id).single()).data).toEqual({ next_step: null });
+  await a.from("students").update({ track_status: "not_on_track", next_step: "leave" }).eq("id", st.id);
+  expect((await a.from("students").select("next_step").eq("id", st.id).single()).data).toEqual({ next_step: "leave" });
+});
+
 test("an exam's window is 3 to 60 days, or null for 14", async () => {
   const exam = (await a.from("school_items").insert({ centre_id: centre, kind: "exam", title: "Window test", subject: "Science", date: "2026-10-16" }).select("id, window_days").single()).data!;
   expect(exam.window_days).toBeNull();

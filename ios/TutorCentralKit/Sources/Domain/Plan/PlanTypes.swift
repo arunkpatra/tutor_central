@@ -111,12 +111,9 @@ public struct PlanLine: Hashable, Sendable, Codable {
     public let words: String
     /// A check line whose questions are the student's own (plan decision 5).
     public let personalChecks: Bool
-    /// The line under a not-on-track student's teach line on Today ("Since Fri 9 Oct · tell Ramesh after the class").
-    public let caption: String?
 
     public init(
-        studentID: UUID?, groupNo: Int, kind: PlanLineKind, skillID: UUID?, words: String, personalChecks: Bool = false,
-        caption: String? = nil
+        studentID: UUID?, groupNo: Int, kind: PlanLineKind, skillID: UUID?, words: String, personalChecks: Bool = false
     ) {
         self.studentID = studentID
         self.groupNo = groupNo
@@ -124,21 +121,20 @@ public struct PlanLine: Hashable, Sendable, Codable {
         self.skillID = skillID
         self.words = words
         self.personalChecks = personalChecks
-        self.caption = caption
     }
 
     /// The line with a student's own skill (a group /ai/plan named, once their chapter and skill are written).
     public func with(skillID: UUID) -> PlanLine {
         PlanLine(
             studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
-            personalChecks: personalChecks, caption: caption
+            personalChecks: personalChecks
         )
     }
 
     func with(words: String) -> PlanLine {
         PlanLine(
             studentID: studentID, groupNo: groupNo, kind: kind, skillID: skillID, words: words,
-            personalChecks: personalChecks, caption: caption
+            personalChecks: personalChecks
         )
     }
 }

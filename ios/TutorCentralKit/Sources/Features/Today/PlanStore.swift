@@ -7,6 +7,8 @@ import Observation
 /// Where a plan line leads: its artefact's screen (AppShell's route).
 public enum PlanOpen: Hashable, Sendable {
     case artefact(UUID)
+    /// A not-on-track caption: the student's page.
+    case student(UUID)
 }
 
 /// A group's card (P10-Today-Plan): the head with its marks, then a line per student.
@@ -31,6 +33,8 @@ public struct PlanLineModel: Identifiable, Hashable, Sendable {
     public let rest: [LineBit]
     public let items: [PlanItem]
     public let groupNo: Int
+    /// "Since Fri 9 Oct · tell Ramesh after the class" (P10-Today-NotOnTrack): opens the student's page.
+    public var caption: String?
 }
 
 /// The brief's row between the groups (the Phase 6 tool row).
@@ -68,6 +72,10 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     public var message: String?
     /// Whether the network is there (AppShell's connectivity); a test sets it.
     @ObservationIgnored public var online: () async -> Bool = { true }
+    /// The parents' log (AppShell's): who was told they are not on track, for the lines' captions.
+    @ObservationIgnored public var messages: (any MessageLogRepository)?
+    /// The members told since their status came; read with the plan.
+    @ObservationIgnored var told: Set<UUID> = []
     let workspace: Workspace
     let register: any Register
     let plans: any PlansRepository
@@ -138,7 +146,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
         // A run still making the plan keeps going: a second open (a return to the app, a pull) makes nothing twice.
         guard run == nil else { return }
-        await readExamDates()
+        await readAround()
         if record == nil, let copy = cache?.load(classID: classID, date: today) {
             show(.made(copy.value))
         }
@@ -196,7 +204,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             return
         }
         guard await !maker.closed(classID: classID, date: today, centre: centre) else { return }
-        await readExamDates()
+        await readAround()
         guard await !wholeBatchOnHoliday(classroom) else {
             generation += 1
             run?.cancel()
@@ -205,6 +213,21 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             return
         }
         await make(choices: nil)
+    }
+
+    /// A not-on-track message sent: the captions read again, the plan as it is.
+    public func readCaptions() async {
+        await readTold()
+        if let record {
+            groups = cards(record)
+        }
+    }
+
+    /// The exams' dates and who was told, read together: offline each takes a while to fail.
+    private func readAround() async {
+        async let exams: Void = readExamDates()
+        async let told: Void = readTold()
+        _ = await (exams, told)
     }
 
     private func readExamDates() async {

@@ -61,6 +61,7 @@ extension RootView {
         case .note, .noteSend, .noteWriting: [.note(FakeStudentsRepository.dev, sunday)]
         case .noteCanDo: [.note(FakeStudentsRepository.sahil, sunday)]
         case .studentMessages: [.student(FakeStudentsRepository.dev), .studentMessages(FakeStudentsRepository.dev)]
+        case .studentNotOnTrack, .studentNextStep, .studentTellParent: [.student(FakeStudentsRepository.dev)]
         default: nil
         }
     }

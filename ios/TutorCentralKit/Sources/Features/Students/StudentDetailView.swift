@@ -15,6 +15,9 @@ public enum StudentDetailBoardState: Sendable {
     /// The consent ask's sheet (P10-Consent-Ask); the Parent agreed sheet (P10-Consent-Record).
     case consentAsk
     case consentRecord
+    /// Phase 14: the next-step sheet (P10-NextStep); the message to the parent (P10-NotOnTrack-Message).
+    case nextStep
+    case tellParent
 }
 
 /// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent with
@@ -37,6 +40,11 @@ public struct StudentDetailView: View {
     @State var asking = false
     @State var addingChapter: AddingChapter?
     @State var recordingConsent = false
+    /// The next-step sheet and the message to the parent (Phase 14).
+    @State var choosingStep = false
+    @State var tellingParent: NotOnTrackStore?
+    /// Builds the message to the parent's store (AppShell's: the AI, the log, the connection).
+    let makeTellParent: ((UUID) -> NotOnTrackStore)?
     @State var topInset: CGFloat = 0
     @Environment(\.dismiss) var dismiss
 
@@ -47,9 +55,11 @@ public struct StudentDetailView: View {
         navigation: StudentsNavigation,
         boardState: StudentDetailBoardState? = nil,
         onMissing: @escaping () -> Void,
-        onMessage: @escaping (String) -> Void = { _ in }
+        onMessage: @escaping (String) -> Void = { _ in },
+        makeTellParent: ((UUID) -> NotOnTrackStore)? = nil
     ) {
         self.onMessage = onMessage
+        self.makeTellParent = makeTellParent
         _store = State(initialValue: store)
         self.register = register
         self.actions = actions
@@ -74,11 +84,7 @@ public struct StudentDetailView: View {
                     if let line = store.archivedLine {
                         Banner(symbol: "archivebox", text: line)
                     }
-                    if let tracking = store.tracking {
-                        TrackingSection(lines: tracking, firstName: student.firstName) {
-                            navigation.openPlacement(student.id)
-                        }
-                    }
+                    tracking(student)
                     ParentCard(student: student, call: store.callURL, whatsApp: store.whatsAppURL, addContact: edit)
                     if !consentAgreed {
                         consentSection
@@ -170,6 +176,10 @@ public struct StudentDetailView: View {
                 Task { await store.loadRecord() }
             }
         }
+        .sheet(isPresented: $choosingStep) { nextStepSheet }
+        .sheet(item: $tellingParent, onDismiss: { Task { await store.loadRecord() } }, content: { tell in
+            TellParentSheet(store: tell) { tellingParent = nil }
+        })
         .sheet(isPresented: $recordingConsent) {
             ConsentRecordSheet(store: store.consent) { recordingConsent = false }
         }
@@ -278,11 +288,6 @@ public struct StudentDetailView: View {
         editing = register.form(.edit(student))
     }
 
-    private func archive() {
-        confirming = nil
-        Task { await store.archive() }
-    }
-
     private func delete() {
         deleting = true
         Task {
@@ -309,6 +314,11 @@ extension StudentDetailView {
     /// This week's quiet Today, when the batch meets today (U35).
     var openToday: (() -> Void)? {
         store.todaysBatch.map { batch in { actions.openToday(batch) } }
+    }
+
+    func archive() {
+        confirming = nil
+        Task { await store.archive() }
     }
 
     func setHomework(_ id: UUID, _ status: HomeworkStatus) {

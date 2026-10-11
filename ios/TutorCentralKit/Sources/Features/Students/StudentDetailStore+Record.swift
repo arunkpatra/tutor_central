@@ -13,6 +13,8 @@ public extension StudentDetailStore {
         public let next: String
         /// Place <name> on the card: not known yet and something to place on.
         public let placeAction: Bool
+        /// Change on the card (Phase 14): the next step can be chosen while the student is to watch or not on track.
+        public let canChange: Bool
     }
 
     struct WeekRow: Identifiable, Hashable, Sendable {
@@ -107,12 +109,16 @@ public extension StudentDetailStore {
         guard let student else { return nil }
         let current = TrackingRules.currentSkill(skills: skills, chapters: chapters)
         let since = student.trackSince.map { "since \(Day($0, calendar: DayHeading.india).shortWeekdayText)" }
+        let changes = [.watch, .notOnTrack].contains(student.trackStatus)
+        let before = current.flatMap { PlanRules.skillBefore($0, chapters: chapters, skills: skills) }
         return TrackingLines(
             status: student.trackStatus,
             since: student.trackStatus == .notKnown ? nil : since,
             reasons: reasons(student),
-            next: TrackingRules.nextStep(student.trackStatus, current: current),
-            placeAction: student.trackStatus == .notKnown && !chapters.isEmpty
+            next: changes ? student.effectiveStep.nextLine(skill: current?.name, before: before?.name)
+                : TrackingRules.nextStep(student.trackStatus, current: current),
+            placeAction: student.trackStatus == .notKnown && !chapters.isEmpty,
+            canChange: changes
         )
     }
 
