@@ -43,6 +43,10 @@ public struct StudentDetailView: View {
     /// The next-step sheet and the message to the parent (Phase 14).
     @State var choosingStep = false
     @State var tellingParent: NotOnTrackStore?
+    /// Marks' Add from a photo: the camera or Photos, then the reading screen.
+    @State var addingMarks = false
+    /// The shell's count of record writes elsewhere (marks saved or undone): the record read again.
+    let recordChanged: Int
     /// Builds the message to the parent's store (AppShell's: the AI, the log, the connection).
     let makeTellParent: ((UUID) -> NotOnTrackStore)?
     @State var topInset: CGFloat = 0
@@ -56,8 +60,10 @@ public struct StudentDetailView: View {
         boardState: StudentDetailBoardState? = nil,
         onMissing: @escaping () -> Void,
         onMessage: @escaping (String) -> Void = { _ in },
-        makeTellParent: ((UUID) -> NotOnTrackStore)? = nil
+        makeTellParent: ((UUID) -> NotOnTrackStore)? = nil,
+        recordChanged: Int = 0
     ) {
+        self.recordChanged = recordChanged
         self.onMessage = onMessage
         self.makeTellParent = makeTellParent
         _store = State(initialValue: store)
@@ -70,7 +76,7 @@ public struct StudentDetailView: View {
 
     public var body: some View {
         ScrollViewReader { reader in
-            page.task(id: store.recordLoaded) { await scrollForBoard(reader) }
+            parentsSheets(page).task(id: store.recordLoaded) { await scrollForBoard(reader) }
         }
     }
 
@@ -176,10 +182,6 @@ public struct StudentDetailView: View {
                 Task { await store.loadRecord() }
             }
         }
-        .sheet(isPresented: $choosingStep) { nextStepSheet }
-        .sheet(item: $tellingParent, onDismiss: { Task { await store.loadRecord() } }, content: { tell in
-            TellParentSheet(store: tell) { tellingParent = nil }
-        })
         .sheet(isPresented: $recordingConsent) {
             ConsentRecordSheet(store: store.consent) { recordingConsent = false }
         }
@@ -333,7 +335,11 @@ extension StudentDetailView {
             ChecksSection(lines: checks).id(Anchor.marks)
         }
         if store.marksLoaded {
-            MarksSection(rows: store.markRows)
+            MarksSection(
+                rows: store.markRows,
+                add: store.canAddMarks || store.marksConsentLine != nil ? { addingMarks = true } : nil,
+                consentLine: store.marksConsentLine
+            )
         }
     }
 }

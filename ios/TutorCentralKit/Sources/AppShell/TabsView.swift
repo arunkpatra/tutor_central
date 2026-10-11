@@ -79,7 +79,7 @@ struct TabsView<
         case .aiAssistant, .aiForm, .aiResult, .aiHistory, .scanRegister, .checkPaper, .checkPages, .checkScheme,
              .checkResult: tools(route)
         case .schoolRead, .schoolItem, .schoolAsk, .schoolGapReport: schoolScreen(route)
-        case .note, .studentMessages: parents(route)
+        case .note, .studentMessages, .readMarks: parents(route)
         }
     }
 

@@ -17,7 +17,8 @@ public enum Fixtures {
         let counts = FakeCountsRepository(counts: counts(for: state))
         let listed = withSchoolLanguages(register(for: state).students, for: state)
         let students = FakeStudentsRepository(
-            students: noteDayStates.contains(state) || notOnTrackStates.contains(state) || state == .todayAfterClose
+            students: noteDayStates.contains(state) || notOnTrackStates.contains(state) || marksStates.contains(state)
+                || state == .todayAfterClose
                 ? withParents(listed, for: state) : listed
         )
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })

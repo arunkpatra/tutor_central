@@ -149,10 +149,17 @@ struct ChecksSection: View {
 /// yet.
 struct MarksSection: View {
     let rows: [MarkRow]
+    /// Add from a photo (Phase 14): nil on an archived student; disabled with the reason until the parent agrees.
+    var add: (() -> Void)?
+    var consentLine: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("Marks")
+            SectionHeader("Marks", action: addAction, actionEnabled: consentLine == nil)
+            if let consentLine {
+                Text(consentLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             Card {
                 if rows.isEmpty {
                     EmptyRow(
@@ -185,6 +192,11 @@ struct MarksSection: View {
                 }
             }
         }
+    }
+
+    /// A typed property: a ternary of tuples inline stalls the type checker (ios/CLAUDE.md).
+    private var addAction: (label: String, run: () -> Void)? {
+        add.map { ("Add from a photo", $0) }
     }
 }
 

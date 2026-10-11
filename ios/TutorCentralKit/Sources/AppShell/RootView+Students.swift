@@ -19,7 +19,8 @@ extension RootView {
             openFeeAction: { openFeeAction($0) },
             openToday: { shell.openToday(batch: $0) },
             openArtefact: { shell.tabs.push(.artefact($0)) },
-            openMessages: { shell.tabs.push(.studentMessages($0)) }
+            openMessages: { shell.tabs.push(.studentMessages($0)) },
+            openReadMarks: { shell.tabs.push(.readMarks($0, $1)) }
         )
     }
 
@@ -121,7 +122,8 @@ extension RootView {
                         shell.today?.plans.values.forEach { plan in Task { await plan.readCaptions() } }
                     }
                     return store
-                }
+                },
+                recordChanged: shell.recordChanged
             )
         }
     }
