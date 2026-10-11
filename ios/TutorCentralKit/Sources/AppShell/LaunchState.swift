@@ -40,6 +40,9 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case schoolAsk = "school-ask"
     /// Today's plan made with Group 1 as the exam group and its revision lines (P13-Today-Revision).
     case todayRevision = "today-revision"
+    /// The mock for Dev's own test in the school's pattern, and its key (P10-Mock).
+    case mock
+    case mockKey = "mock-key"
     /// Ask parents to forward when who was asked could not be read (feedback.md, a list that could not load).
     case schoolAskFailed = "school-ask-failed"
     /// Test tomorrow in Hindi with the English beside, over Dev's exam (P10-TestTomorrow).

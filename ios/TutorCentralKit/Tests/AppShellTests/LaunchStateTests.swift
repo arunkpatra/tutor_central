@@ -318,4 +318,15 @@ struct SchoolLaunchStateTests {
             .items(centre: Fixtures.meeraWorkspace.centre.id)
         #expect(items.map(\.id) == [exam] && (RootView.tab(for: .todayRevision) ?? .today) == .today)
     }
+
+    /// P10-Mock and its key: the mock for Dev's own test opens on Today's stack.
+    @MainActor @Test func theMockStatesOpenTheBoardsMock() async throws {
+        for state in [LaunchState.mock, .mockKey] {
+            #expect(RootView.initialRoutes(for: state) == [.artefact(FakePlansRepository.boardMockID)])
+        }
+        #expect(RootView.artefactBoardState(.mockKey) == .key && RootView.artefactBoardState(.mock) == nil)
+        let kept = try await Fixtures.dependencies(for: .mock).plans
+            .artefact(id: FakePlansRepository.boardMockID, centre: Fixtures.meeraWorkspace.centre.id)
+        #expect(kept?.kind == .mock && kept?.schoolItemID == FakeSchoolItemsRepository.devsTest)
+    }
 }

@@ -15,12 +15,18 @@ public struct ArtefactsContext {
     let online: () async -> Bool
     /// The plans kept on this iPhone: offline the material opens from them.
     let planCache: PlanCache?
+    /// A mock's exam and its school (Phase 13).
+    let schoolItems: (any SchoolItemsRepository)?
+    let schools: (any SchoolsRepository)?
 
     public init(
         workspace: Workspace, register: any Register, plans: any PlansRepository, ai: any AIRepository,
         photos: any PhotoStore, now: @escaping @Sendable () -> Date, calendar: Calendar,
-        online: @escaping () async -> Bool, planCache: PlanCache? = nil
+        online: @escaping () async -> Bool, planCache: PlanCache? = nil,
+        schoolItems: (any SchoolItemsRepository)? = nil, schools: (any SchoolsRepository)? = nil
     ) {
+        self.schoolItems = schoolItems
+        self.schools = schools
         self.workspace = workspace
         self.register = register
         self.plans = plans
@@ -62,6 +68,8 @@ public struct ArtefactScreen: View {
                 BriefView(store: briefStore())
             case .figure?:
                 FigureScreen(store: figureStore())
+            case .mock?:
+                MockView(store: mockStore(), showsKey: boardState == .key)
             case nil where gone:
                 SheetView(store: sheetStore(), actions: actions, boardState: nil)
             default:
@@ -100,6 +108,18 @@ public struct ArtefactScreen: View {
         )
         store.online = context.online
         store.planCache = context.planCache
+        return store
+    }
+
+    private func mockStore() -> MockStore {
+        let store = MockStore(
+            artefactID: artefactID, workspace: context.workspace, register: context.register, plans: context.plans,
+            ai: context.ai, schoolItems: context.schoolItems, schools: context.schools, now: context.now,
+            calendar: context.calendar
+        )
+        store.online = context.online
+        store.planCache = context.planCache
+        store.onMark = actions.markPaper
         return store
     }
 

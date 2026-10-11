@@ -15,7 +15,8 @@ extension RootView {
                     photos: deps.photos, now: deps.now, calendar: DayHeading.india,
                     online: { [connectivity = deps.connectivity] in await connectivity.isOnline },
                     planCache: deps.cachesLists
-                        ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil
+                        ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil,
+                    schoolItems: deps.schoolItems, schools: deps.schools
                 ),
                 actions: ArtefactsActions(openArtefact: { shell.tabs.push(.artefact($0)) }),
                 boardState: launch.flatMap(Self.artefactBoardState)
@@ -30,6 +31,7 @@ extension RootView {
         case .sheetOwn: [.artefact(Fixtures.ownSheet)]
         case .workedExample: [.artefact(Fixtures.groupOneExample)]
         case .brief: [.artefact(Fixtures.brief)]
+        case .mock, .mockKey: [.artefact(FakePlansRepository.boardMockID)]
         case _ where Fixtures.figureStates[state] != nil: [.artefact(FakePlansRepository.figureID)]
         case _ where Fixtures.sheetStates.contains(state): [.artefact(Fixtures.groupOneSheet)]
         default: nil
@@ -38,7 +40,7 @@ extension RootView {
 
     static func artefactBoardState(_ state: LaunchState) -> ArtefactBoardState? {
         switch state {
-        case .sheetKey: .key
+        case .sheetKey, .mockKey: .key
         case .sheetBoard: .board
         case .sheetRegenerate: .reasons
         case .sheetRegenerating: .regenerating
