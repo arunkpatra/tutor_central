@@ -7,7 +7,9 @@ import Foundation
 /// Hindi, Meher's and Akshita's in English, all agreed; Riya's parent (Hindi) has not; the other students have no
 /// number. Dev and Meher were sent this evening; Dev absent Monday and Wednesday, Nikhil Wednesday.
 extension Fixtures {
-    static let noteDayStates: Set<LaunchState> = [.todayNoteDay, .todayNoteHeld, .todayNoteDayChange]
+    static let noteDayStates: Set<LaunchState> = [
+        .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .note, .noteSend, .noteCanDo, .noteWriting,
+    ]
 
     static var noteDayClock: Date {
         india(day: 11, hour: 18, minute: 30)
@@ -88,5 +90,20 @@ extension Fixtures {
                 at: friday, isPlacement: false
             )
         }
+    }
+
+    /// The Evening batch's books, with Sahil's reading moved up to Sentences on Thursday 8 October (P10-CanNowDo).
+    @MainActor static func noteDayTextbooks() -> FakeTextbooksRepository {
+        let books = FakeTextbooksRepository.evening()
+        let sahil = FakeStudentsRepository.sahil
+        let reading = books.chaptersByStudent[sahil]?.first { $0.ladder == .reading }?.id
+        books.skillsByStudent[sahil] = books.skillsByStudent[sahil]?.map { skill in
+            guard skill.chapterID == reading, skill.name == "Sentences" else { return skill }
+            var moved = skill
+            moved.state = .secure
+            moved.stateAt = india(day: 8, hour: 17, minute: 30)
+            return moved
+        }
+        return books
     }
 }

@@ -33,8 +33,8 @@ public enum Fixtures {
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
-            textbooks: closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
-                || noteDayStates.contains(state)
+            textbooks: noteDayStates.contains(state) ? noteDayTextbooks()
+                : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
                 ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
             record: record(for: state),

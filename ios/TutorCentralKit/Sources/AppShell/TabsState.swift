@@ -134,4 +134,7 @@ enum Route: Hashable {
     case schoolAsk
     /// A student's gap report for an exam (the exam, the student), made when first opened.
     case schoolGapReport(UUID, UUID)
+    /// Phase 14: a student's weekly note or can-now-do for a note day, from Today's Read, the held sheet and the sent
+    /// log.
+    case note(UUID, Day)
 }

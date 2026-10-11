@@ -20,16 +20,11 @@ extension NoteDayStore {
         let first = min(weeks.values.map(\.lowerBound).min() ?? thisMonday, thisMonday)
         let since = first.date(in: calendar)
         async let entriesRead = messages.entries(centre: centre, since: since)
-        async let checksRead = record.checks(centre: centre, students: ids, since: since)
-        async let marksRead = record.marks(centre: centre, students: ids)
-        async let sessionsRead = sessions(from: first, to: today, centre: centre)
-        async let itemsRead = try? schoolItems?.items(centre: centre)
-        let books = try await books(ids)
+        let students = ids.compactMap { register.student($0) }
+        let records = try await NoteRecordReader(
+            textbooks: textbooks, record: record, attendance: attendance, schoolItems: schoolItems
+        ).read(students, centre: centre, from: first, to: today, calendar: calendar)
         let entries = try await entriesRead
-        let checks = try await checksRead
-        let marks = try await marksRead
-        let sessions = try await sessionsRead
-        let items = await itemsRead ?? []
         var rows: [NoteRowModel] = []
         var parents: [UUID: [MessageEntry]] = [:]
         for id in ids {
@@ -40,12 +35,7 @@ extension NoteDayStore {
                     MessageCadence.suggestedKinds.contains($0.kind) && $0.openedAt >= thisMonday.date(in: calendar)
                 }
             let state = state(student, entries: entries, parent: theirs, week: week, at: moment)
-            let book = books[id] ?? Book()
-            let record = NoteRecord(
-                student: student, chapters: book.chapters, skills: book.skills,
-                checks: checks.filter { $0.studentID == id }, sessions: sessions,
-                marks: marks.filter { $0.studentID == id }, items: items
-            )
+            guard let record = records[id] else { continue }
             rows.append(NoteRowModel(
                 id: id, name: student.name, initials: student.initials,
                 line: line(record, state: state, week: week), state: state, noteDay: noteDay
@@ -98,40 +88,5 @@ extension NoteDayStore {
         let topic = NoteWeek.topic(facts, chapters: record.chapters, skills: record.skills)
         let lead = facts.lead(status: record.student.trackStatus, absentDays: absent)
         return [language, topic, lead.isEmpty ? nil : lead].compactMap(\.self).joined(separator: " · ")
-    }
-
-    struct Book: Sendable {
-        var chapters: [Chapter] = []
-        var skills: [Skill] = []
-    }
-
-    private func books(_ ids: [UUID]) async throws -> [UUID: Book] {
-        try await withThrowingTaskGroup(of: (UUID, Book).self) { group in
-            for id in ids {
-                group.addTask { [textbooks] in
-                    async let chapters = textbooks.chapters(student: id)
-                    async let skills = textbooks.skills(student: id)
-                    return try await (id, Book(chapters: chapters, skills: skills))
-                }
-            }
-            var books: [UUID: Book] = [:]
-            for try await (id, book) in group {
-                books[id] = book
-            }
-            return books
-        }
-    }
-
-    /// The sessions of the months the weeks touch.
-    private func sessions(from first: Day, to last: Day, centre: UUID) async throws -> [AttendanceSession] {
-        var periods = [first.period]
-        if last.period != first.period {
-            periods.append(last.period)
-        }
-        var all: [AttendanceSession] = []
-        for period in periods {
-            all += try await attendance.sessions(centre: centre, month: period)
-        }
-        return all
     }
 }
