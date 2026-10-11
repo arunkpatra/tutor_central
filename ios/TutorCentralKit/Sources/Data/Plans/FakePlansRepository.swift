@@ -68,7 +68,7 @@ import Foundation
             id: UUID(), kind: artefact.kind, source: artefact.source, title: artefact.title, content: artefact.content,
             photoPath: artefact.photoPath, studentID: link.student, planID: link.plan,
             regeneratedFrom: artefact.regeneratedFrom,
-            madeAt: now
+            madeAt: now, generationID: artefact.generationID, schoolItemID: link.schoolItem
         )
         artefacts.append(made)
         if let index = plans.firstIndex(where: { $0.id == link.plan }) {
@@ -82,6 +82,54 @@ import Foundation
     public func artefact(id: UUID, centre _: UUID) async throws -> Artefact? {
         try await begin()
         return artefacts.first { $0.id == id }
+    }
+
+    public func mock(for item: UUID, centre: UUID) async throws -> Artefact? {
+        try await artefacts(for: item, centre: centre).first { $0.kind == .mock }
+    }
+
+    public func gapReport(for item: UUID, student: UUID, centre: UUID) async throws -> Artefact? {
+        try await artefacts(for: item, centre: centre).first { $0.kind == .gapReport && $0.studentID == student }
+    }
+
+    public func artefacts(for item: UUID, centre _: UUID) async throws -> [Artefact] {
+        try await begin()
+        return artefacts.filter { $0.schoolItemID == item }.reversed()
+    }
+
+    public func setContent(_ content: ArtefactContent, artefact: UUID, centre _: UUID) async throws {
+        try await begin()
+        guard let index = artefacts.firstIndex(where: { $0.id == artefact }) else { return }
+        let old = artefacts[index]
+        artefacts[index] = Artefact(
+            id: old.id, kind: old.kind, source: old.source, title: old.title, content: content,
+            photoPath: old.photoPath,
+            studentID: old.studentID, planID: old.planID, regeneratedFrom: old.regeneratedFrom, madeAt: old.madeAt,
+            generationID: old.generationID, schoolItemID: old.schoolItemID
+        )
+    }
+
+    /// As `name_plan_group`: the group's chapter and skill, and its lines that still follow the group.
+    public func nameGroup(plan: UUID, group: Int, chapter: String, skill: String, centre _: UUID) async throws {
+        try await begin()
+        guard let index = plans.firstIndex(where: { $0.id == plan }) else { return }
+        plans[index].groups = plans[index].groups
+            .map { $0.number == group ? $0.named(chapter: chapter, skill: skill) : $0 }
+        plans[index].items = plans[index].items.map { item in
+            guard item.groupNo == group else { return item }
+            let words: String
+            switch item.kind {
+            case .teach where item.words == PlanRules.withTheGroup: words = PlanRules.cut("Teach: \(skill)")
+            case .catchUp where !item.words.contains("· then "): words = PlanRules.cut("\(item.words) · then \(skill)")
+            case .brief where item.words == "Your brief": words = PlanRules.cut(PlanRules.briefPrefix + chapter)
+            default: return item
+            }
+            return PlanItem(
+                id: item.id, studentID: item.studentID, groupNo: item.groupNo, kind: item.kind, skillID: item.skillID,
+                words: words, artefactID: item.artefactID, doneAt: item.doneAt, skippedAt: item.skippedAt,
+                movedFrom: item.movedFrom
+            )
+        }
     }
 
     public func briefChapters(centre _: UUID) async throws -> Set<String> {

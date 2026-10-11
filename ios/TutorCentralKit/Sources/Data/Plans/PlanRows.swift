@@ -55,9 +55,11 @@ struct ArtefactRow: Decodable {
     let planId: UUID?
     let regeneratedFrom: UUID?
     let createdAt: Date
+    let generationId: UUID?
+    let schoolItemId: UUID?
 
-    static let columns =
-        "id, kind, source, title, content, photo_path, student_id, plan_id, regenerated_from, created_at"
+    static let columns = "id, kind, source, title, content, photo_path, student_id, plan_id, regenerated_from, "
+        + "created_at, generation_id, school_item_id"
 
     var artefact: Artefact? {
         guard let kind = ArtefactKind(rawValue: kind) else { return nil }
@@ -66,7 +68,8 @@ struct ArtefactRow: Decodable {
         let decoded = (try? ArtefactContent.decode(kind: kind, json: json, source: source)) ?? .other
         return Artefact(
             id: id, kind: kind, source: source, title: title, content: decoded, photoPath: photoPath,
-            studentID: studentId, planID: planId, regeneratedFrom: regeneratedFrom, madeAt: createdAt
+            studentID: studentId, planID: planId, regeneratedFrom: regeneratedFrom, madeAt: createdAt,
+            generationID: generationId, schoolItemID: schoolItemId
         )
     }
 }

@@ -101,6 +101,48 @@ public final class SupabaseMessageLogRepository: MessageLogRepository {
         return try Self.decoder.decode([MessageEntryRow].self, from: response.data).compactMap(\.entry)
     }
 
+    public func logTestTomorrow(centre: UUID, studentID: UUID, language: MessageLanguage, body: String) async throws
+        -> Date {
+        let response = try await client.from("message_log")
+            .insert([
+                "centre_id": AnyJSON.string(centre.uuidString),
+                "student_id": .string(studentID.uuidString),
+                "kind": .string(MessageKind.testTomorrow.rawValue),
+                "language": .string(language.rawValue),
+                "body": .string(String(body.prefix(4000))),
+            ])
+            .select(Self.feeColumns).single().execute()
+        return try Self.decoder.decode(ProgressLogRow.self, from: response.data).openedAt
+    }
+
+    public func logForwardAsk(centre: UUID, studentID: UUID) async throws -> Date {
+        let response = try await client.from("message_log")
+            .insert([
+                "centre_id": AnyJSON.string(centre.uuidString),
+                "student_id": .string(studentID.uuidString),
+                "kind": .string(MessageKind.forwardAsk.rawValue),
+            ])
+            .select(Self.feeColumns).single().execute()
+        return try Self.decoder.decode(ProgressLogRow.self, from: response.data).openedAt
+    }
+
+    public func forwardAsked(centre: UUID) async throws -> [UUID: Date] {
+        let response = try await client.from("message_log").select(Self.feeColumns).eq("centre_id", value: centre)
+            .eq("kind", value: MessageKind.forwardAsk.rawValue).order("opened_at", ascending: false).execute()
+        let rows = try Self.decoder.decode([ProgressLogRow].self, from: response.data)
+        return rows.reduce(into: [:]) { latest, row in
+            guard let student = row.studentId, latest[student] == nil else { return }
+            latest[student] = row.openedAt
+        }
+    }
+
+    public func entries(centre: UUID, since: Date) async throws -> [StudentMessage] {
+        let response = try await client.from("message_log").select("id, student_id, kind, opened_at, language")
+            .eq("centre_id", value: centre).gte("opened_at", value: ISO8601DateFormatter().string(from: since))
+            .order("opened_at", ascending: false).execute()
+        return try Self.decoder.decode([StudentEntryRow].self, from: response.data).compactMap(\.message)
+    }
+
     private static let feeColumns = "student_id, kind, opened_at, about_date"
     private static let feeKinds = [FeeLog.Kind.reminder, .receipt].map(\.rawValue)
 }
@@ -134,5 +176,25 @@ struct LogRow: Decodable {
 
     var log: AbsenceLog? {
         studentId.map { AbsenceLog(studentID: $0, openedAt: openedAt, aboutDate: aboutDate.flatMap(Day.init(iso:))) }
+    }
+}
+
+/// A `message_log` row with its student, for the cadence; nil without a student or for a kind this build does not know.
+struct StudentEntryRow: Decodable {
+    let id: UUID
+    let studentId: UUID?
+    let kind: String
+    let openedAt: Date
+    let language: String?
+
+    var message: StudentMessage? {
+        guard let studentId, let kind = MessageKind(rawValue: kind) else { return nil }
+        let entry = MessageEntry(
+            id: id,
+            kind: kind,
+            openedAt: openedAt,
+            language: language.flatMap(MessageLanguage.init)
+        )
+        return StudentMessage(studentID: studentId, entry: entry)
     }
 }

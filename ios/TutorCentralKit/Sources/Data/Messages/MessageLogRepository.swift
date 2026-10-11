@@ -59,4 +59,23 @@ public protocol MessageLogRepository: Sendable {
     func logConsent(centre: UUID, studentID: UUID) async throws -> Date
     /// Everything sent about one student, newest first (the page's Messages section and the consent's "asked on").
     func messages(centre: UUID, student: UUID) async throws -> [MessageEntry]
+    /// Test tomorrow's Open WhatsApp with its language and words (kind `test_tomorrow`); when it was opened.
+    func logTestTomorrow(centre: UUID, studentID: UUID, language: MessageLanguage, body: String) async throws -> Date
+    /// Ask parents to forward's Send (kind `forward_ask`, migration 0021); when it was opened.
+    func logForwardAsk(centre: UUID, studentID: UUID) async throws -> Date
+    /// The latest forward ask by student (P10-School-Ask's Sent).
+    func forwardAsked(centre: UUID) async throws -> [UUID: Date]
+    /// Every message since a moment with its student (the cadence counts a parent's week).
+    func entries(centre: UUID, since: Date) async throws -> [StudentMessage]
+}
+
+/// A logged message and the student it was about.
+public struct StudentMessage: Hashable, Sendable {
+    public let studentID: UUID
+    public let entry: MessageEntry
+
+    public init(studentID: UUID, entry: MessageEntry) {
+        self.studentID = studentID
+        self.entry = entry
+    }
 }

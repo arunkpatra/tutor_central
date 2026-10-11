@@ -46,6 +46,34 @@ public final class SupabasePlansRepository: PlansRepository {
         return try Self.decoder.decode([ArtefactRow].self, from: response.data).first?.artefact
     }
 
+    public func mock(for item: UUID, centre: UUID) async throws -> Artefact? {
+        try await artefacts(for: item, centre: centre).first { $0.kind == .mock }
+    }
+
+    public func gapReport(for item: UUID, student: UUID, centre: UUID) async throws -> Artefact? {
+        try await artefacts(for: item, centre: centre).first { $0.kind == .gapReport && $0.studentID == student }
+    }
+
+    public func artefacts(for item: UUID, centre: UUID) async throws -> [Artefact] {
+        let response = try await client.from("artefacts").select(ArtefactRow.columns).eq("centre_id", value: centre)
+            .eq("school_item_id", value: item).order("created_at", ascending: false).execute()
+        return try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
+    }
+
+    public func setContent(_ content: ArtefactContent, artefact: UUID, centre: UUID) async throws {
+        let json = try JSONDecoder().decode(AnyJSON.self, from: content.encoded())
+        try await client.from("artefacts").update(["content": json]).eq("centre_id", value: centre)
+            .eq("id", value: artefact).execute()
+    }
+
+    public func nameGroup(plan: UUID, group: Int, chapter: String, skill: String, centre: UUID) async throws {
+        let params: [String: AnyJSON] = [
+            "p_centre": Self.id(centre), "p_plan": Self.id(plan), "p_group_no": .integer(group),
+            "p_chapter": .string(chapter), "p_skill": .string(skill),
+        ]
+        try await client.rpc("name_plan_group", params: params).execute()
+    }
+
     public func briefChapters(centre: UUID) async throws -> Set<String> {
         let response = try await client.from("artefacts").select("title").eq("centre_id", value: centre)
             .eq("kind", value: ArtefactKind.brief.rawValue).execute()
@@ -111,8 +139,8 @@ public final class SupabasePlansRepository: PlansRepository {
         ]
     }
 
-    /// `keep_artefact(p_centre, p_artefact, p_plan, p_group_no, p_student, p_item_kind)`: the content in snake-case
-    /// keys, no student for the group's material.
+    /// `keep_artefact(p_centre, p_artefact, p_plan, p_group_no, p_student, p_item_kind, p_school_item)`: the content in
+    /// snake-case keys, no student for the group's material; an exam's artefact with no plan links no line.
     static func keepParams(_ artefact: NewArtefact, to link: ArtefactLink, centre: UUID) throws -> [String: AnyJSON] {
         let content = try JSONDecoder().decode(AnyJSON.self, from: artefact.content.encoded())
         var row: [String: AnyJSON] = [
@@ -133,10 +161,11 @@ public final class SupabasePlansRepository: PlansRepository {
         return [
             "p_centre": id(centre),
             "p_artefact": .object(row),
-            "p_plan": id(link.plan),
+            "p_plan": link.plan.map(id) ?? .null,
             "p_group_no": .integer(link.group),
             "p_student": link.student.map(id) ?? .null,
             "p_item_kind": .string(link.itemKind.rawValue),
+            "p_school_item": link.schoolItem.map(id) ?? .null,
         ]
     }
 

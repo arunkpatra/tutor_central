@@ -48,13 +48,13 @@ public struct APIClient: AIRepository, AccountRepository {
     }
 
     public func checkPaper(
-        pages: [ImageUpload], scheme: SchemeSource, studentName: String, centre: UUID
+        pages: [ImageUpload], scheme: SchemeSource, studentName: String, studentID: UUID?, centre: UUID
     ) async throws(APIFailure) -> CheckAnswer {
         let images = pages.map(ImageBody.init)
         guard images.reduce(0, { $0 + $1.imageBase64.count }) <= Self.bodyLimit else { throw .tooLarge }
         let body = CheckBody(
             centreId: centre.uuidString.lowercased(), pages: images, scheme: SchemeBody(scheme),
-            studentName: studentName
+            studentName: studentName, studentId: studentID?.uuidString.lowercased()
         )
         let data = try await post("ai/check-paper", body: body)
         guard let answer = try? JSONDecoder().decode(CheckEnvelope.self, from: data) else {

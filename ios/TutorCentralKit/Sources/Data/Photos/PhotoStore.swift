@@ -10,6 +10,8 @@ public protocol PhotoStore: Sendable {
     func url(for path: String) async throws -> URL
     /// All the centre's photos removed (account deletion, D40).
     func removeAll(centre: UUID) async throws
+    /// One photo removed (a deleted school item's, plan/phase-13-plan.md decision 7).
+    func remove(path: String) async throws
 }
 
 public final class SupabasePhotoStore: PhotoStore {
@@ -45,6 +47,10 @@ public final class SupabasePhotoStore: PhotoStore {
                 _ = try await files.remove(paths: names)
             }
         }
+    }
+
+    public func remove(path: String) async throws {
+        _ = try await client.storage.from(Self.bucket).remove(paths: [path])
     }
 
     static func path(centre: UUID, kind: String) -> String {
@@ -85,6 +91,12 @@ public final class SupabasePhotoStore: PhotoStore {
     public func removeAll(centre: UUID) async throws {
         try fail()
         paths.removeAll { $0.hasPrefix(centre.uuidString.lowercased() + "/") }
+    }
+
+    public func remove(path: String) async throws {
+        try fail()
+        paths.removeAll { $0 == path }
+        images[path] = nil
     }
 
     private func fail() throws {

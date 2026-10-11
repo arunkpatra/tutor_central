@@ -247,9 +247,10 @@ public protocol AIRepository: Sendable {
     func generate(_ request: GenerateRequest, context: GenerateContext) async throws(APIFailure) -> Generation
     /// POST /ai/scan-register.
     func scanRegister(_ image: ImageUpload, centre: UUID) async throws(APIFailure) -> ScanAnswer
-    /// POST /ai/check-paper: the pages in order and the scheme.
+    /// POST /ai/check-paper: the pages in order and the scheme; `studentID` for a mock, so the student's consent is
+    /// asked (migration 0021).
     func checkPaper(
-        pages: [ImageUpload], scheme: SchemeSource, studentName: String, centre: UUID
+        pages: [ImageUpload], scheme: SchemeSource, studentName: String, studentID: UUID?, centre: UUID
     ) async throws(APIFailure) -> CheckAnswer
     /// POST /ai/parse-textbook: one contents page read into chapters and skills (the photo is not kept anywhere).
     func parseTextbook(
@@ -285,4 +286,14 @@ public protocol AIRepository: Sendable {
     func planTopics(
         classID: UUID?, date: Day, month: Int, groups: [PlanTopicGroup], centre: UUID
     ) async throws(APIFailure) -> [PlanTopic]
+    /// POST /ai/parse-school: what the school sent read into items (nothing about a student goes in).
+    func parseSchool(
+        _ source: SchoolSource, today: Day, schools: [String], classLevels: [ClassLevel], centre: UUID
+    ) async throws(APIFailure) -> SchoolReading
+    /// POST /ai/make, kind `mock`.
+    func makeMock(_ request: MockRequest, centre: UUID) async throws(APIFailure) -> MadeMock
+    /// POST /ai/make, kind `gap_report`.
+    func makeGapReport(_ request: GapRequest, centre: UUID) async throws(APIFailure) -> MadeGapReport
+    /// POST /ai/make, kind `test_tomorrow`.
+    func makeTestTomorrow(_ request: TestTomorrowRequest, centre: UUID) async throws(APIFailure) -> MadeMessage
 }
