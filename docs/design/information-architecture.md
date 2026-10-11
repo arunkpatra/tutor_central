@@ -1254,3 +1254,36 @@ What the boards settle:
 - **Marks** is the 10.2 section without its quiet action until Phase 14 brings Add from a photo; a mock's row is titled
   "<the exam> · mock · <subject>" with the school and the day it was marked; with no marks the card holds the Kit's empty
   row "No marks yet" and "Marks from mocks and checked papers appear here.".
+
+## Phase 14 boards (drawn 2026-10-11, session 29): the states no earlier step drew
+
+Row 24 of the canvas (y 51200; the title note at 50900); sources `mockups/P14-*`. Drawn with Phase 14's plan
+(`plan/phase-14-plan.md`, decision 30) for the owner's approval before PRs 11 and 12 build them. Content is illustrative
+(Hemanth's report card of three subjects, one undated; Dev's items on the School tab; the Science unit test's sheet).
+
+| Board | Source |
+|---|---|
+| Marks from a photo: the report card being read (the photo well with its thumbnail and Add a page, the creating card "Reading the marks", Save waiting) | `P14-Marks-Reading` |
+| Marks from a photo: the marks read, to check (dark and light): a row per mark with a checkbox, "Mathematics · Unit test 2", the date or "Date · not given" in `text3`, the score, a chevron; the undated row unticked; the AI line; Save 2 marks | `P14-Marks-Confirm`, `-Light` |
+| A mark's sheet: Subject (the value opens the subject list), Test, Date (Choose when the card gave none), Score and Out of side by side, Remove this mark | `P14-Marks-Edit` |
+| Paste a message (U41): Check what was read with the source well holding the system Paste button and the line "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do."; Add waiting | `P14-School-Paste` |
+| The School tab filtered to one student (U42), from the page's See all: the chip row under the segmented control ("Dev's items" with his initials; Show all) and his items alone; a footnote on what reaches him | `P14-School-Student` |
+| The exam's sheet with the preparation window (U43): a setting row "Preparation · 14 days before" between Date and Portions, its value opening the system wheel of 7, 10, 14 and 21; the helper "Revision starts this many days before the test. 14 unless you change it." | `P14-School-Item-Window` |
+
+Phase 14 builds these states (`plan/phase-14-plan.md` "Launch states" has the full list with the 10.6 and 10.3 boards'):
+`marks-reading`; `marks-confirm` (both); `marks-edit`; `school-paste`; `school-student`; `school-item-window`.
+
+What the boards settle:
+
+- **Reading marks** is the Phase 13 reading card in the rows' place under the photo well (the 56 × 72 thumbnail, the page
+  count, Add a page while under two), the footer's Save disabled with "Each mark read appears here for you to check. Nothing
+  is kept until you tap Save."
+- **The marks read** are rows the tutor ticks: a row without a date stays unticked with "Date · not given" until its sheet
+  gives one; Save counts the ticked rows ("Save 2 marks"); the AI line sits over the footer. A subject the student has no
+  book for is kept as written (the sheet's helper says so).
+- **Paste** is the system's own button in the well: iOS asks nothing, and the message is read on the tap; nothing else on
+  "Check what was read" changes.
+- **The filtered tab** keeps the tab's list shape and adds one chip row; Show all clears it; the footnote says what reaches
+  the student (his own items, his class's and his school's).
+- **The window** is one setting row on an exam's sheet (not on a homework's or a holiday's); 14 unless changed; the plan,
+  the split and the exam's page read it.

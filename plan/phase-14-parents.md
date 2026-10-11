@@ -1,6 +1,6 @@
 # Phase 14: Parents
 
-**Status:** Not started. **Depends on:** Phase 12; Phase 13 for test tomorrow; boards 10.6.
+**Status:** Planned (session 29, 2026-10-11): `phase-14-plan.md` (24 tasks, thirteen pull requests) and the seven Phase 14 boards on row 24 of the canvas await the owner's approval; the build runs from `resume/028-phase-14-build.md`. **Depends on:** Phase 12; Phase 13 for test tomorrow; boards 10.6, 10.3's note day and To parents, the P14 boards.
 
 ## Goal
 

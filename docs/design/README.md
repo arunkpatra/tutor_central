@@ -13,7 +13,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Approved 2026-10-07 (step 0.2) |
 | Telling the tutor what happened (U33): undo, in place, alert, inline | `feedback.md` | Choosing how any message reaches the tutor; the toast is for Undo only |
 | Information architecture | `information-architecture.md` | Entry flow, tabs and stacks, deep links, launch states, the Phase 2 board list |
-| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames), `P10-*` (Phase 10, the V2 screens, rows 14 to 20), `P12-*` (Phase 12, rows 21 and 22), `P13-*` (Phase 13, row 23) |
+| Kit boards (step 0.2) and approved screen boards | `mockups/` (sources), `previews/` (PNGs, from step 0.3) | `Kit-Controls-*`, `Kit-Surfaces-*` in both appearances; `P2-*` (Phase 2), `P3-*` (Phase 3), `P4-*` (Phase 4), `P5-*` (Phase 5), `P6-*` (Phase 6), `P7-*` (Phase 7), `P8-*` (Phase 8, the website's pages as fluid frames), `P10-*` (Phase 10, the V2 screens, rows 14 to 20), `P12-*` (Phase 12, rows 21 and 22), `P13-*` (Phase 13, row 23), `P14-*` (Phase 14, row 24) |
 
 ## Status
 
@@ -38,6 +38,8 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | 12 Phase 12, the close's card states and the waiting close (U37, U38, U39) | Approved by the owner 2026-10-10 ("the boards are approved too"): 3 boards in row 21 of the canvas (`mockups/P12-Close-Cards`, `-Light`, `P12-Pending-Close`); the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 12 boards"); the parts and the texts in `components.md` |
 
 | 13 Phase 13, the three states no earlier step drew (reading, the exam group on Today, Marks with its empty row) | Approved by the owner 2026-10-11 ("the boards are approved too"): 6 boards in row 23 of the canvas (`mockups/P13-School-Reading`, `P13-Today-Revision`, `-Light`, `P13-Student-Marks`, `-Light`, `P13-Student-Marks-Empty`); the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 13 boards"); the parts and the texts in `components.md` |
+
+| 14 Phase 14, the states no earlier step drew (marks from a photo: the reading, the marks to check, a mark's sheet; U41's paste well, U42's filtered tab, U43's window row) | Drawn by session 29 on 2026-10-11, awaiting the owner's approval: 7 boards in row 24 of the canvas (`mockups/P14-Marks-Reading`, `P14-Marks-Confirm`, `-Light`, `P14-Marks-Edit`, `P14-School-Paste`, `P14-School-Student`, `P14-School-Item-Window`); the list, the launch states and what the boards settle in `information-architecture.md` ("Phase 14 boards"); the parts and the texts in `components.md` |
 
 ## The three directions (step 0.1, decided: A)
 

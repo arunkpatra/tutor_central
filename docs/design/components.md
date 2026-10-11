@@ -960,3 +960,30 @@ Key with the result footer (Make it again, Share as PDF, Mark from a photo); the
 without a mark; after Use this plan the button reads "Plan in use" (feedback.md's success row). 10.2's Marks row is the
 adaptive row with the score in `numberRow` and the Below usual chip under it. 10.3's To parents rows are `ParentSendRow`s,
 the first Send primary.
+
+## Phase 14 parts (drawn 2026-10-11, session 29): marks from a photo, the paste well, the chip row, the window row
+
+**Mark read row:** a 24 pt checkbox (the Phase 13 confirm row's), "<subject> · <test>" as the title, the date in `footnote`
+`text2` (or "Date · not given" in `text3`), the score "14 of 25" in `numberRow`, a chevron; the row opens the mark's sheet.
+
+**Photo well (marks):** the Phase 13 source well with the 56 × 72 thumbnail, the page line and the quiet Add a page.
+
+**Paste well:** the source well's shape holding the system Paste button (40 high, accent, the clipboard glyph) centred over
+the line in `text3`.
+
+**Filter chip row:** an accent chip (the student's 20 pt initials and "<name>'s items") and the quiet Show all on the right,
+under the segmented control.
+
+**Window row:** the Phase 3 setting row "Preparation" with the accent value "14 days before" and the helper under it; the
+value opens the system wheel in a popover (7, 10, 14, 21 days).
+
+The texts:
+
+| Text | Words |
+|---|---|
+| Reading | "Marks from a photo" · "From a photo · a report card or a marked test" · "The photo" · "1 page · a report card is one page, a marked test front and back is two" · Add a page · "Reading the marks" · Cancel · "Usually under a minute. Each subject's test, date and score are picked out for you to check." · Save (disabled) · "Each mark read appears here for you to check. Nothing is kept until you tap Save." |
+| The marks read | "3 marks read" · "Mathematics · Unit test 2" "28 Sep" "14 of 25" · "Hindi · Unit test 2" "Date · not given" "11 of 25" · "AI can make mistakes. Check each mark against the paper." · "Save 2 marks" · "Open a mark to change its subject, test, date or score. A mark without a date waits until you set one. Nothing is kept until you tap Save." |
+| A mark's sheet | Cancel · "Mark" · Save · Subject "As the card prints it. A subject with no book here is kept as written." · Test · Date Choose "The card gave no date. The mark is saved only once it has one." · Score · Out of · Remove this mark |
+| Paste | "What the school sent" · Paste · "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do." |
+| The filtered tab | "Dev's items" · Show all · "What reaches Dev: his own items, his class's and his school's. Show all lists the centre's." |
+| The window | "Preparation" · "14 days before" · "Revision starts this many days before the test. 14 unless you change it." |

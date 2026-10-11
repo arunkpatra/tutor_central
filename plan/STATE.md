@@ -3,16 +3,13 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-11, session 28 (Phase 13 built, on Opus 5.5). **Session 28:** Phase 13 built from
-`plan/phase-13-plan.md`: migrations 0021 and 0022; PRs #123 to #126 and #128 to #134 (#127 the compiler's warnings, the
-owner's ask); hand runs 1 to 15 against the local stack, eleven defects found and fixed with tests that failed first; the
-cost run on the real models with the owner's yes (mock ₹3.94, marking ₹8.18, gap report ₹0.43: about ₹30 an exam for a
-class of three); a fresh review on Fable 5.1 (no Critical, four Important fixed in #134, five minors deferred); deploy run
-38123899264; TestFlight 1.0.0 (24). The owner approved real AI calls in testing without asking (be judicious). "As built" in
-`phase-13-school.md`; the record and ledger in `plan/sessions/028/`.
-**Next:** Phase 14's plan on Fable 5.1 from `resume/027-phase-14-plan.md`, its scope widened by the owner (D67: the model per
-kind of AI work set in one place; D68: Phase 13's U41 to U45, five minors and the lost-connection answer folded in, and a
-phase fixes what it finds). The owner installed 1.0.0 (24) and tests the builds together after the last phase.
+**Last updated:** 2026-10-11, session 29 (Phase 14 planned, on Fable 5.1). **Session 29:** `plan/phase-14-plan.md` written
+(24 tasks, thirteen pull requests, tests first, the launch states, the hand runs, the cost run, the review focus, 30 decisions,
+D67 and D68 as tasks); seven Phase 14 boards drawn on row 24 of the canvas (`P14-Marks-Reading`, `P14-Marks-Confirm`, `-Light`,
+`P14-Marks-Edit`, `P14-School-Paste`, `P14-School-Student`, `P14-School-Item-Window`) and mirrored, awaiting the owner's
+approval; `resume/028-phase-14-build.md` indexed; the record in `plan/sessions/029/`. Documents only, to `main` (D12).
+**Next:** the owner's word on the plan and the seven boards; then Phase 14's build on Opus 5.5 from
+`resume/028-phase-14-build.md`. The owner installed 1.0.0 (24) and tests the builds together after the last phase (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -21,7 +18,7 @@ phase fixes what it finds). The owner installed 1.0.0 (24) and tests the builds 
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (drawn 2026-10-11, awaiting approval) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -35,7 +32,8 @@ phase fixes what it finds). The owner installed 1.0.0 (24) and tests the builds 
 | 11 The record and the close | Done (sessions 23 and 24, 2026-10-10), PRs #97 to #106, #108, #109; hand runs #107 | "As built" in `phase-11-record-and-close.md`; device tests T1 to T3 |
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
-| 14 to 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-14-parents.md` to `phase-16-release.md` |
+| 14 Parents | Planned (session 29, 2026-10-11): `phase-14-plan.md` and the seven P14 boards await the owner's approval | Scope `phase-14-parents.md`; D67 and D68 are its tasks; the build from `resume/028-phase-14-build.md` |
+| 15 and 16 V2 (`docs/spec-v2.md`) | Not started | Scope files `phase-15-make-and-polish.md`, `phase-16-release.md` |
 
 ## In flight
 
@@ -86,9 +84,9 @@ identity). The remote holds `main`,
 
 ## Open items
 
-- **Phase 13 review minors (in Phase 14's scope, D68):** the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`;
-  and, also Phase 14's: the API answers a lost Supabase connection as 401 "sign in again" (the verifier's rule since V1); a 501's words
-  reach the screen through `APIFailure` (seen once against a stale local API).
+- **Phase 13's leftovers are Phase 14's tasks (D68):** the five `Final: minor (deferred)` lines of `plan/sessions/028/ledger.md`
+  (plan decision 15), the API's 401 for a lost Supabase connection and a 501's words reaching the screen (decision 14), U41 to U45
+  (decisions 16 and 4). Nothing stays open after Phase 14 closes.
 - **CI warnings kept (the owner's ask, #127):** `VNDetectBarcodesRequestRevision1` (QRDecoder's deliberate fallback for
   the simulator and CI), the AuthorizationController underscored-module note (Apple's SDK), and the runner's Homebrew lines.
 - **The cost of marking:** ₹8.18 a paper on Opus (two pages) is most of an exam's cost; D64's price reads it; D67 lets the

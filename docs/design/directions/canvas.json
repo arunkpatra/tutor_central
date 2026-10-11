@@ -2530,6 +2530,55 @@
    "w": 393,
    "x": 2365,
    "y": 49800
+  },
+  "P14-Marks-Reading.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · Marks from a photo: the report card being read (the photo well, the creating card \"Reading the marks\", Save waiting) · dark",
+   "w": 393,
+   "x": 0,
+   "y": 51200
+  },
+  "P14-Marks-Confirm.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · Marks from a photo: the marks read, to check (a row each: subject · test, the date or \"Date · not given\", the score; the undated row unticked; Save N marks) · dark",
+   "w": 393,
+   "x": 473,
+   "y": 51200
+  },
+  "P14-Marks-Confirm-Light.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · Marks from a photo: the marks read, to check · light",
+   "w": 393,
+   "x": 946,
+   "y": 51200
+  },
+  "P14-Marks-Edit.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · Marks from a photo: a mark's sheet (Subject, Test, Date, Score, Out of, Remove this mark) · dark",
+   "w": 393,
+   "x": 1419,
+   "y": 51200
+  },
+  "P14-School-Paste.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · Paste a message (U41): Check what was read waits for the system Paste button in the source well, so iOS asks nothing · dark",
+   "w": 393,
+   "x": 1892,
+   "y": 51200
+  },
+  "P14-School-Student.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · The School tab filtered to one student from the page's See all (U42): the chip row and Show all · dark",
+   "w": 393,
+   "x": 2365,
+   "y": 51200
+  },
+  "P14-School-Item-Window.dc.html": {
+   "h": 852,
+   "title": "Phase 14 · The exam's sheet with the preparation window (U43): Preparation · 14 days before, the system wheel of 7, 10, 14 and 21 · dark",
+   "w": 393,
+   "x": 2838,
+   "y": 51200
   }
  },
  "createdOnFiles": {
@@ -2732,6 +2781,14 @@
    "w": 240,
    "x": 0,
    "y": 49500
+  },
+  "p14_1": {
+   "kind": "title1",
+   "maxW": 2800,
+   "w": 240,
+   "x": 0,
+   "y": 50900,
+   "text": "Phase 14 · Parents — the states no earlier step drew: marks from a photo (the reading, the marks to check, a mark's sheet) and three Phase 13 leftovers (Paste without the prompt, U41; the tab filtered to a student, U42; the exam's preparation window, U43)"
   }
  },
  "order": [
@@ -3092,7 +3149,14 @@
   "P13-Today-Revision-Light.dc.html",
   "P13-Student-Marks.dc.html",
   "P13-Student-Marks-Light.dc.html",
-  "P13-Student-Marks-Empty.dc.html"
+  "P13-Student-Marks-Empty.dc.html",
+  "P14-Marks-Reading.dc.html",
+  "P14-Marks-Confirm.dc.html",
+  "P14-Marks-Confirm-Light.dc.html",
+  "P14-Marks-Edit.dc.html",
+  "P14-School-Paste.dc.html",
+  "P14-School-Student.dc.html",
+  "P14-School-Item-Window.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
