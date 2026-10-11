@@ -175,16 +175,20 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         let batch = PlanBatch(
             classroom: classroom, members: register.members(of: classID), date: today, centre: centre
         )
+        let report = reporter(mine)
         let task = Task { [maker] in
-            await maker.make(batch, choices: choices) { [weak self] progress in
-                await self?.apply(progress, mine)
-            }
+            await maker.make(batch, choices: choices, progress: report)
         }
         run = task
         await task.value
         if run == task {
             run = nil
         }
+    }
+
+    /// The maker's progress applied to this store while it lives (a weak hold: the run may outlast the screen).
+    private func reporter(_ generation: Int) -> @Sendable (PlanMaker.Progress) async -> Void {
+        { [weak self] progress in await self?.apply(progress, generation) }
     }
 
     /// The material the plan is still missing (a refresh that iOS stopped part-way), made into the plan as it is.
@@ -194,10 +198,9 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         run?.cancel()
         let members = register.members(of: classID)
         let centre = centre
+        let report = reporter(mine)
         let task = Task { [maker] in
-            await maker.complete(plan, members: members, centre: centre) { [weak self] progress in
-                await self?.apply(progress, mine)
-            }
+            await maker.complete(plan, members: members, centre: centre, progress: report)
         }
         run = task
         await task.value
