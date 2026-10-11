@@ -120,7 +120,8 @@ extension RootView {
         let made = CheckStore(
             workspace: workspace, register: register(for: workspace), ai: deps.ai, history: deps.aiHistory,
             students: deps.students, centres: deps.centres, now: deps.now, record: deps.record,
-            preset: shell.checkPresets[id], plans: deps.plans, schoolItems: deps.schoolItems
+            preset: shell.checkPresets[id] ?? launch.flatMap(Fixtures.checkPreset), plans: deps.plans,
+            schoolItems: deps.schoolItems
         )
         made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }

@@ -72,14 +72,14 @@ extension RootView {
         .checkIntro, .checkSchemeChooser, .checkPagesEmpty, .checkPages, .checkScheme, .checkSchemeTyped,
         .checkChecking,
         .checkResult, .checkMarkPicker,
-        .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed, .checkConsentWaiting,
+        .checkResultEdited, .checkResultScrolled, .checkSaved, .checkFailed, .checkConsentWaiting, .checkIntroMock,
     ]
     static let checkVisit = UUID(uuidString: "eeeeeeee-0000-0000-0000-000000000001") ?? UUID()
 
     static func checkRoutes(for state: LaunchState) -> [Route] {
         let id = checkVisit
         return switch state {
-        case .checkIntro: [.checkPaper(id)]
+        case .checkIntro, .checkIntroMock: [.checkPaper(id)]
         case .checkSchemeChooser: [.checkPaper(id), .checkSchemeChooser(id)]
         case .checkPages, .checkPagesEmpty: [.checkPaper(id), .checkPages(id)]
         case .checkScheme, .checkSchemeTyped: [.checkPaper(id), .checkPages(id), .checkScheme(id)]

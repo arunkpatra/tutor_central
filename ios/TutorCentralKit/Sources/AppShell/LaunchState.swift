@@ -252,7 +252,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case scanFailed = "scan-failed"
     case scanSaved = "scan-saved"
     case checkIntro = "check-intro", checkSchemeChooser = "check-scheme-chooser", checkPagesEmpty = "check-pages-empty"
-    case checkConsentWaiting = "check-consent-waiting"
+    case checkConsentWaiting = "check-consent-waiting", checkIntroMock = "check-intro-mock"
     case checkPages = "check-pages"
     case checkScheme = "check-scheme"
     case checkSchemeTyped = "check-scheme-typed"

@@ -111,7 +111,7 @@ extension Fixtures {
                 now: evening.now
             )
         }
-        if state == .checkIntro || state == .checkSchemeChooser {
+        if [.checkIntro, .checkSchemeChooser, .checkIntroMock].contains(state) {
             return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts + FakePlansRepository
                 .madeRecent)
         }
