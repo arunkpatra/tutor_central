@@ -741,3 +741,17 @@ test("name_plan_group names a plan's group and its teach lines, leaves the artef
   const other = await b.rpc("name_plan_group", { p_centre: centre, p_plan: plan, p_group_no: 1, p_chapter: "x", p_skill: "y" });
   expect(other.error).not.toBeNull();
 });
+
+test("name_plan_group names a group the app wrote with its own keys (number, memberIDs)", async () => {
+  const { cls, s1 } = await batchWithTwo();
+  const made = await a.rpc("make_plan", {
+    p_centre: centre, p_class: cls.id, p_date: "2026-10-21",
+    p_groups: [{ number: 1, subject: "Science", chapter: "", skill: "", classLevels: ["8"], memberIDs: [s1.id] }],
+    p_subjects: { "1": "Science" },
+    p_items: [{ student_id: s1.id, group_no: 1, kind: "teach", words: "Teach: with the group" }],
+  });
+  const plan = (made.data as { plan_id: string }).plan_id;
+  expect((await a.rpc("name_plan_group", { p_centre: centre, p_plan: plan, p_group_no: 1, p_chapter: "Chemical reactions", p_skill: "Balance a chemical equation" })).error).toBeNull();
+  const groups = (await a.from("plans").select("groups").eq("id", plan).single()).data!.groups as { number: number; chapter: string; skill: string }[];
+  expect(groups[0]).toMatchObject({ number: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" });
+});
