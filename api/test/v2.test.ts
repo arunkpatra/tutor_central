@@ -346,3 +346,9 @@ test("an unfit message is refused in words about the message, never about a topi
     expect(claude.requests[0]?.system).toContain("the English at most 700 characters");
   }
 });
+
+test("a body the schema refuses is a 400 marked invalid, so the app never shows the schema's words", async () => {
+  const r = await post(app(), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week: { ...week, right: "x".repeat(121) } });
+  expect(r.status).toBe(400);
+  expect(((await r.json()) as { reason?: string }).reason).toBe("invalid");
+});
