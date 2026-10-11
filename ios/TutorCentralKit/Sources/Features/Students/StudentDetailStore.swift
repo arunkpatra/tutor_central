@@ -38,6 +38,9 @@ public enum FeeActionKind: Sendable {
     var skills: [Skill] = []
     var checkRecords: [CheckRecord] = []
     var homeworkRecords: [HomeworkRecord] = []
+    /// The student's marks (U36), newest first; read with the record.
+    var markRecords: [MarkRecord] = []
+    public internal(set) var marksLoaded = false
     var entries: [MessageEntry] = []
     var openChapterID: UUID?
     /// The record's reads have answered (the record's board opens its chapter then).

@@ -96,3 +96,25 @@ public extension FakeRecordRepository {
         ]
     }
 }
+
+public extension FakeRecordRepository {
+    /// Hemanth's marks (P13-Student-Marks): a class test and unit test 1 in Mathematics, unit test 2 below his usual,
+    /// then a mock (the board's figures are illustrative).
+    nonisolated static var hemanthsMarks: [MarkRecord] {
+        let day = { (month: Int, day: Int) in
+            Day(year: 2026, month: month, day: day) ?? Day(year: 2026, month: 1, day: 1)!
+        }
+        let mark = { (index: Int, test: String, date: Day, score: Int, max: Int) in
+            MarkRecord(
+                id: UUID(uuidString: "abababab-0000-0000-0013-00000000010\(index)") ?? UUID(),
+                studentID: FakeStudentsRepository.hemanth, subject: "Mathematics", test: test, date: date,
+                score: score, max: max, photoPath: nil, schoolItemID: nil,
+                artefactID: index == 3 ? FakePlansRepository.examMockID : nil, questions: nil
+            )
+        }
+        return [
+            mark(0, "Class test", day(7, 20), 18, 25), mark(1, "Unit test 1", day(8, 24), 19, 25),
+            mark(2, "Unit test 2", day(9, 28), 14, 25), mark(3, "Maths unit test 3 · mock", day(10, 6), 26, 40),
+        ]
+    }
+}

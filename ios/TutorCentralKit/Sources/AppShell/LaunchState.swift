@@ -70,6 +70,9 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case studentNewEnd = "student-new-end"
     /// V2's student page (P10-Student-Record, -End, -NotKnown, -Ladder).
     case studentRecord = "student-record"
+    /// Hemanth's Checks and Marks (P13-Student-Marks), and Riya's page with no marks yet (P13-Student-Marks-Empty).
+    case studentMarks = "student-marks"
+    case studentMarksEmpty = "student-marks-empty"
     case studentEnd = "student-end"
     case studentNotKnown = "student-not-known"
     case studentLadder = "student-ladder"

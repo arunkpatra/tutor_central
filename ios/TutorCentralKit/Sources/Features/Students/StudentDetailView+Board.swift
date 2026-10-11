@@ -5,17 +5,22 @@ import SwiftUI
 /// What the boards set up on the page: a confirmation, the edit sheet, the consent sheets, the record or the end.
 extension StudentDetailView {
     enum Anchor: Hashable {
-        case record, end
+        case record, end, marks
     }
 
     /// The scrolled boards: the record (its current chapter open) or the end.
     func scrollForBoard(_ reader: ScrollViewProxy) async {
-        guard boardState == .record || boardState == .end, store.recordLoaded else { return }
+        guard [.record, .end, .marks].contains(boardState), store.recordLoaded else { return }
         if boardState == .record {
             store.openCurrentChapter()
         }
         try? await Task.sleep(for: .seconds(Tokens.panel))
-        reader.scrollTo(boardState == .record ? Anchor.record : Anchor.end, anchor: .top)
+        let anchor: Anchor = switch boardState {
+        case .record: .record
+        case .marks: .marks
+        default: .end
+        }
+        reader.scrollTo(anchor, anchor: .top)
     }
 
     func setUpBoardState() {
@@ -25,7 +30,7 @@ extension StudentDetailView {
         case .edit: edit()
         case .consentAsk: asking = true
         case .consentRecord: recordingConsent = true
-        case .record, .end, nil: break
+        case .record, .end, .marks, nil: break
         }
     }
 }

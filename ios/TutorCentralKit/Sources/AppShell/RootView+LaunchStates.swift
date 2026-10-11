@@ -18,7 +18,8 @@ extension RootView {
         case .laterStudents, .studentsEmpty, .studentsFew, .students, .studentsSearching, .studentsFiltered,
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
-             .student, .studentRecord, .studentEnd, .studentNotKnown, .studentLadder, .studentConsentAsk,
+             .student, .studentRecord, .studentMarks, .studentMarksEmpty, .studentEnd, .studentNotKnown, .studentLadder,
+             .studentConsentAsk,
              .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
              .textbookChapterEdit, .placement, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
@@ -161,7 +162,8 @@ extension RootView {
     /// V2's student page (P10-Student and its scrolls): Hemanth; not known yet: Riya; the ladder: Sahil.
     private static func studentPageRoutes(for state: LaunchState) -> [Route]? {
         switch state {
-        case .student, .studentRecord, .studentEnd: [.student(FakeStudentsRepository.hemanth)]
+        case .student, .studentRecord, .studentEnd, .studentMarks: [.student(FakeStudentsRepository.hemanth)]
+        case .studentMarksEmpty: [.student(FakeStudentsRepository.riya)]
         case .studentNotKnown, .studentConsentAsk, .studentConsentRecord, .studentConsentWaiting:
             [.student(FakeStudentsRepository.riya)]
         case .studentLadder: [.student(FakeStudentsRepository.sahil)]
@@ -213,7 +215,8 @@ extension RootView {
         case .studentArchiveConfirm: .archiveConfirm
         case .studentDeleteConfirm: .deleteConfirm
         case .studentEdit: .edit
-        case .studentRecord: .record
+        case .studentRecord, .studentMarksEmpty: .record
+        case .studentMarks: .marks
         case .studentEnd: .end
         case .studentConsentAsk: .consentAsk
         case .studentConsentRecord: .consentRecord
