@@ -9,13 +9,20 @@ public enum MessageCadence {
     public static let perWeek = 3
     public static let suggestedKinds: Set<MessageKind> = [.note, .canDo, .testTomorrow, .notOnTrack]
 
-    /// The parent's suggested messages in the week of `now`; the caller passes the entries of that parent's students.
-    public static func suggestedCount(_ entries: [MessageEntry], now: Date, calendar: Calendar) -> Int {
+    /// The parent's suggested messages sent in the week of `now`; the caller passes the entries of that parent's
+    /// students. A copy is not a send: it never counts (the note's Copy, plan/phase-14-plan.md decision 3).
+    public static func suggested(_ entries: [MessageEntry], now: Date, calendar: Calendar) -> [MessageEntry] {
         let today = Day(now, calendar: calendar)
         let monday = today.adding(days: 1 - today.weekday(in: calendar).rawValue, calendar: calendar)
         let start = monday.date(in: calendar)
         let end = monday.adding(days: 7, calendar: calendar).date(in: calendar)
-        return entries.filter { suggestedKinds.contains($0.kind) && $0.openedAt >= start && $0.openedAt < end }.count
+        return entries.filter {
+            suggestedKinds.contains($0.kind) && $0.channel != .copied && $0.openedAt >= start && $0.openedAt < end
+        }
+    }
+
+    public static func suggestedCount(_ entries: [MessageEntry], now: Date, calendar: Calendar) -> Int {
+        suggested(entries, now: now, calendar: calendar).count
     }
 
     public static func canSuggest(_ entries: [MessageEntry], now: Date, calendar: Calendar) -> Bool {

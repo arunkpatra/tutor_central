@@ -30,10 +30,8 @@ extension NoteDayStore {
         for id in ids {
             guard let student = register.student(id), let noteDay = days[id], let week = weeks[id] else { continue }
             let theirs = entries.filter { register.sameParent($0.studentID, student) }.map(\.entry)
-            parents[id] = theirs
-                .filter {
-                    MessageCadence.suggestedKinds.contains($0.kind) && $0.openedAt >= thisMonday.date(in: calendar)
-                }
+            // The held sheet lists what the cadence counts: this week's suggested sends, never a copy.
+            parents[id] = MessageCadence.suggested(theirs, now: moment, calendar: calendar)
             let state = state(student, entries: entries, parent: theirs, week: week, at: moment)
             guard let record = records[id] else { continue }
             rows.append(NoteRowModel(

@@ -217,10 +217,14 @@ import Testing
         #expect(sunday.rows.count == 7)
     }
 
-    @Test func aFailedReadSaysSoInPlace() async {
+    @Test func aWeekThatCannotBeReadListsTheRegistersRowsSoAKeptNoteStillOpens() async {
         let store = await Self.make(World(recordFails: true))
         await store.load()
-        #expect(store.isOn && store.loadFailed && store.rows.isEmpty)
+        #expect(store.isOn && store.loadFailed && store.rows.count == 7)
+        #expect(store.heroLine == "7 notes for parents" && store.countLine == "")
+        #expect(row(store, Self.dev)?.line == "Hindi" && row(store, Self.dev)?.state == .read)
+        #expect(row(store, Self.riya)?.line == "Hindi · waits for Neha's consent")
+        #expect(row(store, Self.riya)?.state == .held(.consent(parentFirstName: "Neha")))
     }
 
     @Test func changeDayWritesTheBatchesWhoseNoteDayIsShownAndRefusesOffline() async {

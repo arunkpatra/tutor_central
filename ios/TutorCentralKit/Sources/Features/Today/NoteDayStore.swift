@@ -136,8 +136,32 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
             parentWeek = week.parents
             loadFailed = false
         } catch {
-            rows = []
+            // Offline or a failed read: the register's rows, so a note kept on this iPhone still opens (plan decision
+            // 21); what was sent this week is not known, so nothing is counted.
+            rows = rowsOrdered(registerRows(days))
+            parentWeek = [:]
             loadFailed = true
+        }
+    }
+
+    /// The rows the register alone gives: the language, and the consent a note waits for.
+    func registerRows(_ days: [UUID: Day]) -> [NoteRowModel] {
+        days.compactMap { id, noteDay in
+            guard let student = register.student(id) else { return nil }
+            let language = student.messageLanguage.title
+            let state: NoteRowModel.State = student.consent == nil
+                ? .held(.consent(parentFirstName: student.parentName.flatMap {
+                    $0.split(separator: " ").first.map(String.init)
+                }))
+                : .read
+            let line = if case let .held(reason) = state {
+                "\(language) · \(MessageCadence.heldWords(reason))"
+            } else {
+                language
+            }
+            return NoteRowModel(
+                id: id, name: student.name, initials: student.initials, line: line, state: state, noteDay: noteDay
+            )
         }
     }
 

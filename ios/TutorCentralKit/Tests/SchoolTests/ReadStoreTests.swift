@@ -159,8 +159,10 @@ import Testing
         #expect(store.stage == .pasteWaiting && ai.parseCalls.isEmpty && !store.canAdd)
         #expect(store
             .pasteLine == "Copy the school's message in WhatsApp, then tap Paste. Nothing is read until you do.")
+        #expect(store.footnote.hasPrefix("Each item read appears here"))
         await store.paste(SchoolFixtures.boardMessage)
         #expect(ai.parseCalls.count == 1 && store.drafts.count == 3 && store.sourceText == SchoolFixtures.boardMessage)
+        #expect(store.footnote.hasPrefix("Open an item"))
     }
 
     @Test func pastingNothingSaysSoAndKeepsWaiting() async {

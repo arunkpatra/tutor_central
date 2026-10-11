@@ -152,7 +152,7 @@ public struct ReadView: View {
     private var footer: some View {
         FooterButton {
             VStack(spacing: Tokens.rowPaddingDense) {
-                Text(store.stage == .reading ? SchoolWords.readingFootnote : SchoolWords.readFootnote)
+                Text(store.footnote)
                     .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Button {

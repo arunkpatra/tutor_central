@@ -78,6 +78,11 @@ import UIKit
         }
     }
 
+    /// The footer's line: what will happen while reading or waiting for Paste; what to do once read.
+    public var footnote: String {
+        stage == .reading || stage == .pasteWaiting ? SchoolWords.readingFootnote : SchoolWords.readFootnote
+    }
+
     /// "3 items read".
     public var countLine: String {
         drafts.count == 1 ? "1 item read" : "\(drafts.count) items read"

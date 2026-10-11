@@ -23,7 +23,7 @@ struct NoteDaySection: View {
                     Text(store.countLine).typeStyle(Tokens.footnote).monospacedDigit()
                         .foregroundStyle(Tokens.text2.color)
                 }
-                if store.loadFailed {
+                if store.loadFailed, store.rows.isEmpty {
                     LoadFailedView("Couldn't load this week's notes.") { Task { await store.load() } }
                 } else if !store.rows.isEmpty {
                     Card {
