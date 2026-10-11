@@ -37,6 +37,12 @@ public enum ClassLevel: String, CaseIterable, Hashable, Sendable, Codable, Compa
         stage != .preschool
     }
 
+    /// The level a title names ("Class 10", "UKG"); nil for any other words (a batch's name).
+    public init?(title: String) {
+        guard let level = Self.allCases.first(where: { $0.title == title }) else { return nil }
+        self = level
+    }
+
     /// The class wheel's words.
     public var title: String {
         switch self {

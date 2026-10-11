@@ -176,12 +176,19 @@ public struct Generation: Hashable, Sendable, Identifiable, Codable {
         return studentID.flatMap(studentName) ?? result.title
     }
 
-    /// "Question paper · Class 10 Maths · Tue 6 Oct". `className` is asked for the form's class, or for a note the
+    /// "Question paper · Class 10 · Tue 6 Oct" (a paper from a batch before names the batch). `className` is asked for
+    /// the form's class, or for a note the
     /// student's id (the register answers either); nil reads "No class".
     public func line(className: (UUID?) -> String?, calendar: Calendar) -> String {
         let about = kind == .progressNote ? studentID : request?.classID
         let day = Day(createdAt, calendar: calendar)
-        return "\(kind.title) · \(className(about) ?? "No class") · \(day.shortWeekdayText)"
+        return "\(kind.title) · \(self.className(batchName: { _ in className(about) })) · \(day.shortWeekdayText)"
+    }
+
+    /// The class the work is for: its level ("Class 10"); one made from a batch before, the batch's name; else "No
+    /// class".
+    public func className(batchName: (UUID?) -> String?) -> String {
+        request?.classLevel?.title ?? batchName(request?.classID) ?? "No class"
     }
 
     /// The hero's line: "10 questions · 20 marks · Medium · created today, 18:32"; a note "Warm · written Tue 6 Oct,

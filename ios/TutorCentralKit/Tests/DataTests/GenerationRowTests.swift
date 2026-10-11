@@ -92,4 +92,18 @@ struct GenerationRowTests {
         }
         #expect(worksheet.classID == UUID(uuidString: maths) && !worksheet.withAnswers && worksheet.level == .easy)
     }
+
+    @Test func aStoredClassLevelReadsBackAsTheFormsLevel() throws {
+        let withSections = (String(bytes: Self.inserted, encoding: .utf8) ?? "")
+            .replacingOccurrences(of: #"\"sections\":[]"#, with: Self.sections)
+        let byLevel = withSections.replacingOccurrences(
+            of: #""classLevel": "Class 10 Maths""#, with: #""classLevel": "Class 10""#
+        )
+        let read = { (json: String) in
+            try #require(try SupabaseAIHistoryRepository.decoder.decode([GenerationRow].self, from: Data(json.utf8))
+                .first?.generation)
+        }
+        #expect(try read(byLevel).request?.classLevel == .ten)
+        #expect(try read(withSections).request?.classLevel == nil, "a batch's name is no level")
+    }
 }

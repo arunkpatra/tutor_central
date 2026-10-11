@@ -163,6 +163,10 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case aiAssistant = "ai-assistant"
     case aiAssistantEmpty = "ai-assistant-empty"
     case aiPaper = "ai-paper"
+    /// The paper's Class tile open on the class wheel; the paper with nothing chosen yet (P12-Form-Paper-ClassWheel,
+    /// -NoClass).
+    case aiPaperClassWheel = "ai-paper-class-wheel"
+    case aiPaperNoClass = "ai-paper-no-class"
     case aiHomework = "ai-homework"
     case aiWorksheet = "ai-worksheet"
     case aiNote = "ai-note"

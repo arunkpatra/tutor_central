@@ -42,6 +42,21 @@ import Testing
         #expect(sent["classId"] as? String == form.classID?.uuidString.lowercased())
     }
 
+    @Test func aPaperByClassLevelSendsTheLevelAndNoBatch() async throws {
+        let body = #"{"id":"fbc6ae19-2769-4934-bf10-c830207fd6a3","result":{"title":"T","sections":"#
+            + #"[{"title":"A","marksEach":1,"questions":[{"number":1,"text":"q","marks":1,"answer":"a"}]}]}}"#
+        let (client, recorder) = Self.client(status: 200, body: body)
+        let form = PaperForm(classLevel: .ten, subject: "Mathematics", topic: "Trigonometry")
+        let context = GenerateContext(
+            centre: Self.centre, className: nil, subject: "Mathematics", studentName: nil, parentName: nil,
+            attendanceLine: nil, tutorName: "Meera", centreName: "Bright Minds"
+        )
+        _ = try await client.generate(.paper(form), context: context)
+        let sent = try Self.sent(recorder)
+        #expect(sent["classLevel"] as? String == "Class 10")
+        #expect(sent["classId"] == nil || sent["classId"] is NSNull)
+    }
+
     struct Answer {
         let status: Int
         let body: String

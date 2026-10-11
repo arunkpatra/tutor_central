@@ -202,3 +202,19 @@ public extension CheckStore {
         }
     }
 }
+
+extension CheckStore {
+    /// "Question paper · Class 8 · 20 marks · Sun 11 Oct" (a paper made from a batch before names the batch); a set
+    /// names its questions.
+    func paperLine(_ paper: Generation) -> String {
+        let size = switch paper.result {
+        case let .paper(result): result.totalMarks == 1 ? "1 mark" : "\(result.totalMarks) marks"
+        case let .homework(set), let .worksheet(set):
+            set.questions.count == 1 ? "1 question" : "\(set.questions.count) questions"
+        case .progressNote: ""
+        }
+        let day = Day(paper.createdAt, calendar: calendar).shortWeekdayText
+        let className = paper.className { self.register.classroom($0)?.name }
+        return [paper.kind.title, className, size, day].joined(separator: " · ")
+    }
+}

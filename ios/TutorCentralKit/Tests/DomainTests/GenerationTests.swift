@@ -13,17 +13,17 @@ struct GenerationTests {
         #expect(GenerationKind(rawValue: "progress_note") == .progressNote, "the API's and the enum's spelling")
     }
 
-    @Test func aRequestIsValidWithAClassAndATopicOrAStudentAndObservations() {
+    @Test func aRequestIsValidWithAClassLevelAndATopicOrAStudentAndObservations() {
         #expect(!GenerateRequest.paper(PaperForm()).isValid)
-        #expect(!GenerateRequest.paper(PaperForm(classID: Self.maths, subject: "Mathematics", topic: "   ")).isValid)
+        #expect(!GenerateRequest.paper(PaperForm(classLevel: .ten, subject: "Mathematics", topic: "   ")).isValid)
         #expect(GenerateRequest.paper(PaperForm(
-            classID: Self.maths,
+            classLevel: .ten,
             subject: "Mathematics",
             topic: "Quadratic equations"
         ))
         .isValid)
         let long = String(repeating: "x", count: 201)
-        #expect(!GenerateRequest.paper(PaperForm(classID: Self.maths, subject: "M", topic: long)).isValid)
+        #expect(!GenerateRequest.paper(PaperForm(classLevel: .ten, subject: "M", topic: long)).isValid)
         #expect(!GenerateRequest.progressNote(NoteForm(studentID: nil, observations: "Improving", tone: .warm)).isValid)
         #expect(GenerateRequest.progressNote(NoteForm(studentID: UUID(), observations: "Improving", tone: .warm))
             .isValid)

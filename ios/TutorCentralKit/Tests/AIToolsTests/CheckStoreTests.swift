@@ -134,4 +134,23 @@ import Testing
         await store.retry()
         #expect(!store.askingConsent && store.stage == .result)
     }
+
+    @Test func aPaperInTheSchemesListNamesItsClassLevelElseItsBatch() async {
+        let store = await Self.make()
+        let question = PaperResult.Question(number: 1, text: "q", marks: 2, answer: "a")
+        let sections = [PaperResult.Section(title: "A", marksEach: 2, questions: [question])]
+        let at = Date(timeIntervalSince1970: 1_791_700_000)
+        let byLevel = Generation(
+            id: UUID(), kind: .paper, createdAt: at,
+            request: .paper(PaperForm(classLevel: .eight, subject: "Science", topic: "T")),
+            result: .paper(PaperResult(title: "T", sections: sections))
+        )
+        #expect(store.paperLine(byLevel).hasPrefix("Question paper · Class 8 · 2 marks · "))
+        let byBatch = Generation(
+            id: UUID(), kind: .paper, createdAt: at,
+            request: .paper(PaperForm(classID: FakeClassesRepository.maths.id, subject: "Maths", topic: "T")),
+            result: .paper(PaperResult(title: "T", sections: sections))
+        )
+        #expect(store.paperLine(byBatch).hasPrefix("Question paper · Class 10 Maths · 2 marks · "))
+    }
 }

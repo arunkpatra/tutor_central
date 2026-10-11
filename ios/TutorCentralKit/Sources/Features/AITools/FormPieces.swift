@@ -57,25 +57,34 @@ struct SwitchRow: View {
     }
 }
 
-/// The class of a paper, homework or worksheet: a picker tile over the centre's active classes.
-struct ClassTile: View {
-    let classes: [Classroom]
-    let selected: UUID?
-    let choose: (Classroom) -> Void
-
-    private var value: String {
-        classes.first { $0.id == selected }?.name ?? "Choose a class"
-    }
+/// The class of a paper, homework or worksheet by level (P12-Form-Paper-Class, -ClassWheel, -NoClass): New student's
+/// class wheel of LKG to class 10 in a popover; nothing chosen reads Choose. Opened with no class, the wheel's middle
+/// class is chosen, as the wheel shows it.
+struct ClassLevelTile: View {
+    @Binding var classLevel: ClassLevel?
+    @State private var picking = false
+    /// The board state with the wheel open.
+    var opensWheel = false
 
     var body: some View {
-        Menu {
-            ForEach(classes) { classroom in
-                Button(classroom.name) { choose(classroom) }
+        PickerField(label: "Class", value: classLevel?.title, placeholder: "Choose") {
+            Keyboard.dismiss()
+            if classLevel == nil {
+                classLevel = .five
             }
-        } label: {
-            PickerTile(label: "Class", value: value) {}
+            picking = true
         }
-        .accessibilityLabel("Class, \(value)")
+        .popover(isPresented: $picking, arrowEdge: .top) {
+            WheelPopover(
+                eyebrow: "Class", values: ClassLevel.allCases,
+                selection: Binding(get: { classLevel ?? .five }, set: { classLevel = $0 })
+            ) { $0.title }
+        }
+        .task {
+            if opensWheel {
+                picking = true
+            }
+        }
     }
 }
 
@@ -90,7 +99,6 @@ enum AIWords {
     static let offlineLine = "Check your connection and try again. Nothing was used up."
     static let emptyTitle = "Nothing created yet"
     static let emptyLine = "Papers, homework, worksheets and notes you create appear here, ready to open again."
-    static let subjectHelper = "From the class. Change it for another subject."
 
     static func footnote(_ kind: GenerationKind, parentName: String?) -> String {
         switch kind {

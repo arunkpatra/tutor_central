@@ -83,8 +83,9 @@ public struct ResultView: View {
     @ViewBuilder
     private func content(_ generation: Generation) -> some View {
         let classID = generation.request?.classID
-        let className = store.className(classID) ?? "No class"
-        let subject = store.register.classroom(classID)?.subject ?? subjectOf(generation.request)
+        let className = generation.className(batchName: store.className)
+        let subject = generation.request?.classLevel != nil ? subjectOf(generation.request)
+            : store.register.classroom(classID)?.subject ?? subjectOf(generation.request)
         ResultHero(
             eyebrow: [className, subject].compactMap(\.self).joined(separator: " · "),
             title: generation.title(studentName: store.studentName),

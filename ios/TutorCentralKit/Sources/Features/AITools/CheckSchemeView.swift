@@ -46,7 +46,7 @@ public struct CheckSchemeView: View {
                         VStack(spacing: 0) {
                             ForEach(store.papers) { paper in
                                 PaperChoiceRow(
-                                    title: paper.title(studentName: { _ in nil }), line: line(paper),
+                                    title: paper.title(studentName: { _ in nil }), line: store.paperLine(paper),
                                     chosen: store.scheme == .paper(generationID: paper.id)
                                 ) { store.scheme = .paper(generationID: paper.id) }
                                     .rowDivider(paper.id != store.papers.last?.id)
@@ -101,19 +101,6 @@ public struct CheckSchemeView: View {
             .horizontal,
             Tokens.rowGapInner
         )
-    }
-
-    /// "Question paper · Class 10 Maths · 20 marks · Tue 6 Oct"; a set names its questions.
-    private func line(_ paper: Generation) -> String {
-        let size = switch paper.result {
-        case let .paper(result): result.totalMarks == 1 ? "1 mark" : "\(result.totalMarks) marks"
-        case let .homework(set), let .worksheet(set):
-            set.questions.count == 1 ? "1 question" : "\(set.questions.count) questions"
-        case .progressNote: ""
-        }
-        let day = Day(paper.createdAt, calendar: store.calendar).shortWeekdayText
-        let className = store.register.classroom(paper.request?.classID)?.name ?? "No class"
-        return [paper.kind.title, className, size, day].joined(separator: " · ")
     }
 }
 
