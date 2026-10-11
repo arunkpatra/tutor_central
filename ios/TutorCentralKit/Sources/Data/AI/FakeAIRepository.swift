@@ -23,7 +23,10 @@ import Foundation
     /// One subject's answer scripted apart (a close or placement where one subject fails).
     public var scriptBySubject: [String: Script] = [:]
     /// The plan's calls (Phase 12), each scripted apart.
-    public enum Call: Hashable, Sendable { case checks, sheet, workedExample, figure, brief, topics }
+    public enum Call: Hashable, Sendable {
+        case checks, sheet, workedExample, figure, brief, topics
+        case note, canDo, notOnTrack, readMarks
+    }
 
     public var scriptByKind: [Call: Script] = [:]
     /// A delay for one kind of the plan's calls only (a sheet still on its way while the rest have landed).
@@ -39,6 +42,13 @@ import Foundation
     public private(set) var mockCalls: [MockRequest] = []
     public private(set) var gapCalls: [GapRequest] = []
     public private(set) var messageCalls: [TestTomorrowRequest] = []
+    /// The parents' calls (Phase 14).
+    public private(set) var noteCalls: [NoteRequest] = []
+    public private(set) var canDoCalls: [CanDoRequest] = []
+    public private(set) var notOnTrackCalls: [NotOnTrackRequest] = []
+    public private(set) var readMarksCalls: [ReadMarksRequest] = []
+    /// The rows marks from a photo answer; the board's three unless a test sets others.
+    public var readMarksRows = AISamples.readMarks
     /// The students named by each marking (nil for V1's).
     public private(set) var checkStudents: [UUID?] = []
     /// The items a reading answers, the samples unless a test sets others.
@@ -189,6 +199,32 @@ import Foundation
         return MadeMessage(
             generationID: UUID(), message: AISamples.testTomorrowHindi, english: AISamples.testTomorrowEnglish
         )
+    }
+
+    public func makeNote(_ request: NoteRequest, centre _: UUID) async throws(APIFailure) -> MadeMessage {
+        noteCalls.append(request)
+        try await answer(.note)
+        return MadeMessage(generationID: UUID(), message: AISamples.noteHindi, english: AISamples.noteEnglish)
+    }
+
+    public func makeCanDo(_ request: CanDoRequest, centre _: UUID) async throws(APIFailure) -> MadeMessage {
+        canDoCalls.append(request)
+        try await answer(.canDo)
+        return MadeMessage(generationID: UUID(), message: AISamples.canDoKannada, english: AISamples.canDoEnglish)
+    }
+
+    public func makeNotOnTrack(_ request: NotOnTrackRequest, centre _: UUID) async throws(APIFailure) -> MadeMessage {
+        notOnTrackCalls.append(request)
+        try await answer(.notOnTrack)
+        return MadeMessage(
+            generationID: UUID(), message: AISamples.notOnTrackHindi, english: AISamples.notOnTrackEnglish
+        )
+    }
+
+    public func readMarks(_ request: ReadMarksRequest, centre _: UUID) async throws(APIFailure) -> ReadMarksAnswer {
+        readMarksCalls.append(request)
+        try await answer(.readMarks)
+        return ReadMarksAnswer(generationID: UUID(), marks: readMarksRows)
     }
 
     private func answer(_ call: Call) async throws(APIFailure) {

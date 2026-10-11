@@ -17,6 +17,9 @@ public enum APIFailure: Error, Hashable, Sendable {
     case tooLarge
     /// Anything else the API said, in its words.
     case server(String)
+    /// A named student's parent has not agreed (403 `student_consent`, D62): the API's words are kept; every screen
+    /// says the one alert (`studentAlert`), never the centre's notice words.
+    case studentConsent(String)
 
     public var message: String {
         switch self {
@@ -26,9 +29,15 @@ public enum APIFailure: Error, Hashable, Sendable {
         case let .limit(limit): "You've made today's \(limit). Try again tomorrow."
         case let .allowance(allowance): "You've made this month's \(allowance). More next month."
         case let .refused(words), let .server(words): words
+        case .studentConsent: Self.studentAlert
         case .service: "The AI service didn't answer. Try again."
         case .timedOut: "That took too long to come back. Try again in a minute."
         case .tooLarge: "That's too many pages. Up to six, and try sharper, smaller photos."
         }
     }
+}
+
+public extension APIFailure {
+    /// The alert a store shows for a student whose parent has not agreed (plan/phase-14-plan.md decision 15).
+    static let studentAlert = "The parent hasn't agreed yet. Record their consent on the student's page first."
 }

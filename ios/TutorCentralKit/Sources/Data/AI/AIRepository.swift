@@ -296,4 +296,12 @@ public protocol AIRepository: Sendable {
     func makeGapReport(_ request: GapRequest, centre: UUID) async throws(APIFailure) -> MadeGapReport
     /// POST /ai/make, kind `test_tomorrow`.
     func makeTestTomorrow(_ request: TestTomorrowRequest, centre: UUID) async throws(APIFailure) -> MadeMessage
+    /// POST /ai/make, kind `note` (Phase 14).
+    func makeNote(_ request: NoteRequest, centre: UUID) async throws(APIFailure) -> MadeMessage
+    /// POST /ai/make, kind `can_do`.
+    func makeCanDo(_ request: CanDoRequest, centre: UUID) async throws(APIFailure) -> MadeMessage
+    /// POST /ai/make, kind `not_on_track`.
+    func makeNotOnTrack(_ request: NotOnTrackRequest, centre: UUID) async throws(APIFailure) -> MadeMessage
+    /// POST /ai/read-marks: the rows of a report card or a marked test.
+    func readMarks(_ request: ReadMarksRequest, centre: UUID) async throws(APIFailure) -> ReadMarksAnswer
 }
