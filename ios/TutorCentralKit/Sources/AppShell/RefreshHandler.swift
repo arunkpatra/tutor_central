@@ -29,7 +29,9 @@ import Today
             guard await !maker.closed(classID: batch.id, date: today, centre: centre) else { continue }
             let members = people.filter { $0.classID == batch.id && $0.archivedAt == nil }
             if let made = try? await plans.plan(centre: centre, classID: batch.id, date: today) {
-                await maker.complete(made, members: members, centre: centre) { _ in }
+                await maker.complete(
+                    made, batch: PlanBatch(classroom: batch, members: members, date: today, centre: centre)
+                ) { _ in }
             } else {
                 await maker.make(
                     PlanBatch(classroom: batch, members: members, date: today, centre: centre), choices: nil
@@ -49,7 +51,8 @@ import Today
             maker: { centre in
                 PlanMaker(
                     plans: deps.plans, textbooks: deps.textbooks, attendance: deps.attendance, ai: deps.ai,
-                    cache: PlanCache(centre: centre), now: deps.now, calendar: DayHeading.india
+                    schoolItems: deps.schoolItems, cache: PlanCache(centre: centre), now: deps.now,
+                    calendar: DayHeading.india
                 )
             },
             now: deps.now, calendar: DayHeading.india

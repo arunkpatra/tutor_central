@@ -12,9 +12,11 @@ import Testing
         online: Bool = true, cache: PlanCache? = nil, now: Date = PlanTest.at1635,
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
         classes: FakeClassesRepository = FakeClassesRepository(classes: FakeClassesRepository.withEvening),
-        load: Bool = true
+        items: FakeSchoolItemsRepository = FakeSchoolItemsRepository(items: []), load: Bool = true
     ) async -> PlanStore {
-        let maker = PlanTest.maker(plans: plans, ai: ai, attendance: attendance, cache: cache, now: now)
+        let maker = PlanTest.maker(
+            plans: plans, ai: ai, attendance: attendance, cache: cache, now: now, schoolItems: items
+        )
         let store = await PlanStore(
             classID: PlanTest.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
             register: PlanTest.register(now: now), plans: plans, classes: classes, maker: maker, cache: cache,
@@ -163,5 +165,82 @@ import Testing
         let riya = try #require(lines.first { $0.id == FakeStudentsRepository.riya })
         #expect(riya.rest.map(\.text).contains("Placement, her first checks"))
         #expect(riya.status == "Not known yet")
+    }
+
+    // MARK: - Phase 13: holidays and items that change the day
+
+    /// A holiday for class 8 at Vidya Niketan (Dev, Meher, Nikhil) on `day`.
+    func classEightHoliday(on day: Day) -> SchoolItem {
+        var item = FakeSchoolItemsRepository.boardItems.first { $0.id == FakeSchoolItemsRepository.dasara }!
+        item.audience = .schoolClass(school: FakeSchoolsRepository.vidya.id, level: .eight)
+        item.date = day
+        item.endDate = nil
+        return item
+    }
+
+    var classEight: Set<UUID> {
+        [FakeStudentsRepository.dev, FakeStudentsRepository.meher, FakeStudentsRepository.nikhil]
+    }
+
+    @Test func aHolidayOnAClosedDayChangesNothing() async throws {
+        let plans = FakePlansRepository()
+        let items = FakeSchoolItemsRepository(items: [classEightHoliday(on: FakeSchoolItemsRepository.day(30))])
+        let store = await store(plans: plans, items: items)
+        let plan = try #require(store.record)
+        plans.markDone(Set(plan.items.prefix(1).map(\.id)), session: UUID())
+        let made = plans.made.count
+        _ = try await items.update(classEightHoliday(on: PlanTest.wednesday))
+        await store.remake(for: classEight)
+        #expect(plans.made.count == made)
+    }
+
+    @Test func aHolidayTodayRemakesAnOpenPlanWithoutThem() async throws {
+        let plans = FakePlansRepository()
+        let items = FakeSchoolItemsRepository(items: [classEightHoliday(on: FakeSchoolItemsRepository.day(30))])
+        let store = await store(plans: plans, items: items)
+        #expect(plans.made.count == 1)
+        _ = try await items.update(classEightHoliday(on: PlanTest.wednesday))
+        await store.remake(for: classEight)
+        #expect(plans.made.count == 2 && Set(plans.made.last?.leftOut ?? []) == classEight)
+        let notHere: Set<UUID> = [FakeStudentsRepository.hemanth]
+        await store.remake(for: notHere) // nobody of this batch
+        #expect(plans.made.count == 2)
+    }
+
+    @Test func aBatchWhollyOnHolidayHasNoPlan() async {
+        var vidya = classEightHoliday(on: PlanTest.wednesday)
+        vidya.audience = .school(FakeSchoolsRepository.vidya.id)
+        var sahil = classEightHoliday(on: PlanTest.wednesday)
+        sahil.audience = .student(FakeStudentsRepository.sahil)
+        let plans = FakePlansRepository()
+        let store = await store(plans: plans, items: FakeSchoolItemsRepository(items: [vidya, sahil]))
+        #expect(store.state == .holiday && plans.made.isEmpty && store.groups.isEmpty)
+    }
+
+    @Test func anExamAddedTodayRemakesTheOpenPlanWithRevisionLines() async throws {
+        var exam = try #require(FakeSchoolItemsRepository.boardItems
+            .first { $0.id == FakeSchoolItemsRepository.scienceTest3 })
+        exam.date = FakeSchoolItemsRepository.day(30)
+        let plans = FakePlansRepository()
+        let items = FakeSchoolItemsRepository(items: [exam])
+        let store = await store(plans: plans, items: items)
+        #expect(store.record?.groups.allSatisfy { $0.examItemID == nil } == true)
+        exam.date = FakeSchoolItemsRepository.day(16)
+        _ = try await items.update(exam)
+        await store.remake(for: classEight)
+        #expect(store.record?.groups.first?.examItemID == exam.id)
+        let dev = store.record?.items.first { $0.studentID == FakeStudentsRepository.dev && $0.kind == .teach }
+        #expect(dev?.words.hasPrefix(PlanRules.revisionPrefix) == true)
+    }
+
+    /// P13-Today-Revision: the exam group's head counts down to the test; its marks are Set, Sheet and Checks.
+    @Test func anExamGroupsCardCountsDownToTheTest() async throws {
+        let exam = try #require(FakeSchoolItemsRepository.boardItems
+            .first { $0.id == FakeSchoolItemsRepository.scienceTest3 })
+        let store = await store(items: FakeSchoolItemsRepository(items: [exam]))
+        let card = try #require(store.groups.first)
+        #expect(card.title == "Group 1 · Science unit test 3")
+        #expect(card.line == "Class 8 Science · 3 students · the test in 9 days")
+        #expect(card.marks.map(\.name) == ["Set", "Sheet", "Checks"])
     }
 }

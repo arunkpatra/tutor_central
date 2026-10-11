@@ -36,13 +36,21 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
     public var message: String?
     /// The students an added, changed or deleted item reached: Today makes an open plan again for them.
     public var onChanged: ((Set<UUID>) -> Void)?
+    /// An exam's days from today to the test (P10-School-Item's Preparation); empty for any other item.
+    public internal(set) var preparation: [PreparationRowModel] = []
+    /// The batch whose plan Change opens on Today.
+    public internal(set) var changeOpensToday: UUID?
+    /// From the day before the exam: the sheet for the first of its students whose parent has a number.
+    public internal(set) var testTomorrowAsk: TestTomorrowAsk?
 
     public let itemID: UUID
     let workspace: Workspace
     let register: any Register
-    private let repository: any SchoolItemsRepository
+    let repository: any SchoolItemsRepository
     private let schoolsRepository: any SchoolsRepository
     private let photos: any PhotoStore
+    let textbooks: (any TextbooksRepository)?
+    let plans: (any PlansRepository)?
     private let now: @Sendable () -> Date
     let calendar: Calendar
     private let online: @Sendable () async -> Bool
@@ -50,9 +58,12 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
     public init(
         itemID: UUID, workspace: Workspace, items: any SchoolItemsRepository, register: any Register,
         schools: any SchoolsRepository, photos: any PhotoStore, now: @escaping @Sendable () -> Date, calendar: Calendar,
-        online: @escaping @Sendable () async -> Bool
+        online: @escaping @Sendable () async -> Bool, textbooks: (any TextbooksRepository)? = nil,
+        plans: (any PlansRepository)? = nil
     ) {
         self.itemID = itemID
+        self.textbooks = textbooks
+        self.plans = plans
         self.workspace = workspace
         repository = items
         self.register = register
@@ -82,6 +93,7 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
             if let path = read.photoPath {
                 photoURL = try? await photos.url(for: path)
             }
+            await loadPreparation(read)
         } catch {
             state = item == nil ? .failed : .shown
         }
@@ -147,6 +159,9 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
         do {
             item = try await repository.update(edited)
             onChanged?(before.union(reached))
+            if let item {
+                await loadPreparation(item)
+            }
             return true
         } catch {
             message = "That didn't go through. Check your connection and try again. Your changes are still here."

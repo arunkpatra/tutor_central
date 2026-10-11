@@ -9,7 +9,7 @@ import UIKit
 extension Fixtures {
     static let planStates: Set<LaunchState> = .init([
         .today, .todayScrolled, .todayPlanning, .todayLineMenu, .todayPlanChanged, .todayPlanChange,
-        .todayAfterClose, .workedExample, .brief,
+        .todayAfterClose, .workedExample, .brief, .todayRevision,
     ]).union(sheetStates).union(figureStates.keys)
 
     /// The figure boards' states and their templates (P10-Figure-*).
@@ -79,7 +79,8 @@ extension Fixtures {
             return FakePlansRepository.evening(ownSheet: ownSheet, photoPath: ownPhotoPath)
         case _ where figureStates[state] != nil:
             return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
-        case .closeCards:
+        case .closeCards, .todayRevision:
+            // P13-Today-Revision: made on the board's moment from the exam nine days out.
             return FakePlansRepository()
         case _ where planStates.contains(state) || closeStates.contains(state):
             return FakePlansRepository.evening(changed: state == .todayPlanChanged, done: state == .todayAfterClose)

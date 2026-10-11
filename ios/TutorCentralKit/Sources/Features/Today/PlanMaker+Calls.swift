@@ -7,9 +7,11 @@ struct LinePlace: Sendable {
     let group: Int
     let student: UUID?
     let kind: PlanLineKind
+    /// The exam a mock is kept with.
+    var schoolItem: UUID?
 
     func on(_ plan: UUID) -> ArtefactLink {
-        ArtefactLink(plan: plan, group: group, student: student, itemKind: kind)
+        ArtefactLink(plan: plan, group: group, student: student, itemKind: kind, schoolItem: schoolItem)
     }
 }
 
@@ -24,11 +26,17 @@ extension PlanMaker {
                 let made = try await ai.makeChecksWithID(
                     classLevel: level, subject: subject, skills: skills, centre: work.centre
                 )
-                let content = Self.checks(made.questions, ids: ids, placement: false)
+                let content = Self.checks(made.questions, skills: Self.named(skills, ids), placement: false)
                 return (artefact(.check, "Checks · \(skills.first ?? "")", content, made.generationID), place)
             case let .placement(student, level):
                 return try await placement(student, level: level, work: work).map { ($0, place) }
-            case .sheet, .workedExample, .figure, .brief, .mock:
+            case let .mock(_, item, title, portions, pattern, level, subject):
+                let asked = MockRequest(
+                    classLevel: level, subject: subject, title: title, portions: portions, pattern: pattern,
+                    schoolItemID: item
+                )
+                return try await mock(asked, place: place, centre: work.centre)
+            case .sheet, .workedExample, .figure, .brief:
                 return try await groupMaterial(request, centre: work.centre).map { ($0, place) }
             }
         } catch {
@@ -107,16 +115,24 @@ extension PlanMaker {
         draft.groups.first { $0.memberIDs.contains(student) }?.number ?? 1
     }
 
-    /// The checks' questions with their skill rows; a skill /ai/plan named has no row yet and takes a fresh id (the
-    /// close matches the group's questions to each student's skills by name).
-    static func checks(_ questions: [CheckQuestion], ids: [UUID], placement: Bool) -> ArtefactContent {
-        let rows = questions.enumerated().map { index, made in
-            CheckContent.Question(
-                skillID: index < ids.count ? ids[index] : UUID(), skill: made.skill, question: made.question,
-                answer: made.answer
-            )
+    /// The checks' questions with their skill rows: a question takes the row of the skill it names, else the next row
+    /// not taken, in order; a skill /ai/plan named has no row yet and takes a fresh id (the close matches the group's
+    /// questions to each student's skills by name).
+    static func checks(_ questions: [CheckQuestion], skills: [(String, UUID?)], placement: Bool) -> ArtefactContent {
+        var free = skills
+        let rows = questions.map { made in
+            let index = free.firstIndex { $0.0 == made.skill } ?? free.indices.first
+            let id = index.flatMap { free.remove(at: $0).1 } ?? UUID()
+            return CheckContent.Question(skillID: id, skill: made.skill, question: made.question, answer: made.answer)
         }
         return .check(CheckContent(questions: rows, placement: placement))
+    }
+
+    /// The skills a request names with their rows: the rows belong to the last names when there are fewer of them (a
+    /// group skill /ai/plan named has none yet).
+    static func named(_ skills: [String], _ ids: [UUID]) -> [(String, UUID?)] {
+        let missing = max(0, skills.count - ids.count)
+        return skills.enumerated().map { index, name in (name, index < missing ? nil : ids[index - missing]) }
     }
 }
 

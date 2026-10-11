@@ -19,7 +19,7 @@ import Testing
         events: [CalendarEvent] = FakeEventsRepository.seed,
         tasks: [TaskItem] = FakeTasksRepository.seed,
         record: FakeRecordRepository? = nil,
-        plans: FakePlansRepository? = nil
+        plans: FakePlansRepository? = nil, items: FakeSchoolItemsRepository? = nil
     ) async -> TodayStore {
         let register = RegisterStore(
             workspace: FakeCentreRepository.meeraWorkspace, students: FakeStudentsRepository(students: students),
@@ -35,7 +35,7 @@ import Testing
             tasks: taskStore, now: { now }, record: record
         )
         if let plans {
-            let maker = PlanTest.maker(plans: plans, attendance: attendance, now: now)
+            let maker = PlanTest.maker(plans: plans, attendance: attendance, now: now, schoolItems: items)
             store.makePlanStore = { classID in
                 PlanStore(
                     classID: classID, workspace: FakeCentreRepository.meeraWorkspace, register: register,
@@ -174,6 +174,29 @@ import Testing
         await store.load()
         #expect(Set(store.plans.keys) == [FakeClassesRepository.maths.id, FakeClassesRepository.evening.id])
         #expect(store.planBatches.map(\.id) == [FakeClassesRepository.maths.id, FakeClassesRepository.evening.id])
+    }
+
+    /// Decision 16: an item that reaches a member makes today's open plan of their batch again; the other batch's
+    /// stays.
+    @Test func anItemReachingAMemberRemakesOnlyTheirBatchsPlan() async throws {
+        var holiday = try #require(FakeSchoolItemsRepository.boardItems
+            .first { $0.id == FakeSchoolItemsRepository.dasara })
+        holiday.audience = .student(FakeStudentsRepository.dev)
+        holiday.date = FakeSchoolItemsRepository.day(30)
+        holiday.endDate = nil
+        let plans = FakePlansRepository(), items = FakeSchoolItemsRepository(items: [holiday])
+        let store = await make(
+            now: PlanTest.at1635, students: FakeStudentsRepository.eveningSeed,
+            classes: FakeClassesRepository.withEvening, plans: plans, items: items
+        )
+        await store.load()
+        let made = plans.made.count
+        holiday.date = PlanTest.wednesday
+        _ = try await items.update(holiday)
+        await store.remakePlans(for: [FakeStudentsRepository.dev])
+        #expect(plans.made.count == made + 1)
+        #expect(plans.made.last?.classID == FakeClassesRepository.evening.id)
+        #expect(plans.made.last?.leftOut == [FakeStudentsRepository.dev])
     }
 
     @Test func twoBatchesGetTwoPlans() async throws {

@@ -145,4 +145,24 @@ struct ExamPreparationTests: SchoolSamples {
             .name == "Balance a chemical equation") // the fixture's revisit
         #expect(ExamPreparation.weakest(devSkills.filter { $0.state == .secure }, among: names) == nil)
     }
+
+    /// The plan reads the split each day: it starts when the item came (or at the window's start), not today, so the
+    /// mock day found on Wednesday 7 is still the mock day on Wednesday 14.
+    @Test func theSplitStartsWhenTheItemCameSoTheMockDayHolds() throws {
+        var exam = exam16
+        exam.receivedAt = try #require(calendar.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 15)))
+        let wednesday14 = try #require(Day(year: 2026, month: 10, day: 14))
+        let start = ExamPreparation.start(of: exam, today: wednesday14, calendar: calendar)
+        #expect(start == today)
+        let split = PreparationContext(batch: evening, today: start, holidays: [], students: [dev], calendar: calendar)
+        let days = ExamPreparation.days(exam: exam, student: dev, chapters: [], skills: [], context: split)
+        #expect(days.first { $0.day == wednesday14 }?.kind == .mock)
+        #expect(ExamPreparation.start(of: exam, today: today, calendar: calendar) == today)
+        exam.receivedAt = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 20, hour: 9)))
+        #expect(ExamPreparation.start(of: exam, today: wednesday14, calendar: calendar) == Day(
+            year: 2026,
+            month: 10,
+            day: 2
+        ))
+    }
 }

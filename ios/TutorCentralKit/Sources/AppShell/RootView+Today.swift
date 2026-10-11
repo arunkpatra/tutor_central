@@ -37,6 +37,9 @@ extension RootView {
             .onAppear {
                 if shell.today == nil {
                     shell.today = store
+                    shell.schoolItemsChanged = { [weak store] students in
+                        Task { await store?.remakePlans(for: students) }
+                    }
                 }
                 store.schoolItems = deps.schoolItems
                 store.messages = deps.messages
@@ -59,8 +62,8 @@ extension RootView {
     func planStoreMaker(_ workspace: Workspace, register: any Register) -> (UUID) -> PlanStore {
         let cache = deps.cachesLists ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil
         let maker = PlanMaker(
-            plans: deps.plans, textbooks: deps.textbooks, attendance: deps.attendance, ai: deps.ai, cache: cache,
-            now: deps.now, calendar: DayHeading.india
+            plans: deps.plans, textbooks: deps.textbooks, attendance: deps.attendance, ai: deps.ai,
+            schoolItems: deps.schoolItems, cache: cache, now: deps.now, calendar: DayHeading.india
         )
         return { [deps] classID in
             let store = PlanStore(

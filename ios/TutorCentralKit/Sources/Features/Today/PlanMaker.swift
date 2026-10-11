@@ -60,18 +60,21 @@ public final class PlanMaker: Sendable {
     let textbooks: any TextbooksRepository
     let attendance: any AttendanceRepository
     let ai: any AIRepository
+    let schoolItems: any SchoolItemsRepository
     let cache: PlanCache?
     let now: @Sendable () -> Date
     let calendar: Calendar
 
     public init(
         plans: any PlansRepository, textbooks: any TextbooksRepository, attendance: any AttendanceRepository,
-        ai: any AIRepository, cache: PlanCache?, now: @escaping @Sendable () -> Date, calendar: Calendar
+        ai: any AIRepository, schoolItems: any SchoolItemsRepository, cache: PlanCache?,
+        now: @escaping @Sendable () -> Date, calendar: Calendar
     ) {
         self.plans = plans
         self.textbooks = textbooks
         self.attendance = attendance
         self.ai = ai
+        self.schoolItems = schoolItems
         self.cache = cache
         self.now = now
         self.calendar = calendar
@@ -107,9 +110,11 @@ public final class PlanMaker: Sendable {
         cache?.keep(plan, at: now())
         await progress(.written(plan))
         let requests = ArtefactBudget.requests(
-            for: draft, students: Self.byID(members), spacedSkills: spaced(draft, record), briefsMade: briefs
+            for: draft, students: Self.byID(members), spacedSkills: spaced(draft, record), briefsMade: briefs,
+            exam: examMaterial(batch, record)
         )
         let work = PlanWork(draft: draft, record: record, centre: centre)
+        plan = await linkMocks(into: plan, work: work, progress: progress)
         plan = await makeAll(requests, into: plan, work: work, progress: progress)
         guard !Task.isCancelled else { return }
         await progress(.finished(plan))
@@ -118,8 +123,9 @@ public final class PlanMaker: Sendable {
     /// The material a plan already written is still missing (a refresh iOS stopped part-way, a call that failed), made
     /// into the plan as it stands.
     public func complete(
-        _ plan: PlanRecord, members: [Student], centre: UUID, progress: @escaping @Sendable (Progress) async -> Void
+        _ plan: PlanRecord, batch: PlanBatch, progress: @escaping @Sendable (Progress) async -> Void
     ) async {
+        let (members, centre) = (batch.members, batch.centre)
         guard let record = try? await read(members: members, date: plan.date, centre: centre) else {
             await progress(.finished(plan))
             return
@@ -127,13 +133,15 @@ public final class PlanMaker: Sendable {
         let draft = plan.asDraft
         let briefs = await (try? plans.briefChapters(centre: centre)) ?? []
         let missing = ArtefactBudget.requests(
-            for: draft, students: Self.byID(members), spacedSkills: spaced(draft, record), briefsMade: briefs
+            for: draft, students: Self.byID(members), spacedSkills: spaced(draft, record), briefsMade: briefs,
+            exam: examMaterial(batch, record)
         ).filter { request in
             let place = place(of: request, in: draft)
             return plan.hasLine(for: place) && !plan.fills(place)
         }
         let work = PlanWork(draft: draft, record: record, centre: centre)
-        let made = await makeAll(missing, into: plan, work: work, progress: progress)
+        let linked = await linkMocks(into: plan, work: work, progress: progress)
+        let made = await makeAll(missing, into: linked, work: work, progress: progress)
         guard !Task.isCancelled else { return }
         await progress(.finished(made))
     }
@@ -199,6 +207,12 @@ public final class PlanMaker: Sendable {
         var chapters: [UUID: [Chapter]] = [:]
         var skills: [UUID: [Skill]] = [:]
         var sessions: [AttendanceSession] = []
+        /// The centre's school items (Phase 13): the exams and holidays that reach the members.
+        var items: [SchoolItem] = []
+        /// By exam item: its mock, when one was made.
+        var mocks: [UUID: Artefact] = [:]
+        /// By student: the gap report used for their exam.
+        var gapReports: [UUID: GapReportContent] = [:]
     }
 
     private func read(members: [Student], date: Day, centre: UUID) async throws -> Record {
@@ -224,15 +238,23 @@ public final class PlanMaker: Sendable {
             }
         }
         record.sessions = try await thisMonth + lastMonth
+        record.items = await (try? schoolItems.items(centre: centre)) ?? []
+        (record.mocks, record.gapReports) = await examArtefacts(
+            items: record.items, members: members, date: date, centre: centre
+        )
         return record
     }
 
     private func input(_ batch: PlanBatch, _ record: Record, _ choices: PlanChoices?) -> PlanInput {
-        PlanInput(
+        let exams = exams(for: batch, record: record)
+        return PlanInput(
             classroom: batch.classroom, date: batch.date, students: batch.members, chapters: record.chapters,
-            skills: record.skills,
-            sessions: record.sessions, schoolItems: [], now: now(), calendar: calendar, groupCount: choices?.groups,
-            subjects: choices?.subjects ?? [:]
+            skills: record.skills, sessions: record.sessions,
+            schoolItems: SchoolItemRules.hints(
+                record.items, students: batch.members, today: batch.date, calendar: calendar
+            ),
+            now: now(), calendar: calendar, groupCount: choices?.groups, subjects: choices?.subjects ?? [:],
+            revisions: exams.revisions, holidays: exams.holidays
         )
     }
 

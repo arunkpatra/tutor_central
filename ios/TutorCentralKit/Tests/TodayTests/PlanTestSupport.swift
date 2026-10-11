@@ -15,8 +15,8 @@ enum PlanTest {
     static let saturday0930 = at(10, 9, 30)
     static let members = FakeStudentsRepository.eveningSeed.filter { $0.classID == FakeClassesRepository.evening.id }
 
-    static func batch(_ members: [Student], classroom: Classroom = evening) -> PlanBatch {
-        PlanBatch(classroom: classroom, members: members, date: wednesday, centre: centre)
+    static func batch(_ members: [Student], classroom: Classroom = evening, on date: Day = wednesday) -> PlanBatch {
+        PlanBatch(classroom: classroom, members: members, date: date, centre: centre)
     }
 
     static func at(_ day: Int, _ hour: Int, _ minute: Int) -> Date {
@@ -57,10 +57,12 @@ enum PlanTest {
         plans: FakePlansRepository, ai: FakeAIRepository = FakeAIRepository(),
         textbooks: FakeTextbooksRepository = .evening(),
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
-        cache: PlanCache? = nil, now: Date = at1635
+        cache: PlanCache? = nil, now: Date = at1635, items: [SchoolItem] = [],
+        schoolItems: FakeSchoolItemsRepository? = nil
     ) -> PlanMaker {
         PlanMaker(
-            plans: plans, textbooks: textbooks, attendance: attendance, ai: ai, cache: cache, now: { now },
+            plans: plans, textbooks: textbooks, attendance: attendance, ai: ai,
+            schoolItems: schoolItems ?? FakeSchoolItemsRepository(items: items, now: now), cache: cache, now: { now },
             calendar: DayHeading.india
         )
     }

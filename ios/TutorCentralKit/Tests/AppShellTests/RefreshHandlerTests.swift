@@ -20,7 +20,8 @@ import Today
                 PlanMaker(
                     plans: plans, textbooks: FakeTextbooksRepository.evening(),
                     attendance: FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
-                    ai: FakeAIRepository(), cache: nil, now: { now }, calendar: DayHeading.india
+                    ai: FakeAIRepository(), schoolItems: FakeSchoolItemsRepository(items: []), cache: nil,
+                    now: { now }, calendar: DayHeading.india
                 )
             },
             now: { now }, calendar: DayHeading.india

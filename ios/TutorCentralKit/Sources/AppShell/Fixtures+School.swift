@@ -7,9 +7,14 @@ import School
 extension Fixtures {
     static let schoolStates: Set<LaunchState> = [
         .schoolEmpty, .school, .schoolCalendar, .schoolAddMenu, .schoolReading, .schoolConfirm, .schoolConfirmEdit,
+        .schoolItem, .schoolItemEdit, .schoolItemDelete,
         .schoolItemHomework, .schoolItemHoliday, .schoolAsk, .schoolAskFailed,
         .schoolTestTomorrow,
     ]
+
+    /// The exam's page (P10-School-Item, -Edit, -Delete): the Evening batch's five with the plan's statuses, so
+    /// Preparation reads the Evening batch's days.
+    static let examPageStates: Set<LaunchState> = [.schoolItem, .schoolItemEdit, .schoolItemDelete]
 
     /// Dev's parent writes in Hindi and agreed (P10-TestTomorrow, P10-Today-AfterClose's "Dev's father · Hindi").
     static func withSchoolLanguages(_ students: [Student], for state: LaunchState) -> [Student] {
@@ -42,9 +47,15 @@ extension Fixtures {
     }
 
     @MainActor static func schoolItems(for state: LaunchState) -> FakeSchoolItemsRepository {
-        FakeSchoolItemsRepository(
-            items: state == .schoolEmpty ? [] : FakeSchoolItemsRepository.boardItems, now: clock(for: state)
-        )
+        let items: [SchoolItem] = switch state {
+        case .schoolEmpty: []
+        // P13-Today-Revision: Science unit test 3 alone, so Dev revises with Meher and Nikhil.
+        case .todayRevision: FakeSchoolItemsRepository.boardItems.filter {
+                $0.id == FakeSchoolItemsRepository.scienceTest3
+            }
+        default: FakeSchoolItemsRepository.boardItems
+        }
+        return FakeSchoolItemsRepository(items: items, now: clock(for: state))
     }
 }
 
@@ -54,10 +65,20 @@ extension RootView {
         switch state {
         case .schoolReading, .schoolConfirm, .schoolConfirmEdit:
             [.schoolRead(.pasted(FakeSchoolItemsRepository.boardMessage))]
+        case .schoolItem, .schoolItemEdit, .schoolItemDelete: [.schoolItem(FakeSchoolItemsRepository.scienceTest3)]
         case .schoolItemHomework: [.schoolItem(FakeSchoolItemsRepository.mathsHomework)]
         case .schoolItemHoliday: [.schoolItem(FakeSchoolItemsRepository.dasara)]
         case .schoolAsk, .schoolAskFailed: [.schoolAsk]
         case .schoolTestTomorrow: [.schoolItem(FakeSchoolItemsRepository.devsTest)]
+        default: nil
+        }
+    }
+
+    /// The exam page's edit sheet and delete dialog (P10-School-Item-Edit, -Delete).
+    static func itemBoardState(_ state: LaunchState?) -> ItemBoardState? {
+        switch state {
+        case .schoolItemEdit: .edit
+        case .schoolItemDelete: .delete
         default: nil
         }
     }

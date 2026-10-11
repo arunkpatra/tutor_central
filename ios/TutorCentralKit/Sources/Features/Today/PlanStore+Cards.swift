@@ -29,14 +29,26 @@ extension PlanStore {
         }
     }
 
-    /// "Class 8 Science · 3 students"; a ladder's group, whose subject is its chapter, "Class 2 · 1 student".
+    /// "Class 8 Science · 3 students"; a ladder's group, whose subject is its chapter, "Class 2 · 1 student"; an exam
+    /// group's ends with its countdown, "the test in 9 days" (P13-Today-Revision).
     private func headLine(_ group: PlanGroup, members: [UUID]) -> String {
         let levels = Array(Set(members.compactMap { register.student($0)?.classLevel })).sorted()
         let classes = Self.classes(levels)
         let subject = group.subject == group.chapter ? nil : group.subject
         let what = [classes, subject].compactMap(\.self).joined(separator: " ")
         let count = members.count == 1 ? "1 student" : "\(members.count) students"
-        return what.isEmpty ? count : "\(what) · \(count)"
+        let line = what.isEmpty ? count : "\(what) · \(count)"
+        guard let exam = group.examItemID.flatMap({ examDates[$0] }) else { return line }
+        return "\(line) · \(Self.countdown(today.days(to: exam)))"
+    }
+
+    /// "the test today", "the test tomorrow", "the test in 9 days".
+    static func countdown(_ days: Int) -> String {
+        switch days {
+        case ...0: "the test today"
+        case 1: "the test tomorrow"
+        default: "the test in \(days) days"
+        }
     }
 
     /// "Class 8", "Class 7 and 8", "UKG and Class 1".
@@ -54,7 +66,22 @@ extension PlanStore {
         let items = plan.items.filter { $0.groupNo == group.number }
         let placed = items.filter { $0.kind == .check && $0.studentID != nil }
             .allSatisfy { $0.words.hasPrefix("Placement") }
-        var marks: [(String, Artefact?)] = [
+        var marks: [(String, Artefact?)]
+        if group.examItemID != nil {
+            // An exam group: the set (the mock on its day), the revision sheet, the checks; no worked example.
+            let mockDay = items.contains { $0.kind == .practise && $0.words == PlanRules.mockLine }
+            marks = mockDay
+                ? [("Mock", plan.artefact(group: group.number, kind: .mock))]
+                : [
+                    ("Set", plan.artefact(group: group.number, kind: .sheet, homework: false)),
+                    ("Sheet", plan.artefact(group: group.number, kind: .sheet, homework: true)),
+                ]
+            marks.append(("Checks", checksMark(plan, items: items, group: group.number)))
+            return marks.map { name, artefact in
+                ReadyMark(name: name, state: artefact != nil ? .made : planning ? .onItsWay : .notMade)
+            }
+        }
+        marks = [
             ("Set", plan.artefact(group: group.number, kind: .sheet, homework: false)),
             ("Sheet", plan.artefact(group: group.number, kind: .sheet, homework: true)),
             (placed ? "Placement" : "Checks", checksMark(plan, items: items, group: group.number)),

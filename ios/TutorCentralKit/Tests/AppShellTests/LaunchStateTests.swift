@@ -304,4 +304,18 @@ struct SchoolLaunchStateTests {
         let first = try? await messages.forwardAsked(centre: Fixtures.meeraWorkspace.centre.id)
         #expect(first == nil)
     }
+
+    /// P10-School-Item, -Edit, -Delete over the exam nine days out; P13-Today-Revision made from that exam alone.
+    @MainActor @Test func theExamPageStatesAndTodayRevision() async throws {
+        let exam = FakeSchoolItemsRepository.scienceTest3
+        for state in [LaunchState.schoolItem, .schoolItemEdit, .schoolItemDelete] {
+            #expect(RootView.initialRoutes(for: state) == [.schoolItem(exam)] && RootView.tab(for: state) == .school)
+        }
+        #expect(RootView.itemBoardState(.schoolItemEdit) == .edit && RootView
+            .itemBoardState(.schoolItemDelete) == .delete)
+        #expect(RootView.itemBoardState(.schoolItem) == nil)
+        let items = try await Fixtures.dependencies(for: .todayRevision).schoolItems
+            .items(centre: Fixtures.meeraWorkspace.centre.id)
+        #expect(items.map(\.id) == [exam] && (RootView.tab(for: .todayRevision) ?? .today) == .today)
+    }
 }
