@@ -137,4 +137,6 @@ enum Route: Hashable {
     /// Phase 14: a student's weekly note or can-now-do for a note day, from Today's Read, the held sheet and the sent
     /// log.
     case note(UUID, Day)
+    /// A student's sent log, from the page's Messages See all.
+    case studentMessages(UUID)
 }

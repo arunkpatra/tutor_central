@@ -9,6 +9,7 @@ import Foundation
 extension Fixtures {
     static let noteDayStates: Set<LaunchState> = [
         .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .note, .noteSend, .noteCanDo, .noteWriting,
+        .studentMessages,
     ]
 
     static var noteDayClock: Date {
@@ -48,6 +49,9 @@ extension Fixtures {
         let at = { (day: Int, hour: Int) in india(day: day, hour: hour, minute: 20) }
         let meher = [MessageEntry(id: UUID(), kind: .note, openedAt: at(11, 18), language: .english)]
         let devNote = MessageEntry(id: UUID(), kind: .note, openedAt: at(11, 18), language: .hindi)
+        if state == .studentMessages {
+            return [FakeStudentsRepository.dev: devLog]
+        }
         guard state == .todayNoteHeld else {
             return [
                 FakeStudentsRepository.dev: [devNote],
@@ -106,4 +110,45 @@ extension Fixtures {
         }
         return books
     }
+
+    /// Dev's sent log (P10-Student-Messages): last Sunday's note opened on Monday, Test tomorrow on Wednesday, not on
+    /// track
+    /// on Friday; September's two notes. With the fee reminder of the seed that is three suggestions this week, so this
+    /// Sunday's note is held.
+    static var devLog: [MessageEntry] {
+        let entry = { (kind: MessageKind, month: Int, day: Int, hour: Int) in
+            MessageEntry(
+                id: UUID(), kind: kind, openedAt: DayHeading.india.date(from: DateComponents(
+                    year: 2026, month: month, day: day, hour: hour, minute: 10
+                )) ?? now, language: .hindi
+            )
+        }
+        return [
+            entry(.note, 10, 5, 8), entry(.testTomorrow, 10, 7, 18), entry(.notOnTrack, 10, 9, 18),
+            entry(.note, 9, 28, 8), entry(.note, 9, 20, 19),
+        ]
+    }
+
+    /// Dev's kept notes: this Sunday's (held) and the three before it.
+    static var devNotes: [Artefact] {
+        [(9, 20, 9, 14), (9, 27, 9, 21), (10, 4, 9, 28), (10, 11, 10, 5)].map { month, day, mondayMonth, monday in
+            let made = DayHeading.india.date(from: DateComponents(
+                year: 2026, month: month, day: day, hour: 18, minute: 30
+            )) ?? now
+            let content = NoteContent(
+                message: AISamplesNote.hindi, english: nil, language: .hindi,
+                weekMonday: Day(year: 2026, month: mondayMonth, day: monday) ?? Day(now, calendar: DayHeading.india),
+                facts: [], generationID: nil
+            )
+            return Artefact(
+                id: UUID(), kind: .note, source: .made, title: "Dev's week", content: .note(content), photoPath: nil,
+                studentID: FakeStudentsRepository.dev, planID: nil, regeneratedFrom: nil, madeAt: made
+            )
+        }
+    }
+}
+
+/// The note's words in the fixtures' kept notes.
+enum AISamplesNote {
+    static let hindi = "नमस्ते रमेश जी, इस हफ़्ते देव ने रासायनिक समीकरण संतुलित करना सीखा। धन्यवाद।"
 }

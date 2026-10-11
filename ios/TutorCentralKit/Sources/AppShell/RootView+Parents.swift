@@ -2,13 +2,22 @@ import Artefacts
 import Data
 import DesignSystem
 import Domain
+import Students
 import SwiftUI
 import UIKit
 
 /// Phase 14's screens: the weekly note (Artefacts), opened from Today's note day, the held sheet and the sent log.
 extension RootView {
     @ViewBuilder func parentsScreen(_ route: Route) -> some View {
-        if case let .ready(workspace) = session.state, case let .note(student, noteDay) = route {
+        if case let .ready(workspace) = session.state, case let .studentMessages(student) = route {
+            MessagesScreen(
+                store: MessagesStore(
+                    student: student, centre: workspace.centre.id, register: register(for: workspace),
+                    messages: deps.messages, plans: deps.plans, now: deps.now, calendar: DayHeading.india
+                ),
+                openNote: { shell.tabs.push(.note($0, $1)) }
+            )
+        } else if case let .ready(workspace) = session.state, case let .note(student, noteDay) = route {
             NoteView(
                 store: NoteStore(
                     student: student, noteDay: noteDay, context: noteContext(workspace),
@@ -51,6 +60,7 @@ extension RootView {
         return switch state {
         case .note, .noteSend, .noteWriting: [.note(FakeStudentsRepository.dev, sunday)]
         case .noteCanDo: [.note(FakeStudentsRepository.sahil, sunday)]
+        case .studentMessages: [.student(FakeStudentsRepository.dev), .studentMessages(FakeStudentsRepository.dev)]
         default: nil
         }
     }

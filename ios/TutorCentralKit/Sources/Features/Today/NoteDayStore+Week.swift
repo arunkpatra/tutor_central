@@ -44,12 +44,12 @@ extension NoteDayStore {
         return WeekRead(rows: rows, parents: parents)
     }
 
-    /// Sent once the note or can-now-do was opened in WhatsApp since the week's Monday (the day after the note day, or
-    /// after the note day moved, included); else the cadence's decision.
+    /// Sent once the note or can-now-do was opened in WhatsApp from the day after last week's note day ended (the day
+    /// after the note day, or after the note day moved, included); else the cadence's decision.
     func state(
         _ student: Student, entries: [StudentMessage], parent: [MessageEntry], week: ClosedRange<Day>, at moment: Date
     ) -> NoteRowModel.State {
-        let monday = week.lowerBound.date(in: calendar)
+        let monday = NoteDay.sendsFrom(week.upperBound).date(in: calendar)
         let sent = entries.contains {
             $0.studentID == student.id && [.note, .canDo].contains($0.entry.kind) && $0.entry.channel == .whatsAppLink
                 && $0.entry.openedAt >= monday

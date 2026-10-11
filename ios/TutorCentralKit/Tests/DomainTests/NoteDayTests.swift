@@ -36,6 +36,12 @@ struct NoteDayTests: ParentFixtures {
         #expect(NoteDay.default.noteDay(for: india(2026, 10, 12, 9, 0), calendar: calendar) == day(10, 11))
     }
 
+    @Test func aNoteCountsAsSentFromTheDayAfterTheLastNoteDaysEnd() {
+        // Sunday 11 October's note: last Sunday's ran to the end of Monday 5, so from Tuesday 6 a send is this week's.
+        #expect(NoteDay.sendsFrom(day(10, 11)) == day(10, 6))
+        #expect(NoteDay.sendsFrom(day(10, 12)) == day(10, 7))
+    }
+
     @Test func aBatchWithNoNoteDaySetReadsSundayAtSix() {
         #expect(evening.noteDay == nil)
         #expect(evening.effectiveNoteDay == .default)

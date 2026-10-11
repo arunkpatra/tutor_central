@@ -95,7 +95,7 @@ public struct StudentDetailView: View {
                         line: store.schoolEmptyLine, rows: store.schoolRows, seeAll: navigation.openSchool,
                         open: navigation.openSchoolItem
                     )
-                    MessagesSection(rows: store.messages).id(Anchor.end)
+                    MessagesSection(rows: store.messages) { actions.openMessages(store.id) }.id(Anchor.end)
                     if consentAgreed {
                         consentSection
                     }

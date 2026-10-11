@@ -14,6 +14,8 @@ public struct StudentsActions {
     let openToday: (UUID) -> Void
     /// A homework row's sheet.
     let openArtefact: (UUID) -> Void
+    /// Messages' See all: the sent log (Phase 14).
+    let openMessages: (UUID) -> Void
 
     public init(
         openScanRegister: @escaping () -> Void,
@@ -22,8 +24,10 @@ public struct StudentsActions {
         openStudentAttendance: @escaping (UUID) -> Void,
         openFeeAction: @escaping (FeeAction) -> Void,
         openToday: @escaping (UUID) -> Void,
-        openArtefact: @escaping (UUID) -> Void
+        openArtefact: @escaping (UUID) -> Void,
+        openMessages: @escaping (UUID) -> Void = { _ in }
     ) {
+        self.openMessages = openMessages
         self.openScanRegister = openScanRegister
         self.openStudentFees = openStudentFees
         self.openMarkAttendance = openMarkAttendance

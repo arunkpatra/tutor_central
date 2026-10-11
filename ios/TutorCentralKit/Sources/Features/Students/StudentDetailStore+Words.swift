@@ -30,7 +30,7 @@ extension StudentDetailStore {
     nonisolated static func symbol(_ kind: MessageKind) -> String {
         switch kind {
         case .reminder: "bell"
-        case .receipt: "doc.text"
+        case .receipt: "checkmark.circle"
         case .absence: "person.crop.circle.badge.exclamationmark"
         case .consent: "checkmark.shield"
         default: "text.bubble"
