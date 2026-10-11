@@ -11,6 +11,8 @@ import SwiftUI
     var paths: [AppTab: [Route]] = [:]
     /// Counts the pushes of Scan register: each is a new visit with its own store (`ShellState.scan`).
     @ObservationIgnored private(set) var scanVisits = 0
+    /// A tab chosen in the tab bar or by a link: the School tab's student filter is cleared (U42).
+    @ObservationIgnored var onTabChosen: (() -> Void)?
 
     /// Scan register is on some tab's stack; when it goes (Back, Add, a tab popped to its root) the visit ends.
     var scanOnStack: Bool {
@@ -19,6 +21,12 @@ import SwiftUI
 
     init(selected: AppTab = .today) {
         self.selected = selected
+    }
+
+    /// The tab bar's choice: as `select`, and the School filter cleared.
+    func choose(_ tab: AppTab) {
+        onTabChosen?()
+        select(tab)
     }
 
     /// Tapping the active tab pops it to its root.
@@ -58,6 +66,7 @@ import SwiftUI
     /// A link opens its tab at the root, then its screen (a student's detail; the fees month is set by the caller).
     /// Returns false when this build has no screen for it, so the caller can say so.
     func open(_ link: DeepLink) -> Bool {
+        onTabChosen?()
         selected = link.tab
         paths[link.tab] = []
         switch link {

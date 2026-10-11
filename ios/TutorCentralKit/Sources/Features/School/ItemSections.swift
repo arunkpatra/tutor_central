@@ -23,9 +23,11 @@ struct ItemHeroCard: View {
     }
 }
 
-/// Who: the students the item reaches, each with the status word and the record's reason.
+/// Who: the students the item reaches, each with the status word and the record's reason; a row opens the student's
+/// page (U44, P10-School-Item).
 struct WhoSection: View {
     let rows: [WhoRow]
+    let open: ((UUID) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
@@ -33,16 +35,25 @@ struct WhoSection: View {
             Card {
                 VStack(spacing: 0) {
                     ForEach(rows) { row in
-                        HStack(spacing: Tokens.rowPaddingDense) {
-                            Avatar(initials: row.initials, size: WhoSection.avatar)
-                            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                                Text(row.name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                                Text(row.line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                        Button { open?(row.id) } label: {
+                            HStack(spacing: Tokens.rowPaddingDense) {
+                                Avatar(initials: row.initials, size: WhoSection.avatar)
+                                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                                    Text(row.name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                                    Text(row.line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                if open != nil {
+                                    Chevron()
+                                }
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, Tokens.rowPaddingDense)
+                            .padding(.horizontal, Tokens.rowPaddingHorizontal)
+                            .contentShape(.rect)
                         }
-                        .padding(.vertical, Tokens.rowPaddingDense)
-                        .padding(.horizontal, Tokens.rowPaddingHorizontal)
+                        .buttonStyle(.plain)
+                        .pressable()
+                        .disabled(open == nil)
                         .accessibilityElement(children: .combine)
                         .rowDivider(row.id != rows.last?.id)
                     }

@@ -134,6 +134,8 @@ import Testing
         let store = await Self.make(Self.riya)
         await store.load()
         #expect(store.held?.line == "Held since Sun 11 Oct · waits for Neha's consent")
+        // No note is made without consent: Send now goes back to the page, where it is recorded.
+        #expect(store.sendNow() == nil && store.held?.waitsForConsent == true)
     }
 
     @Test func aFailedReadSaysSoInPlace() async {

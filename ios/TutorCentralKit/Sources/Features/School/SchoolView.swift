@@ -9,6 +9,8 @@ import SwiftUI
 public enum SchoolBoardState: Sendable {
     case addMenu
     case calendar(Day)
+    /// The tab filtered to a student (P14-School-Student).
+    case filtered(UUID)
 }
 
 /// The School tab (P10-School-Empty, -List, -Calendar, -AddMenu): the title with the "+" menu, List | Calendar, the
@@ -95,9 +97,16 @@ public struct SchoolView: View {
             SchoolEmptyCard(askParents: actions.askParents, fromPhoto: { choosingPhoto = true })
         case .items, .offline:
             Segmented(options: [(SchoolStore.Segment.list, "List"), (.calendar, "Calendar")], selection: $store.segment)
+            if let chip = store.filterChip {
+                FilterChipRow(chip, initials: store.filterInitials, clear: ("Show all", store.showAll))
+            }
             switch store.segment {
             case .list: SchoolList(buckets: store.buckets, open: actions.openItem)
             case .calendar: SchoolCalendarSection(store: store, open: actions.openItem)
+            }
+            if let line = store.filterLine {
+                Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -130,14 +139,9 @@ public struct SchoolView: View {
         action()
     }
 
-    /// Paste a message: the pasteboard's text, or the alert when it holds none.
+    /// Paste a message (U41): the read screen waits for the system's Paste button, so iOS asks nothing.
     private func paste() {
-        let text = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        guard !text.isEmpty else {
-            notices?.show(SchoolWords.pasteNothing)
-            return
-        }
-        actions.read(.pasted(String(text.prefix(4000))))
+        actions.read(.pasteWaiting)
     }
 
     /// Take a photo: the camera when allowed, the system's question the first time, where to allow it when refused,
@@ -182,6 +186,8 @@ public struct SchoolView: View {
         case let .calendar(day):
             store.segment = .calendar
             store.selectedDay = day
+        case let .filtered(student):
+            store.filter = student
         case nil:
             break
         }

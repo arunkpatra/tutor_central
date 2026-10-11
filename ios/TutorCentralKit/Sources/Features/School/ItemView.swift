@@ -18,13 +18,17 @@ public struct ItemActions {
     let markPaper: (Student, Artefact, SchoolItem) -> Void
     /// The last days' Gap report: the exam and the student.
     let openGapReport: (UUID, UUID) -> Void
+    /// Who's rows: the student's page (U44).
+    let openStudent: ((UUID) -> Void)?
 
     public init(
         openToday: @escaping (UUID) -> Void, openArtefact: @escaping (UUID) -> Void,
         testTomorrow: @escaping (TestTomorrowAsk) -> Void,
         markPaper: @escaping (Student, Artefact, SchoolItem) -> Void = { _, _, _ in },
-        openGapReport: @escaping (UUID, UUID) -> Void = { _, _ in }
+        openGapReport: @escaping (UUID, UUID) -> Void = { _, _ in },
+        openStudent: ((UUID) -> Void)? = nil
     ) {
+        self.openStudent = openStudent
         self.openToday = openToday
         self.openArtefact = openArtefact
         self.testTomorrow = testTomorrow
@@ -149,7 +153,7 @@ public struct ItemView: View {
                     }
                 }
             } else if !store.who.isEmpty {
-                WhoSection(rows: store.who)
+                WhoSection(rows: store.who, open: actions?.openStudent)
             }
             if let lastDays = store.lastDays, let item = store.item {
                 LastDaysSections(

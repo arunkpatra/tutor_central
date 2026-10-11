@@ -59,7 +59,7 @@ enum DraftResolver {
     private static func itemSource(_ source: ReadSource) -> SchoolItemSource {
         switch source {
         case .photo: .photo
-        case .pasted: .pasted
+        case .pasted, .pasteWaiting: .pasted
         case .typed: .typed
         case let .shared(read): read.image == nil ? .sharedText : .sharedPhoto
         }
@@ -69,7 +69,7 @@ enum DraftResolver {
         switch source {
         case let .pasted(text): String(text.prefix(4000))
         case let .shared(read): read.text.map { String($0.prefix(4000)) }
-        case .photo, .typed: nil
+        case .photo, .typed, .pasteWaiting: nil
         }
     }
 }
