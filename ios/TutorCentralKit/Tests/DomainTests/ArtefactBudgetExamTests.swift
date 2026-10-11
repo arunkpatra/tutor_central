@@ -92,11 +92,11 @@ struct ArtefactBudgetExamTests: SchoolSamples {
         }
     }
 
-    @Test func theBudgetStillHoldsTwentyCalls() {
+    @Test func theBudgetStillHoldsTwentyCalls() throws {
         let others = (1 ... 9).map { student("Other \($0)", level: $0 <= 5 ? .five : .two, school: nil) }
         let made = requests(preparation[5], others: others)
         #expect(made.count <= ArtefactBudget.maxCalls)
         #expect(made.contains { $0.kindName == "mock" })
-        #expect(PriceSheet.rupees(made) < 10)
+        #expect(try PriceSheet.rupees(made) < 10)
     }
 }

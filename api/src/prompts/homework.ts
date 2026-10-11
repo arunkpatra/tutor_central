@@ -1,11 +1,12 @@
 import type { ClaudeRequest } from "../claude.js";
+import { modelFor } from "../models.js";
 import { type HomeworkInput, QuestionSetOutput } from "../schemas.js";
 import { LEVEL_WORDS, VOICE } from "./shared.js";
 
 /** Homework: a short set of practice questions for one evening, with the answers for the tutor. */
 export function request(input: HomeworkInput): ClaudeRequest<QuestionSetOutput> {
   return {
-    model: "claude-sonnet-5-5",
+    model: modelFor("homework"),
     effort: "medium",
     system: [
       VOICE,

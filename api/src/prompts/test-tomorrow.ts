@@ -20,7 +20,7 @@ const first = (name: string) => name.trim().split(/\s+/)[0] ?? name;
  *  is named, so the call needs their consent (start_ai_generation). */
 export function request(input: TestTomorrowInput): ClaudeRequest<TestTomorrowOutput> {
   return {
-    model: modelFor("test_tomorrow", "8"),
+    model: modelFor("test_tomorrow"),
     effort: "medium",
     system: [
       VOICE,

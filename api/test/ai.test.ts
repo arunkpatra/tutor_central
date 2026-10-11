@@ -3,6 +3,7 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
@@ -122,4 +123,18 @@ test("check-paper marks against a mock's key read from its generation, names the
   const gone = await post(app(claude, fakeDb()), "/ai/check-paper", body);
   expect(gone.status).toBe(400);
   expect(await gone.json()).toEqual({ error: "That mock is no longer here. Type the scheme instead." });
+});
+
+test("check-paper's model comes from the table, not a constant (D67)", async () => {
+  applyModelOverrides({ AI_MODEL_CHECK_PAPER: "claude-sonnet-5-5" });
+  try {
+    const claude = fakeClaude({ answer: SAMPLE.check_paper });
+    const db = fakeDb();
+    const r = await post(app(claude, db), "/ai/check-paper", { centreId, pages: [image], scheme: { kind: "typed", text: "Q1 2 marks" }, studentName: "Dev" });
+    expect(r.status).toBe(200);
+    expect(claude.requests[0]?.model).toBe("claude-sonnet-5-5");
+    expect(db.started[0]).toMatchObject({ kind: "check_paper", model: "claude-sonnet-5-5" });
+  } finally {
+    resetModelOverrides();
+  }
 });

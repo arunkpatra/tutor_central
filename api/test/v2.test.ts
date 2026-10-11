@@ -3,6 +3,7 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude, kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
@@ -211,4 +212,19 @@ test("make gap_report and test_tomorrow are personal: the student's consent is a
 test("the note and can_do still answer 501", async () => {
   const r = await post(app(), "/ai/make", { kind: "can_do", centreId, studentId: centreId, studentName: "D", tutorName: "M", language: "en", ladder: {} });
   expect(r.status).toBe(501);
+});
+
+test("AI_MODEL_TEST_TOMORROW reaches the next call and its record (D67)", async () => {
+  applyModelOverrides({ AI_MODEL_TEST_TOMORROW: "claude-opus-5-5" });
+  try {
+    const claude = fakeClaude({ answer: SAMPLE.test_tomorrow });
+    const db = fakeDb();
+    const message = { kind: "test_tomorrow", centreId, studentId: centreId, studentName: "Dev Kumar", tutorName: "Meera Nair", centreName: "Bright Minds Tuition", parentName: "Ramesh Kumar", language: "hi", subject: "Science", title: "Science unit test", date: "2026-10-08", portions: "chapters 1 and 2" };
+    const r = await post(app(claude, db), "/ai/make", message);
+    expect(r.status).toBe(200);
+    expect(claude.requests[0]?.model).toBe("claude-opus-5-5");
+    expect(db.started[0]).toMatchObject({ kind: "test_tomorrow", model: "claude-opus-5-5" });
+  } finally {
+    resetModelOverrides();
+  }
 });

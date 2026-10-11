@@ -1,4 +1,5 @@
 import type { ClaudeRequest } from "../claude.js";
+import { modelFor } from "../models.js";
 import { type PaperInput, PaperOutput } from "../schemas.js";
 import { LEVEL_WORDS, VOICE } from "./shared.js";
 
@@ -53,7 +54,7 @@ export function request(input: PaperInput): ClaudeRequest<PaperOutput> {
   const plan = sectionPlan(input.questions, input.marks);
   const word = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
   return {
-    model: "claude-sonnet-5-5",
+    model: modelFor("paper"),
     effort: "medium",
     system: [
       VOICE,

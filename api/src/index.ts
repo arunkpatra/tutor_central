@@ -8,11 +8,14 @@ import { fakeClaude, localScript } from "./claude-fake.js";
 import { makeDb } from "./db.js";
 import { env } from "./env.js";
 import { makeApp } from "./make-app.js";
+import { applyModelOverrides } from "./models.js";
 
 /** Read at start: a deployment without them fails to boot, so /health and the deploy's smoke fail, instead of every
  *  tutor being told to sign in again. AI_FAKE=1 (local runs only, never in Vercel) answers from the fake, so a hand
  *  run costs nothing while the consent, the limit and the record still run against the database. */
 const supabaseUrl = env("SUPABASE_URL");
+/** AI_MODEL_<WORK_TYPE> overrides api/models.json at deploy (D67); an unknown name stops the start, as a missing setting does. */
+applyModelOverrides(process.env);
 const supabaseAnonKey = env("SUPABASE_ANON_KEY");
 const claude = process.env.AI_FAKE === "1" ? fakeClaude(localScript) : anthropicClaude(env("ANTHROPIC_API_KEY"));
 /** The Sign in with Apple key signs the client secret for revocation (D38). Vercel keeps the .p8's newlines; a one-line
