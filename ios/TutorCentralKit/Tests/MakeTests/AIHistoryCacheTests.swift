@@ -2,7 +2,7 @@ import Data
 import Domain
 import Foundation
 import Testing
-@testable import AITools
+@testable import Make
 
 @MainActor struct AIHistoryCacheTests {
     @Test func offlineTheSavedHistoryShows() async {

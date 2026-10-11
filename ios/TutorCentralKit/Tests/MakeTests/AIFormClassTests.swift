@@ -2,7 +2,7 @@ import Data
 import Domain
 import Foundation
 import Testing
-@testable import AITools
+@testable import Make
 
 /// The AI forms by class level, no batch (P12-Form-Paper-Class, -NoClass): where a new form starts, and what it keeps.
 @MainActor struct AIFormClassTests {

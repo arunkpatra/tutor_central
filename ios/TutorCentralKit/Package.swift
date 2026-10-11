@@ -2,7 +2,7 @@
 import PackageDescription
 
 let features = [
-    "Today", "Students", "Fees", "Attendance", "Schedule", "AITools", "Settings", "Onboarding", "Artefacts", "School",
+    "Today", "Students", "Fees", "Attendance", "Schedule", "Make", "Settings", "Onboarding", "Artefacts", "School",
 ]
 
 let package = Package(
@@ -45,7 +45,7 @@ let package = Package(
             .testTarget(name: "StudentsTests", dependencies: ["Students"]),
             // A real register (Students) under Delete account's counts; the feature itself sees only `Register`.
             .testTarget(name: "SettingsTests", dependencies: ["Settings", "Students"]),
-            .testTarget(name: "AIToolsTests", dependencies: ["AITools", "Students"]),
+            .testTarget(name: "MakeTests", dependencies: ["Make", "Students"]),
             // A real register (Students) under the sheet's names; the feature itself sees only `Register`.
             .testTarget(name: "ArtefactsTests", dependencies: ["Artefacts", "Students"]),
             // A real register (Students) under the School tab; the feature itself sees only `Register`.

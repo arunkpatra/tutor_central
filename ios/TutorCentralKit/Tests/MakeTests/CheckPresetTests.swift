@@ -3,7 +3,7 @@ import Domain
 import Foundation
 import Students
 import Testing
-@testable import AITools
+@testable import Make
 
 /// Marking a mock from a photo (plan/phase-13-plan.md decisions 13 and 14): the preset's student and key, the scheme
 /// step

@@ -1,9 +1,9 @@
-import AITools
 import Attendance
 import Data
 import DesignSystem
 import Domain
 import Fees
+import Make
 import Onboarding
 import Schedule
 import Settings
@@ -109,16 +109,16 @@ extension RootView {
     static func aiRoutes(for state: LaunchState) -> [Route] {
         let note = FakeAIHistoryRepository.id(2)
         return switch state {
-        case .aiAssistant, .aiAssistantEmpty: [.aiAssistant]
+        case .aiAssistant, .aiAssistantEmpty: [.make]
         case .aiPaper, .aiPaperClassWheel, .aiPaperNoClass, .aiGenerating, .aiGenerateFailed:
-            [.aiAssistant, .aiForm(.paper)]
-        case .aiHomework: [.aiAssistant, .aiForm(.homework)]
-        case .aiWorksheet: [.aiAssistant, .aiForm(.worksheet)]
-        case .aiNote, .aiNoteStudent: [.aiAssistant, .aiForm(.progressNote)]
+            [.make, .aiForm(.paper)]
+        case .aiHomework: [.make, .aiForm(.homework)]
+        case .aiWorksheet: [.make, .aiForm(.worksheet)]
+        case .aiNote, .aiNoteStudent: [.make, .aiForm(.progressNote)]
         case .aiResultPaper, .aiResultCopied, .aiResultRegenerating:
-            [.aiAssistant, .aiResult(FakeAIHistoryRepository.quadraticID)]
-        case .aiResultNote, .aiNoteSend: [.aiAssistant, .aiResult(note)]
-        case .aiHistory, .aiHistoryEmpty: [.aiAssistant, .aiHistory]
+            [.make, .aiResult(FakeAIHistoryRepository.quadraticID)]
+        case .aiResultNote, .aiNoteSend: [.make, .aiResult(note)]
+        case .aiHistory, .aiHistoryEmpty: [.make, .aiHistory]
         default: scanStates.contains(state) ? [.scanRegister] : checkRoutes(for: state)
         }
     }

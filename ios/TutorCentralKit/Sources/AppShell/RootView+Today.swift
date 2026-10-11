@@ -25,7 +25,7 @@ extension RootView {
                     openClass: { shell.tabs.push(.classroom($0)) },
                     openEvent: { shell.tabs.push(.event($0)) },
                     openFeesDue: { openFeesDue(in: workspace) },
-                    openAI: { shell.tabs.push(.aiAssistant) },
+                    openAI: { shell.tabs.push(.make) },
                     openScanRegister: { shell.tabs.push(.scanRegister) },
                     openArtefact: { shell.tabs.push(.artefact($0)) },
                     sendToParent: { row in sendToParent(row, workspace: workspace) },

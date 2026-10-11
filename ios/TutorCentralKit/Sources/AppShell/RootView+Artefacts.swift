@@ -1,8 +1,8 @@
-import AITools
 import Artefacts
 import Data
 import DesignSystem
 import Domain
+import Make
 import SwiftUI
 
 /// The artefacts' wiring (V2): a sheet, a worked example or a brief pushed from a plan line or a student's page.

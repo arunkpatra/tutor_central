@@ -72,16 +72,16 @@ import Testing
     @Test func theAIRoutesPushOnTheTabThatAsked() {
         let tabs = TabsState()
         tabs.select(.more)
-        tabs.push(.aiAssistant)
+        tabs.push(.make)
         tabs.push(.aiForm(.paper))
-        #expect(tabs.paths[.more] == [.aiAssistant, .aiForm(.paper)])
+        #expect(tabs.paths[.more] == [.make, .aiForm(.paper)])
         tabs.select(.today)
-        tabs.push(.aiAssistant)
-        #expect(tabs.paths[.today] == [.aiAssistant] && tabs.paths[.more]?.count == 2, "each tab keeps its own stack")
+        tabs.push(.make)
+        #expect(tabs.paths[.today] == [.make] && tabs.paths[.more]?.count == 2, "each tab keeps its own stack")
         let id = UUID()
         tabs.push(.aiResult(id))
         #expect(tabs.paths[.today]?.last == .aiResult(id))
         tabs.remove(.aiResult(id))
-        #expect(tabs.paths[.today] == [.aiAssistant])
+        #expect(tabs.paths[.today] == [.make])
     }
 }

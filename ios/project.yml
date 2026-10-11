@@ -87,7 +87,7 @@ schemes:
         - package: TutorCentralKit/FeesTests
         - package: TutorCentralKit/StudentsTests
         - package: TutorCentralKit/SettingsTests
-        - package: TutorCentralKit/AIToolsTests
+        - package: TutorCentralKit/MakeTests
         - package: TutorCentralKit/ArtefactsTests
         - package: TutorCentralKit/SchoolTests
   TutorCentral Kit:
