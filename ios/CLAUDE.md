@@ -173,7 +173,8 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - A form's remembered choices are UserDefaults keys listed in `Wipe.defaultsKeys` (sign-out wipes them, D40); a test reads the
   list for every new key.
 - Reads that do not depend on each other run together (`async let`, a task group); a failure says so in the list's place (U33).
-- `xt.sh` and `bun check` build into the same DerivedData: after a partial test run, rebuild the tip before a hand-run picture.
+- A hand-run `xcodebuild` test of some targets builds into `bun check`'s DerivedData: after one, rebuild the tip before a hand-run
+  picture (the app installed from DerivedData is the last build).
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.
