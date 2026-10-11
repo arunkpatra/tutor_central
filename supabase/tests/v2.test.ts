@@ -647,3 +647,97 @@ test("a group's worked example and figure link to their own lines, beside the te
   expect(linked.data!.find((r) => r.kind === "figure")?.artefact_id).toBe(figure.data as string);
   expect(linked.data!.filter((r) => r.kind === "teach").every((r) => r.artefact_id === null)).toBe(true);
 });
+
+// ---- Phase 13: what an item holds, marks from a mock, the keeps, a marking's consent, a group's name ----
+test("an item holds its title, a holiday's last day, how it came and when; the checks hold", async () => {
+  const school = (await a.from("schools").insert({ centre_id: centre, name: `Item School ${stamp}` }).select("id").single()).data!;
+  const ok = await a
+    .from("school_items")
+    .insert({ centre_id: centre, school_id: school.id, kind: "holiday", title: "Dasara holidays", date: "2026-10-19", end_date: "2026-10-21", source: "shared_text", source_text: "School will remain closed 19th to 21st Oct for Dasara." })
+    .select("title, end_date, source, received_at, class_level")
+    .single();
+  expect(ok.error).toBeNull();
+  expect(ok.data).toMatchObject({ title: "Dasara holidays", end_date: "2026-10-21", source: "shared_text", class_level: null });
+  expect(ok.data!.received_at).toBeTruthy();
+  const old = await a.from("school_items").insert({ centre_id: centre, kind: "notice", date: "2026-10-20" }).select("title, source").single();
+  expect(old.data).toEqual({ title: "", source: "typed" });
+  expect((await a.from("school_items").insert({ centre_id: centre, kind: "holiday", title: "X", date: "2026-10-21", end_date: "2026-10-19" })).error).not.toBeNull();
+  expect((await a.from("school_items").insert({ centre_id: centre, kind: "notice", title: "X", date: "2026-10-20", source: "fax" })).error).not.toBeNull();
+  expect((await a.from("school_items").insert({ centre_id: centre, kind: "notice", title: "x".repeat(121), date: "2026-10-20" })).error).not.toBeNull();
+});
+
+test("a mark from a mock names the exam, the mock and its questions; deleting the exam keeps the mark", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Mocked", class_level: "8" }).select("id").single()).data!;
+  const exam = (await a.from("school_items").insert({ centre_id: centre, student_id: st.id, kind: "exam", title: "Science unit test 3", subject: "Science", date: "2026-10-16" }).select("id").single()).data!;
+  const mock = (await a.from("artefacts").insert({ centre_id: centre, kind: "mock", title: "Science unit test 3", school_item_id: exam.id }).select("id").single()).data!;
+  const questions = [{ number: 1, marks: 1, of: 1, skill: "Spot a chemical change" }, { number: 2, marks: 0, of: 3, skill: "Balance a chemical equation" }];
+  const mark = await a
+    .from("marks")
+    .insert({ centre_id: centre, student_id: st.id, subject: "Science", test: "Science unit test 3 · mock", date: "2026-10-14", score: 14, max: 25, school_item_id: exam.id, artefact_id: mock.id, questions })
+    .select("id, questions")
+    .single();
+  expect(mark.error).toBeNull();
+  expect(mark.data!.questions).toEqual(questions);
+  expect((await a.from("marks").insert({ centre_id: centre, student_id: st.id, subject: "Science", test: "x", date: "2026-10-14", score: 1, max: 2, questions: { a: 1 } })).error).not.toBeNull();
+  expect((await a.from("school_items").delete().eq("id", exam.id)).error).toBeNull();
+  const kept = await a.from("marks").select("school_item_id, score").eq("id", mark.data!.id).single();
+  expect(kept.data).toEqual({ school_item_id: null, score: 14 });
+});
+
+test("message_log takes forward_ask", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Asked" }).select("id").single()).data!;
+  expect((await a.from("message_log").insert({ centre_id: centre, student_id: st.id, kind: "forward_ask", channel: "whatsapp_link" })).error).toBeNull();
+});
+
+test("keep_artefact links an artefact to an exam with no plan, and the six-argument call still works", async () => {
+  const st = (await a.from("students").insert({ centre_id: centre, name: "Kept", class_level: "8" }).select("id").single()).data!;
+  const exam = (await a.from("school_items").insert({ centre_id: centre, student_id: st.id, kind: "exam", title: "Unit test", subject: "Science", date: "2026-10-16" }).select("id").single()).data!;
+  const mock = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "mock", title: "Unit test", content: { title: "Unit test" } }, p_plan: null, p_group_no: null, p_student: null, p_item_kind: "practise", p_school_item: exam.id });
+  expect(mock.error).toBeNull();
+  const row = await a.from("artefacts").select("school_item_id, plan_id, student_id").eq("id", mock.data as string).single();
+  expect(row.data).toEqual({ school_item_id: exam.id, plan_id: null, student_id: null });
+  const report = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "gap_report", title: "After the mock", content: { summary: "x" } }, p_plan: null, p_group_no: null, p_student: st.id, p_item_kind: "practise", p_school_item: exam.id });
+  expect(report.error).toBeNull();
+  expect((await a.from("artefacts").select("student_id").eq("id", report.data as string).single()).data).toEqual({ student_id: st.id });
+  const six = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "sheet", title: "Sheet", content: {} }, p_plan: null, p_group_no: 1, p_student: null, p_item_kind: "homework" });
+  expect(six.error).toBeNull();
+  expect((await a.from("artefacts").select("school_item_id").eq("id", six.data as string).single()).data).toEqual({ school_item_id: null });
+});
+
+test("start_ai_generation asks the student's consent for a marking that names them, and the centre's for one that does not", async () => {
+  const without = (await a.from("students").insert({ centre_id: centre, name: "No consent" }).select("id").single()).data!;
+  const withIt = (await a.from("students").insert({ centre_id: centre, name: "Consent", consent_at: new Date().toISOString(), consent_phone: "+919876543210", consent_how: "in_person" }).select("id").single()).data!;
+  await a.from("centres").update({ ai_consent_at: new Date().toISOString() }).eq("id", centre);
+  const refused = await a.rpc("start_ai_generation", { p_centre: centre, p_kind: "check_paper", p_input: { pages: 1 }, p_model: "claude-opus-5-5", p_student: without.id });
+  expect(refused.error?.message).toContain("ai_consent_missing");
+  const allowed = await a.rpc("start_ai_generation", { p_centre: centre, p_kind: "check_paper", p_input: { pages: 1 }, p_model: "claude-opus-5-5", p_student: withIt.id });
+  expect(allowed.error).toBeNull();
+  const v1 = await a.rpc("start_ai_generation", { p_centre: centre, p_kind: "check_paper", p_input: { pages: 1 }, p_model: "claude-opus-5-5" });
+  expect(v1.error).toBeNull();
+});
+
+test("name_plan_group names a plan's group and its teach lines, leaves the artefact links, and refuses a non-member", async () => {
+  const { cls, s1, s2 } = await batchWithTwo();
+  const made = await a.rpc("make_plan", {
+    p_centre: centre, p_class: cls.id, p_date: "2026-10-20",
+    p_groups: [{ group_no: 1, subject: "Science", chapter: "", skill: "" }],
+    p_subjects: { "1": "Science" },
+    p_items: [
+      { student_id: s1.id, group_no: 1, kind: "teach", words: "Teach: with the group" },
+      { student_id: s2.id, group_no: 1, kind: "teach", words: "Teach: with the group" },
+      { student_id: s1.id, group_no: 1, kind: "homework", words: "Homework sheet 1" },
+    ],
+  });
+  const plan = (made.data as { plan_id: string }).plan_id;
+  const sheet = await a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "sheet", title: "Sheet", content: {} }, p_plan: plan, p_group_no: 1, p_student: null, p_item_kind: "homework" });
+  const named = await a.rpc("name_plan_group", { p_centre: centre, p_plan: plan, p_group_no: 1, p_chapter: "Chemical reactions", p_skill: "Balance a chemical equation" });
+  expect(named.error).toBeNull();
+  const groups = (await a.from("plans").select("groups").eq("id", plan).single()).data!.groups as { chapter: string; skill: string }[];
+  expect(groups[0]).toMatchObject({ chapter: "Chemical reactions", skill: "Balance a chemical equation" });
+  const items = (await a.from("plan_items").select("kind, words, artefact_id").eq("plan_id", plan).order("kind")).data!;
+  expect(items.find((i) => i.kind === "homework")).toMatchObject({ artefact_id: sheet.data, words: "Homework sheet 1" });
+  expect(items.filter((i) => i.kind === "teach").map((i) => i.words)).toEqual(["Teach: Balance a chemical equation", "Teach: Balance a chemical equation"]);
+  const b = await userClient(l, `v2-b13-${stamp}@example.com`);
+  const other = await b.rpc("name_plan_group", { p_centre: centre, p_plan: plan, p_group_no: 1, p_chapter: "x", p_skill: "y" });
+  expect(other.error).not.toBeNull();
+});
