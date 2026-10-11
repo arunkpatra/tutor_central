@@ -101,24 +101,25 @@ struct GroupCardView: View {
                 ForEach(group.lines) { line in
                     PlanLineRow(
                         initials: line.initials, name: line.name, status: (line.status, line.statusKind),
-                        note: line.note, teachLine: line.teach, rest: line.rest
-                    ) { press(line) }
-                        .contextMenu {
-                            if !store.isClosed {
-                                LineMenu.rows(groups: groups, current: group.id, actions: actions(line))
-                            }
+                        note: line.note, caption: line.caption, teachLine: line.teach, rest: line.rest,
+                        openCaption: { open(.student(line.id)) }, onPress: { press(line) }
+                    )
+                    .contextMenu {
+                        if !store.isClosed {
+                            LineMenu.rows(groups: groups, current: group.id, actions: actions(line))
                         }
-                        .anchorPreference(key: LineMenuSpot.Key.self, value: .bounds) { anchor in
-                            menuFor == line.id
-                                ? LineMenuSpot(
-                                    anchor: anchor,
-                                    groups: groups,
-                                    current: group.id,
-                                    actions: actions(line)
-                                )
-                                : nil
-                        }
-                        .rowDivider(line.id != group.lines.last?.id)
+                    }
+                    .anchorPreference(key: LineMenuSpot.Key.self, value: .bounds) { anchor in
+                        menuFor == line.id
+                            ? LineMenuSpot(
+                                anchor: anchor,
+                                groups: groups,
+                                current: group.id,
+                                actions: actions(line)
+                            )
+                            : nil
+                    }
+                    .rowDivider(line.id != group.lines.last?.id)
                 }
             }
         }

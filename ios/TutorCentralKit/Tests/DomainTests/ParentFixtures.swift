@@ -216,7 +216,7 @@ extension ParentFixtures {
     }
 
     /// Dev alone in the Evening batch on Friday 9 October, at a status and a step, not on track since a day.
-    func planInput(dev status: TrackStatus, step: NextStep?, since: Day? = nil, told: Set<UUID> = []) -> PlanInput {
+    func planInput(dev status: TrackStatus, step: NextStep?, since: Day? = nil) -> PlanInput {
         var student = devWithParent
         student.classID = evening.id
         student.trackStatus = status
@@ -225,7 +225,7 @@ extension ParentFixtures {
         return PlanInput(
             classroom: evening, date: day(10, 9), students: [student], chapters: [student.id: [stepChapter]],
             skills: [student.id: [countingAtoms, balancing]], sessions: [], schoolItems: [],
-            now: india(2026, 10, 9, 16, 35), calendar: calendar, groupCount: nil, subjects: [:], told: told
+            now: india(2026, 10, 9, 16, 35), calendar: calendar, groupCount: nil, subjects: [:]
         )
     }
 

@@ -386,6 +386,8 @@ extension RegisterStore: Register {
             guard var student = student(id) else { continue }
             if student.trackStatus != item.status {
                 student.trackSince = date
+                // The step belongs to the status it was chosen for (0025's trigger).
+                student.nextStep = nil
             }
             student.trackStatus = item.status
             student.trackReasons = item.reasons

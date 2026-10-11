@@ -299,6 +299,8 @@ public struct TodayActions {
     let openArtefact: (UUID) -> Void
     /// To parents' Send: Test tomorrow's sheet (School's) or the absence alert, through AppShell.
     let sendToParent: (ParentRowModel) -> Void
+    /// A plan line's not-on-track caption: the student's page (Phase 14).
+    let openStudent: (UUID) -> Void
 
     public init(
         openSettings: @escaping () -> Void,
@@ -311,9 +313,11 @@ public struct TodayActions {
         openAI: @escaping () -> Void,
         openScanRegister: @escaping () -> Void,
         openArtefact: @escaping (UUID) -> Void = { _ in },
-        sendToParent: @escaping (ParentRowModel) -> Void = { _ in }
+        sendToParent: @escaping (ParentRowModel) -> Void = { _ in },
+        openStudent: @escaping (UUID) -> Void = { _ in }
     ) {
         self.sendToParent = sendToParent
+        self.openStudent = openStudent
         self.openSettings = openSettings
         self.openTab = openTab
         self.openSchedule = openSchedule

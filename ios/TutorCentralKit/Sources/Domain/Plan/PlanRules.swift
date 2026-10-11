@@ -23,16 +23,12 @@ public struct PlanInput: Sendable {
     public let revisions: [UUID: RevisionLine]
     /// Students on holiday today: left out (Phase 13).
     public let holidays: Set<UUID>
-    /// Students not on track whose parent has been told since (a `not_on_track` message logged): no caption (Phase 14).
-    public let told: Set<UUID>
 
     public init(
         classroom: Classroom, date: Day, students: [Student], chapters: [UUID: [Chapter]], skills: [UUID: [Skill]],
         sessions: [AttendanceSession], schoolItems: [SchoolItemHint], now: Date, calendar: Calendar,
-        groupCount: Int?, subjects: [Int: String], revisions: [UUID: RevisionLine] = [:], holidays: Set<UUID> = [],
-        told: Set<UUID> = []
+        groupCount: Int?, subjects: [Int: String], revisions: [UUID: RevisionLine] = [:], holidays: Set<UUID> = []
     ) {
-        self.told = told
         self.revisions = revisions
         self.holidays = holidays
         self.classroom = classroom
@@ -299,8 +295,7 @@ public enum PlanRules {
         }
         let teach = skillName.isEmpty ? withTheGroup : teachWords(skillName, step: step, before: before?.name)
         lines.append(PlanLine(
-            studentID: student.id, groupNo: group.number, kind: .teach, skillID: teachID, words: teach,
-            caption: caption(student, step: step, input: input)
+            studentID: student.id, groupNo: group.number, kind: .teach, skillID: teachID, words: teach
         ))
         lines.append(line(.practise, "Practise set 1", false))
         let personal = !chapters.isEmpty && (placement || again || missed != nil)

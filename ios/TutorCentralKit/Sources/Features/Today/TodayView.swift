@@ -93,8 +93,9 @@ public struct TodayView: View {
                                 store: plan,
                                 title: store.planBatches.count > 1 ? "Today's plan · \(batch.name)" : "Today's plan",
                                 open: { opened in
-                                    if case let .artefact(id) = opened {
-                                        actions.openArtefact(id)
+                                    switch opened {
+                                    case let .artefact(id): actions.openArtefact(id)
+                                    case let .student(id): actions.openStudent(id)
                                     }
                                 },
                                 change: { changing = ChangingBatch(id: batch.id) },

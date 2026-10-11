@@ -15,7 +15,7 @@ extension PlanRules {
     }
 
     /// The skill before this one: the one before it in its chapter, else the last of the chapter before.
-    static func skillBefore(_ skill: Skill, chapters: [Chapter], skills: [Skill]) -> Skill? {
+    public static func skillBefore(_ skill: Skill, chapters: [Chapter], skills: [Skill]) -> Skill? {
         let position = Dictionary(uniqueKeysWithValues: chapters.map { ($0.id, $0.position) })
         let ordered = skills.sorted { lhs, rhs in
             let (left, right) = (position[lhs.chapterID] ?? 0, position[rhs.chapterID] ?? 0)
@@ -25,15 +25,13 @@ extension PlanRules {
         return ordered[index - 1]
     }
 
-    /// "Since Fri 9 Oct · tell Ramesh after the class" on a not-on-track student's teach line until the parent is told.
-    static func caption(_ student: Student, step: NextStep, input: PlanInput) -> String? {
-        guard student.trackStatus == .notOnTrack, step == .tellParent, !input.told.contains(student.id) else {
-            return nil
-        }
-        let who = student.parentName.flatMap { $0.split(
-            separator: " "
-        ).first }.map { "tell \($0)" } ?? "tell the parent"
-        let since = student.trackSince.map { "Since \(Day($0, calendar: input.calendar).shortWeekdayText) · " } ?? ""
+    /// "Since Fri 9 Oct · tell Ramesh after the class" under a not-on-track student's line on Today while the step is
+    /// to tell the parent and they have not been told (no `not_on_track` message since the status came).
+    public static func caption(_ student: Student, told: Bool, calendar: Calendar) -> String? {
+        guard student.trackStatus == .notOnTrack, student.effectiveStep == .tellParent, !told else { return nil }
+        let first = student.parentName.flatMap { $0.split(separator: " ").first }
+        let who = first.map { "tell \($0)" } ?? "tell the parent"
+        let since = student.trackSince.map { "Since \(Day($0, calendar: calendar).shortWeekdayText) · " } ?? ""
         return "\(since)\(who) after the class"
     }
 

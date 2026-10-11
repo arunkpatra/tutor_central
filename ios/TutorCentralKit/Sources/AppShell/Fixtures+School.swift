@@ -64,6 +64,8 @@ extension Fixtures {
     @MainActor static func schoolItems(for state: LaunchState) -> FakeSchoolItemsRepository {
         let items: [SchoolItem] = switch state {
         case .schoolEmpty: []
+        // P10-Today-NotOnTrack: no exam near, so Dev's line teaches again as the board draws it.
+        case _ where notOnTrackStates.contains(state): []
         // P13-Today-Revision: Science unit test 3 alone, so Dev revises with Meher and Nikhil.
         case .todayRevision: FakeSchoolItemsRepository.boardItems.filter {
                 $0.id == FakeSchoolItemsRepository.scienceTest3

@@ -28,7 +28,8 @@ extension RootView {
                     openAI: { shell.tabs.push(.aiAssistant) },
                     openScanRegister: { shell.tabs.push(.scanRegister) },
                     openArtefact: { shell.tabs.push(.artefact($0)) },
-                    sendToParent: { row in sendToParent(row, workspace: workspace) }
+                    sendToParent: { row in sendToParent(row, workspace: workspace) },
+                    openStudent: { shell.tabs.push(.student($0)) }
                 ),
                 ticks: !deps.fixedClock,
                 boardState: launch.flatMap(Self.todayBoardState),
@@ -74,6 +75,7 @@ extension RootView {
                 maker: maker, cache: cache, now: deps.now, calendar: DayHeading.india
             )
             store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
+            store.messages = deps.messages
             return store
         }
     }

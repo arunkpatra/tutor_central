@@ -122,7 +122,8 @@ extension PlanStore {
             return PlanLineModel(
                 id: id, initials: NameInitials.of(name), name: name, status: status.title,
                 statusKind: Self.kind(status), note: note(items), teach: teach, rest: rest, items: items,
-                groupNo: group
+                groupNo: group,
+                caption: student.flatMap { PlanRules.caption($0, told: told.contains(id), calendar: calendar) }
             )
         }
         .sorted { $0.name < $1.name }
@@ -150,5 +151,22 @@ extension PlanStore {
         case .notOnTrack: .notOnTrack
         case .notKnown: .notKnown
         }
+    }
+}
+
+extension PlanStore {
+    /// The members not on track who were sent the not-on-track message since their status came; a failed read keeps
+    /// what was known.
+    func readTold() async {
+        let members = register.members(of: classID).filter { $0.trackStatus == .notOnTrack }
+        guard let messages, !members.isEmpty else { return }
+        let since = members.compactMap(\.trackSince).min() ?? now().addingTimeInterval(-60 * 86400)
+        guard let entries = try? await messages.entries(centre: centre, since: since) else { return }
+        told = Set(members.filter { member in
+            entries.contains { sent in
+                sent.studentID == member.id && sent.entry.kind == .notOnTrack
+                    && sent.entry.openedAt >= (member.trackSince ?? .distantPast)
+            }
+        }.map(\.id))
     }
 }

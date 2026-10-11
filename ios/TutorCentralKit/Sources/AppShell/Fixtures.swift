@@ -17,8 +17,8 @@ public enum Fixtures {
         let counts = FakeCountsRepository(counts: counts(for: state))
         let listed = withSchoolLanguages(register(for: state).students, for: state)
         let students = FakeStudentsRepository(
-            students: noteDayStates
-                .contains(state) || state == .todayAfterClose ? withParents(listed, for: state) : listed
+            students: noteDayStates.contains(state) || notOnTrackStates.contains(state) || state == .todayAfterClose
+                ? withParents(listed, for: state) : listed
         )
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
         let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
@@ -34,6 +34,7 @@ public enum Fixtures {
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
             textbooks: noteDayStates.contains(state) ? noteDayTextbooks()
+                : notOnTrackStates.contains(state) ? FakeTextbooksRepository.notOnTrack()
                 : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
                 ? FakeTextbooksRepository.evening()
                 : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
@@ -228,6 +229,7 @@ public enum Fixtures {
         case _ where offlineStates.contains(state): offlineClock(state)
         case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
         case _ where closeStates.contains(state): india(day: 7, hour: 17, minute: 5)
+        case _ where notOnTrackStates.contains(state): notOnTrackClock
         default: now
         }
     }
@@ -240,6 +242,7 @@ public enum Fixtures {
         case _ where planStates.contains(state): TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         case .todayNoBatch: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
         case _ where noteDayStates.contains(state): TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 0)
+        case .todayNotOnTrack: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1)
         default: .zero
         }
     }
@@ -287,11 +290,10 @@ extension Fixtures {
                 planStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
         case .closeCards: (cardStudents, FakeClassesRepository.withEvening)
-        case _ where noteDayStates.contains(state): (
-                FakeStudentsRepository.eveningSeed,
-                FakeClassesRepository.withEvening
+        case _ where notOnTrackStates.contains(state): (
+                notOnTrackStudents, [FakeClassesRepository.science, FakeClassesRepository.evening]
             )
-        case _ where closeStates.contains(state): (
+        case _ where noteDayStates.contains(state) || closeStates.contains(state): (
                 FakeStudentsRepository.eveningSeed,
                 FakeClassesRepository.withEvening
             )

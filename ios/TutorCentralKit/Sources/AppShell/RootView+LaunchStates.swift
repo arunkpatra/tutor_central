@@ -25,7 +25,7 @@ extension RootView {
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
              .classEdit,
              .classArchiveConfirm, .classDetail, .classAddMembers, .studentFeesDue, .studentFees,
-             .studentMessages: .students
+             .studentMessages, .studentNotOnTrack, .studentNextStep, .studentTellParent: .students
         case .feesEmpty, .fees, .feesLoadFailed, .feesDue, .feesPaid, .feesOverdue, .feesPayee, .feesGenerate,
              .feesGenerateNothing,
              .feesMarkPaid, .feesMarkedPaid, .feesReceipt, .feesRemind, .feesWaive: .fees
@@ -213,18 +213,16 @@ extension RootView {
     }
 
     static func studentDetailBoardState(_ state: LaunchState) -> StudentDetailBoardState? {
-        switch state {
-        case .studentArchiveConfirm: .archiveConfirm
-        case .studentDeleteConfirm: .deleteConfirm
-        case .studentEdit: .edit
-        case .studentRecord, .studentMarksEmpty: .record
-        case .studentMarks: .marks
-        case .studentEnd: .end
-        case .studentConsentAsk: .consentAsk
-        case .studentConsentRecord: .consentRecord
-        default: nil
-        }
+        studentDetailBoardStates[state]
     }
+
+    /// Each student page state's board state (a table: the switch passed the lint's complexity).
+    static let studentDetailBoardStates: [LaunchState: StudentDetailBoardState] = [
+        .studentArchiveConfirm: .archiveConfirm, .studentDeleteConfirm: .deleteConfirm, .studentEdit: .edit,
+        .studentRecord: .record, .studentMarksEmpty: .record, .studentMarks: .marks, .studentEnd: .end,
+        .studentConsentAsk: .consentAsk, .studentConsentRecord: .consentRecord, .studentNextStep: .nextStep,
+        .studentTellParent: .tellParent,
+    ]
 
     static func studentsBoardState(_ state: LaunchState) -> StudentsBoardState? {
         studentsBoardStates[state]

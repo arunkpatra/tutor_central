@@ -30,6 +30,8 @@ extension StudentDetailView {
         case .edit: edit()
         case .consentAsk: asking = true
         case .consentRecord: recordingConsent = true
+        case .nextStep: choosingStep = true
+        case .tellParent: tellingParent = store.student.flatMap { student in makeTellParent?(student.id) }
         case .record, .end, .marks, nil: break
         }
     }

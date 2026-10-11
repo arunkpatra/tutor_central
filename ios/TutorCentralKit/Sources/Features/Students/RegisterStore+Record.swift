@@ -92,4 +92,19 @@ public extension RegisterStore {
                 : "Couldn't save \(before.firstName)'s consent. Check your connection and try again."
         }
     }
+
+    /// The next step the tutor chose (nil: the plan's own), written and put in the register; the failure's words.
+    func setNextStep(_ id: UUID, _ step: NextStep?) async -> String? {
+        guard let before = student(id) else { return "That student is no longer here." }
+        do {
+            var saved = try await studentsRepository.setNextStep(id: id, step)
+            saved.thisMonth = before.thisMonth
+            replace(id, with: saved)
+            succeeded()
+            return nil
+        } catch {
+            return TransportError.isOffline(error) ? OfflineRefusal.words(for: .nextStep)
+                : "Couldn't change \(before.firstName)'s next step. Check your connection and try again."
+        }
+    }
 }

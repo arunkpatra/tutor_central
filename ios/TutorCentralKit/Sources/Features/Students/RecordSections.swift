@@ -8,18 +8,25 @@ struct TrackingSection: View {
     let lines: StudentDetailStore.TrackingLines
     let firstName: String
     let place: (() -> Void)?
+    /// Change: the next-step sheet (Phase 14).
+    let change: (() -> Void)?
 
     var body: some View {
         TrackingCard(
             word: lines.status.title, kind: lines.status.kind, since: lines.since, reasons: lines.reasons,
-            next: lines.next, action: placeAction
+            next: lines.next, action: action
         )
     }
 
     /// A typed property: a ternary of tuples inline stalls the type checker (ios/CLAUDE.md).
-    private var placeAction: (label: String, run: () -> Void)? {
-        guard lines.placeAction, let place else { return nil }
-        return ("Place \(firstName)", place)
+    private var action: (label: String, run: () -> Void)? {
+        if lines.placeAction, let place {
+            return ("Place \(firstName)", place)
+        }
+        if lines.canChange, let change {
+            return ("Change", change)
+        }
+        return nil
     }
 }
 

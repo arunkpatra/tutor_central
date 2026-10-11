@@ -104,13 +104,19 @@ struct PlanRulesStepTests: ParentFixtures {
     }
 
     @Test func theCaptionShowsUntilTheParentIsTold() {
-        let since = day(10, 9)
-        #expect(teach(PlanRules.plan(planInput(dev: .notOnTrack, step: nil, since: since)))?.caption
+        var student = planInput(dev: .notOnTrack, step: nil, since: day(10, 9)).students[0]
+        #expect(PlanRules.caption(student, told: false, calendar: calendar)
             == "Since Fri 9 Oct · tell Ramesh after the class")
-        #expect(teach(PlanRules.plan(planInput(dev: .notOnTrack, step: nil, since: since, told: [dev.id])))?.caption
-            == nil)
-        #expect(teach(PlanRules.plan(planInput(dev: .notOnTrack, step: .leave, since: since)))?.caption == nil)
-        #expect(teach(PlanRules.plan(planInput(dev: .watch, step: nil, since: since)))?.caption == nil)
+        #expect(PlanRules.caption(student, told: true, calendar: calendar) == nil)
+        student.nextStep = .leave
+        #expect(PlanRules.caption(student, told: false, calendar: calendar) == nil)
+        student.nextStep = nil
+        student.trackStatus = .watch
+        #expect(PlanRules.caption(student, told: false, calendar: calendar) == nil)
+        student.trackStatus = .notOnTrack
+        student.parentName = nil
+        #expect(PlanRules.caption(student, told: false, calendar: calendar)
+            == "Since Fri 9 Oct · tell the parent after the class")
     }
 
     @Test func aWatchStudentKeepsPhase12sTeachAgain() {

@@ -24,8 +24,11 @@ public struct LineBit: Hashable, Sendable {
     }
 }
 
-/// A student's line in a group card (components.md "Plan line"): avatar 36, the name `rowTitle`, an optional note
-/// (`caption` 600, `accentText` for a move, `text3` for a skip), the teach line led by the status word, the rest
+/// A student's line in a group card (components.md "Plan line"): avatar 36, the name `rowTitle`, an optional caption
+/// (`caption` 600 `overdue`, "Since Fri 9 Oct · tell Ramesh after the class", which opens the student;
+/// P10-Today-NotOnTrack),
+/// an optional note (`caption` 600, `accentText` for a move, `text3` for a skip), the teach line led by the status
+/// word, the rest
 /// `footnote` `text2` with a skipped item struck through in `text3`, the chevron. The whole line presses; a long press
 /// is the caller's `contextMenu`.
 public struct PlanLineRow: View {
@@ -33,18 +36,23 @@ public struct PlanLineRow: View {
     let name: String
     let status: (word: String, kind: TrackKind)?
     let note: PlanLineNote?
+    let caption: String?
     let teachLine: String
     let rest: [LineBit]
+    let openCaption: (() -> Void)?
     let onPress: () -> Void
 
     public init(
         initials: String, name: String, status: (word: String, kind: TrackKind)?, note: PlanLineNote?,
-        teachLine: String, rest: [LineBit], onPress: @escaping () -> Void
+        caption: String? = nil, teachLine: String, rest: [LineBit], openCaption: (() -> Void)? = nil,
+        onPress: @escaping () -> Void
     ) {
         self.initials = initials
         self.name = name
         self.status = status
         self.note = note
+        self.caption = caption
+        self.openCaption = openCaption
         self.teachLine = teachLine
         self.rest = rest
         self.onPress = onPress
@@ -61,6 +69,13 @@ public struct PlanLineRow: View {
                 Avatar(initials: initials, size: 36)
                 VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                     Text(name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                    if let caption {
+                        Text(caption)
+                            .typeStyle(Tokens.captionStrong)
+                            .foregroundStyle(Tokens.overdue.color)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .highPriorityGesture(TapGesture().onEnded { openCaption?() })
+                    }
                     if let note {
                         Text(note.words)
                             .typeStyle(Tokens.captionStrong)
@@ -79,6 +94,11 @@ public struct PlanLineRow: View {
         .buttonStyle(.plain)
         .pressable()
         .accessibilityElement(children: .combine)
+        .accessibilityActions {
+            if caption != nil, let openCaption {
+                Button("Open \(name)", action: openCaption)
+            }
+        }
     }
 
     private var teach: Text {

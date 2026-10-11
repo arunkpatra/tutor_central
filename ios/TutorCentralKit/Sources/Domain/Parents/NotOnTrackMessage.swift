@@ -38,17 +38,24 @@ public enum NotOnTrackMessage {
     public static func text(
         studentName: String, parentName: String?, facts: Facts, tutorName: String?, centreName: String
     ) -> String {
+        MessageSignature.signed(
+            body(studentName: studentName, parentName: parentName, facts: facts), tutorName: tutorName,
+            centreName: centreName
+        )
+    }
+
+    /// The template's words without the signature: the sheet draws the signature under the editable text.
+    public static func body(studentName: String, parentName: String?, facts: Facts) -> String {
         let greeting = parentName.flatMap { $0.split(separator: " ").first }.map { "Hello \($0)," } ?? "Hello,"
         let child = studentName.split(separator: " ").first.map(String.init) ?? studentName
         let hard = ListWords.and(facts.hard)
         let why = facts.reasons.first.map { " and \(Self.was($0))" } ?? ""
-        let body = [
+        return [
             "\(greeting) \(child) is finding \(hard) hard\(why).",
             "We will \(facts.doing).",
             facts.atHome,
             "Could we talk for five minutes this week? Thank you.",
         ].compactMap(\.self).joined(separator: " ")
-        return MessageSignature.signed(body, tutorName: tutorName, centreName: centreName)
     }
 
     /// "Dev needs a hand this month".

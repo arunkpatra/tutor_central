@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import Students
 import SwiftUI
+import UIKit
 
 /// Where the Students screens' buttons lead: other tabs and screens AppShell owns.
 extension RootView {
@@ -96,11 +97,7 @@ extension RootView {
         if case let .ready(workspace) = session.state {
             let register = register(for: workspace)
             StudentDetailView(
-                store: StudentDetailStore(
-                    id: id, register: register, attendance: deps.attendance, messages: deps.messages,
-                    textbooks: deps.textbooks, record: deps.record, schoolItems: deps.schoolItems, now: deps.now,
-                    online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
-                ),
+                store: studentDetailStore(id, register: register),
                 register: register,
                 actions: studentsActions,
                 navigation: studentsNavigation,
@@ -109,9 +106,35 @@ extension RootView {
                     shell.tabs.remove(.student(id))
                     notices.show(StudentDetailStore.missingMessage)
                 },
-                onMessage: { notices.show($0) }
+                onMessage: { notices.show($0) },
+                makeTellParent: { student in
+                    let store = NotOnTrackStore(
+                        student: student, register: register, textbooks: deps.textbooks, ai: deps.ai,
+                        messages: deps.messages,
+                        online: { [connectivity = deps.connectivity] in await connectivity.isOnline },
+                        effects: NotOnTrackStore.Effects(
+                            copy: { UIPasteboard.general.string = $0 },
+                            open: { url in systemOpenURL(url) }
+                        )
+                    )
+                    store.onSent = { [shell] in
+                        shell.today?.plans.values.forEach { plan in Task { await plan.readCaptions() } }
+                    }
+                    return store
+                }
             )
         }
+    }
+
+    /// The page's store; a chosen next step makes the student's batch's plan again (its next line).
+    func studentDetailStore(_ id: UUID, register: RegisterStore) -> StudentDetailStore {
+        let store = StudentDetailStore(
+            id: id, register: register, attendance: deps.attendance, messages: deps.messages,
+            textbooks: deps.textbooks, record: deps.record, schoolItems: deps.schoolItems, now: deps.now,
+            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+        )
+        store.onStepChanged = { [shell] student in shell.schoolItemsChanged?([student]) }
+        return store
     }
 }
 
