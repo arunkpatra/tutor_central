@@ -855,3 +855,40 @@ test("start_ai_generation refuses a student of another centre, so no centre read
   expect(r.error).not.toBeNull();
   expect(r.data).toBeNull();
 });
+
+// Phase 15: material made from Make something (plan/phase-15-plan.md decision 4).
+const made = (title: string) => ({ kind: "sheet", source: "made", title, content: { title, questions: [], for_homework: false, light: false } });
+const keepMade = (artefact: object, madeFrom?: string) =>
+  a.rpc("keep_artefact", {
+    p_centre: centre, p_artefact: artefact, p_plan: null, p_group_no: 0, p_student: null, p_item_kind: "practise", p_school_item: null,
+    ...(madeFrom === undefined ? {} : { p_made_from: madeFrom }),
+  });
+
+test("keep_artefact keeps made_from, and a regenerate keeps it too", async () => {
+  const first = await keepMade(made("Balancing equations · sheet"), "make");
+  expect(first.error).toBeNull();
+  const again = await keepMade({ ...made("Balancing equations · sheet"), regenerated_from: first.data }, "make");
+  expect(again.error).toBeNull();
+  const rows = (await a.from("artefacts").select("id, made_from, regenerated_from").in("id", [first.data, again.data])).data!;
+  expect(rows.find((r) => r.id === first.data)?.made_from).toBe("make");
+  expect(rows.find((r) => r.id === again.data)).toMatchObject({ made_from: "make", regenerated_from: first.data });
+});
+
+test("keep_artefact's seven-argument call still resolves and leaves made_from null", async () => {
+  const kept = await keepMade(made("A plan's sheet"));
+  expect(kept.error).toBeNull();
+  const row = (await a.from("artefacts").select("made_from").eq("id", kept.data).single()).data!;
+  expect(row.made_from).toBeNull();
+});
+
+test("made_from takes only make", async () => {
+  const refused = await keepMade(made("x"), "page");
+  expect(refused.error?.message).toContain("check");
+});
+
+test("another centre's member cannot read a Make artefact", async () => {
+  expect((await keepMade(made("Ours"), "make")).error).toBeNull();
+  const b = await userClient(l, `v2-p15-other-${stamp}@example.com`);
+  await b.rpc("create_centre", { p_name: "Other 15", p_whatsapp: null });
+  expect((await b.from("artefacts").select("id").eq("made_from", "make")).data).toEqual([]);
+});
