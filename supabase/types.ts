@@ -1095,6 +1095,11 @@ isOneToOne: false
 "name_plan_group":
 { Args: { "p_centre": string,"p_chapter": string,"p_group_no": number,"p_plan": string,"p_skill": string }; Returns: undefined
                            },
+"old_exports":
+{ Args: { "p_before": string,"p_limit"?: number }; Returns: {
+              "name": string
+            }[]
+                           },
 "photo_centre":
 { Args: { "p_name": string }; Returns: string
                            },
@@ -1159,6 +1164,9 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"trim_platform":
+{ Args: { "p_now"?: string }; Returns: Json
+                           },
 "wait_job":
 { Args: { "p_job": string,"p_run_at": string,"p_step": Json,"p_worker": string }; Returns: undefined
                            },

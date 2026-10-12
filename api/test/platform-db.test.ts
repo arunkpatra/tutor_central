@@ -9,6 +9,8 @@ import { noteDay } from "../src/jobs/kinds/note-day.js";
 import { makeNoteSource } from "../src/notes/record.js";
 import { exportJob } from "../src/jobs/kinds/export.js";
 import { makeExportSource } from "../src/export/record.js";
+import { makeSweep } from "../src/jobs/kinds/sweep.js";
+import { makeSweepSource } from "../src/jobs/sweep-db.js";
 import { makePlatformDb } from "../src/db.js";
 import { kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakePusher } from "../src/push/apns-fake.js";
@@ -224,4 +226,28 @@ test.skipIf(!up)("an export asked for the seed's Hemanth is a PDF in exports und
     if (path) await db.storage.from("exports").remove([path]);
     await db.from("jobs").delete().eq("id", job);
   }
+});
+
+test.skipIf(!up)("a deleted student's marks photo leaves Storage at the next sweep", async () => {
+  const db = admin();
+  const student = (await db.from("students").insert({ centre_id: CENTRE, name: "Sweep probe" }).select("id").single()).data?.id as string;
+  const photo = `${CENTRE}/mark/sweep-${Date.now()}.jpg`;
+  const jpeg = new Blob([new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0])], { type: "image/jpeg" });
+  expect((await db.storage.from("photos").upload(photo, jpeg)).error).toBeNull();
+  await db.from("marks").insert({ centre_id: CENTRE, student_id: student, subject: "Maths", test: "Probe", date: "2026-10-01", score: 1, max: 2, photo_path: photo });
+  await db.from("students").delete().eq("id", student);
+  const clock = { now: () => Date.now(), sleep: async () => {} };
+  const ctx = { db: makePlatformDb(url as string, service as string), jobs: fakeJobsDb(clock as never), claude: fakeClaude({}), clock, requestId: crypto.randomUUID(), worker: "w" };
+  const sweep = makeSweep(makeSweepSource(url as string, service as string));
+  let current = { id: "sweep-probe", centreId: null, kind: "sweep" as const, attempts: 1, step: {} as Record<string, unknown>, input: {}, leaseUntil: "" };
+  let removed = 0;
+  for (let i = 0; i < 5; i++) {
+    const out = await sweep.step(current, ctx);
+    if (out.kind === "done") removed = (out.result as { removed: number }).removed;
+    if (out.kind !== "continue") break;
+    current = { ...current, step: out.step };
+  }
+  expect(removed).toBeGreaterThanOrEqual(1);
+  const left = (await db.storage.from("photos").list(`${CENTRE}/mark`, { search: photo.split("/").at(-1) })).data ?? [];
+  expect(left).toEqual([]);
 });

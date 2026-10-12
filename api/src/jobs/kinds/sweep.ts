@@ -1,10 +1,51 @@
 import type { JobHandler } from "../types.js";
 
-/** The platform's hourly sweep (plan decision 28): rows left pending past ten minutes (a function killed between the call
- *  and the finish) are closed as failed, so they stop counting and their key becomes a new call. Phase 18 adds photos. */
-export const sweep: JobHandler = {
-  async step(_job, ctx) {
-    const closed = await ctx.jobs.closePending();
-    return { kind: "done", name: "pending", result: { closed } };
-  },
+/** What the sweep removes and trims (plan decisions 20, 27): Storage's deleted files queued by 0040, the exports past
+ *  seven days, the outbox's and the platform's old rows (0041). */
+export type SweepSource = {
+  /** taken_storage_deletions: each row handed out once and removed. */
+  takeDeletions(limit: number): Promise<{ bucket: string; path: string; prefix: boolean }[]>;
+  /** Every object's name under a prefix, page by page. */
+  list(bucket: string, prefix: string): Promise<string[]>;
+  /** The objects removed through the Storage API; one already gone is no error. */
+  remove(bucket: string, paths: string[]): Promise<void>;
+  /** old_exports: the exports made before a time. */
+  oldExports(before: string, limit: number): Promise<string[]>;
+  /** trim_platform: the counts deleted. */
+  trim(now: string): Promise<{ notifications: number; jobs: number }>;
 };
+
+const TAKE = 100;
+const BATCH = 100;
+const EXPORT_DAYS = 7;
+
+/** The platform's sweep, each ten minutes: rows pending past ten minutes closed as failed (Phase 17); then Storage's
+ *  deleted files removed (a row's delete cannot reach Storage, which refuses a direct delete of its objects); then the
+ *  retention. Without a source (a test of the tick), the first step alone. */
+export function makeSweep(source?: SweepSource): JobHandler {
+  return {
+    async step(job, ctx) {
+      const step = job.step as { at?: "storage" | "retention"; closed?: number; removed?: number };
+      if (step.at === undefined) {
+        const closed = await ctx.jobs.closePending();
+        if (!source) return { kind: "done", name: "pending", result: { closed } };
+        return { kind: "continue", name: "pending", step: { at: "storage", closed } };
+      }
+      if (!source) return { kind: "done", name: "pending", result: { closed: step.closed ?? 0 } };
+      if (step.at === "storage") {
+        let removed = 0;
+        for (const row of await source.takeDeletions(TAKE)) {
+          const paths = row.prefix ? await source.list(row.bucket, row.path) : [row.path];
+          for (let i = 0; i < paths.length; i += BATCH) await source.remove(row.bucket, paths.slice(i, i + BATCH));
+          removed += row.prefix ? paths.length : 1;
+        }
+        return { kind: "continue", name: "storage", step: { at: "retention", closed: step.closed ?? 0, removed } };
+      }
+      const now = new Date(ctx.clock.now());
+      const old = await source.oldExports(new Date(now.getTime() - EXPORT_DAYS * 86_400_000).toISOString(), TAKE);
+      for (let i = 0; i < old.length; i += BATCH) await source.remove("exports", old.slice(i, i + BATCH));
+      const trimmed = await source.trim(now.toISOString());
+      return { kind: "done", name: "retention", result: { closed: step.closed ?? 0, removed: step.removed ?? 0, trimmed: { ...trimmed, exports: old.length } } };
+    },
+  };
+}
