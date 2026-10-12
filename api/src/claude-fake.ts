@@ -23,7 +23,7 @@ import type {
   WorkedExampleOutput,
 } from "./schemas.js";
 
-export type FakeScript = { answer?: unknown; refuse?: boolean; fail?: string; delayMs?: number };
+export type FakeScript = { answer?: unknown; refuse?: boolean; truncate?: boolean; fail?: string; delayMs?: number };
 
 /** A ClaudeClient that answers by script, for tests and for local runs with AI_FAKE=1 (nothing costs money). Every
  *  request is recorded; an answer is still parsed by the request's schema, as the real client's is. */
@@ -37,12 +37,15 @@ export function fakeClaude(
       requests.push(request as ClaudeRequest<unknown>);
       const step = typeof script === "function" ? script(request as ClaudeRequest<unknown>) : script;
       if (step.delayMs) await new Promise((resolve) => setTimeout(resolve, step.delayMs));
-      if (step.fail) return { kind: "failed", reason: step.fail };
-      if (step.refuse) return { kind: "refused", model: request.model, tokensIn: 100, tokensOut: 0 };
+      const latencyMs = step.delayMs ?? 0;
+      if (step.fail) return { kind: "failed", reason: step.fail, latencyMs };
+      const answered = { model: request.model, tokensIn: 812, tokensOut: 1460, stopReason: "end_turn", latencyMs };
+      if (step.refuse) return { kind: "refused", reason: "refused", ...answered, tokensIn: 100, tokensOut: 0, stopReason: "refusal" };
+      if (step.truncate) return { kind: "truncated", ...answered, tokensOut: 16000, stopReason: "max_tokens" };
       // An answer the schema refuses (a figure that does not add up) is refused, as the real client reports an unfit one.
       const parsed = request.schema.safeParse(step.answer);
-      if (!parsed.success) return { kind: "refused", model: request.model, tokensIn: null, tokensOut: null };
-      return { kind: "ok", parsed: parsed.data, model: request.model, tokensIn: 812, tokensOut: 1460 };
+      if (!parsed.success) return { kind: "refused", reason: "unfit", ...answered };
+      return { kind: "ok", parsed: parsed.data, ...answered };
     },
   };
 }

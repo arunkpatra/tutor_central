@@ -2,8 +2,10 @@ import type { Context } from "hono";
 import type { ZodType } from "zod";
 import type { Vars } from "../auth.js";
 import type { ClaudeClient, ClaudeRequest } from "../claude.js";
-import { type AIKind, type Db, DbFailure } from "../db.js";
+import { type AIKind, type Db, DbFailure, type Started } from "../db.js";
 import { type ApiError, errors } from "../errors.js";
+import { log } from "../log.js";
+import { costPaise, promptHash as hashOf, sha256 } from "../price.js";
 import { CentreInput } from "../schemas.js";
 
 export type C = Context<Vars>;
@@ -23,46 +25,92 @@ export type Call<T> = {
 // What every AI route shares (moved from routes/ai.ts for routes/v2.ts): start the record (consent, the limit), call
 // Claude, finish the record, answer `{ id, result }` or an error in words (src/errors.ts); the body's validation.
 
+/** The Idempotency-Key the app sent (D84), when it is one a row can keep; build 26 sends none and replays nothing. */
+function keyOf(c: C): string | undefined {
+  const key = c.req.header("idempotency-key")?.trim();
+  return key && key.length <= 200 ? key : undefined;
+}
+
 export async function run<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centre: string, call: Call<T>) {
   const token = c.get("token");
-  let id: string;
+  const requestId = c.get("requestId");
+  let started: Started;
   try {
-    id = await deps.db.start(token, { centre, kind: call.kind, input: call.input, model: call.request.model, student: call.student });
+    started = await deps.db.startCall(token, {
+      centre,
+      kind: call.kind,
+      input: call.input,
+      model: call.request.model,
+      student: call.student,
+      key: keyOf(c),
+      inputHash: c.get("bodyHash"),
+      requestId,
+    });
   } catch (e) {
     if (!(e instanceof DbFailure)) throw e;
     if (e.reason === "consent") return answer(c, errors.consent());
     if (e.reason === "student_consent") return answer(c, errors.studentConsent(call.studentName));
     if (e.reason === "limit") return answer(c, errors.limit(call.kind, e.limit ?? 0));
     if (e.reason === "not_a_member") return answer(c, errors.member());
+    if (e.reason === "key_reused") return answer(c, errors.keyReused());
     return answer(c, errors.service());
   }
-  const result = await deps.claude.complete(call.request);
-  if (result.kind === "ok" && call.empty?.(result.parsed)) {
-    const tokens = { tokensIn: result.tokensIn, tokensOut: result.tokensOut };
-    await deps.db.finish(token, id, { status: "failed", output: null, model: result.model, ...tokens });
-    return answer(c, errors.refused(call.kind));
+  const { id } = started;
+  // A repeat of a call made within a day: its answer again, nothing paid; still running, the timed-out words.
+  if (started.replay) {
+    if (started.status === "ok" && started.output !== null) {
+      log.info({ requestId, route: c.req.path, generation: id, replay: true });
+      return c.json({ id, result: JSON.parse(started.output) }, 200, { "Idempotent-Replayed": "true" });
+    }
+    return answer(c, errors.inProgress());
   }
-  if (result.kind === "ok") {
+  const result = await deps.claude.complete(call.request);
+  const finishedAt = () => new Date().toISOString();
+  const promptHash = hashOf(call.request.system);
+  if (result.kind === "failed") {
+    await deps.db.finish(token, id, {
+      status: "failed",
+      output: null,
+      model: call.request.model,
+      tokensIn: null,
+      tokensOut: null,
+      costPaise: null,
+      latencyMs: result.latencyMs,
+      promptHash,
+      stopReason: null,
+      errorReason: result.reason,
+      finishedAt: finishedAt(),
+    });
+    return answer(c, errors.service());
+  }
+  const billed = {
+    model: result.model,
+    tokensIn: result.tokensIn,
+    tokensOut: result.tokensOut,
+    costPaise: costPaise(result.model, result.tokensIn, result.tokensOut),
+    latencyMs: result.latencyMs,
+    promptHash,
+    stopReason: result.stopReason,
+  };
+  if (result.kind === "ok" && !call.empty?.(result.parsed)) {
     const kept = call.keep ? call.keep(result.parsed) : result.parsed;
-    const tokens = { tokensIn: result.tokensIn, tokensOut: result.tokensOut };
-    await deps.db.finish(token, id, { status: "ok", output: JSON.stringify(kept), model: result.model, ...tokens });
+    await deps.db.finish(token, id, { status: "ok", output: JSON.stringify(kept), ...billed, errorReason: null, finishedAt: finishedAt() });
     return c.json({ id, result: kept }, 200);
   }
-  if (result.kind === "refused") {
-    const tokens = { tokensIn: result.tokensIn, tokensOut: result.tokensOut };
-    await deps.db.finish(token, id, { status: "failed", output: null, model: result.model, ...tokens });
-    return answer(c, errors.refused(call.kind));
-  }
-  const failed = { status: "failed" as const, output: null, model: call.request.model, tokensIn: null, tokensOut: null };
-  await deps.db.finish(token, id, failed);
-  return answer(c, errors.service());
+  // Cut at max_tokens: a service failure, never a refusal of the topic (decision 11; the repair comes in Phase 20).
+  const errorReason = result.kind === "truncated" ? "truncated" : result.kind === "refused" ? result.reason : "refused";
+  await deps.db.finish(token, id, { status: "failed", output: null, ...billed, errorReason, finishedAt: finishedAt() });
+  return answer(c, result.kind === "truncated" ? errors.service() : errors.refused(call.kind));
 }
 
 export type Parsed<T> = { value: T; centre: string };
 
 /** The body validated: the route's schema and the centre; 400 with the issues otherwise. */
 export async function parse<T>(c: C, schema: ZodType<T>): Promise<Parsed<T> | Response> {
-  const body: unknown = await c.req.json().catch(() => undefined);
+  // The raw body is read once: its hash is the key's check (a key reused with another body, D84).
+  const raw = await c.req.text().catch(() => "");
+  c.set("bodyHash", sha256(raw));
+  const body: unknown = safeJSON(raw) ?? undefined;
   const parsed = schema.safeParse(body);
   const centre = CentreInput.safeParse(body);
   const issues = [...(parsed.success ? [] : parsed.error.issues), ...(centre.success ? [] : centre.error.issues)];

@@ -29,7 +29,7 @@ test("the fake answers what its script says and records the request", async () =
   expect(ok.requests).toHaveLength(1);
   expect((await fakeClaude({ refuse: true }).complete(request)).kind).toBe("refused");
   const failed = await fakeClaude({ fail: "timeout" }).complete(request);
-  expect(failed).toEqual({ kind: "failed", reason: "timeout" });
+  expect(failed).toMatchObject({ kind: "failed", reason: "timeout" });
 });
 
 test("the fake's sample answers fit their schemas", () => {

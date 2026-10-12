@@ -1,15 +1,19 @@
-import { type AIKind, type Db, DbFailure, type Finish } from "./db.js";
+import { type AIKind, type Db, DbFailure, type Finish, type Started } from "./db.js";
 
 const CONSENT_KINDS: AIKind[] = ["scan_register", "check_paper", "progress_note"];
 
-/** An in-memory Db for tests: refuses as start_ai_generation would (the centre's consent, a named student's consent,
- *  the limit) and records every call. */
+/** An in-memory Db for tests: refuses as start_ai_call would (the centre's consent, a named student's consent, the limit,
+ *  a key reused with another body), replays a key it is given, and records every call. */
 export function fakeDb(
   options: {
     consent?: boolean;
     studentConsent?: boolean;
     limit?: number;
     generations?: Record<string, { kind: AIKind; output: string | null }>;
+    /** Keys whose row the gate already holds: replayed, pending or finished. */
+    replays?: Record<string, { id: string; status: "pending" | "ok"; output: string | null }>;
+    /** Keys the gate refuses as reused with another body. */
+    keyReused?: string[];
   } = {},
 ): Db & { started: unknown[]; finished: unknown[] } {
   const consent = options.consent ?? true;
@@ -19,12 +23,15 @@ export function fakeDb(
   return {
     started,
     finished,
-    async start(token, args) {
+    async startCall(token, args): Promise<Started> {
       if (!consent && CONSENT_KINDS.includes(args.kind)) throw new DbFailure("consent");
       if (args.student && options.studentConsent === false) throw new DbFailure("student_consent");
+      if (args.key && options.keyReused?.includes(args.key)) throw new DbFailure("key_reused");
+      const replay = args.key ? options.replays?.[args.key] : undefined;
+      if (replay) return { ...replay, replay: true };
       if (started.length >= limit) throw new DbFailure("limit", limit);
       started.push({ token, ...args });
-      return `gen-${started.length}`;
+      return { id: `gen-${started.length}`, replay: false, status: "pending", output: null };
     },
     async finish(token, id, result: Finish) {
       finished.push({ token, id, ...result });
