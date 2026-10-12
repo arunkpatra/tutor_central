@@ -70,6 +70,7 @@ export async function parse<T>(c: C, schema: ZodType<T>): Promise<Parsed<T> | Re
     const words = issues.map((i) => (i.path.length ? `${i.path.join(".")}: ${i.message}` : i.message));
     return c.json({ error: words.join("; "), reason: "invalid" }, 400);
   }
+  c.set("centreId", centre.data.centreId);
   return { value: parsed.data, centre: centre.data.centreId };
 }
 

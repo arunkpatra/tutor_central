@@ -171,6 +171,17 @@ jobs:
           bun x "$VERCEL_CLI" pull --yes --environment=production
           bun x "$VERCEL_CLI" build --prod
 
+      # Hobby's ceiling (D85): the worker's 200 s budget leaves a step room under it. The Hono builder honours only the
+      # "**/*" pattern in vercel.json (session 35); a build without it would cut a step at the default.
+      - name: The function's time
+        run: |
+          configs=$(find .vercel/output/functions -name .vc-config.json)
+          if [ -z "$configs" ]; then echo "::error::The build made no function."; exit 1; fi
+          for f in $configs; do
+            if ! jq -e '.maxDuration == 300' "$f" > /dev/null; then echo "::error::$f has no maxDuration of 300."; exit 1; fi
+          done
+          echo "maxDuration 300 on: $configs"
+
       # The deployment production served before this one is written down: promoting it back is the rollback.
       # Vercel holds a deployment whose commit author it does not know at UNKNOWN for ever (only arunkpatra@gmail.com
       # deploys); the limit turns that into a failure in minutes.

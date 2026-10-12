@@ -4,13 +4,14 @@ import { fakeClaude, kindOf, localScript, SAMPLE } from "../src/claude-fake.js";
 import { request as noteRequestForFake } from "../src/prompts/note.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { fakeObserve } from "../src/observe-fake.js";
 import { MessageOutput } from "../src/schemas.js";
 import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
 const verify = async (t: string) => (t === "good" ? { id: "u1" } : null);
-const app = (claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), db = fakeDb()) => makeApp({ verify, claude, db, apple: fakeApple({}) });
+const app = (claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), db = fakeDb()) => makeApp({ observe: fakeObserve(), verify, claude, db, apple: fakeApple({}) });
 const post = (a: ReturnType<typeof makeApp>, path: string, body: unknown) => a.request(path, { method: "POST", headers: auth, body: JSON.stringify(body) });
 const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0]).toString("base64");
 const image = { imageBase64: jpeg, mediaType: "image/jpeg" };

@@ -3,6 +3,7 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { fakeObserve } from "../src/observe-fake.js";
 import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 import { makeVerify } from "../src/verify.js";
 
@@ -11,7 +12,7 @@ const auth = { authorization: "Bearer good", "content-type": "application/json" 
 const verify = async (t: string) => (t === "good" ? { id: "u1" } : null);
 const kindOf = (text: string) =>
   (text.includes("register") ? "scan_register" : text.includes("answer sheet") ? "check_paper" : text.includes("progress") ? "progress_note" : "paper") as keyof typeof SAMPLE;
-const app = (claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r.text)] })), db = fakeDb()) => makeApp({ verify, claude, db, apple: fakeApple({}) });
+const app = (claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r.text)] })), db = fakeDb()) => makeApp({ observe: fakeObserve(), verify, claude, db, apple: fakeApple({}) });
 const post = (a: ReturnType<typeof makeApp>, path: string, body: unknown) =>
   a.request(path, { method: "POST", headers: auth, body: JSON.stringify(body) });
 const paper = { kind: "paper", centreId, subject: "Mathematics", classLevel: "Class 10 Maths", topic: "Quadratic equations" };

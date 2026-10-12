@@ -2,7 +2,7 @@ import type { AIKind, V1Kind } from "./db.js";
 import { first } from "./prompts/message.js";
 
 /** The one answer shape for a failure: a status the app maps to its board's words, and the words themselves. */
-export type ApiError = { status: 400 | 401 | 403 | 422 | 429 | 502 | 503; body: Record<string, unknown> };
+export type ApiError = { status: 400 | 401 | 403 | 409 | 413 | 422 | 429 | 502 | 503; body: Record<string, unknown> };
 
 const REFUSED: Partial<Record<AIKind, string>> = {
   scan_register: "Couldn't read this photo. Try another.",
@@ -42,4 +42,8 @@ export const errors = {
   }),
   service: (): ApiError => ({ status: 502, body: { error: "The AI service didn't answer. Try again." } }),
   badImage: (why: string): ApiError => ({ status: 400, body: { error: why } }),
+  /** 20 calls a minute per user, or 60 per address (src/request.ts). */
+  rate: (): ApiError => ({ status: 429, body: { error: "Too many requests in a minute. Try again shortly.", reason: "rate" } }),
+  /** A body past 4.4 MB, before Vercel's own 4.5 MB would answer in its words: the app's words for too many pages. */
+  tooLarge: (): ApiError => ({ status: 413, body: { error: "That's too many pages. Up to six, and try sharper, smaller photos." } }),
 };

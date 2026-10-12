@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database, Json } from "./generated/database.js";
+import { log } from "./log.js";
 
 export type AIKind = V1Kind | V2Kind;
 export type V1Kind = "paper" | "homework" | "worksheet" | "progress_note" | "scan_register" | "check_paper";
@@ -72,7 +73,7 @@ export function makeDb(url: string, anonKey: string): Db {
         if (error.message.includes("ai_not_a_member")) throw new DbFailure("not_a_member");
         if (error.message.includes("ai_consent_missing")) throw new DbFailure(student ? "student_consent" : "consent");
         if (error.message.includes("ai_limit_reached")) throw new DbFailure("limit", Number(error.details));
-        console.error("db start", error.message);
+        log.error({ at: "db start", message: error.message });
         throw new DbFailure("other");
       }
       return data as string;
@@ -82,12 +83,12 @@ export function makeDb(url: string, anonKey: string): Db {
         .from("ai_generations")
         .update({ status, output, model, tokens_in: tokensIn, tokens_out: tokensOut })
         .eq("id", id);
-      if (error) console.error("db finish", id, error.message);
+      if (error) log.error({ at: "db finish", generation: id, message: error.message });
     },
     async generation(token, id) {
       const { data, error } = await client(token).from("ai_generations").select("id, kind, output").eq("id", id).maybeSingle();
       if (error) {
-        console.error("db generation", id, error.message);
+        log.error({ at: "db generation", generation: id, message: error.message });
         return null;
       }
       return data ? { id: data.id as string, kind: data.kind as AIKind, output: (data.output as string | null) ?? null } : null;
