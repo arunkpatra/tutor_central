@@ -79,7 +79,7 @@ jobs:
           state=""
           for i in $(seq 1 12); do
             supabase db query --linked -f "$RUNNER_TEMP/poll.sql" --output-format json > poll.json
-            state=$(jq -r '(.rows // .)[0].state // empty' poll.json 2>/dev/null || true)
+            state=$(jq -r '(if type == "array" then . else .rows end)[0].state // empty' poll.json 2>/dev/null || true)
             if [ "$state" = "done" ] || [ "$state" = "failed" ] || [ "$state" = "cancelled" ]; then break; fi
             sleep 15
           done

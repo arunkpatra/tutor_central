@@ -74,7 +74,7 @@ jobs:
           if ! supabase db query --linked -f "$GITHUB_WORKSPACE/tools/restore-count.sql" --output-format json > "$RUNNER_TEMP/production.json" 2> "$RUNNER_TEMP/query.err"; then
             echo "::error::The production count did not run."; cat "$RUNNER_TEMP/query.err"; head -c 800 "$RUNNER_TEMP/production.json"; exit 1
           fi
-          jq -r '(.rows // .)[] | "\(.name)|\(.n)"' "$RUNNER_TEMP/production.json" | LC_ALL=C sort > "$RUNNER_TEMP/production.txt"
+          jq -r '(if type == "array" then . else .rows end)[] | "\(.name)|\(.n)"' "$RUNNER_TEMP/production.json" | LC_ALL=C sort > "$RUNNER_TEMP/production.txt"
           if ! psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -At -f "$GITHUB_WORKSPACE/tools/restore-count.sql" > "$RUNNER_TEMP/restored.raw" 2> "$RUNNER_TEMP/psql.err"; then
             echo "::error::The restored count did not run."; cat "$RUNNER_TEMP/psql.err"; exit 1
           fi
