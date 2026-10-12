@@ -100,25 +100,23 @@ import Observation
     }
 
     private func loadMade() async {
-        if !madeLoaded, let cached = madeCache?.load() {
-            made = cached.value
-            madeSavedAt = cached.savedAt
-            madeLoaded = true
-        }
-        do {
-            let loaded = try await plans.made(centre: workspace.centre.id)
-            madeCache?.keep(loaded, at: now())
+        let (plans, centre) = (plans, workspace.centre.id)
+        let outcome = await CopyFirst(cache: madeCache, now: now).load(showingCopy: !madeLoaded) { loaded, at in
             made = loaded
-            madeSavedAt = now()
-            madeOfflineRead = false
+            madeSavedAt = at
             madeLoaded = true
-            madeError = nil
-        } catch {
-            if TransportError.isCancelled(error) {
-                return
-            }
-            madeOfflineRead = TransportError.isOffline(error)
-            madeError = madeLoaded && madeOfflineRead ? nil : MakeWords.historyFailed
+        } read: {
+            try await plans.made(centre: centre)
         }
+        guard let failure = outcome.failure else {
+            madeOfflineRead = false
+            madeError = nil
+            return
+        }
+        if TransportError.isCancelled(failure) {
+            return
+        }
+        madeOfflineRead = TransportError.isOffline(failure)
+        madeError = madeLoaded && madeOfflineRead ? nil : MakeWords.historyFailed
     }
 }

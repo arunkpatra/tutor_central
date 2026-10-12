@@ -206,47 +206,42 @@ import Observation
                 loading = false
             }
         }
-        let centre = workspace.centre.id
-        if invoicesMonth != month, let cached = cache?(month).load() {
-            apply(cached.value, month: month)
-            savedAt = cached.savedAt
-            loaded = true
-        }
-        do {
-            async let monthRead = fees.invoices(centre: centre, month: month)
-            async let earlier = fees.dueBefore(centre: centre, month: today.period)
-            async let logRead = messages.feeLogs(centre: centre, month: month)
-            let read = try await monthRead
-            let before = try await earlier
-            let readLogs = try await logRead
+        let (centre, fees, messages, thisMonth) = (workspace.centre.id, fees, messages, today.period)
+        let reader = CopyFirst(cache: cache?(month), now: now)
+        let outcome = await reader.load(showingCopy: invoicesMonth != month) { snapshot, at in
             guard generation == loadGeneration else { return }
-            let snapshot = FeesSnapshot(invoices: read, dueBefore: before, logs: readLogs)
             apply(snapshot, month: month)
-            cache?(month).keep(snapshot, at: now())
-            savedAt = now()
+            savedAt = at
+            loaded = true
+        } read: {
+            async let monthRead = fees.invoices(centre: centre, month: month)
+            async let earlier = fees.dueBefore(centre: centre, month: thisMonth)
+            async let logRead = messages.feeLogs(centre: centre, month: month)
+            return try await FeesSnapshot(invoices: monthRead, dueBefore: earlier, logs: logRead)
+        }
+        guard generation == loadGeneration else { return }
+        guard let failure = outcome.failure else {
             offlineRead = false
             error = nil
-            loaded = true
-        } catch {
-            guard generation == loadGeneration else { return }
-            if TransportError.isCancelled(error) {
-                // The tab went away mid-read: nothing failed; the next visit reads again.
-                if invoicesMonth != month {
-                    opened = false
-                }
-                return
-            }
-            offlineRead = TransportError.isOffline(error)
-            if invoicesMonth != month {
-                invoices = []
-                logs = []
-                savedAt = nil
-            }
-            canRetry = true
-            lastFailed = { [weak self] in await self?.open(month: month) }
-            // Offline, the line under the title says it: a saved copy shows, or the empty card says nothing is saved.
-            self.error = offlineRead ? nil : "Couldn't load fees. Check your connection and try again."
+            return
         }
+        if TransportError.isCancelled(failure) {
+            // The tab went away mid-read: nothing failed; the next visit reads again.
+            if invoicesMonth != month {
+                opened = false
+            }
+            return
+        }
+        offlineRead = TransportError.isOffline(failure)
+        if invoicesMonth != month {
+            invoices = []
+            logs = []
+            savedAt = nil
+        }
+        canRetry = true
+        lastFailed = { [weak self] in await self?.open(month: month) }
+        // Offline, the line under the title says it: a saved copy shows, or the empty card says nothing is saved.
+        error = offlineRead ? nil : "Couldn't load fees. Check your connection and try again."
     }
 
     public func previous() async {

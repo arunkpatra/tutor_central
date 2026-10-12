@@ -134,30 +134,29 @@ import Observation
             }
         }
         let month = month
-        if sessionsMonth != month, let cached = cache?(month).load() {
-            sessions = cached.value
-            sessionsMonth = month
-            savedAt = cached.savedAt
-        }
-        do {
-            let read = try await attendance.sessions(centre: workspace.centre.id, month: month)
+        let (attendance, centre) = (attendance, workspace.centre.id)
+        let reader = CopyFirst(cache: cache?(month), now: now)
+        let outcome = await reader.load(showingCopy: sessionsMonth != month) { read, at in
             guard generation == loadGeneration else { return }
             sessions = read
             sessionsMonth = month
-            cache?(month).keep(read, at: now())
-            savedAt = now()
+            savedAt = at
+        } read: {
+            try await attendance.sessions(centre: centre, month: month)
+        }
+        guard generation == loadGeneration else { return }
+        guard let failure = outcome.failure else {
             offlineRead = false
             error = nil
-        } catch {
-            guard generation == loadGeneration else { return }
-            // Its screen went away mid-read: nothing failed; the next visit reads again.
-            if TransportError.isCancelled(error) {
-                return
-            }
-            offlineRead = TransportError.isOffline(error)
-            let shown = sessionsMonth == month && savedAt != nil
-            self.error = shown && offlineRead ? nil : "Couldn't load attendance. Check your connection and try again."
+            return
         }
+        // Its screen went away mid-read: nothing failed; the next visit reads again.
+        if TransportError.isCancelled(failure) {
+            return
+        }
+        offlineRead = TransportError.isOffline(failure)
+        let shown = sessionsMonth == month && savedAt != nil
+        error = shown && offlineRead ? nil : "Couldn't load attendance. Check your connection and try again."
     }
 
     public func previousMonth() async {

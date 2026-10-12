@@ -129,29 +129,27 @@ import UIKit
 
     public func loadHistory() async {
         await prepare()
-        if !historyLoaded, let cached = historyCache?.load() {
-            history = cached.value
-            historySavedAt = cached.savedAt
-            historyLoaded = true
-        }
-        do {
-            let loaded = try await historyRepository.generations(centre: workspace.centre.id)
-            historyCache?.keep(loaded, at: now())
-            historySavedAt = now()
-            historyOfflineRead = false
+        let (repository, centre) = (historyRepository, workspace.centre.id)
+        let outcome = await CopyFirst(cache: historyCache, now: now).load(showingCopy: !historyLoaded) { loaded, at in
             let ids = Set(loaded.map(\.id))
             history = (Array(results.values.filter { !ids.contains($0.id) }) + loaded)
                 .sorted { $0.createdAt > $1.createdAt }
+            historySavedAt = at
             historyLoaded = true
-            historyError = nil
-        } catch {
-            if TransportError.isCancelled(error) {
-                return
-            }
-            historyOfflineRead = TransportError.isOffline(error)
-            historyError = historyLoaded && historyOfflineRead
-                ? nil : "Couldn't load History. Check your connection and try again."
+        } read: {
+            try await repository.generations(centre: centre)
         }
+        guard let failure = outcome.failure else {
+            historyOfflineRead = false
+            historyError = nil
+            return
+        }
+        if TransportError.isCancelled(failure) {
+            return
+        }
+        historyOfflineRead = TransportError.isOffline(failure)
+        historyError = historyLoaded && historyOfflineRead
+            ? nil : "Couldn't load History. Check your connection and try again."
     }
 
     /// A result: this session's, else History's, else read by id (a link, a relaunch).
