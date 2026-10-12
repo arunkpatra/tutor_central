@@ -914,6 +914,15 @@ test("consent given, changed and withdrawn write their history; a member cannot 
   expect((await b.from("consent_events").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
 });
 
+test("a consent's history is written by the student's change alone, never inserted by a member", async () => {
+  const s = await a.from("students").insert({ centre_id: centre, name: "No Forged History" }).select("id").single();
+  const forged = await a
+    .from("consent_events")
+    .insert({ centre_id: centre, student_id: s.data!.id, kind: "given", phone: "+919876500099", how: "call", at: "2026-01-01T00:00:00Z" });
+  expect(forged.error?.code).toBe("42501");
+  expect((await a.from("consent_events").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
+});
+
 test("a student added with consent has it in their history at once", async () => {
   const s = await a
     .from("students")
