@@ -8,6 +8,7 @@ import {
 	renderSample,
 	renderSwift,
 	stale,
+	write,
 } from "./contract";
 
 test("the Swift file carries the header, the limits and the lists", () => {
@@ -77,4 +78,23 @@ test("each shared case file is copied into DomainTests' Cases (Phase 18: the exa
 			"ios/TutorCentralKit/Tests/DomainTests/Cases/note-cases.json",
 		],
 	]);
+});
+
+test("write removes what is left over in every generated directory, the case copies too (the review's R-app-9)", async () => {
+	const root = await mkdtemp(join(tmpdir(), "contract-write-"));
+	try {
+		await Bun.write(join(root, "samples/old.json"), "{}");
+		await Bun.write(join(root, "cases/retired.json"), "[]");
+		await Bun.write(join(root, "cases/kept.json"), "old");
+		const files = new Map([["cases/kept.json", "new"]]);
+		await write(root, files, ["samples", "cases"]);
+		expect(await Bun.file(join(root, "samples/old.json")).exists()).toBe(false);
+		expect(await Bun.file(join(root, "cases/retired.json")).exists()).toBe(
+			false,
+		);
+		expect(await Bun.file(join(root, "cases/kept.json")).text()).toBe("new");
+		expect(await stale(root, files, ["samples", "cases"])).toEqual([]);
+	} finally {
+		await rm(root, { recursive: true, force: true });
+	}
 });
