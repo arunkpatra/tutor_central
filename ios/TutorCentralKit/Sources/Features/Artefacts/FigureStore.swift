@@ -33,8 +33,16 @@ import Observation
         let centre = workspace.centre.id
         await register.loadIfNeeded()
         do {
-            guard let read = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache),
-                  case let .figure(content) = read.artefact.content else {
+            guard let read = try await ArtefactRead.read(
+                artefactID, centre: centre, plans: plans, cache: planCache, copy: { [weak self] copy in
+                    guard case let .figure(content) = copy.artefact.content, content.figure.validate() == nil else {
+                        return
+                    }
+                    self?.artefact = copy.artefact
+                    self?.figure = content
+                    self?.plan = copy.plan
+                }
+            ), case let .figure(content) = read.artefact.content else {
                 loadFailed = "This figure isn't here any more."
                 return
             }
@@ -48,7 +56,9 @@ import Observation
             plan = read.plan
             loadFailed = nil
         } catch {
-            loadFailed = "Couldn't load the figure. Check your connection and try again."
+            if figure == nil {
+                loadFailed = "Couldn't load the figure. Check your connection and try again."
+            }
         }
     }
 

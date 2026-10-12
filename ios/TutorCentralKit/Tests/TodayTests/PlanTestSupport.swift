@@ -90,3 +90,29 @@ enum PlanTest {
         return jobs
     }
 }
+
+/// A read held until released, as a connection that takes its timeout to fail (run 8); once released, later reads pass.
+@MainActor final class HeldRead {
+    private(set) var waiting = 0
+    private var released = false
+    private var held: [CheckedContinuation<Void, Never>] = []
+
+    func hold() async {
+        guard !released else { return }
+        waiting += 1
+        await withCheckedContinuation { held.append($0) }
+    }
+
+    func release() {
+        released = true
+        held.forEach { $0.resume() }
+        held = []
+    }
+
+    /// Until a read is held.
+    func untilHeld() async {
+        while waiting == 0 {
+            await Task.yield()
+        }
+    }
+}

@@ -54,6 +54,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     public private(set) var isOn = false
     public private(set) var rows: [NoteRowModel] = []
     public private(set) var loadFailed = false
+    /// What was sent this week is known (the read answered): until then the rows are the register's, with no count.
+    private var counted = false
     /// A refused change in words (the alert).
     public var message: String?
     /// Read and Send it now: AppShell opens the note (Artefacts) for the student and the note day.
@@ -107,7 +109,7 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
 
     /// "2 of 7 sent".
     public var countLine: String {
-        loadFailed ? "" : "\(rows.filter { $0.state == .sent }.count) of \(rows.count) sent"
+        counted ? "\(rows.filter { $0.state == .sent }.count) of \(rows.count) sent" : ""
     }
 
     /// The note day of the students whose note is on now, by student: a batch's own day, Sunday 18:00 for a student
@@ -134,12 +136,17 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
             rows = []
             return
         }
+        // The register's rows at once: offline the read takes its timeout to fail (run 8).
+        if rows.isEmpty {
+            rows = rowsOrdered(registerRows(days))
+        }
         do {
             let week = try await read(days: days, at: moment)
             guard mine == generation else { return }
             rows = rowsOrdered(week.rows)
             parentWeek = week.parents
             loadFailed = false
+            counted = true
         } catch {
             guard mine == generation else { return }
             // Offline or a failed read: the register's rows, so a note kept on this iPhone still opens (plan decision
@@ -147,6 +154,7 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
             rows = rowsOrdered(registerRows(days))
             parentWeek = [:]
             loadFailed = true
+            counted = false
         }
     }
 

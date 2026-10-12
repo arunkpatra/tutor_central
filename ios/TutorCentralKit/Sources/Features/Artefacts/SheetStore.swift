@@ -69,7 +69,10 @@ import UIKit
         await register.loadIfNeeded()
         do {
             guard let found = try await ArtefactRead.read(
-                artefactID, centre: centre, plans: plans, cache: planCache
+                artefactID, centre: centre, plans: plans, cache: planCache, copy: { [weak self] copy in
+                    self?.artefact = copy.artefact
+                    self?.plan = copy.plan
+                }
             ) else {
                 loadFailed = ArtefactWords.gone
                 return
@@ -79,7 +82,10 @@ import UIKit
             loadFailed = nil
             await loadOwnImage()
         } catch {
-            loadFailed = "Couldn't load the sheet. Check your connection and try again."
+            // The copy stays on screen when the read fails.
+            if artefact == nil {
+                loadFailed = "Couldn't load the sheet. Check your connection and try again."
+            }
         }
     }
 

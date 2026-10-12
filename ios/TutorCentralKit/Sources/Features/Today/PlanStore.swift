@@ -163,10 +163,10 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
         // A live job is being followed: a second open (a return to the app, a pull) reads nothing twice.
         guard polling == nil else { return }
+        showCopy()
         await readAround()
-        if record == nil, let copy = cache?.load(classID: classID, date: today) {
-            show(.made(copy.value))
-        }
+        // The cards again, with the exams' dates and who was told.
+        show(state)
         guard await online() else {
             if record == nil {
                 show(.offline)
@@ -177,6 +177,14 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         if record != nil {
             await preview.keepBooks(of: register.members(of: classID))
         }
+    }
+
+    /// Today's copy on this iPhone, shown before any read: offline each read takes its timeout to fail (run 8).
+    func showCopy() {
+        guard record == nil, let classroom = register.classroom(classID),
+              classroom.meetingDays.contains(today.weekday(in: calendar)),
+              let copy = cache?.load(classID: classID, date: today) else { return }
+        show(.made(copy.value))
     }
 
     /// Try Again on the failed card: another plan job when the last one failed, else the read again.

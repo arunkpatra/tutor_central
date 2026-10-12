@@ -89,6 +89,11 @@ public struct ArtefactScreen: View {
             }
         }
         .task {
+            if let copy = ArtefactRead.copy(artefactID, cache: context.planCache) {
+                found = copy.artefact
+                kind = copy.artefact.kind
+                return
+            }
             let found = try? await ArtefactRead.read(
                 artefactID, centre: context.workspace.centre.id, plans: context.plans, cache: context.planCache
             )

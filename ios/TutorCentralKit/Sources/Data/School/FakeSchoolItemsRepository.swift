@@ -7,6 +7,8 @@ import Foundation
     public var nextError: (any Error)?
     /// When the fake's adds are confirmed.
     public var now: Date
+    /// Awaited before the items answer: a test holds the read, as a connection that takes its timeout to fail.
+    public var beforeRead: (@MainActor () async -> Void)?
 
     public init(items: [SchoolItem], now: Date = Date()) {
         stored = items
@@ -14,6 +16,7 @@ import Foundation
     }
 
     public func items(centre _: UUID) async throws -> [SchoolItem] {
+        await beforeRead?()
         try begin()
         return stored.sorted { ($0.date, $0.title) < ($1.date, $1.title) }
     }

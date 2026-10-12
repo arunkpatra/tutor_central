@@ -15,11 +15,17 @@ public extension RegisterStore {
         await fetch(showingCopy: !loaded)
     }
 
-    /// For a screen pushed over the list (a detail, a link): read only when nothing has been read or cached yet.
+    /// For a screen pushed over the list (a detail, a link) and Today: read only when nothing has been read or cached
+    /// yet. A copy on this iPhone answers at once and the read runs on: offline it takes its timeout to fail, and
+    /// Today's plans and note day wait for this (Phase 18's hand run 8).
     func loadIfNeeded() async {
-        if !loaded {
+        guard !loaded else { return }
+        guard let copy = cache?.load() else {
             await load()
+            return
         }
+        show(copy, savedAt: copy.savedAt)
+        Task { await refresh() }
     }
 
     func refresh() async {

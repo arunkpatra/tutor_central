@@ -34,6 +34,7 @@ import Testing
         var online = true
         var classes: FakeClassesRepository?
         var messages: FakeMessageLogRepository?
+        var items: FakeSchoolItemsRepository?
     }
 
     static func students(_ world: World) -> [Student] {
@@ -99,7 +100,7 @@ import Testing
         return NoteDayStore(
             workspace: FakeCentreRepository.meeraWorkspace, register: register, textbooks: textbooks, record: record,
             attendance: FakeAttendanceRepository(sessions: weekSessions), messages: messages,
-            schoolItems: FakeSchoolItemsRepository(items: []), classes: classesRepository,
+            schoolItems: world.items ?? FakeSchoolItemsRepository(items: []), classes: classesRepository,
             online: { [online = world.online] in online }, now: { now }, calendar: calendar
         )
     }

@@ -41,8 +41,14 @@ import Observation
         let centre = workspace.centre.id
         await register?.loadIfNeeded()
         do {
-            guard let found = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache),
-                  case let .workedExample(example) = found.artefact.content else {
+            guard let found = try await ArtefactRead.read(
+                artefactID, centre: centre, plans: plans, cache: planCache, copy: { [weak self] copy in
+                    guard case let .workedExample(example) = copy.artefact.content else { return }
+                    self?.artefact = copy.artefact
+                    self?.example = example
+                    self?.plan = copy.plan
+                }
+            ), case let .workedExample(example) = found.artefact.content else {
                 loadFailed = "This worked example isn't here any more."
                 return
             }
@@ -51,7 +57,9 @@ import Observation
             plan = found.plan
             loadFailed = nil
         } catch {
-            loadFailed = "Couldn't load the worked example. Check your connection and try again."
+            if artefact == nil {
+                loadFailed = "Couldn't load the worked example. Check your connection and try again."
+            }
         }
     }
 

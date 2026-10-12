@@ -90,8 +90,12 @@ public struct MockMark: Hashable, Sendable {
     public func load() async {
         await register.loadIfNeeded()
         do {
-            guard let found = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache)
-            else {
+            guard let found = try await ArtefactRead.read(
+                artefactID, centre: centre, plans: plans, cache: planCache, copy: { [weak self] copy in
+                    self?.artefact = copy.artefact
+                    self?.plan = copy.plan
+                }
+            ) else {
                 loadFailed = "This mock isn't here any more."
                 return
             }
@@ -99,8 +103,10 @@ public struct MockMark: Hashable, Sendable {
             plan = found.plan
             loadFailed = nil
         } catch {
-            loadFailed = "Couldn't load the mock. Check your connection and try again."
-            return
+            guard artefact != nil else {
+                loadFailed = "Couldn't load the mock. Check your connection and try again."
+                return
+            }
         }
         if let item = artefact?.schoolItemID ?? mock?.schoolItemID {
             exam = await (try? schoolItems?.item(id: item, centre: centre)) ?? nil
