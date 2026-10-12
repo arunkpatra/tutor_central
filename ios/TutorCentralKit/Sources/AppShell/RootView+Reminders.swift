@@ -16,6 +16,7 @@ extension RootView {
         let made = PushRegistrar(
             notifications: deps.notifications, tokens: deps.deviceTokens,
             registerForRemote: { UIApplication.shared.registerForRemoteNotifications() },
+            unregisterFromRemote: { UIApplication.shared.unregisterForRemoteNotifications() },
             deviceID: { UIDevice.current.identifierForVendor?.uuidString.lowercased() },
             environment: Bundle.main.object(forInfoDictionaryKey: "PUSH_ENVIRONMENT") as? String ?? "sandbox",
             build: (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String).flatMap(Int.init)

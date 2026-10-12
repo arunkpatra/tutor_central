@@ -7,6 +7,7 @@ import Foundation
     private let notifications: any NotificationCenterClient
     private let tokens: any DeviceTokenRepository
     private let registerForRemote: @MainActor () -> Void
+    private let unregisterFromRemote: @MainActor () -> Void
     private let deviceID: @MainActor () -> String?
     private let environment: String
     private let build: Int?
@@ -14,12 +15,13 @@ import Foundation
     /// `environment` is the build's (`PUSH_ENVIRONMENT` in Info.plist: sandbox in Debug, production in Release).
     public init(
         notifications: any NotificationCenterClient, tokens: any DeviceTokenRepository,
-        registerForRemote: @escaping @MainActor () -> Void, deviceID: @escaping @MainActor () -> String?,
-        environment: String, build: Int?
+        registerForRemote: @escaping @MainActor () -> Void, unregisterFromRemote: @escaping @MainActor () -> Void,
+        deviceID: @escaping @MainActor () -> String?, environment: String, build: Int?
     ) {
         self.notifications = notifications
         self.tokens = tokens
         self.registerForRemote = registerForRemote
+        self.unregisterFromRemote = unregisterFromRemote
         self.deviceID = deviceID
         self.environment = environment
         self.build = build
@@ -40,8 +42,11 @@ import Foundation
         )
     }
 
-    /// This device's token forgotten (sign-out, deletion), before the wipe.
+    /// This device's token forgotten (sign-out, deletion), before the wipe; and the app unregistered from APNs, which
+    /// needs no connection: offline the row cannot be deleted, and Apple then answers 410 for the token, which the
+    /// server retires (the review's R-app-4). The next sign-in asks for a token again.
     public func forget() async {
+        unregisterFromRemote()
         guard let device = deviceID() else { return }
         try? await tokens.forget(deviceID: device)
     }
