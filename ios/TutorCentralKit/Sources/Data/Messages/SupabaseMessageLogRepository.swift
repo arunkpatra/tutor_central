@@ -28,16 +28,33 @@ public final class SupabaseMessageLogRepository: MessageLogRepository {
         return try Self.decoder.decode([LogRow].self, from: response.data).compactMap(\.log)
     }
 
+    /// One log a child and day (0033): a log already there (a queued one sent again) is answered, not refused.
     public func logAbsence(centre: UUID, studentID: UUID, about: Day) async throws -> AbsenceLog {
-        let response = try await client.from("message_log")
-            .insert([
-                "centre_id": AnyJSON.string(centre.uuidString),
-                "student_id": .string(studentID.uuidString),
-                "kind": .string("absence"),
-                "about_date": .string(about.iso),
-            ])
-            .select(Self.columns).single().execute()
+        let response: PostgrestResponse<Void>
+        do {
+            response = try await client.from("message_log")
+                .insert([
+                    "centre_id": AnyJSON.string(centre.uuidString),
+                    "student_id": .string(studentID.uuidString),
+                    "kind": .string("absence"),
+                    "about_date": .string(about.iso),
+                ])
+                .select(Self.columns).single().execute()
+        } catch let error as PostgrestError where error.code == "23505" {
+            return try await absence(centre: centre, studentID: studentID, about: about)
+        }
         guard let log = try Self.decoder.decode(LogRow.self, from: response.data).log else {
+            throw URLError(.cannotParseResponse)
+        }
+        return log
+    }
+
+    /// The child's absence log of the day.
+    private func absence(centre: UUID, studentID: UUID, about: Day) async throws -> AbsenceLog {
+        let response = try await client.from("message_log").select(Self.columns)
+            .eq("centre_id", value: centre).eq("student_id", value: studentID).eq("kind", value: "absence")
+            .eq("about_date", value: about.iso).limit(1).execute()
+        guard let log = try Self.decoder.decode([LogRow].self, from: response.data).first?.log else {
             throw URLError(.cannotParseResponse)
         }
         return log

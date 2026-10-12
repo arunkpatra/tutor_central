@@ -110,7 +110,7 @@ public extension AIStore {
             kind: request.kind, request: request, regenerating: regenerating,
             line: request.creatingLine(studentFirstName: studentFirst)
         )
-        let context = context(for: request)
+        let context = regenerating == nil ? context(for: request) : context(for: request).again()
         task = Task { [weak self] in
             await self?.run(request, context: context)
         }

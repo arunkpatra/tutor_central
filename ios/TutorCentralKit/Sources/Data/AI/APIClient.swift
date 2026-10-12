@@ -25,7 +25,7 @@ public struct APIClient: AIRepository, AccountRepository {
     }
 
     public func generate(_ request: GenerateRequest, context: GenerateContext) async throws(APIFailure) -> Generation {
-        let data = try await post("ai/generate", body: GenerateBody(request, context: context))
+        let data = try await post("ai/generate", body: GenerateBody(request, context: context), fresh: context.isAgain)
         guard let envelope = try? JSONDecoder().decode(AnswerEnvelope.self, from: data),
               let output = Self.result(in: data),
               let result = GenerationResult.decode(kind: request.kind, output: output)
@@ -63,14 +63,19 @@ public struct APIClient: AIRepository, AccountRepository {
         return CheckAnswer(id: answer.id, result: answer.result.result)
     }
 
-    func post(_ path: String, body: some Encodable) async throws(APIFailure) -> Data {
-        let answer = try await exchange(path, body: body)
+    /// An AI call: the key from the route and the body, or a fresh one for "another one" (D84).
+    func post(_ path: String, body: some Encodable, fresh: Bool = false) async throws(APIFailure) -> Data {
+        let answer = try await exchange(path, body: body, key: fresh ? .fresh : .body)
         guard !(200 ..< 300).contains(answer.status) else { return answer.data }
         throw Self.failure(status: answer.status, body: try? JSONDecoder().decode(ErrorBody.self, from: answer.data))
     }
 
-    /// One request with the bearer: its status and body, or the failure before any answer came.
-    private func exchange(_ path: String, body: some Encodable) async throws(APIFailure) -> Answer {
+    /// The Idempotency-Key a request carries: none (an account call), the body's, or a fresh one.
+    enum Key { case none, body, fresh }
+
+    /// One request with the bearer and a request id (plan decision 12): its status and body, or the failure before any
+    /// answer came. The body's keys are sorted, so the same request is the same bytes and the same key.
+    private func exchange(_ path: String, body: some Encodable, key: Key) async throws(APIFailure) -> Answer {
         let bearer: String
         do {
             bearer = try await token()
@@ -81,10 +86,23 @@ public struct APIClient: AIRepository, AccountRepository {
         request.httpMethod = "POST"
         request.setValue("Bearer \(bearer)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(UUID().uuidString.lowercased(), forHTTPHeaderField: "X-Request-Id")
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let data: Data
         do {
-            request.httpBody = try JSONEncoder().encode(body)
+            data = try encoder.encode(body)
         } catch {
             throw .server("Couldn't send that. Try again.")
+        }
+        request.httpBody = data
+        switch key {
+        case .none: break
+        case .body: request.setValue(
+                IdempotencyKey.forBody(route: path, body: data),
+                forHTTPHeaderField: "Idempotency-Key"
+            )
+        case .fresh: request.setValue(IdempotencyKey.fresh(), forHTTPHeaderField: "Idempotency-Key")
         }
         do {
             let (data, response) = try await session.data(for: request)
@@ -105,6 +123,11 @@ public struct APIClient: AIRepository, AccountRepository {
     }
 
     static func failure(status: Int, body: ErrorBody?) -> APIFailure {
+        platformFailure(status: status, body: body) ?? routeFailure(status: status, body: body)
+    }
+
+    /// A route's own answers: the consent, the limits, a refusal, the database out of reach, a tutor-facing 400.
+    private static func routeFailure(status: Int, body: ErrorBody?) -> APIFailure {
         switch status {
         case 401: .signedOut
         case 403 where body?.reason == "student_consent": .studentConsent(body?.error ?? APIFailure.studentAlert)
@@ -119,6 +142,19 @@ public struct APIClient: AIRepository, AccountRepository {
         case 400 where body?.reason == "invalid": .service
         case 400: body.map { .server($0.error) } ?? .service
         default: .service
+        }
+    }
+
+    /// The platform's answers (Phase 17): the same key still running (D84) may finish and answer again, so the
+    /// timed-out words; another body under the same key, or any other conflict, the service's words; too many calls in
+    /// a minute, try again shortly, never the day's limit; a body past the limit, too many pages.
+    private static func platformFailure(status: Int, body: ErrorBody?) -> APIFailure? {
+        switch status {
+        case 409 where body?.reason == "in_progress": .timedOut
+        case 409: .service
+        case 429 where body?.reason == "rate": .timedOut
+        case 413: .tooLarge
+        default: nil
         }
     }
 
@@ -143,7 +179,7 @@ public extension APIClient {
     func revokeApple(code: String) async throws(AccountFailure) {
         let answer: Answer
         do {
-            answer = try await exchange("account/revoke-apple", body: ["code": code])
+            answer = try await exchange("account/revoke-apple", body: ["code": code], key: .none)
         } catch {
             throw switch error {
             case .signedOut: .signedOut

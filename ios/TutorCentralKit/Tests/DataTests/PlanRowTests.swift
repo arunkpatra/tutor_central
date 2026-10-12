@@ -71,4 +71,23 @@ struct PlanRowTests {
         #expect(params["p_student"] == .null)
         #expect(params["p_item_kind"] == .string("homework"))
     }
+
+    @Test func aMadeArtefactIsKeptOnceByItsGenerationAndAnOwnOneHasNoKey() throws {
+        let generation = UUID()
+        let sheet = ArtefactContent.sheet(SheetContent(
+            title: "t", instructions: nil, questions: [], forHomework: false, light: false
+        ))
+        let made = NewArtefact(
+            kind: .sheet, source: .made, title: "t", content: sheet, photoPath: nil, generationID: generation,
+            regeneratedFrom: nil
+        )
+        let link = ArtefactLink(plan: UUID(), group: 1, student: nil, itemKind: .practise)
+        let params = try SupabasePlansRepository.keepParams(made, to: link, centre: UUID())
+        #expect(params["p_key"] == .string(generation.uuidString.lowercased()))
+        let own = NewArtefact(
+            kind: .sheet, source: .own, title: "Mine", content: sheet, photoPath: nil, generationID: nil,
+            regeneratedFrom: nil
+        )
+        #expect(try SupabasePlansRepository.keepParams(own, to: link, centre: UUID())["p_key"] == nil)
+    }
 }
