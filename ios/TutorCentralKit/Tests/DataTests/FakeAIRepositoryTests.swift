@@ -91,17 +91,4 @@ import Testing
         }
         #expect(fake.sheets.count == 1 && fake.figures.count == 1 && fake.briefs.count == 1)
     }
-
-    @MainActor @Test func theFakeNamesATopicPerGroup() async throws {
-        let fake = FakeAIRepository()
-        let topics = try await fake.planTopics(
-            classID: nil, date: #require(Day(iso: "2026-10-07")), month: 10,
-            groups: [
-                PlanTopicGroup(groupNo: 1, classLevel: .eight, subject: "Science"),
-                PlanTopicGroup(groupNo: 2, classLevel: .two, subject: "Mathematics"),
-            ], centre: UUID()
-        )
-        #expect(topics.map(\.chapter) == ["Chemical reactions", "Numbers"])
-        #expect(fake.topics.count == 1)
-    }
 }

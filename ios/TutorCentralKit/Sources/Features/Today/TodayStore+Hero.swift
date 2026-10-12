@@ -57,15 +57,19 @@ extension TodayStore {
         }
     }
 
-    /// "17:00–18:30 · 5 students · 3 groups" once the batch's plan has its groups.
     private func startHero(_ next: NextClass) -> Hero {
-        let groups = plans[next.classroom.id]?.record?.groups.count ?? 0
-        let line = groups > 0 ? "\(timeAndMembers(next.classroom)) · \(groups) \(groups == 1 ? "group" : "groups")"
-            : timeAndMembers(next.classroom)
-        return Hero(
+        Hero(
             kind: .start, eyebrow: next.eyebrow, accent: true, title: next.classroom.name, titleMark: false,
-            line: line, classID: next.classroom.id
+            line: timeAndGroups(next.classroom), classID: next.classroom.id
         )
+    }
+
+    /// "17:00–18:30 · 5 students · 3 groups" once the batch's plan has its groups (made before the batch since
+    /// Phase 18, P18-Today-Plan-Making).
+    private func timeAndGroups(_ classroom: Classroom) -> String {
+        let groups = plans[classroom.id]?.record?.groups.count ?? 0
+        return groups > 0 ? "\(timeAndMembers(classroom)) · \(groups) \(groups == 1 ? "group" : "groups")"
+            : timeAndMembers(classroom)
     }
 
     private func upcomingHero(_ next: NextClass) -> Hero {
@@ -76,7 +80,7 @@ extension TodayStore {
         case .soon, .running, .laterToday:
             Hero(
                 kind: .upcoming, eyebrow: next.eyebrow, accent: false, title: classroom.name, titleMark: false,
-                line: timeAndMembers(classroom), classID: classroom.id
+                line: timeAndGroups(classroom), classID: classroom.id
             )
         case .tomorrow:
             Hero(
@@ -89,7 +93,7 @@ extension TodayStore {
             Hero(
                 kind: .upcoming, eyebrow: next.eyebrow, accent: true,
                 title: "Next: \(classroom.name) on \(day.weekday(in: calendar).name)", titleMark: false,
-                line: [time, members, "its plan is made when you open the app on \(day.weekday(in: calendar).name)"]
+                line: [time, members, "its plan is ready before the batch on \(day.weekday(in: calendar).name)"]
                     .compactMap(\.self).joined(separator: " · "),
                 classID: classroom.id
             )

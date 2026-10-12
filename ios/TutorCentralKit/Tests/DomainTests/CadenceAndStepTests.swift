@@ -90,17 +90,6 @@ struct PlanRulesStepTests: ParentFixtures {
         let check = plan.lines.first { $0.studentID == dev.id && $0.kind == .check }
         #expect(check?.personalChecks == true)
         #expect(plan.personalCheckSkills[dev.id]?.first?.name == "Balancing equations")
-        let requests = ArtefactBudget.requests(
-            for: plan, students: [dev.id: planInput(dev: .notOnTrack, step: .addToChecks).students[0]],
-            spacedSkills: [dev.id: [countingAtoms]], briefsMade: []
-        )
-        let personal = requests.compactMap { request -> [String]? in
-            if case let .personalChecks(_, skills, _, _, _) = request {
-                return skills
-            }
-            return nil
-        }
-        #expect(personal.first == ["Balancing equations", "Counting atoms in a formula"])
     }
 
     @Test func theCaptionShowsUntilTheParentIsTold() {

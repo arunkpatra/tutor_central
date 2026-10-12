@@ -1,19 +1,9 @@
 import Domain
 import Foundation
 
-/// The plan's calls (api/src/routes/v2.ts, Phase 12): a first topic per group, and the group material. None carries a
-/// student (D62).
+/// The group material's calls (api/src/routes/v2.ts, Phase 12): Make's and Make it again's. None carries a student
+/// (D62).
 public extension APIClient {
-    func makeChecksWithID(
-        classLevel: ClassLevel, subject: String, skills: [String], centre: UUID
-    ) async throws(APIFailure) -> MadeChecks {
-        let body = MakeCheckBody(
-            centreId: centre.uuidString.lowercased(), classLevel: classLevel.rawValue, subject: subject, skills: skills
-        )
-        let answer = try await made(ChecksEnvelope.Result.self, body: body)
-        return MadeChecks(generationID: answer.id, questions: answer.result.questions)
-    }
-
     func makeSheet(_ request: SheetRequest, centre: UUID) async throws(APIFailure) -> MadeSheet {
         let body = MakeSheetBody(
             centreId: centre.uuidString.lowercased(), classLevel: request.classLevel.rawValue,
@@ -62,21 +52,6 @@ public extension APIClient {
         )
         let answer = try await made(Brief.self, body: body)
         return MadeBrief(generationID: answer.id, brief: answer.result)
-    }
-
-    func planTopics(
-        classID: UUID?, date: Day, month: Int, groups: [PlanTopicGroup], centre: UUID
-    ) async throws(APIFailure) -> [PlanTopic] {
-        let body = PlanBody(
-            centreId: centre.uuidString.lowercased(), classId: classID?.uuidString.lowercased(), date: date.iso,
-            month: month,
-            groups: groups.map { .init(groupNo: $0.groupNo, classLevel: $0.classLevel.rawValue, subject: $0.subject) }
-        )
-        let data = try await post("ai/plan", body: body)
-        guard let answer = try? JSONDecoder().decode(MadeEnvelope<TopicsResult>.self, from: data) else {
-            throw .server("The answer didn't read. Try again.")
-        }
-        return answer.result.groups
     }
 
     /// The API's words for a figure that does not add up (api/src/errors.ts).

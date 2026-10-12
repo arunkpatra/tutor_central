@@ -35,7 +35,6 @@ private let decoders: [String: @Sendable (Data) -> Bool] = {
         "worked_example": decodes(MadeEnvelope<WorkedExample>.self),
         "figure": decodes(MadeEnvelope<FigureContent>.self),
         "brief": decodes(MadeEnvelope<Brief>.self),
-        "plan": decodes(MadeEnvelope<TopicsResult>.self),
         "parse_school": decodes(MadeEnvelope<ParseSchoolResult>.self),
         "mock": decodes(MadeEnvelope<MockResult>.self),
         "gap_report": decodes(MadeEnvelope<GapResult>.self),
@@ -57,7 +56,11 @@ private let decoders: [String: @Sendable (Data) -> Bool] = {
     #expect(samples.count == 22)
 }
 
-@Test(arguments: samples.map(\.kind))
+/// The API's answers the app no longer asks for: /ai/plan names a group's first topic for build 27's plans; since
+/// Phase 18 the server's plan job does that itself.
+private let notAsked: Set<String> = ["plan"]
+
+@Test(arguments: samples.map(\.kind).filter { !notAsked.contains($0) })
 func everySampleAnswerReadsWithTheAppsDecoder(kind: String) throws {
     let sample = try #require(samples.first { $0.kind == kind })
     let decode = try #require(decoders[kind], "no decoder for the API's \(kind) answer")

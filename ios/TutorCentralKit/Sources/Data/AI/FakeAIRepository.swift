@@ -24,7 +24,7 @@ import Foundation
     public var scriptBySubject: [String: Script] = [:]
     /// The plan's calls (Phase 12), each scripted apart.
     public enum Call: Hashable, Sendable {
-        case checks, sheet, workedExample, figure, brief, topics
+        case sheet, workedExample, figure, brief
         case note, canDo, notOnTrack, readMarks
     }
 
@@ -40,7 +40,6 @@ import Foundation
     public private(set) var briefs: [String] = []
     /// The calls made as "another one" (`IdempotencyKey.another`): Make it again and Write again.
     public private(set) var anotherCalls = 0
-    public private(set) var topics: [[PlanTopicGroup]] = []
     /// The school's calls (Phase 13).
     public private(set) var parseCalls: [SchoolSource] = []
     public private(set) var mockCalls: [MockRequest] = []
@@ -119,14 +118,6 @@ import Foundation
         return AISamples.placement(for: chapters)
     }
 
-    public func makeChecksWithID(
-        classLevel: ClassLevel, subject: String, skills: [String], centre: UUID
-    ) async throws(APIFailure) -> MadeChecks {
-        try await answer(.checks)
-        let questions = try await makeChecks(classLevel: classLevel, subject: subject, skills: skills, centre: centre)
-        return MadeChecks(generationID: UUID(), questions: questions)
-    }
-
     public func makeSheet(_ request: SheetRequest, centre _: UUID) async throws(APIFailure) -> MadeSheet {
         sheets.append(request.skills)
         sheetRequests.append(request)
@@ -159,14 +150,6 @@ import Foundation
         briefs.append(chapter)
         try await answer(.brief)
         return MadeBrief(generationID: UUID(), brief: AISamples.brief)
-    }
-
-    public func planTopics(
-        classID _: UUID?, date _: Day, month _: Int, groups: [PlanTopicGroup], centre _: UUID
-    ) async throws(APIFailure) -> [PlanTopic] {
-        topics.append(groups)
-        try await answer(.topics)
-        return AISamples.topics(groups)
     }
 
     public func parseSchool(
@@ -233,9 +216,6 @@ import Foundation
     }
 
     private func answer(_ call: Call) async throws(APIFailure) {
-        if call == .checks, IdempotencyKey.isAnother {
-            anotherCalls += 1
-        }
         if let wait = delayByKind[call] {
             do {
                 try await Task.sleep(for: wait)
@@ -246,9 +226,7 @@ import Foundation
         if case let .failure(failure)? = scriptByKind[call] {
             throw failure
         }
-        if call != .checks {
-            try await answer()
-        }
+        try await answer()
     }
 
     private func answer(subject: String) async throws(APIFailure) {

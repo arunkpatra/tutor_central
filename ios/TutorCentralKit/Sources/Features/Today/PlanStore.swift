@@ -49,8 +49,10 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     public let afterGroup: Int
 }
 
-/// One batch's plan on Today (P10-Today-Plan and its states): nothing yet, being made (the lines fill in as they come),
-/// made, or none because the network is away and no copy exists (plan decision 14).
+/// One batch's plan on Today (P10-Today-Plan and its states), made by the server (Phase 18, D70): the plan row and the
+/// day's plan job read together (plan/phase-18-plan.md decision 18). Being made (the planning card, or the plan with
+/// its
+/// marks on their way), made, failed with Try Again, none, a holiday, or the network away with no copy.
 @MainActor @Observable public final class PlanStore {
     public enum State: Hashable, Sendable {
         case none
@@ -72,6 +74,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     public var message: String?
     /// Whether the network is there (AppShell's connectivity); a test sets it.
     @ObservationIgnored public var online: () async -> Bool = { true }
+    /// Whether the app is in front (AppShell's): the read while a job is live stops behind it.
+    @ObservationIgnored public var inFront: () -> Bool = { true }
     /// The parents' log (AppShell's): who was told they are not on track, for the lines' captions.
     @ObservationIgnored public var messages: (any MessageLogRepository)?
     /// The members told since their status came; read with the plan.
@@ -80,32 +84,45 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     let register: any Register
     let plans: any PlansRepository
     let classes: any ClassesRepository
-    let maker: PlanMaker
+    let jobs: any JobsRepository
+    let preview: PlanPreview
     let cache: PlanCache?
     let now: @Sendable () -> Date
     let calendar: Calendar
+    /// The wait between reads while the job is live (ten seconds; a test passes none).
+    let pause: @Sendable () async throws -> Void
     /// Each member's subjects (their chapters'), for the Change sheet's menus; read when it opens.
     @ObservationIgnored var subjects: [UUID: [String]] = [:]
     /// The exams' dates, by item, for an exam group's countdown (read with the plan).
     @ObservationIgnored var examDates: [UUID: Day] = [:]
-    @ObservationIgnored var generation = 0
-    @ObservationIgnored var run: Task<Void, Never>?
+    /// The day's plan job as last read.
+    @ObservationIgnored var job: JobStatus?
+    @ObservationIgnored var polling: Task<Void, Never>?
+    @ObservationIgnored var followed = 0
 
     public init(
         classID: UUID, workspace: Workspace, register: any Register, plans: any PlansRepository,
-        classes: any ClassesRepository, maker: PlanMaker, cache: PlanCache?, now: @escaping @Sendable () -> Date,
-        calendar: Calendar
+        classes: any ClassesRepository, jobs: any JobsRepository, preview: PlanPreview, cache: PlanCache?,
+        now: @escaping @Sendable () -> Date, calendar: Calendar,
+        pause: @escaping @Sendable () async throws -> Void = { try await Task.sleep(for: .seconds(10)) }
     ) {
         self.classID = classID
         self.workspace = workspace
         self.register = register
         self.plans = plans
         self.classes = classes
-        self.maker = maker
+        self.jobs = jobs
+        self.preview = preview
         self.cache = cache
         self.now = now
         self.calendar = calendar
+        self.pause = pause
     }
+
+    /// The words when the plan job failed: Try Again asks for another.
+    static let jobFailed = "Couldn't make today's plan. Try again in a minute."
+    /// The words when the plan could not be read (Phase 12's).
+    static let readFailed = "Couldn't make today's plan. Check your connection and try again."
 
     public var briefRow: BriefRowModel? {
         briefRows.first
@@ -135,8 +152,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         return false
     }
 
-    /// The copy on this iPhone at once, then the plan already made, completed when material is missing; else made now,
-    /// for a batch that meets today and has not been closed (plan decision 14).
+    /// The copy on this iPhone at once, then the plan and its job; no plan and no job asks the server for one, for a
+    /// batch that meets today and has not been closed (decision 18). While the job is live the store reads again.
     public func load() async {
         let today = today
         guard let classroom = register.classroom(classID),
@@ -144,8 +161,8 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             show(.none)
             return
         }
-        // A run still making the plan keeps going: a second open (a return to the app, a pull) makes nothing twice.
-        guard run == nil else { return }
+        // A live job is being followed: a second open (a return to the app, a pull) reads nothing twice.
+        guard polling == nil else { return }
         await readAround()
         if record == nil, let copy = cache?.load(classID: classID, date: today) {
             show(.made(copy.value))
@@ -156,40 +173,19 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
             }
             return
         }
-        let made: PlanRecord?
-        do {
-            made = try await plans.plan(centre: centre, classID: classID, date: today)
-        } catch {
-            if record == nil {
-                show(TransportError.isOffline(error) ? .offline : .failed(PlanMaker.readFailed))
-            }
-            return
+        await read(classroom, asking: true)
+        if record != nil {
+            await preview.keepBooks(of: register.members(of: classID))
         }
-        if let made {
-            await open(made, classroom: classroom)
-            return
-        }
-        guard await !maker.closed(classID: classID, date: today, centre: centre) else {
-            show(.none)
-            return
-        }
-        guard await !wholeBatchOnHoliday(classroom) else {
-            show(.holiday)
-            return
-        }
-        await make(choices: nil)
     }
 
-    /// A plan already made: shown and completed; none when the whole batch went on holiday after it was made and it
-    /// is not closed (review Important 2).
-    private func open(_ made: PlanRecord, classroom: Classroom) async {
-        if made.sessionID == nil, await wholeBatchOnHoliday(classroom) {
-            show(.holiday)
+    /// Try Again on the failed card: another plan job when the last one failed, else the read again.
+    public func tryAgain() async {
+        guard job?.state == .failed, record == nil else {
+            await load()
             return
         }
-        show(.made(made))
-        cache?.keep(made, at: now())
-        await complete(made)
+        await ask(choices: nil)
     }
 
     /// Today's plan made again when an item changed for one of its members (a holiday, an exam): only while the batch
@@ -203,16 +199,13 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
            current.sessionID != nil {
             return
         }
-        guard await !maker.closed(classID: classID, date: today, centre: centre) else { return }
+        guard await !preview.closed(classID: classID, date: today, centre: centre) else { return }
         await readAround()
         guard await !wholeBatchOnHoliday(classroom) else {
-            generation += 1
-            run?.cancel()
-            run = nil
             show(.holiday)
             return
         }
-        await make(choices: nil)
+        await ask(choices: PlanChoices(groups: nil, subjects: [:]))
     }
 
     /// A not-on-track message sent: the captions read again, the plan as it is.
@@ -223,6 +216,97 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
     }
 
+    /// One read of the plan and its job, and the state they make. `asking` lets a missing plan with no job ask for one
+    /// (an open); the reads while a job is live only follow it.
+    func read(_ classroom: Classroom, asking: Bool) async {
+        async let planRead = plans.plan(centre: centre, classID: classID, date: today)
+        async let jobRead = try? jobs.planJob(centre: centre, classID: classID, date: today)
+        let made: PlanRecord?
+        do {
+            made = try await planRead
+        } catch {
+            _ = await jobRead
+            if record == nil {
+                show(TransportError.isOffline(error) ? .offline : .failed(Self.readFailed))
+            }
+            return
+        }
+        job = await jobRead
+        let live = job?.isLive == true
+        // A plan made before the live job was asked for is being replaced (Make the plan again, an item's change).
+        if let made, !(live && made.madeAt < (job?.createdAt ?? .distantPast)) {
+            await open(made, classroom: classroom, live: live)
+            return
+        }
+        if live {
+            show(.planning(nil))
+            follow()
+            return
+        }
+        switch job?.state {
+        case .failed?:
+            show(.failed(Self.jobFailed))
+        case .done?:
+            show(job?.reason == "holiday" ? .holiday : .none)
+        default:
+            // None asked for yet, or the last one cancelled: asked for now, unless closed or a holiday.
+            guard asking else {
+                show(.none)
+                return
+            }
+            await askIfOpen(classroom)
+        }
+    }
+
+    /// A plan read: shown, with its marks on their way while the job is live; none when the whole batch went on
+    /// holiday after it was made and it is not closed (review Important 2).
+    private func open(_ made: PlanRecord, classroom: Classroom, live: Bool) async {
+        if made.sessionID == nil, await wholeBatchOnHoliday(classroom) {
+            show(.holiday)
+            return
+        }
+        show(live ? .planning(made) : .made(made))
+        cache?.keep(made, at: now())
+        if live {
+            follow()
+        }
+    }
+
+    private func askIfOpen(_ classroom: Classroom) async {
+        guard await !preview.closed(classID: classID, date: today, centre: centre) else {
+            show(.none)
+            return
+        }
+        guard await !wholeBatchOnHoliday(classroom) else {
+            show(.holiday)
+            return
+        }
+        await ask(choices: nil)
+    }
+
+    /// A plan asked of the server (`request_plan`); choices, even none, replace the day's plan. The planning card shows
+    /// until the plan is written, and the job is followed while it is live.
+    func ask(choices: PlanChoices?) async {
+        let asked: UUID
+        do {
+            asked = try await jobs.requestPlan(centre: centre, classID: classID, date: today, choices: choices)
+        } catch {
+            if record == nil {
+                show(TransportError.isOffline(error) ? .offline : .failed(Self.jobFailed))
+            } else {
+                message = Self.changeFailed
+            }
+            return
+        }
+        job = JobStatus(id: asked, state: .queued, createdAt: now())
+        show(.planning(nil))
+        // Read at once: the live job a request answered may already have written its plan.
+        if let classroom = register.classroom(classID) {
+            await read(classroom, asking: false)
+        }
+        follow()
+    }
+
     /// The exams' dates and who was told, read together: offline each takes a while to fail.
     private func readAround() async {
         async let exams: Void = readExamDates()
@@ -231,82 +315,14 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
     }
 
     private func readExamDates() async {
-        guard let items = try? await maker.schoolItems.items(centre: centre) else { return }
+        guard let items = try? await preview.items(centre: centre) else { return }
         examDates = Dictionary(items.filter { $0.kind == .exam }.map { ($0.id, $0.date) }) { first, _ in first }
     }
 
     private func wholeBatchOnHoliday(_ classroom: Classroom) async -> Bool {
-        await maker.wholeBatchOnHoliday(
+        await preview.wholeBatchOnHoliday(
             PlanBatch(classroom: classroom, members: register.members(of: classID), date: today, centre: centre)
         )
-    }
-
-    /// Makes the day's plan (again): the run before it is cancelled and its late answers dropped.
-    func make(choices: PlanChoices?) async {
-        guard let classroom = register.classroom(classID) else { return }
-        generation += 1
-        let mine = generation
-        run?.cancel()
-        show(.planning(nil))
-        let batch = PlanBatch(
-            classroom: classroom, members: register.members(of: classID), date: today, centre: centre
-        )
-        let report = reporter(mine)
-        let task = Task { [maker] in
-            await maker.make(batch, choices: choices, progress: report)
-        }
-        run = task
-        await task.value
-        if run == task {
-            run = nil
-        }
-    }
-
-    /// The maker's progress applied to this store while it lives (a weak hold: the run may outlast the screen).
-    private func reporter(_ generation: Int) -> @Sendable (PlanMaker.Progress) async -> Void {
-        { [weak self] progress in await self?.apply(progress, generation) }
-    }
-
-    /// The material the plan is still missing (a refresh that iOS stopped part-way), made into the plan as it is.
-    private func complete(_ plan: PlanRecord) async {
-        guard let classroom = register.classroom(classID) else { return }
-        generation += 1
-        let mine = generation
-        run?.cancel()
-        let batch = PlanBatch(
-            classroom: classroom, members: register.members(of: classID), date: plan.date, centre: centre
-        )
-        let report = reporter(mine)
-        let task = Task { [maker] in
-            await maker.complete(plan, batch: batch, progress: report)
-        }
-        run = task
-        await task.value
-        if run == task {
-            run = nil
-        }
-    }
-
-    /// A run's news on screen. A kept artefact is linked into the plan as shown (a student moved meanwhile follows the
-    /// new group, as `keep_artefact` linked them), so a change made while the material lands is kept.
-    private func apply(_ progress: PlanMaker.Progress, _ mine: Int) {
-        guard mine == generation else { return }
-        switch progress {
-        case let .written(plan):
-            show(.planning(plan))
-        case let .kept(artefact, plan):
-            let merged = record.map { $0.id == plan.id ? $0.merging(artefact, from: plan) : plan } ?? plan
-            show(.planning(merged))
-            cache?.keep(merged, at: now())
-        case let .finished(plan):
-            show(.made(record.map { $0.id == plan.id ? $0 : plan } ?? plan))
-        case let .failed(words):
-            if record == nil {
-                show(.failed(words))
-            } else if let plan = record {
-                show(.made(plan))
-            }
-        }
     }
 
     /// A line's artefact: the set, the checks (the student's own or the group's), the homework sheet, the brief.
@@ -322,7 +338,7 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
 
     /// The members' subjects for the Change sheet.
     public func readSubjects() async {
-        subjects = await maker.subjects(of: register.members(of: classID))
+        subjects = await preview.subjects(of: register.members(of: classID))
     }
 
     func show(_ state: State) {

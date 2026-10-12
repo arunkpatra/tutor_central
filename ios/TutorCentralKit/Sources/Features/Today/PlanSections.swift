@@ -30,10 +30,22 @@ struct PlanSection: View {
             section(change: nil) { failed(words) }
         case .planning(nil):
             section(change: nil) {
-                CreatingCard(title: "Planning today's class", line: Self.planningLine, cancel: store.cancel)
+                CreatingCard(title: "Planning today's class", line: Self.planningLine) {
+                    Task { await store.cancel() }
+                }
             }
         case .planning, .made:
-            section(change: store.isClosed ? nil : change) { cards }
+            section(change: store.isClosed ? nil : change) {
+                if let line = store.madeLine {
+                    // P18-Today-Plan-Making: while a mark is on its way.
+                    Text(line)
+                        .typeStyle(Tokens.footnote)
+                        .foregroundStyle(Tokens.text3.color)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, Tokens.rowGapInner)
+                }
+                cards
+            }
         }
     }
 
@@ -80,7 +92,7 @@ struct PlanSection: View {
         HStack {
             Text(words).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             Spacer()
-            Button("Try Again") { Task { await store.load() } }.buttonStyle(.quiet)
+            Button("Try Again") { Task { await store.tryAgain() } }.buttonStyle(.quiet)
         }
         .padding(.horizontal, Tokens.rowGapInner)
     }

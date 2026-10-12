@@ -35,16 +35,6 @@ struct PlanRowTests {
         }
     }
 
-    @Test func makeParamsCarryTheDraftAsTheFunctionTakesIt() {
-        let params = SupabasePlansRepository.makeParams(PlanSamples.sampleDraft, centre: UUID())
-        #expect(params["p_groups"] != nil)
-        #expect(params["p_subjects"] != nil)
-        guard case let .array(items)? = params["p_items"],
-              case let .object(first)? = items.first else { Issue.record("no items"); return }
-        #expect(first["kind"] == .string("teach"))
-        #expect(first["words"] != nil)
-    }
-
     @Test func keepParamsEncodeTheContentWithSnakeCaseAndNoStudentForAGroup() throws {
         let artefact = NewArtefact(
             kind: .sheet,

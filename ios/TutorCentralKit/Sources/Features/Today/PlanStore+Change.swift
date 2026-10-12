@@ -77,18 +77,25 @@ public extension PlanStore {
         }
     }
 
-    /// Use this plan: today's plan made again with the sheet's choices (the material made again).
+    /// Use this plan: today's plan made again by the server with the sheet's choices (the material made again).
     func useToday(choices: PlanChoices?) async {
         guard await allowed() else { return }
-        await make(choices: choices)
+        await ask(choices: choices ?? PlanChoices(groups: nil, subjects: [:]))
     }
 
-    /// Cancel on the planning card: the run stops; the plan is made at the next open.
-    func cancel() {
-        generation += 1
-        run?.cancel()
-        run = nil
-        show(record.map(State.made) ?? .none)
+    /// Cancel on the planning card: the job is cancelled and the plan as it stands shows; with none, the next open
+    /// asks again.
+    func cancel() async {
+        polling?.cancel()
+        polling = nil
+        if let job, job.isLive {
+            try? await jobs.cancel(centre: centre, job: job.id)
+        }
+        guard let classroom = register.classroom(classID), await online() else {
+            show(record.map(State.made) ?? .none)
+            return
+        }
+        await read(classroom, asking: false)
     }
 
     /// The sheet's starting values: the plan's group count and each group's subject.
@@ -114,7 +121,7 @@ public extension PlanStore {
         let batch = PlanBatch(
             classroom: classroom, members: register.members(of: classID), date: today, centre: centre
         )
-        guard let draft = try? await maker.draft(batch, choices: choices) else { return [] }
+        guard let draft = try? await preview.draft(batch, choices: choices) else { return [] }
         return draft.groups.map { group in
             ChangeRow(
                 number: group.number,

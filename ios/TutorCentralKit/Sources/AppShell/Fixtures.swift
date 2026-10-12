@@ -15,15 +15,15 @@ public enum Fixtures {
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
         let (auth, centres) = session(for: state)
         let counts = FakeCountsRepository(counts: counts(for: state))
-        let listed = withSchoolLanguages(register(for: state).students, for: state)
-        let students = FakeStudentsRepository(
-            students: noteDayStates.contains(state) || notOnTrackStates.contains(state) || marksStates.contains(state)
-                || state == .todayAfterClose
-                ? withParents(listed, for: state) : listed
-        )
+        let students = FakeStudentsRepository(students: students(for: state))
         let fees = FakeFeesRepository(invoices: fees(for: state), now: { clock(for: state) })
         let attendance = FakeAttendanceRepository(sessions: attendance(for: state), now: { clock(for: state) })
         scriptFailures(for: state, counts: counts, students: students, fees: fees, attendance: attendance)
+        let (plans, schoolItems, textbooks) = (plans(for: state), schoolItems(for: state), textbooks(for: state))
+        let server = PlanServer(
+            plans: plans, textbooks: textbooks, attendance: attendance, schoolItems: schoolItems,
+            students: students.students, classes: register(for: state).classes, now: { clock(for: state) }
+        )
         return Dependencies(
             auth: auth,
             centres: centres,
@@ -33,10 +33,10 @@ public enum Fixtures {
             attendance: attendance,
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
-            schoolItems: schoolItems(for: state),
-            textbooks: textbooks(for: state),
+            schoolItems: schoolItems,
+            textbooks: textbooks,
             record: record(for: state),
-            plans: plans(for: state), photos: photos(for: state),
+            plans: plans, photos: photos(for: state),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
             tasks: FakeTasksRepository(tasks: [.tasksEmpty, .todayEmpty].contains(state) ? [] : FakeTasksRepository
                 .seed),
@@ -50,6 +50,7 @@ public enum Fixtures {
             notifications: FakeNotificationCenter(permission: notificationPermission(for: state)),
             reminderSettings: reminderSettings(for: state),
             deviceTokens: FakeDeviceTokenRepository(),
+            jobs: jobs(for: state, server: server),
             connectivity: FakeConnectivity(online: !offlineStates.contains(state)),
             cachesLists: false,
             filesDirectory: filesDirectory(for: state),
@@ -69,6 +70,14 @@ public enum Fixtures {
             : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
             ? FakeTextbooksRepository.evening()
             : FakeTextbooksRepository.seeded(riyasMaths: state == .placement)
+    }
+
+    /// The register's students with their schools' languages, and their parents where the board names them.
+    static func students(for state: LaunchState) -> [Student] {
+        let listed = withSchoolLanguages(register(for: state).students, for: state)
+        let parents = noteDayStates.contains(state) || notOnTrackStates.contains(state) || marksStates.contains(state)
+            || state == .todayAfterClose
+        return parents ? withParents(listed, for: state) : listed
     }
 
     /// The failures a board draws: a month that does not load, a refused save, every read offline.
@@ -278,7 +287,8 @@ extension Fixtures {
     static func todayClock(_ state: LaunchState) -> Date? {
         switch state {
         case .todayAfterClose: india(day: 7, hour: 18, minute: 40)
-        case .today, .todayAddingTask, .todayAI: india(day: 7, hour: 16, minute: 35)
+        case .today, .todayAddingTask, .todayAI, .todayPlanFailed: india(day: 7, hour: 16, minute: 35)
+        case .todayPlanMaking: india(day: 7, hour: 6, minute: 5)
         case _ where planStates.contains(state): india(day: 7, hour: 16, minute: 35)
         case _ where lastDaysStates.contains(state): india(day: 14, hour: 19, minute: 0)
         case .todayNoBatch: india(day: 10, hour: 9, minute: 30)

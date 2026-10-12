@@ -14,8 +14,6 @@ import Foundation
     public var nextError: (any Error)?
     /// Every call waits this long first: lets a store's writes overlap, as a real network can.
     public var delay: Duration?
-    /// A make waits this long more (the plan still being written: P10-Today-Planning).
-    public var makeDelay: Duration?
     /// Tests: `keep` waits this long first, and a cancelled task stops there (as a cancelled request does).
     public var keepDelay: Duration?
     /// Tests: `notes` answers this long after it is asked (a connection that hangs).
@@ -40,11 +38,10 @@ import Foundation
         return plans.first { $0.id == id }.map(withArtefacts)
     }
 
+    /// The draft written as the server's plan job writes it (`make_plan`; the fixtures' and the tests' plan job): a
+    /// second call replaces the day's plan.
     public func make(_ draft: PlanDraft, centre _: UUID) async throws -> PlanRecord {
         try await begin()
-        if let makeDelay {
-            try? await Task.sleep(for: makeDelay)
-        }
         made.append(draft)
         let existing = plans.firstIndex { $0.classID == draft.classID && $0.date == draft.date }
         let items = draft.lines.map { line in
@@ -133,32 +130,13 @@ import Foundation
         )
     }
 
-    /// As `name_plan_group`: the group's chapter and skill, and its lines that still follow the group.
-    public func nameGroup(plan: UUID, group: Int, chapter: String, skill: String, centre _: UUID) async throws {
-        try await begin()
-        guard let index = plans.firstIndex(where: { $0.id == plan }) else { return }
-        plans[index].groups = plans[index].groups
-            .map { $0.number == group ? $0.named(chapter: chapter, skill: skill) : $0 }
-        plans[index].items = plans[index].items.map { item in
-            guard item.groupNo == group else { return item }
-            let words: String
-            switch item.kind {
-            case .teach where item.words == PlanRules.withTheGroup: words = PlanRules.cut("Teach: \(skill)")
-            case .catchUp where !item.words.contains("· then "): words = PlanRules.cut("\(item.words) · then \(skill)")
-            case .brief where item.words == "Your brief": words = PlanRules.cut(PlanRules.briefPrefix + chapter)
-            default: return item
-            }
-            return PlanItem(
-                id: item.id, studentID: item.studentID, groupNo: item.groupNo, kind: item.kind, skillID: item.skillID,
-                words: words, artefactID: item.artefactID, doneAt: item.doneAt, skippedAt: item.skippedAt,
-                movedFrom: item.movedFrom
-            )
-        }
-    }
-
+    /// The chapters a brief was made for: the fixtures' plan job adds a brief line for the others.
     public func briefChapters(centre _: UUID) async throws -> Set<String> {
         try await begin()
-        return Set(artefacts.filter { $0.kind == .brief }.map { SupabasePlansRepository.chapter(ofBrief: $0.title) })
+        let prefix = PlanRules.briefPrefix
+        return Set(artefacts.filter { $0.kind == .brief }.map { brief in
+            brief.title.hasPrefix(prefix) ? String(brief.title.dropFirst(prefix.count)) : brief.title
+        })
     }
 
     public func skip(item: UUID, centre _: UUID) async throws {

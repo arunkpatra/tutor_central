@@ -77,19 +77,6 @@ struct ArtefactRow: Decodable {
     }
 }
 
-/// `make_plan`'s answer: the plan's id and each written item's id, student, group and kind.
-struct MadePlanRow: Decodable {
-    struct Item: Decodable {
-        let id: UUID
-        let studentId: UUID?
-        let groupNo: Int
-        let kind: PlanLineKind
-    }
-
-    let planId: UUID
-    let items: [Item]
-}
-
 extension AnyJSON {
     /// An `Encodable` value as the JSON `rpc` sends.
     static func encoding(_ value: some Encodable, snakeCase: Bool = false) throws -> AnyJSON {

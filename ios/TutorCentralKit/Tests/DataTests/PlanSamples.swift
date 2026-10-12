@@ -37,21 +37,6 @@ enum PlanSamples {
         return PlanDraft(classID: classID, date: Day(iso: "2026-10-07")!, groups: groups, lines: lines, leftOut: [])
     }()
 
-    /// Group 1 before /ai/plan named it: no chapter, no skill, its teach lines "with the group".
-    static let unnamedDraft: PlanDraft = {
-        let group = PlanGroup(
-            number: 1, subject: "Science", chapter: "", skill: "", classLevels: [.eight], memberIDs: [dev, meher],
-            skillID: nil
-        )
-        let lines = [dev, meher].flatMap { student in
-            [
-                PlanLine(studentID: student, groupNo: 1, kind: .teach, skillID: nil, words: PlanRules.withTheGroup),
-                PlanLine(studentID: student, groupNo: 1, kind: .homework, skillID: nil, words: "Homework sheet 1"),
-            ]
-        }
-        return PlanDraft(classID: classID, date: Day(iso: "2026-10-07")!, groups: [group], lines: lines, leftOut: [])
-    }()
-
     static func sampleRecord(date: Day) -> PlanRecord {
         let items = sampleDraft.lines.map { line in
             PlanItem(

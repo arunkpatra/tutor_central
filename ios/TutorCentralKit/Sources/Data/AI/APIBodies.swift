@@ -241,33 +241,6 @@ struct MakeBriefBody: Encodable {
     let chapter: String
 }
 
-/// POST /ai/plan: the groups to name, by class and subject.
-struct PlanBody: Encodable {
-    struct Group: Encodable {
-        let groupNo: Int
-        let classLevel: String
-        let subject: String
-    }
-
-    let centreId: String
-    let classId: String?
-    let date: String
-    let month: Int
-    let groups: [Group]
-
-    /// `classId` is sent as null when there is no batch, as the schema reads it.
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: Keys.self)
-        try container.encode(centreId, forKey: .centreId)
-        try container.encode(classId, forKey: .classId)
-        try container.encode(date, forKey: .date)
-        try container.encode(month, forKey: .month)
-        try container.encode(groups, forKey: .groups)
-    }
-
-    private enum Keys: String, CodingKey { case centreId, classId, date, month, groups }
-}
-
 /// `{ id, result }` for a kind whose result decodes as `Result`.
 struct MadeEnvelope<Result: Decodable>: Decodable {
     let id: UUID
@@ -279,8 +252,4 @@ struct SheetResult: Decodable {
     let title: String
     let instructions: String?
     let questions: [SheetQuestion]
-}
-
-struct TopicsResult: Decodable {
-    let groups: [PlanTopic]
 }

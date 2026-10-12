@@ -53,17 +53,40 @@ enum PlanTest {
         return repo
     }
 
-    @MainActor static func maker(
-        plans: FakePlansRepository, ai: FakeAIRepository = FakeAIRepository(),
-        textbooks: FakeTextbooksRepository = .evening(),
+    @MainActor static func preview(
+        plans: FakePlansRepository, textbooks: FakeTextbooksRepository = .evening(),
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
         cache: PlanCache? = nil, now: Date = at1635, items: [SchoolItem] = [],
         schoolItems: FakeSchoolItemsRepository? = nil
-    ) -> PlanMaker {
-        PlanMaker(
-            plans: plans, textbooks: textbooks, attendance: attendance, ai: ai,
+    ) -> PlanPreview {
+        PlanPreview(
+            plans: plans, textbooks: textbooks, attendance: attendance,
             schoolItems: schoolItems ?? FakeSchoolItemsRepository(items: items, now: now), cache: cache, now: { now },
             calendar: DayHeading.india
         )
+    }
+
+    /// The server's plan job done in place: a request writes the rules' plan for the batch with its material
+    /// (`FakePlansRepository.serve`) and the job is done.
+    @MainActor static func serving(
+        _ plans: FakePlansRepository, preview: PlanPreview, now: Date = at1635,
+        students: [Student] = FakeStudentsRepository.eveningSeed,
+        classes: [Classroom] = FakeClassesRepository.withEvening
+    ) -> FakeJobsRepository {
+        let jobs = FakeJobsRepository(now: { now })
+        jobs.onPlanRequest = { classID, date, choices in
+            let members = students.filter { $0.classID == classID && $0.archivedAt == nil }
+            let pairs = members.compactMap { member in member.classLevel.map { (member.id, $0) } }
+            let levels = Dictionary(pairs) { first, _ in first }
+            guard let classroom = classes.first(where: { $0.id == classID }),
+                  let draft = try? await preview.draft(
+                      batch(members, classroom: classroom, on: date),
+                      choices: choices
+                  ),
+                  await (try? plans.serve(draft, levels: levels, material: true, centre: centre)) != nil
+            else { return .failed }
+            return .done
+        }
+        return jobs
     }
 }

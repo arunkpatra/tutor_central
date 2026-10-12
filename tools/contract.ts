@@ -2,8 +2,8 @@
 /** bun contract [--check]: the contract between the database, the API and the app (D80), generated so a limit lives once.
  *  Writes the API's database types from supabase/types.ts, the app's limits and lists from the API's schemas
  *  (api/src/contract.ts), the fake's sample answers, which the app's decoders read in ContractTests, and the shared
- *  case files' copies for DomainTests (the plan, the budget, the note week; the reminders' cases stay the API's alone,
- *  since the server plans them). --check writes nothing: it names each generated file that is stale, missing or left over, and exits 1. */
+ *  case files' copies for DomainTests (the plan, the exam split in the budget's file, the note week; the reminders' cases
+ *  stay the API's alone, since the server plans them). --check writes nothing: it names each generated file that is stale, missing or left over, and exits 1. */
 import { readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 

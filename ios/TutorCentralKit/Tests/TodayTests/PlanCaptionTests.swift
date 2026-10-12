@@ -27,7 +27,8 @@ import Testing
         let store = PlanStore(
             classID: PlanTest.evening.id, workspace: FakeCentreRepository.meeraWorkspace, register: register,
             plans: plans, classes: FakeClassesRepository(classes: FakeClassesRepository.withEvening),
-            maker: PlanTest.maker(plans: plans), cache: nil, now: { PlanTest.at1635 }, calendar: DayHeading.india
+            jobs: FakeJobsRepository(), preview: PlanTest.preview(plans: plans), cache: nil, now: { PlanTest.at1635 },
+            calendar: DayHeading.india
         )
         store.online = { true }
         store.messages = FakeMessageLogRepository(entries: [FakeStudentsRepository.dev: entries])

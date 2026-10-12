@@ -8,7 +8,8 @@ import UIKit
 /// Sahil, the material made (the figures are illustrative).
 extension Fixtures {
     static let planStates: Set<LaunchState> = .init([
-        .today, .todayScrolled, .todayPlanning, .todayLineMenu, .todayPlanChanged, .todayPlanChange,
+        .today, .todayScrolled, .todayPlanning, .todayPlanMaking, .todayPlanFailed, .todayLineMenu, .todayPlanChanged,
+        .todayPlanChange,
         .todayAfterClose, .workedExample, .brief, .todayRevision,
     ]).union(sheetStates).union(figureStates.keys)
 
@@ -69,17 +70,12 @@ extension Fixtures {
     }
 
     @MainActor static func plans(for state: LaunchState) -> FakePlansRepository {
-        if let make = makePlans(for: state) {
+        if let make = makePlans(for: state) ?? jobPlans(for: state) {
             return make
         }
         switch state {
         case .studentMessages:
             return FakePlansRepository(artefacts: devNotes, now: noteDayClock)
-        case .todayPlanning:
-            // P10-Today-Planning: the plan is still being written.
-            let plans = FakePlansRepository()
-            plans.makeDelay = .seconds(3600)
-            return plans
         case .sheetOwn:
             return FakePlansRepository.evening(ownSheet: ownSheet, photoPath: ownPhotoPath)
         case _ where figureStates[state] != nil:
@@ -98,6 +94,16 @@ extension Fixtures {
             return FakePlansRepository.evening(changed: state == .todayPlanChanged, done: state == .todayAfterClose)
         default:
             return FakePlansRepository()
+        }
+    }
+
+    /// The plan job's states: none written yet (its job live, P10-Today-Planning), none for a failed job, or the plan
+    /// made at 06:00 with Group 1's set and sheet alone (P18-Today-Plan-Making).
+    @MainActor static func jobPlans(for state: LaunchState) -> FakePlansRepository? {
+        switch state {
+        case .todayPlanning, .todayPlanFailed: FakePlansRepository()
+        case .todayPlanMaking: FakePlansRepository.eveningMaking()
+        default: nil
         }
     }
 

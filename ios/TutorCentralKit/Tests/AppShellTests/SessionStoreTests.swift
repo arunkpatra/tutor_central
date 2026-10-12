@@ -31,6 +31,7 @@ import Testing
             notifications: FakeNotificationCenter(),
             reminderSettings: FakeReminderSettingsRepository(),
             deviceTokens: FakeDeviceTokenRepository(),
+            jobs: FakeJobsRepository(),
             connectivity: FakeConnectivity(),
             cachesLists: false,
             filesDirectory: files ?? FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),

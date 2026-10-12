@@ -78,7 +78,7 @@ struct NextClassTests {
         #expect(NextClass.soon(Self.maths, startsIn: 25).eyebrow == "Next batch · in 25 min")
         #expect(NextClass.running(Self.maths, endsAt: TimeOfDay(hour: 18, minute: 0)).eyebrow == "Now · until 18:00")
         #expect(NextClass.running(Self.maths, endsAt: nil).eyebrow == "Now")
-        #expect(NextClass.laterToday(Self.maths, at: TimeOfDay(hour: 17, minute: 0)).eyebrow == "Next batch · 17:00")
+        #expect(NextClass.laterToday(Self.maths, at: TimeOfDay(hour: 17, minute: 0)).eyebrow == "Next batch · at 17:00")
         #expect(NextClass.laterToday(Self.maths, at: nil).eyebrow == "Next batch · today")
         #expect(NextClass.tomorrow(Self.science).eyebrow == "Next batch · tomorrow")
         #expect(try NextClass.onDay(Self.maths, #require(Day(year: 2026, month: 10, day: 12)))

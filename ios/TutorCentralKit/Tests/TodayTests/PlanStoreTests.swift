@@ -6,29 +6,36 @@ import Testing
 @testable import Today
 
 /// One batch's plan on Today (P10-Today-Plan and its states).
+/// The job's own states are PlanStoreJobTests'.
 @MainActor struct PlanStoreTests {
+    /// A store over the fakes; with no `jobs`, a request is answered at once by the server's plan (PlanTest.serving).
     func store(
-        plans: FakePlansRepository = FakePlansRepository(), ai: FakeAIRepository = FakeAIRepository(),
-        online: Bool = true, cache: PlanCache? = nil, now: Date = PlanTest.at1635,
+        plans: FakePlansRepository = FakePlansRepository(), jobs: FakeJobsRepository? = nil, online: Bool = true,
+        cache: PlanCache? = nil, now: Date = PlanTest.at1635,
         attendance: FakeAttendanceRepository = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed),
         classes: FakeClassesRepository = FakeClassesRepository(classes: FakeClassesRepository.withEvening),
         items: FakeSchoolItemsRepository = FakeSchoolItemsRepository(items: []),
-        textbooks: FakeTextbooksRepository = .evening(), load: Bool = true
+        textbooks: FakeTextbooksRepository = .evening(), load: Bool = true,
+        pause: @escaping @Sendable () async throws -> Void = { try await Task.sleep(for: .seconds(3600)) }
     ) async -> PlanStore {
-        let maker = PlanTest.maker(
-            plans: plans, ai: ai, textbooks: textbooks, attendance: attendance, cache: cache, now: now,
-            schoolItems: items
+        let preview = PlanTest.preview(
+            plans: plans, textbooks: textbooks, attendance: attendance, cache: cache, now: now, schoolItems: items
         )
         let store = await PlanStore(
             classID: PlanTest.evening.id, workspace: FakeCentreRepository.meeraWorkspace,
-            register: PlanTest.register(now: now), plans: plans, classes: classes, maker: maker, cache: cache,
-            now: { now }, calendar: DayHeading.india
+            register: PlanTest.register(now: now), plans: plans, classes: classes,
+            jobs: jobs ?? PlanTest.serving(plans, preview: preview, now: now), preview: preview, cache: cache,
+            now: { now }, calendar: DayHeading.india, pause: pause
         )
         store.online = { online }
         if load {
             await store.load()
         }
         return store
+    }
+
+    func live(at: Date = PlanTest.at(7, 5, 30)) -> FakeJobsRepository {
+        FakeJobsRepository(planJobs: [PlanTest.evening.id: JobStatus(id: UUID(), state: .running, createdAt: at)])
     }
 
     @Test func aLineReadsInThePlansOrderWhateverOrderTheItemsArriveIn() async {
@@ -42,25 +49,15 @@ import Testing
         #expect(meher?.rest.map(\.text) == ["Practise set 1", "Check 3", "Homework sheet 1"])
     }
 
-    @Test func aSecondOpenWhilePlanningMakesNothingTwice() async throws {
-        let once = FakeAIRepository(), oncePlans = FakePlansRepository()
-        _ = await store(plans: oncePlans, ai: once)
-        let ai = FakeAIRepository()
-        ai.delay = .milliseconds(200)
-        let plans = FakePlansRepository()
-        let store = await store(plans: plans, ai: ai, load: false)
-        let first = Task { await store.load() }
-        while store.record == nil {
-            try await Task.sleep(for: .milliseconds(20))
-        }
+    @Test func aSecondOpenWhileTheJobIsLiveAsksNothingTwice() async {
+        let jobs = FakeJobsRepository()
+        let store = await store(jobs: jobs)
+        #expect(store.state == .planning(nil))
         await store.load()
-        await first.value
-        #expect(ai.sheets.count == once.sheets.count)
-        #expect(ai.checkCalls.count == once.checkCalls.count)
-        #expect(plans.kept.count == oncePlans.kept.count)
+        #expect(jobs.requested == [.plan(classID: PlanTest.evening.id, date: PlanTest.wednesday, choices: nil)])
     }
 
-    @Test func openingMakesThePlanAndShowsTheGroupsAsTheyLand() async {
+    @Test func openingAsksTheServerAndShowsThePlanItMade() async {
         let store = await store()
         guard case .made = store.state else { Issue.record("not made: \(store.state)")
             return
@@ -76,24 +73,25 @@ import Testing
         #expect(store.briefRow?.afterGroup == 1)
         #expect(store.briefRow?.title == "Your brief · Chemical reactions")
         #expect(store.briefRow?.line == "Five minutes · three common mistakes · the worked example to use")
+        #expect(store.madeLine == nil)
     }
 
-    @Test func aPlanAlreadyMadeOpensAtOnceWithoutMakingAgain() async {
-        let plans = FakePlansRepository(), ai = FakeAIRepository()
-        _ = await store(plans: plans, ai: ai)
-        let calls = ai.sheets.count
-        let store = await store(plans: plans, ai: ai)
+    @Test func aPlanAlreadyMadeOpensAtOnceWithoutAskingAgain() async {
+        let plans = FakePlansRepository(), preview = PlanTest.preview(plans: FakePlansRepository())
+        let jobs = PlanTest.serving(plans, preview: preview)
+        _ = await store(plans: plans, jobs: jobs)
+        let store = await store(plans: plans, jobs: jobs)
         guard case .made = store.state else { Issue.record("not made")
             return
         }
-        #expect(ai.sheets.count == calls)
+        #expect(jobs.requested.count == 1)
     }
 
     @Test func offlineWithNoPlanShowsNothingAndStartClassStays() async {
-        let ai = FakeAIRepository()
-        let store = await store(ai: ai, online: false)
+        let jobs = FakeJobsRepository()
+        let store = await store(jobs: jobs, online: false)
         #expect(store.state == .offline)
-        #expect(store.groups.isEmpty && ai.sheets.isEmpty)
+        #expect(store.groups.isEmpty && jobs.requested.isEmpty)
     }
 
     @Test func aPlanAlreadyMadeOpensOffline() async {
@@ -109,12 +107,13 @@ import Testing
     }
 
     @Test func aClosedBatchIsNotPlanned() async {
-        let ai = FakeAIRepository()
+        let jobs = FakeJobsRepository()
         let store = await store(
-            ai: ai, now: PlanTest.at1840, attendance: FakeAttendanceRepository(sessions: PlanTest.eveningClosedToday)
+            jobs: jobs, now: PlanTest.at1840,
+            attendance: FakeAttendanceRepository(sessions: PlanTest.eveningClosedToday)
         )
         #expect(store.state == .none)
-        #expect(ai.sheets.isEmpty)
+        #expect(jobs.requested.isEmpty)
     }
 
     @Test func anUnclosedBatchIsPlannedAfterItsHours() async {
@@ -124,30 +123,22 @@ import Testing
         }
     }
 
-    @Test func noBatchTodayMakesNoPlan() async {
-        let ai = FakeAIRepository()
-        let store = await store(ai: ai, now: PlanTest.saturday0930)
+    @Test func noBatchTodayAsksForNoPlan() async {
+        let jobs = FakeJobsRepository()
+        let store = await store(jobs: jobs, now: PlanTest.saturday0930)
         #expect(store.state == .none)
-        #expect(ai.sheets.isEmpty)
+        #expect(jobs.requested.isEmpty && jobs.reads == 0)
     }
 
-    @Test func planningShowsTheLinesBeforeTheMaterial() async throws {
-        let ai = FakeAIRepository()
-        ai.delay = .seconds(5)
-        let store = await store(ai: ai, load: false)
-        let load = Task { await store.load() }
-        // The material takes 5 s here: wait for the lines (CI's runner is slower than a fixed 300 ms allowed).
-        let until = ContinuousClock.now.advanced(by: .seconds(4))
-        while store.record == nil, ContinuousClock.now < until {
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        guard case let .planning(plan?) = store.state else { Issue.record("not planning with lines: \(store.state)")
-            load.cancel()
+    /// P18-Today-Plan-Making: the plan the server made at 06:00, its material still coming.
+    @Test func aPlanWithALiveJobShowsItsMarksOnTheirWayAndTheLine() async {
+        let store = await store(plans: FakePlansRepository.eveningMaking(), jobs: live(), now: PlanTest.at(7, 6, 5))
+        guard case .planning(_?) = store.state else { Issue.record("not planning with the plan: \(store.state)")
             return
         }
-        #expect(!plan.items.isEmpty)
-        #expect(store.groups[0].marks.allSatisfy { $0.state == .onItsWay })
-        load.cancel()
+        #expect(store.madeLine == "Made at 06:00, before the batch. The sheets and checks are still being made; each "
+            + "mark turns green when it is ready.")
+        #expect(store.groups[0].marks.map(\.state) == [.made, .made, .onItsWay, .onItsWay])
     }
 
     @Test func aLineOpensItsArtefact() async throws {
@@ -248,21 +239,6 @@ import Testing
         #expect(card.title == "Group 1 · Science unit test 3")
         #expect(card.line == "Class 8 Science · 3 students · the test in 9 days")
         #expect(card.marks.map(\.name) == ["Set", "Sheet", "Checks"])
-    }
-
-    /// Task 24: a group the make could not name (the API away) is named when the plan is opened again.
-    @Test func reopeningNamesTheGroupTheMakeCouldNot() async throws {
-        let ai = FakeAIRepository(), plans = FakePlansRepository()
-        ai.scriptByKind[.topics] = .failure(.offline)
-        let textbooks = FakeTextbooksRepository() // no member has a book: every group needs /ai/plan
-        let first = await store(plans: plans, ai: ai, textbooks: textbooks)
-        let unnamed = first.record?.groups.filter(\.skill.isEmpty).map(\.number) ?? []
-        try #require(!unnamed.isEmpty)
-        ai.scriptByKind[.topics] = nil
-        let again = await store(plans: plans, ai: ai, textbooks: textbooks)
-        let named = again.record?.groups.filter { unnamed.contains($0.number) } ?? []
-        #expect(named.allSatisfy { !$0.skill.isEmpty })
-        #expect(again.groups.filter { unnamed.contains($0.id) }.allSatisfy { $0.title.contains(" · ") })
     }
 
     /// Review Important 2: a plan made before the whole batch went on holiday is not shown again when reopened.

@@ -3,6 +3,7 @@ import DesignSystem
 import Domain
 import SwiftUI
 import Today
+import UIKit
 
 /// Today's wiring: its one store and its actions.
 extension RootView {
@@ -62,19 +63,21 @@ extension RootView {
         }
     }
 
-    /// A batch's plan store: the maker as the user (D60), the plan's copy on this iPhone, the network's state.
+    /// A batch's plan store: the plan and its job read as the user (D60), the preview's reads, the plan's copy on this
+    /// iPhone, the network's state, whether the app is in front.
     func planStoreMaker(_ workspace: Workspace, register: any Register) -> (UUID) -> PlanStore {
         let cache = deps.cachesLists ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil
-        let maker = PlanMaker(
-            plans: deps.plans, textbooks: deps.textbooks, attendance: deps.attendance, ai: deps.ai,
-            schoolItems: deps.schoolItems, cache: cache, now: deps.now, calendar: DayHeading.india
+        let preview = PlanPreview(
+            plans: deps.plans, textbooks: deps.textbooks, attendance: deps.attendance, schoolItems: deps.schoolItems,
+            cache: cache, now: deps.now, calendar: DayHeading.india
         )
         return { [deps] classID in
             let store = PlanStore(
                 classID: classID, workspace: workspace, register: register, plans: deps.plans, classes: deps.classes,
-                maker: maker, cache: cache, now: deps.now, calendar: DayHeading.india
+                jobs: deps.jobs, preview: preview, cache: cache, now: deps.now, calendar: DayHeading.india
             )
             store.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
+            store.inFront = { UIApplication.shared.applicationState == .active }
             store.messages = deps.messages
             return store
         }

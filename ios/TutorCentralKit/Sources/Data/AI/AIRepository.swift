@@ -213,43 +213,6 @@ public struct MadeBrief: Hashable, Sendable {
     }
 }
 
-/// The close's checks made ahead with the plan, kept with their generation.
-public struct MadeChecks: Hashable, Sendable {
-    public let generationID: UUID
-    public let questions: [CheckQuestion]
-
-    public init(generationID: UUID, questions: [CheckQuestion]) {
-        self.generationID = generationID
-        self.questions = questions
-    }
-}
-
-/// A group /ai/plan is asked to name: its number, class and subject; no student.
-public struct PlanTopicGroup: Hashable, Sendable {
-    public let groupNo: Int
-    public let classLevel: ClassLevel
-    public let subject: String
-
-    public init(groupNo: Int, classLevel: ClassLevel, subject: String) {
-        self.groupNo = groupNo
-        self.classLevel = classLevel
-        self.subject = subject
-    }
-}
-
-/// A first topic /ai/plan named for a group whose record names none.
-public struct PlanTopic: Hashable, Sendable, Codable {
-    public let groupNo: Int
-    public let chapter: String
-    public let skill: String
-
-    public init(groupNo: Int, chapter: String, skill: String) {
-        self.groupNo = groupNo
-        self.chapter = chapter
-        self.skill = skill
-    }
-}
-
 /// Our API's AI routes (api/src/routes/ai.ts, v2.ts). Never Anthropic directly: the app holds no AI key (D11).
 public protocol AIRepository: Sendable {
     /// POST /ai/generate: the kind's result and the generation's id.
@@ -273,10 +236,6 @@ public protocol AIRepository: Sendable {
     func makePlacement(
         classLevel: ClassLevel, subject: String, chapters: [String], centre: UUID
     ) async throws(APIFailure) -> [PlacementQuestion]
-    /// POST /ai/make, kind `check`, with the generation's id: the plan keeps the checks with it.
-    func makeChecksWithID(
-        classLevel: ClassLevel, subject: String, skills: [String], centre: UUID
-    ) async throws(APIFailure) -> MadeChecks
     /// POST /ai/make, kind `sheet`: the set or the homework; `reason` from Make it again.
     func makeSheet(_ request: SheetRequest, centre: UUID) async throws(APIFailure) -> MadeSheet
     /// POST /ai/make, kind `worked_example`.
@@ -291,10 +250,6 @@ public protocol AIRepository: Sendable {
     func makeBrief(
         classLevel: ClassLevel, subject: String, chapter: String, centre: UUID
     ) async throws(APIFailure) -> MadeBrief
-    /// POST /ai/plan: a first chapter and skill for each group whose record names none.
-    func planTopics(
-        classID: UUID?, date: Day, month: Int, groups: [PlanTopicGroup], centre: UUID
-    ) async throws(APIFailure) -> [PlanTopic]
     /// POST /ai/parse-school: what the school sent read into items (nothing about a student goes in).
     func parseSchool(
         _ source: SchoolSource, today: Day, schools: [String], classLevels: [ClassLevel], centre: UUID
