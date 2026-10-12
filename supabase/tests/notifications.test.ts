@@ -117,7 +117,7 @@ test("the sender marks a row with Apple's answer, reads live tokens and retires 
   await a.from("device_tokens").insert({ device_id: `sim-${stamp}`, token: "tok-a", environment: "sandbox" });
   const tokens = (await svc.rpc("live_tokens", { p_user: userA })).data as { id: string; token: string; environment: string }[];
   expect(tokens.map((t) => [t.token, t.environment])).toEqual([["tok-a", "sandbox"]]);
-  await svc.rpc("retire_token", { p_id: tokens[0].id });
+  await svc.rpc("retire_token", { p_id: tokens[0]!.id });
   expect((await svc.rpc("live_tokens", { p_user: userA })).data).toEqual([]);
   await sql`delete from public.notifications where user_id = ${userA}`;
 });
