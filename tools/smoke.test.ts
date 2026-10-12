@@ -7,6 +7,7 @@ let healthStatus = 200;
 let aiStatus = 401;
 let questions: unknown[] = [{ prompt: "1/2 + 1/4" }];
 let tickStatus = 200;
+let health: { pdf: number; apns: boolean } = { pdf: 1, apns: true };
 const seen: { make?: { headers: Headers; body: Record<string, unknown> }; token?: { headers: Headers; body: Record<string, unknown> }; tick?: Headers } = {};
 const server = Bun.serve({
   port: 0,
@@ -23,6 +24,7 @@ const server = Bun.serve({
       seen.make = { headers: req.headers, body: (await req.json()) as Record<string, unknown> };
       return Response.json({ id: "g1", result: { questions } });
     }
+    if (path === "/jobs/health") return Response.json(health, { status: req.headers.get("authorization") === "Bearer s" ? 200 : 401 });
     if (path === "/jobs/tick") {
       seen.tick = req.headers;
       return Response.json({ claimed: 0 }, { status: tickStatus });
@@ -99,4 +101,13 @@ test("without an account the two old checks still run", async () => {
   seen.make = undefined;
   expect(await smoke(site, "abc", { attempts: 1, waitMs: 0 })).toEqual([]);
   expect(seen.make).toBeUndefined();
+});
+
+test("the worker's health must render a page and reach APNs (plan decision 26)", async () => {
+  expect(await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).toEqual([]);
+  health = { pdf: 0, apns: true };
+  expect((await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).join("\n")).toContain("/jobs/health rendered no page");
+  health = { pdf: 1, apns: false };
+  expect((await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).join("\n")).toContain("/jobs/health could not reach APNs");
+  health = { pdf: 1, apns: true };
 });

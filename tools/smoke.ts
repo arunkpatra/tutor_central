@@ -41,6 +41,17 @@ async function tick(site: string, secret: string): Promise<string[]> {
   return res.status === 200 ? [] : [`/jobs/tick answered ${res.status}`];
 }
 
+/** The worker's health (plan decision 26): a page rendered with the bundled fonts, and APNs taking the key. */
+async function workerHealth(site: string, secret: string): Promise<string[]> {
+  const res = await fetch(`${site}/jobs/health`, { headers: { authorization: `Bearer ${secret}` } });
+  if (res.status !== 200) return [`/jobs/health answered ${res.status}`];
+  const body = (await res.json()) as { pdf?: number; apns?: boolean };
+  const problems: string[] = [];
+  if (!body.pdf || body.pdf < 1) problems.push("/jobs/health rendered no page");
+  if (body.apns !== true) problems.push("/jobs/health could not reach APNs");
+  return problems;
+}
+
 async function once(site: string, commit: string): Promise<string[]> {
   const problems: string[] = [];
   try {
@@ -72,7 +83,7 @@ export async function smoke(site: string, commit: string, opts: SmokeOptions = {
   if (problems.length > 0) return problems;
   try {
     if (opts.account) problems.push(...(await makeCheck(site, commit, opts.account)));
-    if (opts.workerSecret) problems.push(...(await tick(site, opts.workerSecret)));
+    if (opts.workerSecret) problems.push(...(await tick(site, opts.workerSecret)), ...(await workerHealth(site, opts.workerSecret)));
   } catch (e) {
     problems.push(`could not reach ${site}: ${(e as Error).message}`);
   }
@@ -100,5 +111,5 @@ if (import.meta.main) {
   }
   console.log(`smoke of ${site}: health ok, commit ${commit}, AI routes refuse a missing token`);
   console.log(account ? "one check made for the smoke centre on the real model" : "no smoke account: no real call made");
-  console.log(workerSecret ? "the worker answered its tick" : "no worker secret: the worker not woken");
+  console.log(workerSecret ? "the worker answered its tick; a page rendered and APNs took the key" : "no worker secret: the worker not woken");
 }

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.132.1",
+    "@myriaddreamin/typst-ts-node-compiler": "0.7.0",
     "@parse/node-apn": "8.1.0",
     "@supabase/supabase-js": "2.117.2",
     "hono": "4.13.13",

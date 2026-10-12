@@ -17,6 +17,7 @@ import { makeApnsPusher } from "./push/apns.js";
 import { fakePusher } from "./push/apns-fake.js";
 import { makeOutboxDb } from "./push/db.js";
 import { makeNoteSource } from "./notes/record.js";
+import { makePdfSource } from "./pdf/source.js";
 import { makeReminderSource } from "./reminders/source.js";
 import { makeVerify } from "./verify.js";
 
@@ -85,7 +86,7 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record) }),
+    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey) }),
     push: { outbox, pusher },
   },
 });

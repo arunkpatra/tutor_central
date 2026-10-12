@@ -177,6 +177,13 @@ jobs:
             if ! jq -e '.maxDuration == 300' "$f" > /dev/null; then echo "::error::$f has no maxDuration of 300."; exit 1; fi
           done
           echo "maxDuration 300 on: $configs"
+          # The PDFs (D89): the Typst module built for Vercel's Linux and the committed fonts go with the function.
+          for f in $configs; do
+            dir=$(dirname "$f")
+            if ! find -L "$dir" -name '*.node' -path '*typst-ts-node-compiler-linux-x64-gnu*' | grep -q .; then echo "::error::$dir has no Typst module for linux-x64-gnu."; exit 1; fi
+            if ! find -L "$dir" -path '*fonts/NotoSans-Regular.ttf' | grep -q .; then echo "::error::$dir has no fonts/NotoSans-Regular.ttf."; exit 1; fi
+          done
+          echo "the Typst module and the fonts are with the function"
 
       # The deployment production served before this one is written down: promoting it back is the rollback.
       # Vercel holds a deployment whose commit author it does not know at UNKNOWN for ever (only arunkpatra@gmail.com

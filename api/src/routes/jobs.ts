@@ -7,6 +7,9 @@ import { makeHandlers } from "../jobs/kinds/index.js";
 import { drain } from "../jobs/runner.js";
 import { type Clock, type JobHandler, type JobKind, type JobsDb, realClock } from "../jobs/types.js";
 import { log } from "../log.js";
+import { renderPdf } from "../pdf/render.js";
+import { preamble, t } from "../pdf/typst.js";
+import { alertPayload } from "../push/payload.js";
 import type { Pusher } from "../push/apns.js";
 import type { OutboxDb } from "../push/db.js";
 import { sendDue } from "../push/send-due.js";
@@ -78,5 +81,27 @@ export function jobRoutes(worker: Worker, claude: ClaudeClient) {
     return c.json({ ...(await run(c.get("requestId"))), ...(pushed ? { push: pushed } : {}) });
   });
   r.post("/wake", async (c) => c.json(await run(c.get("requestId"))));
+  /** The deploy's proof of the new parts (plan decision 26): one page rendered with a Devanagari line (the module and the
+   *  fonts are with the function), and APNs asked once in production with a token no device has: "BadDeviceToken" means
+   *  Apple took the key, the team and the topic. */
+  r.get("/health", async (c) => {
+    let pdf = 0;
+    try {
+      pdf = (await renderPdf(`${preamble()}\n${t("Tutor Central · नमस्ते")}`)).pages;
+    } catch (e) {
+      log.error({ requestId: c.get("requestId"), message: "the health page did not render", error: e });
+    }
+    let apns = false;
+    if (worker.push) {
+      const pusher = worker.push.pusher();
+      try {
+        const answer = await pusher.send({ token: "0".repeat(64), environment: "production", payload: alertPayload({ id: "health", kind: "health", title: "-", body: "-", link: null }) });
+        apns = answer.ok || answer.reason === "BadDeviceToken";
+      } finally {
+        await pusher.close();
+      }
+    }
+    return c.json({ pdf, apns });
+  });
   return r;
 }
