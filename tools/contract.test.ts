@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { databaseFile, renderSample, renderSwift, stale } from "./contract";
+import { caseCopies, databaseFile, renderSample, renderSwift, stale } from "./contract";
 
 test("the Swift file carries the header, the limits and the lists", () => {
   const swift = renderSwift({ limits: { tutorSaysMax: 300 }, lists: { eventKinds: ["a"] } });
@@ -38,4 +38,13 @@ test("stale names the files that differ, are missing, or are left over", async (
   } finally {
     await rm(root, { recursive: true });
   }
+});
+
+test("each shared case file is copied into DomainTests' Cases (Phase 18: the budget, the reminders, the note week)", () => {
+  expect(caseCopies()).toEqual([
+    ["tools/contract/plan-cases.json", "ios/TutorCentralKit/Tests/DomainTests/Cases/plan-cases.json"],
+    ["tools/contract/budget-cases.json", "ios/TutorCentralKit/Tests/DomainTests/Cases/budget-cases.json"],
+    ["tools/contract/reminder-cases.json", "ios/TutorCentralKit/Tests/DomainTests/Cases/reminder-cases.json"],
+    ["tools/contract/note-cases.json", "ios/TutorCentralKit/Tests/DomainTests/Cases/note-cases.json"],
+  ]);
 });

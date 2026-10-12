@@ -1,0 +1,2394 @@
+{
+  "cases" : [
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+            "Types of reactions"
+          ],
+          "right" : "2 of 3 checks · 14 of 25 on Unit test 2",
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "2 of 3 checks · 14 of 25 on Unit test 2",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Types of reactions",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000001",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000005",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+          {
+            "at" : "2026-10-06T12:00:00Z",
+            "correct" : true,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000003"
+          },
+          {
+            "at" : "2026-10-08T12:00:00Z",
+            "correct" : false,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000003"
+          },
+          {
+            "at" : "2026-10-08T12:00:00Z",
+            "correct" : true,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000004"
+          },
+          {
+            "at" : "2026-10-01T12:00:00Z",
+            "correct" : false,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000002"
+          }
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+          {
+            "date" : "2026-10-09",
+            "max" : 25,
+            "score" : 14,
+            "subject" : "Science",
+            "test" : "Unit test 2"
+          }
+        ],
+        "sessions" : [
+          {
+            "date" : "2026-10-05",
+            "mark" : "present"
+          },
+          {
+            "date" : "2026-10-07",
+            "mark" : "present"
+          },
+          {
+            "date" : "2026-10-09",
+            "mark" : "present"
+          }
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000002",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000003",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000004",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000006",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000007",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000008",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "a week of teaching, checks and a mark"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "attendance" : "absent 2 of 3 classes",
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000001",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000005",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+          {
+            "date" : "2026-10-05",
+            "mark" : "absent"
+          },
+          {
+            "date" : "2026-10-07",
+            "mark" : "present"
+          },
+          {
+            "date" : "2026-10-09",
+            "mark" : "absent"
+          }
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000002",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000003",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000004",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000006",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000007",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000008",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "two absences of three"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : true,
+          "attendance" : "absent all week (3 classes)",
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week: absent all week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week: absent all week"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000001",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000005",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+          {
+            "date" : "2026-10-05",
+            "mark" : "absent"
+          },
+          {
+            "date" : "2026-10-07",
+            "mark" : "absent"
+          },
+          {
+            "date" : "2026-10-09",
+            "mark" : "absent"
+          }
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000002",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000003",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000004",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000006",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000007",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000008",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "absent all week teaches nothing"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Rusting"
+          ],
+          "practise" : [
+            "Types of reactions"
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Types of reactions",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Rusting",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000009",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000013",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000009",
+            "id" : "d0000000-0000-4000-8000-000000000010",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000009",
+            "id" : "d0000000-0000-4000-8000-000000000011",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000009",
+            "id" : "d0000000-0000-4000-8000-000000000012",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000013",
+            "id" : "d0000000-0000-4000-8000-000000000014",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000013",
+            "id" : "d0000000-0000-4000-8000-000000000015",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000013",
+            "id" : "d0000000-0000-4000-8000-000000000016",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "no sessions and nothing taught"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Acids, bases and salts"
+          ],
+          "practise" : [
+            "Rusting",
+            "Types of reactions"
+          ],
+          "right" : "0 of 2 checks",
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "0 of 2 checks",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Rusting · Types of reactions",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Acids, bases and salts",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : false,
+        "topic" : "Acids, bases and salts"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000025",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000029",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+          {
+            "at" : "2026-10-07T12:00:00Z",
+            "correct" : false,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000028"
+          },
+          {
+            "at" : "2026-10-08T12:00:00Z",
+            "correct" : false,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000027"
+          }
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000025",
+            "id" : "d0000000-0000-4000-8000-000000000026",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000025",
+            "id" : "d0000000-0000-4000-8000-000000000027",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "secure",
+            "stateAt" : "2026-09-22T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000025",
+            "id" : "d0000000-0000-4000-8000-000000000028",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "secure",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000029",
+            "id" : "d0000000-0000-4000-8000-000000000030",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000029",
+            "id" : "d0000000-0000-4000-8000-000000000031",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000029",
+            "id" : "d0000000-0000-4000-8000-000000000032",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "wrong checks name what to practise when nothing is weak"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Acids, bases and salts"
+          ],
+          "practise" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Types of reactions · Rusting",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Acids, bases and salts",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000017",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000021",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000017",
+            "id" : "d0000000-0000-4000-8000-000000000018",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000017",
+            "id" : "d0000000-0000-4000-8000-000000000019",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "practising",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000017",
+            "id" : "d0000000-0000-4000-8000-000000000020",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "revisit",
+            "stateAt" : "2026-10-07T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000021",
+            "id" : "d0000000-0000-4000-8000-000000000022",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000021",
+            "id" : "d0000000-0000-4000-8000-000000000023",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000021",
+            "id" : "d0000000-0000-4000-8000-000000000024",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "practising and revisit skills are what to practise"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Acids, bases and salts"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Acids, bases and salts",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : false,
+        "topic" : "Acids, bases and salts"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000025",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000029",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000025",
+            "id" : "d0000000-0000-4000-8000-000000000026",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000025",
+            "id" : "d0000000-0000-4000-8000-000000000027",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "secure",
+            "stateAt" : "2026-09-22T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000025",
+            "id" : "d0000000-0000-4000-8000-000000000028",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "secure",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000029",
+            "id" : "d0000000-0000-4000-8000-000000000030",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000029",
+            "id" : "d0000000-0000-4000-8000-000000000031",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000029",
+            "id" : "d0000000-0000-4000-8000-000000000032",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "the next skill opens a new chapter"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Rusting"
+          ],
+          "practise" : [
+            "Types of reactions"
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Types of reactions",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Rusting",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000009",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000013",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+          {
+            "at" : "2026-10-06T12:00:00Z",
+            "correct" : true,
+            "isPlacement" : true,
+            "skillID" : "d0000000-0000-4000-8000-000000000011"
+          }
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000009",
+            "id" : "d0000000-0000-4000-8000-000000000010",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000009",
+            "id" : "d0000000-0000-4000-8000-000000000011",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000009",
+            "id" : "d0000000-0000-4000-8000-000000000012",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000013",
+            "id" : "d0000000-0000-4000-8000-000000000014",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000013",
+            "id" : "d0000000-0000-4000-8000-000000000015",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000013",
+            "id" : "d0000000-0000-4000-8000-000000000016",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "a placement's checks are not the week's"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+
+          ],
+          "right" : "2 of 2 checks",
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "2 of 2 checks",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000001",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000005",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+          {
+            "at" : "2026-10-06T12:00:00Z",
+            "correct" : true,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000003"
+          },
+          {
+            "at" : "2026-10-08T12:00:00Z",
+            "correct" : true,
+            "isPlacement" : false,
+            "skillID" : "d0000000-0000-4000-8000-000000000004"
+          }
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000002",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000003",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000001",
+            "id" : "d0000000-0000-4000-8000-000000000004",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000006",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000007",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000005",
+            "id" : "d0000000-0000-4000-8000-000000000008",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "every check right"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Indicators",
+            "the unit test on Fri 16 Oct"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators · the unit test on Fri 16 Oct",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000033",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000037",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+          {
+            "audience" : {
+              "classLevel" : "8",
+              "school" : "f0000000-0000-4000-8000-000000000001"
+            },
+            "date" : "2026-10-16",
+            "id" : "e0000000-0000-4000-8000-000000000301",
+            "kind" : "exam",
+            "receivedAt" : "2026-10-01T10:00:00+05:30",
+            "subject" : "Science",
+            "title" : "Unit test"
+          }
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000034",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000035",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000036",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000038",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000039",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000040",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "the nearest exam is coming"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000033",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000037",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+          {
+            "audience" : {
+              "classLevel" : "8",
+              "school" : "f0000000-0000-4000-8000-000000000001"
+            },
+            "date" : "2026-11-30",
+            "id" : "e0000000-0000-4000-8000-000000000302",
+            "kind" : "exam",
+            "receivedAt" : "2026-10-01T10:00:00+05:30",
+            "subject" : "Science",
+            "title" : "Half yearly"
+          }
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000034",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000035",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000036",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000038",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000039",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000040",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "an exam beyond its window is not"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000033",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000037",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+          {
+            "date" : "2026-09-20",
+            "max" : 10,
+            "score" : 9,
+            "subject" : "Science",
+            "test" : "FA1"
+          }
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000034",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000035",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000036",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000038",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000039",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000040",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "8",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "a mark outside the week is left out"
+    },
+    {
+      "expected" : {
+        "canDo" : {
+          "atHome" : "Five words a day from the picture book",
+          "canDo" : [
+            "Read words",
+            "Count to 9"
+          ],
+          "ladderHeading" : "Moved up",
+          "movedUp" : [
+            {
+              "area" : "reading",
+              "step" : "Words"
+            }
+          ],
+          "movedUpLine" : "Words · moved up this week",
+          "next" : [
+            "Reading sentences",
+            "Counting to 99"
+          ],
+          "rows" : [
+            {
+              "fact" : "Read words · count to 9",
+              "label" : "Can now do",
+              "symbol" : "star"
+            },
+            {
+              "fact" : "Five words a day from the picture book",
+              "label" : "At home",
+              "symbol" : "house"
+            },
+            {
+              "fact" : "Reading sentences · counting to 99",
+              "label" : "Next",
+              "symbol" : "arrow.right.circle"
+            }
+          ]
+        },
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Paragraph"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Reading: sentences",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Paragraph",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Sentences"
+          ],
+          "taughtLine" : "Reading: sentences"
+        },
+        "isLadder" : true,
+        "topic" : "Reading"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000041",
+            "ladder" : "reading",
+            "name" : "Reading",
+            "position" : 1,
+            "subject" : "English"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000047",
+            "ladder" : "numbers",
+            "name" : "Numbers",
+            "position" : 2,
+            "subject" : "Mathematics"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000041",
+            "id" : "d0000000-0000-4000-8000-000000000042",
+            "name" : "Letters",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000041",
+            "id" : "d0000000-0000-4000-8000-000000000043",
+            "name" : "Words",
+            "position" : 2,
+            "state" : "secure",
+            "stateAt" : "2026-10-07T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000041",
+            "id" : "d0000000-0000-4000-8000-000000000044",
+            "name" : "Sentences",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000041",
+            "id" : "d0000000-0000-4000-8000-000000000045",
+            "name" : "Paragraph",
+            "position" : 4,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000041",
+            "id" : "d0000000-0000-4000-8000-000000000046",
+            "name" : "Story",
+            "position" : 5,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000047",
+            "id" : "d0000000-0000-4000-8000-000000000048",
+            "name" : "To 9",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000047",
+            "id" : "d0000000-0000-4000-8000-000000000049",
+            "name" : "To 99",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000047",
+            "id" : "d0000000-0000-4000-8000-000000000050",
+            "name" : "Add",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000047",
+            "id" : "d0000000-0000-4000-8000-000000000051",
+            "name" : "Subtract",
+            "position" : 4,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000047",
+            "id" : "d0000000-0000-4000-8000-000000000052",
+            "name" : "Multiply",
+            "position" : 5,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "ukg",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "UKG moving up gets can-now-do"
+    },
+    {
+      "expected" : {
+        "canDo" : {
+          "atHome" : "Point to the letters in the picture book",
+          "canDo" : [
+            "Know the letters"
+          ],
+          "ladderHeading" : "On the ladder",
+          "movedUp" : [
+
+          ],
+          "movedUpLine" : "No change this week",
+          "next" : [
+            "Reading words",
+            "Counting to 9"
+          ],
+          "rows" : [
+            {
+              "fact" : "Know the letters",
+              "label" : "Can now do",
+              "symbol" : "star"
+            },
+            {
+              "fact" : "Point to the letters in the picture book",
+              "label" : "At home",
+              "symbol" : "house"
+            },
+            {
+              "fact" : "Reading words · counting to 9",
+              "label" : "Next",
+              "symbol" : "arrow.right.circle"
+            }
+          ]
+        },
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Sentences"
+          ],
+          "practise" : [
+            "Words"
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Words",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Sentences",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : true,
+        "topic" : "Reading"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000053",
+            "ladder" : "reading",
+            "name" : "Reading",
+            "position" : 1,
+            "subject" : "English"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000059",
+            "ladder" : "numbers",
+            "name" : "Numbers",
+            "position" : 2,
+            "subject" : "Mathematics"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000053",
+            "id" : "d0000000-0000-4000-8000-000000000054",
+            "name" : "Letters",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000053",
+            "id" : "d0000000-0000-4000-8000-000000000055",
+            "name" : "Words",
+            "position" : 2,
+            "state" : "practising",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000053",
+            "id" : "d0000000-0000-4000-8000-000000000056",
+            "name" : "Sentences",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000053",
+            "id" : "d0000000-0000-4000-8000-000000000057",
+            "name" : "Paragraph",
+            "position" : 4,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000053",
+            "id" : "d0000000-0000-4000-8000-000000000058",
+            "name" : "Story",
+            "position" : 5,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000059",
+            "id" : "d0000000-0000-4000-8000-000000000060",
+            "name" : "To 9",
+            "position" : 1,
+            "state" : "taught",
+            "stateAt" : "2026-09-25T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000059",
+            "id" : "d0000000-0000-4000-8000-000000000061",
+            "name" : "To 99",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000059",
+            "id" : "d0000000-0000-4000-8000-000000000062",
+            "name" : "Add",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000059",
+            "id" : "d0000000-0000-4000-8000-000000000063",
+            "name" : "Subtract",
+            "position" : 4,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000059",
+            "id" : "d0000000-0000-4000-8000-000000000064",
+            "name" : "Multiply",
+            "position" : 5,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "2",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "class 2 on the ladder with no change"
+    },
+    {
+      "expected" : {
+        "canDo" : {
+          "atHome" : "Five words a day from the picture book",
+          "canDo" : [
+            "Read words",
+            "Count to 99"
+          ],
+          "ladderHeading" : "Moved up",
+          "movedUp" : [
+            {
+              "area" : "reading",
+              "step" : "Words"
+            },
+            {
+              "area" : "numbers",
+              "step" : "To 99"
+            }
+          ],
+          "movedUpLine" : "Words · moved up this week",
+          "next" : [
+            "Reading sentences",
+            "Adding to 20"
+          ],
+          "rows" : [
+            {
+              "fact" : "Read words · count to 99",
+              "label" : "Can now do",
+              "symbol" : "star"
+            },
+            {
+              "fact" : "Five words a day from the picture book",
+              "label" : "At home",
+              "symbol" : "house"
+            },
+            {
+              "fact" : "Reading sentences · adding to 20",
+              "label" : "Next",
+              "symbol" : "arrow.right.circle"
+            }
+          ]
+        },
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Sentences"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Nothing new this week",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Sentences",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+
+          ],
+          "taughtLine" : "Nothing new this week"
+        },
+        "isLadder" : true,
+        "topic" : "Reading"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000065",
+            "ladder" : "reading",
+            "name" : "Reading",
+            "position" : 1,
+            "subject" : "English"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000071",
+            "ladder" : "numbers",
+            "name" : "Numbers",
+            "position" : 2,
+            "subject" : "Mathematics"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000065",
+            "id" : "d0000000-0000-4000-8000-000000000066",
+            "name" : "Letters",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000065",
+            "id" : "d0000000-0000-4000-8000-000000000067",
+            "name" : "Words",
+            "position" : 2,
+            "state" : "secure",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000065",
+            "id" : "d0000000-0000-4000-8000-000000000068",
+            "name" : "Sentences",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000065",
+            "id" : "d0000000-0000-4000-8000-000000000069",
+            "name" : "Paragraph",
+            "position" : 4,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000065",
+            "id" : "d0000000-0000-4000-8000-000000000070",
+            "name" : "Story",
+            "position" : 5,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000071",
+            "id" : "d0000000-0000-4000-8000-000000000072",
+            "name" : "To 9",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000071",
+            "id" : "d0000000-0000-4000-8000-000000000073",
+            "name" : "To 99",
+            "position" : 2,
+            "state" : "secure",
+            "stateAt" : "2026-10-09T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000071",
+            "id" : "d0000000-0000-4000-8000-000000000074",
+            "name" : "Add",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000071",
+            "id" : "d0000000-0000-4000-8000-000000000075",
+            "name" : "Subtract",
+            "position" : 4,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000071",
+            "id" : "d0000000-0000-4000-8000-000000000076",
+            "name" : "Multiply",
+            "position" : 5,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "1",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "class 1 moving up in two areas"
+    },
+    {
+      "expected" : {
+        "facts" : {
+          "absentAllWeek" : false,
+          "coming" : [
+            "Indicators"
+          ],
+          "practise" : [
+
+          ],
+          "rows" : [
+            {
+              "fact" : "Chemical reactions: types of reactions, rusting",
+              "label" : "Taught",
+              "symbol" : "book.closed"
+            },
+            {
+              "fact" : "No checks yet",
+              "label" : "Got right",
+              "symbol" : "checkmark.circle"
+            },
+            {
+              "fact" : "Nothing to add",
+              "label" : "To practise",
+              "symbol" : "pencil.line"
+            },
+            {
+              "fact" : "Indicators",
+              "label" : "Coming",
+              "symbol" : "calendar"
+            }
+          ],
+          "taught" : [
+            "Types of reactions",
+            "Rusting"
+          ],
+          "taughtLine" : "Chemical reactions: types of reactions, rusting"
+        },
+        "isLadder" : false,
+        "topic" : "Chemical reactions"
+      },
+      "input" : {
+        "chapters" : [
+          {
+            "id" : "b0000000-0000-4000-8000-000000000033",
+            "name" : "Chemical reactions",
+            "position" : 1,
+            "subject" : "Science"
+          },
+          {
+            "id" : "b0000000-0000-4000-8000-000000000037",
+            "name" : "Acids, bases and salts",
+            "position" : 2,
+            "subject" : "Science"
+          }
+        ],
+        "checks" : [
+
+        ],
+        "from" : "2026-10-05",
+        "items" : [
+
+        ],
+        "marks" : [
+
+        ],
+        "sessions" : [
+
+        ],
+        "skills" : [
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000034",
+            "name" : "Balancing equations",
+            "position" : 1,
+            "state" : "secure",
+            "stateAt" : "2026-09-20T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000035",
+            "name" : "Types of reactions",
+            "position" : 2,
+            "state" : "taught",
+            "stateAt" : "2026-10-06T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000033",
+            "id" : "d0000000-0000-4000-8000-000000000036",
+            "name" : "Rusting",
+            "position" : 3,
+            "state" : "taught",
+            "stateAt" : "2026-10-08T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000038",
+            "name" : "Naming acids",
+            "position" : 1,
+            "state" : "practising",
+            "stateAt" : "2026-09-28T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000039",
+            "name" : "Indicators",
+            "position" : 2,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          },
+          {
+            "chapterID" : "b0000000-0000-4000-8000-000000000037",
+            "id" : "d0000000-0000-4000-8000-000000000040",
+            "name" : "Neutralisation",
+            "position" : 3,
+            "state" : "not_started",
+            "stateAt" : "2026-09-01T11:30:00Z"
+          }
+        ],
+        "student" : {
+          "classLevel" : "3",
+          "id" : "a0000000-0000-4000-8000-000000000001",
+          "name" : "Dev",
+          "schoolID" : "f0000000-0000-4000-8000-000000000001"
+        },
+        "to" : "2026-10-11"
+      },
+      "name" : "class 3 without a ladder chapter gets the weekly note"
+    }
+  ]
+}

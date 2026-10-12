@@ -1,0 +1,2155 @@
+{
+  "cases" : [
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T16:35:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "a class reminds before each meeting of the next fourteen days"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:45:00+05:30",
+          "body" : "In 15 minutes · 1 student. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:45:00+05:30",
+          "body" : "In 15 minutes · 1 student. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:45:00+05:30",
+          "body" : "In 15 minutes · 1 student. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:45:00+05:30",
+          "body" : "In 15 minutes · 1 student. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:45:00+05:30",
+          "body" : "In 15 minutes · 1 student. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:45:00+05:30",
+          "body" : "In 15 minutes · 1 student. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 1
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 15,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "a fifteen-minute lead and one student"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T16:50:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "a meeting already begun is skipped"
+    },
+    {
+      "expected" : [
+
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "an untimed batch has no reminder"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-08T17:00:00+05:30",
+          "body" : "In 1 hour · 2 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000102-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Evening batch",
+          "title" : "Evening batch at 18:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-13T17:00:00+05:30",
+          "body" : "In 1 hour · 2 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000102-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Evening batch",
+          "title" : "Evening batch at 18:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-15T17:00:00+05:30",
+          "body" : "In 1 hour · 2 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000102-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Evening batch",
+          "title" : "Evening batch at 18:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-20T17:00:00+05:30",
+          "body" : "In 1 hour · 2 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000102-2026-10-20",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Evening batch",
+          "title" : "Evening batch at 18:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          },
+          {
+            "days" : [
+              2,
+              4
+            ],
+            "end" : "19:30",
+            "id" : "c0000000-0000-4000-8000-000000000102",
+            "name" : "Evening batch",
+            "start" : "18:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4,
+          "c0000000-0000-4000-8000-000000000102" : 2
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "two batches interleave, soonest first"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-07T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-07T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-07T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-07T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-07T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-08T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-08T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-08T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-08T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-08T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-08T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-08",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-09T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-09T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-09T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-09T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-09T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-09T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-10T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-10",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-10T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-10",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-10T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-10",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-10T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-10",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-10T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-10",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-10T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-10",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-11T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-11",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-11T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-11",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-11T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-11",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-11T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-11",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-11T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-11",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-11T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-11",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-12T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-12T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-12T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-12T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-12T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-12T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-13T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-13T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-13T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-13T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-13T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-13T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-13",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-14T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-14T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-14T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-14T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-14T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-14T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-15T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-15T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-15T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-15T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-15T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-15T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-15",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        },
+        {
+          "at" : "2026-10-16T08:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000301-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 1",
+          "title" : "Batch 1 at 09:00"
+        },
+        {
+          "at" : "2026-10-16T09:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000302-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 2",
+          "title" : "Batch 2 at 10:00"
+        },
+        {
+          "at" : "2026-10-16T10:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000303-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 3",
+          "title" : "Batch 3 at 11:00"
+        },
+        {
+          "at" : "2026-10-16T11:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000304-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 4",
+          "title" : "Batch 4 at 12:00"
+        },
+        {
+          "at" : "2026-10-16T12:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000305-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 5",
+          "title" : "Batch 5 at 13:00"
+        },
+        {
+          "at" : "2026-10-16T13:00:00+05:30",
+          "body" : "In 1 hour · 0 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000306-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Batch 6",
+          "title" : "Batch 6 at 14:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000301",
+            "name" : "Batch 1",
+            "start" : "09:00"
+          },
+          {
+            "days" : [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000302",
+            "name" : "Batch 2",
+            "start" : "10:00"
+          },
+          {
+            "days" : [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000303",
+            "name" : "Batch 3",
+            "start" : "11:00"
+          },
+          {
+            "days" : [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000304",
+            "name" : "Batch 4",
+            "start" : "12:00"
+          },
+          {
+            "days" : [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000305",
+            "name" : "Batch 5",
+            "start" : "13:00"
+          },
+          {
+            "days" : [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000306",
+            "name" : "Batch 6",
+            "start" : "14:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+
+        },
+        "now" : "2026-10-07T07:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "more than sixty are cut to the soonest sixty"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 3 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "A batch",
+          "title" : "A batch at 17:00"
+        },
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 3 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000102-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "B batch",
+          "title" : "B batch at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 3 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "A batch",
+          "title" : "A batch at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 3 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000102-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "B batch",
+          "title" : "B batch at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              3
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000102",
+            "name" : "B batch",
+            "start" : "17:00"
+          },
+          {
+            "days" : [
+              3
+            ],
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "A batch",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 3,
+          "c0000000-0000-4000-8000-000000000102" : 3
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "a reminder due at the same minute keeps its id order"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T17:00:00+05:30",
+          "body" : "Fri 9 Oct, 18:00–19:00 · Bring the report cards.",
+          "id" : "event-e0000000-0000-4000-8000-000000000201",
+          "kind" : "event",
+          "link" : "tutorcentral://event/e0000000-0000-4000-8000-000000000201",
+          "subject" : "Parents meeting",
+          "title" : "Parents meeting in 1 hour"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+          {
+            "date" : "2026-10-09",
+            "end" : "19:00",
+            "id" : "e0000000-0000-4000-8000-000000000201",
+            "note" : "Bring the report cards\nand pens",
+            "start" : "18:00",
+            "title" : "Parents meeting"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "an event an hour before its start, with the note's first line"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-08T18:00:00+05:30",
+          "body" : "Fri 9 Oct, 18:00–19:00 · Bring the report cards.",
+          "id" : "event-e0000000-0000-4000-8000-000000000201",
+          "kind" : "event",
+          "link" : "tutorcentral://event/e0000000-0000-4000-8000-000000000201",
+          "subject" : "Parents meeting",
+          "title" : "Parents meeting tomorrow"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+          {
+            "date" : "2026-10-09",
+            "end" : "19:00",
+            "id" : "e0000000-0000-4000-8000-000000000201",
+            "note" : "Bring the report cards\nand pens",
+            "start" : "18:00",
+            "title" : "Parents meeting"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "day_before",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "an event the day before at 18:00"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T17:30:00+05:30",
+          "body" : "Fri 9 Oct, 18:00.",
+          "id" : "event-e0000000-0000-4000-8000-000000000201",
+          "kind" : "event",
+          "link" : "tutorcentral://event/e0000000-0000-4000-8000-000000000201",
+          "subject" : "Parents meeting",
+          "title" : "Parents meeting in 30 minutes"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+          {
+            "date" : "2026-10-09",
+            "id" : "e0000000-0000-4000-8000-000000000201",
+            "start" : "18:00",
+            "title" : "Parents meeting"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "min30",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "an event thirty minutes before, with a start and no end"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-10T09:00:00+05:30",
+          "body" : "Sat 10 Oct · Doors at 10.",
+          "id" : "event-e0000000-0000-4000-8000-000000000202",
+          "kind" : "event",
+          "link" : "tutorcentral://event/e0000000-0000-4000-8000-000000000202",
+          "subject" : "Open day",
+          "title" : "Open day today"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+          {
+            "date" : "2026-10-10",
+            "id" : "e0000000-0000-4000-8000-000000000202",
+            "note" : "Doors at 10.",
+            "title" : "Open day"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "an untimed event reminds at nine that day"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+          {
+            "date" : "2026-10-30",
+            "id" : "e0000000-0000-4000-8000-000000000202",
+            "start" : "09:00",
+            "title" : "Sports day"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "an event outside the fourteen days is left out"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-02T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-02",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-05T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-05",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-01T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "no fee due, no fee reminder"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-02T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-02",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-05T09:00:00+05:30",
+          "body" : "₹4,000 to collect. Tap to remind parents.",
+          "id" : "fees-2026-10",
+          "kind" : "fees",
+          "link" : "tutorcentral://fees?month=2026-10",
+          "subject" : "Fees still due",
+          "title" : "4 fees still due for October"
+        },
+        {
+          "at" : "2026-10-05T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-05",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "dueFees" : {
+          "count" : 4,
+          "total" : 4000
+        },
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-01T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "fees due remind on the 5th at nine"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-16T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-16",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-19T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-19",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-11-05T09:00:00+05:30",
+          "body" : "₹800 to collect. Tap to remind parents.",
+          "id" : "fees-2026-11",
+          "kind" : "fees",
+          "link" : "tutorcentral://fees?month=2026-11",
+          "subject" : "Fees still due",
+          "title" : "1 fee still due for November"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "dueFees" : {
+          "count" : 1,
+          "total" : 800
+        },
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-06T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : true
+        }
+      },
+      "name" : "the fee day already past this month names next month"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-02T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-02",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-05T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-05",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-07T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-07",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-09T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-09",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-10T09:00:00+05:30",
+          "body" : "₹1,500 to collect. Tap to remind parents.",
+          "id" : "fees-2026-10",
+          "kind" : "fees",
+          "link" : "tutorcentral://fees?month=2026-10",
+          "subject" : "Fees still due",
+          "title" : "2 fees still due for October"
+        },
+        {
+          "at" : "2026-10-12T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-12",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        },
+        {
+          "at" : "2026-10-14T16:00:00+05:30",
+          "body" : "In 1 hour · 4 students. Open for today's plan.",
+          "id" : "class-c0000000-0000-4000-8000-000000000101-2026-10-14",
+          "kind" : "class",
+          "link" : "tutorcentral://today",
+          "subject" : "Class 10 Maths",
+          "title" : "Class 10 Maths at 17:00"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "dueFees" : {
+          "count" : 2,
+          "total" : 1500
+        },
+        "events" : [
+
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-01T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : true,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 10,
+          "feesOn" : true
+        }
+      },
+      "name" : "a fee day of the 10th"
+    },
+    {
+      "expected" : [
+        {
+          "at" : "2026-10-09T17:00:00+05:30",
+          "body" : "Fri 9 Oct, 18:00–19:00 · Bring the report cards.",
+          "id" : "event-e0000000-0000-4000-8000-000000000201",
+          "kind" : "event",
+          "link" : "tutorcentral://event/e0000000-0000-4000-8000-000000000201",
+          "subject" : "Parents meeting",
+          "title" : "Parents meeting in 1 hour"
+        }
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "dueFees" : {
+          "count" : 4,
+          "total" : 4000
+        },
+        "events" : [
+          {
+            "date" : "2026-10-09",
+            "end" : "19:00",
+            "id" : "e0000000-0000-4000-8000-000000000201",
+            "note" : "Bring the report cards\nand pens",
+            "start" : "18:00",
+            "title" : "Parents meeting"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : false,
+          "eventLead" : "hour1",
+          "eventsOn" : true,
+          "feesDay" : 5,
+          "feesOn" : false
+        }
+      },
+      "name" : "switches off drop their kind"
+    },
+    {
+      "expected" : [
+
+      ],
+      "input" : {
+        "classes" : [
+          {
+            "days" : [
+              1,
+              3,
+              5
+            ],
+            "end" : "18:30",
+            "id" : "c0000000-0000-4000-8000-000000000101",
+            "name" : "Class 10 Maths",
+            "start" : "17:00"
+          }
+        ],
+        "dueFees" : {
+          "count" : 4,
+          "total" : 4000
+        },
+        "events" : [
+          {
+            "date" : "2026-10-09",
+            "end" : "19:00",
+            "id" : "e0000000-0000-4000-8000-000000000201",
+            "note" : "Bring the report cards\nand pens",
+            "start" : "18:00",
+            "title" : "Parents meeting"
+          }
+        ],
+        "memberCounts" : {
+          "c0000000-0000-4000-8000-000000000101" : 4
+        },
+        "now" : "2026-10-07T09:00:00+05:30",
+        "settings" : {
+          "classMinutes" : 60,
+          "classOn" : false,
+          "eventLead" : "hour1",
+          "eventsOn" : false,
+          "feesDay" : 5,
+          "feesOn" : false
+        }
+      },
+      "name" : "every switch off plans nothing"
+    }
+  ]
+}
