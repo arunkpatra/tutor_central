@@ -52,6 +52,8 @@ const IOS_INPUTS = [
   "ios/**/*.entitlements",
   "ios/Config/*.xcconfig",
   "ios/TutorCentralKit/Package.resolved",
+  // DomainTests read the shared case files (D80).
+  "ios/TutorCentralKit/Tests/DomainTests/Cases/**",
   // The token test reads the document (D25).
   "docs/design/design-tokens.md",
   // The price sheet reads the model table (D67).
@@ -101,7 +103,7 @@ export const STEPS: Step[] = [
       "api/src/generated/**",
       "ios/TutorCentralKit/Sources/Domain/Generated/**",
       "ios/TutorCentralKit/Tests/DataTests/Contract/**",
-      "tools/contract/plan-cases.json",
+      "tools/contract/*-cases.json",
       "ios/TutorCentralKit/Tests/DomainTests/Cases/**",
     ],
     run: async () => {
@@ -113,7 +115,7 @@ export const STEPS: Step[] = [
   {
     name: "api",
     // schemas.test parses the class 10 blueprints of the syllabus data.
-    inputs: ["api/src/**", "api/test/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**", "tools/contract/plan-cases.json"],
+    inputs: ["api/src/**", "api/test/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**", "tools/contract/*-cases.json"],
     run: () => run("bun run check", "api"),
   },
   {

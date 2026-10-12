@@ -65,6 +65,8 @@ struct InputJSON: Codable {
         var name: String
         var state: String
         var stateAt: String
+        /// The spaced queue's clock (the budget's cases); absent in the plan's.
+        var lastCheckedAt: String?
     }
 
     struct SessionJSON: Codable {
@@ -88,9 +90,14 @@ struct InputJSON: Codable {
         var gapLine: String?
         var pattern: PatternLineJSON?
         var setNumber: Int
+        /// What the budget reads besides the rules (the budget's cases): the day's skill names, the portions, the
+        /// weakest skills of a marked mock.
+        var skills: [String]?
+        var portions: [String]?
+        var gapSkills: [String]?
     }
 
-    struct PatternLineJSON: Codable {
+    struct PatternLineJSON: Codable, Equatable {
         var marks: Int
         var durationMinutes: Int
     }
@@ -233,7 +240,7 @@ extension InputJSON {
         }
         return try Skill(
             id: uuid(json.id), chapterID: uuid(json.chapterID), position: json.position, name: json.name, state: state,
-            stateAt: at, lastCheckedAt: nil
+            stateAt: at, lastCheckedAt: json.lastCheckedAt.flatMap { ISO8601DateFormatter().date(from: $0) }
         )
     }
 
@@ -275,11 +282,11 @@ extension InputJSON.RevisionJSON {
         default: .exam
         }
         let prepared = try PreparationDay(
-            day: isoDay(day.day), kind: kind, title: day.title, skillIDs: day.skillIDs.map(uuid)
+            day: isoDay(day.day), kind: kind, title: day.title, skills: skills ?? [], skillIDs: day.skillIDs.map(uuid)
         )
         return try RevisionLine(
             itemID: uuid(itemID), title: title, subject: subject, examDate: isoDay(examDate), day: prepared,
-            gapLine: gapLine,
+            gapLine: gapLine, gapSkills: gapSkills ?? [], portions: portions ?? [],
             pattern: pattern.map { MockPattern(marks: $0.marks, durationMinutes: $0.durationMinutes) },
             setNumber: setNumber
         )
