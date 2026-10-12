@@ -1,7 +1,46 @@
 # Phase 18: V3 the server's work and push
 
-**Status:** Planned (session 36, 2026-10-12): the 14 boards of row 26 approved; `phase-18-plan.md`; the build from `resume/035-phase-18-build.md`. **Depends on:** Phase 17; boards for the states that change (consent withdrawal, the export, "plan
+**Status:** Built (session 37, 2026-10-13) from `phase-18-plan.md` in #215 to #261 (hand runs #260); deployed (0036 to 0045, the worker, push and Typst live); 1.0.0 (29) on TestFlight. "As built" below. **Depends on:** Phase 17; the 14 boards of row 26 (approved 2026-10-12).
 ready").
+
+## As built (session 37, 2026-10-13)
+
+Built from `plan/phase-18-plan.md` in pull requests #215 to #261; the hand runs are issue #260. Every ruling, hand run, fix and
+review finding is in `plan/sessions/037/ledger.md`.
+
+**The pull requests.** #215 to #220 migrations 0036 to 0040 (consent's withdrawal; the member requests; reminder settings and
+the outbox; the schedules and change triggers; the buckets, the deletion queue and the PDF's job). #221 to #231 the API: the
+shared case files, `makeRequest`, the budget, spaced queue and exam split ported, APNs, the reminder rules and
+`reminder_sweep`, the `plan` job's material, exam weeks and pushes, the `note_day` job, Typst and the `pdf` job, the `export`
+job, the sweep and 0041, the outbox's subject. #232 to #238 the app and web: push and the settings on the account, Today on
+the server's plan (PlanMaker retired), the note from the job, withdrawal and its history, the Export section and the server's
+PDFs, `CopyFirst`, `/trust`. #239 to #243 what the hand runs found (a step name over 40 characters, a dropped APNs stream, the
+note's week, the copies offline) and #240 a lean local stack. #244 to #259 every finding of the two fresh reviews on Fable 5.1
+(#251 a lint fix). #261 the TestFlight run prints the app's push entitlement and stops without it.
+
+**What runs on the server.** pg_cron queues each batch's plan for the day (from 05:30 India time), each note day, and an hourly
+reminder plan; a change to a class, event, fee or the settings queues the centre's reminder plan at once (0045: each change its
+own). The worker (`/jobs/tick` each minute, `/jobs/wake` on a queue) runs `plan` (groups, names, the material as recorded calls,
+exam weeks with one mock shared across batches, a replace on request, then Plan ready and the background fetch, keyed by the
+job), `note_day` (one note per consented student, held otherwise; a note already kept is not made again; the week an ISO day),
+`pdf` (Typst with the committed fonts), `export` (everything about a student, kept seven days), `reminder_sweep` and `sweep`
+(pending calls closed, queued files removed under a lease (0044), retention). A plan job ends `not_meeting` for a day its batch
+no longer meets.
+
+**Push.** APNs by token key (D88); the outbox (`notifications`) is sent on the minute's tick; a token answering 410 is retired; a
+dropped connection is tried once more. The tutor's choices are the account's (`reminder_settings`); build 27's local choices
+move once, into an account that has none. A sign-out deletes the iPhone's row and unregisters it from APNs; a token another
+tutor registered later on the same iPhone is theirs (0042).
+
+**The app.** Today follows the server's plan (made, being made, failed, holiday) and the note day's notes; Change shows the
+phone's rules before asking again. Consent can be withdrawn, with its history. A student's Export. Share takes the server's
+PDF (the kept copy at once, else online within five seconds, else the phone's drawing: D93). Lists, Today's plans, the note day
+and the material show what the iPhone has before any read answers. A background push fills today's plans within 25 seconds.
+
+**Checked.** `bun check` green before every merge; hand runs 1 to 11 (#260); a plan job and a note day on the real models
+(₹3.05); two fresh reviews (16 findings: 15 fixed with a test that failed first or by removing the failing path, one ruled
+transitional); Deploy 1 (run 38282034144) and Deploy 2 (run 38311560782), each smoke green with a real check, the tick, a rendered
+page and APNs; 1.0.0 (28) by run 38312753433 and (29) by run 38314213195, whose log shows the archive's `aps-environment`.
 
 ## Goal
 

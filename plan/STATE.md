@@ -3,15 +3,16 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-12, session 36 (Phase 18's boards and plan, on Fable 5.1). **Session 36:** the 14 boards of row 26
-drawn and approved (consent withdrawn, the export and its file, plan ready: the notifications, Today while the material is
-made, the Reminders screen), mirrored (`d6c8b66`); `plan/phase-18-plan.md` written (25 tasks, 22 pull requests, D88 to D92);
-the record in `plan/sessions/036/`.
-**Next:** the owner reviews `plan/phase-18-plan.md`; then Phase 18's build on Opus 5.5 from `resume/035-phase-18-build.md`
-(its first message asks the owner for the APNs key, Task 1). The order (D81): V3's Phases 17 to 22, then the external testing
-round on the first build that carries them, then Phase 16. The round's documents are ready (`docs/release.md`,
-`docs/testing/tester-guide.md`, `plan/phase-15-findings.md`); the owner's own findings go into `plan/phase-15-findings.md`
-(Who = Owner); none reported yet.
+**Last updated:** 2026-10-13, session 37 (Phase 18's build, on Opus 5.5). **Session 37:** Phase 18 built in #215 to #259
+(hand runs #260): the server makes each batch's plan and material, the note day's notes, the PDFs and a student's export, and
+reaches the iPhone through APNs; consent withdrawal and its history; the copies first offline. Two fresh reviews' sixteen
+findings handled (#244 to #259); D93 written. Deploy 2 (0042 to 0045) green; 1.0.0 (29) on TestFlight (28 too; 29 adds the run's push check, #261). The record in
+`plan/sessions/037/`.
+**Next:** read the owner's centre's first morning plan job on the server (13 October, 05:30: steps, made and not made, cost);
+then Phase 19 (the admin portal, reading) on Fable 5.1: its boards and plan, from a resume the owner asks for. The order
+(D81): V3's Phases 17 to 22, then the external testing round on the first build that carries them, then Phase 16. The owner
+tests the builds at the end (D68): device tests T16 and T17 are Phase 18's. The round's documents are ready
+(`docs/release.md`, `docs/testing/tester-guide.md`, `plan/phase-15-findings.md`).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -38,12 +39,12 @@ round on the first build that carries them, then Phase 16. The round's documents
 | 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the external testing round waits for V3 (D69, D81) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready |
 | 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
 | 17 V3 platform foundation | Done (session 35, 2026-10-12), PRs #184 to #214; hand runs #212 | "As built" in `phase-17-platform-foundation.md`; deployed; 1.0.0 (27) |
-| 18 V3 the server's work and push | Planned (session 36, 2026-10-12): boards approved (row 26), `phase-18-plan.md`; the build next (resume 035) | Scope file `phase-18-server-work-and-push.md`; builds on 17 |
+| 18 V3 the server's work and push | Done (session 37, 2026-10-13), PRs #215 to #261; hand runs #260 | "As built" in `phase-18-server-work-and-push.md`; deployed (0036 to 0045); 1.0.0 (29); device tests T16, T17 |
 | 19 V3 the admin portal, reading | Not started | Scope file `phase-19-admin-portal-reading.md`; depends on 17; boards first |
 | 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
 | 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
 | 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
-| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phase 17 built and deployed (D83 to D87) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17 and 18 built and deployed (D83 to D93) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 
@@ -60,9 +61,11 @@ delete.
   `A @ 216.198.79.1`, `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and
   `api.tutorcentral.in` (a CNAME to Vercel, attached to `tutor-central-api`) untouched. `APP_STORE_URL` unset (Home shows the
   email call to action) until the app is in the App Store.
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0035: 0028 to 0035 by deploy run
-  38256073141 (Phase 17: jobs, the recorded call, the observability tables, device tokens, consent history, idempotent
-  writes, the wakes, the review's fixes); before them 0027 by run 38181486512 and the earlier runs in git; nothing pending.
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0045: 0042 to 0045 by deploy run
+  38311560782 (Phase 18's review fixes: the token handover, own-centre photos, the deletion lease, a reminder plan per change);
+  0036 to 0041 by run 38282034144 (Phase 18: withdrawal, the member requests, reminder settings and the outbox, the schedules,
+  the buckets `pdfs` and `exports`, retention); 0028 to 0035 by run 38256073141 (Phase 17); nothing pending. pg_cron also
+  queues the day's plans and note days (each 15 minutes) and the hourly reminder plans.
   pg_cron's `wake_worker_minute` gets the worker's `/jobs/tick` each minute through pg_net, with `worker_url` and
   `worker_secret` in Vault (written by the deploy). The Smoke centre (`SMOKE_CENTRE_ID`, the owner's +smoke account) takes
   the deploy's one real check. The
@@ -73,21 +76,26 @@ delete.
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `a3c6012` (deploy run 38256073141, 2026-10-12:
-  Phase 17's envelope, recorded call, keys and worker; before it `54adb24`, run 38181486512); the deploy is gated on `main`'s
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `6d973b9` (deploy run 38311560782, 2026-10-13:
+  Phase 18 with its review fixes; before it `ed0077f`, run 38282034144, and `a3c6012`, run 38256073141); the deploy is gated on `main`'s
   green check and smokes a real check and a tick. Vercel's Production holds `SUPABASE_SERVICE_ROLE_KEY` (the new `sb_secret`
   key, D83) and `WORKER_SECRET`; GitHub's `Production` holds `SMOKE_EMAIL`, `SMOKE_PASSWORD`, `WORKER_SECRET`. The model
   table `api/models.json` with `AI_MODEL_<WORK_TYPE>` overrides (none set on Vercel).
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
-  `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.
+  `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline. APNs (D88): the token key (id
+  `5TN9CJ8CRL`) as `APNS_KEY`, `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_TOPIC` in Vercel's Production and `api/.env.local`; the
+  deploy's smoke sends to a dummy token and APNs takes the key. Typst renders the PDFs with the fonts in `api/fonts` (D89).
   Vercel Hobby refuses deploys whose commit author it does not know; this repo's git email stays `arunkpatra@gmail.com`.
 - **iOS:** bundle id `in.tutorcentral.app` (D27), team `Y7SW6436RD`, App Store Connect record "Tutor Central".
   The share extension `in.tutorcentral.app.share` and the app group `group.in.tutorcentral` (on both App IDs) were
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (27) by run 38258868771 (Phase 17: the keys, request ids and activity log; nothing new on screen;
+  run number. 1.0.0 (29) by run 38314213195 (`main` at `a778350`: build 28 and the run's push check, which printed the
+  archive's `aps-environment`; the App Store export re-signs it for production), the one to test; 1.0.0 (28) by run
+  38312753433 (Phase 18: push, Today on the server's plan, the note from the job, withdrawal, the export, the copies first;
+  `main` at `e3bbe97`), the first build with push; 1.0.0 (27) by run 38258868771 (Phase 17: the keys, request ids and activity log; nothing new on screen;
   `main` at `e89927c`); 1.0.0 (26) by run 38184444260 (Phase 15: Make something, Check a paper under Make, Reports' Progress, the Kit, the polish rows, the review's fixes; `main` at `f5218ab`), the round's candidate, waiting for the owner's own test (D68); 1.0.0 (25) by run 38151541726 (Phase 14: the note day, the weekly note and can-now-do, the cadence, the sent log,
   not on track and the next step, marks from a photo, the School leftovers) on the internal group; 1.0.0 (24) by run 38124050257 (Phase 13: the School tab, exam preparation, the mock, marks, the gap report, the
   messages to parents) on the internal group; 1.0.0 (23) by run 38105466595 (the AI forms by class level, #122) on the internal group; 1.0.0 (22) by
@@ -101,6 +109,9 @@ delete.
 
 ## Open items
 
+- **Phase 18 closed with nothing of its own open (D68):** the hand runs' faults fixed (#239, #241 to #243), every review
+  finding fixed (#244 to #259) but one ruled transitional (build 27 filling a line while the job makes the material; ends
+  with build 28). The real calls cost ₹3.05. U27 done; U10 narrowed to the spinner (no board); U49 opened.
 - **Phase 17 closed with nothing of its own open (D68):** every finding of both reviews fixed (#207 to #211), and the faults
   found after (#213, #214). The hand runs' real calls cost ₹4.57.
 - **Phase 15's build closed with nothing of its own open (D68):** every hand-run fault and review finding fixed (#167 to
