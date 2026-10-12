@@ -101,7 +101,7 @@ import Testing
         let store = await store(plans, mock.id, ai: ai)
         await store.load()
         #expect(await store.again())
-        #expect(ai.mockCalls.count == 1 && ai.mockCalls.first?.schoolItemID == exam.id)
+        #expect(ai.mockCalls.count == 1 && ai.mockCalls.first?.schoolItemID == exam.id && ai.anotherCalls == 1)
         let newer = try #require(try await plans.mock(for: exam.id, centre: ArtefactTest.centre))
         #expect(newer.id != mock.id && store.artefact?.id == newer.id)
         #expect(plans.artefacts.contains { $0.id == mock.id })

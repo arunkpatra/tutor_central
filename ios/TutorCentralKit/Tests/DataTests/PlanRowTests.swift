@@ -90,4 +90,21 @@ struct PlanRowTests {
         )
         #expect(try SupabasePlansRepository.keepParams(own, to: link, centre: UUID())["p_key"] == nil)
     }
+
+    /// The made sheet kept again over the tutor's own (Use the made sheet instead) is a new row, not the first keep
+    /// answered again: the key is the generation and what the artefact replaces.
+    @Test func aKeepOverAnotherArtefactHasItsOwnKey() throws {
+        let generation = UUID(), own = UUID()
+        let sheet = ArtefactContent.sheet(SheetContent(
+            title: "t", instructions: nil, questions: [], forHomework: false, light: false
+        ))
+        let again = NewArtefact(
+            kind: .sheet, source: .made, title: "t", content: sheet, photoPath: nil, generationID: generation,
+            regeneratedFrom: own
+        )
+        let link = ArtefactLink(plan: UUID(), group: 1, student: nil, itemKind: .practise)
+        let params = try SupabasePlansRepository.keepParams(again, to: link, centre: UUID())
+        let key = "\(generation.uuidString.lowercased()):\(own.uuidString.lowercased())"
+        #expect(params["p_key"] == .string(key))
+    }
 }

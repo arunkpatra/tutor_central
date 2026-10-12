@@ -63,7 +63,7 @@ public struct APIClient: AIRepository, AccountRepository {
         return CheckAnswer(id: answer.id, result: answer.result.result)
     }
 
-    /// An AI call: the key from the route and the body, or a fresh one for "another one" (D84).
+    /// An AI call: the key from the route, the body and the day, or a fresh one for "another one" (D84).
     func post(_ path: String, body: some Encodable, fresh: Bool = false) async throws(APIFailure) -> Data {
         let answer = try await exchange(path, body: body, key: fresh ? .fresh : .body)
         guard !(200 ..< 300).contains(answer.status) else { return answer.data }
@@ -98,11 +98,11 @@ public struct APIClient: AIRepository, AccountRepository {
         request.httpBody = data
         switch key {
         case .none: break
-        case .body: request.setValue(
-                IdempotencyKey.forBody(route: path, body: data),
+        case .body where !IdempotencyKey.isAnother: request.setValue(
+                IdempotencyKey.forBody(route: path, body: data, day: Day(now(), calendar: DayHeading.india)),
                 forHTTPHeaderField: "Idempotency-Key"
             )
-        case .fresh: request.setValue(IdempotencyKey.fresh(), forHTTPHeaderField: "Idempotency-Key")
+        case .body, .fresh: request.setValue(IdempotencyKey.fresh(), forHTTPHeaderField: "Idempotency-Key")
         }
         do {
             let (data, response) = try await session.data(for: request)

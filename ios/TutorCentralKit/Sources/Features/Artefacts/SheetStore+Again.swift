@@ -27,7 +27,7 @@ extension SheetStore {
                 skills: made?.skills ?? [group?.skill ?? sheet.title], questions: max(sheet.questions.count, 3),
                 forHomework: sheet.forHomework, reason: reason.words
             )
-            let answer = try await ai.makeSheet(request, centre: centre)
+            let answer = try await IdempotencyKey.another { try await ai.makeSheet(request, centre: centre) }
             guard !Task.isCancelled else { return }
             let new = NewArtefact(
                 kind: .sheet, source: .made, title: artefact.title, content: .sheet(answer.content), photoPath: nil,

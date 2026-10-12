@@ -12,12 +12,15 @@ import Testing
         attendanceLine: nil, tutorName: "Meera Nair", centreName: "Bright Minds Tuition"
     )
 
-    static func client(status: Int, body: String) -> (APIClient, StubProtocol.Recorder) {
+    static func client(
+        status: Int, body: String, now: @escaping @Sendable () -> Date = Date.init
+    ) -> (APIClient, StubProtocol.Recorder) {
         let recorder = StubProtocol.Recorder(status: status, body: body)
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [StubProtocol.self]
         StubProtocol.recorder.withLock { $0 = recorder }
-        return (APIClient(origin: origin, token: { "tok" }, session: URLSession(configuration: config)), recorder)
+        let session = URLSession(configuration: config)
+        return (APIClient(origin: origin, token: { "tok" }, session: session, now: now), recorder)
     }
 
     static func sent(_ recorder: StubProtocol.Recorder) throws -> [String: Any] {

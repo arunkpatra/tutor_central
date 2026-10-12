@@ -43,10 +43,10 @@ extension NoteStore {
         await make(student: student, from: kept?.id)
     }
 
-    /// A fresh draft; the shown one stays kept (`regenerated_from`).
+    /// A fresh draft, a new call though the facts are the same; the shown one stays kept (`regenerated_from`).
     public func writeAgain() async {
         guard let student else { return }
-        await make(student: student, from: kept?.id)
+        await IdempotencyKey.another { await make(student: student, from: kept?.id) }
     }
 
     /// Copy: the signed note on the pasteboard, logged as copied when a connection allows; nothing is sent.

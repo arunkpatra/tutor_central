@@ -45,7 +45,7 @@ import Testing
         let plans = FakePlansRepository.evening(), ai = FakeAIRepository()
         let store = await store(plans: plans, ai: ai)
         await store.makeAgain()
-        #expect(ai.briefs.last == "Chemical reactions")
+        #expect(ai.briefs.last == "Chemical reactions" && ai.anotherCalls == 1)
         #expect(store.artefact?.id != Self.briefID)
         #expect(store.artefact?.regeneratedFrom == Self.briefID)
         let plan = try #require(try await ArtefactTest.plan(plans))
