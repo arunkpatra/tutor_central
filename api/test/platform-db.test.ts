@@ -5,6 +5,8 @@ import { makeRecordSource } from "../src/jobs/record.js";
 import { fakeClock } from "../src/jobs/db-fake.js";
 import { makeObserve } from "../src/observe.js";
 import { planJob } from "../src/jobs/kinds/plan.js";
+import { noteDay } from "../src/jobs/kinds/note-day.js";
+import { makeNoteSource } from "../src/notes/record.js";
 import { makePlatformDb } from "../src/db.js";
 import { kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakePusher } from "../src/push/apns-fake.js";
@@ -162,6 +164,37 @@ test.skipIf(!up)("a plan job on the seed's Evening batch writes the plan, keeps 
     await db.from("device_tokens").delete().eq("device_id", device);
     await db.from("plans").delete().eq("centre_id", CENTRE).eq("class_id", batch).eq("date", date);
     await db.from("artefacts").delete().eq("centre_id", CENTRE).like("idempotency_key", `${job}:make:%`);
+    await db.from("jobs").delete().eq("id", job);
+  }
+});
+
+test.skipIf(!up)("a note asked for the seed's Diya (her parent agreed) is made by the job and kept by its week's key, in Hindi with its English", async () => {
+  const db = admin();
+  const aarav = (await db.from("students").select("id").eq("centre_id", CENTRE).eq("name", "Diya Pillai").single()).data?.id as string;
+  const today = new Date(Date.now() + 5.5 * 3_600_000);
+  today.setUTCDate(today.getUTCDate() - ((today.getUTCDay() + 6) % 7));
+  const monday = today.toISOString().slice(0, 10);
+  const job = (await db.from("jobs").insert({ centre_id: CENTRE, kind: "note_day", idempotency_key: `platform-db-note-${Date.now()}`, input: { student_id: aarav, week: monday }, state: "running" }).select("id").single()).data?.id as string;
+  const key = `note:${aarav}:`;
+  try {
+    const handler = noteDay(makeNoteSource(url as string, service as string, makeRecordSource(url as string, service as string, makeOutboxDb(url as string, service as string))));
+    const clock = { now: () => Date.now(), sleep: async () => {} };
+    const ctx = { db: makePlatformDb(url as string, service as string), jobs: fakeJobsDb(clock as never), claude: fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), clock, requestId: crypto.randomUUID(), worker: "w" };
+    let current = { id: job, centreId: CENTRE, kind: "note_day" as const, attempts: 1, step: {} as Record<string, unknown>, input: { student_id: aarav, week: monday }, leaseUntil: "" };
+    let last = "";
+    for (let i = 0; i < 10; i++) {
+      const out = await handler.step(current, ctx);
+      last = `${out.name}:${out.kind}:${JSON.stringify((out as { result?: unknown }).result ?? "")}`;
+      if (out.kind !== "continue") break;
+      current = { ...current, step: out.step };
+    }
+    expect(last).toStartWith("notify:done:");
+    const kept = (await db.from("artefacts").select("kind, idempotency_key, content").eq("centre_id", CENTRE).eq("student_id", aarav).like("idempotency_key", `${key}%`)).data ?? [];
+    expect(kept).toHaveLength(1);
+    expect(kept[0]).toMatchObject({ kind: "note" });
+    expect(kept[0]?.content).toMatchObject({ language: "hi", english: expect.any(String), week_monday: { year: Number(monday.slice(0, 4)) } });
+  } finally {
+    await db.from("artefacts").delete().eq("centre_id", CENTRE).eq("student_id", aarav).like("idempotency_key", `${key}%`);
     await db.from("jobs").delete().eq("id", job);
   }
 });
