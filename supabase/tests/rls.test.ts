@@ -31,10 +31,11 @@ const CENTRE_TABLES = [
   "homework",
   "school_items",
   "marks",
+  "events",
 ] as const;
 
 /** The platform's tables (D71, D77): written by the service role alone; a member reads their centre's rows, or none. */
-const PLATFORM_TABLES = ["jobs", "job_steps"] as const;
+const PLATFORM_TABLES = ["jobs", "job_steps", "api_requests", "alerts", "admin_audit"] as const;
 
 beforeAll(async () => {
   l = await local();
@@ -53,7 +54,7 @@ test("every public table has row-level security and at least one policy", async 
     where t.schemaname = 'public' group by t.tablename, t.rowsecurity order by t.tablename`;
   await db.close();
   const tables = rows.map((r: { tablename: string }) => r.tablename);
-  expect(tables).toEqual([...CENTRE_TABLES, ...PLATFORM_TABLES, "centre_members", "centres", "profiles", "syllabi"].sort());
+  expect(tables).toEqual([...CENTRE_TABLES, ...PLATFORM_TABLES, "centre_members", "centres", "device_tokens", "profiles", "syllabi"].sort());
   for (const r of rows) expect({ table: r.tablename, rls: r.rowsecurity, policy: r.policies > 0 }).toEqual({ table: r.tablename, rls: true, policy: true });
 });
 
@@ -63,14 +64,26 @@ test("the platform's tables are read by their centre's members alone and written
   expect(job.error).toBeNull();
   const step = await svc.from("job_steps").insert({ centre_id: centreA, job_id: job.data!.id, step: "read", attempt: 1, state: "done" }).select("id").single();
   expect(step.error).toBeNull();
-  type Probe = { id: string; insert: Record<string, unknown>; field: string; change: string };
+  const made = async (table: string, row: Record<string, unknown>) => {
+    const r = await svc.from(table).insert(row).select("id").single();
+    expect({ table, error: r.error }).toEqual({ table, error: null });
+    return r.data!.id as string;
+  };
+  const request = { request_id: crypto.randomUUID(), route: "/ai/make", method: "POST", status: 200, latency_ms: 12, centre_id: centreA };
+  const alert = { kind: "cost_day", threshold: 100, value: 120, centre_id: centreA };
+  const audit = { admin_user_id: crypto.randomUUID(), action: "open_centre", centre_id: centreA, target: {}, reason: "support" };
+  // memberReads: the centre's member reads the row (jobs, steps, requests) or no one but the platform does (alerts, audit).
+  type Probe = { id: string; insert: Record<string, unknown>; field: string; change: string | number; memberReads: boolean };
   const rows: Record<(typeof PLATFORM_TABLES)[number], Probe> = {
-    jobs: { id: job.data!.id, insert: { centre_id: centreA, kind: "plan", idempotency_key: `rls-mine-${stamp}` }, field: "state", change: "done" },
-    job_steps: { id: step.data!.id, insert: { centre_id: centreA, job_id: job.data!.id, step: "x", attempt: 1, state: "done" }, field: "step", change: "changed" },
+    jobs: { id: job.data!.id, insert: { centre_id: centreA, kind: "plan", idempotency_key: `rls-mine-${stamp}` }, field: "state", change: "done", memberReads: true },
+    job_steps: { id: step.data!.id, insert: { centre_id: centreA, job_id: job.data!.id, step: "x", attempt: 1, state: "done" }, field: "step", change: "changed", memberReads: true },
+    api_requests: { id: await made("api_requests", request), insert: { ...request, request_id: crypto.randomUUID() }, field: "status", change: 500, memberReads: true },
+    alerts: { id: await made("alerts", alert), insert: alert, field: "kind", change: "changed", memberReads: false },
+    admin_audit: { id: await made("admin_audit", audit), insert: audit, field: "action", change: "changed", memberReads: false },
   };
   for (const table of PLATFORM_TABLES) {
-    const { id, insert, field, change } = rows[table];
-    expect({ table, rows: (await a.from(table).select("id").eq("id", id)).data?.length }).toEqual({ table, rows: 1 });
+    const { id, insert, field, change, memberReads } = rows[table];
+    expect({ table, rows: (await a.from(table).select("id").eq("id", id)).data?.length }).toEqual({ table, rows: memberReads ? 1 : 0 });
     expect({ table, rows: (await b.from(table).select("id").eq("id", id)).data }).toEqual({ table, rows: [] });
     expect({ table, rows: (await anonClient(l).from(table).select("id").eq("id", id)).data ?? [] }).toEqual({ table, rows: [] });
     expect({ table, refused: (await a.from(table).insert(insert)).error !== null }).toEqual({ table, refused: true });
@@ -80,6 +93,31 @@ test("the platform's tables are read by their centre's members alone and written
     expect({ table, kept: after.data !== null && (after.data as unknown as Record<string, unknown>)[field] !== change }).toEqual({ table, kept: true });
   }
   await svc.from("jobs").delete().eq("id", job.data!.id);
+  for (const table of ["api_requests", "alerts", "admin_audit"] as const) await svc.from(table).delete().eq("id", rows[table].id);
+});
+
+test("an event is the member's own, of a kind the check allows, and cannot be changed", async () => {
+  const { data: me } = await a.auth.getUser();
+  const ok = await a.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString() }).select("user_id").single();
+  expect(ok.data!.user_id).toBe(me.user!.id);
+  expect((await a.from("events").insert({ centre_id: centreA, kind: "Opened App", at: new Date().toISOString() })).error).not.toBeNull();
+  expect((await a.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString(), screen: "x".repeat(41) })).error).not.toBeNull();
+  expect((await a.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString(), user_id: "00000000-0000-0000-0000-000000000000" })).error).not.toBeNull();
+  expect((await b.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString() })).error).not.toBeNull();
+  expect((await a.from("events").update({ kind: "signed_in" }).eq("centre_id", centreA).select("id")).data).toEqual([]);
+  expect((await a.from("events").delete().eq("centre_id", centreA).select("id")).data).toEqual([]);
+  // The isolation test counts one event of its own in centre A.
+  await serviceClient(l).from("events").delete().eq("centre_id", centreA);
+});
+
+test("a device token is its user's alone, one per device, and the environment is sandbox or production", async () => {
+  const ok = await a.from("device_tokens").insert({ device_id: "sim-1", token: "abc", environment: "sandbox", app_build: 27 }).select("id").single();
+  expect(ok.error).toBeNull();
+  expect((await a.from("device_tokens").upsert({ device_id: "sim-1", token: "def", environment: "sandbox" }, { onConflict: "user_id,device_id" })).error).toBeNull();
+  expect((await a.from("device_tokens").select("token")).data).toEqual([{ token: "def" }]);
+  expect((await b.from("device_tokens").select("id")).data).toEqual([]);
+  expect((await b.from("device_tokens").update({ token: "stolen" }).eq("id", ok.data!.id).select("id")).data).toEqual([]);
+  expect((await a.from("device_tokens").insert({ device_id: "sim-2", token: "x", environment: "staging" })).error).not.toBeNull();
 });
 
 test("a new member sees nothing until they create a centre", async () => {
@@ -150,6 +188,7 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     homework: { student_id: student.data!.id, session_id: session.data!.id, artefact_id: artefact.data!.id, status: "given" },
     school_items: { kind: "notice", date: "2026-10-20" },
     marks: { student_id: student.data!.id, subject: "Maths", test: "FA1", date: "2026-07-20", score: 10, max: 15 },
+    events: { kind: "tab_opened", screen: "today", at: new Date().toISOString() },
   };
   for (const [table, row] of Object.entries(inserts)) {
     if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
