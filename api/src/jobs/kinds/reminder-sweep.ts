@@ -34,7 +34,7 @@ export function reminderSweep(source: ReminderSource): JobHandler {
       const read = await source.read(centre, istDay(now));
       let rows = 0;
       for (const { user, settings } of read.users) {
-        const written = notificationsFor({ ...read, settings }, now.toISOString());
+        const written = notificationsFor({ ...read, settings }, centre, now.toISOString());
         await source.replace(centre, user, REMINDER_KINDS, now.toISOString(), written);
         rows += written.length;
       }

@@ -13,7 +13,7 @@ import type { ReminderClass } from "../src/reminders/planner.js";
 const CENTRE = "c0000000-0000-4000-8000-0000000000aa";
 const USER = "u0000000-0000-4000-8000-000000000001";
 
-function fakeReminderSource(over: { classes: ReminderClass[]; users: string[]; settings?: Record<string, Partial<ReminderSettings>> }) {
+function fakeReminderSource(over: { classes: ReminderClass[]; users: string[]; settings?: Record<string, Partial<ReminderSettings>>; dueFees?: { count: number; total: number } }) {
   const replaced: { centre: string; user: string; kinds: string[]; from: string; rows: NotificationRow[] }[] = [];
   const src: ReminderSource & { classes: ReminderClass[]; settings: Record<string, Partial<ReminderSettings>>; replaced: typeof replaced; centres: string[] } = {
     classes: over.classes,
@@ -26,7 +26,7 @@ function fakeReminderSource(over: { classes: ReminderClass[]; users: string[]; s
         classes: src.classes,
         memberCounts: Object.fromEntries(src.classes.map((c) => [c.id, 3])),
         events: [],
-        dueFees: null,
+        dueFees: over.dueFees ?? null,
         users: over.users.map((user) => ({ user, settings: { ...DEFAULT_SETTINGS, ...(src.settings[user] ?? {}) } })),
         today,
       };
@@ -48,6 +48,14 @@ async function run(handler: ReturnType<typeof reminderSweep>, job: Job, clock: R
   const ctx: StepContext = { db: fakeDb(), jobs: fakeJobsDb(clock as never), claude: fakeClaude({}), clock, requestId: "r1", worker: "w1" };
   return handler.step(job, ctx);
 }
+
+test("the fees reminder's key names its centre: a tutor of two centres gets one for each (the review's R-db-6)", async () => {
+  const src = fakeReminderSource({ classes: [], users: [USER], settings: { [USER]: { feesDay: 3 } }, dueFees: { count: 2, total: 2400 } });
+  await run(reminderSweep(src), jobFor(CENTRE), at("2026-11-02T16:00:00+05:30"));
+  await run(reminderSweep(src), jobFor("c0000000-0000-4000-8000-000000000002"), at("2026-11-02T16:00:00+05:30"));
+  const keys = src.replaced.flatMap((r) => r.rows.filter((n) => n.kind === "fees").map((n) => n.key));
+  expect(keys).toEqual([`fees:${CENTRE}:2026-11`, "fees:c0000000-0000-4000-8000-000000000002:2026-11"]);
+});
 
 test("a replan cancels the unsent row of a moved class and writes its new one", async () => {
   const src = fakeReminderSource({ classes: [cls("c1", "Class 10 Maths", [1], "17:00")], users: [USER] });

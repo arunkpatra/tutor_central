@@ -138,10 +138,20 @@ export function planReminders(input: ReminderInput, now: string): Reminder[] {
   return planned(input, now).map((k) => k.reminder);
 }
 
-/** The outbox's rows for the reminders due within the window (the hourly plan writes 26 hours ahead). */
-export function notificationsFor(input: ReminderInput, now: string, windowHours = 26): NotificationRow[] {
+/** The outbox's rows for the centre's reminders due within the window (the hourly plan writes 26 hours ahead). The
+ *  outbox is unique per user and key: a batch's and an event's keys carry their ids, the fees' the centre, so a tutor of
+ *  two centres gets each centre's (the review's R-db-6). */
+export function notificationsFor(input: ReminderInput, centre: string, now: string, windowHours = 26): NotificationRow[] {
   const until = Date.parse(now) + windowHours * 3_600_000;
   return planned(input, now)
     .filter(({ reminder: r }) => Date.parse(r.at) <= until)
-    .map(({ reminder: r, key }) => ({ kind: r.kind, key, due_at: r.at, title: r.title, body: r.body, link: r.link, subject: r.subject }));
+    .map(({ reminder: r, key }) => ({
+      kind: r.kind,
+      key: r.kind === "fees" ? `fees:${centre}:${key.slice("fees:".length)}` : key,
+      due_at: r.at,
+      title: r.title,
+      body: r.body,
+      link: r.link,
+      subject: r.subject,
+    }));
 }
