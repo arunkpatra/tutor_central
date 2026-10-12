@@ -105,6 +105,11 @@ test("an event is the member's own, of a kind the check allows, and cannot be ch
   expect((await a.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString(), screen: "x".repeat(41) })).error).not.toBeNull();
   expect((await a.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString(), user_id: "00000000-0000-0000-0000-000000000000" })).error).not.toBeNull();
   expect((await b.from("events").insert({ centre_id: centreA, kind: "app_opened", at: new Date().toISOString() })).error).not.toBeNull();
+  // The app sends each event's id and ignores one already sent (a post retried after its answer was lost).
+  const event = { id: crypto.randomUUID(), centre_id: centreA, kind: "tab_opened", screen: "fees", at: new Date().toISOString() };
+  expect((await a.from("events").upsert(event, { onConflict: "id", ignoreDuplicates: true })).error).toBeNull();
+  expect((await a.from("events").upsert(event, { onConflict: "id", ignoreDuplicates: true })).error).toBeNull();
+  expect((await serviceClient(l).from("events").select("id").eq("id", event.id)).data).toHaveLength(1);
   expect((await a.from("events").update({ kind: "signed_in" }).eq("centre_id", centreA).select("id")).data).toEqual([]);
   expect((await a.from("events").delete().eq("centre_id", centreA).select("id")).data).toEqual([]);
   // The isolation test counts one event of its own in centre A.
@@ -447,13 +452,9 @@ test("start_ai_generation records a pending call for a member and refuses a non-
   expect(row.data).toEqual({ kind: "paper", status: "pending", input: { topic: "Fractions" }, model: "claude-sonnet-5-5", output: null });
   const theirs = await b.rpc("start_ai_generation", { p_centre: centreA, p_kind: "paper", p_input: {}, p_model: "m" });
   expect(theirs.error?.message).toContain("ai_not_a_member");
-  // The member finishes the row with a plain update; the other user cannot see it.
-  const done = await a
-    .from("ai_generations")
-    .update({ status: "ok", output: "{}", tokens_in: 10, tokens_out: 20 })
-    .eq("id", r.data as string)
-    .select("status, tokens_in")
-    .single();
+  // The platform finishes the row (0035: never the member); the member reads it, the other user cannot see it.
+  await serviceClient(l).from("ai_generations").update({ status: "ok", output: "{}", tokens_in: 10, tokens_out: 20 }).eq("id", r.data as string);
+  const done = await a.from("ai_generations").select("status, tokens_in").eq("id", r.data as string).single();
   expect(done.data).toEqual({ status: "ok", tokens_in: 10 });
   expect((await b.from("ai_generations").select("id").eq("id", r.data as string)).data).toEqual([]);
 });
@@ -499,7 +500,7 @@ test("the limit counts only calls that did not fail, per kind group, over 24 hou
   }
 });
 
-test("a member cannot delete, backdate or re-kind a call, and failed calls meet a hard cap", async () => {
+test("a member cannot delete, backdate, re-kind or finish a call, and failed calls meet a hard cap", async () => {
   const sql = new SQL(l.db);
   try {
     await sql`delete from public.ai_generations where centre_id = ${centreA}`;
@@ -508,7 +509,8 @@ test("a member cannot delete, backdate or re-kind a call, and failed calls meet 
     expect((await a.from("ai_generations").delete().eq("id", id)).error).not.toBeNull();
     expect((await a.from("ai_generations").update({ created_at: "2020-01-01T00:00:00Z" }).eq("id", id)).error).not.toBeNull();
     expect((await a.from("ai_generations").update({ kind: "scan_register" }).eq("id", id)).error).not.toBeNull();
-    expect((await a.from("ai_generations").update({ status: "failed" }).eq("id", id)).error).toBeNull();
+    expect((await a.from("ai_generations").update({ status: "failed" }).eq("id", id)).error).not.toBeNull();
+    await sql`update public.ai_generations set status = 'failed' where id = ${id}`;
     // 59 more marked failed: 60 started in the day, none counted by the soft rule, and the hard cap refuses the 61st.
     await sql`insert into public.ai_generations (centre_id, kind, input, status)
       select ${centreA}::uuid, 'homework', '{}', 'failed' from generate_series(1, 59)`;

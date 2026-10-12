@@ -52,6 +52,8 @@ test("queuing a job posts to the worker when the secrets are set, and does nothi
     const q = await queued(tx, since);
     expect(q.length).toBe(1);
     expect(q[0]).toMatchObject({ method: "POST", url: "http://127.0.0.1:3000/jobs/wake" });
+    // The worker drains for up to 200 s: the request stays open so the database sees its answer (the review's finding 9).
+    expect((await tx`select timeout_milliseconds from net.http_request_queue where id > ${since}`)[0].timeout_milliseconds).toBe(290000);
     expect(q[0].headers.Authorization).toBe("Bearer s3cret");
     expect(JSON.parse(Buffer.from(q[0].body).toString())).toEqual({ job: job.id });
   });

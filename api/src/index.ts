@@ -54,7 +54,7 @@ const app: Hono<Vars> = makeApp({
   verify,
   commit: process.env.TC_COMMIT,
   claude,
-  db: makeDb(supabaseUrl, supabaseAnonKey),
+  db: makeDb(supabaseUrl, supabaseAnonKey, serviceKey),
   apple,
   observe: makeObserve(supabaseUrl, serviceKey),
   worker: {

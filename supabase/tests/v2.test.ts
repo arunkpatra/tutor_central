@@ -965,6 +965,19 @@ test("keep_artefact with a key keeps once", async () => {
   expect((await a.rpc("keep_artefact", eight)).error).toBeNull();
 });
 
+test("keep_artefact with a key already kept links this plan's lines too (two batches' plans sharing one made sheet)", async () => {
+  const one = await batchWithTwo(), two = await batchWithTwo();
+  const planOne = (await a.rpc("make_plan", { p_centre: centre, p_class: one.cls.id, p_date: "2026-10-09", p_groups: [], p_subjects: {}, p_items: items(one.s1.id, one.s2.id) })).data as { plan_id: string };
+  const planTwo = (await a.rpc("make_plan", { p_centre: centre, p_class: two.cls.id, p_date: "2026-10-09", p_groups: [], p_subjects: {}, p_items: items(two.s1.id, two.s2.id) })).data as { plan_id: string };
+  const keep = (plan: string) =>
+    a.rpc("keep_artefact", { p_centre: centre, p_artefact: { kind: "sheet", source: "made", title: "Shared", content: {} }, p_plan: plan, p_group_no: 1, p_student: null, p_item_kind: "homework", p_school_item: null, p_made_from: null, p_key: `gen-shared-${stamp}` });
+  const first = await keep(planOne.plan_id);
+  const second = await keep(planTwo.plan_id);
+  expect(second.data).toBe(first.data);
+  const linked = await a.from("plan_items").select("artefact_id").eq("plan_id", planTwo.plan_id).eq("kind", "homework").eq("student_id", two.s1.id).single();
+  expect(linked.data?.artefact_id).toBe(first.data as string);
+});
+
 test("one absence log per child and day", async () => {
   const s = await a.from("students").insert({ centre_id: centre, name: "Absent Child" }).select("id").single();
   const first = await a.from("message_log").insert({ centre_id: centre, student_id: s.data!.id, kind: "absence", about_date: "2026-10-09" }).select("id").single();

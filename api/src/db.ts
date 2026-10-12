@@ -57,13 +57,15 @@ export type StartCall = {
 /** The gate's answer: a new pending row, or a replay of the key's row (pending, or finished with its output). */
 export type Started = { id: string; replay: boolean; status: "pending" | "ok"; output: string | null };
 
-/** The database as the tutor: every call carries their own JWT, so row-level security decides what is read and written.
- *  The platform's (makePlatformDb) is the same over the service role (D83) and ignores the token. */
+/** The database as the tutor: every call carries their own JWT, so row-level security decides what is read and the gate
+ *  whose call it is; the row is finished by the platform (0035: a member writes no row). The platform's (makePlatformDb)
+ *  is the same over the service role (D83) and ignores the token. */
 export type Db = {
   /** start_ai_call: the consent, the allowance, the key and the pending record. Throws DbFailure. */
   startCall(token: string, args: StartCall): Promise<Started>;
-  /** The row finished as the API saw it. A failure is logged and swallowed: the tutor has their answer, and a row left
-   *  pending still counts against the limit, which is the safe side (the sweep closes it after ten minutes). */
+  /** The row finished as the API saw it, by the platform. A failure is logged and swallowed: the tutor has their answer,
+   *  and a row left pending still counts against the limit, which is the safe side (the sweep closes it after ten
+   *  minutes). */
   finish(token: string, id: string, result: Finish): Promise<void>;
   /** A generation the tutor's centre made, for a scheme from a paper; null when there is none they can see. */
   generation(token: string, id: string): Promise<{ id: string; kind: AIKind; output: string | null } | null>;
@@ -81,18 +83,22 @@ export class DbFailure extends Error {
 
 const options = { auth: { persistSession: false, autoRefreshToken: false } };
 
-/** The tutor's database: a client per call with their own token. */
-export function makeDb(url: string, anonKey: string): Db {
-  return dbOver((token) => createClient<Database>(url, anonKey, { ...options, global: { headers: { Authorization: `Bearer ${token}` } } }));
+/** The tutor's database: a client per call with their own token, and the platform's for the finish. */
+export function makeDb(url: string, anonKey: string, serviceKey: string): Db {
+  const platform = createClient<Database>(url, serviceKey, options);
+  return dbOver(
+    (token) => createClient<Database>(url, anonKey, { ...options, global: { headers: { Authorization: `Bearer ${token}` } } }),
+    platform,
+  );
 }
 
 /** The platform's database (D83): the service role, for the worker's calls; the token argument is not used. */
 export function makePlatformDb(url: string, serviceKey: string): Db {
   const client = createClient<Database>(url, serviceKey, options);
-  return dbOver(() => client);
+  return dbOver(() => client, client);
 }
 
-function dbOver(client: (token: string) => SupabaseClient<Database>): Db {
+function dbOver(client: (token: string) => SupabaseClient<Database>, platform: SupabaseClient<Database>): Db {
   return {
     async startCall(token, { centre, kind, input, model, student, key, inputHash, requestId, job }) {
       const { data, error } = await client(token).rpc("start_ai_call", {
@@ -116,8 +122,8 @@ function dbOver(client: (token: string) => SupabaseClient<Database>): Db {
       }
       return data as unknown as Started;
     },
-    async finish(token, id, r) {
-      const { error } = await client(token)
+    async finish(_token, id, r) {
+      const { error } = await platform
         .from("ai_generations")
         .update({
           status: r.status,
