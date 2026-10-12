@@ -69,11 +69,11 @@ isOneToOne: false
       referencedRelation: "students"
       referencedColumns: ["centre_id","id"]
     },{
-      foreignKeyName: "ai_generations_job_id_fkey"
-      columns: ["job_id"]
+      foreignKeyName: "ai_generations_job_fkey"
+      columns: ["centre_id","job_id"]
 isOneToOne: false
       referencedRelation: "jobs"
-      referencedColumns: ["id"]
+      referencedColumns: ["centre_id","id"]
     }
                   ]
                 },"alerts": {

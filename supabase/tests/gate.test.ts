@@ -37,26 +37,43 @@ test("the same key with the same body replays: pending while pending, the output
   const pending = await start({ p_key: "k2", p_input_hash: "h2" });
   expect(pending.data).toEqual({ id: first.data.id, replay: true, status: "pending", output: null });
   const done = { status: "ok", output: '{"q":1}', tokens_in: 5, tokens_out: 7, cost_paise: 3, latency_ms: 900, stop_reason: "end_turn", finished_at: new Date().toISOString() };
-  expect((await a.from("ai_generations").update(done).eq("id", first.data.id)).error).toBeNull();
+  expect((await svc.from("ai_generations").update(done).eq("id", first.data.id)).error).toBeNull();
   const replayed = await start({ p_key: "k2", p_input_hash: "h2" });
   expect(replayed.data).toEqual({ id: first.data.id, replay: true, status: "ok", output: '{"q":1}' });
   expect((await sql`select count(*)::int as n from public.ai_generations where idempotency_key = 'k2'`)[0].n).toBe(1);
 });
 
-test("a finished row is final for the member: its cost and status cannot be rewritten; the platform may", async () => {
+test("a member writes no row, pending or finished: the platform finishes it (the review's finding 7)", async () => {
   const r = await start({ p_key: `final-${stamp}`, p_input_hash: "h" });
+  expect((await a.from("ai_generations").update({ status: "failed", cost_paise: 0 }).eq("id", r.data.id)).error?.code).toBe("42501");
   const finish = { status: "ok", output: "{}", tokens_in: 9, tokens_out: 9, cost_paise: 40, finished_at: new Date().toISOString() };
-  expect((await a.from("ai_generations").update(finish).eq("id", r.data.id)).error).toBeNull();
+  expect((await svc.from("ai_generations").update(finish).eq("id", r.data.id)).error).toBeNull();
   expect((await a.from("ai_generations").update({ cost_paise: 0 }).eq("id", r.data.id)).error?.code).toBe("42501");
-  expect((await a.from("ai_generations").update({ status: "failed" }).eq("id", r.data.id)).error?.code).toBe("42501");
   expect((await sql`select cost_paise, status from public.ai_generations where id = ${r.data.id}`)[0]).toEqual({ cost_paise: 40, status: "ok" });
   expect((await svc.from("ai_generations").update({ error_reason: "checked" }).eq("id", r.data.id)).error).toBeNull();
+});
+
+test("a call names only its own centre's job", async () => {
+  const other = await userClient(l, `gate-job-${stamp}@example.com`);
+  const centreB = (await other.rpc("create_centre", { p_name: "Gate Job" })).data as string;
+  const job = (await svc.rpc("enqueue_job", { p_centre: centreB, p_kind: "plan", p_key: `gate-foreign-${stamp}` })).data as string;
+  expect((await start({ p_job: job })).error).not.toBeNull();
+  await sql`delete from public.jobs where id = ${job}`;
+});
+
+test("the money cap counts the month's cost for a V1 call too, not the last day's", async () => {
+  await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+  await sql`update public.centres set ai_allowance_paise = 100 where id = ${centreA}`;
+  await sql`insert into public.ai_generations (centre_id, kind, input, status, cost_paise, created_at) values (${centreA}, 'sheet', '{}', 'ok', 100,
+    greatest(date_trunc('month', now() at time zone 'Asia/Kolkata') at time zone 'Asia/Kolkata', now() - interval '30 hours'))`;
+  expect((await start({ p_kind: "homework" })).error?.message).toContain("ai_limit_reached");
+  await sql`update public.centres set ai_allowance_paise = 0 where id = ${centreA}`;
 });
 
 test("a key with another body is refused; a key whose row failed is a new call; a key older than a day is a new call", async () => {
   const first = await start({ p_key: "k3", p_input_hash: "h3" });
   expect((await start({ p_key: "k3", p_input_hash: "other" })).error?.message).toContain("ai_key_reused");
-  await a.from("ai_generations").update({ status: "failed" }).eq("id", first.data.id);
+  await svc.from("ai_generations").update({ status: "failed" }).eq("id", first.data.id);
   const again = await start({ p_key: "k3", p_input_hash: "h3" });
   expect(again.data.replay).toBe(false);
   await sql`update public.ai_generations set created_at = now() - interval '25 hours' where id = ${again.data.id}`;

@@ -51,10 +51,10 @@ test("enqueue is idempotent per centre and key, and the same key in another cent
   expect((await enqueue(centreB, "plan:x:2026-10-13")).data).not.toBe(first.data);
 });
 
-test("a member may enqueue for their centre and read it, not another's; a member cannot write the table", async () => {
-  const mine = await a.rpc("enqueue_job", { p_centre: centreA, p_kind: "export", p_key: `export:${stamp}` });
+test("a member cannot enqueue (no screen asks yet: the review's finding 2) and reads their centre's jobs, not another's; a member cannot write the table", async () => {
+  expect((await a.rpc("enqueue_job", { p_centre: centreA, p_kind: "plan", p_key: `member:${stamp}` })).error?.code).toBe("42501");
+  const mine = await svc.rpc("enqueue_job", { p_centre: centreA, p_kind: "export", p_key: `export:${stamp}` });
   expect(mine.error).toBeNull();
-  expect((await b.rpc("enqueue_job", { p_centre: centreA, p_kind: "export", p_key: "x" })).error?.code).toBe("42501");
   expect((await a.from("jobs").select("id").eq("id", mine.data as string)).data?.length).toBe(1);
   expect((await b.from("jobs").select("id").eq("id", mine.data as string)).data).toEqual([]);
   expect((await a.from("jobs").insert({ centre_id: centreA, kind: "plan", idempotency_key: "direct" })).error).not.toBeNull();
