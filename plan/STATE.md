@@ -7,9 +7,11 @@ short and true. History belongs in git and in the phase files, not here.
 (#152 to #165), the D62 fix for Check a paper (#166), the fifteen hand runs (issue #174) and their fixes (#167 to #173, #176),
 the cost run (30 calls, ₹22.54; the price sheet #175), the review on Fable 5.1 with every finding fixed (#177 to #183), 0026
 and 0027 deployed, the trust page live, the TestFlight build (below); the record in `plan/sessions/032/`.
-**Next:** the round (Tasks 18 to 23 of `phase-15-plan.md`) from `resume/030-phase-15-build.md` (its step 8, pasted at each session of the round), starting with one question
-to the owner: did the Phase 15 build pass on his iPhone (D68)? Then the release notes, the guide, his App Store Connect steps
-one at a time, the tester's device checks, the invitations (about 21 October), the readings Monday and Thursday.
+**Next:** the round. Build 26 passed on the owner's iPhone (2026-10-12). Done: the release notes and checklist
+(`docs/release.md`), the V2 guide (`docs/testing/tester-guide.md`), the findings file (`plan/phase-15-findings.md`, tutors
+R1 to R6). Now the owner's App Store Connect steps one at a time (Task 20: step 1, Test Information, asked 2026-10-12), then
+the testers' facts, the tester's device checks, the invitations (about 21 October), the readings Monday and Thursday; each
+session from `resume/030-phase-15-build.md` (step 8).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.

@@ -1189,12 +1189,12 @@ meets Monday to Friday; on a weekend move its `meeting_days` by psql and put it 
 **Files:**
 - Modify: `docs/release.md` (a fresh checklist block for the V2 build; the notes), `plan/STATE.md`
 
-- [ ] **Step 1: the candidate.** The Phase 15 TestFlight build after the owner's own test (D68): ask (one question) "Build N
+- [x] **Step 1: the candidate.** The Phase 15 TestFlight build after the owner's own test (D68): ask (one question) "Build N
   passed on your phone?" A finding is the first row of the findings file, fixed by Task 21's shape before this task continues.
-- [ ] **Step 2: tick "Before the build"** with proofs: `main` green (the run id), no migration pending (the deploy run's summary),
+- [x] **Step 2: tick "Before the build"** with proofs: `main` green (the run id), no migration pending (the deploy run's summary),
   `/health` at `main`'s head (`curl -s https://api.tutorcentral.in/health`), `bun check --fresh` green, the D32 hand runs (this
   phase's issue, and Phases 11 to 14's), `MARKETING_VERSION` 1.0.0. Tick "The build" with the run and the owner's install.
-- [ ] **Step 3: the release notes** under "1.0 (build N), the first V2 build for the Tutors group", also "What to Test":
+- [x] **Step 3: the release notes** under "1.0 (build N), the first V2 build for the Tutors group", also "What to Test":
 
 ```markdown
 ### 1.0 (build N), the first V2 build for the Tutors group
@@ -1220,7 +1220,7 @@ Or write to hello@tutorcentral.in from More, then Help.
 ```
 
   Check: `grep -i -w -E 'server|servers|sync|syncing|synced|cache|cached|queue|queued|upload|uploaded|database|supabase|postgrest|api|http|json|token|backend|request|error code' docs/release.md` prints only lines above the notes; every line names something the app does.
-- [ ] **Step 4: commit the documents** to `main` and push.
+- [x] **Step 4: commit the documents** to `main` and push.
 
 ---
 
@@ -1231,7 +1231,7 @@ Or write to hello@tutorcentral.in from More, then Help.
   limits are the monthly allowance's; the C and A tests' paths under Make)
 - Create: `plan/phase-15-findings.md`, `plan/phase-15-findings/.gitkeep`
 
-- [ ] **Step 1: write the guide**, exactly this:
+- [x] **Step 1: write the guide**, exactly this:
 
 ```markdown
 # Trying Tutor Central before it is in the App Store
@@ -1308,18 +1308,18 @@ Settings, under About.
   everything: More, then Account, then "Delete account permanently".
 ```
 
-- [ ] **Step 2: check the words** with the banned-list grep (nothing printed) and against the app's own labels (`grep -rn
+- [x] **Step 2: check the words** with the banned-list grep (nothing printed) and against the app's own labels (`grep -rn
   '"Add a textbook"' ios/TutorCentralKit/Sources`, "Start class", "Make something", "Scan paper register", "Delete account
   permanently"); "tutorcentral.in/trust" is live by then (Task 13).
-- [ ] **Step 3: the findings file** `plan/phase-15-findings.md`: Phase 9's skeleton (Task 2 of `phase-09-plan.md`) with the
+- [x] **Step 3: the findings file** `plan/phase-15-findings.md`: Phase 9's skeleton (Task 2 of `phase-09-plan.md`) with the
   heading "Phase 15 findings" and the same four tables and statuses.
 - [ ] **Step 4: ask the owner for the testers' facts** (one message, the table to fill: centre size, the sign-in, the iPhone,
   iOS, mostly mobile data), checked against D52 (two of 30 or more, two under 10; Apple, Google and email each at least once;
   one iPhone 11 or 12; one on mobile data); a gap is said and his answer written in the row.
-- [ ] **Step 5:** `device-tests.md`'s "How to run": the V2 build's AI calls count against the centre's monthly allowance; the C
+- [x] **Step 5:** `device-tests.md`'s "How to run": the V2 build's AI calls count against the centre's monthly allowance; the C
   tests start "More → Check a paper" (now under Make) and the A tests "More → Make something" (the V1 kinds under For you);
   a new row T15 (Make's sheet → Print on a real printer); the log's lines for an external build under its number.
-- [ ] **Step 6: commit the documents** to `main` and push.
+- [x] **Step 6: commit the documents** to `main` and push.
 
 ---
 
