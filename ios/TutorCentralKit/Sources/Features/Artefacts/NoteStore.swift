@@ -4,7 +4,7 @@ import Foundation
 import Observation
 
 /// What the note screen needs (AppShell's): the centre, the register, the record's reader, the log, the plans (the
-/// kept notes), the AI, the copy on this iPhone.
+/// kept notes), the AI, the server's jobs (a note asked for), the copy on this iPhone.
 public struct NoteContext {
     let workspace: Workspace
     let register: any Register
@@ -12,15 +12,19 @@ public struct NoteContext {
     let messages: any MessageLogRepository
     let plans: any PlansRepository
     let ai: any AIRepository
+    let jobs: any JobsRepository
     let notesCache: NotesCache?
     let online: () async -> Bool
     let now: () -> Date
     let calendar: Calendar
+    /// The wait between reads while an asked note is written (five seconds; a test passes none).
+    let pause: @Sendable () async throws -> Void
 
     public init(
         workspace: Workspace, register: any Register, reader: NoteRecordReader, messages: any MessageLogRepository,
-        plans: any PlansRepository, ai: any AIRepository, notesCache: NotesCache?, online: @escaping () async -> Bool,
-        now: @escaping () -> Date, calendar: Calendar
+        plans: any PlansRepository, ai: any AIRepository, jobs: any JobsRepository, notesCache: NotesCache?,
+        online: @escaping () async -> Bool, now: @escaping () -> Date, calendar: Calendar,
+        pause: @escaping @Sendable () async throws -> Void = { try await Task.sleep(for: .seconds(5)) }
     ) {
         self.workspace = workspace
         self.register = register
@@ -28,16 +32,22 @@ public struct NoteContext {
         self.messages = messages
         self.plans = plans
         self.ai = ai
+        self.jobs = jobs
         self.notesCache = notesCache
         self.online = online
         self.now = now
         self.calendar = calendar
+        self.pause = pause
+    }
+
+    var writer: NoteWriter {
+        NoteWriter(workspace: workspace, plans: plans, ai: ai, calendar: calendar)
     }
 }
 
 /// The weekly note or can-now-do of one student for one note day (P10-Note, P10-CanNowDo; plan/phase-14-plan.md
-/// decisions 1 to 3, 18, 21): the kept note of the week, else made from the week's facts and kept; edited, written
-/// again, copied, sent on WhatsApp with the signature and logged.
+/// decisions 1 to 3, 18, 21): the kept note of the week, which the note day's job wrote on the server (Phase 18), else
+/// asked of the server and waited for; edited, written again, copied, sent on WhatsApp with the signature and logged.
 @MainActor @Observable public final class NoteStore {
     public enum Stage: Hashable, Sendable {
         case loading, writing, ready, failed(String)

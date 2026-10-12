@@ -1,3 +1,4 @@
+import Artefacts
 import Data
 import Domain
 import Foundation
@@ -68,5 +69,28 @@ extension Fixtures {
         guard await (try? server.plans.serve(draft, levels: levels, material: material, centre: centre)) != nil
         else { return .failed }
         return material ? .done : .running
+    }
+
+    /// The note day's job as the boards see it: a note asked for is written from the student's week and kept at once.
+    @MainActor static func serveNotes(_ jobs: FakeJobsRepository, deps: Dependencies, state: LaunchState) {
+        let today = Day(clock(for: state), calendar: DayHeading.india)
+        let reader = NoteRecordReader(
+            textbooks: deps.textbooks, record: deps.record, attendance: deps.attendance, schoolItems: deps.schoolItems
+        )
+        let writer = NoteWriter(
+            workspace: meeraWorkspace, plans: deps.plans, ai: deps.ai, calendar: DayHeading.india
+        )
+        let students = students(for: state)
+        jobs.onNoteRequest = { id, monday in
+            let calendar = DayHeading.india
+            let ending = NoteDay.week(ending: today, calendar: calendar).lowerBound == monday
+                ? today : monday.adding(days: 6, calendar: calendar)
+            let week = NoteDay.week(ending: ending, calendar: calendar)
+            guard let student = students.first(where: { $0.id == id }),
+                  let record = try? await reader.read(
+                      [student], centre: meeraWorkspace.centre.id, from: week.lowerBound, to: ending, calendar: calendar
+                  )[id] else { return }
+            _ = try? await writer.write(student, record: record, week: week, saying: nil, replacing: nil)
+        }
     }
 }

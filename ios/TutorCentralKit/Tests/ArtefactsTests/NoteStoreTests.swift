@@ -31,6 +31,8 @@ import Testing
         var devAbsentAllWeek = false
         var notesCache: NotesCache?
         var effects = Effects()
+        /// The server's jobs; nil writes an asked note at once, as the note day's job would (NoteWriter).
+        var jobs: FakeJobsRepository?
     }
 
     static func students() -> [Student] {
@@ -66,15 +68,17 @@ import Testing
             now: { sunday1830 }
         )
         await register.loadIfNeeded()
+        let reader = NoteRecordReader(
+            textbooks: FakeTextbooksRepository.evening(), record: FakeRecordRepository(checks: [], homework: []),
+            attendance: FakeAttendanceRepository(sessions: sessions(devAbsentAllWeek: world.devAbsentAllWeek)),
+            schoolItems: nil
+        )
         let context = NoteContext(
-            workspace: FakeCentreRepository.meeraWorkspace, register: register,
-            reader: NoteRecordReader(
-                textbooks: FakeTextbooksRepository.evening(), record: FakeRecordRepository(checks: [], homework: []),
-                attendance: FakeAttendanceRepository(sessions: sessions(devAbsentAllWeek: world.devAbsentAllWeek)),
-                schoolItems: nil
-            ),
-            messages: world.messages, plans: world.plans, ai: world.ai, notesCache: world.notesCache,
-            online: { [online = world.online] in online }, now: { sunday1830 }, calendar: DayHeading.india
+            workspace: FakeCentreRepository.meeraWorkspace, register: register, reader: reader,
+            messages: world.messages, plans: world.plans, ai: world.ai,
+            jobs: world.jobs ?? serving(world, reader: reader), notesCache: world.notesCache,
+            online: { [online = world.online] in online }, now: { sunday1830 }, calendar: DayHeading.india,
+            pause: {}
         )
         let effects = world.effects
         return NoteStore(
@@ -216,11 +220,13 @@ import Testing
         #expect(store.stage == .failed("Riya's note waits for Neha's consent. Record it on Riya's page first."))
     }
 
+    /// Write again is the phone's call: its failure keeps the facts and offers Try Again.
     @Test func aFailedCallKeepsTheFactsAndOffersTryAgain() async {
         let world = World()
-        world.ai.scriptByKind[.note] = .failure(.service)
         let store = await Self.make(Self.dev, world)
         await store.load()
+        world.ai.scriptByKind[.note] = .failure(.service)
+        await store.writeAgain()
         #expect(store.stage == .failed("The AI service didn't answer. Try again.") && store.facts.count == 4)
         world.ai.scriptByKind[.note] = nil
         await store.make()

@@ -52,7 +52,7 @@ extension RootView {
                 textbooks: deps.textbooks, record: deps.record, attendance: deps.attendance,
                 schoolItems: deps.schoolItems
             ),
-            messages: deps.messages, plans: deps.plans, ai: deps.ai,
+            messages: deps.messages, plans: deps.plans, ai: deps.ai, jobs: deps.jobs,
             notesCache: deps
                 .cachesLists ? NotesCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil,
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, now: deps.now,

@@ -29,7 +29,8 @@ public struct JobStatus: Hashable, Sendable {
 }
 
 /// The server's jobs for the centre (`jobs`, members read their centre's rows) and the requests a member may make
-/// (0037: `request_plan`; 0028: `cancel_job`). A request answers the live job for the same subject, so a second tap
+/// (0037: `request_plan`, `request_note`; 0028: `cancel_job`). A request answers the live job for the same subject, so
+/// a second tap
 /// starts nothing.
 public protocol JobsRepository: Sendable {
     /// The newest plan job for the batch and day; none when the server has not been asked.
@@ -37,6 +38,9 @@ public protocol JobsRepository: Sendable {
     /// A plan for the batch and day; `choices` (the Change sheet's) replace the day's plan unless it is closed.
     func requestPlan(centre: UUID, classID: UUID, date: Day, choices: PlanChoices?) async throws -> UUID
     func cancel(centre: UUID, job: UUID) async throws
+    /// A student's note for the week the note day did not write (`request_note`; the week named by its Monday); the job
+    /// keeps it as the note day's would.
+    func requestNote(centre: UUID, student: UUID, week: Day) async throws -> UUID
 }
 
 /// Today's choices from the Change sheet, as the plan job reads them: the group count and each group's subject; nil
