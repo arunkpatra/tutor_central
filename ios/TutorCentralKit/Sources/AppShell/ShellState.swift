@@ -85,6 +85,9 @@ struct AbsenceAsk: Identifiable, Hashable {
     @ObservationIgnored var queue: ChangeQueue?
     /// The centre's activity log (D77): made with the queue, gone with it; none in the launch states.
     @ObservationIgnored var recorder: ActivityRecorder?
+    /// The app came to the front (the scene's active, at a launch too) and that is not recorded yet: a launch waits for
+    /// the centre's log.
+    @ObservationIgnored private var openedPending = false
     @ObservationIgnored var runner: QueueRunner?
     /// The centre's reminder planner, made on first use.
     @ObservationIgnored var scheduler: ReminderScheduler?
@@ -168,8 +171,22 @@ struct AbsenceAsk: Identifiable, Hashable {
                 ActivityRecorder(log: ActivityLog(centre: workspace.centre.id, repository: $0, directory: files))
             }
             tabs.onTabOpened = { [recorder] tab in Task { await recorder?.tabChosen(tab) } }
+            recordOpened()
         }
         centre = workspace.centre.id
+    }
+
+    /// A launch or a return to the app: recorded and posted in a task of its own, never in the way of the return's
+    /// refresh; at a launch, once the centre's log is made.
+    func opened() {
+        openedPending = true
+        recordOpened()
+    }
+
+    private func recordOpened() {
+        guard openedPending, let recorder else { return }
+        openedPending = false
+        Task { await recorder.cameBack() }
     }
 
     /// The scan visit is over (Add or Back): its store is let go.

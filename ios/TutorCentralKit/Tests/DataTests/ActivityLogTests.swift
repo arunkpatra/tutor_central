@@ -1,5 +1,6 @@
 import Domain
 import Foundation
+import Supabase
 import Testing
 @testable import Data
 
@@ -63,9 +64,55 @@ struct ActivityLogTests {
         ).path))
     }
 
+    /// The review's finding 9: a tap writes one line at the file's end; the file is written whole only after a post.
+    @Test func aRecordAddsALineAndNeverReplacesTheFile() async throws {
+        let log = log(FakeActivityRepository(failures: 100))
+        await log.record(.signedIn)
+        let file = directory.appendingPathComponent("activity-\(centre.uuidString.lowercased()).json")
+        let before = try FileManager.default.attributesOfItem(atPath: file.path)[.systemFileNumber] as? Int
+        await log.record(.tabOpened, screen: "fees")
+        let after = try FileManager.default.attributesOfItem(atPath: file.path)[.systemFileNumber] as? Int
+        #expect(before != nil && before == after)
+        let lines = try String(contentsOf: file, encoding: .utf8).split(separator: "\n")
+        #expect(lines.count == 2)
+    }
+
+    /// The review's finding 7: a post still running when the tutor signs out; the sign-out is posted with everything
+    /// gathered (an event sent twice is one row, by its id), and nothing is written after, so the wipe's file stays
+    /// gone.
+    @Test func closePostsTheSignOutBesideAPostStillRunningAndWritesNothingAfter() async {
+        let repository = FakeActivityRepository(held: true)
+        let log = log(repository)
+        await log.record(.tabOpened, screen: "fees")
+        let running = Task { await log.flush() }
+        while repository.waiting == 0 {
+            await Task.yield()
+        }
+        let closing = Task { await log.close(with: .signedOut) }
+        await Task.yield()
+        repository.release()
+        await running.value
+        await closing.value
+        let posted = repository.batches.flatMap(\.self)
+        #expect(posted.contains { $0.kind == .signedOut } && Set(posted.map(\.id)).count == 2)
+        await log.record(.tabOpened, screen: "today")
+        #expect(await log.pending == 0)
+        #expect(!FileManager.default.fileExists(atPath: directory.appendingPathComponent(
+            "activity-\(centre.uuidString.lowercased()).json"
+        ).path))
+    }
+
     @Test func flushWithNothingPostsNothing() async {
         let repository = FakeActivityRepository()
         await log(repository).flush()
         #expect(repository.batches.isEmpty)
     }
+}
+
+/// The review's finding 6: each row carries the event's id, so a batch posted again after its answer was lost is one
+/// row.
+@Test func eachRowCarriesItsEventsID() {
+    let event = ActivityEvent(kind: .tabOpened, screen: "fees", at: Date(timeIntervalSince1970: 0))
+    let rows = SupabaseActivityRepository.rows([event], centre: UUID())
+    #expect(rows.first?["id"] == .string(event.id.uuidString.lowercased()))
 }

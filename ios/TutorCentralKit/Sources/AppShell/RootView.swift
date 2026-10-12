@@ -95,9 +95,8 @@ public struct RootView: View {
             .onChange(of: scenePhase) { _, phase in
                 // The foreground refresh hook: the centre and profile read again when the app comes back.
                 if phase == .active, launch == nil {
+                    shell.opened()
                     Task {
-                        await shell.recorder?.appOpened()
-                        await shell.recorder?.flush()
                         await session.refresh()
                         await runQueue()
                         // The reminders plan from the classes as they are now, not as first read; every list reads
