@@ -161,10 +161,10 @@ test.skipIf(!up)("a plan job on the seed's Evening batch writes the plan, keeps 
     expect(kept.length).toBeGreaterThanOrEqual(4);
     const linked = (await db.from("plan_items").select("artefact_id").eq("plan_id", plan).not("artefact_id", "is", null)).data ?? [];
     expect(linked.length).toBeGreaterThanOrEqual(4);
-    const queued = (await db.from("notifications").select("kind").eq("user_id", user).like("key", `%:${batch}:${date}`)).data ?? [];
+    const queued = (await db.from("notifications").select("kind").eq("user_id", user).like("key", `%:${batch}:${date}:%`)).data ?? [];
     expect(queued.map((n) => n.kind).sort()).toEqual(["plan_fetch", "plan_ready"]);
   } finally {
-    await db.from("notifications").delete().eq("user_id", user).like("key", `%:${batch}:${date}`);
+    await db.from("notifications").delete().eq("user_id", user).like("key", `%:${batch}:${date}:%`);
     await db.from("device_tokens").delete().eq("device_id", device);
     await db.from("plans").delete().eq("centre_id", CENTRE).eq("class_id", batch).eq("date", date);
     await db.from("artefacts").delete().eq("centre_id", CENTRE).like("idempotency_key", `${job}:make:%`);

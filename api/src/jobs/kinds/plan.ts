@@ -114,7 +114,7 @@ export function planJob(source: PlanRecordSource): JobHandler {
         case "make":
           return make(job, ctx, source, centre, step);
         case "notify":
-          return notify(source, centre, input, step, ctx);
+          return notify(source, centre, input, job.id, step, ctx);
       }
     },
   };
@@ -348,19 +348,21 @@ export function planReadyBody(record: PlanRead, groups: number): string {
   return `${times}${groups} ${groups === 1 ? "group" : "groups"}. Tap to see it.`;
 }
 
-/** Plan ready for each reachable tutor who wants it, and the plan's background fetch for every one (decisions 7, 17). */
-async function notify(source: PlanRecordSource, centre: string, input: Input, step: Extract<Step, { at: "notify" }>, ctx: StepContext): Promise<StepOutcome> {
+/** Plan ready for each reachable tutor who wants it, and the plan's background fetch for every one (decisions 7, 17).
+ *  The keys carry the job: the outbox rewrites no sent row, so a plan made again after Plan ready was sent needs its own
+ *  rows (the review's R-db-4); a retaken step of the same job writes the same ones. */
+async function notify(source: PlanRecordSource, centre: string, input: Input, job: string, step: Extract<Step, { at: "notify" }>, ctx: StepContext): Promise<StepOutcome> {
   const { record, draft, plan } = step;
   const now = new Date(ctx.clock.now()).toISOString();
   const ready: NotificationRow = {
     kind: "plan_ready",
-    key: `plan_ready:${input.classId}:${input.date}`,
+    key: `plan_ready:${input.classId}:${input.date}:${job}`,
     due_at: now,
     title: `${record.classroom.name ?? "Your batch"}: today’s plan is ready`,
     body: planReadyBody(record, draft.groups.length),
     link: "tutorcentral://today",
   };
-  const fetch: NotificationRow = { kind: "plan_fetch", key: `plan_fetch:${input.classId}:${input.date}`, due_at: now, background: true };
+  const fetch: NotificationRow = { kind: "plan_fetch", key: `plan_fetch:${input.classId}:${input.date}:${job}`, due_at: now, background: true };
   try {
     for (const user of await source.pushUsers(centre)) await source.notify(centre, user.user, user.planReady ? [ready, fetch] : [fetch]);
   } catch (e) {

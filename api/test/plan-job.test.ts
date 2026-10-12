@@ -381,7 +381,9 @@ test("after the write, the budget's requests are made one a step, kept and linke
     ["worked_example", "job-1:make:3", "worked_example"],
   ]);
   expect(s.kept.every((k) => k.plan === "plan-1" && k.groupNo === 1 && k.student === undefined)).toBe(true);
-  expect(s.notified.map((n) => n.key)).toEqual([`plan_ready:${CLASS}:2026-10-07`, `plan_fetch:${CLASS}:2026-10-07`]);
+  // The job's id in the keys: a plan made again after Plan ready was sent pushes again (the outbox rewrites no sent row,
+  // the review's R-db-4); a retaken notify step of the same job writes the same rows.
+  expect(s.notified.map((n) => n.key)).toEqual([`plan_ready:${CLASS}:2026-10-07:job-1`, `plan_fetch:${CLASS}:2026-10-07:job-1`]);
   expect(s.notified[0]).toMatchObject({ title: "Evening batch: today’s plan is ready", body: "17:00–18:30 · 1 group. Tap to see it." });
   expect(s.notified[1]).toMatchObject({ kind: "plan_fetch", background: true });
   expect(out.at(-1)).toMatchObject({ kind: "done", result: { plan_id: "plan-1", made: 4, not_made: 0 } });
