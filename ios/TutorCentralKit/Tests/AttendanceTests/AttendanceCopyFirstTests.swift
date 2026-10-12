@@ -5,8 +5,8 @@ import Students
 import Testing
 @testable import Attendance
 
-/// The mark screen's one read path (D76): the day's copy at once (U27), a spinner by the date while the read runs and
-/// no hint beside an error (U10), and the replayed day read again after the queue sent it (Phase 17's hand run 3).
+/// The mark screen's one read path (D76): the day's copy at once while the read runs (U27), and the replayed day read
+/// again after the queue sent it (Phase 17's hand run 3).
 @MainActor struct AttendanceCopyFirstTests {
     let folder = FileManager.default.temporaryDirectory.appendingPathComponent("copy-first-\(UUID().uuidString)")
     let centre = FakeCentreRepository.meeraWorkspace.centre.id
@@ -33,7 +33,7 @@ import Testing
         FakeAttendanceRepository.seedWithToday[0].date
     }
 
-    @Test func offlineAtLaunchTheDaysCopyShowsAtOnceWithTheSpinner() async throws {
+    @Test func offlineAtLaunchTheDaysCopyShowsAtOnceWhileTheReadRuns() async throws {
         let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seedWithToday)
         await make(attendance).open(classID: FakeClassesRepository.maths.id, date: day)
         attendance.delay = .seconds(5)
@@ -80,5 +80,24 @@ import Testing
         #expect(store.saved?.marks[hemanth] == .absent && store.draft.marks[hemanth] == .absent)
         #expect(store.phase == .reopened(savedAt: FakeCountsRepository.fixedNow) || store
             .phase == .saved(at: FakeCountsRepository.fixedNow))
+    }
+}
+
+extension AttendanceCopyFirstTests {
+    /// P7-Offline-AttendanceSaved: offline with the month's copy, a change is kept on this iPhone.
+    @Test func offlineWithTheCopyAChangeIsKeptHere() async {
+        let attendance = FakeAttendanceRepository(sessions: FakeAttendanceRepository.seed)
+        let october = Period(year: 2026, month: 10)
+        CachedRead<AttendanceSnapshot>(centre: centre, key: "attendance-\(october.isoMonth)", directory: folder).keep(
+            AttendanceSnapshot(sessions: FakeAttendanceRepository.seed, told: []), at: Date(timeIntervalSince1970: 0)
+        )
+        attendance.nextError = URLError(.notConnectedToInternet)
+        let store = await make(attendance)
+        store.queue = ChangeQueue(centre: centre, directory: folder)
+        store.online = { false }
+        await store.load()
+        store.toggle(hemanth)
+        #expect(await store.save())
+        #expect(store.phase == .savedHere(at: FakeCountsRepository.fixedNow))
     }
 }

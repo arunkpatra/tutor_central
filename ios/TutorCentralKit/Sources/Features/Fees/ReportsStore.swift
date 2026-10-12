@@ -203,59 +203,33 @@ import Observation
             await loadProgress(generation)
             return
         }
-        let centre = workspace.centre.id
-        let month = month
-        if monthShown != month {
-            showMonthAtOnce(month)
+        let (centre, month, fees, attendance, messages, copies) = (
+            workspace.centre.id, month, fees, attendance, messages, cache?.month(month)
+        )
+        let newMonth = monthShown != month
+        if newMonth {
+            // A month not on screen yet: its copy at once while the network answers (hand run 14), else no figures.
+            (invoices, sessions, logs, monthShown, savedAt) = ([], [], [], month, nil)
         }
-        do {
+        let reader = CopyFirst(cache: copies, now: now)
+        let outcome = await reader.load(showingCopy: newMonth) { copy, at in
+            guard generation == loadGeneration else { return }
+            (invoices, sessions, logs) = (copy.invoices, copy.sessions, copy.logs)
+            (savedAt, loaded) = (at, true)
+        } read: {
             async let invoicesRead = fees.invoices(centre: centre, month: month)
             async let sessionsRead = attendance.sessions(centre: centre, month: month)
             async let logsRead = messages.feeLogs(centre: centre, month: month)
-            let readInvoices = try await invoicesRead
-            let readSessions = try await sessionsRead
-            let readLogs = try await logsRead
-            guard generation == loadGeneration else { return }
-            invoices = readInvoices
-            sessions = readSessions
-            logs = readLogs
-            cache?.month(month).keep(
-                MonthCopy(invoices: readInvoices, sessions: readSessions, logs: readLogs),
-                at: now()
-            )
-            (error, savedAt, offlineRead, loaded) = (nil, now(), false, true)
-        } catch {
-            guard generation == loadGeneration else { return }
-            showMonthCopy(month, failure: error)
+            return try await MonthCopy(invoices: invoicesRead, sessions: sessionsRead, logs: logsRead)
         }
-    }
-
-    /// A month not on screen yet: its copy at once while the network answers (hand run 14), else no figures.
-    private func showMonthAtOnce(_ month: Period) {
-        let copy = cache?.month(month).load()
-        invoices = copy?.value.invoices ?? []
-        sessions = copy?.value.sessions ?? []
-        logs = copy?.value.logs ?? []
-        if let copy {
-            (savedAt, loaded) = (copy.savedAt, true)
-        }
-        monthShown = month
-    }
-
-    /// This iPhone's copy of the month when the network is away; else the error line (U26).
-    private func showMonthCopy(_ month: Period, failure: any Error) {
-        if let copy = cache?.month(month).load() {
-            invoices = copy.value.invoices
-            sessions = copy.value.sessions
-            logs = copy.value.logs
-            (error, savedAt, offlineRead, loaded) = (nil, copy.savedAt, TransportError.isOffline(failure), true)
+        guard generation == loadGeneration else { return }
+        guard let failure = outcome.failure else {
+            (error, offlineRead) = (nil, false)
             return
         }
-        invoices = []
-        sessions = []
-        logs = []
-        (savedAt, offlineRead) = (nil, TransportError.isOffline(failure))
-        error = "Couldn't load the report. Check your connection and try again."
+        offlineRead = TransportError.isOffline(failure)
+        // A copy, or the month's last good read, stays on screen; with neither the error line says so (U26).
+        error = savedAt == nil ? "Couldn't load the report. Check your connection and try again." : nil
     }
 
     /// The month back, or on Progress by term the term back.

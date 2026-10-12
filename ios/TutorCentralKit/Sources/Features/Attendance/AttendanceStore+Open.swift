@@ -5,7 +5,7 @@ import Foundation
 /// Opening a class and day: the month's copy at once, then the read (D76, U10, U27).
 public extension AttendanceStore {
     /// A class and day (the menu, the date picker, Mark attendance on Today, the link): the month's copy on this
-    /// iPhone shown at once (U27), then the month read (a spinner by the date meanwhile, U10); the saved session found
+    /// iPhone shown at once (U27), then the month read; the saved session found
     /// and the draft made from it, unless the tutor has already changed it. `showingCopy` false (a reload) keeps what
     /// is shown until the read answers.
     func open(classID: UUID?, date: Day, showingCopy: Bool = true) async {
@@ -25,6 +25,7 @@ public extension AttendanceStore {
             .load(showingCopy: showingCopy) { snapshot, at in
                 guard generation == openGeneration else { return }
                 (sessions, told) = (snapshot.sessions, snapshot.told)
+                shownMonth = date.period
                 savedAt = at
                 showDay(classID: classID, date: date)
             } read: {

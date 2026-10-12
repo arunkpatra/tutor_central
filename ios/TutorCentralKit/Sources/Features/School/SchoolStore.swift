@@ -128,38 +128,40 @@ public struct SchoolRowModel: Identifiable, Hashable, Sendable {
         filter = nil
     }
 
+    /// The copy at once, then the read (D76); a failed read keeps what is shown.
     public func load() async {
-        if items.isEmpty, let copy = cache?.load() {
-            items = copy.value
-            savedAt = copy.savedAt
-            state = copy.value.isEmpty ? .empty : .items
-        }
-        await refresh()
+        await read(showingCopy: items.isEmpty)
     }
 
     public func refresh() async {
+        await read(showingCopy: false)
+    }
+
+    private func read(showingCopy: Bool) async {
         await register.loadIfNeeded()
         if let read = try? await schoolsRepository.schools(centre: workspace.centre.id) {
             schools = read
         }
-        do {
-            let read = try await repository.items(centre: workspace.centre.id)
+        let (repository, centre, cache) = (repository, workspace.centre.id, cache)
+        let reader = CopyFirst<[SchoolItem]>(
+            copy: { cache?.load() }, keep: { items, at in cache?.keep(items, at: at) }, now: now
+        )
+        let outcome = await reader.load(showingCopy: showingCopy) { read, at in
             items = read
-            offlineRead = false
-            savedAt = now()
-            cache?.keep(read, at: now())
+            savedAt = at
             state = read.isEmpty ? .empty : .items
-        } catch {
-            offlineRead = true
-            if let copy = cache?.load() {
-                items = copy.value
-                savedAt = copy.savedAt
-                state = .offline
-            } else if items.isEmpty {
-                state = .failed
-            } else {
-                state = .offline
-            }
+        } read: {
+            try await repository.items(centre: centre)
+        }
+        guard outcome.failure != nil else {
+            offlineRead = false
+            return
+        }
+        offlineRead = true
+        if case .nothing = outcome, items.isEmpty {
+            state = .failed
+        } else {
+            state = .offline
         }
     }
 

@@ -102,7 +102,7 @@ public struct AttendanceView: View {
 
     private var pickers: some View {
         VStack(spacing: 0) {
-            PickerLine(label: "Date", value: store.dateText, working: store.loading) { picksDate = true }
+            PickerLine(label: "Date", value: store.dateText) { picksDate = true }
                 .popover(isPresented: $picksDate) {
                     DatePicker(
                         "Date",

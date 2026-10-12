@@ -30,6 +30,16 @@ public struct CopyFirst<Value: Codable & Sendable>: Sendable {
         self.now = now
     }
 
+    /// A copy kept another way (the register's snapshot, a report's month): how to read it and how to keep a read.
+    public init(
+        copy: @escaping @Sendable () -> CachedValue<Value>?, keep: @escaping @Sendable (Value, Date) -> Void,
+        now: @escaping @Sendable () -> Date
+    ) {
+        self.copy = copy
+        self.keep = keep
+        self.now = now
+    }
+
     /// `showingCopy` false skips the copy (the list on screen is already newer); `show` gets the value and when it
     /// was read: the copy's save, or now.
     public func load(

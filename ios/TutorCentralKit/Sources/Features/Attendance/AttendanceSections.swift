@@ -7,8 +7,6 @@ import SwiftUI
 struct PickerLine: View {
     let label: String
     let value: String
-    /// A read of the day runs (U10): a small spinner before the value.
-    var working = false
     let action: () -> Void
     static var height: CGFloat {
         ButtonSize.card.rawValue
@@ -19,9 +17,6 @@ struct PickerLine: View {
             AdaptiveRow {
                 Text(label).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
                 AdaptiveSpacer(minLength: Tokens.inline)
-                if working {
-                    ProgressView().controlSize(.small).tint(Tokens.text3.color)
-                }
                 PickerValue(value)
             }
             .padding(.horizontal, Tokens.rowPaddingHorizontal)

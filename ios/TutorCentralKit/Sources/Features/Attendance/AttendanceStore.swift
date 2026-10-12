@@ -70,7 +70,10 @@ import Observation
     var openGeneration = 0
     var sessions: [AttendanceSession] = []
     var told: [AbsenceLog] = []
+    /// The month read from the server; the next open of another month reads again.
     var loadedMonth: Period?
+    /// The month on screen, from the server or its copy: a save needs its sessions (a day saved before is replaced).
+    var shownMonth: Period?
     private var lastFailed: (@MainActor () async -> Void)?
     let workspace: Workspace
     let register: any Register
@@ -124,7 +127,7 @@ import Observation
     /// A fresh class is always worth saving; a saved or reopened one once a mark changed; never while saving, and never
     /// while the day's sessions are unread: "everyone present" saved blind would erase real absences.
     public var canSave: Bool {
-        guard phase != .saving, !members.isEmpty, error == nil, loadedMonth == draft.date.period else { return false }
+        guard phase != .saving, !members.isEmpty, error == nil, shownMonth == draft.date.period else { return false }
         return draft.isChanged(from: saved, members: members)
     }
 
