@@ -73,8 +73,8 @@ struct WipeTests {
         for name in [
             "register-\(mine).json", "cache-\(mine)-fees-2026-10.json", "queue-\(mine).json",
             "queue-\(mine).unreadable.json",
-            "upi-qr-\(mine).png",
-            "register-\(other).json", "workspace.json",
+            "upi-qr-\(mine).png", "activity-\(mine).json",
+            "register-\(other).json", "activity-\(other).json", "workspace.json",
         ] {
             try Data("x".utf8).write(to: dir.appendingPathComponent(name))
         }
@@ -85,7 +85,7 @@ struct WipeTests {
         defaults.set(true, forKey: "reminders.asked")
         try Wipe.everything(centre: #require(UUID(uuidString: mine)), directory: dir, defaults: defaults)
         let left = try FileManager.default.contentsOfDirectory(atPath: dir.path)
-        #expect(left == ["register-\(other).json"])
+        #expect(left.sorted() == ["activity-\(other).json", "register-\(other).json"])
         #expect(defaults.object(forKey: "haptics") == nil && defaults.object(forKey: "appearance") == nil)
         #expect(defaults.object(forKey: "reminders") == nil && defaults.object(forKey: "reminders.asked") == nil)
     }

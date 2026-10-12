@@ -13,6 +13,8 @@ import SwiftUI
     @ObservationIgnored private(set) var scanVisits = 0
     /// A tab chosen in the tab bar or by a link: the School tab's student filter is cleared (U42).
     @ObservationIgnored var onTabChosen: (() -> Void)?
+    /// The tab bar's choice, for the activity log (D82).
+    @ObservationIgnored var onTabOpened: ((AppTab) -> Void)?
 
     /// Scan register is on some tab's stack; when it goes (Back, Add, a tab popped to its root) the visit ends.
     var scanOnStack: Bool {
@@ -26,6 +28,7 @@ import SwiftUI
     /// The tab bar's choice: as `select`, and the School filter cleared.
     func choose(_ tab: AppTab) {
         onTabChosen?()
+        onTabOpened?(tab)
         select(tab)
     }
 

@@ -160,19 +160,23 @@ public struct SignOutWipe {
     let defaults: UserDefaults
     let queue: ChangeQueue?
     let notifications: any NotificationCenterClient
+    let recorder: ActivityRecorder?
 
-    public init(
+    init(
         centre: UUID, directory: URL? = nil, defaults: UserDefaults = .standard, queue: ChangeQueue?,
-        notifications: any NotificationCenterClient
+        notifications: any NotificationCenterClient, recorder: ActivityRecorder? = nil
     ) {
         self.centre = centre
         self.directory = directory
         self.defaults = defaults
         self.queue = queue
         self.notifications = notifications
+        self.recorder = recorder
     }
 
+    /// The sign-out recorded and the activity posted first, while the session is still there; then the phone wiped.
     @MainActor func run() async {
+        await recorder?.signingOut()
         queue?.wipe()
         Wipe.everything(centre: centre, directory: directory, defaults: defaults)
         await notifications.removeAll()

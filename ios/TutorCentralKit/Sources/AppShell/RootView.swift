@@ -42,7 +42,7 @@ public struct RootView: View {
         }
         let shell = ShellState(tabs: tabs)
         shell.testTomorrow = launch.flatMap(Fixtures.testTomorrowAsk(for:))
-        Self.follow(initial, shell: shell, deps: deps)
+        Self.follow(initial, shell: shell, deps: deps, launch: launch)
         if launch == .syncSending {
             // P7-Sync-Sending: back online, three changes going.
             shell.runState = .sending(3)
@@ -51,8 +51,8 @@ public struct RootView: View {
     }
 
     /// The shell follows the session: a centre's place, its queue and the queue's runner.
-    static func follow(_ state: SessionStore.State, shell: ShellState, deps: Dependencies) {
-        shell.sessionChanged(state, files: deps.filesDirectory)
+    static func follow(_ state: SessionStore.State, shell: ShellState, deps: Dependencies, launch: LaunchState? = nil) {
+        shell.sessionChanged(state, files: deps.filesDirectory, activity: launch == nil ? deps.activity : nil)
         guard case let .ready(workspace) = state, shell.runner == nil, let queue = shell.queue else { return }
         shell.runner = QueueRunner(
             queue: queue, centre: workspace.centre.id, attendance: deps.attendance, fees: deps.fees,
@@ -96,6 +96,8 @@ public struct RootView: View {
                 // The foreground refresh hook: the centre and profile read again when the app comes back.
                 if phase == .active, launch == nil {
                     Task {
+                        await shell.recorder?.appOpened()
+                        await shell.recorder?.flush()
                         await session.refresh()
                         await runQueue()
                         // The reminders plan from the classes as they are now, not as first read; every list reads
@@ -107,6 +109,7 @@ public struct RootView: View {
                     }
                 }
                 if phase == .background, launch == nil {
+                    Task { await shell.recorder?.flush() }
                     BackgroundRefresh.schedule(at: BackgroundRefresh.nextMorning(
                         after: deps.now(),
                         calendar: DayHeading.india
@@ -114,7 +117,7 @@ public struct RootView: View {
                 }
             }
             .onChange(of: session.state) { _, state in
-                Self.follow(state, shell: shell, deps: deps)
+                Self.follow(state, shell: shell, deps: deps, launch: launch)
                 if session.isReady {
                     Task { await runQueue() }
                     replanReminders()
@@ -146,6 +149,7 @@ public struct RootView: View {
     /// A `tutorcentral://` link, from outside or from a tapped reminder.
     func openLink(_ url: URL) {
         guard let link = DeepLink(url: url), session.isReady else { return }
+        Task { await shell.recorder?.linkOpened(link) }
         if !shell.tabs.open(link) {
             notices.show("That opens in a later build.")
         }
@@ -179,7 +183,7 @@ public struct RootView: View {
                 legal: Legal.links,
                 fixture: launch.flatMap(Self.signInFixture),
                 deletedCentre: launch == .signinDeleted ? Fixtures.meeraWorkspace.centre.name : session.deletedCentre,
-                onSignedIn: { await session.signedIn($0) },
+                onSignedIn: { await signedIn($0) },
                 onMessage: { notices.show($0) }
             )
         case let .needsOnboarding(user):

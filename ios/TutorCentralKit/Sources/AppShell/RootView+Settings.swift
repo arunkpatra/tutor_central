@@ -121,7 +121,7 @@ extension RootView {
     func wipe(for workspace: Workspace) -> SignOutWipe {
         SignOutWipe(
             centre: workspace.centre.id, directory: deps.filesDirectory, queue: shell.queue,
-            notifications: deps.notifications
+            notifications: deps.notifications, recorder: shell.recorder
         )
     }
 

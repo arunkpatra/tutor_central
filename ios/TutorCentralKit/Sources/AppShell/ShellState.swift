@@ -83,6 +83,8 @@ struct AbsenceAsk: Identifiable, Hashable {
     @ObservationIgnored var scan: ScanVisit?
     /// The centre's queue of changes made offline (D39), read from its file when the centre arrives, and its runner.
     @ObservationIgnored var queue: ChangeQueue?
+    /// The centre's activity log (D77): made with the queue, gone with it; none in the launch states.
+    @ObservationIgnored var recorder: ActivityRecorder?
     @ObservationIgnored var runner: QueueRunner?
     /// The centre's reminder planner, made on first use.
     @ObservationIgnored var scheduler: ReminderScheduler?
@@ -152,7 +154,7 @@ struct AbsenceAsk: Identifiable, Hashable {
     }
 
     /// `files` is where the centre's queue file lives (nil: Application Support).
-    func sessionChanged(_ state: SessionStore.State, files: URL?) {
+    func sessionChanged(_ state: SessionStore.State, files: URL?, activity: (any ActivityRepository)? = nil) {
         guard case let .ready(workspace) = state else {
             reset()
             return
@@ -162,6 +164,10 @@ struct AbsenceAsk: Identifiable, Hashable {
         }
         if centre == nil {
             queue = ChangeQueue(centre: workspace.centre.id, directory: files)
+            recorder = activity.map {
+                ActivityRecorder(log: ActivityLog(centre: workspace.centre.id, repository: $0, directory: files))
+            }
+            tabs.onTabOpened = { [recorder] tab in Task { await recorder?.tabChosen(tab) } }
         }
         centre = workspace.centre.id
     }
@@ -190,6 +196,7 @@ struct AbsenceAsk: Identifiable, Hashable {
         checkPresets = [:]
         scan = nil
         queue = nil
+        recorder = nil
         runner = nil
         scheduler = nil
         runState = .idle

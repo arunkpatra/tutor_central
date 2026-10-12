@@ -88,7 +88,7 @@ extension RootView {
     /// The centre's queue, made now if the shell has not followed the session yet: the tab roots are built in the same
     /// update that makes the session ready, before `onChange` runs (run 8: the stores got none).
     func centreQueue() -> ChangeQueue? {
-        Self.follow(session.state, shell: shell, deps: deps)
+        Self.follow(session.state, shell: shell, deps: deps, launch: launch)
         // A change queued while online (behind a waiting one) is sent at once (review I1).
         shell.queue?.onAdded = { Task { await runQueue() } }
         return shell.queue
