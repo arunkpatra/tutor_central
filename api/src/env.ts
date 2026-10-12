@@ -8,7 +8,11 @@ export function env(
     | "ANTHROPIC_API_KEY"
     | "APPLE_TEAM_ID"
     | "APPLE_KEY_ID"
-    | "APPLE_SIGNIN_KEY",
+    | "APPLE_SIGNIN_KEY"
+    | "APNS_KEY"
+    | "APNS_KEY_ID"
+    | "APNS_TEAM_ID"
+    | "APNS_TOPIC",
 ): string {
   const v = process.env[name];
   if (!v) throw new Error(`${name} is not set`);

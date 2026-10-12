@@ -7,13 +7,23 @@ import { makeHandlers } from "../jobs/kinds/index.js";
 import { drain } from "../jobs/runner.js";
 import { type Clock, type JobHandler, type JobKind, type JobsDb, realClock } from "../jobs/types.js";
 import { log } from "../log.js";
+import type { Pusher } from "../push/apns.js";
+import type { OutboxDb } from "../push/db.js";
+import { sendDue } from "../push/send-due.js";
 
 /** The worker's run budget: under Hobby's 300 s with a step's room (D85; the two rise together on Pro). */
 export const JOB_RUN_BUDGET_MS = 200_000;
 
-/** The worker's reach: its jobs, the platform's Db for paid calls, its bearer, and the kinds it runs (the sweep alone
- *  unless the entry gives the record's source). */
-export type Worker = { jobs: JobsDb; db: Db; secret: string; clock?: Clock; handlers?: Partial<Record<JobKind, JobHandler>> };
+/** The worker's reach: its jobs, the platform's Db for paid calls, its bearer, the kinds it runs (the sweep alone unless
+ *  the entry gives the record's source), and the outbox with a pusher made for each run (D88: providers opened per run). */
+export type Worker = {
+  jobs: JobsDb;
+  db: Db;
+  secret: string;
+  clock?: Clock;
+  handlers?: Partial<Record<JobKind, JobHandler>>;
+  push?: { outbox: OutboxDb; pusher: () => Pusher };
+};
 
 function sameSecret(given: string | undefined, secret: string): boolean {
   if (!given) return false;
@@ -46,9 +56,26 @@ export function jobRoutes(worker: Worker, claude: ClaudeClient) {
     log.info({ requestId, worker: name, ...result });
     return result;
   };
+  /** The minute's pushes (plan decision 7), before the jobs: a reminder due now is not held behind a plan's material. A
+   *  failure to reach the outbox is logged and the jobs still run. */
+  const push = async (requestId: string) => {
+    if (!worker.push) return undefined;
+    const pusher = worker.push.pusher();
+    try {
+      const counts = await sendDue({ outbox: worker.push.outbox, pusher, clock });
+      log.info({ requestId, push: counts });
+      return counts;
+    } catch (e) {
+      log.error({ requestId, message: "the outbox was not sent", error: e });
+      return undefined;
+    } finally {
+      await pusher.close();
+    }
+  };
   r.get("/tick", async (c) => {
+    const pushed = await push(c.get("requestId"));
     if ((await worker.jobs.live("sweep")) === 0) await worker.jobs.enqueue(null, "sweep", sweepKey(clock.now()));
-    return c.json(await run(c.get("requestId")));
+    return c.json({ ...(await run(c.get("requestId"))), ...(pushed ? { push: pushed } : {}) });
   });
   r.post("/wake", async (c) => c.json(await run(c.get("requestId"))));
   return r;

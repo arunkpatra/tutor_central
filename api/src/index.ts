@@ -13,6 +13,9 @@ import { makeRecordSource } from "./jobs/record.js";
 import { makeApp } from "./make-app.js";
 import { applyModelOverrides } from "./models.js";
 import { makeObserve } from "./observe.js";
+import { makeApnsPusher } from "./push/apns.js";
+import { fakePusher } from "./push/apns-fake.js";
+import { makeOutboxDb } from "./push/db.js";
 import { makeVerify } from "./verify.js";
 
 /** Read at start: a deployment without them fails to boot, so /health and the deploy's smoke fail, instead of every
@@ -45,6 +48,21 @@ const apple =
         clientId: "in.tutorcentral.app",
       });
 
+/** APNs (D88): the token key, its id, the team and the topic. Production must have them (a deploy without them fails its
+ *  smoke); a local run without them sends to a pusher in memory, which logs nothing out of the Mac. Vercel keeps the
+ *  .p8's newlines; a one-line value with "\n" (api/.env.local) is turned back. */
+const pushConfigured = ["APNS_KEY", "APNS_KEY_ID", "APNS_TEAM_ID", "APNS_TOPIC"].every((name) => process.env[name]);
+const pusher =
+  pushConfigured || process.env.VERCEL_ENV === "production"
+    ? () =>
+        makeApnsPusher({
+          key: env("APNS_KEY").replace(/\\n/g, "\n"),
+          keyId: env("APNS_KEY_ID"),
+          teamId: env("APNS_TEAM_ID"),
+          topic: env("APNS_TOPIC"),
+        })
+    : () => fakePusher({});
+
 /** A 4xx from Supabase is the token's (sign in again); a lost connection is "unreachable" (D68). */
 const verify = makeVerify(() => createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false, autoRefreshToken: false } }));
 
@@ -62,6 +80,7 @@ const app: Hono<Vars> = makeApp({
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
     handlers: makeHandlers(makeRecordSource(supabaseUrl, serviceKey)),
+    push: { outbox: makeOutboxDb(supabaseUrl, serviceKey), pusher },
   },
 });
 export default app;

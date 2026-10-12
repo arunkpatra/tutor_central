@@ -2,7 +2,11 @@ import { expect, test } from "bun:test";
 import { createClient } from "@supabase/supabase-js";
 import { makeDb } from "../src/db.js";
 import { makeRecordSource } from "../src/jobs/record.js";
+import { fakeClock } from "../src/jobs/db-fake.js";
 import { makeObserve } from "../src/observe.js";
+import { fakePusher } from "../src/push/apns-fake.js";
+import { makeOutboxDb } from "../src/push/db.js";
+import { sendDue } from "../src/push/send-due.js";
 
 // The platform's reads and writes over the local stack's service role (the review's findings 3 and 8). It needs
 // `supabase start`; without it the file says so and skips.
@@ -64,5 +68,27 @@ test.skipIf(!up)("a route's call is started as the tutor and finished as the pla
     expect(row.data?.user_id).not.toBeNull();
   } finally {
     await admin().from("ai_generations").delete().eq("id", started.id);
+  }
+});
+
+test.skipIf(!up)("a row due in the outbox is sent to the user's live token and marked sent with Apple's answer", async () => {
+  const db = admin();
+  const user = (await db.from("centre_members").select("user_id").eq("centre_id", CENTRE).limit(1).single()).data?.user_id as string;
+  const outbox = makeOutboxDb(url as string, service as string);
+  const key = `class:platform-db:${Date.now()}`;
+  const device = `platform-db-${Date.now()}`;
+  try {
+    await db.from("device_tokens").insert({ user_id: user, device_id: device, token: "tok-platform", environment: "sandbox" });
+    expect(await outbox.replace(CENTRE, user, ["class"], new Date(Date.now() - 60_000).toISOString(), [{ kind: "class", key, due_at: new Date(Date.now() - 1000).toISOString(), title: "t", body: "b", link: "tutorcentral://today" }])).toBe(1);
+    const pusher = fakePusher({});
+    const counts = await sendDue({ outbox, pusher, clock: { ...fakeClock(), now: () => Date.now() } });
+    expect(counts.sent).toBeGreaterThanOrEqual(1);
+    expect(pusher.sent.some((p) => p.token === "tok-platform")).toBe(true);
+    const row = (await db.from("notifications").select("state, apns").eq("key", key).single()).data;
+    expect(row?.state).toBe("sent");
+    expect(JSON.stringify(row?.apns)).toContain("a-tok-platform");
+  } finally {
+    await db.from("notifications").delete().eq("key", key);
+    await db.from("device_tokens").delete().eq("device_id", device);
   }
 });

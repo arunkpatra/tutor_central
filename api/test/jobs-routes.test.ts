@@ -5,6 +5,8 @@ import { fakeDb } from "../src/db-fake.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 import { fakeObserve } from "../src/observe-fake.js";
+import { fakePusher } from "../src/push/apns-fake.js";
+import { fakeOutbox } from "../src/push/db.js";
 
 function build() {
   const clock = fakeClock();
@@ -84,4 +86,27 @@ test("the worker reaches the database only through its named functions", async (
   // The one table read is the sweep guard's count of live jobs; every write is a function of 0028 or 0029.
   expect(reads).toEqual(["jobs"]);
   expect(source).not.toMatch(/\.(insert|update|upsert|delete)\(/);
+});
+
+test("the tick sends what is due before it drains, and answers both", async () => {
+  const clock = fakeClock();
+  const jobs = fakeJobsDb(clock);
+  const outbox = fakeOutbox([{ id: "n1", user_id: "u1", kind: "class", title: "t", body: "b", link: "tutorcentral://today", background: false }], {
+    u1: [{ id: "t1", token: "tok", environment: "sandbox" }],
+  });
+  const pusher = fakePusher({});
+  const app = makeApp({
+    verify: async () => null,
+    claude: fakeClaude({}),
+    db: fakeDb(),
+    apple: fakeApple({}),
+    observe: fakeObserve(),
+    worker: { jobs, db: fakeDb(), secret: "s3cret", clock, push: { outbox, pusher: () => pusher } },
+  });
+  const r = await app.request("/jobs/tick", { headers: bearer });
+  expect(await r.json()).toMatchObject({ claimed: 1, done: 1, push: { sent: 1, failed: 0, retired: 0 } });
+  expect(outbox.marks).toEqual([{ id: "n1", state: "sent", apns: [{ token: "t1", apnsId: "a-tok" }] }]);
+  expect(pusher.closed).toBe(1);
+  // The wake drains only: a push is the minute's work.
+  expect(await (await app.request("/jobs/wake", { method: "POST", headers: bearer })).json()).not.toHaveProperty("push");
 });
