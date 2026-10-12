@@ -9,14 +9,26 @@ export type RecordedCall<T> =
   | { kind: "pending" }
   | { kind: "failed"; id?: string; costPaise?: number; reason: string };
 
-/** A paid call made by a job step (D84): asked of the gate as the platform with the key `<job>:<step>`, so a step taken
- *  again after a lost lease replays the finished call or meets it still running, and pays once. Finished as a route
- *  finishes its row (`finishOf`). */
+/** A paid call made by a job step (D84): asked of the gate as the platform with the key `<job>:<step>` (or the key given:
+ *  a mock shared by two plans, a week's note), so a step taken again after a lost lease replays the finished call or
+ *  meets it still running, and pays once. A call naming a student asks the gate for their consent: without it the call
+ *  fails `student_consent` before anything is paid. Finished as a route finishes its row (`finishOf`), an empty answer
+ *  failed as refused. */
 export async function recordedCall<T>(
   ctx: StepContext,
-  args: { centre: string; kind: AIKind; input: unknown; request: ClaudeRequest<T>; job: string; step: string },
+  args: {
+    centre: string;
+    kind: AIKind;
+    input: unknown;
+    request: ClaudeRequest<T>;
+    job: string;
+    step: string;
+    key?: string;
+    student?: string;
+    empty?: (parsed: T) => boolean;
+  },
 ): Promise<RecordedCall<T>> {
-  const key = `${args.job}:${args.step}`;
+  const key = args.key ?? `${args.job}:${args.step}`;
   let started: Awaited<ReturnType<StepContext["db"]["startCall"]>>;
   try {
     started = await ctx.db.startCall("", {
@@ -24,6 +36,7 @@ export async function recordedCall<T>(
       kind: args.kind,
       input: args.input,
       model: args.request.model,
+      student: args.student,
       key,
       inputHash: sha256(JSON.stringify(args.input)),
       requestId: ctx.requestId,
@@ -37,7 +50,7 @@ export async function recordedCall<T>(
     return { kind: "ok", id: started.id, parsed: JSON.parse(started.output) as T, costPaise: 0 };
   }
   const result = await ctx.claude.complete(args.request);
-  const outcome = finishOf({ request: args.request }, result);
+  const outcome = finishOf({ request: args.request, empty: args.empty }, result);
   await ctx.db.finish("", started.id, outcome.finish);
   const costPaise = outcome.finish.costPaise ?? 0;
   if (outcome.kept !== undefined) return { kind: "ok", id: started.id, parsed: outcome.kept, costPaise };
