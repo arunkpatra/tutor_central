@@ -59,9 +59,10 @@ jobs:
           supabase init --force > /dev/null
           supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
+      # As the blank database's superuser: the roles' dump grants parameters (log_min_messages) that only it may.
       - name: Restore
         run: |
-          psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" --single-transaction --variable ON_ERROR_STOP=1 \
+          psql "postgresql://supabase_admin:postgres@127.0.0.1:54322/postgres" --single-transaction --variable ON_ERROR_STOP=1 \
             --file "$RUNNER_TEMP/roles.sql" --file "$RUNNER_TEMP/schema.sql" \
             --command 'set session_replication_role = replica' --file "$RUNNER_TEMP/data.sql" > "$RUNNER_TEMP/restore.log"
           echo "RESTORED=$(date +%s)" >> "$GITHUB_ENV"
