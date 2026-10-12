@@ -35,15 +35,16 @@ import Testing
         #expect(store.title == "Asked Neha Sharma on Wed 7 Oct")
     }
 
-    @Test func recordThenRemove() async throws {
+    @Test func recordThenWithdraw() async throws {
         let (store, register) = try await store()
         store.sheet.how = .call
         #expect(store.sheet.digits == "9811122233" && store.sheet.canRecord)
         #expect(await store.record())
         #expect(register.student(FakeStudentsRepository.riya)?.consent?.how == .call)
         #expect(store.title == "Neha Sharma agreed" && store.line == "Wed 7 Oct · +91 98111 22233 · on a call")
-        #expect(await store.remove())
-        #expect(register.student(FakeStudentsRepository.riya)?.consent == nil && store.state == .notRecorded)
+        store.withdrawSheet.how = .call
+        #expect(await store.withdraw())
+        #expect(register.student(FakeStudentsRepository.riya)?.consent == nil && store.title == "Neha Sharma withdrew")
     }
 
     @Test func waitingShowsAfterAnAskUntilRecorded() async throws {

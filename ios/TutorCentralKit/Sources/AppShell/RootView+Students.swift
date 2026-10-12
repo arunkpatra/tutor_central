@@ -137,7 +137,8 @@ extension RootView {
     func studentDetailStore(_ id: UUID, register: RegisterStore) -> StudentDetailStore {
         let store = StudentDetailStore(
             id: id, register: register, attendance: deps.attendance, messages: deps.messages,
-            textbooks: deps.textbooks, record: deps.record, schoolItems: deps.schoolItems, now: deps.now,
+            textbooks: deps.textbooks, record: deps.record, schoolItems: deps.schoolItems,
+            consentHistory: deps.consentHistory, now: deps.now,
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
         )
         store.onStepChanged = { [shell] student in shell.schoolItemsChanged?([student]) }
@@ -161,4 +162,19 @@ extension RootView {
             )
         }
     }
+}
+
+extension RootView {
+    static func studentDetailBoardState(_ state: LaunchState) -> StudentDetailBoardState? {
+        studentDetailBoardStates[state]
+    }
+
+    /// Each student page state's board state (a table: the switch passed the lint's complexity).
+    static let studentDetailBoardStates: [LaunchState: StudentDetailBoardState] = [
+        .studentArchiveConfirm: .archiveConfirm, .studentDeleteConfirm: .deleteConfirm, .studentEdit: .edit,
+        .studentRecord: .record, .studentMarksEmpty: .record, .studentMarks: .marks, .studentEnd: .end,
+        .studentConsentAsk: .consentAsk, .studentConsentRecord: .consentRecord, .studentNextStep: .nextStep,
+        .studentConsentChange: .consentRecord, .studentConsentWithdraw: .consentWithdraw,
+        .studentTellParent: .tellParent,
+    ]
 }

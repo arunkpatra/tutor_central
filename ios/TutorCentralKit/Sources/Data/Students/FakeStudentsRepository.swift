@@ -122,6 +122,8 @@ import Foundation
     public private(set) var deletedMany: [[UUID]] = []
     public private(set) var notesUpdates: [NotesUpdate] = []
     public private(set) var consentCalls: [(UUID, ConsentRecord?)] = []
+    /// Each withdrawal: the student, how and the day.
+    public internal(set) var withdrawals: [Withdrawal] = []
     /// The next steps written, in order.
     public internal(set) var nextStepCalls: [NextStep?] = []
 
@@ -280,5 +282,22 @@ import Foundation
                 thisMonth: month
             )
         }
+    }
+}
+
+/// A withdrawal as the fake recorded it.
+public struct Withdrawal: Sendable {
+    public let student: UUID
+    public let how: ConsentMethod
+    public let day: Day
+}
+
+public extension FakeStudentsRepository {
+    func withdrawConsent(id: UUID, centre _: UUID, how: ConsentMethod, on day: Day) async throws -> Student {
+        try await begin()
+        let index = try index(of: id)
+        withdrawals.append(Withdrawal(student: id, how: how, day: day))
+        students[index].consent = nil
+        return students[index]
     }
 }

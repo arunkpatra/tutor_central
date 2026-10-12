@@ -12,9 +12,11 @@ public enum StudentDetailBoardState: Sendable {
     case end
     /// Scrolled to Checks and Marks (P13-Student-Marks).
     case marks
-    /// The consent ask's sheet (P10-Consent-Ask); the Parent agreed sheet (P10-Consent-Record).
+    /// The consent ask's sheet (P10-Consent-Ask); the Parent agreed sheet (P10-Consent-Record, P18-Consent-Change); the
+    /// Parent withdrew sheet (P18-Consent-Withdraw).
     case consentAsk
     case consentRecord
+    case consentWithdraw
     /// Phase 14: the next-step sheet (P10-NextStep); the message to the parent (P10-NotOnTrack-Message).
     case nextStep
     case tellParent
@@ -40,6 +42,8 @@ public struct StudentDetailView: View {
     @State var asking = false
     @State var addingChapter: AddingChapter?
     @State var recordingConsent = false
+    @State var withdrawingConsent = false
+    @State var withdrawNext = false
     /// The next-step sheet and the message to the parent (Phase 14).
     @State var choosingStep = false
     @State var tellingParent: NotOnTrackStore?
@@ -76,7 +80,7 @@ public struct StudentDetailView: View {
 
     public var body: some View {
         ScrollViewReader { reader in
-            parentsSheets(page).task(id: store.recordLoaded) { await scrollForBoard(reader) }
+            parentsSheets(consentSheets(page)).task(id: store.recordLoaded) { await scrollForBoard(reader) }
         }
     }
 
@@ -165,10 +169,6 @@ public struct StudentDetailView: View {
         }
         // A student who goes while the screen is open (deleted elsewhere, a refresh): the route leaves, with a word.
         // A deletion made here dismisses on its own.
-        .sheet(isPresented: $asking) {
-            ConsentAskSheet(store: store.consent) { asking = false }
-                .boardDetents(MessageSheet.boardFraction)
-        }
         .sheet(item: $addingChapter) { adding in
             ChapterSheet(
                 position: store.nextPosition(adding.subject), initialName: "", initialSkills: [],
@@ -184,14 +184,6 @@ public struct StudentDetailView: View {
                 Task { await store.loadRecord() }
             }
         }
-        .sheet(isPresented: $recordingConsent) {
-            ConsentRecordSheet(store: store.consent) { recordingConsent = false }
-        }
-        .onChange(of: store.consent.failure) { _, failure in
-            guard let failure else { return }
-            onMessage(failure)
-            store.consent.failure = nil
-        }
         .onChange(of: store.message) { _, message in
             guard let message else { return }
             onMessage(message)
@@ -202,20 +194,6 @@ public struct StudentDetailView: View {
                 onMissing()
             }
         }
-    }
-
-    /// Consent waits under the parent while it asks something of the tutor (P10-Student-NotKnown, -Consent-Waiting);
-    /// agreed, it sits after the messages (P10-Student-End).
-    private var consentAgreed: Bool {
-        if case .agreed = store.consent.state {
-            true
-        } else {
-            false
-        }
-    }
-
-    private var consentSection: some View {
-        ConsentSection(store: store.consent, ask: { asking = true }, agreed: { recordingConsent = true })
     }
 
     private func navigationRow(_ student: Student?) -> some View {

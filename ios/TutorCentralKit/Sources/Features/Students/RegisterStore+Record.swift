@@ -93,6 +93,23 @@ public extension RegisterStore {
         }
     }
 
+    /// The parent withdrew: written with how and the day, the student's consent cleared here; the failure's words.
+    func withdrawConsent(_ id: UUID, how: ConsentMethod, on day: Day) async -> String? {
+        guard let before = student(id) else { return "That student is no longer here." }
+        do {
+            var saved = try await studentsRepository.withdrawConsent(
+                id: id, centre: workspace.centre.id, how: how, on: day
+            )
+            saved.thisMonth = before.thisMonth
+            replace(id, with: saved)
+            succeeded()
+            return nil
+        } catch {
+            return TransportError.isOffline(error) ? OfflineRefusal.words(for: .consent)
+                : "Couldn't save \(before.firstName)'s consent. Check your connection and try again."
+        }
+    }
+
     /// The next step the tutor chose (nil: the plan's own), written and put in the register; the failure's words.
     func setNextStep(_ id: UUID, _ step: NextStep?) async -> String? {
         guard let before = student(id) else { return "That student is no longer here." }

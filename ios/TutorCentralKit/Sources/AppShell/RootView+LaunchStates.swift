@@ -19,7 +19,7 @@ extension RootView {
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
              .student, .studentRecord, .studentMarks, .studentMarksEmpty, .studentEnd, .studentNotKnown, .studentLadder,
-             .studentConsentAsk,
+             .studentConsentAsk, .studentConsentChange, .studentConsentWithdraw, .studentWithdrawn,
              .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
              .textbookChapterEdit, .placement, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
@@ -182,7 +182,8 @@ extension RootView {
     /// V2's student page (P10-Student and its scrolls): Hemanth; not known yet: Riya; the ladder: Sahil.
     private static func studentPageRoutes(for state: LaunchState) -> [Route]? {
         switch state {
-        case .student, .studentRecord, .studentEnd, .studentMarks: [.student(FakeStudentsRepository.hemanth)]
+        case .student, .studentRecord, .studentEnd, .studentMarks, .studentConsentChange, .studentConsentWithdraw,
+             .studentWithdrawn: [.student(FakeStudentsRepository.hemanth)]
         case .studentMarksEmpty: [.student(FakeStudentsRepository.riya)]
         case .studentNotKnown, .studentConsentAsk, .studentConsentRecord, .studentConsentWaiting:
             [.student(FakeStudentsRepository.riya)]
@@ -231,18 +232,6 @@ extension RootView {
         default: nil
         }
     }
-
-    static func studentDetailBoardState(_ state: LaunchState) -> StudentDetailBoardState? {
-        studentDetailBoardStates[state]
-    }
-
-    /// Each student page state's board state (a table: the switch passed the lint's complexity).
-    static let studentDetailBoardStates: [LaunchState: StudentDetailBoardState] = [
-        .studentArchiveConfirm: .archiveConfirm, .studentDeleteConfirm: .deleteConfirm, .studentEdit: .edit,
-        .studentRecord: .record, .studentMarksEmpty: .record, .studentMarks: .marks, .studentEnd: .end,
-        .studentConsentAsk: .consentAsk, .studentConsentRecord: .consentRecord, .studentNextStep: .nextStep,
-        .studentTellParent: .tellParent,
-    ]
 
     static func studentsBoardState(_ state: LaunchState) -> StudentsBoardState? {
         studentsBoardStates[state]

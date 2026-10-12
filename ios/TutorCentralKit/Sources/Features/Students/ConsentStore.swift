@@ -3,14 +3,17 @@ import Domain
 import Foundation
 import Observation
 
-/// Consent on the student's page (D62; P10-Student-NotKnown, P10-Consent-Ask, -Record, P10-Student-Consent-Waiting): a
-/// section, never a gate. Not recorded, waiting after a WhatsApp ask (plan decision 13: whenever a `consent` log exists
-/// and nothing is recorded), or agreed; the ask sheet's message and the record sheet.
+/// Consent on the student's page (D62; P10-Student-NotKnown, P10-Consent-Ask, -Record, P10-Student-Consent-Waiting,
+/// P18-Consent-Change, -Withdraw, P18-Student-Withdrawn): a section, never a gate. Not recorded, waiting after a
+/// WhatsApp ask (plan decision 13: whenever a `consent` log exists and nothing is recorded), agreed, or withdrawn (the
+/// history's newest event, unless asked again since); the history beyond the first agreement; the ask sheet's message,
+/// the record sheet and the withdraw sheet.
 @MainActor @Observable public final class ConsentStore {
     public enum State: Hashable, Sendable {
         case notRecorded
         case waiting(askedOn: Day)
         case agreed(ConsentRecord)
+        case withdrawn(ConsentEvent)
     }
 
     /// The Parent agreed sheet's fields.
@@ -28,34 +31,46 @@ import Observation
         }
     }
 
+    /// The Parent withdrew sheet's fields: how and the day.
+    public struct WithdrawSheet: Hashable, Sendable {
+        public var how: ConsentMethod = .inPerson
+        public var withdrewOn: Day
+    }
+
     public let studentID: UUID
     let register: RegisterStore
     let messages: any MessageLogRepository
+    let historyRepository: (any ConsentHistoryRepository)?
     let tutorName: String?
     let centreName: String?
     let now: @Sendable () -> Date
     let online: @Sendable () async -> Bool
     public private(set) var askedOn: Day?
+    /// The consent events, newest first.
+    public internal(set) var history: [ConsentEvent] = []
     public var sheet: Sheet
+    public var withdrawSheet: WithdrawSheet
     /// Words for the system alert when a write is refused (U33).
     public var failure: String?
 
     public init(
-        studentID: UUID, register: RegisterStore, messages: any MessageLogRepository, tutorName: String?,
-        centreName: String?, now: @escaping @Sendable () -> Date = Date.init,
+        studentID: UUID, register: RegisterStore, messages: any MessageLogRepository,
+        history: (any ConsentHistoryRepository)? = nil, tutorName: String?, centreName: String?,
+        now: @escaping @Sendable () -> Date = Date.init,
         online: @escaping @Sendable () async -> Bool = { true }
     ) {
         self.studentID = studentID
         self.register = register
         self.messages = messages
+        historyRepository = history
         self.tutorName = tutorName
         self.centreName = centreName
         self.now = now
         self.online = online
         let student = register.student(studentID)
-        sheet = Sheet(
-            agreedOn: Day(now(), calendar: DayHeading.india), digits: student?.parentPhone?.nationalDigits ?? ""
-        )
+        let today = Day(now(), calendar: DayHeading.india)
+        sheet = Sheet(agreedOn: today, digits: student?.parentPhone?.nationalDigits ?? "")
+        withdrawSheet = WithdrawSheet(withdrewOn: today)
     }
 
     var student: Student? {
@@ -66,19 +81,27 @@ import Observation
         if let record = student?.consent {
             return .agreed(record)
         }
+        if let latest = history.first, latest.kind == .withdrawn,
+           askedOn.map({ $0 < Day(latest.at, calendar: DayHeading.india) }) ?? true {
+            return .withdrawn(latest)
+        }
         return askedOn.map { .waiting(askedOn: $0) } ?? .notRecorded
     }
 
-    private var child: String {
+    var child: String {
         student?.firstName ?? "The student"
     }
 
-    private var parent: String {
+    var parent: String {
         student?.parentName ?? "The parent"
     }
 
-    private var pronoun: String {
+    var pronoun: String {
         StudentDetailStore.possessive(student?.gender)
+    }
+
+    var object: String {
+        StudentDetailStore.pronouns(student?.gender).object
     }
 
     public var title: String {
@@ -86,6 +109,7 @@ import Observation
         case .notRecorded: "Not recorded yet"
         case let .waiting(day): "Asked \(parent) on \(day.shortWeekdayText)"
         case .agreed: "\(parent) agreed"
+        case .withdrawn: "\(parent) withdrew"
         }
     }
 
@@ -99,6 +123,9 @@ import Observation
         case let .agreed(record):
             "\(Day(record.at, calendar: DayHeading.india).shortWeekdayText) · \(record.phone.display) · "
                 + Self.howWords(record.how, pronoun: pronoun)
+        case let .withdrawn(event):
+            [Day(event.at, calendar: DayHeading.india).shortWeekdayText, event.how.map(Self.withdrawnHow)]
+                .compactMap(\.self).joined(separator: " · ")
         }
     }
 
@@ -111,6 +138,9 @@ import Observation
         case .waiting: nil
         case .agreed:
             "\(child)'s name, marks and work go to the AI service only for \(pronoun) own material and notes."
+        case .withdrawn:
+            "Nothing about \(child) goes to the AI service now. \(pronoun.capitalized) notes, marking and messages "
+                + "wait until \(pronoun) parent agrees again; sheets and sets for \(pronoun) group go on."
         }
     }
 
@@ -155,8 +185,8 @@ import Observation
     }
 
     public var sheetFootnote: String {
-        "Kept with \(child)'s record: the day, the number and how. From now \(pronoun) own notes, marking and messages "
-            + "can be made. You can change or remove this any time."
+        "Kept with \(child)'s record: the day, the number and how. If \(pronoun) parent changes their mind, record it "
+            + "with Parent withdrew; the agreement stays in \(pronoun) history."
     }
 
     /// The asks already logged: the latest one makes the section wait.
@@ -165,9 +195,24 @@ import Observation
         if sheet.digits.isEmpty, let digits = student?.parentPhone?.nationalDigits {
             sheet.digits = digits
         }
-        let entries = try? await messages.messages(centre: register.workspace.centre.id, student: studentID)
+        // Change on an agreed consent starts from the agreement as kept (P18-Consent-Change).
+        if let record = student?.consent {
+            sheet = Sheet(
+                how: record.how, agreedOn: Day(record.at, calendar: DayHeading.india),
+                digits: record.phone.nationalDigits
+            )
+        }
+        async let entriesRead = try? messages.messages(centre: register.workspace.centre.id, student: studentID)
+        async let historyRead = try? historyRepository?.history(
+            centre: register.workspace.centre.id,
+            student: studentID
+        )
+        let (entries, events) = await (entriesRead, historyRead)
         if let asked = entries?.filter({ $0.kind == .consent }).map(\.openedAt).max() {
             askedOn = Day(asked, calendar: DayHeading.india)
+        }
+        if let events {
+            history = events
         }
     }
 
@@ -189,19 +234,11 @@ import Observation
         }
     }
 
-    /// Record it: the day, the number and how.
+    /// Record it: the day, the number and how; a new agreement after a withdrawal goes into the history too.
     public func record() async -> Bool {
         guard let phone = sheet.phone else { return false }
         let at = sheet.agreedOn.date(in: DayHeading.india)
-        return await write(ConsentRecord(at: at, phone: phone, how: sheet.how))
-    }
-
-    /// Remove (plan decision 13): the three columns cleared; the message log is kept.
-    public func remove() async -> Bool {
-        await write(nil)
-    }
-
-    private func write(_ consent: ConsentRecord?) async -> Bool {
+        let consent = ConsentRecord(at: at, phone: phone, how: sheet.how)
         guard await online() else {
             failure = OfflineRefusal.words(for: .consent)
             return false
@@ -209,6 +246,9 @@ import Observation
         if let words = await register.setConsent(studentID, consent) {
             failure = words
             return false
+        }
+        if history.first.map({ $0.kind != .given || $0.at != at || $0.phone != phone || $0.how != sheet.how }) ?? true {
+            history.insert(ConsentEvent(kind: .given, how: sheet.how, at: at, phone: phone), at: 0)
         }
         return true
     }

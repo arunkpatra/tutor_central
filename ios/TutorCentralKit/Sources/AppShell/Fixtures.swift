@@ -59,6 +59,7 @@ public enum Fixtures {
             reminderSettings: reminderSettings(for: state),
             deviceTokens: FakeDeviceTokenRepository(),
             jobs: jobs(for: state, server: server),
+            consentHistory: consentHistory(for: state),
             connectivity: FakeConnectivity(online: !offlineStates.contains(state)),
             cachesLists: false,
             filesDirectory: filesDirectory(for: state),
@@ -255,6 +256,7 @@ public enum Fixtures {
         }
         return switch state {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
+        case _ where consentStates.contains(state): consentClock
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
         case _ where offlineStates.contains(state): offlineClock(state)
         case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)
@@ -317,7 +319,8 @@ extension Fixtures {
         // Check a paper's boards mark Hemanth's paper: his parent has agreed (D62).
         let board = boardRegister(state)
         let agreed = RootView.checkStates.contains(state) && state != .checkConsentWaiting
-        return agreed ? (board.students.map(agreeing), board.classes) : board
+        return agreed ? (board.students.map(agreeing), board.classes)
+            : (withConsent(board.students, for: state), board.classes)
     }
 
     /// A student whose parent's consent is recorded (the boards' moment).

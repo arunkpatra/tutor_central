@@ -73,9 +73,12 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case studentNotKnown = "student-not-known"
     case studentLadder = "student-ladder"
     /// Consent (P10-Consent-Ask, -Record, P10-Student-Consent-Waiting), over Riya's page.
-    case studentConsentAsk = "student-consent-ask"
-    case studentConsentRecord = "student-consent-record"
+    case studentConsentAsk = "student-consent-ask", studentConsentRecord = "student-consent-record"
     case studentConsentWaiting = "student-consent-waiting"
+    /// Phase 18 over Hemanth's page: the record sheet with Parent withdrew (P18-Consent-Change), the withdraw sheet
+    /// (P18-Consent-Withdraw), the page withdrawn with its history (P18-Student-Withdrawn).
+    case studentConsentChange = "student-consent-change", studentConsentWithdraw = "student-consent-withdraw"
+    case studentWithdrawn = "student-withdrawn"
     /// Add a textbook for Riya's Mathematics (P10-Textbook-Intro, -Reading, -Chapters, -Chapter-Edit).
     case textbookIntro = "textbook-intro"
     case textbookReading = "textbook-reading"
