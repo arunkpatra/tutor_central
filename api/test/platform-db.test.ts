@@ -5,7 +5,12 @@ import { makeRecordSource } from "../src/jobs/record.js";
 import { fakeClock } from "../src/jobs/db-fake.js";
 import { makeObserve } from "../src/observe.js";
 import { fakePusher } from "../src/push/apns-fake.js";
+import { reminderSweep } from "../src/jobs/kinds/reminder-sweep.js";
+import { fakeJobsDb } from "../src/jobs/db-fake.js";
+import { fakeClaude } from "../src/claude-fake.js";
+import { fakeDb } from "../src/db-fake.js";
 import { makeOutboxDb } from "../src/push/db.js";
+import { makeReminderSource } from "../src/reminders/source.js";
 import { sendDue } from "../src/push/send-due.js";
 
 // The platform's reads and writes over the local stack's service role (the review's findings 3 and 8). It needs
@@ -90,5 +95,29 @@ test.skipIf(!up)("a row due in the outbox is sent to the user's live token and m
   } finally {
     await db.from("notifications").delete().eq("key", key);
     await db.from("device_tokens").delete().eq("device_id", device);
+  }
+});
+
+test.skipIf(!up)("a centre with a live token and a batch in two hours gets its class reminder in the outbox", async () => {
+  const db = admin();
+  const user = (await db.from("centre_members").select("user_id").eq("centre_id", CENTRE).limit(1).single()).data?.user_id as string;
+  const outbox = makeOutboxDb(url as string, service as string);
+  const device = `platform-db-reminder-${Date.now()}`;
+  const start = new Date(Date.now() + 5.5 * 3_600_000 + 2 * 3_600_000).toISOString().slice(11, 16);
+  const room = (await db.from("classes").insert({ centre_id: CENTRE, name: "Reminder probe", meeting_days: [1, 2, 3, 4, 5, 6, 7], start_time: start }).select("id").single()).data?.id as string;
+  try {
+    await db.from("device_tokens").insert({ user_id: user, device_id: device, token: "tok-reminder", environment: "sandbox" });
+    const now = Date.now();
+    const clock = { now: () => now, sleep: async () => {} };
+    const job = { id: "job-r", centreId: CENTRE, kind: "reminder_sweep" as const, attempts: 1, step: {}, input: { centre_id: CENTRE }, leaseUntil: "" };
+    const out = await reminderSweep(makeReminderSource(url as string, service as string, outbox)).step(job, { db: fakeDb(), jobs: fakeJobsDb(clock as never), claude: fakeClaude({}), clock, requestId: "r", worker: "w" });
+    expect(out).toMatchObject({ kind: "done", name: "plan" });
+    const rows = (await db.from("notifications").select("key, title, state").eq("user_id", user).like("key", `class:${room}:%`)).data ?? [];
+    expect(rows.length).toBeGreaterThanOrEqual(1);
+    expect(rows[0]).toMatchObject({ title: `Reminder probe at ${start}`, state: "due" });
+  } finally {
+    await db.from("notifications").delete().eq("user_id", user).like("key", `class:${room}:%`);
+    await db.from("device_tokens").delete().eq("device_id", device);
+    await db.from("classes").delete().eq("id", room);
   }
 });
