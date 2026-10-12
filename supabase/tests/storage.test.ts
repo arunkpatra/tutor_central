@@ -71,6 +71,7 @@ test("a deleted artefact queues its photo and its PDF; a deleted textbook or sch
   await a.from("textbooks").delete().eq("id", book);
   await a.from("school_items").delete().eq("id", item);
   expect([...(await deletions(centreA))]).toEqual([
+    { bucket: "pdfs", path: `${centreA}/${art}-key.pdf`, prefix: false, why: "artefact" },
     { bucket: "pdfs", path: `${centreA}/${art}.pdf`, prefix: false, why: "artefact" },
     { bucket: "photos", path: `${centreA}/item/i.jpg`, prefix: false, why: "school_items" },
     { bucket: "photos", path: `${centreA}/sheet/p.jpg`, prefix: false, why: "artefacts" },

@@ -1,5 +1,6 @@
 -- V3, Phase 18: the server's files (plan decision 20, D90, D92). Two private buckets the platform writes and the centre's
--- members read: `pdfs` (a sheet's, mock's or brief's PDF, `<centre>/<artefact>.pdf`) and `exports` (a student's file,
+-- members read: `pdfs` (a sheet's, mock's or brief's PDF, `<centre>/<artefact>.pdf`, and a sheet's or mock's form with the
+-- answers, `<centre>/<artefact>-key.pdf`) and `exports` (a student's file,
 -- `<centre>/<student>/<job>.pdf`). A deleted row's files are queued in `storage_deletions`, which the sweep empties through
 -- the Storage API (a row's delete cannot reach Storage itself). A kept sheet, mock or brief queues its PDF's job.
 
@@ -44,6 +45,10 @@ begin
   if tg_table_name = 'artefacts' then  -- nested: `old.kind` is planned only for the artefacts' row
     if old.kind::text in ('sheet', 'mock', 'brief') then
       insert into public.storage_deletions (bucket, path, why) values ('pdfs', old.centre_id || '/' || old.id || '.pdf', 'artefact');
+    end if;
+    -- A sheet's and a mock's form with the answers (the pdf job writes both).
+    if old.kind::text in ('sheet', 'mock') then
+      insert into public.storage_deletions (bucket, path, why) values ('pdfs', old.centre_id || '/' || old.id || '-key.pdf', 'artefact');
     end if;
   end if;
   perform set_config('tc.forget', 'off', true);

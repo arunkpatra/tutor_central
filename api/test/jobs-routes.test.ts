@@ -110,3 +110,21 @@ test("the tick sends what is due before it drains, and answers both", async () =
   // The wake drains only: a push is the minute's work.
   expect(await (await app.request("/jobs/wake", { method: "POST", headers: bearer })).json()).not.toHaveProperty("push");
 });
+
+test("/jobs/health renders one page and answers apns true behind the bearer", async () => {
+  const clock = fakeClock();
+  const pusher = fakePusher({ ["0".repeat(64)]: { ok: false, status: 400, reason: "BadDeviceToken", retire: true } });
+  const app = makeApp({
+    verify: async () => null,
+    claude: fakeClaude({}),
+    db: fakeDb(),
+    apple: fakeApple({}),
+    observe: fakeObserve(),
+    worker: { jobs: fakeJobsDb(clock), db: fakeDb(), secret: "s3cret", clock, push: { outbox: fakeOutbox([], {}), pusher: () => pusher } },
+  });
+  expect((await app.request("/jobs/health")).status).toBe(401);
+  const r = await app.request("/jobs/health", { headers: bearer });
+  expect(await r.json()).toEqual({ pdf: 1, apns: true });
+  expect(pusher.sent.map((p) => p.environment)).toEqual(["production"]);
+  expect(pusher.closed).toBe(1);
+});
