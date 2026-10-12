@@ -7,6 +7,8 @@ import { makeObserve } from "../src/observe.js";
 import { planJob } from "../src/jobs/kinds/plan.js";
 import { noteDay } from "../src/jobs/kinds/note-day.js";
 import { makeNoteSource } from "../src/notes/record.js";
+import { exportJob } from "../src/jobs/kinds/export.js";
+import { makeExportSource } from "../src/export/record.js";
 import { makePlatformDb } from "../src/db.js";
 import { kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakePusher } from "../src/push/apns-fake.js";
@@ -195,6 +197,31 @@ test.skipIf(!up)("a note asked for the seed's Diya (her parent agreed) is made b
     expect(kept[0]?.content).toMatchObject({ language: "hi", english: expect.any(String), week_monday: { year: Number(monday.slice(0, 4)) } });
   } finally {
     await db.from("artefacts").delete().eq("centre_id", CENTRE).eq("student_id", aarav).like("idempotency_key", `${key}%`);
+    await db.from("jobs").delete().eq("id", job);
+  }
+});
+
+test.skipIf(!up)("an export asked for the seed's Hemanth is a PDF in exports under the centre and the student", async () => {
+  const db = admin();
+  const hemanth = (await db.from("students").select("id").eq("centre_id", CENTRE).eq("name", "Hemanth Reddy").single()).data?.id as string;
+  const member = createClient(url as string, anon as string, { auth: { persistSession: false } });
+  // The seed's tutor (supabase/CLAUDE.md) asks, as the app does.
+  await member.auth.signInWithPassword({ email: "meera@example.com", password: "tutor-local-1" });
+  const asked = await member.rpc("request_export", { p_centre: CENTRE, p_student: hemanth });
+  expect(asked.error).toBeNull();
+  const job = asked.data as string;
+  let path = "";
+  try {
+    const clock = { now: () => Date.now(), sleep: async () => {} };
+    const ctx = { db: makePlatformDb(url as string, service as string), jobs: fakeJobsDb(clock as never), claude: fakeClaude({}), clock, requestId: crypto.randomUUID(), worker: "w" };
+    const out = await exportJob(makeExportSource(url as string, service as string)).step({ id: job, centreId: CENTRE, kind: "export", attempts: 1, step: {}, input: { student_id: hemanth }, leaseUntil: "" }, ctx);
+    expect(out).toMatchObject({ kind: "done", result: { path: `${CENTRE}/${hemanth}/${job}.pdf` } });
+    path = (out as unknown as { result: { path: string } }).result.path;
+    const file = await db.storage.from("exports").download(path);
+    expect(file.error).toBeNull();
+    expect(new TextDecoder("latin1").decode(new Uint8Array(await file.data!.arrayBuffer()).slice(0, 5))).toBe("%PDF-");
+  } finally {
+    if (path) await db.storage.from("exports").remove([path]);
     await db.from("jobs").delete().eq("id", job);
   }
 });
