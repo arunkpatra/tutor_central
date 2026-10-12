@@ -12,6 +12,8 @@ public struct Dependencies: Sendable {
     public let classes: any ClassesRepository
     public let attendance: any AttendanceRepository
     public let messages: any MessageLogRepository
+    /// Where the tutor's activity goes (`events`, D77); the fixtures' goes nowhere.
+    public let activity: any ActivityRepository
     /// V2's record (Phase 11): the schools, the textbooks and each student's chapters and skills, the checks and
     /// homework.
     public let schools: any SchoolsRepository
@@ -58,6 +60,7 @@ public struct Dependencies: Sendable {
         classes: any ClassesRepository,
         attendance: any AttendanceRepository,
         messages: any MessageLogRepository,
+        activity: any ActivityRepository = FakeActivityRepository(),
         schools: any SchoolsRepository,
         schoolItems: any SchoolItemsRepository,
         textbooks: any TextbooksRepository,
@@ -88,6 +91,7 @@ public struct Dependencies: Sendable {
         self.classes = classes
         self.attendance = attendance
         self.messages = messages
+        self.activity = activity
         self.schools = schools
         self.schoolItems = schoolItems
         self.textbooks = textbooks
@@ -132,6 +136,7 @@ public struct Dependencies: Sendable {
             classes: SupabaseClassesRepository(client: client),
             attendance: SupabaseAttendanceRepository(client: client),
             messages: SupabaseMessageLogRepository(client: client),
+            activity: SupabaseActivityRepository(client: client),
             schools: SupabaseSchoolsRepository(client: client),
             schoolItems: SupabaseSchoolItemsRepository(client: client),
             textbooks: SupabaseTextbooksRepository(client: client),
