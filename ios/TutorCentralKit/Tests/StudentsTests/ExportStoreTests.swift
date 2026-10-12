@@ -39,7 +39,8 @@ import Testing
         }
         return ExportStore(
             studentID: hemanth, register: register, jobs: jobs, files: files, now: { Self.now }, online: { online },
-            pause: {}
+            // A real wait, short: a pause that never suspends would let a follow that keeps reading starve the test.
+            pause: { try await Task.sleep(for: .milliseconds(5)) }
         )
     }
 
@@ -90,6 +91,49 @@ import Testing
             try await Task.sleep(for: .milliseconds(10))
         }
         #expect(store.title == "Ready to share")
+    }
+
+    /// The Phase 18 review's R-app-2: one failed read on a flaky link no longer ends the follow; the file still
+    /// arrives.
+    @Test func aFailedReadKeepsFollowing() async throws {
+        let jobs = FakeJobsRepository(now: { Self.now })
+        jobs.exportJobs[hemanth] = JobStatus(id: UUID(), state: .running, createdAt: at(16, 2))
+        let store = await store(jobs: jobs)
+        await store.load()
+        jobs.failure = URLError(.timedOut)
+        let failedFrom = jobs.reads
+        try await until { jobs.reads > failedFrom + 1 }
+        jobs.failure = nil
+        jobs.exportJobs[hemanth] = ready()
+        try await until { store.title == "Ready to share" }
+        #expect(store.title == "Ready to share")
+        store.stop()
+    }
+
+    /// The review's R-app-2: with the page behind (WhatsApp in front) the reads wait; back in front the made file
+    /// shows.
+    @Test func backInFrontTheMadeFileShows() async throws {
+        let jobs = FakeJobsRepository(now: { Self.now })
+        jobs.exportJobs[hemanth] = JobStatus(id: UUID(), state: .running, createdAt: at(16, 2))
+        let store = await store(jobs: jobs)
+        var front = true
+        store.inFront = { front }
+        await store.load()
+        front = false
+        jobs.exportJobs[hemanth] = ready()
+        try await Task.sleep(for: .milliseconds(100))
+        front = true
+        try await until { store.title == "Ready to share" }
+        #expect(store.title == "Ready to share")
+        store.stop()
+    }
+
+    /// Polls until `done` or three seconds.
+    func until(_ done: () -> Bool) async throws {
+        let end = ContinuousClock.now.advanced(by: .seconds(3))
+        while !done(), ContinuousClock.now < end {
+            try await Task.sleep(for: .milliseconds(10))
+        }
     }
 
     @Test func aFailedJobShowsTryAgainAndTryAgainAsksAgain() async {
