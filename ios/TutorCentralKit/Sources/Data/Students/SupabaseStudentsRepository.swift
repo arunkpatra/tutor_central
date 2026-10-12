@@ -90,13 +90,14 @@ public final class SupabaseStudentsRepository: StudentsRepository {
         return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
     }
 
-    public func withdrawConsent(id: UUID, centre: UUID, how: ConsentMethod, on day: Day) async throws -> Student {
+    /// One call: the RPC is the whole write (it clears the consent's three columns). A read after it could fail with
+    /// the
+    /// withdrawal recorded and say it was not (the review's R-app-5); the register clears its own copy instead.
+    public func withdrawConsent(id: UUID, centre: UUID, how: ConsentMethod, on day: Day) async throws {
         try await client.rpc("withdraw_consent", params: [
             "p_centre": AnyJSON.string(centre.uuidString), "p_student": .string(id.uuidString),
             "p_how": .string(how.rawValue), "p_on": .string(day.iso),
         ]).execute()
-        let response = try await client.from("students").select(Self.columns).eq("id", value: id).single().execute()
-        return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
     }
 
     public func setNextStep(id: UUID, _ step: NextStep?) async throws -> Student {

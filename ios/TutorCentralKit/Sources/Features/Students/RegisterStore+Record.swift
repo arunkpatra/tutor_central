@@ -97,10 +97,9 @@ public extension RegisterStore {
     func withdrawConsent(_ id: UUID, how: ConsentMethod, on day: Day) async -> String? {
         guard let before = student(id) else { return "That student is no longer here." }
         do {
-            var saved = try await studentsRepository.withdrawConsent(
-                id: id, centre: workspace.centre.id, how: how, on: day
-            )
-            saved.thisMonth = before.thisMonth
+            try await studentsRepository.withdrawConsent(id: id, centre: workspace.centre.id, how: how, on: day)
+            var saved = before
+            saved.consent = nil
             replace(id, with: saved)
             succeeded()
             return nil
