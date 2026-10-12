@@ -136,7 +136,7 @@ extension RootView {
     func reminderSummary() async -> ReminderSummary {
         var settings = ReminderSettings()
         if case let .ready(workspace) = session.state,
-           let read = try? await deps.reminderSettings.read(centre: workspace.centre.id) {
+           let read = try? await deps.reminderSettings.read(centre: workspace.centre.id) ?? nil {
             settings = read
         }
         return await ReminderSummary(permission: deps.notifications.permission(), settings: settings)

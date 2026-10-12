@@ -68,7 +68,7 @@ import Observation
     /// The permission, the account's choices (the defaults when they cannot be read) and the next reminder.
     public func load() async {
         permission = await notifications.permission()
-        if let read = try? await repository.read(centre: centre) {
+        if let read = try? await repository.read(centre: centre) ?? nil {
             settings = read
         }
         confirmed = settings
