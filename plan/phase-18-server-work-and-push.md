@@ -1,6 +1,6 @@
 # Phase 18: V3 the server's work and push
 
-**Status:** Not started. **Depends on:** Phase 17; boards for the states that change (consent withdrawal, the export, "plan
+**Status:** Planned (session 36, 2026-10-12): the 14 boards of row 26 approved; `phase-18-plan.md`; the build from `resume/035-phase-18-build.md`. **Depends on:** Phase 17; boards for the states that change (consent withdrawal, the export, "plan
 ready").
 
 ## Goal

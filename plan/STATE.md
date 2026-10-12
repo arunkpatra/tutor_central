@@ -3,16 +3,15 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-12, session 35 (Phase 17's build, on Opus 5.5). **Session 35:** Phase 17 built in #184 to #214
-(hand runs #212), every finding of the two fresh reviews fixed (#207 to #211, migration 0035), deployed (run 38256073141:
-0028 to 0035, the worker live, the minute wake answering), the owner's centre's first plan job done (Good Ground, Class 8,
-13 October), 1.0.0 (27) to TestFlight with nothing new on screen; D86 (merge on local green) and D87 (the session runs
-production's setup through the signed-in CLIs) recorded; the record in `plan/sessions/035/`.
-**Next:** Phase 18's boards, then its plan, on Fable 5.1 from `resume/034-phase-18-boards-and-plan.md`. The order (D81):
-V3's Phases 17 to 22, then the external testing round on the first build that carries them, then Phase 16. The round's
-documents are ready (`docs/release.md`, `docs/testing/tester-guide.md`, `plan/phase-15-findings.md`); the owner's own
-findings go into `plan/phase-15-findings.md` (Who = Owner); none reported yet. The owner opens Today on 13 October to see the
-plan the job made overnight.
+**Last updated:** 2026-10-12, session 36 (Phase 18's boards and plan, on Fable 5.1). **Session 36:** the 14 boards of row 26
+drawn and approved (consent withdrawn, the export and its file, plan ready: the notifications, Today while the material is
+made, the Reminders screen), mirrored (`d6c8b66`); `plan/phase-18-plan.md` written (25 tasks, 22 pull requests, D88 to D92);
+the record in `plan/sessions/036/`.
+**Next:** the owner reviews `plan/phase-18-plan.md`; then Phase 18's build on Opus 5.5 from `resume/035-phase-18-build.md`
+(its first message asks the owner for the APNs key, Task 1). The order (D81): V3's Phases 17 to 22, then the external testing
+round on the first build that carries them, then Phase 16. The round's documents are ready (`docs/release.md`,
+`docs/testing/tester-guide.md`, `plan/phase-15-findings.md`); the owner's own findings go into `plan/phase-15-findings.md`
+(Who = Owner); none reported yet.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -21,7 +20,7 @@ plan the job made overnight.
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -39,7 +38,7 @@ plan the job made overnight.
 | 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the external testing round waits for V3 (D69, D81) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready |
 | 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
 | 17 V3 platform foundation | Done (session 35, 2026-10-12), PRs #184 to #214; hand runs #212 | "As built" in `phase-17-platform-foundation.md`; deployed; 1.0.0 (27) |
-| 18 V3 the server's work and push | Next: boards, then the plan (resume 034) | Scope file `phase-18-server-work-and-push.md`; builds on 17 |
+| 18 V3 the server's work and push | Planned (session 36, 2026-10-12): boards approved (row 26), `phase-18-plan.md`; the build next (resume 035) | Scope file `phase-18-server-work-and-push.md`; builds on 17 |
 | 19 V3 the admin portal, reading | Not started | Scope file `phase-19-admin-portal-reading.md`; depends on 17; boards first |
 | 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
 | 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
@@ -147,7 +146,7 @@ delete.
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.
 - Crash reporting: D77 (2026-10-12) settles it for V3: Xcode Organizer and TestFlight, no SDK in the app.
-- **The trust page** is live (#165, #181); the per-student export (D62) is Phase 18's job (D79).
+- **The trust page** is live (#165, #181); the per-student export (D62) is Phase 18's job (D79, D92), and the page's words change with it (plan Task 23).
 - After App Store approval (a later slice): `APP_STORE_URL` on Vercel's `tutor-central-web`, then `gh workflow run deploy-web`
   for Home's badge (D47).
 

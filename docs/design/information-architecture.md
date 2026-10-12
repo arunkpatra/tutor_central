@@ -1363,7 +1363,7 @@ current and future design boards for this session are pre-approved.").
 
 Launch states (Phase 18 builds them): `student-consent-change`, `student-consent-withdraw`, `student-withdrawn`,
 `student-export`, `student-export-making`, `student-export-ready`, `student-export-failed`, `today-plan-making`,
-`settings-reminders` (redrawn: the Phase 7 state shows the new screen). The notifications have no launch state: they are proven
+`reminders` (redrawn: the Phase 7 state shows the new screen). The notifications have no launch state: they are proven
 by a push to the simulator (`xcrun simctl push`, `docs/runbooks/simulator.md`). The file has none: it is proven by the export
 job's PDF from the local stack, its first page rendered for the pull request.
 
@@ -1400,8 +1400,8 @@ What the boards settle:
   the tutor's name and number, a marigold rule, a line for the parent ("This file is for <student>'s parent. It lists what is
   kept about <object> in Tutor Central, the app <pronoun> tutor uses. To correct or remove anything, ask <tutor>; deleting
   <student> removes all of it."), then sections as label and value rows: About <object>, Consent (each event), Attendance,
-  Fees, <Pronoun> record (chapters, checks, school marks), Homework, Messages to <pronoun> parent (each one's day, kind,
-  language and words), Made about <object> (each note and message the AI service wrote, its day and words); the page's foot
+  Fees, <Pronoun> record (chapters, checks, school marks), Homework, Messages to <pronoun> parent (each one's day and kind:
+  the log keeps no words), Made about <object> (each note and message the AI service wrote, its day and words); the page's foot
   names what continues and "Page n of m". No photo is in the file (none is kept, D79's export holds the record, the messages
   and the outputs).
 - **Plan ready** is one notification per batch when its plan job is done, material included: the title "<batch>: today's plan
