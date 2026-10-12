@@ -69,6 +69,30 @@ import Testing
         #expect(await repository.saves.map(\.feesDay) == [10] && store.feesDayLabel == "10th")
     }
 
+    /// The review's R-app-3: the lead scrolled 15 → 30 → 60 while the first save is slow; the account ends at 60, never
+    /// at
+    /// an earlier choice landing last.
+    @Test func quickChangesSaveInOrderAndTheLastChoiceStays() async throws {
+        let center = FakeNotificationCenter(permission: .allowed)
+        let repository = FakeReminderSettingsRepository()
+        let store = make(center, repository: repository)
+        await store.load()
+        await repository.holdNextSave()
+        store.settings.classMinutesBefore = 15
+        while await !repository.isHolding {
+            await Task.yield()
+        }
+        store.settings.classMinutesBefore = 30
+        store.settings.classMinutesBefore = 60
+        try await Task.sleep(for: .milliseconds(50))
+        await repository.releaseSave()
+        // Long enough for every save to land, in whatever order they run.
+        try await Task.sleep(for: .milliseconds(200))
+        #expect(await repository.kept?.classMinutesBefore == 60)
+        #expect(await repository.saves.last?.classMinutesBefore == 60)
+        #expect(store.settings.classMinutesBefore == 60)
+    }
+
     @Test func aSaveThatFailsPutsTheChoiceBackAndSaysSo() async throws {
         let repository = FakeReminderSettingsRepository(failure: URLError(.notConnectedToInternet))
         let store = make(FakeNotificationCenter(permission: .allowed), repository: repository)
