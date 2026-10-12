@@ -100,6 +100,8 @@ export const STEPS: Step[] = [
       "api/src/generated/**",
       "ios/TutorCentralKit/Sources/Domain/Generated/**",
       "ios/TutorCentralKit/Tests/DataTests/Contract/**",
+      "tools/contract/plan-cases.json",
+      "ios/TutorCentralKit/Tests/DomainTests/Cases/**",
     ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
@@ -110,7 +112,7 @@ export const STEPS: Step[] = [
   {
     name: "api",
     // schemas.test parses the class 10 blueprints of the syllabus data.
-    inputs: ["api/src/**", "api/test/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**"],
+    inputs: ["api/src/**", "api/test/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**", "tools/contract/plan-cases.json"],
     run: () => run("bun run check", "api"),
   },
   {

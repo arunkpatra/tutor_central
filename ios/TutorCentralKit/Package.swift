@@ -33,7 +33,7 @@ let package = Package(
                 dependencies: ["Domain", "Data", "DesignSystem"] + features.map { Target.Dependency(stringLiteral: $0) }
             ),
             .testTarget(name: "DesignSystemTests", dependencies: ["DesignSystem"]),
-            .testTarget(name: "DomainTests", dependencies: ["Domain"]),
+            .testTarget(name: "DomainTests", dependencies: ["Domain"], resources: [.copy("Cases")]),
             .testTarget(name: "DataTests", dependencies: ["Data"], resources: [.copy("Contract")]),
             .testTarget(name: "AppShellTests", dependencies: ["AppShell"]),
             .testTarget(name: "OnboardingTests", dependencies: ["Onboarding"]),
