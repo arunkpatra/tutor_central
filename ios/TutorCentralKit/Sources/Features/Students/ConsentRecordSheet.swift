@@ -2,11 +2,12 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// Parent agreed (P10-Consent-Record): how, the day (today or earlier), the parent's number, Record it; Remove when a
-/// record exists (plan decision 13).
+/// Parent agreed (P10-Consent-Record, P18-Consent-Change): how, the day (today or earlier), the parent's number, Record
+/// it; Parent withdrew when an agreement exists, which opens the withdraw sheet (the history stays true).
 struct ConsentRecordSheet: View {
     @Bindable var store: ConsentStore
     let close: () -> Void
+    let withdrew: () -> Void
     @State private var saving = false
     @State private var pickingDay = false
 
@@ -42,7 +43,7 @@ struct ConsentRecordSheet: View {
                 .buttonStyle(.primary(.card, loading: saving))
                 .disabled(!store.sheet.canRecord)
                 if case .agreed = store.state {
-                    Button("Remove") { save { await store.remove() } }.buttonStyle(.destructive(.form))
+                    Button("Parent withdrew", action: withdrew).buttonStyle(.destructive(.form))
                 }
             }
         }

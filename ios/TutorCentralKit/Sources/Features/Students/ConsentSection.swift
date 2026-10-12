@@ -2,8 +2,9 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// Consent on the page (P10-Student-NotKnown, -End, P10-Student-Consent-Waiting): one row in its state, the footnote
-/// under the card; Ask on WhatsApp opens the ask sheet, Parent agreed and Change the record sheet.
+/// Consent on the page (P10-Student-NotKnown, -End, P10-Student-Consent-Waiting, P18-Student-Withdrawn): one row in its
+/// state with the history beyond the first agreement, the footnote under the card; Ask on WhatsApp opens the ask sheet,
+/// Parent agreed and Change the record sheet.
 struct ConsentSection: View {
     @Bindable var store: ConsentStore
     let ask: () -> Void
@@ -25,7 +26,12 @@ struct ConsentSection: View {
     @ViewBuilder private var row: some View {
         switch store.state {
         case .agreed:
-            ConsentRow(agreedTitle: store.title, line: store.line, change: agreed)
+            ConsentRow(agreedTitle: store.title, line: store.line, history: store.historyLines, change: agreed)
+        case .withdrawn:
+            ConsentRow(
+                withdrawnTitle: store.title, line: store.line, history: store.historyLines,
+                buttons: .init(ask: ("Ask on WhatsApp", ask), agreed: agreed)
+            )
         case .notRecorded:
             ConsentRow(
                 title: store.title,

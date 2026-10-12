@@ -30,6 +30,10 @@ extension StudentDetailView {
         case .edit: edit()
         case .consentAsk: asking = true
         case .consentRecord: recordingConsent = true
+        case .consentWithdraw:
+            // P18-Consent-Withdraw draws a withdrawal on a call.
+            store.consent.withdrawSheet.how = .call
+            withdrawingConsent = true
         case .nextStep: choosingStep = true
         case .tellParent: tellingParent = store.student.flatMap { student in makeTellParent?(student.id) }
         case .record, .end, .marks, nil: break

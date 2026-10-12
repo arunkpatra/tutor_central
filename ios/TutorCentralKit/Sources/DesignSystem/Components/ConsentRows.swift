@@ -1,8 +1,10 @@
 import SwiftUI
 
-/// The consent section's one row (components.md "Consent section"), in its three forms: not recorded and waiting carry
+/// The consent section's one row (components.md "Consent section"), in its four forms: not recorded and waiting carry
 /// the line and two buttons 44 high under it (the secondary ask, the primary Parent agreed); agreed carries
-/// `checkmark.circle` 22 in `ok` and the quiet Change. The footnotes sit outside the card.
+/// `checkmark.circle` 22 in `ok` and the quiet Change; withdrawn (P18-Student-Withdrawn) `minus.circle` 22 in `text3`
+/// and the two buttons. Agreed and withdrawn show the history under the row once there is more than the first
+/// agreement. The footnotes sit outside the card.
 public struct ConsentRow: View {
     public struct Buttons {
         let ask: (label: String, run: () -> Void)
@@ -18,6 +20,8 @@ public struct ConsentRow: View {
     let line: String
     let buttons: Buttons?
     let change: (() -> Void)?
+    let symbol: (name: String, color: ColorToken)?
+    let history: [ConsentHistoryLine]
     static var agreedSymbol: CGFloat {
         22
     }
@@ -28,23 +32,37 @@ public struct ConsentRow: View {
         self.line = line
         self.buttons = buttons
         change = nil
+        symbol = nil
+        history = []
     }
 
-    /// Agreed: the tick and Change.
-    public init(agreedTitle: String, line: String, change: @escaping () -> Void) {
+    /// Agreed: the tick and Change, with the history when there is one.
+    public init(agreedTitle: String, line: String, history: [ConsentHistoryLine] = [], change: @escaping () -> Void) {
         title = agreedTitle
         self.line = line
         buttons = nil
         self.change = change
+        symbol = ("checkmark.circle", Tokens.ok)
+        self.history = history
+    }
+
+    /// Withdrawn: the mark, the history and the two buttons.
+    public init(withdrawnTitle: String, line: String, history: [ConsentHistoryLine], buttons: Buttons) {
+        title = withdrawnTitle
+        self.line = line
+        self.buttons = buttons
+        change = nil
+        symbol = ("minus.circle", Tokens.text3)
+        self.history = history
     }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: Tokens.rowPaddingDense) {
             HStack(alignment: .center, spacing: Tokens.rowPaddingDense) {
-                if change != nil {
-                    Image(systemName: "checkmark.circle")
+                if let symbol {
+                    Image(systemName: symbol.name)
                         .font(.system(size: Self.agreedSymbol))
-                        .foregroundStyle(Tokens.ok.color)
+                        .foregroundStyle(symbol.color.color)
                         .accessibilityHidden(true)
                 }
                 VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
@@ -58,6 +76,9 @@ public struct ConsentRow: View {
                 if let change {
                     Button("Change", action: change).buttonStyle(.quiet).fixedSize()
                 }
+            }
+            if !history.isEmpty {
+                ConsentHistory(lines: history)
             }
             if let buttons {
                 AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {

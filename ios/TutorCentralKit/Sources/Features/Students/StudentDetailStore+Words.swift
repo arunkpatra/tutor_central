@@ -46,12 +46,13 @@ extension StudentDetailStore {
         let subject: String
         let possessive: String
         let verb: String
+        var object = "them"
     }
 
     nonisolated static func pronouns(_ gender: Gender?) -> Pronouns {
         switch gender {
-        case .female: Pronouns(subject: "she", possessive: "her", verb: "stands")
-        case .male: Pronouns(subject: "he", possessive: "his", verb: "stands")
+        case .female: Pronouns(subject: "she", possessive: "her", verb: "stands", object: "her")
+        case .male: Pronouns(subject: "he", possessive: "his", verb: "stands", object: "him")
         case .other, nil: Pronouns(subject: "they", possessive: "their", verb: "stand")
         }
     }

@@ -58,13 +58,14 @@ public enum FeeActionKind: Sendable {
     public init(
         id: UUID, register: RegisterStore, attendance: any AttendanceRepository, messages: any MessageLogRepository,
         textbooks: (any TextbooksRepository)? = nil, record: (any RecordRepository)? = nil,
-        schoolItems: (any SchoolItemsRepository)? = nil,
+        schoolItems: (any SchoolItemsRepository)? = nil, consentHistory: (any ConsentHistoryRepository)? = nil,
         now: @escaping @Sendable () -> Date = Date.init, online: @escaping @Sendable () async -> Bool = { true }
     ) {
         self.schoolItems = schoolItems
         consent = ConsentStore(
-            studentID: id, register: register, messages: messages, tutorName: register.workspace.profile.displayName,
-            centreName: register.workspace.centre.name, now: now, online: online
+            studentID: id, register: register, messages: messages, history: consentHistory,
+            tutorName: register.workspace.profile.displayName, centreName: register.workspace.centre.name, now: now,
+            online: online
         )
         self.id = id
         self.register = register

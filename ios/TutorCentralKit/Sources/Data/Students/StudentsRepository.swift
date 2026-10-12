@@ -19,8 +19,11 @@ public protocol StudentsRepository: Sendable {
     func deleteMany(ids: [UUID]) async throws
     /// The whole notes text (nil clears), answering the student as stored (a checked paper's line, and its Undo).
     func updateNotes(id: UUID, notes: String?) async throws -> Student
-    /// The parent's consent recorded (D62), or cleared with nil; the student as stored.
+    /// The parent's consent recorded (D62); the student as stored.
     func setConsent(id: UUID, _ consent: ConsentRecord?) async throws -> Student
+    /// The parent withdrew (`withdraw_consent`, 0036): the event with how and the day (today or earlier, not before the
+    /// agreement), the consent cleared in the same transaction; the student as stored.
+    func withdrawConsent(id: UUID, centre: UUID, how: ConsentMethod, on day: Day) async throws -> Student
     /// The next step the tutor chose for a student not on track (Phase 14); nil: the plan's own.
     func setNextStep(id: UUID, _ step: NextStep?) async throws -> Student
 }

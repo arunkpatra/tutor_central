@@ -90,6 +90,15 @@ public final class SupabaseStudentsRepository: StudentsRepository {
         return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
     }
 
+    public func withdrawConsent(id: UUID, centre: UUID, how: ConsentMethod, on day: Day) async throws -> Student {
+        try await client.rpc("withdraw_consent", params: [
+            "p_centre": AnyJSON.string(centre.uuidString), "p_student": .string(id.uuidString),
+            "p_how": .string(how.rawValue), "p_on": .string(day.iso),
+        ]).execute()
+        let response = try await client.from("students").select(Self.columns).eq("id", value: id).single().execute()
+        return try Self.decoder.decode(StudentRow.self, from: response.data).student(calendar: calendar)
+    }
+
     public func setNextStep(id: UUID, _ step: NextStep?) async throws -> Student {
         let response = try await client.from("students")
             .update(["next_step": step.map { AnyJSON.string($0.rawValue) } ?? .null])
