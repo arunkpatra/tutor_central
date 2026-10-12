@@ -70,9 +70,16 @@ jobs:
       - name: Count both sides
         working-directory: supabase
         run: |
-          supabase db query --linked -f ../tools/restore-count.sql --output-format json > "$RUNNER_TEMP/production.json"
-          jq -r '(.rows // .)[] | "\(.name)|\(.n)"' "$RUNNER_TEMP/production.json" | sort > "$RUNNER_TEMP/production.txt"
-          psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -At -f ../tools/restore-count.sql | sort > "$RUNNER_TEMP/restored.txt"
+          # Each side's failure is said with the tool's own message (counts and errors only, never a row).
+          if ! supabase db query --linked -f ../tools/restore-count.sql --output-format json > "$RUNNER_TEMP/production.json" 2> "$RUNNER_TEMP/query.err"; then
+            echo "::error::The production count did not run."; cat "$RUNNER_TEMP/query.err"; head -c 800 "$RUNNER_TEMP/production.json"; exit 1
+          fi
+          jq -r '(.rows // .)[] | "\(.name)|\(.n)"' "$RUNNER_TEMP/production.json" | LC_ALL=C sort > "$RUNNER_TEMP/production.txt"
+          if ! psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -At -f ../tools/restore-count.sql > "$RUNNER_TEMP/restored.raw" 2> "$RUNNER_TEMP/psql.err"; then
+            echo "::error::The restored count did not run."; cat "$RUNNER_TEMP/psql.err"; exit 1
+          fi
+          LC_ALL=C sort "$RUNNER_TEMP/restored.raw" > "$RUNNER_TEMP/restored.txt"
+          wc -l "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt"
           seconds=$(( RESTORED - STARTED ))
           # Table names and counts only: the same table in the log and the summary.
           {
@@ -81,7 +88,7 @@ jobs:
             echo ""
             echo "| Table | Production | Restored |"
             echo "|---|---|---|"
-            join -t '|' -a 1 -a 2 -e '—' -o 0,1.2,2.2 "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" | awk -F'|' '{ print "| " $1 " | " $2 " | " $3 " |" }'
+            LC_ALL=C join -t '|' -a 1 -a 2 -e '—' -o 0,1.2,2.2 "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" | awk -F'|' '{ print "| " $1 " | " $2 " | " $3 " |" }'
           } | tee -a "$GITHUB_STEP_SUMMARY"
           if diff -q "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" > /dev/null; then
             echo "Every table's count is equal." >> "$GITHUB_STEP_SUMMARY"
@@ -93,5 +100,5 @@ jobs:
       - name: Nothing kept
         if: always()
         run: |
-          rm -f "$RUNNER_TEMP"/*.sql "$RUNNER_TEMP"/*.json "$RUNNER_TEMP"/*.txt "$RUNNER_TEMP"/restore.log
+          rm -f "$RUNNER_TEMP"/*.sql "$RUNNER_TEMP"/*.json "$RUNNER_TEMP"/*.txt "$RUNNER_TEMP"/*.raw "$RUNNER_TEMP"/*.err "$RUNNER_TEMP"/restore.log
           (cd "$RUNNER_TEMP/blank" 2>/dev/null && supabase stop --no-backup) || true
