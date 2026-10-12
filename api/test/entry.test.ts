@@ -22,6 +22,8 @@ test("src/index.ts exports the server as its default", async () => {
   process.env.APPLE_TEAM_ID ??= "test";
   process.env.APPLE_KEY_ID ??= "test";
   process.env.APPLE_SIGNIN_KEY ??= "test";
+  process.env.SUPABASE_SERVICE_ROLE_KEY ??= "test";
+  process.env.WORKER_SECRET ??= "test";
   const entry = await import("../src/index.js");
   expect(typeof entry.default.fetch).toBe("function");
 });
@@ -29,6 +31,8 @@ test("src/index.ts exports the server as its default", async () => {
 const SETTINGS = {
   SUPABASE_URL: "http://127.0.0.1:54321",
   SUPABASE_ANON_KEY: "k",
+  SUPABASE_SERVICE_ROLE_KEY: "s",
+  WORKER_SECRET: "w",
   ANTHROPIC_API_KEY: "a",
   APPLE_TEAM_ID: "t",
   APPLE_KEY_ID: "k",
@@ -70,4 +74,14 @@ test("an unknown AI_MODEL value stops the entry, so the deploy's smoke fails and
   expect(stderr).toContain("AI_MODEL_NOTE names an unknown model: claude-5");
   const good = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env: { ...env, AI_MODEL_NOTE: "claude-sonnet-5-5" }, stdout: "pipe", stderr: "pipe" });
   expect(await good.exited).toBe(0);
+});
+
+test("the entry refuses AI_FAKE and APPLE_FAKE in production, so the deploy's smoke fails and no tutor's call answers from a fake", async () => {
+  for (const fake of ["AI_FAKE", "APPLE_FAKE"]) {
+    const env: Record<string, string> = { PATH: process.env.PATH ?? "", ...SETTINGS, VERCEL_ENV: "production", [fake]: "1" };
+    const proc = Bun.spawn(["bun", "--no-env-file", "-e", "await import('./src/index.ts')"], { cwd: root, env, stdout: "pipe", stderr: "pipe" });
+    const stderr = await new Response(proc.stderr).text();
+    expect({ fake, code: await proc.exited }).not.toEqual({ fake, code: 0 });
+    expect(stderr).toContain(`${fake} is refused in production`);
+  }
 });

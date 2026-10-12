@@ -3,10 +3,11 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { fakeObserve } from "../src/observe-fake.js";
 
 const deps = { claude: fakeClaude({ refuse: true }), db: fakeDb(), apple: fakeApple({}) };
 
-const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), ...deps });
+const app = makeApp({ observe: fakeObserve(), verify: async (t) => (t === "good" ? { id: "u1" } : null), ...deps });
 const post = (headers: Record<string, string>) =>
   app.request("/ai/generate", { method: "POST", body: "{}", headers: { "content-type": "application/json", ...headers } });
 
@@ -28,11 +29,11 @@ test("an expired, unknown or deleted user's token → 401, never 500", async () 
 });
 
 test("an unreachable Supabase answers 503 in connection words, not 401 'sign in again' (D68)", async () => {
-  const down = makeApp({ verify: async () => "unreachable", ...deps });
+  const down = makeApp({ observe: fakeObserve(), verify: async () => "unreachable", ...deps });
   const r = await down.request("/ai/generate", { method: "POST", body: "{}", headers: { authorization: "Bearer good" } });
   expect(r.status).toBe(503);
   expect(await r.json()).toEqual({ error: "Couldn't reach the service. Try again.", reason: "unreachable" });
-  const failing = makeApp({ verify: async () => { throw new Error("fetch failed"); }, ...deps });
+  const failing = makeApp({ observe: fakeObserve(), verify: async () => { throw new Error("fetch failed"); }, ...deps });
   const thrown = await failing.request("/ai/generate", { method: "POST", body: "{}", headers: { authorization: "Bearer x" } });
   expect(thrown.status).toBe(503);
 });

@@ -3,9 +3,10 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { fakeObserve } from "../src/observe-fake.js";
 
 function appWith(apple = fakeApple({})) {
-  return makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), claude: fakeClaude({}), db: fakeDb(), apple });
+  return makeApp({ observe: fakeObserve(), verify: async (t) => (t === "good" ? { id: "u1" } : null), claude: fakeClaude({}), db: fakeDb(), apple });
 }
 const post = (app: ReturnType<typeof makeApp>, body: unknown, token = "good") =>
   app.request("/account/revoke-apple", {

@@ -3,9 +3,10 @@ import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
+import { fakeObserve } from "../src/observe-fake.js";
 
 const deps = { claude: fakeClaude({ refuse: true }), db: fakeDb(), apple: fakeApple({}) };
-const app = makeApp({ verify: async (t) => (t === "good" ? { id: "u1" } : null), commit: "abc1234", ...deps });
+const app = makeApp({ observe: fakeObserve(), verify: async (t) => (t === "good" ? { id: "u1" } : null), commit: "abc1234", ...deps });
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
 const post = (path: string, body: string) => app.request(path, { method: "POST", headers: auth, body });
 
@@ -13,7 +14,7 @@ test("health answers with status and the commit it was deployed from", async () 
   const r = await app.request("/health");
   expect(r.status).toBe(200);
   expect(await r.json()).toEqual({ ok: true, commit: "abc1234" });
-  const unknown = makeApp({ verify: async () => null, ...deps });
+  const unknown = makeApp({ observe: fakeObserve(), verify: async () => null, ...deps });
   expect(await (await unknown.request("/health")).json()).toEqual({ ok: true, commit: "local" });
 });
 

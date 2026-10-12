@@ -3,6 +3,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type { ZodType } from "zod";
+import { log } from "./log.js";
 
 export type ImageInput = { mediaType: "image/jpeg" | "image/png" | "image/webp"; base64: string };
 export type ClaudeRequest<T> = {
@@ -64,7 +65,7 @@ export function anthropicClaude(
         }
         if (e instanceof Anthropic.APIError) return failed(`api ${e.status}`, e);
         if (e instanceof Anthropic.AnthropicError && e.message.startsWith("Failed to parse structured output")) {
-          console.error("claude", "unfit answer", e.message);
+          log.error({ at: "claude", reason: "unfit", message: e.message });
           return { kind: "refused", model: request.model, tokensIn: null, tokensOut: null };
         }
         return failed("error", e);
@@ -74,6 +75,6 @@ export function anthropicClaude(
 }
 
 function failed(reason: string, e: unknown): { kind: "failed"; reason: string } {
-  console.error("claude", reason, e instanceof Error ? e.message : String(e));
+  log.error({ at: "claude", reason, error: e instanceof Error ? e : String(e) });
   return { kind: "failed", reason };
 }

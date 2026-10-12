@@ -9,15 +9,27 @@ import { makeDb } from "./db.js";
 import { env } from "./env.js";
 import { makeApp } from "./make-app.js";
 import { applyModelOverrides } from "./models.js";
+import { makeObserve } from "./observe.js";
 import { makeVerify } from "./verify.js";
 
 /** Read at start: a deployment without them fails to boot, so /health and the deploy's smoke fail, instead of every
  *  tutor being told to sign in again. AI_FAKE=1 (local runs only, never in Vercel) answers from the fake, so a hand
  *  run costs nothing while the consent, the limit and the record still run against the database. */
+/** A fake in production would answer a tutor's call from samples, or skip Apple: refused at start, so the deploy's smoke
+ *  fails instead (plan decision 27). */
+for (const fake of ["AI_FAKE", "APPLE_FAKE"] as const) {
+  if (process.env.VERCEL_ENV === "production" && process.env[fake] === "1") throw new Error(`${fake} is refused in production`);
+}
 const supabaseUrl = env("SUPABASE_URL");
 /** AI_MODEL_<WORK_TYPE> overrides api/models.json at deploy (D67); an unknown name stops the start, as a missing setting does. */
 applyModelOverrides(process.env);
 const supabaseAnonKey = env("SUPABASE_ANON_KEY");
+/** The platform's identity (D83): read here alone and handed to the observability client and the worker, never to the
+ *  tutor routes' database client, which carries the tutor's own token. */
+const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
+/** The bearer pg_cron and the enqueue trigger send to the worker's routes (D85, Phase 17's PR 10): read at boot, so a
+ *  deployment without it fails its smoke. */
+env("WORKER_SECRET");
 const claude = process.env.AI_FAKE === "1" ? fakeClaude(localScript) : anthropicClaude(env("ANTHROPIC_API_KEY"));
 /** The Sign in with Apple key signs the client secret for revocation (D38). Vercel keeps the .p8's newlines; a one-line
  *  value with "\n" (api/.env.local) is turned back. APPLE_FAKE=1 (local runs only) answers without Apple. */
@@ -42,5 +54,6 @@ const app: Hono<Vars> = makeApp({
   claude,
   db: makeDb(supabaseUrl, supabaseAnonKey),
   apple,
+  observe: makeObserve(supabaseUrl, serviceKey),
 });
 export default app;
