@@ -61,6 +61,8 @@ export function fakeJobsDb(clock: Clock) {
     },
     async record(id, worker, outcome: StepOutcome) {
       const j = held(id, worker);
+      // job_steps.step is 1 to 40 characters (0028): the table refuses a longer name, so the fake does too.
+      if (outcome.name.length < 1 || outcome.name.length > 40) throw new Error("job_steps_step_check");
       steps.push({ job: id, name: outcome.name, state: outcome.kind, attempt: j.attempts, generationId: outcome.generationId });
       if ("costPaise" in outcome) j.costPaise += outcome.costPaise ?? 0;
       j.leaseUntilMs = clock.now() + LEASE_MS;
