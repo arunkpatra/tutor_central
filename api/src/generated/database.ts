@@ -938,6 +938,9 @@ isOneToOne: false
 "cancel_job":
 { Args: { "p_centre": string,"p_job": string }; Returns: boolean
                            },
+"centre_in_use":
+{ Args: { "p_centre": string,"p_now"?: string }; Returns: boolean
+                           },
 "claim_jobs":
 { Args: { "p_lease_seconds"?: number,"p_limit"?: number,"p_worker": string }; Returns: {
               "attempts": number,
@@ -1082,6 +1085,9 @@ isOneToOne: false
 "photo_centre":
 { Args: { "p_name": string }; Returns: string
                            },
+"plan_time":
+{ Args: { "p_day": string,"p_start": string }; Returns: string
+                           },
 "record_placement":
 { Args: { "p_centre": string,"p_checks": Json,"p_states": Json,"p_student": string,"p_track": Json }; Returns: undefined
                            },
@@ -1108,6 +1114,15 @@ isOneToOne: false
                            },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
+                           },
+"schedule_note_days":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
+"schedule_plans":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
+"schedule_reminders":
+{ Args: { "p_now"?: string }; Returns: number
                            },
 "start_ai_call":
 { Args: { "p_centre": string,"p_input": Json,"p_input_hash"?: string,"p_job"?: string,"p_key"?: string,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_request_id"?: string,"p_student"?: string }; Returns: Json
