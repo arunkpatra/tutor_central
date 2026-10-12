@@ -3,15 +3,17 @@ import { Hono } from "hono";
 import type { Vars } from "../auth.js";
 import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
-import { handlers } from "../jobs/kinds/index.js";
+import { makeHandlers } from "../jobs/kinds/index.js";
 import { drain } from "../jobs/runner.js";
-import { type Clock, type JobsDb, realClock } from "../jobs/types.js";
+import { type Clock, type JobHandler, type JobKind, type JobsDb, realClock } from "../jobs/types.js";
 import { log } from "../log.js";
 
 /** The worker's run budget: under Hobby's 300 s with a step's room (D85; the two rise together on Pro). */
 export const JOB_RUN_BUDGET_MS = 200_000;
 
-export type Worker = { jobs: JobsDb; db: Db; secret: string; clock?: Clock };
+/** The worker's reach: its jobs, the platform's Db for paid calls, its bearer, and the kinds it runs (the sweep alone
+ *  unless the entry gives the record's source). */
+export type Worker = { jobs: JobsDb; db: Db; secret: string; clock?: Clock; handlers?: Partial<Record<JobKind, JobHandler>> };
 
 function sameSecret(given: string | undefined, secret: string): boolean {
   if (!given) return false;
@@ -30,6 +32,7 @@ export function sweepKey(now: number): string {
 export function jobRoutes(worker: Worker, claude: ClaudeClient) {
   const r = new Hono<Vars>();
   const clock = worker.clock ?? realClock;
+  const handlers = worker.handlers ?? makeHandlers();
   r.use("*", async (c, next) => {
     const given = c.req.header("authorization")?.match(/^Bearer\s+(\S+)$/i)?.[1];
     if (!sameSecret(given, worker.secret)) return c.json({ error: "sign in again" }, 401);

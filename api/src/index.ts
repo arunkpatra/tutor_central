@@ -8,6 +8,8 @@ import { fakeClaude, localScript } from "./claude-fake.js";
 import { makeDb, makePlatformDb } from "./db.js";
 import { env } from "./env.js";
 import { makeJobsDb } from "./jobs/db.js";
+import { makeHandlers } from "./jobs/kinds/index.js";
+import { makeRecordSource } from "./jobs/record.js";
 import { makeApp } from "./make-app.js";
 import { applyModelOverrides } from "./models.js";
 import { makeObserve } from "./observe.js";
@@ -55,6 +57,11 @@ const app: Hono<Vars> = makeApp({
   db: makeDb(supabaseUrl, supabaseAnonKey),
   apple,
   observe: makeObserve(supabaseUrl, serviceKey),
-  worker: { jobs: makeJobsDb(supabaseUrl, serviceKey), db: makePlatformDb(supabaseUrl, serviceKey), secret: workerSecret },
+  worker: {
+    jobs: makeJobsDb(supabaseUrl, serviceKey),
+    db: makePlatformDb(supabaseUrl, serviceKey),
+    secret: workerSecret,
+    handlers: makeHandlers(makeRecordSource(supabaseUrl, serviceKey)),
+  },
 });
 export default app;
