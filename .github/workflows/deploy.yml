@@ -219,6 +219,8 @@ jobs:
           SMOKE_CENTRE_ID: ${{ vars.SMOKE_CENTRE_ID }}
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
           SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
+          # With it the smoke wakes the worker (GET /jobs/tick): the route, the service key and the secret proven.
+          WORKER_SECRET: ${{ secrets.WORKER_SECRET }}
         run: |
           status=0
           bun tools/smoke.ts "$SITE" --commit "$COMMIT" > smoke.txt 2>&1 || status=$?

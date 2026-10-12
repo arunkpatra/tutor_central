@@ -5,8 +5,9 @@ import { fakeApple } from "./apple-fake.js";
 import type { Vars } from "./auth.js";
 import { anthropicClaude } from "./claude.js";
 import { fakeClaude, localScript } from "./claude-fake.js";
-import { makeDb } from "./db.js";
+import { makeDb, makePlatformDb } from "./db.js";
 import { env } from "./env.js";
+import { makeJobsDb } from "./jobs/db.js";
 import { makeApp } from "./make-app.js";
 import { applyModelOverrides } from "./models.js";
 import { makeObserve } from "./observe.js";
@@ -27,9 +28,8 @@ const supabaseAnonKey = env("SUPABASE_ANON_KEY");
 /** The platform's identity (D83): read here alone and handed to the observability client and the worker, never to the
  *  tutor routes' database client, which carries the tutor's own token. */
 const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
-/** The bearer pg_cron and the enqueue trigger send to the worker's routes (D85, Phase 17's PR 10): read at boot, so a
- *  deployment without it fails its smoke. */
-env("WORKER_SECRET");
+/** The bearer pg_cron and the enqueue trigger send to /jobs/* (D85). */
+const workerSecret = env("WORKER_SECRET");
 const claude = process.env.AI_FAKE === "1" ? fakeClaude(localScript) : anthropicClaude(env("ANTHROPIC_API_KEY"));
 /** The Sign in with Apple key signs the client secret for revocation (D38). Vercel keeps the .p8's newlines; a one-line
  *  value with "\n" (api/.env.local) is turned back. APPLE_FAKE=1 (local runs only) answers without Apple. */
@@ -55,5 +55,6 @@ const app: Hono<Vars> = makeApp({
   db: makeDb(supabaseUrl, supabaseAnonKey),
   apple,
   observe: makeObserve(supabaseUrl, serviceKey),
+  worker: { jobs: makeJobsDb(supabaseUrl, serviceKey), db: makePlatformDb(supabaseUrl, serviceKey), secret: workerSecret },
 });
 export default app;
