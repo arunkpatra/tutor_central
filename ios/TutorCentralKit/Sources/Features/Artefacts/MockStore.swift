@@ -201,7 +201,7 @@ public struct MockMark: Hashable, Sendable {
             pattern: mock.pattern, schoolItemID: artefact.schoolItemID ?? mock.schoolItemID
         )
         do {
-            let made = try await ai.makeMock(request, centre: centre)
+            let made = try await IdempotencyKey.another { try await ai.makeMock(request, centre: centre) }
             let new = NewArtefact(
                 kind: .mock, source: .made, title: artefact.title, content: .mock(made.content), photoPath: nil,
                 generationID: made.generationID, regeneratedFrom: artefact.id

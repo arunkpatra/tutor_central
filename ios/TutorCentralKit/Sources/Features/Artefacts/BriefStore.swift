@@ -164,9 +164,14 @@ import Observation
         defer { making = false }
         let level = group.memberIDs.compactMap { register.student($0)?.classLevel }.max() ?? .eight
         do {
-            let made = try await ai.makeBrief(
-                classLevel: level, subject: group.subject, chapter: group.chapter, centre: centre
-            )
+            let made = try await IdempotencyKey.another {
+                try await ai.makeBrief(
+                    classLevel: level,
+                    subject: group.subject,
+                    chapter: group.chapter,
+                    centre: centre
+                )
+            }
             guard !Task.isCancelled, let planID = plan?.id else { return }
             let kept = try await plans.keep(
                 NewArtefact(
@@ -193,9 +198,9 @@ import Observation
         making = true
         defer { making = false }
         do {
-            let answer = try await ai.makeBrief(
-                classLevel: level, subject: made.subject ?? "", chapter: chapter, centre: centre
-            )
+            let answer = try await IdempotencyKey.another {
+                try await ai.makeBrief(classLevel: level, subject: made.subject ?? "", chapter: chapter, centre: centre)
+            }
             guard !Task.isCancelled else { return }
             let new = NewArtefact(
                 kind: .brief, source: .made, title: artefact.title, content: .brief(answer.brief), photoPath: nil,

@@ -200,9 +200,11 @@ public final class SupabasePlansRepository: PlansRepository {
         if artefact.madeFor != nil {
             params["p_made_from"] = .string("make")
         }
-        // A made artefact is kept once (0033): a keep replayed answers the first row. An own one has no generation.
+        // A made artefact is kept once (0033): a keep replayed answers the first row. The key is the generation and
+        // what it replaces, so the made sheet kept again over the tutor's own is a row of its own. An own one has none.
         if let generation = artefact.generationID {
-            params["p_key"] = id(generation)
+            let key = [generation, artefact.regeneratedFrom].compactMap { $0?.uuidString.lowercased() }
+            params["p_key"] = .string(key.joined(separator: ":"))
         }
         return params
     }

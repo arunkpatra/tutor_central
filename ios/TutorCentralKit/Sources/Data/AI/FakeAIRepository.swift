@@ -38,6 +38,8 @@ import Foundation
     public private(set) var examples: [String] = []
     public private(set) var figures: [FigureSpec.Kind] = []
     public private(set) var briefs: [String] = []
+    /// The calls made as "another one" (`IdempotencyKey.another`): Make it again and Write again.
+    public private(set) var anotherCalls = 0
     public private(set) var topics: [[PlanTopicGroup]] = []
     /// The school's calls (Phase 13).
     public private(set) var parseCalls: [SchoolSource] = []
@@ -231,6 +233,9 @@ import Foundation
     }
 
     private func answer(_ call: Call) async throws(APIFailure) {
+        if call == .checks, IdempotencyKey.isAnother {
+            anotherCalls += 1
+        }
         if let wait = delayByKind[call] {
             do {
                 try await Task.sleep(for: wait)
@@ -254,6 +259,9 @@ import Foundation
     }
 
     private func answer() async throws(APIFailure) {
+        if IdempotencyKey.isAnother {
+            anotherCalls += 1
+        }
         if let delay {
             do {
                 try await Task.sleep(for: delay)

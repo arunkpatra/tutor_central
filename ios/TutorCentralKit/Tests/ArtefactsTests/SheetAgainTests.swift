@@ -11,7 +11,7 @@ import Testing
         let store = try await SheetStoreTests().store(plans: plans, ai: ai)
         let old = try #require(store.artefact?.id)
         await store.makeAgain(.easier)
-        #expect(ai.reasons.last == "easier")
+        #expect(ai.reasons.last == "easier" && ai.anotherCalls == 1)
         #expect(store.artefact?.id != old)
         #expect(store.artefact?.regeneratedFrom == old)
         let plan = try #require(try await ArtefactTest.plan(plans))

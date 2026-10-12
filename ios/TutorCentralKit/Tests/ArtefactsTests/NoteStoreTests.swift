@@ -138,6 +138,7 @@ import Testing
         let first = world.plans.artefacts.first?.id
         await store.writeAgain()
         #expect(world.plans.kept.count == 2 && world.plans.kept.last?.regeneratedFrom == first)
+        #expect(world.ai.anotherCalls == 1)
     }
 
     @Test func aLadderStudentGetsCanNowDoWithMovedUp() async {
