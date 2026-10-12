@@ -84,6 +84,21 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
   step (`jobs/runner.ts`). The tick queues the sweep each ten minutes (rows pending past ten minutes closed). The `plan`
   kind (`jobs/kinds/plan.ts`) reads, groups by the rules ported to `src/plan/` (held equal to the app's by
   `tools/contract/plan-cases.json`), names unnamed groups with one platform call keyed `<job>:name`, and writes the plan
-  through `make_plan`; it never replaces a plan the phone made, and leaves an exam week or a holiday to the phone.
+  through `make_plan`; it never replaces a plan the phone made (Phase 18 adds exam weeks, holidays and the material).
   `vercel.json`'s `functions` gives every function 300 s (the only pattern the Hono builder honours); the deploy checks it.
 - Tests against the local stack (`jobs-db.test.ts`, `platform-db.test.ts`) skip with a line when it is down.
+- Phase 18: the job kinds are `plan` (the material with recorded calls, exam weeks with one mock per exam shared across
+  batches, a replace on request, then the pushes), `note_day` (a step `note:<n>` per student; a student without consent is
+  held, never paid; kept by `note:<student>:<week>`; the content's `week_monday` an ISO day, written by `noteContent`, which
+  also makes the contract's `kept_note` sample), `pdf` (Typst through `@myriaddreamin/typst-ts-node-compiler` with the
+  committed fonts in `api/fonts`, OFL, shipped by `vercel.json`'s `includeFiles`), `export`, `reminder_sweep` and `sweep`
+  (closes pending calls, removes `storage_deletions`, trims). `job_steps.step` holds 1 to 40 characters (`fakeJobsDb`
+  refuses another).
+- Push (D88): `APNS_KEY`, `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_TOPIC`; production must have them, a local run without
+  them sends to a pusher in memory. The tick sends the outbox (`notifications`, `sendDue`) before it drains; a token's
+  `environment` picks APNs' host (Debug builds are `sandbox`); 410 or `BadDeviceToken` retires the token; a dropped
+  connection (no answer from Apple) is tried once more at once; Apple's 429 and 5xx are not retried. `GET /jobs/health`
+  behind the bearer renders one page and sends to a dummy token: `{ pdf: 1, apns: true }` when Apple took the key.
+- A call's key replays its answer within a day, the fake's too: a local run on the real models after a fake run under the
+  same keys gets the fake's text at no cost (clear those `ai_generations` rows locally first).
+

@@ -63,3 +63,11 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
   both do nothing. Locally the secrets are absent unless a test sets them inside a rolled-back transaction.
 - `supabase db query --linked --output-format json` answers a bare array; `--local` answers `{ "rows": [...] }`; `-f`
   resolves its file from the repository's root (the restore drill and `run-job` read either shape).
+- Phase 18: consent's withdrawal is `withdraw_consent` (0036; the columns cleared, a `withdrawn` event with how, the
+  student's queued note request cancelled); a member asks the server through `request_plan`, `request_note`,
+  `request_export` and `cancel_job` (0037), never by writing `jobs`. The account's reminder settings (`reminder_settings`, 0038) are the tutor's own
+  row; the push outbox (`notifications`) is written by the platform through named functions and a member reads their own. The schedules (0039): `schedule_plans` and `schedule_note_days` every 15 minutes, `schedule_reminders` at five past
+  each hour, with `wake_worker_minute`. Storage (0040): private buckets `pdfs` (5 MB) and `exports` (10 MB) beside
+  `photos`; a deleted row with a file queues it in `storage_deletions` (a centre's delete queues its prefixes), which the
+  sweep empties. Retention (0041): an export is kept seven days; `trim_platform` deletes notifications after 30 days and
+  the sweeps' done jobs after seven.

@@ -104,11 +104,11 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - A stopped gateway keeps `NWPath` satisfied: reads fail after about 20 s and a replay starts on foreground (`HOME`, then
   `xcrun simctl launch`). Coming back to the app reads every list again (`ShellState.refreshScreens`); a reload that
   fails keeps what is shown.
-- Reminders: `ReminderScheduler` (AppShell) plans and replaces on sign-in, foreground (after the register is read
-  again), any saved class, student, event or fee write, and a queue run; a call during a run plans again after it; a
-  failed read keeps that kind's pending reminders. `AppDelegate` installs `NotificationDelegate` before launch ends; a
-  tap's link reaches `RootView.openLink`. The simulator's lock screen and banners take no injected taps: open the
-  reminder's link with `simctl openurl` and leave the tap to the tester.
+- Reminders (since Phase 18): the server plans and sends them (APNs); the iPhone schedules none. The settings are the
+  account's (`reminder_settings`); `ReminderSettingsMigration` moves build 27's local settings there once, removes its
+  pending reminders and the old keys. `AppDelegate` installs `NotificationDelegate` before launch ends; a tap's link reaches
+  `RootView.openLink`. The simulator's lock screen and banners take no injected taps: open the link with `simctl openurl`
+  and leave the tap to the tester.
 - Telling the tutor what happened (U33): the toast is for Undo only; a success shows in place, a failed or refused write is
   the system alert (`NoticeCenter`), a field's error is under the field, a list that could not load says so in its place.
   Before adding any message read `docs/design/feedback.md` and pick its row.
@@ -189,6 +189,24 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   batches of twenty, at background and on return; the shell records the app opened (`ShellState.opened()`, the scene's
   active, at a launch once the centre's log is made), a sign-in, a tab, a link, and a sign-out, which closes the log
   before the wipe. Never a name or an id in an event.
+
+- Phase 18 (the server's work and push): the plan and its material, the note day's notes, the PDFs and a student's export
+  are made by the server's jobs; the app asks (`JobsRepository`: `request_plan`, `request_note`, `request_export`,
+  `cancel_job`) and follows the job, never makes them itself. `PlanPreview` shows the phone's rules for Change before a
+  plan is asked again; PlanMaker, the phone's budget and the price sheet are gone. What stays a call from the phone: Write
+  again and the tutor's own words on a note, Make, Check a paper, the V1 forms.
+- Push: `aps-environment` and `PUSH_ENVIRONMENT` per configuration (`project.yml`: Debug sandbox, Release production).
+  `PushRegistrar` keeps one `device_tokens` row per user and device after Allow and forgets it at sign-out; `PushRelay`
+  hands the token from the `AppDelegate`. The background push (`plan_fetch`) runs `PlanFetch`: today's plans into
+  `PlanCache` within iOS's 30 s, the completion called once.
+- Copies first (D39, U27): `CopyFirst<Value>` shows a list's copy, then reads. `RegisterStore.loadIfNeeded` answers from
+  its copy at once and reads on; Today shows every batch's plan copy before any batch reads (`PlanStore.showCopy`), and the
+  note day the register's rows with no count until its read; the material screens open from `ArtefactRead.copy` (the
+  plan's copy) and keep it when the read fails. Offline each read takes about 20 s to fail: never put one before a copy.
+- Server PDFs: `ServerFiles` downloads a path once into `files-<centre>` (the wipe removes it); Share on a sheet, mock or
+  brief takes the server's PDF (`ServerPDF`), else draws on the phone. The export (`ExportStore`) shares the server's file.
+- A note's week is an ISO day in its content (`week_monday`); the API's `noteContent` writes the same, and the contract's
+  `kept_note` sample is read by the app's decoder (ContractTests).
 
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.
