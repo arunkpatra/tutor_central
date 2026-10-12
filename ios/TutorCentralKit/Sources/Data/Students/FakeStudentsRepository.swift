@@ -293,11 +293,10 @@ public struct Withdrawal: Sendable {
 }
 
 public extension FakeStudentsRepository {
-    func withdrawConsent(id: UUID, centre _: UUID, how: ConsentMethod, on day: Day) async throws -> Student {
+    func withdrawConsent(id: UUID, centre _: UUID, how: ConsentMethod, on day: Day) async throws {
         try await begin()
         let index = try index(of: id)
         withdrawals.append(Withdrawal(student: id, how: how, day: day))
         students[index].consent = nil
-        return students[index]
     }
 }
