@@ -31,6 +31,23 @@ import Testing
         #expect(center.pendingRemoved == 1)
     }
 
+    /// The review's R-app-6: a second iPhone updated a week later must not put its old choices over what the tutor set
+    /// on the first; its keys and pending reminders still go.
+    @Test func anAccountThatHasChoicesKeepsThemAndThePhonesStillGo() async throws {
+        var account = ReminderSettings()
+        account.planReady = false
+        account.classMinutesBefore = 15
+        let defaults = try defaults(with: ReminderSettings())
+        let repository = FakeReminderSettingsRepository(kept: account)
+        let center = FakeNotificationCenter(permission: .allowed)
+        await ReminderSettingsMigration.run(
+            defaults: defaults, repository: repository, notifications: center, centre: centre
+        )
+        #expect(await repository.saves.isEmpty)
+        #expect(await repository.kept == account)
+        #expect(defaults.data(forKey: ReminderSettingsMigration.key) == nil && center.pendingRemoved == 1)
+    }
+
     @Test func aFailedSaveKeepsTheKeyForTheNextLaunch() async throws {
         let defaults = try defaults(with: ReminderSettings())
         let center = FakeNotificationCenter(permission: .allowed)

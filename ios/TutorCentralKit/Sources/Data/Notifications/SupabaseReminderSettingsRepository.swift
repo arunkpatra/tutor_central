@@ -53,12 +53,12 @@ public struct SupabaseReminderSettingsRepository: ReminderSettingsRepository {
         )
     }
 
-    public func read(centre: UUID) async throws -> ReminderSettings {
+    public func read(centre: UUID) async throws -> ReminderSettings? {
         let response = try await client.from("reminder_settings")
             .select("class_on, class_minutes, events_on, event_lead, fees_on, fees_day, plan_ready_on, notes_ready_on")
             .eq("centre_id", value: centre.uuidString).limit(1).execute()
         let rows = try PostgRESTDecoder.make().decode([Row].self, from: response.data)
-        return rows.first.map(Self.settings) ?? ReminderSettings()
+        return rows.first.map(Self.settings)
     }
 
     public func save(_ settings: ReminderSettings, centre: UUID) async throws {

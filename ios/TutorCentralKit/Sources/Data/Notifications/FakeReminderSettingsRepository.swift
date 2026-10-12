@@ -17,11 +17,11 @@ public actor FakeReminderSettingsRepository: ReminderSettingsRepository {
         self.failure = failure
     }
 
-    public func read(centre _: UUID) async throws -> ReminderSettings {
+    public func read(centre _: UUID) async throws -> ReminderSettings? {
         if let failure {
             throw failure
         }
-        return kept ?? ReminderSettings()
+        return kept
     }
 
     public func save(_ settings: ReminderSettings, centre _: UUID) async throws {
