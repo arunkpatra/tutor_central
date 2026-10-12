@@ -5,6 +5,7 @@ import Testing
 @MainActor struct PushRegistrarTests {
     final class Calls {
         var registered = 0
+        var unregistered = 0
     }
 
     func make(
@@ -12,8 +13,21 @@ import Testing
     ) -> PushRegistrar {
         PushRegistrar(
             notifications: center, tokens: tokens, registerForRemote: { calls.registered += 1 },
-            deviceID: { device }, environment: "sandbox", build: 28
+            unregisterFromRemote: { calls.unregistered += 1 }, deviceID: { device }, environment: "sandbox", build: 28
         )
+    }
+
+    /// The review's R-app-4: an offline sign-out cannot delete the token's row, so the app also unregisters from APNs
+    /// (no connection needed); Apple then answers 410 for the token and the server retires it.
+    @Test func forgettingUnregistersFromApplePushEvenWhenTheRowCannotBeDeleted() async {
+        let calls = Calls()
+        let offline = FakeDeviceTokenRepository(failure: URLError(.notConnectedToInternet))
+        await make(FakeNotificationCenter(permission: .allowed), tokens: offline, calls: calls).forget()
+        #expect(calls.unregistered == 1)
+        let online = FakeDeviceTokenRepository()
+        await make(FakeNotificationCenter(permission: .allowed), tokens: online, calls: calls).forget()
+        #expect(calls.unregistered == 2)
+        #expect(await online.forgotten == ["device-1"])
     }
 
     @Test func registersOnlyOnceNotificationsAreAllowedAndNeverAsks() async {

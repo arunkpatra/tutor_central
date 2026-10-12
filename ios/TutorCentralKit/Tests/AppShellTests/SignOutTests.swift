@@ -20,7 +20,8 @@ import Testing
         // The token is forgotten while the queue is still there: before the wipe.
         let tokens = FakeDeviceTokenRepository(onForget: { @MainActor in #expect(!queue.pending.isEmpty) })
         let push = PushRegistrar(
-            notifications: notifications, tokens: tokens, registerForRemote: {}, deviceID: { "device-1" },
+            notifications: notifications, tokens: tokens, registerForRemote: {}, unregisterFromRemote: {},
+            deviceID: { "device-1" },
             environment: "sandbox", build: 28
         )
         let defaults = try #require(UserDefaults(suiteName: "signout-\(UUID().uuidString)"))

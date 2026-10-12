@@ -117,6 +117,22 @@ test("due rows come once to two takers; rows older than thirty minutes expire un
   await sql`delete from public.notifications where user_id = ${userA}`;
 });
 
+test("a token another tutor registered later on the same iPhone is theirs: the first tutor's row is not sent to", async () => {
+  // The review's R-db/R-app-4: tutor A signed out offline (their row stays), tutor B signs in on the same iPhone.
+  const userB = (await b.auth.getUser()).data.user!.id;
+  const token = `tok-shared-${stamp}`;
+  await sql`insert into public.device_tokens (user_id, device_id, token, environment, last_seen_at)
+    values (${userA}, ${`dev-a-${stamp}`}, ${token}, 'sandbox', now() - interval '1 hour'),
+           (${userB}, ${`dev-b-${stamp}`}, ${token}, 'sandbox', now())`;
+  const live = async (user: string) => ((await svc.rpc("live_tokens", { p_user: user })).data as { token: string }[]).map((t) => t.token);
+  try {
+    expect(await live(userA)).not.toContain(token);
+    expect(await live(userB)).toContain(token);
+  } finally {
+    await sql`delete from public.device_tokens where token = ${token}`;
+  }
+});
+
 test("the sender marks a row with Apple's answer, reads live tokens and retires one", async () => {
   await replace(["class"], iso(-60), [row("class:c2:now", 0)]);
   const [n] = (await svc.rpc("due_notifications", { p_now: iso(1) })).data!;
