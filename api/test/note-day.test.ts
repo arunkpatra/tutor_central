@@ -91,7 +91,7 @@ test("each consented student's note is made and kept; the job says the notes are
     [DEV, "note", `note:${DEV}:2026-10-05`, "Dev's week"],
     [RIYA, "note", `note:${RIYA}:2026-10-05`, "Riya's week"],
   ]);
-  expect(s.kept[0]?.content).toMatchObject({ language: "en", week_monday: { year: 2026, month: 10, day: 5 }, generation_id: "gen-1" });
+  expect(s.kept[0]?.content).toMatchObject({ language: "en", week_monday: "2026-10-05", generation_id: "gen-1" });
   expect(s.kept[0]?.content).not.toHaveProperty("english");
   expect(s.kept[1]?.content).toMatchObject({ language: "hi", english: expect.any(String) });
   expect((s.kept[0]?.content.facts as { label: string }[]).map((f) => f.label)).toEqual(["Taught", "Got right", "To practise", "Coming"]);

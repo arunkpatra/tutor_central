@@ -65,11 +65,8 @@ export function makeNoteSource(url: string, serviceKey: string, plans: Pick<Plan
           client.from("attendance_marks").select("status, attendance_sessions!inner(date)").eq("centre_id", centre).eq("student_id", row.id).gte("attendance_sessions.date", week.from).lte("attendance_sessions.date", week.to),
           client.from("artefacts").select("content").eq("centre_id", centre).eq("student_id", row.id).in("kind", ["note", "can_do"]).gte("created_at", `${addDays(week.from, -7)}T00:00:00+05:30`),
         ]);
-        const [y, m, d] = week.from.split("-").map(Number);
-        const kept = must(notes, "artefacts").some((n) => {
-          const monday = (n.content as { week_monday?: { year: number; month: number; day: number } }).week_monday;
-          return monday?.year === y && monday?.month === m && monday?.day === d;
-        });
+        // The week's Monday as the app and the job keep it, an ISO day (noteContent).
+        const kept = must(notes, "artefacts").some((n) => (n.content as { week_monday?: unknown }).week_monday === week.from);
         const student = { id: row.id, name: row.name, ...(row.class_level ? { classLevel: row.class_level } : {}), ...(row.school_id ? { schoolID: row.school_id } : {}) };
         students.push({
           student: { id: row.id, name: row.name, ...(row.parent_name ? { parentName: row.parent_name } : {}), ...(row.class_level ? { classLevel: row.class_level } : {}), language: row.message_language },

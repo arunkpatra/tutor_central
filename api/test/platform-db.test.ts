@@ -196,10 +196,28 @@ test.skipIf(!up)("a note asked for the seed's Diya (her parent agreed) is made b
     const kept = (await db.from("artefacts").select("kind, idempotency_key, content").eq("centre_id", CENTRE).eq("student_id", aarav).like("idempotency_key", `${key}%`)).data ?? [];
     expect(kept).toHaveLength(1);
     expect(kept[0]).toMatchObject({ kind: "note" });
-    expect(kept[0]?.content).toMatchObject({ language: "hi", english: expect.any(String), week_monday: { year: Number(monday.slice(0, 4)) } });
+    expect(kept[0]?.content).toMatchObject({ language: "hi", english: expect.any(String), week_monday: monday });
   } finally {
     await db.from("artefacts").delete().eq("centre_id", CENTRE).eq("student_id", aarav).like("idempotency_key", `${key}%`);
     await db.from("jobs").delete().eq("id", job);
+  }
+});
+
+test.skipIf(!up)("a note the phone kept for the week (its Monday an ISO day, under the phone's key) is read as kept, so the job writes no second", async () => {
+  const db = admin();
+  const diya = (await db.from("students").select("id").eq("centre_id", CENTRE).eq("name", "Diya Pillai").single()).data?.id as string;
+  const today = new Date(Date.now() + 5.5 * 3_600_000);
+  today.setUTCDate(today.getUTCDate() - ((today.getUTCDay() + 6) % 7));
+  const monday = today.toISOString().slice(0, 10);
+  const key = `platform-db-phone-note-${Date.now()}`;
+  try {
+    const phone = { message: "m", language: "en", week_monday: monday, facts: [] };
+    expect((await db.from("artefacts").insert({ centre_id: CENTRE, kind: "note", source: "made", student_id: diya, title: "Diya's week", content: phone, idempotency_key: key })).error).toBeNull();
+    const source = makeNoteSource(url as string, service as string, makeRecordSource(url as string, service as string, makeOutboxDb(url as string, service as string)));
+    const read = await source.read(CENTRE, { studentId: diya, week: monday });
+    expect(read.students.map((s) => s.kept)).toEqual([true]);
+  } finally {
+    await db.from("artefacts").delete().eq("centre_id", CENTRE).eq("idempotency_key", key);
   }
 });
 

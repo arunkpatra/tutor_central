@@ -1,0 +1,14 @@
+{
+  "english": "Aarav had a good week.",
+  "facts": [
+    {
+      "fact": "Fractions",
+      "label": "Taught",
+      "symbol": "book.closed"
+    }
+  ],
+  "generation_id": "11111111-1111-1111-1111-111111111111",
+  "language": "hi",
+  "message": "Aarav had a good week.",
+  "week_monday": "2026-10-05"
+}
