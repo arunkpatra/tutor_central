@@ -33,10 +33,15 @@ import Testing
         CachedRead<TodaySnapshot>(centre: centre, key: "today", directory: folder)
             .keep(TodaySnapshot(counts: cached, sessions: [], events: []), at: savedAt)
         let counts = FakeCountsRepository(counts: TodayCounts(students: 10, due: Money(rupees: 4000), classesToday: 1))
+        counts.delay = .milliseconds(300)
         let store = make(counts)
-        store.showCached()
+        let load = Task { await store.load() }
+        let until = ContinuousClock.now.advanced(by: .seconds(3))
+        while store.savedAt == nil, ContinuousClock.now < until {
+            try? await Task.sleep(for: .milliseconds(5))
+        }
         #expect(store.counts.students == 9 && store.savedAt == savedAt)
-        await store.load()
+        await load.value
         #expect(store.counts == counts.counts && store.savedAt == FakeCountsRepository.fixedNow && store
             .offlineRead == false)
         let kept = CachedRead<TodaySnapshot>(centre: centre, key: "today", directory: folder).load()
@@ -48,7 +53,6 @@ import Testing
         await make(counts).load() // fills the cache
         counts.nextError = URLError(.notConnectedToInternet)
         let again = make(counts)
-        again.showCached()
         await again.load()
         #expect(again.counts == counts.counts && again.savedAt != nil && again.offlineRead && again.error == nil)
     }
@@ -57,7 +61,6 @@ import Testing
         let counts = FakeCountsRepository()
         counts.nextError = URLError(.notConnectedToInternet)
         let store = make(counts)
-        store.showCached()
         await store.load()
         #expect(store.savedAt == nil && store.offlineRead && store.error != nil)
     }

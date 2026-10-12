@@ -153,34 +153,34 @@ import Observation
         }
         guard let first = Day(iso: month.isoDay), let last = Day(iso: month.next.previousDayISO) else { return }
         let month = month
-        if readMonth != month, let cached = cache?(month).load() {
-            (events, sessions) = (cached.value.events, cached.value.sessions)
-            readMonth = month
-            savedAt = cached.savedAt
-        }
-        do {
-            // Coming up runs past the month's end: read its two weeks beyond it.
-            let to = last.adding(days: Self.comingUpDays, calendar: calendar)
-            async let read = eventsRepository.events(centre: workspace.centre.id, from: first, to: to)
-            async let marked = attendance.sessions(centre: workspace.centre.id, month: month)
-            let result = try await (read, marked)
+        // Coming up runs past the month's end: read its two weeks beyond it.
+        let to = last.adding(days: Self.comingUpDays, calendar: calendar)
+        let (events, attendance, centre) = (eventsRepository, attendance, workspace.centre.id)
+        let reader = CopyFirst(cache: cache?(month), now: now)
+        let outcome = await reader.load(showingCopy: readMonth != month) { snapshot, at in
             guard generation == loadGeneration else { return }
-            (events, sessions) = result
+            (self.events, sessions) = (snapshot.events, snapshot.sessions)
             readMonth = month
-            cache?(month).keep(ScheduleSnapshot(events: result.0, sessions: result.1), at: now())
-            savedAt = now()
+            savedAt = at
+        } read: {
+            async let read = events.events(centre: centre, from: first, to: to)
+            async let marked = attendance.sessions(centre: centre, month: month)
+            let (found, sessions) = try await (read, marked)
+            return ScheduleSnapshot(events: found, sessions: sessions)
+        }
+        guard generation == loadGeneration else { return }
+        guard let failure = outcome.failure else {
             offlineRead = false
             error = nil
-        } catch {
-            guard generation == loadGeneration else { return }
-            // Its screen went away mid-read: nothing failed; the next visit reads again.
-            if TransportError.isCancelled(error) {
-                return
-            }
-            offlineRead = TransportError.isOffline(error)
-            let shown = readMonth == month && savedAt != nil
-            self.error = shown && offlineRead ? nil : "Couldn't load the schedule. Check your connection and try again."
+            return
         }
+        // Its screen went away mid-read: nothing failed; the next visit reads again.
+        if TransportError.isCancelled(failure) {
+            return
+        }
+        offlineRead = TransportError.isOffline(failure)
+        let shown = readMonth == month && savedAt != nil
+        error = shown && offlineRead ? nil : "Couldn't load the schedule. Check your connection and try again."
     }
 
     public func select(_ day: Day) async {

@@ -136,11 +136,12 @@ public struct AttendanceView: View {
         )
     }
 
-    /// The hint while nothing is saved; the banner after a save or on a day marked before.
+    /// The hint while nothing is saved; the banner after a save or on a day marked before; nothing beside an error
+    /// line (U10).
     @ViewBuilder private var stateLine: some View {
         if let banner = store.banner {
             Banner(symbol: banner.symbol, text: banner.text, tone: banner.ok ? .ok : banner.due ? .due : nil)
-        } else {
+        } else if store.error == nil {
             Text("Everyone starts present. Tap anyone who did not come, then save.")
                 .typeStyle(Tokens.footnote)
                 .foregroundStyle(Tokens.text3.color)

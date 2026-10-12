@@ -6,9 +6,9 @@ import Observation
 @MainActor @Observable public final class RegisterStore {
     public internal(set) var students: [Student] = []
     public internal(set) var classes: [Classroom] = []
-    public private(set) var loading = false
-    public private(set) var refreshing = false
-    public private(set) var error: String?
+    public internal(set) var loading = false
+    public internal(set) var refreshing = false
+    public internal(set) var error: String?
     public var message: String?
     public private(set) var canRetry = false
     /// When the last write succeeded: the view plays the success haptic on it (design-tokens.md, Haptics).
@@ -23,19 +23,19 @@ import Observation
     public let workspace: Workspace
     let studentsRepository: any StudentsRepository
     let classesRepository: any ClassesRepository
-    private let cache: RegisterCache?
+    let cache: RegisterCache?
     /// Where the parent's message language last chosen is kept (the form starts from it); nil keeps it in memory.
     let languageDefaults: UserDefaults?
     var languageInMemory = MessageLanguage.default
     let schoolsRepository: (any SchoolsRepository)?
     let textbooksRepository: (any TextbooksRepository)?
     /// When the register on screen was saved on this iPhone, until the network replaces it (D39).
-    public private(set) var savedAt: Date?
+    public internal(set) var savedAt: Date?
     /// The last read failed for the network, not the server.
-    public private(set) var offlineRead = false
+    public internal(set) var offlineRead = false
     let now: @Sendable () -> Date
     private let calendar: Calendar
-    private var loaded = false
+    var loaded = false
     private var lastFailed: (@MainActor () async -> Void)?
 
     public init(
@@ -140,68 +140,6 @@ import Observation
         return classroom(student.classID)?.name ?? "No batch yet"
     }
 
-    // MARK: Reads
-
-    public func load() async {
-        if !loaded, let snapshot = cache?.load() {
-            savedAt = snapshot.savedAt
-            classes = snapshot.classes
-            students = snapshot.period == period ? snapshot.students : snapshot.students
-                .map(Self.withoutFeeMark)
-            loaded = true
-        }
-        if !loaded {
-            loading = true
-        } else {
-            refreshing = true
-        }
-        defer { loading = false; refreshing = false }
-        await fetch()
-    }
-
-    /// For a screen pushed over the list (a detail, a link): read only when nothing has been read or cached yet.
-    public func loadIfNeeded() async {
-        if !loaded {
-            await load()
-        }
-    }
-
-    public func refresh() async {
-        refreshing = true
-        defer { refreshing = false }
-        await fetch()
-    }
-
-    private func fetch() async {
-        do {
-            async let read = studentsRepository.students(centre: workspace.centre.id, period: period)
-            async let classRead = classesRepository.classes(centre: workspace.centre.id)
-            (students, classes) = try await (read, classRead)
-            await readSchools()
-            error = nil
-            offlineRead = false
-            savedAt = now()
-            loaded = true
-            persist()
-        } catch {
-            // Its screen went away mid-read: nothing failed; the next visit reads again.
-            if TransportError.isCancelled(error) {
-                return
-            }
-            offlineRead = TransportError.isOffline(error)
-            // A saved register offline: the line under the title says it.
-            self.error = loaded && offlineRead ? nil : "Couldn't refresh. Check your connection and try again."
-        }
-    }
-
-    /// The schools ride along with the register; a failed read keeps the ones shown (the form still saves without).
-    private func readSchools() async {
-        guard let schoolsRepository else { return }
-        if let read = try? await schoolsRepository.schools(centre: workspace.centre.id) {
-            schools = read
-        }
-    }
-
     private func persist() {
         try? cache?.save(RegisterSnapshot(students: students, classes: classes, period: period, savedAt: now()))
     }
@@ -242,7 +180,7 @@ import Observation
             .map(String.init) ?? name
     }
 
-    private static func withoutFeeMark(_ student: Student) -> Student {
+    static func withoutFeeMark(_ student: Student) -> Student {
         var kept = student
         kept.thisMonth = nil
         return kept

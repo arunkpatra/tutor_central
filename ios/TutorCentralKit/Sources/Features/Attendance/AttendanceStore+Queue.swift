@@ -47,7 +47,7 @@ extension AttendanceStore {
         }
         let shown = (sessions, told, saved, draft, phase, loadedMonth, savedAt, offlineRead)
         loadedMonth = nil
-        await open(classID: draft.classID, date: draft.date)
+        await open(classID: draft.classID, date: draft.date, showingCopy: false)
         guard error != nil || offlineRead else { return }
         (sessions, told, saved, draft, phase, loadedMonth, savedAt, offlineRead) = shown
         error = nil

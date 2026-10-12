@@ -93,30 +93,31 @@ import Observation
             .map { ($0.text, $0.overdue ? .overdue : nil) }
     }
 
+    /// The copy at once, then the read (D76); a failed read keeps what is shown.
     public func load() async {
-        if !loaded, let cached = cache?.load() {
-            tasks = cached.value
-            savedAt = cached.savedAt
-            loaded = true
-        }
         loading = !loaded
         defer { loading = false }
-        do {
-            tasks = try await repository.tasks(centre: workspace.centre.id)
-            cache?.keep(tasks, at: now())
-            savedAt = now()
-            offlineRead = false
+        let (repository, centre) = (repository, workspace.centre.id)
+        let outcome = await CopyFirst(cache: cache, now: now).load(showingCopy: !loaded) { value, at in
+            tasks = value
+            savedAt = at
             loaded = true
-            error = nil
-        } catch {
-            // Its screen went away mid-read: nothing failed; the next visit reads again.
-            if TransportError.isCancelled(error) {
-                return
-            }
-            offlineRead = TransportError.isOffline(error)
-            // A saved copy offline: the line under the title says it.
-            self.error = loaded && offlineRead ? nil : "Couldn't load your tasks. Check your connection and try again."
+            loading = false
+        } read: {
+            try await repository.tasks(centre: centre)
         }
+        guard let failure = outcome.failure else {
+            offlineRead = false
+            error = nil
+            return
+        }
+        // Its screen went away mid-read: nothing failed; the next visit reads again.
+        if TransportError.isCancelled(failure) {
+            return
+        }
+        offlineRead = TransportError.isOffline(failure)
+        // A saved copy offline: the line under the title says it.
+        error = loaded && offlineRead ? nil : "Couldn't load your tasks. Check your connection and try again."
     }
 
     /// Reads only once; Today and the Tasks screen share what was read.

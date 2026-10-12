@@ -182,17 +182,8 @@ import Observation
         nextClass = NextClass.find(in: register.activeClasses, now: date, calendar: calendar)
     }
 
-    /// The copy saved on this iPhone, at once, before the first read (D39).
-    public func showCached() {
-        guard !loaded, let cached = cache?.load() else { return }
-        counts = cached.value.counts
-        sessions = cached.value.sessions
-        events = cached.value.events
-        savedAt = cached.savedAt
-        loaded = true
-        tick(now())
-    }
-
+    /// The copy at once, then the counts, the month's sessions and the week's events read together beside the
+    /// register, the tasks and the plans (D76); a failed read keeps what is shown.
     public func load() async {
         if !loaded {
             loading = true
@@ -200,51 +191,55 @@ import Observation
         defer { loading = false }
         clock = now()
         let today = today
-        async let monthSessions = try? attendance.sessions(centre: workspace.centre.id, month: today.period)
         // The register and the tasks show their saved copies at once, beside the counts' read (D39).
         let registerRead = Task { await register.loadIfNeeded() }
         let tasksRead = Task { await tasks.loadIfNeeded() }
         // The plans start once the register is in, beside the counts: each shows its copy at once offline, where
         // the counts' read takes its timeout to fail.
         async let plansRead: Void = startPlans(after: registerRead)
-        async let weekEvents = try? eventsRepository.events(
-            centre: workspace.centre.id, from: today, to: today.adding(days: 7, calendar: calendar)
+        let (repository, attendance, events, centre, at, calendar) = (
+            repository, attendance, eventsRepository, workspace.centre.id, clock, calendar
         )
-        var fresh = false
-        do {
-            counts = try await repository.todayCounts(centre: workspace.centre.id, on: clock)
-            error = nil
-            offlineRead = false
-            loaded = true
-            fresh = true
-        } catch {
+        let outcome = await CopyFirst(cache: cache, now: now).load(showingCopy: !loaded) { snapshot, savedAt in
+            show(snapshot, savedAt: savedAt)
+        } read: {
+            async let monthSessions = attendance.sessions(centre: centre, month: today.period)
+            async let weekEvents = events.events(
+                centre: centre, from: today, to: today.adding(days: 7, calendar: calendar)
+            )
+            let counts = try await repository.todayCounts(centre: centre, on: at)
+            return try await TodaySnapshot(counts: counts, sessions: monthSessions, events: weekEvents)
+        }
+        if let failure = outcome.failure {
             // Its screen went away mid-read: nothing failed; the next visit reads again.
-            if TransportError.isCancelled(error) {
+            if TransportError.isCancelled(failure) {
                 return
             }
-            offlineRead = TransportError.isOffline(error)
+            offlineRead = TransportError.isOffline(failure)
             // With a saved copy on screen the offline line says it; the error line is for nothing to show.
-            self.error = savedAt == nil || !offlineRead ? "Couldn't refresh. Check your connection and try again." : nil
+            error = savedAt == nil || !offlineRead ? "Couldn't refresh. Check your connection and try again." : nil
+        } else {
+            error = nil
+            offlineRead = false
         }
         await registerRead.value
         await tasksRead.value
-        if let read = await monthSessions {
-            sessions = read
-        }
-        if let read = await weekEvents {
-            events = read
-        }
         await readCloseCounts()
         await loadParents()
         await noteDay?.load()
-        if fresh {
-            savedAt = now()
-            cache?.keep(TodaySnapshot(counts: counts, sessions: sessions, events: events), at: now())
-        }
         tick(clock)
         // The counts are in; the plans fill their section as they are made.
         loading = false
         await plansRead
+    }
+
+    private func show(_ snapshot: TodaySnapshot, savedAt: Date) {
+        counts = snapshot.counts
+        sessions = snapshot.sessions
+        events = snapshot.events
+        self.savedAt = savedAt
+        loaded = true
+        tick(clock)
     }
 
     private func startPlans(after registerRead: Task<Void, Never>) async {
