@@ -1016,6 +1016,18 @@ isOneToOne: false
 "record_step":
 { Args: { "p_cost_paise"?: number,"p_error"?: Json,"p_generation"?: string,"p_job": string,"p_state": Database["public"]['Enums']["job_state"],"p_step": string,"p_step_data"?: Json,"p_worker": string }; Returns: string
                            },
+"request_export":
+{ Args: { "p_centre": string,"p_student": string }; Returns: string
+                           },
+"request_job":
+{ Args: { "p_centre": string,"p_input": Json,"p_kind": Database["public"]['Enums']["job_kind"],"p_subject": string }; Returns: string
+                           },
+"request_note":
+{ Args: { "p_centre": string,"p_student": string,"p_week": string }; Returns: string
+                           },
+"request_plan":
+{ Args: { "p_centre": string,"p_choices"?: Json,"p_class": string,"p_date": string }; Returns: string
+                           },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
                            },

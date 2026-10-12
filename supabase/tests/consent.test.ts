@@ -90,7 +90,7 @@ test("a clear of the columns still records a withdrawal (build 27's Remove)", as
   expect(kinds.map((k: { kind: string }) => k.kind)).toEqual(["given", "withdrawn"]);
 });
 
-test.skip("withdraw_consent cancels the student's queued note request", async () => {
+test("withdraw_consent cancels the student's queued note request", async () => {
   const id = await studentWithConsent(a, centreA, "2026-10-01");
   const job = (await a.rpc("request_note", { p_centre: centreA, p_student: id, p_week: weekStart() })).data as string;
   await a.rpc("withdraw_consent", { p_centre: centreA, p_student: id, p_how: "in_person", p_on: today() });
