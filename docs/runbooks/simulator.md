@@ -224,6 +224,27 @@ cd api && eval "$(cd ../supabase && supabase status -o env | grep -E '^(API_URL|
   in Docker) and `worker_secret` to `local` with `vault.create_secret`, insert a job, and delete the two secrets after
   (session 35: woken and done within a second). Production's are written by the deploy.
 
+## 13. A push to the simulator (Phase 18)
+
+The iPhone 17 simulator on this Mac takes real sandbox pushes from APNs: a Debug build registers a token (`device_tokens`
+gets a `sandbox` row after Turn on reminders → Allow), and the local API sends with `api/.env.local`'s `APNS_*` (the token
+key; `/jobs/health` answers `apns: true`). The outbox (`notifications`) is sent on each minute's tick, so a row written by a
+job arrives within the minute with the local Vault secrets set (section 12).
+
+- **A payload alone**, no APNs: `xcrun simctl push booted in.tutorcentral.app payload.json` with `{"aps": {"alert":
+  {"title": "…", "body": "…"}}, "link": "tutorcentral://today"}`.
+- **The lock screen:** quit the app (swipe it away) and lock the simulator (`xcrun simctl spawn booted notifyutil -p
+  com.apple.springboard.lockcomplete` or Device → Lock); after a lock the simulator's panel can look frozen: section 9.
+- **Stop the local API with its listener only:** `kill $(lsof -ti :3000 -sTCP:LISTEN)`. A bare `lsof -ti :3000` also lists
+  Docker's own backend (the database's pg_net keeps a connection to `host.docker.internal:3000` for the worker's wake), and
+  killing it stops Docker Desktop (session 37, three times).
+- **Never run the API's tests during a hand run:** `jobs-db.test.ts` and `platform-db.test.ts` use the local stack; with a
+  local worker running, the worker claims the tests' jobs, and the tests clear the jobs table and reset rows the run made.
+  Stop the local API first (and expect to set the run's data again).
+- **Real models:** start the API without `AI_FAKE=1` only for the run that needs them, and stop it straight after: the
+  local schedules queue plan and note jobs by themselves, and a fake call's key replays its fake answer (clear those
+  `ai_generations` rows locally first).
+
 ## The proof run
 
 Session 7 followed sections 1 to 8 from a cold simulator against a freshly reset seed: signed in through the screens

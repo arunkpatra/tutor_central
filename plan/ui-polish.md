@@ -25,16 +25,16 @@ screen, several as a polish slice, or not at all.
 |---|---|---|---|---|
 | U5 | 2026-10-08 | More | The rows are 56 pt high (SettingRow's minimum); P4-More draws them at 50 | Session 9, comparing with the board (PR #42) |
 | U8 | 2026-10-08 | Date pickers in a popover | Picking the day the calendar already shows leaves the popover open (tap outside to close); the system calendar starts the week on Sunday where the app's month starts on Monday | Session 9's hand run |
-| U10 | 2026-10-08 | Attendance mark | A slow or failing read shows nothing for up to 20 s (no spinner by the date), and "Everyone starts present…" stays beside the error line | Session 9's follow-up hand run |
+| U10 | 2026-10-08 | Attendance mark | A slow read has no spinner by the date (no board draws one); the helper beside the error line was fixed in #237 | Session 9's follow-up hand run |
 | U13 | 2026-10-08 | Any sheet, then a link | A sheet open on one tab (Reports' Share as CSV) stays up over the tab a `tutorcentral://` link opens | Session 11's hand run (issue #50) |
 | U14 | 2026-10-08 | Fees, an empty current month | Before the month is generated, the overdue banner for last month's unpaid fees is not shown (the board draws the empty month without it) | Session 11's final review |
 | U15 | 2026-10-08 | Fees, Due or Paid with nothing in it | "Nothing due · Every fee for October is settled." and "Nothing paid yet" are the Kit's empty row in words no board drew | Session 11 (the plan's unboarded filler) |
 | U25 | 2026-10-09 | Delete account | With the keyboard up, Delete my account sits under it until the field is put away | Session 15's hand run 5 |
-| U27 | 2026-10-09 | Attendance, offline at launch | The day's saved copy is used only after a read fails, so the first 20 s offline show nothing | Session 15's hand run 7 |
 | U28 | 2026-10-09 | Fees, Mark paid offline | The receipt sheet is not offered after an offline Mark paid (no log can queue a receipt) | Session 14's plan, seen in session 15 |
 | U29 | 2026-10-09 | Students, the "+" menu at the largest text sizes | The system menu cuts "Scan paper register" to "Scan paper regis…" | Session 15's Dynamic Type check |
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U48 | 2026-10-12 | Students, the empty card (P10-Students-Empty) | "Create a batch" is the width of its text; the board draws it at full width like the two ways above it | Session 32, U34's pictures |
+| U49 | 2026-10-13 | Teacher reminders, before the ask (P7-Reminders-NotAsked) | The intro says "Set on this iPhone only"; since Phase 18 the settings go with the account to any iPhone (the footnote after the ask says so) | Session 37's hand run 9 |
 
 ## Done
 
@@ -53,6 +53,7 @@ screen, several as a polish slice, or not at all.
 | U34 | 2026-10-12 | #164 | The Students empty card stacks Add a student and Scan paper register at full width (P10-Students-Empty) |
 | U40 | 2026-10-12 | #163 | The student's page draws the status bar glass when scrolled |
 | U36 | 2026-10-11 | #133 | The student's page has Marks after Checks: mocks and checked papers, Below usual, "No marks yet" (P13-Student-Marks, -Empty) |
+| U27 | 2026-10-13 | #237, #243 | Attendance, Today, its plans and note day, and the material show their copy on this iPhone at once offline, before any read answers |
 | U46 | 2026-10-11 | #151 | Can now do in a week no step moved is headed "On the ladder" with "No change this week" (P14-CanNowDo-NoChange) |
 | U47 | 2026-10-11 | #150 | The note opens from the copy on this iPhone at once, then the server's; no 20 s of "Writing" on a connection that hangs |
 | U41 | 2026-10-11 | #146 | Paste a message waits for the system's Paste button: iOS asks nothing (P14-School-Paste) |

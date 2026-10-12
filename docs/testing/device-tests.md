@@ -123,6 +123,13 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T14 | A student not on track whose parent writes in Hinglish → the page's Tell the parent → Open WhatsApp. | The message arrives readable in Hinglish (Latin letters) and says what is hard, what the class is doing and what helps at home, signed; the card under the tracking card is gone; Today's caption for the student is gone. |
 | T15 | More → Make something → Sheet → For → a group of today's plan → Make the sheet → Print, to a real printer (or Save to Files as PDF). Then Share as PDF to yourself on WhatsApp. | The printout has the questions with the key after them ("Key at the end" on); the shared PDF has the questions and no key. Both fit A4 with nothing cut. |
 
+### Phase 18: Notifications and the server's work (build 28 or later; the simulator cannot show a real iPhone's lock screen or airplane mode)
+
+| Id | Do | Expect |
+|---|---|---|
+| T16 | More → Settings → Teacher reminders → Turn on reminders → Allow. Leave "Before each class" on, 30 minutes, and "Plan ready" on. Do not open the app the next day until after the first batch. | A reminder "<batch> at <time>" arrives on the lock screen 30 minutes before each batch, though the app was not opened that day. "Today's plan is ready" arrives before the first batch; tapping it opens Today on that batch's plan with every mark ticked. |
+| T17 | On a day with a batch: wait for "Today's plan is ready" to arrive (do not open the app). Then turn on airplane mode and open the app. | Today shows the day's plan with its groups and lines, from the iPhone; a line's sheet opens; Share as PDF works. Nothing says "Couldn't load". |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |
