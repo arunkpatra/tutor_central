@@ -126,6 +126,9 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
   expect(plan.error).toBeNull();
   const artefact = await a.from("artefacts").insert({ centre_id: centreA, kind: "sheet", source: "own", title: "Own sheet" }).select("id").single();
   expect(artefact.error).toBeNull();
+  // A generation comes through the gate alone (0029).
+  const generation = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: { topic: "Fractions" }, p_model: "m" });
+  expect(generation.error).toBeNull();
   const inserts: Record<(typeof CENTRE_TABLES)[number], Record<string, unknown> | null> = {
     classes: { name: "Class A" },
     students: null,
@@ -134,7 +137,7 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     fee_invoices: { student_id: student.data!.id, period: "2026-09-01", amount: 1000 },
     calendar_events: { title: "Parents meeting", date: "2026-10-10" },
     tasks: { title: "Buy chalk" },
-    ai_generations: { kind: "homework", input: { topic: "Fractions" } },
+    ai_generations: null,
     message_log: { student_id: student.data!.id, kind: "reminder" },
     schools: null,
     textbooks: { school_id: school.data!.id, class_level: "3", subject: "English", title: "English 3" },
