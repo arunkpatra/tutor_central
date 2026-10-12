@@ -119,15 +119,27 @@ extension RootView {
 
     /// What sign-out and deletion clear for this centre (D40).
     func wipe(for workspace: Workspace) -> SignOutWipe {
-        SignOutWipe(
+        // A launch state has no token to forget.
+        var forgetPush: (@MainActor () async -> Void)?
+        if launch == nil {
+            let push = pushRegistrar()
+            forgetPush = { await push.forget() }
+        }
+        return SignOutWipe(
             centre: workspace.centre.id, directory: deps.filesDirectory, queue: shell.queue,
-            notifications: deps.notifications, recorder: shell.recorder
+            notifications: deps.notifications, recorder: shell.recorder, forgetPush: forgetPush
         )
     }
 
-    /// Where reminders stand on this iPhone, for Settings' row.
+    /// Where reminders stand, for Settings' row: the permission on this iPhone, the choices with the account (the
+    /// defaults when they cannot be read).
     func reminderSummary() async -> ReminderSummary {
-        await ReminderSummary(permission: deps.notifications.permission(), settings: deps.reminderSettings.load())
+        var settings = ReminderSettings()
+        if case let .ready(workspace) = session.state,
+           let read = try? await deps.reminderSettings.read(centre: workspace.centre.id) {
+            settings = read
+        }
+        return await ReminderSummary(permission: deps.notifications.permission(), settings: settings)
     }
 
     /// Mail, Safari: the system opens it; in a launch state nothing leaves the app.

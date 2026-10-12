@@ -6,86 +6,90 @@ import Testing
 
 @MainActor struct RemindersStoreTests {
     let calendar = DayHeading.india
-    var now: Date {
-        calendar.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 16, minute: 35)) ?? Date()
+    let centre = UUID()
+
+    func at(day: Int, hour: Int, minute: Int = 0) -> Date {
+        calendar.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute)) ?? Date()
     }
 
-    var next: Reminder {
-        Reminder(
-            id: "class-x-2026-10-07", kind: .classMeeting, title: "Class 10 Maths at 17:00", body: "b",
-            fireAt: calendar.date(from: DateComponents(year: 2026, month: 10, day: 7, hour: 16, minute: 45)) ?? Date(),
-            link: "tutorcentral://attendance", subject: "Class 10 Maths"
-        )
+    final class Calls {
+        var allowed = 0
     }
 
     func make(
-        _ center: FakeNotificationCenter, settings: ReminderSettings = ReminderSettings(), plan: [Reminder] = [],
-        defaults: UserDefaults? = nil
-    ) throws -> RemindersStore {
-        let defaults = try defaults ?? #require(UserDefaults(suiteName: "reminders-\(UUID().uuidString)"))
-        let store = ReminderSettingsStore(defaults: defaults)
-        store.save(settings)
-        let now = now
+        _ center: FakeNotificationCenter, repository: FakeReminderSettingsRepository, calls: Calls = Calls()
+    ) -> RemindersStore {
+        let now = at(day: 7, hour: 16, minute: 35)
         return RemindersStore(
-            notifications: center, settingsStore: store, classNames: { ["Class 10 Maths", "Class 8 Science"] },
-            now: { now }, calendar: calendar,
-            replan: {
-                await center.replace(with: plan)
-                return plan
-            }
+            notifications: center, repository: repository, centre: centre,
+            classNames: { ["Class 10 Maths", "Class 8 Science"] }, now: { now }, calendar: calendar,
+            onAllowed: { calls.allowed += 1 }
         )
     }
 
-    @Test func beforeTheAskThereIsNoBannerAndTurnOnAsksOnce() async throws {
+    @Test func beforeTheAskThereIsNoBannerAndTurnOnAsksOnceThenRegisters() async {
         let center = FakeNotificationCenter(permission: .notAsked, allowOnAsk: true)
-        let store = try make(center, plan: [next])
+        let calls = Calls()
+        let next = NextReminder(subject: "Class 10 Maths", at: at(day: 7, hour: 16, minute: 45))
+        let store = make(center, repository: FakeReminderSettingsRepository(next: next), calls: calls)
         await store.load()
         #expect(store.permission == .notAsked && store.banner == nil)
         #expect(store.classesLine == "Class 10 Maths and Class 8 Science on their days")
         #expect(store.rowLines == ["1 hour before", "1 hour before", "On the 5th at 09:00"])
         await store.turnOn()
-        #expect(center.asked == 1 && store.permission == .allowed && center.replacements == 1)
-        #expect(store.banner == .on(next: "Class 10 Maths, today at 16:45"))
+        #expect(center.asked == 1 && store.permission == .allowed && calls.allowed == 1)
         #expect(store.banner?.text == "Reminders are on. Next: Class 10 Maths, today at 16:45.")
     }
 
-    @Test func refusedShowsOpenSettingsAndKeepsTheSwitches() async throws {
+    @Test func refusedShowsOpenSettingsKeepsTheSwitchesAndRegistersNothing() async {
         let center = FakeNotificationCenter(permission: .notAsked, allowOnAsk: false)
-        let store = try make(center)
+        let calls = Calls()
+        let store = make(center, repository: FakeReminderSettingsRepository(), calls: calls)
         await store.load()
         await store.turnOn()
         #expect(store.permission == .refused && store.banner == .refused && store.settings.classOn)
-        #expect(store.banner?.text == "Notifications are off for Tutor Central.")
-        #expect(store.onThisPhone.count == "Nothing set")
+        #expect(store.banner?.text == "Notifications are off for Tutor Central." && calls.allowed == 0)
     }
 
-    @Test func allOffSaysSoAndAChangeIsSavedAndReplanned() async throws {
-        let center = FakeNotificationCenter(permission: .allowed)
+    @Test func theAccountsChoicesAreReadAndAChangeIsSavedWithIt() async throws {
         var off = ReminderSettings()
         off.classOn = false
         off.eventOn = false
         off.feesOn = false
-        let defaults = try #require(UserDefaults(suiteName: "reminders-\(UUID().uuidString)"))
-        let store = try make(center, settings: off, defaults: defaults)
+        off.planReady = false
+        off.notesReady = false
+        let repository = FakeReminderSettingsRepository(kept: off)
+        let store = make(FakeNotificationCenter(permission: .allowed), repository: repository)
         await store.load()
-        #expect(store.banner == .allOff && store.onThisPhone.count == "No reminders set")
+        #expect(store.banner == .allOff)
+        #expect(await repository.saves.isEmpty)
         #expect(store.banner?.text == "Reminders are allowed, but every switch below is off.")
-        let before = center.replacements
         store.settings.feesDay = 10
         try await Task.sleep(for: .milliseconds(20))
-        #expect(center.replacements == before + 1 && store.feesDayLabel == "10th")
-        #expect(ReminderSettingsStore(defaults: defaults).load().feesDay == 10)
+        #expect(await repository.saves.map(\.feesDay) == [10] && store.feesDayLabel == "10th")
     }
 
-    @Test func theCountAndTheLastDayReadAsTheBoard() async throws {
-        let center = FakeNotificationCenter(permission: .allowed)
-        let later = Reminder(
-            id: "fees-2026-10", kind: .fees, title: "t", body: "b",
-            fireAt: calendar.date(from: DateComponents(year: 2026, month: 10, day: 23, hour: 9)) ?? Date(), link: "l"
-        )
-        let store = try make(center, plan: [next, later])
+    @Test func aSaveThatFailsPutsTheChoiceBackAndSaysSo() async throws {
+        let repository = FakeReminderSettingsRepository(failure: URLError(.notConnectedToInternet))
+        let store = make(FakeNotificationCenter(permission: .allowed), repository: repository)
         await store.load()
-        #expect(store.onThisPhone.count == "2 reminders set" && store.onThisPhone.through == "through Fri 23 Oct")
+        store.settings.classOn = false
+        try await Task.sleep(for: .milliseconds(20))
+        #expect(store.settings.classOn && store.alert == "That didn't go through. Check your connection and try again.")
+    }
+
+    @Test func theNextReminderReadsTodayTomorrowOrItsDay() async {
+        let cases: [(Date?, String)] = [
+            (at(day: 8, hour: 9), "Reminders are on. Next: Fees still due, tomorrow at 09:00."),
+            (at(day: 10, hour: 10), "Reminders are on. Next: Fees still due, Sat 10 Oct at 10:00."),
+            (nil, "Reminders are on. Next: nothing in the next day."),
+        ]
+        for (date, text) in cases {
+            let next = date.map { NextReminder(subject: "Fees still due", at: $0) }
+            let store = make(FakeNotificationCenter(permission: .allowed), repository: .init(next: next))
+            await store.load()
+            #expect(store.banner?.text == text)
+        }
     }
 
     @Test func dayNamesReadAsOrdinals() {

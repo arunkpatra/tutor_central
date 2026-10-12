@@ -34,13 +34,7 @@ public enum Fixtures {
             messages: messages(for: state),
             schools: FakeSchoolsRepository(schools: boardSchools),
             schoolItems: schoolItems(for: state),
-            textbooks: state == .noteCanDoNoChange || makeStates.contains(state) || progressStates.contains(state)
-                ? FakeTextbooksRepository.evening()
-                : noteDayStates.contains(state) ? noteDayTextbooks()
-                : notOnTrackStates.contains(state) ? FakeTextbooksRepository.notOnTrack()
-                : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
-                ? FakeTextbooksRepository.evening()
-                : FakeTextbooksRepository.seeded(riyasMaths: state == .placement),
+            textbooks: textbooks(for: state),
             record: record(for: state),
             plans: plans(for: state), photos: photos(for: state),
             events: FakeEventsRepository(events: state == .todayEmpty ? [] : FakeEventsRepository.seed),
@@ -54,7 +48,8 @@ public enum Fixtures {
             ),
             account: FakeAccountRepository(),
             notifications: FakeNotificationCenter(permission: notificationPermission(for: state)),
-            reminderSettings: ReminderSettingsStore(defaults: boardDefaults(for: state)),
+            reminderSettings: reminderSettings(for: state),
+            deviceTokens: FakeDeviceTokenRepository(),
             connectivity: FakeConnectivity(online: !offlineStates.contains(state)),
             cachesLists: false,
             filesDirectory: filesDirectory(for: state),
@@ -63,6 +58,17 @@ public enum Fixtures {
             fixedClock: true,
             bundleVersion: "1.0 (14)"
         )
+    }
+
+    /// The books each board draws: the evening's, the note day's, the one not on track, or the seed's.
+    @MainActor static func textbooks(for state: LaunchState) -> FakeTextbooksRepository {
+        state == .noteCanDoNoChange || makeStates.contains(state) || progressStates.contains(state)
+            ? FakeTextbooksRepository.evening()
+            : noteDayStates.contains(state) ? noteDayTextbooks()
+            : notOnTrackStates.contains(state) ? FakeTextbooksRepository.notOnTrack()
+            : closeStates.contains(state) || planStates.contains(state) || examPageStates.contains(state)
+            ? FakeTextbooksRepository.evening()
+            : FakeTextbooksRepository.seeded(riyasMaths: state == .placement)
     }
 
     /// The failures a board draws: a month that does not load, a refused save, every read offline.
@@ -146,20 +152,23 @@ public enum Fixtures {
         ]
     }
 
-    /// A fresh `UserDefaults` suite per launch, so a fixture's reminder choices never touch the iPhone's own.
-    static func boardDefaults(for state: LaunchState) -> UserDefaults {
-        let name = "fixtures-\(state.rawValue)"
-        let defaults = UserDefaults(suiteName: name) ?? .standard
-        defaults.removePersistentDomain(forName: name)
+    /// The tutor's reminder choices with the account (P18-Reminders: 15 minutes before a class, the next at 16:45
+    /// today); every switch off on P7-Reminders-AllOff.
+    static func reminderSettings(for state: LaunchState) -> FakeReminderSettingsRepository {
+        var settings = ReminderSettings()
         if state == .remindersAllOff {
-            // P7-Reminders-AllOff: allowed, every switch off.
-            var off = ReminderSettings()
-            off.classOn = false
-            off.eventOn = false
-            off.feesOn = false
-            ReminderSettingsStore(defaults: defaults).save(off)
+            settings.classOn = false
+            settings.eventOn = false
+            settings.feesOn = false
+            settings.planReady = false
+            settings.notesReady = false
+        } else {
+            settings.classMinutesBefore = 15
         }
-        return defaults
+        let next = DayHeading.india.date(bySettingHour: 16, minute: 45, second: 0, of: clock(for: state))
+        return FakeReminderSettingsRepository(
+            kept: settings, next: next.map { NextReminder(subject: "Class 10 Maths", at: $0) }
+        )
     }
 
     /// What iOS answers about notifications: not asked yet or refused on those boards, allowed elsewhere.

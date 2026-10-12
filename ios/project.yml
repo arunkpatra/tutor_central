@@ -38,6 +38,15 @@ targets:
         CODE_SIGN_ENTITLEMENTS: App/TutorCentral.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
+      # Push (Phase 18, D72): Apple's sandbox for a Debug build (the simulator, Xcode), production for an archive
+      # (TestFlight, the App Store); the server keeps each token with its environment.
+      configs:
+        Debug:
+          APS_ENVIRONMENT: development
+          PUSH_ENVIRONMENT: sandbox
+        Release:
+          APS_ENVIRONMENT: production
+          PUSH_ENVIRONMENT: production
   # "Share to Tutor Central" (docs/spec-v2.md section 9): its own App ID, the app group shared with the app. No package
   # dependency: it writes one file the app reads, from Phase 13. Embedded from Phase 10 so cloud signing is proven early
   # (the owner, 2026-10-10).

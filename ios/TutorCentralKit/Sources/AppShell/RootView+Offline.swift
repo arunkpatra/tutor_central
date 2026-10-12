@@ -151,6 +151,5 @@ extension RootView {
     /// sent save still read "saved on this iPhone"; a discarded fee still read paid here).
     func afterQueueChanged() {
         Task { await shell.refreshScreens() }
-        replanReminders()
     }
 }

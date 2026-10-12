@@ -1,4 +1,3 @@
-import Domain
 import Foundation
 
 /// Whether this iPhone lets the app remind the tutor.
@@ -6,29 +5,26 @@ public enum NotificationPermission: Hashable, Sendable {
     case notAsked, allowed, refused
 }
 
-/// The device's notification centre behind a protocol, so the scheduler and Teacher reminders are tested without
-/// UserNotifications.
+/// The device's notification centre behind a protocol, so Teacher reminders and the shell are tested without
+/// UserNotifications. The reminders themselves are sent by the server (Phase 18): the app asks, and clears.
 public protocol NotificationCenterClient: Sendable {
     func permission() async -> NotificationPermission
     /// The system's ask; true when allowed. Only ever called from Turn on reminders.
     func requestPermission() async -> Bool
-    /// Replaces every pending reminder of ours with these: the ones not in the plan go, the rest are added (the same
-    /// id replaces itself, so an unchanged one keeps its place).
-    func replace(with reminders: [Reminder]) async
-    func pending() async -> [Reminder]
+    /// The reminders builds 27 and earlier set on this iPhone, removed (the server sends them now).
+    func removePending() async
+    /// Every notification of ours, pending and shown (sign-out and deletion, D40).
     func removeAll() async
 }
 
 /// The notification centre of tests, previews and `bun shots`: a scripted permission, a record of the ask and of
-/// every plan, an optional delay.
+/// what was removed.
 @MainActor public final class FakeNotificationCenter: NotificationCenterClient {
     public var permissionAnswer: NotificationPermission
     public var allowOnAsk: Bool
     public private(set) var asked = 0
-    public private(set) var scheduled: [Reminder] = []
-    public private(set) var replacements = 0
-    /// Holds each replace this long, as the system's centre can.
-    public var delay: Duration?
+    public private(set) var pendingRemoved = 0
+    public private(set) var allRemoved = 0
 
     public init(permission: NotificationPermission = .notAsked, allowOnAsk: Bool = true) {
         permissionAnswer = permission
@@ -45,19 +41,11 @@ public protocol NotificationCenterClient: Sendable {
         return allowOnAsk
     }
 
-    public func replace(with reminders: [Reminder]) async {
-        if let delay {
-            try? await Task.sleep(for: delay)
-        }
-        replacements += 1
-        scheduled = reminders
-    }
-
-    public func pending() async -> [Reminder] {
-        scheduled
+    public func removePending() async {
+        pendingRemoved += 1
     }
 
     public func removeAll() async {
-        scheduled = []
+        allRemoved += 1
     }
 }

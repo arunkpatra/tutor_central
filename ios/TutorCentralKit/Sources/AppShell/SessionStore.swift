@@ -161,10 +161,14 @@ public struct SignOutWipe {
     let queue: ChangeQueue?
     let notifications: any NotificationCenterClient
     let recorder: ActivityRecorder?
+    /// This iPhone's push token forgotten, while the session is still there (Phase 18): no push reaches a signed-out
+    /// iPhone.
+    let forgetPush: (@MainActor () async -> Void)?
 
     init(
         centre: UUID, directory: URL? = nil, defaults: UserDefaults = .standard, queue: ChangeQueue?,
-        notifications: any NotificationCenterClient, recorder: ActivityRecorder? = nil
+        notifications: any NotificationCenterClient, recorder: ActivityRecorder? = nil,
+        forgetPush: (@MainActor () async -> Void)? = nil
     ) {
         self.centre = centre
         self.directory = directory
@@ -172,11 +176,14 @@ public struct SignOutWipe {
         self.queue = queue
         self.notifications = notifications
         self.recorder = recorder
+        self.forgetPush = forgetPush
     }
 
-    /// The sign-out recorded and the activity posted first, while the session is still there; then the phone wiped.
+    /// The sign-out recorded and the activity posted first, and the push token forgotten, while the session is still
+    /// there; then the phone wiped.
     @MainActor func run() async {
         await recorder?.signingOut()
+        await forgetPush?()
         queue?.wipe()
         Wipe.everything(centre: centre, directory: directory, defaults: defaults)
         await notifications.removeAll()

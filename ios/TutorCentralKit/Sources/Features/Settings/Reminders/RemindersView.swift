@@ -2,9 +2,10 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// Teacher reminders (P7-Reminders-NotAsked, -On, -AllOff, -Refused, -DayPicker): before the ask, the intro and Turn on
-/// reminders over the three choices dimmed; after it, the banner, the three cards, what is set on this iPhone.
-/// Pushed from Settings.
+/// Teacher reminders (P18-Reminders; P7-Reminders-NotAsked, -AllOff, -Refused, -DayPicker): before the ask, the intro
+/// and
+/// Turn on reminders over the three choices dimmed; after it, the banner, the cards for classes, events and fees, and
+/// Plans and notes. The server sends them. Pushed from Settings.
 public struct RemindersView: View {
     /// The wheel open over the screen.
     public enum Wheel: Hashable, Sendable {
@@ -15,6 +16,7 @@ public struct RemindersView: View {
     @State private var wheel: Wheel?
     @State private var topInset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
+    @Environment(NoticeCenter.self) private var notices: NoticeCenter?
     @Environment(\.scenePhase) private var scenePhase
     private let boardState: Bool
     private let openSettings: () -> Void
@@ -51,6 +53,11 @@ public struct RemindersView: View {
         .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .task { await store.load() }
+        .onChange(of: store.alert) { _, alert in
+            guard let alert else { return }
+            notices?.show(alert)
+            store.alert = nil
+        }
         .onChange(of: scenePhase) { _, phase in
             // Back from the iPhone's Settings: the permission may have changed.
             if phase == .active, !boardState {
@@ -98,7 +105,7 @@ public struct RemindersView: View {
             classes
             events
             fees
-            onThisPhone
+            plansAndNotes
         }
         .opacity(store.permission == .refused ? Tokens.opacityDisabled : 1)
         .allowsHitTesting(store.permission != .refused)
@@ -106,8 +113,8 @@ public struct RemindersView: View {
             store.permission == .refused
                 ? "Allow them under Settings → Tutor Central → Notifications, then come back here. Your switches are "
                 + "kept."
-                : "Reminders are set two weeks ahead and refreshed whenever you open the app or change a class, an "
-                + "event or a fee."
+                : "Sent by Tutor Central, so they arrive even on days you have not opened the app. These settings go "
+                + "with your account to any iPhone you sign in on."
         )
     }
 
@@ -170,15 +177,14 @@ public struct RemindersView: View {
         }
     }
 
-    private var onThisPhone: some View {
-        VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
-            SectionHeader("On this iPhone", action: ("Refresh", { Task { await store.refresh() } }))
-            Card {
-                SettingRow(label: store.onThisPhone.count) {
-                    if let through = store.onThisPhone.through {
-                        RowValue(through)
-                    }
-                }
+    private var plansAndNotes: some View {
+        group("Plans and notes") {
+            SettingRow(label: "Plan ready", line: "When each batch’s plan and material are made, before the batch") {
+                Switch(isOn: $store.settings.planReady, label: "Plan ready")
+            }
+            .rowDivider()
+            SettingRow(label: "Notes ready", line: "When the note day’s notes for parents are written") {
+                Switch(isOn: $store.settings.notesReady, label: "Notes ready")
             }
         }
     }

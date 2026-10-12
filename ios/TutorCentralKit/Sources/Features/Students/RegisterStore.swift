@@ -33,8 +33,6 @@ import Observation
     public private(set) var savedAt: Date?
     /// The last read failed for the network, not the server.
     public private(set) var offlineRead = false
-    /// Told after any saved write, so the shell plans the reminders again (a class's days, a member count).
-    public var onChanged: () -> Void = {}
     let now: @Sendable () -> Date
     private let calendar: Calendar
     private var loaded = false
@@ -221,7 +219,6 @@ import Observation
         canRetry = false
         lastSavedAt = now()
         persist()
-        onChanged()
     }
 
     func failed(
