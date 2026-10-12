@@ -5,7 +5,8 @@ import { alertPayload, fetchPayload } from "./payload.js";
 
 /** The minute tick's send (plan decision 7): each row due goes to every live token of its user; a token Apple retired is
  *  retired and never tried again; the row is sent when any device took it, else failed, with each device's answer. A
- *  429 or a 5xx fails this minute's row and is not retried: a reminder is late or not at all. */
+ *  429 or a 5xx fails this minute's row and is not retried: a reminder is late or not at all. A connection that dropped
+ *  before Apple answered (no status) is tried once more at once: that is not Apple's answer (hand run 4). */
 export async function sendDue(deps: { outbox: OutboxDb; pusher: Pusher; clock: Clock }, limit = 200): Promise<{ sent: number; failed: number; retired: number }> {
   const counts = { sent: 0, failed: 0, retired: 0 };
   const rows = await deps.outbox.due(new Date(deps.clock.now()).toISOString(), limit);
@@ -22,7 +23,9 @@ export async function sendDue(deps: { outbox: OutboxDb; pusher: Pusher; clock: C
     const answers: unknown[] = [];
     let delivered = false;
     for (const token of tokens) {
-      const answer = await deps.pusher.send({ token: token.token, environment: token.environment, payload, background: row.background });
+      const push = { token: token.token, environment: token.environment, payload, background: row.background };
+      let answer = await deps.pusher.send(push);
+      if (!answer.ok && answer.status === 0) answer = await deps.pusher.send(push);
       if (answer.ok) {
         delivered = true;
         answers.push({ token: token.id, apnsId: answer.apnsId });
