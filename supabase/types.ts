@@ -117,14 +117,14 @@ isOneToOne: false
                   ]
                 },"artefacts": {
                   Row: {
-                    "centre_id": string,"content": NonNullable<Json>,"created_at": string,"generation_id": string | null,"id": string,"kind": Database["public"]['Enums']["artefact_kind"],"made_from": string | null,"photo_path": string | null,"plan_id": string | null,"regenerated_from": string | null,"school_item_id": string | null,"source": Database["public"]['Enums']["artefact_source"],"student_id": string | null,"title": string,"updated_at": string
+                    "centre_id": string,"content": NonNullable<Json>,"created_at": string,"generation_id": string | null,"id": string,"idempotency_key": string | null,"kind": Database["public"]['Enums']["artefact_kind"],"made_from": string | null,"photo_path": string | null,"plan_id": string | null,"regenerated_from": string | null,"school_item_id": string | null,"source": Database["public"]['Enums']["artefact_source"],"student_id": string | null,"title": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"content"?: NonNullable<Json>,"created_at"?: string,"generation_id"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["artefact_kind"],"made_from"?: string | null,"photo_path"?: string | null,"plan_id"?: string | null,"regenerated_from"?: string | null,"school_item_id"?: string | null,"source"?: Database["public"]['Enums']["artefact_source"],"student_id"?: string | null,"title": string,"updated_at"?: string
+                    "centre_id": string,"content"?: NonNullable<Json>,"created_at"?: string,"generation_id"?: string | null,"id"?: string,"idempotency_key"?: string | null,"kind": Database["public"]['Enums']["artefact_kind"],"made_from"?: string | null,"photo_path"?: string | null,"plan_id"?: string | null,"regenerated_from"?: string | null,"school_item_id"?: string | null,"source"?: Database["public"]['Enums']["artefact_source"],"student_id"?: string | null,"title": string,"updated_at"?: string
                   }
                   Update: {
-                    "centre_id"?: string,"content"?: NonNullable<Json>,"created_at"?: string,"generation_id"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["artefact_kind"],"made_from"?: string | null,"photo_path"?: string | null,"plan_id"?: string | null,"regenerated_from"?: string | null,"school_item_id"?: string | null,"source"?: Database["public"]['Enums']["artefact_source"],"student_id"?: string | null,"title"?: string,"updated_at"?: string
+                    "centre_id"?: string,"content"?: NonNullable<Json>,"created_at"?: string,"generation_id"?: string | null,"id"?: string,"idempotency_key"?: string | null,"kind"?: Database["public"]['Enums']["artefact_kind"],"made_from"?: string | null,"photo_path"?: string | null,"plan_id"?: string | null,"regenerated_from"?: string | null,"school_item_id"?: string | null,"source"?: Database["public"]['Enums']["artefact_source"],"student_id"?: string | null,"title"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -377,6 +377,32 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "centres"
       referencedColumns: ["id"]
+    }
+                  ]
+                },"consent_events": {
+                  Row: {
+                    "at": string,"by_user": string | null,"centre_id": string,"created_at": string,"how": string | null,"id": string,"kind": string,"phone": string | null,"student_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "at": string,"by_user"?: string | null,"centre_id": string,"created_at"?: string,"how"?: string | null,"id"?: string,"kind": string,"phone"?: string | null,"student_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "at"?: string,"by_user"?: string | null,"centre_id"?: string,"created_at"?: string,"how"?: string | null,"id"?: string,"kind"?: string,"phone"?: string | null,"student_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "consent_events_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "consent_events_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
     }
                   ]
                 },"device_tokens": {
@@ -972,7 +998,7 @@ isOneToOne: false
         isSetofReturn: false
       } },
 "keep_artefact":
-{ Args: { "p_artefact": Json,"p_centre": string,"p_group_no": number,"p_item_kind": Database["public"]['Enums']["plan_item_kind"],"p_made_from"?: string,"p_plan": string,"p_school_item"?: string,"p_student": string }; Returns: string
+{ Args: { "p_artefact": Json,"p_centre": string,"p_group_no": number,"p_item_kind": Database["public"]['Enums']["plan_item_kind"],"p_key"?: string,"p_made_from"?: string,"p_plan": string,"p_school_item"?: string,"p_student": string }; Returns: string
                            },
 "make_plan":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_groups": Json,"p_items": Json,"p_subjects": Json }; Returns: Json
