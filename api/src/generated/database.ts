@@ -620,6 +620,26 @@ isOneToOne: false
       referencedColumns: ["centre_id","id"]
     }
                   ]
+                },"notifications": {
+                  Row: {
+                    "apns": Json | null,"background": boolean,"body": string | null,"centre_id": string,"created_at": string,"due_at": string,"id": string,"key": string,"kind": string,"link": string | null,"sent_at": string | null,"state": string,"title": string | null,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id": string,"created_at"?: string,"due_at": string,"id"?: string,"key": string,"kind": string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"title"?: string | null,"updated_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id"?: string,"created_at"?: string,"due_at"?: string,"id"?: string,"key"?: string,"kind"?: string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"title"?: string | null,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notifications_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"plan_items": {
                   Row: {
                     "artefact_id": string | null,"centre_id": string,"created_at": string,"done_at": string | null,"group_no": number | null,"id": string,"kind": Database["public"]['Enums']["plan_item_kind"],"moved_from": number | null,"plan_id": string,"skill_id": string | null,"skipped_at": string | null,"student_id": string | null,"updated_at": string,"words": string
@@ -709,6 +729,26 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"reminder_settings": {
+                  Row: {
+                    "centre_id": string,"class_minutes": number,"class_on": boolean,"created_at": string,"event_lead": string,"events_on": boolean,"fees_day": number,"fees_on": boolean,"id": string,"notes_ready_on": boolean,"plan_ready_on": boolean,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"class_minutes"?: number,"class_on"?: boolean,"created_at"?: string,"event_lead"?: string,"events_on"?: boolean,"fees_day"?: number,"fees_on"?: boolean,"id"?: string,"notes_ready_on"?: boolean,"plan_ready_on"?: boolean,"updated_at"?: string,"user_id"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"class_minutes"?: number,"class_on"?: boolean,"created_at"?: string,"event_lead"?: string,"events_on"?: boolean,"fees_day"?: number,"fees_on"?: boolean,"id"?: string,"notes_ready_on"?: boolean,"plan_ready_on"?: boolean,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "reminder_settings_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"school_items": {
                   Row: {
@@ -951,6 +991,30 @@ isOneToOne: false
 "delete_centre":
 { Args: { "p_centre": string }; Returns: undefined
                            },
+"due_notifications":
+{ Args: { "p_limit"?: number,"p_now": string }; Returns: {
+              "apns": Json | null,
+"background": boolean,
+"body": string | null,
+"centre_id": string,
+"created_at": string,
+"due_at": string,
+"id": string,
+"key": string,
+"kind": string,
+"link": string | null,
+"sent_at": string | null,
+"state": string,
+"title": string | null,
+"updated_at": string,
+"user_id": string
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "notifications"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
 "enqueue_job":
 { Args: { "p_centre": string,"p_input"?: Json,"p_key": string,"p_kind": Database["public"]['Enums']["job_kind"],"p_max_attempts"?: number,"p_run_at"?: string }; Returns: string
                            },
@@ -1001,8 +1065,16 @@ isOneToOne: false
 "keep_artefact":
 { Args: { "p_artefact": Json,"p_centre": string,"p_group_no": number,"p_item_kind": Database["public"]['Enums']["plan_item_kind"],"p_key"?: string,"p_made_from"?: string,"p_plan": string,"p_school_item"?: string,"p_student": string }; Returns: string
                            },
+"live_tokens":
+{ Args: { "p_user": string }; Returns: {
+              "environment": string,"id": string,"token": string
+            }[]
+                           },
 "make_plan":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_groups": Json,"p_items": Json,"p_subjects": Json }; Returns: Json
+                           },
+"mark_notification":
+{ Args: { "p_apns": Json,"p_id": string,"p_state": string }; Returns: undefined
                            },
 "name_plan_group":
 { Args: { "p_centre": string,"p_chapter": string,"p_group_no": number,"p_plan": string,"p_skill": string }; Returns: undefined
@@ -1016,6 +1088,9 @@ isOneToOne: false
 "record_step":
 { Args: { "p_cost_paise"?: number,"p_error"?: Json,"p_generation"?: string,"p_job": string,"p_state": Database["public"]['Enums']["job_state"],"p_step": string,"p_step_data"?: Json,"p_worker": string }; Returns: string
                            },
+"replace_notifications":
+{ Args: { "p_centre": string,"p_from": string,"p_kinds": (string)[],"p_rows": Json,"p_user": string }; Returns: number
+                           },
 "request_export":
 { Args: { "p_centre": string,"p_student": string }; Returns: string
                            },
@@ -1027,6 +1102,9 @@ isOneToOne: false
                            },
 "request_plan":
 { Args: { "p_centre": string,"p_choices"?: Json,"p_class": string,"p_date": string }; Returns: string
+                           },
+"retire_token":
+{ Args: { "p_id": string }; Returns: undefined
                            },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
