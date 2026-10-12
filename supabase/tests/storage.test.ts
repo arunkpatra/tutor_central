@@ -137,12 +137,19 @@ test("a member reads no storage deletion and writes none", async () => {
   expect((await a.from("storage_deletions").insert({ bucket: "photos", path: `${centreB}/x.jpg`, why: "forged" })).error).not.toBeNull();
 });
 
-test("taken_storage_deletions hands each row out once and removes it", async () => {
+test("taken_storage_deletions hands each row out once; a row goes only when done, and comes back after ten minutes (the review's R-db-2)", async () => {
   await sql`insert into public.storage_deletions (bucket, path, why) select 'photos', ${centreA} || '/t/' || g || '.jpg', 'test' from generate_series(1, 6) g`;
   const [x, y] = await Promise.all([svc.rpc("taken_storage_deletions", { p_limit: 4 }), svc.rpc("taken_storage_deletions", { p_limit: 4 })]);
-  const taken = [...(x.data ?? []), ...(y.data ?? [])].map((r: { path: string }) => r.path);
-  expect(taken).toHaveLength(6);
-  expect(new Set(taken).size).toBe(6);
-  expect((await sql`select count(*)::int as n from public.storage_deletions`)[0].n).toBe(0);
+  const rows = [...(x.data ?? []), ...(y.data ?? [])] as { id: string; path: string }[];
+  expect(rows).toHaveLength(6);
+  expect(new Set(rows.map((r) => r.path)).size).toBe(6);
+  // Taken, not gone: a sweep that fails before Storage answers leaves them for the next.
+  expect((await sql`select count(*)::int as n from public.storage_deletions`)[0].n).toBe(6);
+  expect((await svc.rpc("taken_storage_deletions", { p_limit: 10 })).data).toEqual([]);
+  for (const r of rows.slice(0, 5)) expect((await svc.rpc("done_storage_deletion", { p_id: r.id })).error).toBeNull();
+  expect((await sql`select count(*)::int as n from public.storage_deletions`)[0].n).toBe(1);
+  await sql`update public.storage_deletions set taken_at = now() - interval '11 minutes'`;
+  expect(((await svc.rpc("taken_storage_deletions", { p_limit: 10 })).data as { id: string }[]).map((r) => r.id)).toEqual([rows[5]!.id]);
   expect((await a.rpc("taken_storage_deletions", { p_limit: 1 })).error?.code).toBe("42501");
+  expect((await a.rpc("done_storage_deletion", { p_id: rows[5]!.id })).error?.code).toBe("42501");
 });

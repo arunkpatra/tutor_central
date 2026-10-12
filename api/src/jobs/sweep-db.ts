@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../generated/database.js";
 import type { SweepSource } from "./kinds/sweep.js";
 
-/** The sweep's reach as the platform (D83): 0040's and 0041's named functions, and the Storage API for the files. */
+/** The sweep's reach as the platform (D83): 0040's, 0041's and 0044's named functions, and the Storage API for the files. */
 export function makeSweepSource(url: string, serviceKey: string): SweepSource {
   const client = createClient<Database>(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const fail = (what: string, error: { message: string } | null) => {
@@ -29,7 +29,11 @@ export function makeSweepSource(url: string, serviceKey: string): SweepSource {
     async takeDeletions(limit) {
       const { data, error } = await client.rpc("taken_storage_deletions", { p_limit: limit });
       fail("taken_storage_deletions", error);
-      return (data ?? []).map((r) => ({ bucket: r.bucket, path: r.path, prefix: r.prefix }));
+      return (data ?? []).map((r) => ({ id: r.id, bucket: r.bucket, path: r.path, prefix: r.prefix }));
+    },
+    async doneDeletion(id) {
+      const { error } = await client.rpc("done_storage_deletion", { p_id: id });
+      fail("done_storage_deletion", error);
     },
     list,
     async remove(bucket, paths) {

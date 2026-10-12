@@ -3,8 +3,11 @@ import type { JobHandler } from "../types.js";
 /** What the sweep removes and trims (plan decisions 20, 27): Storage's deleted files queued by 0040, the exports past
  *  seven days, the outbox's and the platform's old rows (0041). */
 export type SweepSource = {
-  /** taken_storage_deletions: each row handed out once and removed. */
-  takeDeletions(limit: number): Promise<{ bucket: string; path: string; prefix: boolean }[]>;
+  /** taken_storage_deletions: each row handed out once and kept until done; one taken and not done comes back after ten
+   *  minutes (0044). */
+  takeDeletions(limit: number): Promise<{ id: string; bucket: string; path: string; prefix: boolean }[]>;
+  /** done_storage_deletion: the row removed once Storage removed its files. */
+  doneDeletion(id: string): Promise<void>;
   /** Every object's name under a prefix, page by page. */
   list(bucket: string, prefix: string): Promise<string[]>;
   /** The objects removed through the Storage API; one already gone is no error. */
@@ -25,7 +28,7 @@ const EXPORT_DAYS = 7;
 export function makeSweep(source?: SweepSource): JobHandler {
   return {
     async step(job, ctx) {
-      const step = job.step as { at?: "storage" | "retention"; closed?: number; removed?: number };
+      const step = job.step as { at?: "storage" | "retention"; closed?: number; removed?: number; left?: number };
       if (step.at === undefined) {
         const closed = await ctx.jobs.closePending();
         if (!source) return { kind: "done", name: "pending", result: { closed } };
@@ -34,18 +37,26 @@ export function makeSweep(source?: SweepSource): JobHandler {
       if (!source) return { kind: "done", name: "pending", result: { closed: step.closed ?? 0 } };
       if (step.at === "storage") {
         let removed = 0;
+        let left = 0;
         for (const row of await source.takeDeletions(TAKE)) {
-          const paths = row.prefix ? await source.list(row.bucket, row.path) : [row.path];
-          for (let i = 0; i < paths.length; i += BATCH) await source.remove(row.bucket, paths.slice(i, i + BATCH));
-          removed += row.prefix ? paths.length : 1;
+          // A row goes only once its files are gone: one Storage refuses stays for a later sweep, and the rest go on
+          // (the review's R-db-2: the take deleted them first, and a failure orphaned the files).
+          try {
+            const paths = row.prefix ? await source.list(row.bucket, row.path) : [row.path];
+            for (let i = 0; i < paths.length; i += BATCH) await source.remove(row.bucket, paths.slice(i, i + BATCH));
+            await source.doneDeletion(row.id);
+            removed += row.prefix ? paths.length : 1;
+          } catch {
+            left += 1;
+          }
         }
-        return { kind: "continue", name: "storage", step: { at: "retention", closed: step.closed ?? 0, removed } };
+        return { kind: "continue", name: "storage", step: { at: "retention", closed: step.closed ?? 0, removed, left } };
       }
       const now = new Date(ctx.clock.now());
       const old = await source.oldExports(new Date(now.getTime() - EXPORT_DAYS * 86_400_000).toISOString(), TAKE);
       for (let i = 0; i < old.length; i += BATCH) await source.remove("exports", old.slice(i, i + BATCH));
       const trimmed = await source.trim(now.toISOString());
-      return { kind: "done", name: "retention", result: { closed: step.closed ?? 0, removed: step.removed ?? 0, trimmed: { ...trimmed, exports: old.length } } };
+      return { kind: "done", name: "retention", result: { closed: step.closed ?? 0, removed: step.removed ?? 0, left: step.left ?? 0, trimmed: { ...trimmed, exports: old.length } } };
     },
   };
 }
