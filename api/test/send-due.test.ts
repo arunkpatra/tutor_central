@@ -52,3 +52,27 @@ test("a background row is sent as the plan's fetch, an alert with its words", as
     [true, { aps: { "content-available": 1 }, fetch: "plan", id: "n2" }],
   ]);
 });
+
+// Hand run 4: the sandbox dropped the stream ("stream ended unexpectedly", no status). That is no answer from Apple, so
+// the push is tried once more at once; Apple's own 429 and 5xx stay unretried (decision 7).
+test("a dropped connection (no status) is tried once more at once; a 503 is not", async () => {
+  const dropped: Record<string, number> = {};
+  const flaky = {
+    sent: [] as string[],
+    async send(p: { token: string }) {
+      flaky.sent.push(p.token);
+      dropped[p.token] = (dropped[p.token] ?? 0) + 1;
+      if (p.token === "tok-drop" && dropped[p.token] === 1) return { ok: false as const, status: 0, reason: "stream ended unexpectedly", retire: false };
+      if (p.token === "tok-busy") return { ok: false as const, status: 503, reason: "ServiceUnavailable", retire: false };
+      return { ok: true as const, apnsId: `a-${p.token}` };
+    },
+    async close() {},
+  };
+  const outbox = fakeOutbox([notif("n1", USER, "notes_ready"), notif("n2", "u2", "class")], {
+    [USER]: [tok("t1", "tok-drop")],
+    u2: [tok("t2", "tok-busy")],
+  });
+  expect(await sendDue({ outbox, pusher: flaky, clock: CLOCK })).toEqual({ sent: 1, failed: 1, retired: 0 });
+  expect(flaky.sent).toEqual(["tok-drop", "tok-drop", "tok-busy"]);
+  expect(outbox.marks[0]).toEqual({ id: "n1", state: "sent", apns: [{ token: "t1", apnsId: "a-tok-drop" }] });
+});
