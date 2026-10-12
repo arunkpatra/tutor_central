@@ -59,8 +59,8 @@ Hono on Vercel. Exists only for AI and scanning (D5, D11); everything else is th
   call's kind (`kindOf`), so a check is never answered with a paper. The textbook photo is read and dropped:
   `textbooks.photo_path` stays null (Phase 11).
 
-Commands: `bun run dev` (local on :3000, needs `api/.env.local`, and `SUPABASE_URL=… SUPABASE_ANON_KEY=…` from `supabase
-status -o env` on the command line); `bun run check` (tsc and tests);
+Commands: `bun run dev` (local on :3000, needs `api/.env.local` with `WORKER_SECRET`, and `SUPABASE_URL=… SUPABASE_ANON_KEY=…
+SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line); `bun run check` (tsc and tests);
 `bun check --only=api`; `gh workflow run deploy`.
 
 - Phase 13: the models overrun an output schema's string limits unless the prompt states them; state each limit in the
