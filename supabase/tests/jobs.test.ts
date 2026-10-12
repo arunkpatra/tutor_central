@@ -77,6 +77,16 @@ test("a claim takes due jobs in run_at order with a lease, skips the future and 
   expect((await claim("w3")).data).toEqual([]);
 });
 
+test("two workers claiming at once each take a job, every time (skip locked under contention)", async () => {
+  for (let round = 0; round < 25; round++) {
+    await clear();
+    await enqueue(centreA, `race-${round}-1`);
+    await enqueue(centreA, `race-${round}-2`);
+    const [one, two] = await Promise.all([claim("w1", 1), claim("w2", 1)]);
+    expect({ round, taken: [one.data?.length, two.data?.length], errors: [one.error?.message, two.error?.message] }).toEqual({ round, taken: [1, 1], errors: [undefined, undefined] });
+  }
+});
+
 test("a write by a worker that lost the lease is refused; the lease past its time is retaken", async () => {
   await clear();
   const id = (await enqueue(centreA, "lease")).data as string;

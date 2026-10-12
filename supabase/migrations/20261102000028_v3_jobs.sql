@@ -117,16 +117,20 @@ begin
   update public.jobs set state = 'failed', finished_at = now(), leased_by = null, lease_until = null,
          error = coalesce(error, '{}'::jsonb) || jsonb_build_object('reason', 'attempts', 'message', 'the lease lapsed on the last attempt')
    where state = 'running' and lease_until < now() and attempts >= max_attempts;
+  -- The rows are picked once, in a materialized CTE: a sub-select with LIMIT under `in (…)` may be planned so that two
+  -- workers at once come away with fewer jobs than are due (seen once in session 35).
   return query
+    with picked as materialized (
+      select q.id from public.jobs q
+       where (q.state = 'waiting' and q.run_at <= now())
+          or (q.state = 'queued' and q.run_at <= now() and q.attempts < q.max_attempts)
+          or (q.state = 'running' and q.lease_until < now() and q.attempts < q.max_attempts)
+       order by q.run_at for update skip locked limit p_limit)
     update public.jobs j
        set state = 'running', leased_by = p_worker, lease_until = now() + make_interval(secs => p_lease_seconds),
            started_at = coalesce(j.started_at, now()),
            attempts = j.attempts + case when j.state = 'waiting' then 0 else 1 end
-     where j.id in (select q.id from public.jobs q
-                     where (q.state = 'waiting' and q.run_at <= now())
-                        or (q.state = 'queued' and q.run_at <= now() and q.attempts < q.max_attempts)
-                        or (q.state = 'running' and q.lease_until < now() and q.attempts < q.max_attempts)
-                     order by q.run_at for update skip locked limit p_limit)
+      from picked where j.id = picked.id
     returning j.*;
 end $$;
 
