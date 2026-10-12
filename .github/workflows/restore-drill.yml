@@ -74,6 +74,7 @@ jobs:
           jq -r '(.rows // .)[] | "\(.name)|\(.n)"' "$RUNNER_TEMP/production.json" | sort > "$RUNNER_TEMP/production.txt"
           psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -At -f ../tools/restore-count.sql | sort > "$RUNNER_TEMP/restored.txt"
           seconds=$(( RESTORED - STARTED ))
+          # Table names and counts only: the same table in the log and the summary.
           {
             echo "### The restore drill"
             echo "Dumped and restored in ${seconds} s."
@@ -81,7 +82,7 @@ jobs:
             echo "| Table | Production | Restored |"
             echo "|---|---|---|"
             join -t '|' -a 1 -a 2 -e '—' -o 0,1.2,2.2 "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" | awk -F'|' '{ print "| " $1 " | " $2 " | " $3 " |" }'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
           if diff -q "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" > /dev/null; then
             echo "Every table's count is equal." >> "$GITHUB_STEP_SUMMARY"
           else
