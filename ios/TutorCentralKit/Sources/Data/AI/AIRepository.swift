@@ -20,6 +20,13 @@ public struct ImageUpload: Hashable, Sendable {
 /// What a generation needs beyond the form: the names the register knows. The API records the class's and the
 /// student's ids too, so a result read back later names them again.
 public struct GenerateContext: Hashable, Sendable {
+    /// The same context for Create again.
+    public func again() -> GenerateContext {
+        var copy = self
+        copy.isAgain = true
+        return copy
+    }
+
     public let centre: UUID
     public let className: String?
     public let subject: String
@@ -28,6 +35,8 @@ public struct GenerateContext: Hashable, Sendable {
     public let attendanceLine: String?
     public let tutorName: String
     public let centreName: String
+    /// Create again: "another one", so the call carries a fresh key, not the request's (D84).
+    public private(set) var isAgain = false
 
     public init(
         centre: UUID, className: String?, subject: String, studentName: String?, parentName: String?,
