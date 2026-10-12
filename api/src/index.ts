@@ -16,6 +16,7 @@ import { makeObserve } from "./observe.js";
 import { makeApnsPusher } from "./push/apns.js";
 import { fakePusher } from "./push/apns-fake.js";
 import { makeOutboxDb } from "./push/db.js";
+import { makeNoteSource } from "./notes/record.js";
 import { makeReminderSource } from "./reminders/source.js";
 import { makeVerify } from "./verify.js";
 
@@ -65,6 +66,8 @@ const pusher =
     : () => fakePusher({});
 
 const outbox = makeOutboxDb(supabaseUrl, serviceKey);
+/** The record the plan and note jobs read and write as the platform (D83), with the outbox for their pushes. */
+const record = makeRecordSource(supabaseUrl, serviceKey, outbox);
 
 /** A 4xx from Supabase is the token's (sign in again); a lost connection is "unreachable" (D68). */
 const verify = makeVerify(() => createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false, autoRefreshToken: false } }));
@@ -82,7 +85,7 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers({ record: makeRecordSource(supabaseUrl, serviceKey), reminders: makeReminderSource(supabaseUrl, serviceKey, outbox) }),
+    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record) }),
     push: { outbox, pusher },
   },
 });
