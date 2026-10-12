@@ -42,6 +42,7 @@ export function makeObserve(url: string, serviceKey: string): Observe {
         .from("api_requests")
         .select("id", { count: "exact", head: true })
         .eq("user_id", userId)
+        .lt("status", 429)
         .gt("created_at", since);
       if (error) throw new Error(`api_requests: ${error.message}`);
       return count ?? 0;

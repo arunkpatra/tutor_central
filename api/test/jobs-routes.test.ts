@@ -31,14 +31,26 @@ test("the worker's routes need the worker's secret", async () => {
   }
 });
 
-test("tick with the secret enqueues the hour's sweep once and drains it", async () => {
+test("a sweep runs each ten minutes, so a call left pending blocks its key for ten minutes, not an hour", async () => {
+  const { app, jobs, clock } = build();
+  await app.request("/jobs/tick", { headers: bearer });
+  clock.advance(60_000);
+  await app.request("/jobs/tick", { headers: bearer });
+  expect(jobs.counts.closePending).toBe(1);
+  clock.advance(600_000);
+  await app.request("/jobs/tick", { headers: bearer });
+  expect(jobs.counts.closePending).toBe(2);
+  expect(jobs.jobs.map((j) => j.key)).toEqual(["sweep:2026-10-12-12:00", "sweep:2026-10-12-12:10"]);
+});
+
+test("tick with the secret enqueues the ten minutes' sweep once and drains it", async () => {
   const { app, jobs } = build();
   jobs.setPendingClosed(2);
   const r = await app.request("/jobs/tick", { headers: bearer });
   expect(r.status).toBe(200);
   expect(await r.json()).toMatchObject({ claimed: 1, done: 1 });
   expect(jobs.jobs).toHaveLength(1);
-  expect(jobs.jobs[0]).toMatchObject({ kind: "sweep", centreId: null, key: "sweep:2026-10-12-12", state: "done", result: { closed: 2 } });
+  expect(jobs.jobs[0]).toMatchObject({ kind: "sweep", centreId: null, key: "sweep:2026-10-12-12:00", state: "done", result: { closed: 2 } });
   await app.request("/jobs/tick", { headers: bearer });
   expect(jobs.jobs).toHaveLength(1);
   expect(jobs.counts.closePending).toBe(1);

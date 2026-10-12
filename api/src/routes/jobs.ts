@@ -22,13 +22,15 @@ function sameSecret(given: string | undefined, secret: string): boolean {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-/** The hour's sweep key, by the UTC hour: one sweep an hour whatever the number of ticks. */
+/** The sweep's key, by the UTC ten minutes: one sweep each ten minutes whatever the number of ticks, so a call left
+ *  pending (its key answering "in progress") is closed within twenty (plan decision 28). */
 export function sweepKey(now: number): string {
-  return `sweep:${new Date(now).toISOString().slice(0, 13).replace("T", "-")}`;
+  const bucket = new Date(Math.floor(now / 600_000) * 600_000);
+  return `sweep:${bucket.toISOString().slice(0, 16).replace("T", "-")}`;
 }
 
 /** GET /jobs/tick (pg_cron, each minute) and POST /jobs/wake (the enqueue trigger): the worker's bearer, then one run.
- *  The tick first queues the hour's sweep when none is live. Without the bearer, the AI routes' 401, so nothing new leaks. */
+ *  The tick first queues the ten minutes' sweep when none is live. Without the bearer, the AI routes' 401, so nothing new leaks. */
 export function jobRoutes(worker: Worker, claude: ClaudeClient) {
   const r = new Hono<Vars>();
   const clock = worker.clock ?? realClock;
