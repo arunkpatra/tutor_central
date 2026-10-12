@@ -54,7 +54,7 @@ import Testing
         }
         let drawn = try #require(await offline.sharedPDF())
         #expect(try Data(contentsOf: drawn).starts(with: Data("%PDF".utf8)))
-        #expect(await tried.count == 0)
+        #expect(await tried.none)
         let (stalled, _) = try await sheet(wait: .milliseconds(200)) { _, _ in
             try await Task.sleep(for: .seconds(60))
             return Data("server".utf8)
@@ -67,9 +67,9 @@ import Testing
     }
 
     actor Tried {
-        var count = 0
+        private(set) var none = true
         func add() {
-            count += 1
+            none = false
         }
     }
 }
