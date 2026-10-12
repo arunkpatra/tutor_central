@@ -1030,6 +1030,9 @@ isOneToOne: false
                            },
 "wake_worker_tick":
 { Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"withdraw_consent":
+{ Args: { "p_centre": string,"p_how": string,"p_on": string,"p_student": string }; Returns: string
                            }
           }
           Enums: {

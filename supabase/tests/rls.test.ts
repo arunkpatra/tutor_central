@@ -619,3 +619,16 @@ test("anonymous gets no grant on a table or function made after migration 0001",
     await sql.close();
   }
 });
+
+test("no function grants anonymous or PUBLIC but 0001's trigger helper, and the security definer functions stay four", async () => {
+  const sql = new SQL(l.db);
+  try {
+    const open = await sql`select distinct routine_name from information_schema.role_routine_grants
+      where routine_schema = 'public' and grantee in ('anon', 'PUBLIC') order by 1`;
+    expect(open.map((r: { routine_name: string }) => r.routine_name)).toEqual(["set_updated_at"]);
+    const definers = await sql`select proname from pg_proc where pronamespace = 'public'::regnamespace and prosecdef order by 1`;
+    expect(definers.map((r: { proname: string }) => r.proname)).toEqual(["delete_account", "is_member", "wake_worker", "wake_worker_tick"]);
+  } finally {
+    await sql.close();
+  }
+});
