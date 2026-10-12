@@ -35,7 +35,7 @@ findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner).
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
 | 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
-| 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the round waits (D69) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round from `resume/030-phase-15-build.md` (step 8) |
+| 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the round waits (D69) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready, the round itself waits (D69) |
 | 16 Release | Not started | Scope file `phase-16-release.md`; depends on Phase 15's round |
 | V3 Platform | The interview next (D69) | `resume/031-v3-interview-and-spec.md`; the spec `docs/spec-v3.md` after it |
 
