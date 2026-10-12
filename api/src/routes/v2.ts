@@ -3,23 +3,12 @@ import type { Vars } from "../auth.js";
 import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
-import { request as briefRequest } from "../prompts/brief.js";
-import { request as canDoRequest } from "../prompts/can-do.js";
-import { request as checkRequest } from "../prompts/check.js";
-import { request as figureRequest } from "../prompts/figure.js";
-import { request as gapReportRequest } from "../prompts/gap-report.js";
-import { request as mockRequest } from "../prompts/mock.js";
-import { request as notOnTrackRequest } from "../prompts/not-on-track.js";
-import { request as noteRequest } from "../prompts/note.js";
 import { request as textbookRequest } from "../prompts/parse-textbook.js";
-import { request as placementRequest } from "../prompts/placement.js";
 import { request as planRequest } from "../prompts/plan.js";
 import { request as readMarksRequest } from "../prompts/read-marks.js";
-import { request as sheetRequest } from "../prompts/sheet.js";
-import { request as testTomorrowRequest } from "../prompts/test-tomorrow.js";
-import { request as workedExampleRequest } from "../prompts/worked-example.js";
 import { type DecodedImage, decodeImage } from "../images.js";
-import { MakeInput, mockMarks, ParseTextbookInput, PlanInput, ReadMarksInput } from "../schemas.js";
+import { makeRequest } from "../make.js";
+import { MakeInput, ParseTextbookInput, PlanInput, ReadMarksInput } from "../schemas.js";
 import { answer, isParsed, parse, run } from "./common.js";
 
 /** The V2 routes (docs/spec-v2.md section 9): the textbook's contents page, `/plan` (a first topic for a group whose
@@ -47,40 +36,7 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
   routes.post("/make", async (c) => {
     const body = await parse(c, MakeInput);
     if (!isParsed(body)) return body;
-    const v = body.value;
-    switch (v.kind) {
-      case "sheet":
-        return run(c, deps, body.centre, { kind: "sheet", input: v, request: sheetRequest(v) });
-      case "worked_example":
-        return run(c, deps, body.centre, { kind: "worked_example", input: v, request: workedExampleRequest(v.classLevel, v.subject, v.skill) });
-      case "figure":
-        return run(c, deps, body.centre, {
-          kind: "figure",
-          input: v,
-          request: figureRequest(v.figure, v.classLevel, v.subject, v.skill),
-          // The template asked for is the template answered; another is an unfit answer.
-          empty: (made) => made.figure.kind !== v.figure,
-        });
-      case "brief":
-        return run(c, deps, body.centre, { kind: "brief", input: v, request: briefRequest(v.classLevel, v.subject, v.chapter) });
-      case "check":
-        return run(c, deps, body.centre, { kind: "check", input: v, request: checkRequest(v.classLevel, v.subject, v.skills) });
-      case "placement":
-        return run(c, deps, body.centre, { kind: "placement", input: v, request: placementRequest(v.classLevel, v.subject, v.chapters) });
-      case "mock":
-        // A mock whose marks do not sum to the pattern's is an unfit answer, refused in words (decision 12).
-        return run(c, deps, body.centre, { kind: "mock", input: v, request: mockRequest(v), empty: (made) => mockMarks(made) !== v.pattern.marks });
-      case "gap_report":
-        return run(c, deps, body.centre, { kind: "gap_report", input: v, request: gapReportRequest(v), student: v.studentId });
-      case "test_tomorrow":
-        return run(c, deps, body.centre, { kind: "test_tomorrow", input: v, request: testTomorrowRequest(v), student: v.studentId, studentName: v.studentName });
-      case "note":
-        return run(c, deps, body.centre, { kind: "note", input: v, request: noteRequest(v), student: v.studentId, studentName: v.studentName });
-      case "can_do":
-        return run(c, deps, body.centre, { kind: "can_do", input: v, request: canDoRequest(v), student: v.studentId, studentName: v.studentName });
-      case "not_on_track":
-        return run(c, deps, body.centre, { kind: "not_on_track", input: v, request: notOnTrackRequest(v), student: v.studentId, studentName: v.studentName });
-    }
+    return run(c, deps, body.centre, { input: body.value, ...makeRequest(body.value) });
   });
   routes.post("/read-marks", async (c) => {
     const body = await parse(c, ReadMarksInput);
