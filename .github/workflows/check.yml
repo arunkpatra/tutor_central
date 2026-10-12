@@ -110,10 +110,19 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
+      # A runner once held 54322 and the start failed (#183): free the stack's ports first, and start again once.
+      - name: Free the local ports
+        run: |
+          for p in 54320 54321 54322 54323 54324; do
+            if sudo lsof -iTCP:$p -sTCP:LISTEN -Pn; then echo "::warning::port $p was held; freeing it"; sudo fuser -k $p/tcp || true; fi
+          done
+
       # Only what the tests touch: Postgres, Auth, PostgREST, Storage (the photos bucket's policies) and the gateway.
       - name: Local Supabase
         working-directory: supabase
-        run: supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+        run: |
+          start() { supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor; }
+          start || { echo "::warning::supabase start failed once; stopping and starting again"; supabase stop --no-backup || true; start; }
 
       - name: bun check
         run: bun check --only=api,web,db $FRESH
