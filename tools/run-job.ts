@@ -26,16 +26,24 @@ function find(email: string, batch: string): string {
   select c.id into v_class from public.classes c where c.centre_id = v_centre and c.name = ${literal(batch)} and c.archived_at is null;`;
 }
 
+/** The block's dollar quote: one no input holds, so a name cannot end the block early. */
+function quoteFor(...inputs: string[]): string {
+  let tag = "$run_job$";
+  for (let n = 1; inputs.some((s) => s.includes(tag)); n++) tag = `$run_job_${n}$`;
+  return tag;
+}
+
 export function queueSql(email: string, batch: string, date: string): string {
   checked(email, batch, date);
-  return `do $$
+  const q = quoteFor(email, batch);
+  return `do ${q}
 declare v_centre uuid; v_class uuid; v_count integer;
 begin
 ${find(email, batch)}
   insert into public.jobs (centre_id, kind, idempotency_key, input)
   values (v_centre, 'plan', 'plan:' || v_class || ':${date}', jsonb_build_object('class_id', v_class, 'date', '${date}'))
   on conflict do nothing;
-end $$;
+end ${q};
 `;
 }
 
