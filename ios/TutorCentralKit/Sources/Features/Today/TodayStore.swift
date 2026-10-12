@@ -197,6 +197,8 @@ import Observation
         // The plans start once the register is in, beside the counts: each shows its copy at once offline, where
         // the counts' read takes its timeout to fail.
         async let plansRead: Void = startPlans(after: registerRead)
+        // The note day too: its rows come from the register at once, its read beside the counts.
+        async let noteDayRead: Void = startNoteDay(after: registerRead)
         let (repository, attendance, events, centre, at, calendar) = (
             repository, attendance, eventsRepository, workspace.centre.id, clock, calendar
         )
@@ -226,7 +228,7 @@ import Observation
         await tasksRead.value
         await readCloseCounts()
         await loadParents()
-        await noteDay?.load()
+        await noteDayRead
         tick(clock)
         // The counts are in; the plans fill their section as they are made.
         loading = false
@@ -247,6 +249,11 @@ import Observation
         await loadPlans()
     }
 
+    private func startNoteDay(after registerRead: Task<Void, Never>) async {
+        await registerRead.value
+        await noteDay?.load()
+    }
+
     /// Today's batches in time order, each with its plan store: made (or read) one after another (plan decision 14).
     public var planBatches: [Classroom] {
         NextClass.classesToday(in: register.activeClasses, on: today, calendar: calendar)
@@ -254,9 +261,14 @@ import Observation
 
     func loadPlans() async {
         guard let makePlanStore else { return }
-        for batch in planBatches {
+        let stores = planBatches.map { batch in
             let store = plans[batch.id] ?? makePlanStore(batch.id)
             plans[batch.id] = store
+            return store
+        }
+        // Every batch's copy first: the batches read one after another, and offline each read takes its timeout.
+        stores.forEach { $0.showCopy() }
+        for store in stores {
             await store.load()
         }
     }

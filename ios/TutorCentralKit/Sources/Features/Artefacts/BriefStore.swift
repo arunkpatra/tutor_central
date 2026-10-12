@@ -55,8 +55,12 @@ import Observation
     public func load() async {
         await register.loadIfNeeded()
         do {
-            guard let found = try await ArtefactRead.read(artefactID, centre: centre, plans: plans, cache: planCache)
-            else {
+            guard let found = try await ArtefactRead.read(
+                artefactID, centre: centre, plans: plans, cache: planCache, copy: { [weak self] copy in
+                    self?.artefact = copy.artefact
+                    self?.plan = copy.plan
+                }
+            ) else {
                 loadFailed = "This brief isn't here any more."
                 return
             }
@@ -64,7 +68,9 @@ import Observation
             plan = found.plan
             loadFailed = nil
         } catch {
-            loadFailed = "Couldn't load the brief. Check your connection and try again."
+            if artefact == nil {
+                loadFailed = "Couldn't load the brief. Check your connection and try again."
+            }
         }
     }
 

@@ -19,7 +19,8 @@ import Testing
         events: [CalendarEvent] = FakeEventsRepository.seed,
         tasks: [TaskItem] = FakeTasksRepository.seed,
         record: FakeRecordRepository? = nil,
-        plans: FakePlansRepository? = nil, items: FakeSchoolItemsRepository? = nil
+        plans: FakePlansRepository? = nil, items: FakeSchoolItemsRepository? = nil, planCache: PlanCache? = nil,
+        plansOnline: Bool = true
     ) async -> TodayStore {
         let register = RegisterStore(
             workspace: FakeCentreRepository.meeraWorkspace, students: FakeStudentsRepository(students: students),
@@ -38,11 +39,13 @@ import Testing
             let preview = PlanTest.preview(plans: plans, attendance: attendance, now: now, schoolItems: items)
             let jobs = PlanTest.serving(plans, preview: preview, now: now, students: students, classes: classes)
             store.makePlanStore = { classID in
-                PlanStore(
+                let plan = PlanStore(
                     classID: classID, workspace: FakeCentreRepository.meeraWorkspace, register: register,
                     plans: plans, classes: FakeClassesRepository(classes: classes), jobs: jobs, preview: preview,
-                    cache: nil, now: { now }, calendar: DayHeading.india
+                    cache: planCache, now: { now }, calendar: DayHeading.india
                 )
+                plan.online = { plansOnline }
+                return plan
             }
         }
         return store

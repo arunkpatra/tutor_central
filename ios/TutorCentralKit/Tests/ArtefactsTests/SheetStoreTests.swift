@@ -98,4 +98,32 @@ import Testing
         #expect(store.sheet?.questions.count == 8)
         #expect(store.line == "8 questions · for Dev, Meher and Nikhil · made today, 16:40")
     }
+
+    /// Phase 18's hand run 8: offline the read takes its timeout to fail; the plan's copy is on screen before it
+    /// answers.
+    @Test func theSheetShowsThePlansCopyBeforeTheRead() async throws {
+        let plan = try #require(try await ArtefactTest.plan(FakePlansRepository.evening()))
+        let cache = PlanCache(
+            centre: ArtefactTest.centre,
+            directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        )
+        cache.keep(plan, at: .now)
+        let plans = FakePlansRepository()
+        plans.delay = .seconds(30)
+        let id = try #require(plan.artefact(group: 1, kind: .sheet, homework: true)?.id)
+        let store = await SheetStore(
+            artefactID: id, workspace: FakeCentreRepository.meeraWorkspace, register: ArtefactTest.register(),
+            plans: plans, ai: FakeAIRepository(), photos: FakePhotoStore(), now: { ArtefactTest.at1640 },
+            calendar: DayHeading.india
+        )
+        store.planCache = cache
+        let loading = Task { await store.load() }
+        let clock = ContinuousClock()
+        let start = clock.now
+        while store.sheet == nil, clock.now - start < .seconds(2) {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(store.sheet?.questions.count == 8, "the sheet waited for the read")
+        loading.cancel()
+    }
 }
