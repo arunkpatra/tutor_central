@@ -3,15 +3,16 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-12, session 34 (Phase 17's plan, on Fable 5.1). **Session 34:** `plan/phase-17-plan.md` written
-and approved (18 tasks, 15 pull requests, no picture: nothing new on screen); D83 (the job key is the service role), D84
-(idempotency keys) and D85 (no paid plan this phase: pg_cron wakes the worker, Hobby's 300 s holds a step, no database copy
-exists until Pro before the external testing round) recorded; resume 033 for the build; the record in `plan/sessions/034/`.
-**Next:** Phase 17's build on Opus 5.5 from `resume/033-phase-17-build.md` (session 035). The order (D81): V3's Phases 17 to 22,
-then the external testing round (Phase 15's Tasks 20 to 23, by D52 to D55) on the first build that carries them, then Phase 16.
-The round's documents are ready (`docs/release.md`'s build 26 checklist and notes, `docs/testing/tester-guide.md`,
-`plan/phase-15-findings.md`); the owner's own findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner); none
-reported yet.
+**Last updated:** 2026-10-12, session 35 (Phase 17's build, on Opus 5.5). **Session 35:** Phase 17 built in #184 to #214
+(hand runs #212), every finding of the two fresh reviews fixed (#207 to #211, migration 0035), deployed (run 38256073141:
+0028 to 0035, the worker live, the minute wake answering), the owner's centre's first plan job done (Good Ground, Class 8,
+13 October), 1.0.0 (27) to TestFlight with nothing new on screen; D86 (merge on local green) and D87 (the session runs
+production's setup through the signed-in CLIs) recorded; the record in `plan/sessions/035/`.
+**Next:** Phase 18's boards, then its plan, on Fable 5.1 from `resume/034-phase-18-boards-and-plan.md`. The order (D81):
+V3's Phases 17 to 22, then the external testing round on the first build that carries them, then Phase 16. The round's
+documents are ready (`docs/release.md`, `docs/testing/tester-guide.md`, `plan/phase-15-findings.md`); the owner's own
+findings go into `plan/phase-15-findings.md` (Who = Owner); none reported yet. The owner opens Today on 13 October to see the
+plan the job made overnight.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -37,21 +38,20 @@ reported yet.
 | 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
 | 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the external testing round waits for V3 (D69, D81) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready |
 | 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
-| 17 V3 platform foundation | Planned (session 34, 2026-10-12); the build next | `phase-17-plan.md` approved with D83 to D85; scope file `phase-17-platform-foundation.md`; resume 033 |
-| 18 V3 the server's work and push | Not started | Scope file `phase-18-server-work-and-push.md`; depends on 17 |
+| 17 V3 platform foundation | Done (session 35, 2026-10-12), PRs #184 to #214; hand runs #212 | "As built" in `phase-17-platform-foundation.md`; deployed; 1.0.0 (27) |
+| 18 V3 the server's work and push | Next: boards, then the plan (resume 034) | Scope file `phase-18-server-work-and-push.md`; builds on 17 |
 | 19 V3 the admin portal, reading | Not started | Scope file `phase-19-admin-portal-reading.md`; depends on 17; boards first |
 | 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
 | 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
 | 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
-| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phase 17 planned (D83 to D85) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phase 17 built and deployed (D83 to D87) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 
-Nothing open on GitHub but the hand-run records #107 and #120 (issues, kept open as earlier phases' are); Phase 13's and
-Phase 14's hand runs are in `plan/sessions/028/ledger.md` and `plan/sessions/030/ledger.md`. A student link while
-another student's page was open showed the first student: fixed in #121 (every pushed screen takes its route as its
-identity). The remote holds `main`,
-`pr-shots`, and the merged `phase-10/*` to `phase-14/*` and `fix/*` branches, the owner's to delete.
+Nothing open on GitHub but the hand-run records (issues #107, #120, #174, #212, kept open as earlier phases' are). One task
+offered to the owner (a chip in session 35): Attendance shows everyone present after a queued replay until a cold launch
+(Phase 7's code, found in Phase 17's hand run 3). The remote holds `main`, `pr-shots`, and merged branches, the owner's to
+delete.
 
 ## Production
 
@@ -61,12 +61,12 @@ identity). The remote holds `main`,
   `A @ 216.198.79.1`, `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and
   `api.tutorcentral.in` (a CNAME to Vercel, attached to `tutor-central-api`) untouched. `APP_STORE_URL` unset (Home shows the
   email call to action) until the app is in the App Store.
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0027: 0009 to 0013 by deploy run
-  38042680418, 0014 to 0016 by run 38046925061, 0017 by run 38052646487 (after #97), 0018 by run 38062264863 (after #108),
-  0019 by run 38067327168 (after #110), 0020 by run 38075931282 (after #117), 0021 by run 38110074045 (after #124), 0022 by
-  run 38123899264 (after #134), 0023 and 0024 by run 38137427740 (after #138 and #139), 0025 by run 38151333693 (after
-  #149), 0026 by run 38159898956 (after #154), 0027 by run 38181486512 (after #180; a student's AI records and messages go with the
-  student, a progress note needs the parent's consent); nothing pending after. The
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0035: 0028 to 0035 by deploy run
+  38256073141 (Phase 17: jobs, the recorded call, the observability tables, device tokens, consent history, idempotent
+  writes, the wakes, the review's fixes); before them 0027 by run 38181486512 and the earlier runs in git; nothing pending.
+  pg_cron's `wake_worker_minute` gets the worker's `/jobs/tick` each minute through pg_net, with `worker_url` and
+  `worker_secret` in Vault (written by the deploy). The Smoke centre (`SMOKE_CENTRE_ID`, the owner's +smoke account) takes
+  the deploy's one real check. The
   `photos` bucket (private, JPEG, 3 MB, add-only) is made by 0011. Migrations go up only through `deploy.yml`'s migrate job,
   before the API (D26); secrets `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` in the GitHub environment `Production`.
 - **Auth:** Apple (client id `in.tutorcentral.app`), Google (a web OAuth client in Google Cloud; Supabase holds its id
@@ -74,9 +74,11 @@ identity). The remote holds `main`,
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `54adb24` (deploy run 38181486512, 2026-10-12: Phase 15's `tutorSays` carried whole and quoted, a progress note named
-  for the consent gate; before it `bb2ab25`, run 38159898956); the model table `api/models.json` with `AI_MODEL_<WORK_TYPE>`
-  overrides (none set on Vercel); nothing pending in the database.
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `a3c6012` (deploy run 38256073141, 2026-10-12:
+  Phase 17's envelope, recorded call, keys and worker; before it `54adb24`, run 38181486512); the deploy is gated on `main`'s
+  green check and smokes a real check and a tick. Vercel's Production holds `SUPABASE_SERVICE_ROLE_KEY` (the new `sb_secret`
+  key, D83) and `WORKER_SECRET`; GitHub's `Production` holds `SMOKE_EMAIL`, `SMOKE_PASSWORD`, `WORKER_SECRET`. The model
+  table `api/models.json` with `AI_MODEL_<WORK_TYPE>` overrides (none set on Vercel).
   The Sign in with Apple key (id `LZXF45DB8U`, "tutor-central-signin") is in Vercel's Production environment as
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_SIGNIN_KEY` and in `api/.env.local`; Apple accepts its signed secret.
   `ANTHROPIC_API_KEY` is in its environment; the Claude calls run under one 110 s deadline.
@@ -86,7 +88,8 @@ identity). The remote holds `main`,
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (26) by run 38184444260 (Phase 15: Make something, Check a paper under Make, Reports' Progress, the Kit, the polish rows, the review's fixes; `main` at `f5218ab`), the round's candidate, waiting for the owner's own test (D68); 1.0.0 (25) by run 38151541726 (Phase 14: the note day, the weekly note and can-now-do, the cadence, the sent log,
+  run number. 1.0.0 (27) by run 38258868771 (Phase 17: the keys, request ids and activity log; nothing new on screen;
+  `main` at `e89927c`); 1.0.0 (26) by run 38184444260 (Phase 15: Make something, Check a paper under Make, Reports' Progress, the Kit, the polish rows, the review's fixes; `main` at `f5218ab`), the round's candidate, waiting for the owner's own test (D68); 1.0.0 (25) by run 38151541726 (Phase 14: the note day, the weekly note and can-now-do, the cadence, the sent log,
   not on track and the next step, marks from a photo, the School leftovers) on the internal group; 1.0.0 (24) by run 38124050257 (Phase 13: the School tab, exam preparation, the mock, marks, the gap report, the
   messages to parents) on the internal group; 1.0.0 (23) by run 38105466595 (the AI forms by class level, #122) on the internal group; 1.0.0 (22) by
   run 38100960937 (Phase 12 with the student-link fix #121) on the owner's iPhone, fine;
@@ -99,6 +102,8 @@ identity). The remote holds `main`,
 
 ## Open items
 
+- **Phase 17 closed with nothing of its own open (D68):** every finding of both reviews fixed (#207 to #211), and the faults
+  found after (#213, #214). The hand runs' real calls cost ₹4.57.
 - **Phase 15's build closed with nothing of its own open (D68):** every hand-run fault and review finding fixed (#167 to
   #183). A CI database job failed twice on a runner whose port 54322 was taken (#183; passed on the third attempt).
 - **Phase 14 closed with nothing of its own open (D68).** Two review findings ruled, not changed, and approved by the owner
@@ -128,7 +133,7 @@ identity). The remote holds `main`,
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today. One environment until the owner says (D80).
-- **Free and Hobby stay through Phase 17 (D85):** no copy of the database exists anywhere (a bad migration or a deletion is final); Vercel's logs keep an hour, Supabase's a day; Vercel's Hobby terms are non-commercial. Supabase Pro and Vercel Pro are bought before the external testing round, as a step of its checklist; point-in-time recovery is Phase 16's call.
+- **Free and Hobby stay until the external testing round (D85):** the worker lives within Hobby's 300 s (a 200 s run budget; the wakes hold their request 290 s); no copy of the database exists anywhere (a bad migration or a deletion is final); Vercel's logs keep an hour, Supabase's a day; Vercel's Hobby terms are non-commercial. Supabase Pro and Vercel Pro are bought before the external testing round, as a step of its checklist; point-in-time recovery is Phase 16's call.
 - **V3 covers** the platform-shaped minors below where they are the platform's (duplicate paid calls, the 20 s offline waits, the pending rows, `APPLE_FAKE` in production, the limits copied across layers, orphaned photos): each is closed by the V3 phase that owns it, not on its own.
 - **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U13 to U15, U25, U27 to U30, U48 open; the rest done (Phase 15: U11, U17 to
   U23, U26, U32, U34, U40; U36 by #133).
