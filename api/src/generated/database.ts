@@ -836,14 +836,14 @@ isOneToOne: false
                   ]
                 },"storage_deletions": {
                   Row: {
-                    "bucket": string,"created_at": string,"id": string,"path": string,"prefix": boolean,"updated_at": string,"why": string
+                    "bucket": string,"created_at": string,"id": string,"path": string,"prefix": boolean,"taken_at": string | null,"updated_at": string,"why": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "bucket": string,"created_at"?: string,"id"?: string,"path": string,"prefix"?: boolean,"updated_at"?: string,"why": string
+                    "bucket": string,"created_at"?: string,"id"?: string,"path": string,"prefix"?: boolean,"taken_at"?: string | null,"updated_at"?: string,"why": string
                   }
                   Update: {
-                    "bucket"?: string,"created_at"?: string,"id"?: string,"path"?: string,"prefix"?: boolean,"updated_at"?: string,"why"?: string
+                    "bucket"?: string,"created_at"?: string,"id"?: string,"path"?: string,"prefix"?: boolean,"taken_at"?: string | null,"updated_at"?: string,"why"?: string
                   }
                   Relationships: [
                     
@@ -1008,6 +1008,9 @@ isOneToOne: false
 "delete_centre":
 { Args: { "p_centre": string }; Returns: undefined
                            },
+"done_storage_deletion":
+{ Args: { "p_id": string }; Returns: undefined
+                           },
 "due_notifications":
 { Args: { "p_limit"?: number,"p_now": string }; Returns: {
               "apns": Json | null,
@@ -1157,6 +1160,7 @@ isOneToOne: false
 "id": string,
 "path": string,
 "prefix": boolean,
+"taken_at": string | null,
 "updated_at": string,
 "why": string
             }[]
