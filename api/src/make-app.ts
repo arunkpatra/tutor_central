@@ -10,8 +10,10 @@ import type { Observe } from "./observe.js";
 import { makeAddressRate, makeRequest, makeUserRate } from "./request.js";
 import { accountRoutes } from "./routes/account.js";
 import { aiRoutes } from "./routes/ai.js";
+import { jobRoutes, type Worker } from "./routes/jobs.js";
 
-export type Deps = { verify: Verify; commit?: string; claude: ClaudeClient; db: Db; apple: AppleClient; observe: Observe };
+/** `worker` mounts /jobs/* (the platform's jobs, D71); the entry always gives it, a test only when it runs the worker. */
+export type Deps = { verify: Verify; commit?: string; claude: ClaudeClient; db: Db; apple: AppleClient; observe: Observe; worker?: Worker };
 
 /** Past this a body is refused in words before it is read: Vercel's own 4.5 MB would answer first otherwise. */
 export const BODY_LIMIT_BYTES = 4_400_000;
@@ -30,6 +32,7 @@ export function makeApp(deps: Deps) {
   app.route("/ai", aiRoutes(deps));
   app.use("/account/*", byAddress, makeRequireUser(deps.verify), byUser);
   app.route("/account", accountRoutes(deps.apple));
+  if (deps.worker) app.route("/jobs", jobRoutes(deps.worker, deps.claude));
   app.notFound((c) => c.json({ error: "no such route" }, 404));
   app.onError((e, c) => {
     log.error({ requestId: c.get("requestId"), route: c.req.path, error: e });

@@ -1027,6 +1027,9 @@ isOneToOne: false
                            },
 "wait_job":
 { Args: { "p_job": string,"p_run_at": string,"p_step": Json,"p_worker": string }; Returns: undefined
+                           },
+"wake_worker_tick":
+{ Args: Record<PropertyKey, never>; Returns: undefined
                            }
           }
           Enums: {
