@@ -1,0 +1,31 @@
+{
+  "instructions": "Answer in two or three sentences each.",
+  "questions": [
+    {
+      "answer": "The smallest unit that can carry out all life processes; every living thing is made of cells.",
+      "number": 1,
+      "text": "What is a cell? Why is it called the basic unit of life?"
+    },
+    {
+      "answer": "Cell membrane, cytoplasm and nucleus.",
+      "number": 2,
+      "text": "Name the three main parts of a cell."
+    },
+    {
+      "answer": "A plant cell has a cell wall and chloroplasts; an animal cell has neither.",
+      "number": 3,
+      "text": "Give two differences between a plant cell and an animal cell."
+    },
+    {
+      "answer": "It controls the cell's activities and carries the genes.",
+      "number": 4,
+      "text": "What is the function of the nucleus?"
+    },
+    {
+      "answer": "They hold chlorophyll for photosynthesis, which only plants carry out.",
+      "number": 5,
+      "text": "Why are chloroplasts found only in plant cells?"
+    }
+  ],
+  "title": "Cell structure"
+}

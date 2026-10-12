@@ -57,7 +57,7 @@ public enum MakeRules {
     public static let levels: [(title: String, reason: String?)] = [
         ("Easier", "easier"), ("As the record says", nil), ("Harder", "harder"),
     ]
-    public static let tutorSaysLimit = 300
+    public static let tutorSaysLimit = APIContract.tutorSaysMax
     /// The skills a batch offers the Skill tile at most (the sheet's schema takes six).
     static let batchSkills = 6
 

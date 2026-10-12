@@ -39,13 +39,17 @@ struct MakeNoteBody: Encodable {
         language = request.language.rawValue
         let facts = request.week
         week = Week(
-            monday: request.weekMonday.iso, taught: Self.cut(facts.taught, count: 6, length: 200),
+            monday: request.weekMonday.iso, taught: Self.cut(
+                facts.taught,
+                count: APIContract.noteTaughtMax,
+                length: APIContract.noteItemLength
+            ),
             right: facts.right.map { String($0.prefix(120)) }, practise: Self.cut(
                 facts.practise,
-                count: 3,
-                length: 200
+                count: APIContract.notePractiseMax,
+                length: APIContract.noteItemLength
             ),
-            coming: Self.cut(facts.coming, count: 3, length: 200),
+            coming: Self.cut(facts.coming, count: APIContract.noteComingMax, length: APIContract.noteComingLength),
             attendance: facts.attendance.map { String($0.prefix(80)) }
         )
     }
@@ -91,8 +95,9 @@ struct MakeCanDoBody: Encodable {
         let f = request.facts
         ladder = Ladder(
             movedUp: f.movedUp.prefix(3).map { MovedUp(area: $0.area.rawValue, step: String($0.step.prefix(40))) },
-            canDo: MakeNoteBody.cut(f.canDo, count: 4, length: 80), atHome: String(f.atHome.prefix(160)),
-            next: MakeNoteBody.cut(f.next, count: 3, length: 80)
+            canDo: MakeNoteBody.cut(f.canDo, count: APIContract.canDoMax, length: APIContract.canDoLength),
+            atHome: String(f.atHome.prefix(APIContract.canDoAtHomeLength)),
+            next: MakeNoteBody.cut(f.next, count: APIContract.canDoNextMax, length: APIContract.canDoNextLength)
         )
     }
 }
@@ -122,8 +127,10 @@ struct MakeNotOnTrackBody: Encodable {
         classLevel = request.classLevel.rawValue
         language = request.language.rawValue
         let f = request.facts
-        hard = MakeNoteBody.cut(f.hard, count: 3, length: 200)
-        reasons = MakeNoteBody.cut(f.reasons, count: 4, length: 200)
+        hard = MakeNoteBody.cut(f.hard, count: APIContract.notOnTrackHardMax, length: APIContract.notOnTrackHardLength)
+        reasons = MakeNoteBody.cut(
+            f.reasons, count: APIContract.notOnTrackReasonsMax, length: APIContract.notOnTrackReasonLength
+        )
         doing = String(f.doing.prefix(200))
         atHome = f.atHome.map { String($0.prefix(200)) }
     }
@@ -140,8 +147,10 @@ struct ReadMarksBody: Encodable {
         centreId = centre.uuidString.lowercased()
         studentId = request.studentID.uuidString.lowercased()
         studentName = String(request.studentName.prefix(80))
-        pages = request.pages.prefix(2).map(ImageBody.init)
-        subjects = MakeNoteBody.cut(request.subjects, count: 12, length: 80)
+        pages = request.pages.prefix(APIContract.readMarksPagesMax).map(ImageBody.init)
+        subjects = MakeNoteBody.cut(
+            request.subjects, count: APIContract.readMarksSubjectsMax, length: APIContract.subjectLength
+        )
     }
 }
 

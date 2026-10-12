@@ -5,8 +5,8 @@ import Foundation
 /// consent and the day's limit, and calls Claude (D11); this client sends, waits up to 125 s, and maps every answer to
 /// a result or an `APIFailure`.
 public struct APIClient: AIRepository, AccountRepository {
-    /// Base64 characters in one request: under Vercel's 4.5 MB body with room for the JSON around it.
-    public static let bodyLimit = 4_200_000
+    /// Base64 characters in one request: under Vercel's 4.5 MB body with room for the JSON around it (the API's limit).
+    public static let bodyLimit = APIContract.bodyBase64Max
     public static let timeout: TimeInterval = 125
 
     private let origin: URL

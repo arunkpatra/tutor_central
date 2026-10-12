@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+/** Limits a refine holds, named so the contract (src/contract.ts) can export them to the app. */
+export const TUTOR_SAYS_MAX = 300;
+/** Base64 characters across one request's photos: under Vercel's 4.5 MB body with room for the JSON around it. */
+export const BODY_BASE64_MAX = 4_200_000;
+
 const Common = { subject: z.string().min(1).max(80), classLevel: z.string().min(1).max(40) };
 /** Recorded with the input (never sent to Claude), so a result read back from the database names its class again. */
 const ClassId = { classId: z.guid().optional() };
@@ -82,7 +87,7 @@ export const CheckPaperInput = z
     /** Sent for a mock (Phase 13), so start_ai_generation asks the student's consent (D62). */
     studentId: z.guid().optional(),
   })
-  .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= 4_200_000, {
+  .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= BODY_BASE64_MAX, {
     message: "pages: too many characters in one request",
   })
   // A mock is marked for one named student: without the id the gate could not ask their consent (D62).
@@ -232,7 +237,7 @@ export const MakeInput = z.discriminatedUnion("kind", [
       .string()
       .trim()
       .min(1)
-      .refine((words) => [...words].length <= 300)
+      .refine((words) => [...words].length <= TUTOR_SAYS_MAX)
       .optional(),
   }),
   z.object({
@@ -401,7 +406,7 @@ export type TestTomorrowOutput = MessageOutput;
  *  consent is asked), and the subjects the tutor keeps for them so the rows use the same names. */
 export const ReadMarksInput = z
   .object({ ...V2, studentId: z.guid(), studentName: z.string().min(1).max(80), pages: z.array(Image).min(1).max(2), subjects: z.array(Subject).max(12).optional() })
-  .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= 4_200_000, { message: "pages: too many characters in one request" });
+  .refine((v) => v.pages.reduce((n, p) => n + p.imageBase64.length, 0) <= BODY_BASE64_MAX, { message: "pages: too many characters in one request" });
 export type ReadMarksInput = z.infer<typeof ReadMarksInput>;
 export const ReadMarksOutput = z.object({
   marks: z

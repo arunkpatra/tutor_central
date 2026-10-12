@@ -1,0 +1,66 @@
+{
+  "instructions": "Show your working for every question.",
+  "questions": [
+    {
+      "answer": "2x + 3y − 9 = 0",
+      "number": 1,
+      "text": "Write 2x + 3y = 9 in the form ax + by + c = 0."
+    },
+    {
+      "answer": "Yes: 3 + 2 = 5",
+      "number": 2,
+      "text": "Is (3, 1) a solution of x + 2y = 5?"
+    },
+    {
+      "answer": "(4, 0) and (5, 1), for example",
+      "number": 3,
+      "text": "Find two solutions of x − y = 4."
+    },
+    {
+      "answer": "k = 2",
+      "number": 4,
+      "text": "Find k if (2, 1) lies on 3x + ky = 8."
+    },
+    {
+      "answer": "x = 6, y = 4",
+      "number": 5,
+      "text": "Solve x + y = 10 and x − y = 2."
+    },
+    {
+      "answer": "x = 3, y = 1",
+      "number": 6,
+      "text": "Solve 2x + y = 7 and x − y = 2."
+    },
+    {
+      "answer": "x = 2, y = 3",
+      "number": 7,
+      "text": "Solve 3x + 2y = 12 and x + 2y = 8."
+    },
+    {
+      "answer": "15 and 10",
+      "number": 8,
+      "text": "The sum of two numbers is 25 and their difference is 5. Find them."
+    },
+    {
+      "answer": "Pen ₹8, pencil ₹8",
+      "number": 9,
+      "text": "Two pens and three pencils cost ₹40; one pen and one pencil cost ₹16. Find each price."
+    },
+    {
+      "answer": "At (3, 0)",
+      "number": 10,
+      "text": "Where does 2x + 3y = 6 cut the x-axis?"
+    },
+    {
+      "answer": "At (0, 2)",
+      "number": 11,
+      "text": "Where does 2x + 3y = 6 cut the y-axis?"
+    },
+    {
+      "answer": "Father 30, son 10",
+      "number": 12,
+      "text": "A father is 3 times as old as his son; in 10 years he will be twice as old. Find their ages."
+    }
+  ],
+  "title": "Linear equations in two variables"
+}

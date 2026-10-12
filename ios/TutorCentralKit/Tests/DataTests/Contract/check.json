@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "answer": "2H₂ + O₂ → 2H₂O",
+      "question": "Balance H₂ + O₂ → H₂O.",
+      "skill": "Balance a chemical equation"
+    },
+    {
+      "answer": "Magnesium and oxygen",
+      "question": "In magnesium burning in air, what are the reactants?",
+      "skill": "Name the reactants"
+    },
+    {
+      "answer": "Physical: no new substance forms",
+      "question": "Is ice melting a physical or a chemical change?",
+      "skill": "Tell a physical from a chemical change"
+    }
+  ]
+}

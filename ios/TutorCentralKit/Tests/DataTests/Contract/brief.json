@@ -1,0 +1,44 @@
+{
+  "about": "A chemical reaction makes a new substance; a physical change does not. Students learn to spot one (gas, colour, heat, a precipitate), to write it as a word equation and then a formula equation, and to balance it so each element counts the same on both sides. Then the kinds: combination, decomposition, displacement, double displacement, and oxidation.",
+  "mistakes": [
+    {
+      "howToCatch": "H₂O becomes H₂O₂ to \"balance\" oxygen. Only the numbers in front may change: the formula is the substance.",
+      "title": "Changing the small numbers inside a formula"
+    },
+    {
+      "howToCatch": "In 2Fe₂O₃ there are 4 Fe and 6 O. Multiply the front number into every element.",
+      "title": "Counting atoms once, not per molecule"
+    },
+    {
+      "howToCatch": "Ask: is there a new substance? Ice to water is not; iron to rust is.",
+      "title": "Calling melting or dissolving a reaction"
+    }
+  ],
+  "words": [
+    "Reactants on the left, products on the right.",
+    "A number in front multiplies the whole formula.",
+    "Balanced means the same count of each element on both sides."
+  ],
+  "workedExample": {
+    "problem": "Balance: Fe + O₂ → Fe₂O₃",
+    "slip": "A common slip here: changing the small numbers inside a formula. Only the numbers in front change.",
+    "steps": [
+      {
+        "title": "Count each element on both sides",
+        "working": "Left: 1 Fe, 2 O. Right: 2 Fe, 3 O. Nothing matches yet."
+      },
+      {
+        "title": "Fix the element that appears in one place on each side first: oxygen",
+        "working": "O is 2 on the left and 3 on the right. The smallest number both go into is 6: put 3 before O₂ and 2 before Fe₂O₃."
+      },
+      {
+        "title": "Now count iron again",
+        "working": "Right: 2 × 2 = 4 Fe. Put 4 before Fe on the left: 4Fe + 3O₂ → 2Fe₂O₃."
+      },
+      {
+        "title": "Check every element once more",
+        "working": "Fe: 4 and 4. O: 6 and 6. Balanced."
+      }
+    ]
+  }
+}

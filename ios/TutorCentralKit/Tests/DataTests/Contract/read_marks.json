@@ -1,0 +1,25 @@
+{
+  "marks": [
+    {
+      "date": "2026-09-28",
+      "max": 25,
+      "score": 14,
+      "subject": "Mathematics",
+      "test": "Unit test 2"
+    },
+    {
+      "date": "2026-09-29",
+      "max": 25,
+      "score": 18,
+      "subject": "Science",
+      "test": "Unit test 2"
+    },
+    {
+      "date": null,
+      "max": 25,
+      "score": 11,
+      "subject": "Hindi",
+      "test": "Unit test 2"
+    }
+  ]
+}
