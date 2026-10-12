@@ -1,7 +1,7 @@
 import { SQL } from "bun";
 import { beforeAll, expect, test } from "bun:test";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { anonClient, type Local, local, userClient } from "./client";
+import { anonClient, type Local, local, serviceClient, userClient } from "./client";
 
 let l: Local;
 let a: SupabaseClient;
@@ -33,6 +33,9 @@ const CENTRE_TABLES = [
   "marks",
 ] as const;
 
+/** The platform's tables (D71, D77): written by the service role alone; a member reads their centre's rows, or none. */
+const PLATFORM_TABLES = ["jobs", "job_steps"] as const;
+
 beforeAll(async () => {
   l = await local();
   a = await userClient(l, `rls-a-${stamp}@example.com`);
@@ -50,8 +53,33 @@ test("every public table has row-level security and at least one policy", async 
     where t.schemaname = 'public' group by t.tablename, t.rowsecurity order by t.tablename`;
   await db.close();
   const tables = rows.map((r: { tablename: string }) => r.tablename);
-  expect(tables).toEqual([...CENTRE_TABLES, "centre_members", "centres", "profiles", "syllabi"].sort());
+  expect(tables).toEqual([...CENTRE_TABLES, ...PLATFORM_TABLES, "centre_members", "centres", "profiles", "syllabi"].sort());
   for (const r of rows) expect({ table: r.tablename, rls: r.rowsecurity, policy: r.policies > 0 }).toEqual({ table: r.tablename, rls: true, policy: true });
+});
+
+test("the platform's tables are read by their centre's members alone and written by none", async () => {
+  const svc = serviceClient(l);
+  const job = await svc.from("jobs").insert({ centre_id: centreA, kind: "plan", idempotency_key: `rls-${stamp}` }).select("id").single();
+  expect(job.error).toBeNull();
+  const step = await svc.from("job_steps").insert({ centre_id: centreA, job_id: job.data!.id, step: "read", attempt: 1, state: "done" }).select("id").single();
+  expect(step.error).toBeNull();
+  type Probe = { id: string; insert: Record<string, unknown>; field: string; change: string };
+  const rows: Record<(typeof PLATFORM_TABLES)[number], Probe> = {
+    jobs: { id: job.data!.id, insert: { centre_id: centreA, kind: "plan", idempotency_key: `rls-mine-${stamp}` }, field: "state", change: "done" },
+    job_steps: { id: step.data!.id, insert: { centre_id: centreA, job_id: job.data!.id, step: "x", attempt: 1, state: "done" }, field: "step", change: "changed" },
+  };
+  for (const table of PLATFORM_TABLES) {
+    const { id, insert, field, change } = rows[table];
+    expect({ table, rows: (await a.from(table).select("id").eq("id", id)).data?.length }).toEqual({ table, rows: 1 });
+    expect({ table, rows: (await b.from(table).select("id").eq("id", id)).data }).toEqual({ table, rows: [] });
+    expect({ table, rows: (await anonClient(l).from(table).select("id").eq("id", id)).data ?? [] }).toEqual({ table, rows: [] });
+    expect({ table, refused: (await a.from(table).insert(insert)).error !== null }).toEqual({ table, refused: true });
+    await a.from(table).update({ [field]: change }).eq("id", id);
+    await a.from(table).delete().eq("id", id);
+    const after = await svc.from(table).select(field).eq("id", id).single();
+    expect({ table, kept: after.data !== null && (after.data as unknown as Record<string, unknown>)[field] !== change }).toEqual({ table, kept: true });
+  }
+  await svc.from("jobs").delete().eq("id", job.data!.id);
 });
 
 test("a new member sees nothing until they create a centre", async () => {
