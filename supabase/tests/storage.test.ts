@@ -62,6 +62,19 @@ test("a deleted student's marks photo and exports are queued for deletion", asyn
   ]);
 });
 
+test("a row whose photo path is another centre's queues nothing for it (the review's R-db-1)", async () => {
+  const s = await student(a, centreA);
+  const foreign = `${centreB}/marks/${stamp}.jpg`;
+  const { data, error } = await a
+    .from("marks")
+    .insert({ centre_id: centreA, student_id: s, subject: "Science", test: "Unit", date: "2026-10-01", score: 5, max: 10, photo_path: foreign })
+    .select("id")
+    .single();
+  expect(error).toBeNull();
+  expect((await a.from("marks").delete().eq("id", data!.id)).error).toBeNull();
+  expect([...(await deletions(centreB))]).toEqual([]);
+});
+
 test("a deleted artefact queues its photo and its PDF; a deleted textbook or school item its photo", async () => {
   const art = (await a.from("artefacts").insert({ centre_id: centreA, kind: "sheet", source: "own", title: "Own", photo_path: `${centreA}/sheet/p.jpg` }).select("id").single()).data!.id;
   const school = (await a.from("schools").insert({ centre_id: centreA, name: "S" }).select("id").single()).data!.id;
