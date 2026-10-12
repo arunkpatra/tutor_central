@@ -38,6 +38,24 @@ import Testing
         #expect(await !fetch(plans: plans, cache: cache()).run())
     }
 
+    /// iOS gives a background push 30 seconds and a stalled read takes about 20 s to fail: the fetch answers false at
+    /// its deadline (the Phase 18 review's R-app-1).
+    @Test func aStalledReadAnswersFalseAtTheDeadline() async {
+        let plans = FakePlansRepository.evening()
+        plans.delay = .seconds(60)
+        let clock = ContinuousClock()
+        var answered = true
+        let took = await clock.measure {
+            answered = await fetch(plans: plans, cache: cache()).run(within: .milliseconds(200))
+        }
+        #expect(!answered)
+        #expect(took < .seconds(2), "the fetch waited for the stalled read")
+    }
+
+    @Test func withinTheDeadlineTheFetchAnswersAsBefore() async {
+        #expect(await fetch(plans: FakePlansRepository.evening(), cache: cache()).run(within: .seconds(5)))
+    }
+
     @Test func signedOutTheFetchDoesNothing() async {
         let copy = cache()
         #expect(await !fetch(plans: FakePlansRepository.evening(), cache: copy, signedIn: false).run())

@@ -41,6 +41,31 @@ import Foundation
         }
     }
 
+    /// iOS gives a background push 30 seconds and a stalled read takes about 20 s to fail: `run` raced against a deadline,
+    /// false when the deadline comes first (its reads cancelled; a batch already read stays in the copy).
+    func run(within deadline: Duration) async -> Bool {
+        let answer = Answer()
+        return await withCheckedContinuation { continuation in
+            answer.continuation = continuation
+            let work = Task { answer.give(await run()) }
+            Task {
+                try? await Task.sleep(for: deadline)
+                work.cancel()
+                answer.give(false)
+            }
+        }
+    }
+
+    /// The first of the run and the deadline answers; the other is dropped.
+    @MainActor private final class Answer {
+        var continuation: CheckedContinuation<Bool, Never>?
+
+        func give(_ value: Bool) {
+            continuation?.resume(returning: value)
+            continuation = nil
+        }
+    }
+
     /// Whether a push is a plan's fetch.
     static func asks(_ userInfo: [AnyHashable: Any]) -> Bool {
         userInfo["fetch"] as? String == "plan"
@@ -61,6 +86,7 @@ import Foundation
     /// What the app delegate runs for a background push: nothing without the live dependencies.
     static func runLive() async -> Bool {
         guard let deps = RootView.live else { return false }
-        return await live(deps).run()
+        // Five seconds of iOS's thirty kept for the answer to reach it.
+        return await live(deps).run(within: .seconds(25))
     }
 }
