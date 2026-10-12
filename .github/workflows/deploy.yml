@@ -41,6 +41,9 @@ jobs:
     permissions:
       actions: read
       contents: read
+    # The one commit of the run: the migration and the API take it, so a main that moves meanwhile changes nothing.
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -85,14 +88,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: The commit
+      - name: The gate's commit
         env:
-          ASKED: ${{ inputs.commit }}
-        run: |
-          sha="${ASKED:-$(git rev-parse origin/main)}"
-          if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then echo "::error::\"$sha\" is not a whole commit SHA."; exit 1; fi
-          if ! git merge-base --is-ancestor "$sha" origin/main 2>/dev/null; then echo "::error::$sha is not a commit of main."; exit 1; fi
-          git checkout -q "$sha"
+          SHA: ${{ needs.gate.outputs.sha }}
+        run: git checkout -q "$SHA"
 
       - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
         with:
@@ -136,7 +135,7 @@ jobs:
 
   deploy:
     name: the API to production
-    needs: migrate
+    needs: [gate, migrate]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: Production
@@ -145,16 +144,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      # The commit asked for, or the head of main; it must be a whole SHA of main.
+      # The gate's commit: the one the check passed and the migration took.
       - id: commit
         env:
-          ASKED: ${{ inputs.commit }}
+          SHA: ${{ needs.gate.outputs.sha }}
         run: |
-          sha="${ASKED:-$(git rev-parse origin/main)}"
-          if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then echo "::error::\"$sha\" is not a whole commit SHA."; exit 1; fi
-          if ! git merge-base --is-ancestor "$sha" origin/main 2>/dev/null; then echo "::error::$sha is not a commit of main."; exit 1; fi
-          git checkout -q "$sha"
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          git checkout -q "$SHA"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
 
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:

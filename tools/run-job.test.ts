@@ -18,6 +18,16 @@ test("a batch's name is quoted as SQL; a bad email or day is refused in words", 
   expect(() => queueSql("a@b.co", "", "2026-10-13")).toThrow("a batch's name");
 });
 
+test("the block's quote is one the inputs do not hold, so a name with dollars cannot end it (the review's finding 8)", () => {
+  for (const batch of ["Evening $$ batch", "Odd $run_job$ name"]) {
+    const sql = queueSql("a@b.co", batch, "2026-10-13");
+    const tag = sql.match(/^do (\$[a-z_0-9]*\$)/)?.[1] as string;
+    expect(tag).toBeDefined();
+    expect(batch.includes(tag)).toBe(false);
+    expect(sql.trimEnd().endsWith(`end ${tag};`)).toBe(true);
+  }
+});
+
 test("the poll reads the job's state and plan id, never a name", () => {
   const sql = pollSql("a@b.co", "Evening batch", "2026-10-13");
   expect(sql).toContain("j.state");
