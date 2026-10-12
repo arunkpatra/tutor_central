@@ -4,6 +4,9 @@ import { makeDb } from "../src/db.js";
 import { makeRecordSource } from "../src/jobs/record.js";
 import { fakeClock } from "../src/jobs/db-fake.js";
 import { makeObserve } from "../src/observe.js";
+import { planJob } from "../src/jobs/kinds/plan.js";
+import { makePlatformDb } from "../src/db.js";
+import { kindOf, SAMPLE } from "../src/claude-fake.js";
 import { fakePusher } from "../src/push/apns-fake.js";
 import { reminderSweep } from "../src/jobs/kinds/reminder-sweep.js";
 import { fakeJobsDb } from "../src/jobs/db-fake.js";
@@ -119,5 +122,46 @@ test.skipIf(!up)("a centre with a live token and a batch in two hours gets its c
     await db.from("notifications").delete().eq("user_id", user).like("key", `class:${room}:%`);
     await db.from("device_tokens").delete().eq("device_id", device);
     await db.from("classes").delete().eq("id", room);
+  }
+});
+
+test.skipIf(!up)("a plan job on the seed's Evening batch writes the plan, keeps its material by its keys and queues Plan ready", async () => {
+  const db = admin();
+  const batch = "33333333-3333-3333-3333-333333333333";
+  const user = (await db.from("centre_members").select("user_id").eq("centre_id", CENTRE).limit(1).single()).data?.user_id as string;
+  // A weekday three weeks on: no plan of the seed's, no exam week.
+  const day = new Date(Date.now() + 5.5 * 3_600_000 + 21 * 86_400_000);
+  while ([0, 6].includes(day.getUTCDay())) day.setUTCDate(day.getUTCDate() + 1);
+  const date = day.toISOString().slice(0, 10);
+  const device = `platform-db-plan-${Date.now()}`;
+  const job = (await db.from("jobs").insert({ centre_id: CENTRE, kind: "plan", idempotency_key: `platform-db-plan-${Date.now()}`, input: { class_id: batch, date }, state: "running" }).select("id").single()).data?.id as string;
+  const outbox = makeOutboxDb(url as string, service as string);
+  try {
+    await db.from("device_tokens").insert({ user_id: user, device_id: device, token: "tok-plan", environment: "sandbox" });
+    const handler = planJob(makeRecordSource(url as string, service as string, outbox));
+    const clock = { now: () => Date.now(), sleep: async () => {} };
+    const ctx = { db: makePlatformDb(url as string, service as string), jobs: fakeJobsDb(clock as never), claude: fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), clock, requestId: crypto.randomUUID(), worker: "w" };
+    let current = { id: job, centreId: CENTRE, kind: "plan" as const, attempts: 1, step: {} as Record<string, unknown>, input: { class_id: batch, date }, leaseUntil: "" };
+    const names: string[] = [];
+    for (let i = 0; i < 60; i++) {
+      const out = await handler.step(current, ctx);
+      names.push(`${out.name}:${out.kind}`);
+      if (out.kind !== "continue") break;
+      current = { ...current, step: out.step };
+    }
+    expect(names.at(-1)).toBe("notify:done");
+    const plan = (await db.from("plans").select("id").eq("centre_id", CENTRE).eq("class_id", batch).eq("date", date).single()).data?.id as string;
+    const kept = (await db.from("artefacts").select("kind, idempotency_key").eq("centre_id", CENTRE).like("idempotency_key", `${job}:make:%`)).data ?? [];
+    expect(kept.length).toBeGreaterThanOrEqual(4);
+    const linked = (await db.from("plan_items").select("artefact_id").eq("plan_id", plan).not("artefact_id", "is", null)).data ?? [];
+    expect(linked.length).toBeGreaterThanOrEqual(4);
+    const queued = (await db.from("notifications").select("kind").eq("user_id", user).like("key", `%:${batch}:${date}`)).data ?? [];
+    expect(queued.map((n) => n.kind).sort()).toEqual(["plan_fetch", "plan_ready"]);
+  } finally {
+    await db.from("notifications").delete().eq("user_id", user).like("key", `%:${batch}:${date}`);
+    await db.from("device_tokens").delete().eq("device_id", device);
+    await db.from("plans").delete().eq("centre_id", CENTRE).eq("class_id", batch).eq("date", date);
+    await db.from("artefacts").delete().eq("centre_id", CENTRE).like("idempotency_key", `${job}:make:%`);
+    await db.from("jobs").delete().eq("id", job);
   }
 });

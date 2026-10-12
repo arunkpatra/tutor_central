@@ -15,7 +15,6 @@ export function makeReminderSource(url: string, serviceKey: string, outbox: Outb
   return {
     async read(centre, today) {
       const month = `${today.slice(0, 7)}-01`;
-      const since = new Date(Date.now() - 60 * 86_400_000).toISOString();
       const [classes, students, events, invoices, members, settings] = await Promise.all([
         client.from("classes").select("id, name, meeting_days, start_time, end_time").eq("centre_id", centre).is("archived_at", null),
         client.from("students").select("class_id").eq("centre_id", centre).is("archived_at", null),
@@ -25,10 +24,9 @@ export function makeReminderSource(url: string, serviceKey: string, outbox: Outb
         client.from("reminder_settings").select("user_id, class_on, class_minutes, events_on, event_lead, fees_on, fees_day, plan_ready_on, notes_ready_on").eq("centre_id", centre),
       ]);
       const ids = must(members, "centre_members").map((m) => m.user_id);
-      const tokens = ids.length
-        ? must(await client.from("device_tokens").select("user_id").in("user_id", ids).is("retired_at", null).gt("last_seen_at", since), "device_tokens")
-        : [];
-      const reachable = [...new Set(tokens.map((t) => t.user_id))];
+      // A member is reachable with a live token (0038's live_tokens: tokens are the user's, not a centre's).
+      const reachable: string[] = [];
+      for (const user of ids) if ((await outbox.tokens(user)).length > 0) reachable.push(user);
       const counts: Record<string, number> = {};
       for (const s of must(students, "students")) if (s.class_id) counts[s.class_id] = (counts[s.class_id] ?? 0) + 1;
       const due = must(invoices, "fee_invoices");

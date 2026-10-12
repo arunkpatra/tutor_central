@@ -9,7 +9,8 @@ export type SkillState = "not_started" | "taught" | "practising" | "secure" | "r
 export type LineKind = "teach" | "practise" | "check" | "homework" | "brief" | "catch_up" | "worked_example" | "figure";
 
 export type Student = { id: string; name: string; classLevel?: ClassLevel; trackStatus: TrackStatus; nextStep?: NextStep; gender?: string };
-export type Chapter = { id: string; subject: string; position: number; name: string };
+/** `ladder` is set for a young student's ladder chapters (reading, writing, numbers). */
+export type Chapter = { id: string; subject: string; position: number; name: string; ladder?: string };
 export type Skill = {
   id: string;
   chapterID: string;
