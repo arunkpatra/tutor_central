@@ -27,6 +27,22 @@ public extension FakePlansRepository {
         return FakePlansRepository(plans: [plan], artefacts: boardArtefacts + [own], now: madeAt)
     }
 
+    /// P18-Today-Plan-Making: the boards' plan made by the server at 06:00, only Group 1's set and sheet kept yet.
+    static func eveningMaking() -> FakePlansRepository {
+        let board = boardPlan(changed: false, done: false)
+        let kept: Set<UUID> = [artefactID(11), artefactID(12)]
+        var items = board.items
+        for index in items.indices where !(items[index].artefactID.map(kept.contains) ?? false) {
+            items[index].artefactID = nil
+        }
+        let at = india(7, 6, minute: 0)
+        let plan = PlanRecord(
+            id: board.id, classID: board.classID, date: board.date, madeAt: at, groups: board.groups, items: items,
+            artefacts: [], sessionID: nil
+        )
+        return FakePlansRepository(plans: [plan], artefacts: boardArtefacts.filter { kept.contains($0.id) }, now: at)
+    }
+
     nonisolated static let planID = UUID(uuidString: "abababab-0000-0000-0000-000000000001")!
     private nonisolated static let madeAt = india(7, 16, minute: 40)
     private nonisolated static func artefactID(_ number: Int) -> UUID {

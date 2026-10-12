@@ -62,7 +62,7 @@ test("stale names the files that differ, are missing, or are left over", async (
 	}
 });
 
-test("each shared case file is copied into DomainTests' Cases (Phase 18: the budget and the note week; the reminders are the server's alone)", () => {
+test("each shared case file is copied into DomainTests' Cases (Phase 18: the exam split and the note week; the reminders are the server's alone)", () => {
 	expect(caseCopies()).toEqual([
 		[
 			"tools/contract/plan-cases.json",

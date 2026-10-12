@@ -2,21 +2,17 @@ import Domain
 import Foundation
 
 /// The day's plans and their artefacts (`plans`, `plan_items`, `artefacts`; migrations 0010 and 0019). RLS keeps every
-/// call inside the member's centre; the writes are the app's, as the user (D60).
+/// call inside the member's centre. The server writes the plan and its material (Phase 18); the app's writes are the
+/// tutor's changes and the artefacts Make and the artefact screens keep, as the user (D60).
 public protocol PlansRepository: Sendable {
     /// The day's plan for a batch with its items and the artefacts its items link; nil when none was made.
     func plan(centre: UUID, classID: UUID, date: Day) async throws -> PlanRecord?
     /// A plan by its id (an artefact's screen reads the plan it belongs to); nil when gone.
     func plan(id: UUID, centre: UUID) async throws -> PlanRecord?
-    /// `make_plan`: the draft written (a second call replaces the day's plan); the record with its item ids, no
-    /// artefacts.
-    func make(_ draft: PlanDraft, centre: UUID) async throws -> PlanRecord
     /// `keep_artefact`: the artefact written and linked to the group's items of the kind (student nil) or one
     /// student's.
     func keep(_ artefact: NewArtefact, to link: ArtefactLink, centre: UUID) async throws -> Artefact
     func artefact(id: UUID, centre: UUID) async throws -> Artefact?
-    /// The chapters a brief was made for (the budget's "asked before").
-    func briefChapters(centre: UUID) async throws -> Set<String>
     func skip(item: UUID, centre: UUID) async throws
     func move(items: [UUID], to group: Int, from: Int, centre: UUID) async throws
     /// The student's lines skipped for today: they close with attendance alone.
@@ -31,8 +27,6 @@ public protocol PlansRepository: Sendable {
     func artefacts(for item: UUID, centre: UUID) async throws -> [Artefact]
     /// The content replaced (Use this plan marks a gap report used).
     func setContent(_ content: ArtefactContent, artefact: UUID, centre: UUID) async throws
-    /// `name_plan_group` (migration 0021): a group /ai/plan could not name at the make, named later; links untouched.
-    func nameGroup(plan: UUID, group: Int, chapter: String, skill: String, centre: UUID) async throws
     /// The students' weekly notes and can-now-dos kept since a moment, newest first (Phase 14).
     func notes(centre: UUID, students: [UUID], since: Date) async throws -> [Artefact]
     /// What Make something made (`made_from = 'make'`), newest first, at most 50, a regenerated one in its

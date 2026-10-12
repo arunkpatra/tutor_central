@@ -35,12 +35,13 @@ import Testing
             tasks: taskStore, now: { now }, record: record
         )
         if let plans {
-            let maker = PlanTest.maker(plans: plans, attendance: attendance, now: now, schoolItems: items)
+            let preview = PlanTest.preview(plans: plans, attendance: attendance, now: now, schoolItems: items)
+            let jobs = PlanTest.serving(plans, preview: preview, now: now, students: students, classes: classes)
             store.makePlanStore = { classID in
                 PlanStore(
                     classID: classID, workspace: FakeCentreRepository.meeraWorkspace, register: register,
-                    plans: plans, classes: FakeClassesRepository(classes: classes), maker: maker, cache: nil,
-                    now: { now }, calendar: DayHeading.india
+                    plans: plans, classes: FakeClassesRepository(classes: classes), jobs: jobs, preview: preview,
+                    cache: nil, now: { now }, calendar: DayHeading.india
                 )
             }
         }
@@ -115,7 +116,7 @@ import Testing
         let hero = try #require(store.hero)
         #expect(store.greeting == "Good morning, Meera" && hero.eyebrow == "No batch today" && hero.accent)
         #expect(hero.title == "Next: Class 10 Maths on Monday" && hero.kind == .upcoming)
-        #expect(hero.line == "17:00–18:00 · 6 students · its plan is made when you open the app on Monday")
+        #expect(hero.line == "17:00–18:00 · 6 students · its plan is ready before the batch on Monday")
         #expect(store.todayRows.map(\.title) == ["Parents' meeting"] && store.todayRows[0].start == "11:00")
         #expect(store.todayRows[0].end == "12:00" && store.todayRows[0]
             .line == "Class 10 parents. Bring the September test papers.")

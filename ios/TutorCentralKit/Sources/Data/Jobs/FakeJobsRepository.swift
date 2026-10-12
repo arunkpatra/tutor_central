@@ -1,0 +1,60 @@
+import Domain
+import Foundation
+
+/// Jobs in memory, for tests, previews and `bun shots`: the plan job each batch and day answers, a record of each
+/// request and cancel, and each read.
+@MainActor public final class FakeJobsRepository: JobsRepository {
+    public enum Request: Hashable, Sendable {
+        case plan(classID: UUID, date: Day, choices: PlanChoices?)
+    }
+
+    /// The plan job a read answers, by batch; set by a test to move a job on.
+    public var planJobs: [UUID: JobStatus]
+    /// What a request leaves for its batch: a live job, unless a test says otherwise.
+    public var afterRequest: JobStatus.State = .queued
+    /// The server's work for a plan request, for `bun shots`: the plan written and the job's state after it.
+    public var onPlanRequest: (@MainActor (UUID, Day, PlanChoices?) async -> JobStatus.State)?
+    public var failure: (any Error)?
+    public private(set) var requested: [Request] = []
+    public private(set) var cancelled: [UUID] = []
+    public private(set) var reads = 0
+    private let now: @Sendable () -> Date
+
+    public init(planJobs: [UUID: JobStatus] = [:], now: @escaping @Sendable () -> Date = { Date() }) {
+        self.planJobs = planJobs
+        self.now = now
+    }
+
+    public func planJob(centre _: UUID, classID: UUID, date _: Day) async throws -> JobStatus? {
+        reads += 1
+        if let failure {
+            throw failure
+        }
+        return planJobs[classID]
+    }
+
+    public func requestPlan(centre _: UUID, classID: UUID, date: Day, choices: PlanChoices?) async throws -> UUID {
+        if let failure {
+            throw failure
+        }
+        requested.append(.plan(classID: classID, date: date, choices: choices))
+        if let live = planJobs[classID], live.isLive {
+            return live.id
+        }
+        let created = now()
+        let state = await onPlanRequest?(classID, date, choices) ?? afterRequest
+        let job = JobStatus(id: UUID(), state: state, createdAt: created)
+        planJobs[classID] = job
+        return job.id
+    }
+
+    public func cancel(centre _: UUID, job: UUID) async throws {
+        if let failure {
+            throw failure
+        }
+        cancelled.append(job)
+        for (classID, status) in planJobs where status.id == job && status.isLive {
+            planJobs[classID] = JobStatus(id: job, state: .cancelled, createdAt: status.createdAt, finishedAt: now())
+        }
+    }
+}

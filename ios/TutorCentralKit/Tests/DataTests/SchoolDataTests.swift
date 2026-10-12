@@ -139,36 +139,4 @@ struct MarkRowTests {
         #expect(try await repo.artefact(id: kept.id, centre: centre)?.content == .gapReport(used))
         #expect(try await repo.artefacts(for: exam, centre: centre).map(\.id) == [kept.id])
     }
-
-    @Test func nameGroupRenamesTheGroupAndItsTeachLines() async throws {
-        let repo = FakePlansRepository()
-        let made = try await repo.make(PlanSamples.unnamedDraft, centre: centre)
-        let sheet = try await repo.keep(
-            NewArtefact(
-                kind: .sheet, source: .made, title: "s",
-                content: .sheet(SheetContent(
-                    title: "s",
-                    instructions: nil,
-                    questions: [],
-                    forHomework: true,
-                    light: false
-                )),
-                photoPath: nil, generationID: nil, regeneratedFrom: nil
-            ),
-            to: ArtefactLink(plan: made.id, group: 1, student: nil, itemKind: .homework), centre: centre
-        )
-        try await repo.nameGroup(
-            plan: made.id,
-            group: 1,
-            chapter: "Chemical reactions",
-            skill: "Balance an equation",
-            centre: centre
-        )
-        let read = try #require(try await repo.plan(id: made.id, centre: centre))
-        #expect(read.groups.first { $0.number == 1 }?.skill == "Balance an equation")
-        #expect(read.groups.first { $0.number == 1 }?.chapter == "Chemical reactions")
-        #expect(read.items.filter { $0.groupNo == 1 && $0.kind == .teach }
-            .allSatisfy { $0.words == "Teach: Balance an equation" })
-        #expect(read.items.filter { $0.groupNo == 1 && $0.kind == .homework }.allSatisfy { $0.artefactID == sheet.id })
-    }
 }

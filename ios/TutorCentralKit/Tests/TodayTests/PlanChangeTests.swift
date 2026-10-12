@@ -58,15 +58,15 @@ import Testing
         var board = FakePlansRepository.boardPlan(changed: false, done: true)
         board.sessionID = UUID()
         let plans = FakePlansRepository(plans: [board], artefacts: FakePlansRepository.boardArtefacts)
-        let ai = FakeAIRepository()
-        let store = await PlanStoreTests().store(plans: plans, ai: ai)
+        let jobs = FakeJobsRepository()
+        let store = await PlanStoreTests().store(plans: plans, jobs: jobs)
         #expect(store.isClosed)
         await store.move(student: FakeStudentsRepository.riya, to: 1)
         await store.skipHomework(student: FakeStudentsRepository.nikhil)
         await store.useToday(choices: PlanChoices(groups: 2, subjects: [:]))
         let after = try await plan(plans)
         #expect(after.items == board.items)
-        #expect(ai.sheets.isEmpty && plans.made.isEmpty)
+        #expect(jobs.requested.isEmpty && plans.made.isEmpty)
     }
 
     @Test func skipHomeworkStrikesTheBitAndSaysSkippedToday() async throws {
@@ -146,40 +146,6 @@ import Testing
         await store.keep(choices: two, for: .wednesday)
         let evening = try #require(classes.classes.first { $0.id == PlanTest.evening.id })
         #expect(evening.planPattern[.wednesday] == PlanPattern(groups: 2, subjects: shown))
-    }
-
-    @Test func aMoveBeforeTheSheetLandsFollowsTheNewGroup() async throws {
-        let ai = FakeAIRepository()
-        ai.delay = .milliseconds(150)
-        let plans = FakePlansRepository()
-        let store = await PlanStoreTests().store(plans: plans, ai: ai, load: false)
-        let load = Task { await store.load() }
-        while store.record == nil {
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        await store.move(student: FakeStudentsRepository.riya, to: 1)
-        await load.value
-        let made = try await plan(plans)
-        let homework = made.items(of: FakeStudentsRepository.riya).first { $0.kind == .homework }
-        #expect(homework?.artefactID == made.artefact(group: 1, kind: .sheet, homework: true)?.id)
-        #expect(store.record?.items(of: FakeStudentsRepository.riya).allSatisfy { $0.groupNo == 1 } == true)
-    }
-
-    @Test func makingAgainDropsLateAnswers() async throws {
-        let ai = FakeAIRepository()
-        ai.delay = .milliseconds(150)
-        let plans = FakePlansRepository()
-        let store = await PlanStoreTests().store(plans: plans, ai: ai, load: false)
-        let load = Task { await store.load() }
-        while store.record == nil {
-            try await Task.sleep(for: .milliseconds(20))
-        }
-        await store.useToday(choices: PlanChoices(groups: 1, subjects: [:]))
-        await load.value
-        let made = try await plan(plans)
-        #expect(made.groups.count == 1)
-        #expect(store.groups.count == 1)
-        #expect(made.items.allSatisfy { $0.artefactID == nil || made.artefact($0.artefactID) != nil })
     }
 
     @Test func aGroupLeftWithNoOneIsNotShown() async throws {

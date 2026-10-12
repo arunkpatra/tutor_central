@@ -240,18 +240,6 @@ extension APIClientTests {
         }
     }
 
-    @Test func planTopicsDecodeTheGroups() async throws {
-        let body = #"{"id":"7a1f0000-0000-0000-0000-000000000011","result":{"groups":[{"groupNo":1,"#
-            + #""chapter":"Chemical reactions","skill":"Balance a chemical equation"}]}}"#
-        let (client, recorder) = Self.client(status: 200, body: body)
-        let topics = try await client.planTopics(
-            classID: nil, date: #require(Day(iso: "2026-10-07")), month: 10,
-            groups: [PlanTopicGroup(groupNo: 1, classLevel: .eight, subject: "Science")], centre: Self.centre
-        )
-        #expect(topics == [PlanTopic(groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation")])
-        #expect(try Self.sent(recorder)["month"] as? Int == 10)
-    }
-
     @Test func aSheetIsLightForAYoungClassAndCarriesItsUse() async throws {
         let body = #"{"id":"7a1f0000-0000-0000-0000-000000000012","result":{"title":"Fractions","instructions":null,"#
             + #""questions":[{"number":1,"text":"Shade half","answer":"Two of four"}]}}"#

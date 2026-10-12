@@ -121,19 +121,14 @@ public extension AISamples {
         ]
     )
 
-    /// A first topic for a group with no record, by class and subject.
-    static func topics(_ groups: [PlanTopicGroup]) -> [PlanTopic] {
-        groups.map { group in
-            switch (group.classLevel, group.subject) {
-            case (.eight, "Science"):
-                PlanTopic(groupNo: group.groupNo, chapter: "Chemical reactions", skill: "Balance a chemical equation")
-            case (.five, "Mathematics"):
-                PlanTopic(groupNo: group.groupNo, chapter: "Parts and Wholes", skill: "Name a fraction of a whole")
-            case (.two, _):
-                PlanTopic(groupNo: group.groupNo, chapter: "Numbers", skill: "To 99")
-            default:
-                PlanTopic(groupNo: group.groupNo, chapter: "\(group.subject) chapter 1", skill: "The first idea")
-            }
+    /// A first topic for a group with no record, by class and subject, as the server's plan names it (the fixtures'
+    /// plan job).
+    static func topic(classLevel: ClassLevel, subject: String) -> (chapter: String, skill: String) {
+        switch (classLevel, subject) {
+        case (.eight, "Science"): ("Chemical reactions", "Balance a chemical equation")
+        case (.five, "Mathematics"): ("Parts and Wholes", "Name a fraction of a whole")
+        case (.two, _): ("Numbers", "To 99")
+        default: ("\(subject) chapter 1", "The first idea")
         }
     }
 }

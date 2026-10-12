@@ -4,12 +4,8 @@ import Foundation
 /// draws gets a case (information-architecture.md, "Launch states"); the Kit's cases open the Kit at each of its
 /// sections, since a screenshot holds one screen.
 public enum LaunchState: String, CaseIterable, Sendable {
-    case placeholder
-    case kit
-    case kitFields = "kit-fields"
-    case kitSurfaces = "kit-surfaces"
-    case kitPatterns = "kit-patterns"
-    case kitDialog = "kit-dialog"
+    case placeholder, kit
+    case kitFields = "kit-fields", kitSurfaces = "kit-surfaces", kitPatterns = "kit-patterns", kitDialog = "kit-dialog"
     case kitPhase7 = "kit-phase7", kitPhase10 = "kit-phase10", kitPhase10Figures = "kit-phase10-figures"
     case signin
     case signinEmail = "signin-email"
@@ -126,6 +122,10 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case todayScrolled = "today-scrolled"
     /// The plan being made (P10-Today-Planning).
     case todayPlanning = "today-planning"
+    /// Today at 06:05: the plan the server made at 06:00, its material still being made (P18-Today-Plan-Making).
+    case todayPlanMaking = "today-plan-making"
+    /// The plan job failed: Phase 12's failed card with Try Again, in Phase 18's words.
+    case todayPlanFailed = "today-plan-failed"
     /// Dev's line pressed (P10-Today-Plan-StudentMenu).
     case todayLineMenu = "today-line-menu"
     /// Riya moved to Group 1, Nikhil's homework skipped (P10-Today-Plan-Changed).

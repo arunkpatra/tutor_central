@@ -28,10 +28,6 @@ struct APIBodiesV2Tests {
             MakeWorkedExampleBody(centreId: "c", classLevel: "8", subject: "Science", skill: "x"),
             MakeFigureBody(centreId: "c", figure: "fraction_bar", classLevel: "5", subject: "Mathematics", skill: "x"),
             MakeBriefBody(centreId: "c", classLevel: "8", subject: "Science", chapter: "x"),
-            PlanBody(
-                centreId: "c", classId: nil, date: "2026-10-07", month: 10,
-                groups: [.init(groupNo: 1, classLevel: "8", subject: "Science")]
-            ),
         ]
         for body in bodies {
             #expect(try !json(body).lowercased().contains("student"))

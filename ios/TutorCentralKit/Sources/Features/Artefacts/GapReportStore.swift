@@ -217,7 +217,8 @@ public struct GapDayRow: Identifiable, Hashable, Sendable {
 
     // MARK: - Use this plan
 
-    /// The report marked used; the plan reads its lines for the days after the mock (PlanMaker) and is made again.
+    /// The report marked used; the plan reads its lines for the days after the mock and is made again (the server's
+    /// plan job).
     public func use() async -> Bool {
         guard var content = report, let artefact else { return false }
         guard await online() else {
