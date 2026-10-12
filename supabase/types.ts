@@ -23,7 +23,27 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "ai_generations": {
+            "admin_audit": {
+                  Row: {
+                    "action": string,"admin_user_id": string,"centre_id": string | null,"created_at": string,"id": string,"ip": string | null,"reason": string | null,"target": NonNullable<Json>,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "action": string,"admin_user_id": string,"centre_id"?: string | null,"created_at"?: string,"id"?: string,"ip"?: string | null,"reason"?: string | null,"target"?: NonNullable<Json>,"updated_at"?: string
+                  }
+                  Update: {
+                    "action"?: string,"admin_user_id"?: string,"centre_id"?: string | null,"created_at"?: string,"id"?: string,"ip"?: string | null,"reason"?: string | null,"target"?: NonNullable<Json>,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "admin_audit_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"ai_generations": {
                   Row: {
                     "centre_id": string,"cost_paise": number | null,"created_at": string,"error_reason": string | null,"fallback_model": string | null,"finished_at": string | null,"id": string,"idempotency_key": string | null,"input": NonNullable<Json>,"input_hash": string | null,"job_id": string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms": number | null,"model": string | null,"output": string | null,"prompt_hash": string | null,"prompt_version": string | null,"request_id": string | null,"status": Database["public"]['Enums']["ai_status"],"stop_reason": string | null,"student_id": string | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string,"user_id": string | null
                   }
@@ -52,6 +72,46 @@ isOneToOne: false
       columns: ["job_id"]
 isOneToOne: false
       referencedRelation: "jobs"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"alerts": {
+                  Row: {
+                    "acknowledged_at": string | null,"centre_id": string | null,"created_at": string,"id": string,"kind": string,"raised_at": string,"threshold": number | null,"updated_at": string,"value": number | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "acknowledged_at"?: string | null,"centre_id"?: string | null,"created_at"?: string,"id"?: string,"kind": string,"raised_at"?: string,"threshold"?: number | null,"updated_at"?: string,"value"?: number | null
+                  }
+                  Update: {
+                    "acknowledged_at"?: string | null,"centre_id"?: string | null,"created_at"?: string,"id"?: string,"kind"?: string,"raised_at"?: string,"threshold"?: number | null,"updated_at"?: string,"value"?: number | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "alerts_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"api_requests": {
+                  Row: {
+                    "centre_id": string | null,"created_at": string,"id": string,"latency_ms": number,"method": string,"reason": string | null,"request_id": string,"route": string,"status": number,"updated_at": string,"user_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id"?: string | null,"created_at"?: string,"id"?: string,"latency_ms": number,"method": string,"reason"?: string | null,"request_id": string,"route": string,"status": number,"updated_at"?: string,"user_id"?: string | null
+                  }
+                  Update: {
+                    "centre_id"?: string | null,"created_at"?: string,"id"?: string,"latency_ms"?: number,"method"?: string,"reason"?: string | null,"request_id"?: string,"route"?: string,"status"?: number,"updated_at"?: string,"user_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "api_requests_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
       referencedColumns: ["id"]
     }
                   ]
@@ -313,6 +373,40 @@ isOneToOne: false
                   Relationships: [
                     {
       foreignKeyName: "classes_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"device_tokens": {
+                  Row: {
+                    "app_build": number | null,"created_at": string,"device_id": string,"environment": string,"id": string,"last_seen_at": string,"retired_at": string | null,"token": string,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "app_build"?: number | null,"created_at"?: string,"device_id": string,"environment": string,"id"?: string,"last_seen_at"?: string,"retired_at"?: string | null,"token": string,"updated_at"?: string,"user_id"?: string
+                  }
+                  Update: {
+                    "app_build"?: number | null,"created_at"?: string,"device_id"?: string,"environment"?: string,"id"?: string,"last_seen_at"?: string,"retired_at"?: string | null,"token"?: string,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"events": {
+                  Row: {
+                    "at": string,"centre_id": string,"created_at": string,"id": string,"kind": string,"screen": string | null,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "at": string,"centre_id": string,"created_at"?: string,"id"?: string,"kind": string,"screen"?: string | null,"updated_at"?: string,"user_id"?: string
+                  }
+                  Update: {
+                    "at"?: string,"centre_id"?: string,"created_at"?: string,"id"?: string,"kind"?: string,"screen"?: string | null,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "events_centre_id_fkey"
       columns: ["centre_id"]
 isOneToOne: false
       referencedRelation: "centres"
