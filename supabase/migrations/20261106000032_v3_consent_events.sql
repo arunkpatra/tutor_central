@@ -22,9 +22,25 @@ alter table public.consent_events enable row level security;
 create policy consent_events_member_read on public.consent_events for select to authenticated using (public.is_member(centre_id));
 create policy consent_events_member_insert on public.consent_events for insert to authenticated with check (public.is_member(centre_id));
 
+-- A row comes from the student's change alone (the commit review, 2026-10-12): the history trigger sets tc.consent for
+-- its insert; a member's own insert, which could backdate a consent or name someone else, is refused. The platform and a
+-- session with no request (the backfill below, psql) may write.
+create function public.consent_events_from_students() returns trigger language plpgsql set search_path = '' as $$
+begin
+  if current_setting('tc.consent', true) is distinct from 'on'
+     and coalesce((select auth.jwt() ->> 'role'), '') not in ('service_role', '') then
+    raise exception 'consent_history_from_the_student' using errcode = '42501';
+  end if;
+  return new;
+end $$;
+revoke all on function public.consent_events_from_students() from public, anon, authenticated;
+create trigger consent_events_from_students before insert on public.consent_events
+  for each row execute function public.consent_events_from_students();
+
 -- Runs as the member who changed the student, so its insert passes the policy above.
 create function public.students_consent_history() returns trigger language plpgsql set search_path = '' as $$
 begin
+  perform set_config('tc.consent', 'on', true);
   if new.consent_at is not null and (tg_op = 'INSERT' or old.consent_at is null
        or old.consent_at is distinct from new.consent_at or old.consent_phone is distinct from new.consent_phone
        or old.consent_how is distinct from new.consent_how) then
@@ -34,6 +50,7 @@ begin
     insert into public.consent_events (centre_id, student_id, kind, at, by_user)
     values (new.centre_id, new.id, 'withdrawn', now(), auth.uid());
   end if;
+  perform set_config('tc.consent', 'off', true);
   return null;
 end $$;
 revoke all on function public.students_consent_history() from public, anon, authenticated;
