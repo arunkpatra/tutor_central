@@ -143,5 +143,5 @@ export function notificationsFor(input: ReminderInput, now: string, windowHours 
   const until = Date.parse(now) + windowHours * 3_600_000;
   return planned(input, now)
     .filter(({ reminder: r }) => Date.parse(r.at) <= until)
-    .map(({ reminder: r, key }) => ({ kind: r.kind, key, due_at: r.at, title: r.title, body: r.body, link: r.link }));
+    .map(({ reminder: r, key }) => ({ kind: r.kind, key, due_at: r.at, title: r.title, body: r.body, link: r.link, subject: r.subject }));
 }

@@ -621,14 +621,14 @@ isOneToOne: false
                   ]
                 },"notifications": {
                   Row: {
-                    "apns": Json | null,"background": boolean,"body": string | null,"centre_id": string,"created_at": string,"due_at": string,"id": string,"key": string,"kind": string,"link": string | null,"sent_at": string | null,"state": string,"title": string | null,"updated_at": string,"user_id": string
+                    "apns": Json | null,"background": boolean,"body": string | null,"centre_id": string,"created_at": string,"due_at": string,"id": string,"key": string,"kind": string,"link": string | null,"sent_at": string | null,"state": string,"subject": string | null,"title": string | null,"updated_at": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id": string,"created_at"?: string,"due_at": string,"id"?: string,"key": string,"kind": string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"title"?: string | null,"updated_at"?: string,"user_id": string
+                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id": string,"created_at"?: string,"due_at": string,"id"?: string,"key": string,"kind": string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"subject"?: string | null,"title"?: string | null,"updated_at"?: string,"user_id": string
                   }
                   Update: {
-                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id"?: string,"created_at"?: string,"due_at"?: string,"id"?: string,"key"?: string,"kind"?: string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"title"?: string | null,"updated_at"?: string,"user_id"?: string
+                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id"?: string,"created_at"?: string,"due_at"?: string,"id"?: string,"key"?: string,"kind"?: string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"subject"?: string | null,"title"?: string | null,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
                     {
@@ -1021,6 +1021,7 @@ isOneToOne: false
 "link": string | null,
 "sent_at": string | null,
 "state": string,
+"subject": string | null,
 "title": string | null,
 "updated_at": string,
 "user_id": string
