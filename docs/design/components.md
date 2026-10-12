@@ -1006,3 +1006,25 @@ The texts:
 | The consent sheet from a note | "Before the first note" · "A note about a student carries their name and what you have seen of their work. It is sent to our AI service (Claude, by Anthropic) only to be put into words, and is not stored there or on our servers. Make sure the parents are fine with their details being kept in Tutor Central." · "Asked once for <centre>, and recorded with the date." · I agree, continue |
 
 **As built in Phase 15** (session 32). Under 10.7: Make's home (`MakeHomeView`: the two kind groups, Recent's three with See all, the AI line), the forms (`MakeFormView`, `MakeFormFields`: For, Subject, Skill or topic, Length, Level, Key at the end, the helper; the brief's Class wheel, Subject and Chapter; the mock's Student and Exam; the note's Student and What to say with its counter), the For sheet (`ForSheet`: Student | Group | Batch | Class; a group's line leads with its batch when two batches meet), the skill and exam choosers, `CreatingCard` while making; Recent's empty row reads "Nothing made yet · Sheets, examples, figures, mocks and papers you make appear here, ready to open again." (Make's notes live on the student's page). Progress (`StudentProgressRow`, `ProgressHeroCard` in DesignSystem; the sort's popover for its launch state). Under 10.4: a made artefact's eyebrow is its target's (`made_for`: "For Dev · Class 8 Science · Balancing equations"); "Key at the end" puts the key after the questions on Print only. The consent sheet from a note: "Before the first note" · "A note about a student carries their name and what you have seen of their work. It is sent to our AI service (Claude, by Anthropic) only to be put into words. The service normally deletes it within 30 days and never uses it for training. Make sure the parents are fine with their details being kept in Tutor Central.".
+
+## Phase 18 parts (session 36, 2026-10-12): withdrawal, the export, plan ready
+
+**Consent history:** inside the consent card under its row, the eyebrow HISTORY (`caption` 600, tracked, `text3`), then one
+line per event newest first: the event and how in `footnote` `text2`, the day on the right in `footnote` `text3` tabular.
+
+**Export card:** a list card with a 40 pt tile (radius 12; `s2` and `text2` for the ask, a 20 pt spinner while being made,
+`okTint` and `ok` when ready, `overTint` and `overdue` when not made) beside the row's title and line; the buttons below in the
+card's padding (one secondary, or Make again and Share as a pair).
+
+**Withdrawal button:** the destructive form button (`overTint` fill, `overdue` text), 46 in the record sheet, 52 as the
+withdrawal sheet's action.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| Withdrawal | "Parent withdrew" · "<parent> withdrew" · "Withdrew on" · "From now, at once" · "Nothing about <student> goes to the AI service. <Pronoun> notes, marking and messages to <pronoun> parent stop; a note already written waits unsent. Sheets and sets for <pronoun> group go on, without <pronoun> name." · "Record the withdrawal" · page: "<day> · <how>" · "History" · "Withdrew · <how>" · "Agreed · <how> · <number>" · "Nothing about <student> goes to the AI service now. <Pronoun> notes, marking and messages wait until <pronoun> parent agrees again; sheets and sets for <pronoun> group go on." |
+| Export | "Export" · "Everything about <student>" · "Make the file" · "Making the file" · "Asked at <time>. Usually ready in a minute; you can leave this page." · "Ready to share" · "Made today at <time> · PDF, <n> pages" · Make again · Share · "Kept for 7 days, then removed from Tutor Central. Make it again whenever you need it." · "Couldn't make the file" · "Nothing was shared. Try again in a minute." · Try Again |
+| Notifications | "<batch>: today's plan is ready" "<start>–<end> · <n> groups. Tap to see it." · "<n> weekly notes are ready" "For the note day. Read each as the parent will, then send." |
+| Today | "Made at <time>, before the batch. The sheets and checks are still being made; each mark turns green when it is ready." · "Next batch · at <time>" · "its plan is ready before the batch on <day>" · "Couldn't make today's plan. Try again in a minute." |
+| Reminders | "Plans and notes" · "Plan ready" "When each batch's plan and material are made, before the batch" · "Notes ready" "When the note day's notes for parents are written" · "Sent by Tutor Central, so they arrive even on days you have not opened the app. These settings go with your account to any iPhone you sign in on." |

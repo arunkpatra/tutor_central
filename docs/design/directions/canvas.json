@@ -2625,6 +2625,104 @@
    "x": 3660,
    "y": 52600,
    "title": "Phase 15 · The consent sheet reached from a progress note (U20): \"Before the first note\" and the note's sentences over the form, in the Phase 6 sheet · dark"
+  },
+  "P18-Consent-Change.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 0,
+   "y": 56600,
+   "title": "Phase 18 · Consent: Change on an agreed consent, Parent withdrew in place of Remove · dark"
+  },
+  "P18-Consent-Withdraw.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 473,
+   "y": 56600,
+   "title": "Phase 18 · Consent: the Parent withdrew sheet (how, the day, what stops at once) · dark"
+  },
+  "P18-Student-Withdrawn.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 946,
+   "y": 56600,
+   "title": "Phase 18 · The student page after a withdrawal: consent back under the parent, \"<parent> withdrew\", the history, Ask on WhatsApp and Parent agreed · dark"
+  },
+  "P18-Student-Withdrawn-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 1419,
+   "y": 56600,
+   "title": "Phase 18 · The student page after a withdrawal · light"
+  },
+  "P18-Export-Ask.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 1892,
+   "y": 56600,
+   "title": "Phase 18 · The student page's foot, the Export section: \"Everything about Hemanth\", Make the file · dark"
+  },
+  "P18-Export-Making.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 2365,
+   "y": 56600,
+   "title": "Phase 18 · The student page's foot, the file being made: a spinner, \"Making the file\", asked at, you can leave · dark"
+  },
+  "P18-Export-Ready.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 2838,
+   "y": 56600,
+   "title": "Phase 18 · The student page's foot, the file ready: \"Ready to share\", made at and pages, Make again and Share, kept for 7 days · dark"
+  },
+  "P18-Export-Ready-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 3311,
+   "y": 56600,
+   "title": "Phase 18 · The student page's foot, the file ready · light"
+  },
+  "P18-Export-Failed.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 3784,
+   "y": 56600,
+   "title": "Phase 18 · The student page's foot, the file not made: \"Couldn't make the file\", Try Again · dark"
+  },
+  "P18-Export-File.dc.html": {
+   "h": 842,
+   "w": 595,
+   "x": 4257,
+   "y": 56600,
+   "title": "Phase 18 · The file a tutor shares: page 1 of the PDF (about him, consent, attendance, fees, his record; continued: homework, messages, notes) · A4"
+  },
+  "P18-Notification-PlanReady.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 4932,
+   "y": 56600,
+   "title": "Phase 18 · The notifications from Tutor Central: plan ready per batch (the batch, its time, the groups; no student named), the note day’s notes ready · dark"
+  },
+  "P18-Today-Plan-Making.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 5405,
+   "y": 56600,
+   "title": "Phase 18 · Today at 06:05: the plan made before the batch, its material still being made (marks on their way), \"Made at 06:00, before the batch\" · dark"
+  },
+  "P18-Today-Plan-Making-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 5878,
+   "y": 56600,
+   "title": "Phase 18 · Today at 06:05: the plan made before the batch, its material still being made (marks on their way), \"Made at 06:00, before the batch\" · light"
+  },
+  "P18-Reminders.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 6351,
+   "y": 56600,
+   "title": "Phase 18 · Teacher reminders sent by Tutor Central, scrolled: Classes, Events, Fees as before, Plans and notes (Plan ready, Notes ready), \"On this iPhone\" gone · dark"
   }
  },
  "createdOnFiles": {
@@ -2843,6 +2941,14 @@
    "x": 0,
    "y": 52300,
    "text": "Phase 15 · Make and polish — the two states no earlier step drew: the website's trust page (what reaches the AI service and when, how a parent's consent is asked and kept, what a parent can ask for) and the consent sheet reached from a progress note (U20)"
+  },
+  "p18_1": {
+   "kind": "title1",
+   "maxW": 5200,
+   "w": 240,
+   "x": 0,
+   "y": 56300,
+   "text": "Phase 18 · The server's work and push — the states no earlier step drew: consent withdrawn (an event in the student's history), the student's export (asked, being made, ready to share, failed, and the file), plan ready (the notification, Today while the material is still being made, the reminders screen)"
   }
  },
  "order": [
@@ -3216,7 +3322,21 @@
   "P15-Web-Trust-Light.dc.html",
   "P15-Web-Trust-Phone.dc.html",
   "P15-Web-Trust-Phone-Light.dc.html",
-  "P15-Consent-Note.dc.html"
+  "P15-Consent-Note.dc.html",
+  "P18-Consent-Change.dc.html",
+  "P18-Consent-Withdraw.dc.html",
+  "P18-Student-Withdrawn.dc.html",
+  "P18-Student-Withdrawn-Light.dc.html",
+  "P18-Export-Ask.dc.html",
+  "P18-Export-Making.dc.html",
+  "P18-Export-Ready.dc.html",
+  "P18-Export-Ready-Light.dc.html",
+  "P18-Export-Failed.dc.html",
+  "P18-Export-File.dc.html",
+  "P18-Notification-PlanReady.dc.html",
+  "P18-Today-Plan-Making.dc.html",
+  "P18-Today-Plan-Making-Light.dc.html",
+  "P18-Reminders.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

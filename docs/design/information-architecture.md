@@ -1343,3 +1343,81 @@ Where each claim on `/trust` comes from:
 | Kept in India; one tutor never reads another's; shared only with the services that run the app and, after consent, the AI service | D50; RLS (rule 6) |
 
 **As built in Phase 15** (session 32): the consent sheet from a note says "A note about a student carries their name and what you have seen of their work. It is sent to our AI service (Claude, by Anthropic) only to be put into words. The service normally deletes it within 30 days and never uses it for training. Make sure the parents are fine with their details being kept in Tutor Central." (the board's "not stored there or on our servers" left out: D41, and the retention is the AI service's). The trust page's words follow the code where the board's did not, each sentence checked twice (the build, then the review): the messages send first names; a school's message or photo is read without consent and its photo kept with the item; deleting a student deletes everything about them, the messages and AI records included (migration 0027). Make's launch states as built: `make`, `make-empty`, `make-sheet`, `make-for`, `make-for-student`, `make-worked-example`, `make-figure`, `make-brief`, `make-mock`, `make-note`, `make-making`, `make-made`, `make-sheet-no-class` (the helper's way out; no board draws a Class tile there); Check a paper's `check-intro`, `check-intro-mock`, `check-scheme-chooser`, `check-pages-empty`, `check-consent-waiting`; Reports' `reports-progress`, `-term`, `-sort`, `-export`, `reports-progress-empty` (Reports' empty card in Progress's words); the Kit's `kit-phase10`, `kit-phase10-figures`. `ai-assistant` and `ai-assistant-empty` are retired (Make's home and `make-empty` replace them).
+
+## Phase 18 boards (session 36, 2026-10-12): the states no earlier step drew
+
+Row 26 of the canvas (y 56600; the title note at 56300); sources `mockups/P18-*`. Drawn by the plan session in three sets, each
+shown to the owner: set 1 approved ("Approved"), set 2 approved with every later board of the session ("Approved. All your
+current and future design boards for this session are pre-approved.").
+
+| Board | Source |
+|---|---|
+| Consent: Change on an agreed consent, Parent withdrew in place of Remove | `P18-Consent-Change` |
+| Consent: the Parent withdrew sheet (how, the day, what stops at once) | `P18-Consent-Withdraw` |
+| The student page after a withdrawal: consent back under the parent with its history (dark and light) | `P18-Student-Withdrawn`, `-Light` |
+| The student page's foot with the Export section: the ask, being made, ready to share (dark and light), not made | `P18-Export-Ask`, `-Making`, `-Ready`, `-Ready-Light`, `-Failed` |
+| The file a tutor shares: page 1 of the PDF (A4, paper) | `P18-Export-File` |
+| The notifications sent by Tutor Central: plan ready per batch, the note day's notes ready | `P18-Notification-PlanReady` |
+| Today at 06:05: the plan made before the batch, its material still being made (dark and light) | `P18-Today-Plan-Making`, `-Light` |
+| Teacher reminders sent by Tutor Central: Plans and notes, "On this iPhone" gone | `P18-Reminders` |
+
+Launch states (Phase 18 builds them): `student-consent-change`, `student-consent-withdraw`, `student-withdrawn`,
+`student-export`, `student-export-making`, `student-export-ready`, `student-export-failed`, `today-plan-making`,
+`settings-reminders` (redrawn: the Phase 7 state shows the new screen). The notifications have no launch state: they are proven
+by a push to the simulator (`xcrun simctl push`, `docs/runbooks/simulator.md`). The file has none: it is proven by the export
+job's PDF from the local stack, its first page rendered for the pull request.
+
+What the boards settle:
+
+- **Withdrawal replaces Remove.** On an agreed consent the record sheet's destructive button is "Parent withdrew" (the
+  `overTint` button under Record it); the helper says "Kept with <student>'s record: the day, the number and how. If <pronoun>
+  parent changes their mind, record it with Parent withdrew; the agreement stays in <pronoun> history." A consent recorded by
+  mistake is withdrawn too: the history stays true.
+- **The Parent withdrew sheet** is the record sheet's frame: "<parent> withdrew" / "<student>'s parent", How (In person, On a
+  call, On WhatsApp), "Withdrew on" (today or earlier, not before the agreement), a box "From now, at once": "Nothing about
+  <student> goes to the AI service. <Pronoun> notes, marking and messages to <pronoun> parent stop; a note already written
+  waits unsent. Sheets and sets for <pronoun> group go on, without <pronoun> name.", the footnote "Kept in <student>'s history:
+  the day and how. What was made before stays in <pronoun> record until you delete <object>. You can record a new agreement any
+  time.", and the destructive "Record the withdrawal" (52). Offline it is refused as every consent write is (D39).
+- **Withdrawn on the page:** consent goes back under the parent card (it asks something of the tutor again). The row: the
+  withdrawn mark (`minus.circle` 22 in `text3`), "<parent> withdrew", "<day> · <how>"; then HISTORY (the eyebrow) with one line
+  per event, newest first: "Withdrew · on a call" / "Agreed · in person · <number>" with the day on the right; then Ask on
+  WhatsApp and Parent agreed. The footnote: "Nothing about <student> goes to the AI service now. <Pronoun> notes, marking and
+  messages wait until <pronoun> parent agrees again; sheets and sets for <pronoun> group go on." The history shows on every
+  state that has one (agreed included, under its row) once an event exists beyond the first agreement.
+- **The export** is a section "Export" on the page's foot, after Notes and before Archive and Delete. Its card: a 40 pt tile
+  and a row. Ask: `doc.text`, "Everything about <student>", "<Pronoun> details, attendance, fees, record, marks, and the notes
+  and messages made about <object>, in one PDF.", the secondary "Make the file"; footnote "For <pronoun> parent, when they ask
+  what you keep about <object>. Usually ready in a minute; you can leave this page." Being made: a spinner tile, "Making the
+  file", "Asked at <time>. Usually ready in a minute; you can leave this page." (the ask and the work show the same: a queued
+  job is answered within seconds by the wake). Ready: the tile in `okTint`, "Ready to share", "Made today at <time> · PDF,
+  <n> pages", Make again (secondary) and Share (primary, `square.and.arrow.up`, the system share sheet); footnote "Kept for 7
+  days, then removed from Tutor Central. Make it again whenever you need it." Not made: the tile in `overTint`, "Couldn't make
+  the file", "Nothing was shared. Try again in a minute.", Try Again. After 7 days the section returns to the ask. Offline,
+  Make the file and Try Again are refused with the consent write's offline words (D39); Share of a file already on the iPhone
+  works.
+- **The file** is A4, paper only: the student's name, "Everything <centre> keeps about <object>, as of <date>", the centre and
+  the tutor's name and number, a marigold rule, a line for the parent ("This file is for <student>'s parent. It lists what is
+  kept about <object> in Tutor Central, the app <pronoun> tutor uses. To correct or remove anything, ask <tutor>; deleting
+  <student> removes all of it."), then sections as label and value rows: About <object>, Consent (each event), Attendance,
+  Fees, <Pronoun> record (chapters, checks, school marks), Homework, Messages to <pronoun> parent (each one's day, kind,
+  language and words), Made about <object> (each note and message the AI service wrote, its day and words); the page's foot
+  names what continues and "Page n of m". No photo is in the file (none is kept, D79's export holds the record, the messages
+  and the outputs).
+- **Plan ready** is one notification per batch when its plan job is done, material included: the title "<batch>: today's plan
+  is ready", the body "<start>–<end> · <n> groups. Tap to see it." (no student is named, D72; the batch is the tutor's own
+  label); a tap opens Today. **Notes ready**: "<n> weekly notes are ready", "For the note day. Read each as the parent will,
+  then send."; a tap opens Today's note day. The class, event and fee reminders keep their Phase 7 words, now sent by Tutor
+  Central.
+- **Today with a plan made before the batch:** the plan opens at once with the line under "Today's plan": "Made at <time>,
+  before the batch. The sheets and checks are still being made; each mark turns green when it is ready." while any mark is on
+  its way (the ready marks' spinner, Phase 10); when every mark is made or not made, the line is gone. The hero's eyebrow before
+  the day's batches reads "Next batch · at <time>". The no-batch hero and tomorrow's line say "its plan is ready before the
+  batch on <day>" (was "its plan is made when you open the app on <day>"). A plan job that failed shows the failed card with
+  "Couldn't make today's plan. Try again in a minute." and Try Again (a new plan job); a read that failed offline keeps the
+  Phase 12 words.
+- **Teacher reminders:** Classes, Events and Fees as Phase 7 drew them; a new group "Plans and notes" with "Plan ready" ("When
+  each batch's plan and material are made, before the batch") and "Notes ready" ("When the note day's notes for parents are
+  written"), both on by default; "On this iPhone" and Refresh are gone; the footnote "Sent by Tutor Central, so they arrive
+  even on days you have not opened the app. These settings go with your account to any iPhone you sign in on." The status line
+  keeps "Reminders are on. Next: <reminder>." and "Notifications are off for Tutor Central." with Open Settings.
