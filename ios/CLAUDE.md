@@ -176,5 +176,19 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - A hand-run `xcodebuild` test of some targets builds into `bun check`'s DerivedData: after one, rebuild the tip before a hand-run
   picture (the app installed from DerivedData is the last build).
 
+- Phase 17 (V3 platform): the API's limits and lists are generated (`Domain/Generated/APIContract.swift`, by `bun
+  contract` from `api/src/contract.ts`; never edited, `bun check` fails when stale); a body keeps within them, not within
+  a literal. The fake's sample answers (`DataTests/Contract`) and the plan cases (`DomainTests/Cases/plan-cases.json`, the
+  rules held equal to the API's port) are generated too; a rule change rewrites the cases with
+  `TEST_RUNNER_TC_WRITE_PLAN_CASES=<path>` and `bun contract`.
+- Every AI call carries an `Idempotency-Key` (`IdempotencyKey`): the route, the body with sorted keys and the day in India,
+  so a repeat that day replays and costs nothing; a screen that means "another one" (Make it again, Write again) runs its
+  call in `IdempotencyKey.another { }` for a fresh key (V1's Create again through `GenerateContext.again()`). A made artefact is kept by the key
+  `<generation>[:<what it replaces>]`. 409 `in_progress` and 429 `rate` read as the timed-out words, 413 as too many pages.
+- The activity log (D82): `ActivityLog` (Data, an actor) keeps `activity-<centre>.json`, one event a line, and posts
+  batches of twenty, at background and on return; the shell records the app opened (`ShellState.opened()`, the scene's
+  active, at a launch once the centre's log is made), a sign-in, a tab, a link, and a sign-out, which closes the log
+  before the wipe. Never a name or an id in an event.
+
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

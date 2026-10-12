@@ -86,9 +86,12 @@ change per pull request, described by what it does and how it was checked.
 | `bun store-shots` | The App Store screenshots: the approved `Store-*` boards rendered with fresh simulator screens (dark, 9:41) at 1206 × 2622 JPEG into `docs/store/screenshots/` (D51); needs the `bun check` build. The listing's words are `docs/store/listing.md` |
 | `bun cost [--since 30m\|2h\|7d] [--kinds note,can_do]` | What the local AI calls cost, by kind and model, priced by `api/models.json` (D67) |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
+| `bun contract [--check]` | Write the generated contract (the API's database types, the app's `APIContract.swift`, the fake's samples, the plan cases' copy); `--check` (in `bun check`'s tools step) names what is stale (D80) |
 | `cd supabase && supabase start` | The local database stack (Docker) |
 | `cd api && bun run dev` | The API locally |
 | `gh workflow run deploy` | Deploy `main`'s head to production: pending migrations first (D26), then the API with its smoke (D21) |
+| `gh workflow run run-job -f email=… -f batch=… [-f date=YYYY-MM-DD]` | Queue one `plan` job in production for a centre's batch and day (default tomorrow in India) and report its state; the email and batch are typed at the run, never written to a file (D55) |
+| `gh workflow run restore-drill` | Dump production, restore it into a blank database on the runner and compare every table's count (`docs/runbooks/restore.md`) |
 | `gh workflow run testflight` | Archive `main`'s head with cloud signing and upload it to TestFlight (D24); stops while migrations are pending |
 
 CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`, except a commit of

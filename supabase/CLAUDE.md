@@ -8,8 +8,9 @@
   test in `tests/rls.test.ts` fails when a public table lacks RLS or a policy, or is missing from its list.
 - References between centre tables are composite, `(centre_id, x_id)` to `(centre_id, id)`, so a row can never
   point into another centre (foreign keys bypass RLS). Optional ones use `on delete set null (x_id)`.
-- Multi-row operations are functions, `security invoker` so RLS applies, `set search_path = ''`; `is_member` and
-  `delete_account` are the only `security definer` functions (D37), each with its reason in its migration. Since
+- Multi-row operations are functions, `security invoker` so RLS applies, `set search_path = ''`; `is_member`,
+  `delete_account`, `wake_worker` and `wake_worker_tick` (0034: Vault is readable by postgres alone) are the only
+  `security definer` functions (D37, D83), each with its reason in its migration. Since
   migration 0002, new tables, sequences and functions grant nothing to `anon`, and new functions grant no `PUBLIC`
   execute (in any schema, for functions the `postgres` role creates, extensions' included): every new function
   grants `authenticated` itself, and an extension's functions need explicit grants. The catalogue test probes this.
@@ -49,3 +50,17 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
   keeps three weeks of checks at the Evening batch's closes (the dates relative to `current_date`). 0027: what was written
   about a student goes with them (`ai_generations.student_id` and `message_log` cascade on the student's delete), and a
   progress note needs the parent's consent. A test that inserts into centre A runs before `delete_account`'s test.
+- Phase 17 (V3 platform): the platform is the service role (D83): `is_member` is true for its claim, and the platform's
+  tables (`jobs`, `job_steps`, `api_requests`, `alerts`, `admin_audit`) are read by members at most (`alerts` and
+  `admin_audit` not at all). A table written only through functions holds it with a transaction setting the function sets
+  and a trigger that refuses the rest (`tc.jobs` for `jobs`, `tc.gate` for `ai_generations`, `tc.consent` for
+  `consent_events`); the platform and a session with no request (psql, the seed, the tests' fixtures) pass. A member
+  writes no `ai_generations` row (0035): `start_ai_call` makes it, the API finishes it as the platform, and a finished row
+  is final (`ai_generations_finish_once`). `start_ai_call` serialises a centre's calls with an advisory lock, replays a key
+  within a day, and reads the allowance from `centres.ai_allowance` (calls a month) and `ai_allowance_paise` (the month's
+  cost; 0 is none), which members cannot update. No member queues a job yet (0035).
+- The wakes (0034): pg_cron's `wake_worker_minute` gets `/jobs/tick` each minute and a queued job posts `/jobs/wake`,
+  through pg_net, with the address and secret the deploy writes to Vault (`worker_url`, `worker_secret`); without them
+  both do nothing. Locally the secrets are absent unless a test sets them inside a rolled-back transaction.
+- `supabase db query --linked --output-format json` answers a bare array; `--local` answers `{ "rows": [...] }`; `-f`
+  resolves its file from the repository's root (the restore drill and `run-job` read either shape).
