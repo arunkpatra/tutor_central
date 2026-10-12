@@ -21,6 +21,8 @@ import Foundation
     /// The server's work for a note request, for `bun shots` and the tests: the note kept for the student and week.
     public var onNoteRequest: (@MainActor (UUID, Day) async -> Void)?
     public var failure: (any Error)?
+    /// A failure of the plan job's read alone (a request still goes through).
+    public var planReadFailure: (any Error)?
     public private(set) var requested: [Request] = []
     public private(set) var cancelled: [UUID] = []
     public private(set) var reads = 0
@@ -33,7 +35,7 @@ import Foundation
 
     public func planJob(centre _: UUID, classID: UUID, date _: Day) async throws -> JobStatus? {
         reads += 1
-        if let failure {
+        if let failure = failure ?? planReadFailure {
             throw failure
         }
         return planJobs[classID]
