@@ -7,11 +7,11 @@ short and true. History belongs in git and in the phase files, not here.
 (#152 to #165), the D62 fix for Check a paper (#166), the fifteen hand runs (issue #174) and their fixes (#167 to #173, #176),
 the cost run (30 calls, ₹22.54; the price sheet #175), the review on Fable 5.1 with every finding fixed (#177 to #183), 0026
 and 0027 deployed, the trust page live, the TestFlight build (below); the record in `plan/sessions/032/`.
-**Next:** the round. Build 26 passed on the owner's iPhone (2026-10-12). Done: the release notes and checklist
-(`docs/release.md`), the V2 guide (`docs/testing/tester-guide.md`), the findings file (`plan/phase-15-findings.md`, tutors
-R1 to R6). Now the owner's App Store Connect steps one at a time (Task 20: step 1, Test Information, asked 2026-10-12), then
-the testers' facts, the tester's device checks, the invitations (about 21 October), the readings Monday and Thursday; each
-session from `resume/030-phase-15-build.md` (step 8).
+**Next:** V3 (D69): the interview of the owner and then `docs/spec-v3.md`, on Fable 5.1, from
+`resume/031-v3-interview-and-spec.md` (session 033). The tutor round waits (D69): the owner tests build 26 on his own iPhone and
+reviews the engineering decisions himself; the round's documents are ready (`docs/release.md`'s build 26 checklist and notes,
+`docs/testing/tester-guide.md`, `plan/phase-15-findings.md`); App Store Connect's step 1 was not done, by his choice. His
+findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -35,8 +35,9 @@ session from `resume/030-phase-15-build.md` (step 8).
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
 | 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
-| 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the round next | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round from `resume/030-phase-15-build.md` (step 8) |
+| 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the round waits (D69) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round from `resume/030-phase-15-build.md` (step 8) |
 | 16 Release | Not started | Scope file `phase-16-release.md`; depends on Phase 15's round |
+| V3 Platform | The interview next (D69) | `resume/031-v3-interview-and-spec.md`; the spec `docs/spec-v3.md` after it |
 
 ## In flight
 
