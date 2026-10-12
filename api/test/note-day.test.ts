@@ -84,7 +84,9 @@ test("each consented student's note is made and kept; the job says the notes are
   const s = source([entry(DEV, "Dev Kumar"), entry(RIYA, "Riya Shah", { student: { id: RIYA, name: "Riya Shah", classLevel: "8", language: "hi" } })]);
   const c = ctx();
   const out = await drainAll(noteDay(s), job(), c);
-  expect(out.map((o) => o.name)).toEqual(["read", `note:${DEV}`, `note:${RIYA}`, "notify"]);
+  expect(out.map((o) => o.name)).toEqual(["read", "note:1", "note:2", "notify"]);
+  // job_steps.step holds 40 characters (0028); a student's id in the name made 41 (hand run 4).
+  expect(out.every((o) => o.name.length <= 40)).toBe(true);
   expect(s.kept.map((k) => [k.student, k.kind, k.key, k.title])).toEqual([
     [DEV, "note", `note:${DEV}:2026-10-05`, "Dev's week"],
     [RIYA, "note", `note:${RIYA}:2026-10-05`, "Riya's week"],
@@ -117,7 +119,7 @@ test("a student withdrawn mid-job is held, not paid", async () => {
   const db = fakeDb({ studentConsent: { [RIYA]: false } });
   const c = ctx(db);
   const out = await drainAll(noteDay(source([entry(DEV, "Dev"), entry(RIYA, "Riya")])), job(), c);
-  expect(out.find((o) => o.name === `note:${RIYA}`)).toMatchObject({ kind: "continue", step: expect.objectContaining({ held: [RIYA] }) });
+  expect(out.find((o) => o.name === "note:2")).toMatchObject({ kind: "continue", step: expect.objectContaining({ held: [RIYA] }) });
   expect(c.claude.requests).toHaveLength(1);
   expect(db.finished).toHaveLength(1);
   expect(out.at(-1)).toMatchObject({ result: { made: 1, held: 1 } });

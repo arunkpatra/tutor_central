@@ -79,7 +79,8 @@ async function note(job: Job, ctx: StepContext, source: NoteSource, centre: stri
   const { read, i } = step;
   const entry = read.students[i] as NoteRead["students"][number];
   const { student, week, record } = entry;
-  const name = `note:${student.id}`;
+  // The step's name is the student's place in the read (as the plan's make:<n>): job_steps.step holds 40 characters.
+  const name = `note:${i + 1}`;
   const go = (counts: Partial<Counts>, extra: { generationId?: string; costPaise?: number } = {}): StepOutcome => {
     const next = { ...step, ...counts };
     const following: Step = i + 1 < read.students.length ? { ...next, i: i + 1 } : { at: "notify", read, made: next.made, held: next.held, kept: next.kept, failed: next.failed };
