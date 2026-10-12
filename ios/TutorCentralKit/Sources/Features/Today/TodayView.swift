@@ -150,7 +150,6 @@ public struct TodayView: View {
                 Haptic.play(.impactLight)
             }
             .task {
-                store.showCached()
                 await store.load()
                 if boardState == .addingTask {
                     setUpAddingTask()
