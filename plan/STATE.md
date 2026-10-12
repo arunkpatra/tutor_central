@@ -3,15 +3,15 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-12, session 32 (Phase 15 built, on Opus 5.5). **Session 32:** the plan's twelve pull requests
-(#152 to #165), the D62 fix for Check a paper (#166), the fifteen hand runs (issue #174) and their fixes (#167 to #173, #176),
-the cost run (30 calls, ₹22.54; the price sheet #175), the review on Fable 5.1 with every finding fixed (#177 to #183), 0026
-and 0027 deployed, the trust page live, the TestFlight build (below); the record in `plan/sessions/032/`.
-**Next:** V3 (D69): the interview of the owner and then `docs/spec-v3.md`, on Fable 5.1, from
-`resume/031-v3-interview-and-spec.md` (session 033). The tutor round waits (D69): the owner tests build 26 on his own iPhone and
-reviews the engineering decisions himself; the round's documents are ready (`docs/release.md`'s build 26 checklist and notes,
-`docs/testing/tester-guide.md`, `plan/phase-15-findings.md`); App Store Connect's step 1 was not done, by his choice. His
-findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner).
+**Last updated:** 2026-10-12, session 33 (V3's interview and spec, on Fable 5.1). **Session 33:** the owner's interview
+(`docs/v3/interview.md`: six questions answered, the rest decided at his word), the research (`plan/sessions/033/research.md`),
+`docs/spec-v3.md` written and approved, D70 to D82 recorded, Phases 17 to 22 in the phase table with their scope files, resume
+032 for Phase 17's plan; the record in `plan/sessions/033/`.
+**Next:** Phase 17's plan on Fable 5.1 from `resume/032-phase-17-plan.md` (session 034). The order (D81): V3's Phases 17 to 22,
+then the external testing round (Phase 15's Tasks 20 to 23, by D52 to D55) on the first build that carries them, then Phase 16.
+The round's documents are ready (`docs/release.md`'s build 26 checklist and notes, `docs/testing/tester-guide.md`,
+`plan/phase-15-findings.md`); the owner's own findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner); none
+reported yet.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -35,9 +35,15 @@ findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner).
 | 12 The plan | Done (sessions 25 and 26, 2026-10-10 and 11), PRs #110 to #119; hand runs #120 | "As built" in `phase-12-class-plan.md`; device tests T4 to T7 |
 | 13 School | Done (sessions 27 and 28, 2026-10-11), PRs #123 to #126, #128 to #134 | "As built" in `phase-13-school.md`; device tests T8 to T10 |
 | 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
-| 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the round waits (D69) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready, the round itself waits (D69) |
-| 16 Release | Not started | Scope file `phase-16-release.md`; depends on Phase 15's round |
-| V3 Platform | The interview next (D69) | `resume/031-v3-interview-and-spec.md`; the spec `docs/spec-v3.md` after it |
+| 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the external testing round waits for V3 (D69, D81) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready |
+| 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
+| 17 V3 platform foundation | Not started; the plan next | Scope file `phase-17-platform-foundation.md`; resume 032 |
+| 18 V3 the server's work and push | Not started | Scope file `phase-18-server-work-and-push.md`; depends on 17 |
+| 19 V3 the admin portal, reading | Not started | Scope file `phase-19-admin-portal-reading.md`; depends on 17; boards first |
+| 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
+| 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
+| 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 
@@ -121,7 +127,8 @@ identity). The remote holds `main`,
   two tests the plan named. Earlier phases' minors: `plan/sessions/004`, `006`, `009`, `011`, `013` records (Phase 6's 1, 6
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
-- **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today.
+- **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today. One environment until the owner says (D80).
+- **V3 covers** the platform-shaped minors below where they are the platform's (duplicate paid calls, the 20 s offline waits, the pending rows, `APPLE_FAKE` in production, the limits copied across layers, orphaned photos): each is closed by the V3 phase that owns it, not on its own.
 - **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U13 to U15, U25, U27 to U30, U48 open; the rest done (Phase 15: U11, U17 to
   U23, U26, U32, U34, U40; U36 by #133).
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
@@ -133,8 +140,8 @@ identity). The remote holds `main`,
   the C, A, N and W tests on their V2 paths (`phase-15-plan.md` Task 20).
 - The Anthropic API key: Vercel's `ANTHROPIC_API_KEY` on `tutor-central-api` and `api/.env.local` (ignored). `AI_FAKE=1`
   is for local runs only.
-- Crash reporting: no decision yet (D18 leaves it open); TestFlight's crash reports through Phase 15's round.
-- **The trust page** is live (#165, #181); per-student export (D62) stays for later (`phase-15-plan.md` decision 25).
+- Crash reporting: D77 (2026-10-12) settles it for V3: Xcode Organizer and TestFlight, no SDK in the app.
+- **The trust page** is live (#165, #181); the per-student export (D62) is Phase 18's job (D79).
 - After App Store approval (a later slice): `APP_STORE_URL` on Vercel's `tutor-central-web`, then `gh workflow run deploy-web`
   for Home's badge (D47).
 
