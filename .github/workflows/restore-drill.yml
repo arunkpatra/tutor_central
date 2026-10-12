@@ -1,0 +1,95 @@
+name: restore-drill
+
+# The restore drill (plan decision 22; docs/runbooks/restore.md): production's roles, schema and data dumped and restored
+# into a blank Supabase database started on this runner, every public table's rows counted on both sides, the two
+# columns and the elapsed time in the run's summary. Until Supabase Pro's daily backups are bought (D85) this dump is the
+# only copy of the database that ever exists, and it lives for the minutes of the drill: it stays in the runner's
+# temporary folder, is never uploaded as an artifact, and the runner is gone after.
+
+run-name: the restore drill
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: restore-drill
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  drill:
+    name: dump, restore, count
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: Production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      PROJECT_REF: esowihbxawvoexflekxa
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.120.0
+
+      - name: Start the clock
+        run: echo "STARTED=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Link
+        working-directory: supabase
+        run: supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+
+      # Supabase's own route to a new database: the roles, the schema, then the data with triggers held off.
+      - name: Dump production
+        working-directory: supabase
+        run: |
+          umask 077
+          supabase db dump --linked --password "$SUPABASE_DB_PASSWORD" --role-only -f "$RUNNER_TEMP/roles.sql"
+          supabase db dump --linked --password "$SUPABASE_DB_PASSWORD" -f "$RUNNER_TEMP/schema.sql"
+          supabase db dump --linked --password "$SUPABASE_DB_PASSWORD" --data-only --use-copy -f "$RUNNER_TEMP/data.sql"
+          ls -l "$RUNNER_TEMP"/*.sql | awk '{ print $5, $9 }'
+
+      # A blank Supabase (its auth, storage and vault schemas, none of ours), as a new project would be.
+      - name: A blank database
+        run: |
+          mkdir -p "$RUNNER_TEMP/blank" && cd "$RUNNER_TEMP/blank"
+          supabase init --force > /dev/null
+          supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Restore
+        run: |
+          psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" --single-transaction --variable ON_ERROR_STOP=1 \
+            --file "$RUNNER_TEMP/roles.sql" --file "$RUNNER_TEMP/schema.sql" \
+            --command 'set session_replication_role = replica' --file "$RUNNER_TEMP/data.sql" > "$RUNNER_TEMP/restore.log"
+          echo "RESTORED=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Count both sides
+        working-directory: supabase
+        run: |
+          supabase db query --linked -f ../tools/restore-count.sql --output-format json > "$RUNNER_TEMP/production.json"
+          jq -r '(.rows // .)[] | "\(.name)|\(.n)"' "$RUNNER_TEMP/production.json" | sort > "$RUNNER_TEMP/production.txt"
+          psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -At -f ../tools/restore-count.sql | sort > "$RUNNER_TEMP/restored.txt"
+          seconds=$(( RESTORED - STARTED ))
+          {
+            echo "### The restore drill"
+            echo "Dumped and restored in ${seconds} s."
+            echo ""
+            echo "| Table | Production | Restored |"
+            echo "|---|---|---|"
+            join -t '|' -a 1 -a 2 -e '—' -o 0,1.2,2.2 "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" | awk -F'|' '{ print "| " $1 " | " $2 " | " $3 " |" }'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if diff -q "$RUNNER_TEMP/production.txt" "$RUNNER_TEMP/restored.txt" > /dev/null; then
+            echo "Every table's count is equal." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::The restored copy's counts differ from production's (the summary's table)."
+            exit 1
+          fi
+
+      - name: Nothing kept
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP"/*.sql "$RUNNER_TEMP"/*.json "$RUNNER_TEMP"/*.txt "$RUNNER_TEMP"/restore.log
+          (cd "$RUNNER_TEMP/blank" 2>/dev/null && supabase stop --no-backup) || true

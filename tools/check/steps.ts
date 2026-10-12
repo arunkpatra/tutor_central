@@ -84,6 +84,7 @@ export const STEPS: Step[] = [
     name: "tools",
     inputs: [
       "tools/**/*.ts",
+      "tools/**/*.sql",
       "package.json",
       "tsconfig.json",
       "bun.lock",
