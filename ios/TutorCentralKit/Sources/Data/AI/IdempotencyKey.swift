@@ -11,8 +11,8 @@ public enum IdempotencyKey {
     @TaskLocal public static var isAnother = false
 
     /// Runs `operation` as "another one": the same body asked again is a new call.
-    public static func another<T>(
-        isolation _: isolated (any Actor)? = #isolation, _ operation: () async throws -> T
+    public nonisolated(nonsending) static func another<T>(
+        _ operation: nonisolated(nonsending) () async throws -> T
     ) async rethrows -> T {
         try await $isAnother.withValue(true, operation: operation)
     }
