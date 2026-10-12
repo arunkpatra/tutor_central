@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 export type OutboxRow = { id: string; user_id: string; kind: string; title: string | null; body: string | null; link: string | null; background: boolean };
 export type LiveToken = { id: string; token: string; environment: "sandbox" | "production" };
 /** A row the plan writes (`replace_notifications`'s rows). */
-export type NotificationRow = { kind: string; key: string; due_at: string; title?: string; body?: string; link?: string; background?: boolean };
+export type NotificationRow = { kind: string; key: string; due_at: string; title?: string; body?: string; link?: string; subject?: string; background?: boolean };
 
 /** The outbox and the tokens, through 0038's named functions as the platform (D83). */
 export type OutboxDb = {

@@ -75,8 +75,8 @@ test("only the next 26 hours are written, with the words and the link", async ()
   // Monday 15:00 to Tuesday 17:00: Monday's and Tuesday's 16:00, not Wednesday's.
   await run(reminderSweep(src), jobFor(CENTRE), at("2026-11-02T15:00:00+05:30"));
   expect(src.replaced.at(-1)!.rows).toEqual([
-    { kind: "class", key: "class:c1:2026-11-02T17:00", due_at: "2026-11-02T16:00:00+05:30", title: "Class 10 Maths at 17:00", body: "In 1 hour · 3 students. Open for today's plan.", link: "tutorcentral://today" },
-    { kind: "class", key: "class:c1:2026-11-03T17:00", due_at: "2026-11-03T16:00:00+05:30", title: "Class 10 Maths at 17:00", body: "In 1 hour · 3 students. Open for today's plan.", link: "tutorcentral://today" },
+    { kind: "class", key: "class:c1:2026-11-02T17:00", due_at: "2026-11-02T16:00:00+05:30", title: "Class 10 Maths at 17:00", body: "In 1 hour · 3 students. Open for today's plan.", link: "tutorcentral://today", subject: "Class 10 Maths" },
+    { kind: "class", key: "class:c1:2026-11-03T17:00", due_at: "2026-11-03T16:00:00+05:30", title: "Class 10 Maths at 17:00", body: "In 1 hour · 3 students. Open for today's plan.", link: "tutorcentral://today", subject: "Class 10 Maths" },
   ]);
 });
 

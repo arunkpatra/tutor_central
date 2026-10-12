@@ -38,6 +38,8 @@ create table public.notifications (
   title text check (title is null or char_length(title) <= 200),
   body text check (body is null or char_length(body) <= 400),
   link text check (link is null or char_length(link) <= 200),
+  -- What it is about (a batch's name, an event's title, "Fees still due"): the Reminders screen's "Next:" line.
+  subject text check (subject is null or char_length(subject) <= 200),
   background boolean not null default false,
   state text not null default 'due' check (state in ('due', 'sent', 'failed', 'expired', 'cancelled')),
   sent_at timestamptz,
@@ -65,13 +67,13 @@ begin
   update public.notifications n set state = 'cancelled'
    where n.user_id = p_user and n.centre_id = p_centre and n.kind = any (p_kinds) and n.state = 'due' and n.due_at >= p_from
      and n.key not in (select r->>'key' from jsonb_array_elements(coalesce(p_rows, '[]')) r);
-  insert into public.notifications as n (centre_id, user_id, kind, key, due_at, title, body, link, background)
+  insert into public.notifications as n (centre_id, user_id, kind, key, due_at, title, body, link, subject, background)
   select p_centre, p_user, r->>'kind', r->>'key', (r->>'due_at')::timestamptz, r->>'title', r->>'body', r->>'link',
-         coalesce((r->>'background')::boolean, false)
+         r->>'subject', coalesce((r->>'background')::boolean, false)
     from jsonb_array_elements(coalesce(p_rows, '[]')) r
   on conflict (user_id, key) do update
      set due_at = excluded.due_at, title = excluded.title, body = excluded.body, link = excluded.link,
-         background = excluded.background, kind = excluded.kind, centre_id = excluded.centre_id, state = 'due'
+         subject = excluded.subject, background = excluded.background, kind = excluded.kind, centre_id = excluded.centre_id, state = 'due'
    where n.state in ('due', 'cancelled');
   get diagnostics v_count = row_count;
   return v_count;

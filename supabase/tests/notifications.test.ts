@@ -23,7 +23,7 @@ const row = (key: string, minutes: number) => ({
   body: "b",
   link: "tutorcentral://today",
 });
-const replace = (kinds: string[], from: string, rows: ReturnType<typeof row>[]) =>
+const replace = (kinds: string[], from: string, rows: (ReturnType<typeof row> & { subject?: string })[]) =>
   svc.rpc("replace_notifications", { p_centre: centreA, p_user: userA, p_kinds: kinds, p_from: from, p_rows: rows });
 
 beforeAll(async () => {
@@ -93,6 +93,14 @@ test("a replan cancels a future unsent row it no longer writes, keeps sent rows,
     { key: "class:c1:tomorrow", state: "sent" },
     { key: "fees:2026-11", state: "due" },
   ]);
+  await sql`delete from public.notifications where user_id = ${userA}`;
+});
+
+test("a planned row keeps its subject for the Reminders screen's next line, and a replan updates it", async () => {
+  await replace(["class"], iso(0), [{ ...row("class:c3:t", 30), subject: "Class 10 Maths" }]);
+  expect((await a.from("notifications").select("subject").eq("key", "class:c3:t")).data).toEqual([{ subject: "Class 10 Maths" }]);
+  await replace(["class"], iso(0), [{ ...row("class:c3:t", 30), subject: "Evening batch" }]);
+  expect((await a.from("notifications").select("subject").eq("key", "class:c3:t")).data).toEqual([{ subject: "Evening batch" }]);
   await sql`delete from public.notifications where user_id = ${userA}`;
 });
 
