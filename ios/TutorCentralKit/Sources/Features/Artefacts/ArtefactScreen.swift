@@ -20,15 +20,18 @@ public struct ArtefactsContext {
     let schools: (any SchoolsRepository)?
     /// The marks a gap report reads (Phase 13).
     let record: (any RecordRepository)?
+    /// The server's PDFs (Phase 18): Share takes the made file when it can be had.
+    let serverPDF: ServerPDF?
 
     public init(
         workspace: Workspace, register: any Register, plans: any PlansRepository, ai: any AIRepository,
         photos: any PhotoStore, now: @escaping @Sendable () -> Date, calendar: Calendar,
         online: @escaping () async -> Bool, planCache: PlanCache? = nil,
         schoolItems: (any SchoolItemsRepository)? = nil, schools: (any SchoolsRepository)? = nil,
-        record: (any RecordRepository)? = nil
+        record: (any RecordRepository)? = nil, serverPDF: ServerPDF? = nil
     ) {
         self.record = record
+        self.serverPDF = serverPDF
         self.schoolItems = schoolItems
         self.schools = schools
         self.workspace = workspace
@@ -118,6 +121,7 @@ public struct ArtefactScreen: View {
         )
         store.online = context.online
         store.planCache = context.planCache
+        store.serverPDF = context.serverPDF
         return store
     }
 
@@ -129,6 +133,7 @@ public struct ArtefactScreen: View {
         )
         store.online = context.online
         store.planCache = context.planCache
+        store.serverPDF = context.serverPDF
         store.onMark = actions.markPaper
         return store
     }
@@ -151,6 +156,7 @@ public struct ArtefactScreen: View {
         )
         store.online = context.online
         store.planCache = context.planCache
+        store.serverPDF = context.serverPDF
         return store
     }
 }

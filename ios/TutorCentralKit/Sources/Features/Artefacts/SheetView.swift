@@ -123,7 +123,7 @@ struct SheetView: View {
             setUpBoard()
         }
         .task(id: PDFKey(form: store.form, artefact: store.artefact?.id, image: store.ownImage?.count)) {
-            pdf = try? PDFMaker.pdf(for: store.pdfSheet)
+            pdf = await store.sharedPDF()
         }
     }
 

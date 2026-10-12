@@ -18,13 +18,25 @@ public struct SupabaseJobsRepository: JobsRepository {
         let result: JobResult?
 
         var status: JobStatus {
-            JobStatus(id: id, state: state, createdAt: createdAt, finishedAt: finishedAt, reason: result?.reason)
+            let file = result.flatMap { result in
+                result.path.map { JobFile(
+                    path: $0,
+                    pages: result.pages ?? 0,
+                    madeAt: result.madeAt ?? finishedAt ?? createdAt
+                ) }
+            }
+            return JobStatus(
+                id: id, state: state, createdAt: createdAt, finishedAt: finishedAt, reason: result?.reason, file: file
+            )
         }
     }
 
     /// The part of a job's result the app reads.
     struct JobResult: Decodable {
         let reason: String?
+        let path: String?
+        let pages: Int?
+        let madeAt: Date?
     }
 
     public func planJob(centre: UUID, classID: UUID, date: Day) async throws -> JobStatus? {
@@ -46,6 +58,21 @@ public struct SupabaseJobsRepository: JobsRepository {
         try await client.rpc("cancel_job", params: [
             "p_centre": AnyJSON.string(centre.uuidString), "p_job": .string(job.uuidString),
         ]).execute()
+    }
+
+    public func exportJob(centre: UUID, student: UUID) async throws -> JobStatus? {
+        let response = try await client.from("jobs").select("id, state, created_at, finished_at, result")
+            .eq("centre_id", value: centre.uuidString).eq("kind", value: "export")
+            .eq("input->>student_id", value: student.uuidString.lowercased())
+            .order("created_at", ascending: false).limit(1).execute()
+        return try PostgRESTDecoder.make().decode([Row].self, from: response.data).first?.status
+    }
+
+    public func requestExport(centre: UUID, student: UUID) async throws -> UUID {
+        let response = try await client.rpc("request_export", params: [
+            "p_centre": AnyJSON.string(centre.uuidString), "p_student": .string(student.uuidString),
+        ]).execute()
+        return try PostgRESTDecoder.make().decode(UUID.self, from: response.data)
     }
 
     public func requestNote(centre: UUID, student: UUID, week: Day) async throws -> UUID {

@@ -46,6 +46,8 @@ public struct MockMark: Hashable, Sendable {
     @ObservationIgnored public var onMark: ((MockMark) -> Void)?
     @ObservationIgnored public var online: () async -> Bool = { true }
     @ObservationIgnored public var planCache: PlanCache?
+    /// The server's PDF for Share (Phase 18); none in tests and previews (the phone draws its own).
+    @ObservationIgnored public var serverPDF: ServerPDF?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -233,6 +235,15 @@ public struct MockMark: Hashable, Sendable {
     // MARK: - The PDF
 
     /// The paper by section; the key only when asked.
+    /// What Share hands over: the server's PDF when it can be had, else the phone's.
+    public func sharedPDF(withKey key: Bool) async -> URL? {
+        let sheet = pdfSheet(withKey: key)
+        if let id = artefact?.id, mock != nil, let file = await serverPDF?.file(id, key: key, title: sheet.title) {
+            return file
+        }
+        return try? PDFMaker.pdf(for: sheet)
+    }
+
     public func pdfSheet(withKey: Bool) -> PDFSheet {
         guard let mock else { return PDFSheet(title: title, instructions: nil, blocks: []) }
         let sections: [PDFBlock] = mock.sections.map { section in

@@ -43,6 +43,9 @@ public struct Dependencies: Sendable {
     public let jobs: any JobsRepository
     /// A student's consent history (Phase 18): the agreements and withdrawals.
     public let consentHistory: any ConsentHistoryRepository
+    /// The files the server made for a centre (a sheet's PDF, a student's export), downloaded once; none in the
+    /// fixtures (Share draws the phone's PDF).
+    public let serverFiles: @Sendable (UUID) -> ServerFiles?
     /// The network (D39): the offline bar and the replay follow it.
     public let connectivity: any ConnectivityMonitor
     /// The lists keep a copy on this iPhone (`CachedRead`); the fixtures write theirs into `filesDirectory`.
@@ -85,6 +88,7 @@ public struct Dependencies: Sendable {
         deviceTokens: any DeviceTokenRepository,
         jobs: any JobsRepository,
         consentHistory: any ConsentHistoryRepository,
+        serverFiles: @escaping @Sendable (UUID) -> ServerFiles? = { _ in nil },
         connectivity: any ConnectivityMonitor,
         cachesLists: Bool,
         filesDirectory: URL? = nil,
@@ -119,6 +123,7 @@ public struct Dependencies: Sendable {
         self.deviceTokens = deviceTokens
         self.jobs = jobs
         self.consentHistory = consentHistory
+        self.serverFiles = serverFiles
         self.connectivity = connectivity
         self.cachesLists = cachesLists
         self.filesDirectory = filesDirectory
@@ -167,6 +172,7 @@ public struct Dependencies: Sendable {
             deviceTokens: SupabaseDeviceTokenRepository(client: client),
             jobs: SupabaseJobsRepository(client: client),
             consentHistory: SupabaseConsentHistoryRepository(client: client),
+            serverFiles: { ServerFiles.live(client: client, centre: $0) },
             connectivity: PathMonitor(),
             cachesLists: true,
             cachesRegister: true,

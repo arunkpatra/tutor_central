@@ -65,7 +65,7 @@ struct MockView: View {
             }
         }
         .task(id: PDFKey(form: store.form, artefact: store.artefact?.id)) {
-            pdf = try? PDFMaker.pdf(for: store.pdfSheet(withKey: store.form == .key))
+            pdf = await store.sharedPDF(withKey: store.form == .key)
         }
     }
 

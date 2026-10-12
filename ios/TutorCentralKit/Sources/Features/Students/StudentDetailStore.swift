@@ -49,6 +49,8 @@ public enum FeeActionKind: Sendable {
     public var message: String?
     /// Consent's section (D62).
     public let consent: ConsentStore
+    /// The student's export (Phase 18, AppShell's: the jobs and the server's files); none in a test without them.
+    public var export: ExportStore?
     /// A next step written (Phase 14): AppShell makes today's plans again for the student.
     @ObservationIgnored public var onStepChanged: ((UUID) -> Void)?
     /// A close kept on this iPhone that tracks the student is still to be sent (AppShell's, the queue's): a step chosen

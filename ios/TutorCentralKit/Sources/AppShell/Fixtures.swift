@@ -257,6 +257,7 @@ public enum Fixtures {
         return switch state {
         case .attendanceSaved, .attendanceAlert: now.addingTimeInterval(2 * 60)
         case _ where consentStates.contains(state): consentClock
+        case _ where exportStates.contains(state): exportClock
         case _ where RootView.aiStates.contains(state): now.addingTimeInterval(2 * 60)
         case _ where offlineStates.contains(state): offlineClock(state)
         case .syncSending, .syncSent, .syncFailed: india(day: 7, hour: 16, minute: 35)

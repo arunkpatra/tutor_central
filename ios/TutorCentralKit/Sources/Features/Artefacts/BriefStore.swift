@@ -18,6 +18,8 @@ import Observation
     public var message: String?
     @ObservationIgnored public var online: () async -> Bool = { true }
     @ObservationIgnored public var planCache: PlanCache?
+    /// The server's PDF for Share (Phase 18); none in tests and previews (the phone draws its own).
+    @ObservationIgnored public var serverPDF: ServerPDF?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -141,6 +143,15 @@ import Observation
     }
 
     /// The four parts as text blocks under the title.
+    /// What Share hands over: the server's PDF when it can be had, else the phone's.
+    public func sharedPDF() async -> URL? {
+        guard brief != nil else { return nil }
+        if let id = artefact?.id, let file = await serverPDF?.file(id, key: false, title: pdfSheet.title) {
+            return file
+        }
+        return try? PDFMaker.pdf(for: pdfSheet)
+    }
+
     public var pdfSheet: PDFSheet {
         let parts = copyText.components(separatedBy: "\n\n").dropFirst()
         return PDFSheet(title: "\(title) · \(eyebrow)", instructions: nil, blocks: parts.map { .text($0) })
