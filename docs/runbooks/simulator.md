@@ -202,6 +202,28 @@ docker exec supabase_db_tutor_central psql -U postgres -c "select title, kind, d
 
 The waits measured on the hand runs are added here (section 5's way) when the phase's documents are written.
 
+## 12. The worker locally (Phase 17)
+
+The API's worker (`/jobs/tick`, `/jobs/wake`, D71) runs in the local API. `api/.env.local` holds `WORKER_SECRET=local`;
+the service key comes from the stack, as the URL and the anon key do:
+
+```bash
+cd api && eval "$(cd ../supabase && supabase status -o env | grep -E '^(API_URL|ANON_KEY|SERVICE_ROLE_KEY)=')" && SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY AI_FAKE=1 APPLE_FAKE=1 bun run dev
+```
+
+- **Queue a job** as the platform (psql has no request claim, so `enqueue_job` refuses it there): PostgREST with the
+  service key, `curl -s -X POST "$API_URL/rest/v1/rpc/enqueue_job" -H "apikey: $SERVICE_ROLE_KEY" -H "Authorization:
+  Bearer $SERVICE_ROLE_KEY" -H "Content-Type: application/json" -d '{"p_centre": "<centre>", "p_kind": "plan", "p_key":
+  "plan:<class>:<day>", "p_input": {"class_id": "<class>", "date": "<day>"}}'`.
+- **Run the worker:** `curl -s -H "Authorization: Bearer local" http://127.0.0.1:3000/jobs/tick` answers the run's counts
+  (`claimed`, `steps`, `done`, `waiting`, `failed`, `lost`); the tick first queues the hour's sweep.
+- **Read it back:** `select kind, state, step, result, error, attempts from jobs`, `select step, attempt, state from
+  job_steps`, `select route, status from api_requests order by created_at desc`.
+- **The wakes from inside the database:** locally the Vault secrets are absent, so neither the enqueue trigger nor the
+  minute's pg_cron calls the API. To prove them, set `worker_url` to `http://host.docker.internal:3000` (the database runs
+  in Docker) and `worker_secret` to `local` with `vault.create_secret`, insert a job, and delete the two secrets after
+  (session 35: woken and done within a second). Production's are written by the deploy.
+
 ## The proof run
 
 Session 7 followed sections 1 to 8 from a cold simulator against a freshly reset seed: signed in through the screens
