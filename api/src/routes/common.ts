@@ -1,8 +1,8 @@
 import type { Context } from "hono";
 import type { ZodType } from "zod";
 import type { Vars } from "../auth.js";
-import type { ClaudeClient, ClaudeRequest } from "../claude.js";
-import { type AIKind, type Db, DbFailure, type Started } from "../db.js";
+import type { ClaudeAnswer, ClaudeClient, ClaudeRequest } from "../claude.js";
+import { type AIKind, type Db, DbFailure, type Finish, type Started } from "../db.js";
 import { type ApiError, errors } from "../errors.js";
 import { log } from "../log.js";
 import { costPaise, promptHash as hashOf, sha256 } from "../price.js";
@@ -65,23 +65,36 @@ export async function run<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centr
     return answer(c, errors.inProgress());
   }
   const result = await deps.claude.complete(call.request);
-  const finishedAt = () => new Date().toISOString();
+  const outcome = finishOf(call, result);
+  await deps.db.finish(token, id, outcome.finish);
+  if (outcome.kept !== undefined) return c.json({ id, result: outcome.kept }, 200);
+  return answer(c, result.kind === "truncated" || result.kind === "failed" ? errors.service() : errors.refused(call.kind));
+}
+
+/** How a call's answer finishes its row (D76), for a route and a job alike: an answer kept (`kept`), or the row failed
+ *  with its reason, with the billed tokens of every answer that came back and the cost they priced. */
+export function finishOf<T>(
+  call: Pick<Call<T>, "request" | "keep" | "empty">,
+  result: ClaudeAnswer<T>,
+): { finish: Finish; kept?: T } {
+  const finishedAt = new Date().toISOString();
   const promptHash = hashOf(call.request.system);
   if (result.kind === "failed") {
-    await deps.db.finish(token, id, {
-      status: "failed",
-      output: null,
-      model: call.request.model,
-      tokensIn: null,
-      tokensOut: null,
-      costPaise: null,
-      latencyMs: result.latencyMs,
-      promptHash,
-      stopReason: null,
-      errorReason: result.reason,
-      finishedAt: finishedAt(),
-    });
-    return answer(c, errors.service());
+    return {
+      finish: {
+        status: "failed",
+        output: null,
+        model: call.request.model,
+        tokensIn: null,
+        tokensOut: null,
+        costPaise: null,
+        latencyMs: result.latencyMs,
+        promptHash,
+        stopReason: null,
+        errorReason: result.reason,
+        finishedAt,
+      },
+    };
   }
   const billed = {
     model: result.model,
@@ -91,16 +104,15 @@ export async function run<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centr
     latencyMs: result.latencyMs,
     promptHash,
     stopReason: result.stopReason,
+    finishedAt,
   };
   if (result.kind === "ok" && !call.empty?.(result.parsed)) {
     const kept = call.keep ? call.keep(result.parsed) : result.parsed;
-    await deps.db.finish(token, id, { status: "ok", output: JSON.stringify(kept), ...billed, errorReason: null, finishedAt: finishedAt() });
-    return c.json({ id, result: kept }, 200);
+    return { finish: { status: "ok", output: JSON.stringify(kept), ...billed, errorReason: null }, kept };
   }
   // Cut at max_tokens: a service failure, never a refusal of the topic (decision 11; the repair comes in Phase 20).
   const errorReason = result.kind === "truncated" ? "truncated" : result.kind === "refused" ? result.reason : "refused";
-  await deps.db.finish(token, id, { status: "failed", output: null, ...billed, errorReason, finishedAt: finishedAt() });
-  return answer(c, result.kind === "truncated" ? errors.service() : errors.refused(call.kind));
+  return { finish: { status: "failed", output: null, ...billed, errorReason } };
 }
 
 export type Parsed<T> = { value: T; centre: string };
