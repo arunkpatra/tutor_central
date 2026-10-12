@@ -48,7 +48,7 @@ import Observation
     public internal(set) var draft: AttendanceDraft
     public internal(set) var saved: AttendanceSession?
     public internal(set) var phase: Phase = .fresh
-    public private(set) var loading = false
+    public internal(set) var loading = false
     public internal(set) var error: String?
     /// When the month's sessions on screen were saved on this iPhone, until the network replaces them (D39).
     public internal(set) var savedAt: Date?
@@ -64,17 +64,17 @@ import Observation
     public internal(set) var canRetry = false
     public internal(set) var lastSavedAt: Date?
     /// True once a class and day have been opened: the empty state waits for it, and `load()` runs only once.
-    public private(set) var opened = false
+    public internal(set) var opened = false
     /// Counts the opens asked for (the tab's first, a link, Mark attendance, the menus): only the newest lands, however
     /// the reads interleave, so a slower earlier read never replaces the day chosen last.
-    private var openGeneration = 0
+    var openGeneration = 0
     var sessions: [AttendanceSession] = []
     var told: [AbsenceLog] = []
     var loadedMonth: Period?
     private var lastFailed: (@MainActor () async -> Void)?
     let workspace: Workspace
     let register: any Register
-    private let attendance: any AttendanceRepository
+    let attendance: any AttendanceRepository
     let messages: any MessageLogRepository
     let now: @Sendable () -> Date
     let calendar: Calendar
@@ -182,51 +182,6 @@ import Observation
         await open(classID: register.activeClasses.first?.id, date: today)
     }
 
-    /// A class and day (the menu, the date picker, Mark attendance on Today, the link): the month's sessions are read
-    /// once, the saved session found, the draft made from it.
-    public func open(classID: UUID?, date: Day) async {
-        openGeneration += 1
-        let generation = openGeneration
-        await register.loadIfNeeded()
-        if loadedMonth != date.period {
-            loading = true
-            defer { loading = false }
-            let cached = cache?(date.period).load()
-            do {
-                async let read = attendance.sessions(centre: workspace.centre.id, month: date.period)
-                async let logs = messages.absences(centre: workspace.centre.id, month: date.period)
-                let (month, monthLogs) = try await (read, logs)
-                guard generation == openGeneration else { return }
-                (sessions, told) = (month, monthLogs)
-                loadedMonth = date.period
-                cache?(date.period).keep(AttendanceSnapshot(sessions: month, told: monthLogs), at: now())
-                savedAt = now()
-                offlineRead = false
-                error = nil
-            } catch {
-                guard generation == openGeneration else { return }
-                if TransportError.isCancelled(error) {
-                    // The tab went away mid-read: nothing failed; the next visit opens again.
-                    if !opened {
-                        openGeneration = 0
-                    }
-                    return
-                }
-                offlineRead = TransportError.isOffline(error)
-                if !showSaved(cached, month: date.period) {
-                    self.error = "Couldn't load attendance. Check your connection and try again."
-                }
-            }
-        }
-        guard generation == openGeneration else { return }
-        saved = sessions.first { $0.date == date && $0.classID == classID }
-        draft = AttendanceDraft(
-            date: date, classID: classID, members: Self.members(of: classID, in: register), saved: saved
-        )
-        phase = saved.map { .reopened(savedAt: $0.savedAt) } ?? .fresh
-        opened = true
-    }
-
     public func toggle(_ studentID: UUID) {
         draft.toggle(studentID)
         if case .saved = phase, let saved {
@@ -280,7 +235,7 @@ import Observation
         await retry()
     }
 
-    private static func members(of classID: UUID?, in register: any Register) -> [Student] {
+    static func members(of classID: UUID?, in register: any Register) -> [Student] {
         guard let classID else {
             return StudentQuery.apply(
                 register.activeStudents, classes: register.activeClasses, search: "", filter: .all, sort: .name
