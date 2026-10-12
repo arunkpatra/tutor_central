@@ -140,10 +140,25 @@ export async function stale(
 	return out;
 }
 
+/** The generated files written, and what sits unasked for in a generated directory removed: `--check` and the write
+ *  look at the same directories (the review's R-app-9: a retired case copy could not be cleared). */
+export async function write(
+	root: string,
+	files: Map<string, string>,
+	dirs: string[],
+): Promise<void> {
+	for (const dir of dirs)
+		for (const path of await listed(root, dir))
+			if (!files.has(path)) await Bun.file(join(root, path)).delete();
+	for (const [path, content] of files)
+		await Bun.write(join(root, path), content);
+}
+
 if (import.meta.main) {
 	const files = await expected();
+	const generated = [SAMPLES, CASES_COPY];
 	if (process.argv.includes("--check")) {
-		const paths = await stale(ROOT, files, [SAMPLES, CASES_COPY]);
+		const paths = await stale(ROOT, files, generated);
 		if (paths.length > 0) {
 			console.error(
 				`the contract is stale; run bun contract:\n${paths.map((p) => `  - ${p}`).join("\n")}`,
@@ -152,10 +167,7 @@ if (import.meta.main) {
 		}
 		console.log("the contract is current");
 	} else {
-		for (const path of await listed(ROOT, SAMPLES))
-			if (!files.has(path)) await Bun.file(join(ROOT, path)).delete();
-		for (const [path, content] of files)
-			await Bun.write(join(ROOT, path), content);
+		await write(ROOT, files, generated);
 		console.log(`wrote ${files.size} files`);
 	}
 }
