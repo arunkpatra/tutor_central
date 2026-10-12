@@ -25,14 +25,14 @@ export type Database = {
           Tables: {
             "ai_generations": {
                   Row: {
-                    "centre_id": string,"created_at": string,"id": string,"input": NonNullable<Json>,"kind": Database["public"]['Enums']["ai_kind"],"model": string | null,"output": string | null,"status": Database["public"]['Enums']["ai_status"],"student_id": string | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string
+                    "centre_id": string,"cost_paise": number | null,"created_at": string,"error_reason": string | null,"fallback_model": string | null,"finished_at": string | null,"id": string,"idempotency_key": string | null,"input": NonNullable<Json>,"input_hash": string | null,"job_id": string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms": number | null,"model": string | null,"output": string | null,"prompt_hash": string | null,"prompt_version": string | null,"request_id": string | null,"status": Database["public"]['Enums']["ai_status"],"stop_reason": string | null,"student_id": string | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"created_at"?: string,"id"?: string,"input": NonNullable<Json>,"kind": Database["public"]['Enums']["ai_kind"],"model"?: string | null,"output"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string
+                    "centre_id": string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input": NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Update: {
-                    "centre_id"?: string,"created_at"?: string,"id"?: string,"input"?: NonNullable<Json>,"kind"?: Database["public"]['Enums']["ai_kind"],"model"?: string | null,"output"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string
+                    "centre_id"?: string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input"?: NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind"?: Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -47,6 +47,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "students"
       referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "ai_generations_job_id_fkey"
+      columns: ["job_id"]
+isOneToOne: false
+      referencedRelation: "jobs"
+      referencedColumns: ["id"]
     }
                   ]
                 },"artefacts": {
@@ -205,14 +211,14 @@ isOneToOne: false
                   ]
                 },"centres": {
                   Row: {
-                    "ai_consent_at": string | null,"created_at": string,"currency": string,"id": string,"name": string,"owner_id": string,"payment_link": string | null,"send_receipts": boolean,"updated_at": string,"upi_confirmed_at": string | null,"upi_id": string | null,"whatsapp_number": string | null
+                    "ai_allowance": number,"ai_allowance_paise": number,"ai_consent_at": string | null,"created_at": string,"currency": string,"id": string,"name": string,"owner_id": string,"payment_link": string | null,"send_receipts": boolean,"updated_at": string,"upi_confirmed_at": string | null,"upi_id": string | null,"whatsapp_number": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name": string,"owner_id": string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
+                    "ai_allowance"?: number,"ai_allowance_paise"?: number,"ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name": string,"owner_id": string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
                   }
                   Update: {
-                    "ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name"?: string,"owner_id"?: string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
+                    "ai_allowance"?: number,"ai_allowance_paise"?: number,"ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name"?: string,"owner_id"?: string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
                   }
                   Relationships: [
                     
@@ -800,6 +806,9 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"close_pending_generations":
+{ Args: { "p_older_than"?: string }; Returns: number
+                           },
 "close_session":
 { Args: { "p_centre": string,"p_checks": Json,"p_class": string,"p_date": string,"p_done"?: (string)[],"p_homework": Json,"p_marks": Json,"p_states"?: Json,"p_track": Json }; Returns: string
                            },
@@ -888,6 +897,9 @@ isOneToOne: false
                            },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
+                           },
+"start_ai_call":
+{ Args: { "p_centre": string,"p_input": Json,"p_input_hash"?: string,"p_job"?: string,"p_key"?: string,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_request_id"?: string,"p_student"?: string }; Returns: Json
                            },
 "start_ai_generation":
 { Args: { "p_centre": string,"p_input": Json,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_student"?: string }; Returns: string
