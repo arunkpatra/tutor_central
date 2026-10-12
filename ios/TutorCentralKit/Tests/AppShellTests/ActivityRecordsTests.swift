@@ -18,7 +18,7 @@ import Testing
     @Test func theAppOpenedASignInATabAndALinkAreRecorded() async {
         let repository = FakeActivityRepository()
         let recorder = recorder(repository)
-        await recorder.appOpened()
+        await recorder.cameBack()
         await recorder.signedIn()
         await recorder.tabChosen(.students)
         await recorder.linkOpened(.student(UUID()))
@@ -42,5 +42,29 @@ import Testing
         #expect(ActivityRecorder.screen(of: .school(UUID())) == "school")
         #expect(ActivityRecorder.screen(of: .event(UUID())) == "event")
         #expect(ActivityRecorder.screen(of: .today) == "today")
+    }
+}
+
+/// The review's findings 4 and 5: the app opened is recorded at a cold launch, once the centre's log is made, and on
+/// each
+/// return, in a task of its own (the return's refresh never waits for the post).
+@MainActor struct ActivityOpenedTests {
+    let files = FileManager.default.temporaryDirectory.appendingPathComponent("opened-\(UUID().uuidString)")
+
+    @Test func aLaunchBeforeTheCentreIsReadIsRecordedWhenTheLogIsMadeAndEachReturnAfter() async {
+        let shell = ShellState(), repository = FakeActivityRepository()
+        shell.opened()
+        shell.sessionChanged(.ready(Fixtures.meeraWorkspace), files: files, activity: repository)
+        await Self.until { repository.batches.count == 1 }
+        shell.sessionChanged(.ready(Fixtures.meeraWorkspace), files: files, activity: repository)
+        shell.opened()
+        await Self.until { repository.batches.count == 2 }
+        #expect(repository.batches.flatMap(\.self).map(\.kind) == [.appOpened, .appOpened])
+    }
+
+    static func until(_ done: () -> Bool) async {
+        for _ in 0 ..< 1000 where !done() {
+            await Task.yield()
+        }
     }
 }
