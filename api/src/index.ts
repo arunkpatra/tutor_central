@@ -16,6 +16,7 @@ import { makeObserve } from "./observe.js";
 import { makeApnsPusher } from "./push/apns.js";
 import { fakePusher } from "./push/apns-fake.js";
 import { makeOutboxDb } from "./push/db.js";
+import { makeReminderSource } from "./reminders/source.js";
 import { makeVerify } from "./verify.js";
 
 /** Read at start: a deployment without them fails to boot, so /health and the deploy's smoke fail, instead of every
@@ -63,6 +64,8 @@ const pusher =
         })
     : () => fakePusher({});
 
+const outbox = makeOutboxDb(supabaseUrl, serviceKey);
+
 /** A 4xx from Supabase is the token's (sign in again); a lost connection is "unreachable" (D68). */
 const verify = makeVerify(() => createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false, autoRefreshToken: false } }));
 
@@ -79,8 +82,8 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers(makeRecordSource(supabaseUrl, serviceKey)),
-    push: { outbox: makeOutboxDb(supabaseUrl, serviceKey), pusher },
+    handlers: makeHandlers({ record: makeRecordSource(supabaseUrl, serviceKey), reminders: makeReminderSource(supabaseUrl, serviceKey, outbox) }),
+    push: { outbox, pusher },
   },
 });
 export default app;
