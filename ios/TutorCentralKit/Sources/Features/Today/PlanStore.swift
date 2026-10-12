@@ -224,48 +224,6 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         }
     }
 
-    /// One read of the plan and its job, and the state they make. `asking` lets a missing plan with no job ask for one
-    /// (an open); the reads while a job is live only follow it.
-    func read(_ classroom: Classroom, asking: Bool) async {
-        async let planRead = plans.plan(centre: centre, classID: classID, date: today)
-        async let jobRead = try? jobs.planJob(centre: centre, classID: classID, date: today)
-        let made: PlanRecord?
-        do {
-            made = try await planRead
-        } catch {
-            _ = await jobRead
-            if record == nil {
-                show(TransportError.isOffline(error) ? .offline : .failed(Self.readFailed))
-            }
-            return
-        }
-        job = await jobRead
-        let live = job?.isLive == true
-        // A plan made before the live job was asked for is being replaced (Make the plan again, an item's change).
-        if let made, !(live && made.madeAt < (job?.createdAt ?? .distantPast)) {
-            await open(made, classroom: classroom, live: live)
-            return
-        }
-        if live {
-            show(.planning(nil))
-            follow()
-            return
-        }
-        switch job?.state {
-        case .failed?:
-            show(.failed(Self.jobFailed))
-        case .done?:
-            show(job?.reason == "holiday" ? .holiday : .none)
-        default:
-            // None asked for yet, or the last one cancelled: asked for now, unless closed or a holiday.
-            guard asking else {
-                show(.none)
-                return
-            }
-            await askIfOpen(classroom)
-        }
-    }
-
     /// A plan read: shown, with its marks on their way while the job is live; none when the whole batch went on
     /// holiday after it was made and it is not closed (review Important 2).
     private func open(_ made: PlanRecord, classroom: Classroom, live: Bool) async {
@@ -355,5 +313,75 @@ public struct BriefRowModel: Hashable, Sendable, Identifiable {
         groups = plan.map(cards) ?? []
         briefRows = plan.map(briefs) ?? []
         changedNote = plan?.items.contains { $0.movedFrom != nil || $0.skippedAt != nil } ?? false
+    }
+}
+
+/// The plan and its job read together (the review's R-app-8: a failed job read is not "none asked for").
+extension PlanStore {
+    /// One read of the plan and its job, and the state they make. `asking` lets a missing plan with no job ask for one
+    /// (an open); the reads while a job is live only follow it.
+    func read(_ classroom: Classroom, asking: Bool) async {
+        async let planRead = plans.plan(centre: centre, classID: classID, date: today)
+        async let jobRead = readJob()
+        let made: PlanRecord?
+        do {
+            made = try await planRead
+        } catch {
+            _ = await jobRead
+            if record == nil {
+                show(TransportError.isOffline(error) ? .offline : .failed(Self.readFailed))
+            }
+            return
+        }
+        switch await jobRead {
+        case let .success(read):
+            job = read
+        case let .failure(error):
+            // Not "none asked for": nothing is asked, or each open would queue another paid job (the review's R-app-8).
+            if let made {
+                await open(made, classroom: classroom, live: false)
+            } else if record == nil {
+                show(TransportError.isOffline(error) ? .offline : .failed(Self.readFailed))
+            }
+            return
+        }
+        await settle(made, classroom: classroom, asking: asking)
+    }
+
+    /// What a plan and its job read make: the plan; planning while a job is live; the job's failure or holiday; else
+    /// a plan asked for (an open).
+    private func settle(_ made: PlanRecord?, classroom: Classroom, asking: Bool) async {
+        let live = job?.isLive == true
+        // A plan made before the live job was asked for is being replaced (Make the plan again, an item's change).
+        if let made, !(live && made.madeAt < (job?.createdAt ?? .distantPast)) {
+            await open(made, classroom: classroom, live: live)
+            return
+        }
+        if live {
+            show(.planning(nil))
+            follow()
+            return
+        }
+        switch job?.state {
+        case .failed?:
+            show(.failed(Self.jobFailed))
+        case .done?:
+            show(job?.reason == "holiday" ? .holiday : .none)
+        default:
+            // None asked for yet, or the last one cancelled: asked for now, unless closed or a holiday.
+            guard asking else {
+                show(.none)
+                return
+            }
+            await askIfOpen(classroom)
+        }
+    }
+
+    private func readJob() async -> Result<JobStatus?, any Error> {
+        do {
+            return try await .success(jobs.planJob(centre: centre, classID: classID, date: today))
+        } catch {
+            return .failure(error)
+        }
     }
 }

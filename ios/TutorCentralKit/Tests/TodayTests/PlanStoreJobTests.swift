@@ -23,6 +23,17 @@ import Testing
         #expect(store.state == .planning(nil))
     }
 
+    /// The review's R-app-8: a job read that fails is not "none asked for": nothing is asked (each Today open would
+    /// queue
+    /// another paid job), and the read's failure shows.
+    @Test func aFailedJobReadAsksNothing() async {
+        let jobs = FakeJobsRepository()
+        jobs.planReadFailure = URLError(.badServerResponse)
+        let store = await base.store(jobs: jobs)
+        #expect(jobs.requested.isEmpty)
+        #expect(store.state == .failed(PlanStore.readFailed))
+    }
+
     @Test func noPlanAndNoJobAsksForOneAndShowsPlanning() async {
         let jobs = FakeJobsRepository()
         let store = await base.store(jobs: jobs)
