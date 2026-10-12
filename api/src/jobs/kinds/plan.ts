@@ -1,110 +1,189 @@
 import { request as planRequest } from "../../prompts/plan.js";
+import { makeRequest } from "../../make.js";
 import type { PlanInput as TopicsInput, PlanOutput } from "../../schemas.js";
+import { type BudgetInput, budget, type MaterialRequest } from "../../plan/budget.js";
+import { type GapReport, nearestExam, type PrepItem, type PrepStudent, revisionLines } from "../../plan/exam-prep.js";
+import { type KeptArtefact, artefactOf, materialInput, placementGroups, placeOf } from "../../plan/material.js";
+import { MOCK_LINE } from "../../plan/exam.js";
 import { addingBriefs, naming, planRules } from "../../plan/rules.js";
-import { examMode, type SchoolItem } from "../../plan/school.js";
-import { CLASS_LEVELS, type Chapter, type ClassLevel, type PlanDraft, type PlanInput, type Session, type Skill, type Student } from "../../plan/types.js";
+import {
+  CLASS_LEVELS,
+  type Chapter,
+  type ClassLevel,
+  type Hint,
+  type LineKind,
+  type PlanDraft,
+  type PlanInput,
+  type Revision,
+  type Session,
+  type Skill,
+  type Student,
+} from "../../plan/types.js";
+import type { NotificationRow } from "../../push/db.js";
 import { recordedCall } from "../call.js";
 import type { Job, JobHandler, StepContext, StepOutcome } from "../types.js";
 
-/** What the job reads of a batch for a day (as PlanMaker.read does): the batch and its active members, their chapters
- *  and skills, this month's and last month's sessions, the centre's school items, whether the day's session is closed,
- *  the plan already made for the day, and the chapters the tutor had briefs made for. */
+/** What the job reads of a batch for a day (as PlanMaker.read did): the batch with its days and times, its active
+ *  members, their chapters and skills, this month's and last month's sessions, the centre's school items, the gap
+ *  reports used for an exam and the mocks made, whether the day's session is closed, the plan already made for the day,
+ *  and the chapters the tutor had briefs made for. */
 export type PlanRead = {
-  classroom: PlanInput["classroom"];
+  classroom: PlanInput["classroom"] & { name?: string; meetingDays?: number[]; start?: string | null; end?: string | null };
   members: (Student & { schoolId?: string | null })[];
   chapters: Record<string, Chapter[]>;
   skills: Record<string, Skill[]>;
   sessions: Session[];
-  items: SchoolItem[];
+  items: PrepItem[];
   closed: boolean;
-  existingPlan: string | null;
+  /** The day's plan, if any, and whether its session closed it. */
+  existingPlan: { id: string; closed: boolean } | null;
   briefChapters: string[];
+  /** By student: the gap report used for their exam. */
+  gapReports?: Record<string, GapReport>;
+  /** By exam: the mock made for it. */
+  mocks?: Record<string, string>;
 };
 
 /** The record as the job reaches it: through the service role, the centre always the job's own (D83). */
 export type PlanRecordSource = {
   read(centre: string, classId: string, date: string): Promise<PlanRead>;
   /** The plan already made for the batch and day, if any (the phone's, made meanwhile). */
-  existingPlan(centre: string, classId: string, date: string): Promise<string | null>;
+  existingPlan(centre: string, classId: string, date: string): Promise<{ id: string; closed: boolean } | null>;
   /** A new chapter at the end of the subject with one skill; the skill's id. */
   addChapter(centre: string, student: string, subject: string, name: string, skill: string): Promise<string>;
   /** A new skill at the end of the chapter; its id. */
   addSkill(centre: string, chapter: string, student: string, name: string): Promise<string>;
   /** make_plan, with the parameters SupabasePlansRepository.makeParams builds; the plan's id. */
   makePlan(centre: string, draft: PlanDraft): Promise<string>;
+  /** keep_artefact: the artefact kept once by its key and linked to the plan's lines of its place; its id. */
+  keep(centre: string, artefact: KeptArtefact, place: { plan: string; groupNo: number; student?: string; itemKind: LineKind; schoolItem?: string }, key: string): Promise<string>;
+  /** The plan's group lines of a kind take an artefact kept before (a mock another plan or the phone made). */
+  link(centre: string, plan: string, groupNo: number, itemKind: LineKind, artefact: string): Promise<void>;
+  /** The mock kept for an exam, if any. */
+  mockFor(centre: string, schoolItem: string): Promise<string | null>;
+  /** The centre's members reachable by a push, and whether each wants Plan ready. */
+  pushUsers(centre: string): Promise<{ user: string; planReady: boolean; notesReady: boolean }[]>;
+  /** Rows queued in a user's outbox (nothing of theirs cancelled). */
+  notify(centre: string, user: string, rows: NotificationRow[]): Promise<void>;
 };
 
-/** A naming call still running: the next try, half a minute on. */
+/** A naming call or a mock still running: the next try, half a minute on. */
 const KEY_WAIT_MS = 30_000;
 
+type Made = { made: number; notMade: number };
 type Step =
   | { at?: undefined }
   | { at: "groups"; record: PlanRead }
-  | { at: "name"; record: PlanRead; draft: PlanDraft }
-  | { at: "write"; record: PlanRead; draft: PlanDraft };
+  | { at: "name"; record: PlanRead; draft: PlanDraft; revisions: Record<string, Revision> }
+  | { at: "write"; record: PlanRead; draft: PlanDraft; revisions: Record<string, Revision> }
+  | { at: "budget"; record: PlanRead; draft: PlanDraft; revisions: Record<string, Revision>; plan: string }
+  | ({ at: "make"; n: number; record: PlanRead; draft: PlanDraft; plan: string; requests: MaterialRequest[] } & Made)
+  | ({ at: "notify"; record: PlanRead; draft: PlanDraft; plan: string } & Made);
 
-/** The day's plan for a batch, made on the server (D70; plan decision 20): read, the groups by the rules, a name for
- *  the groups the record leaves unnamed (one `plan` call), the plan written. The material stays the phone's `complete()`
- *  until Phase 18; so do days in exam mode (an exam or a holiday reaching a member). */
+type Choices = { groups?: number; subjects?: Record<string, string> };
+type Input = { classId: string; date: string; replace: boolean; choices?: Choices };
+
+/** The day's plan for a batch, made on the server (D70; plan/phase-18-plan.md decisions 10, 11): read; the groups by
+ *  the rules with the exam weeks and holidays; a name for the groups the record leaves unnamed (one `plan` call); the
+ *  plan written; the budget's material made one request a step, each kept and linked; then Plan ready and the plan's
+ *  background fetch queued for the batch's tutors. It never replaces a plan unless asked (Make the plan again), and
+ *  never a closed one. */
 export function planJob(source: PlanRecordSource): JobHandler {
   return {
     async step(job, ctx) {
-      const input = job.input as { class_id?: unknown; date?: unknown };
-      const classId = typeof input.class_id === "string" ? input.class_id : null;
-      const date = typeof input.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(input.date) ? input.date : null;
+      const raw = job.input as { class_id?: unknown; date?: unknown; replace?: unknown; choices?: unknown };
+      const classId = typeof raw.class_id === "string" ? raw.class_id : null;
+      const date = typeof raw.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(raw.date) ? raw.date : null;
       if (!job.centreId || !classId || !date) {
         return { kind: "fail", name: "start", error: { reason: "input", message: "a plan job names a centre, a class and a day" }, retry: false };
       }
+      const input: Input = { classId, date, replace: raw.replace === true, choices: (raw.choices ?? undefined) as Choices | undefined };
       const step = job.step as Step;
       const centre = job.centreId;
       switch (step.at) {
         case undefined:
-          return read(source, centre, classId, date);
+          return read(source, centre, input);
         case "groups":
-          return { kind: "continue", name: "groups", step: { at: "name", record: step.record, draft: planRules(planInput(step.record, date)) } };
+          return groups(step.record, input);
         case "name":
-          return name(job, ctx, source, centre, step.record, step.draft);
+          return name(job, ctx, source, centre, step);
         case "write":
-          return write(source, centre, classId, date, step.record, step.draft);
+          return write(source, centre, input, step);
+        case "budget":
+          return material(source, centre, ctx, step);
+        case "make":
+          return make(job, ctx, source, centre, step);
+        case "notify":
+          return notify(source, centre, input, step, ctx);
       }
     },
   };
 }
 
-async function read(source: PlanRecordSource, centre: string, classId: string, date: string): Promise<StepOutcome> {
+async function read(source: PlanRecordSource, centre: string, input: Input): Promise<StepOutcome> {
   let record: PlanRead;
   try {
-    record = await source.read(centre, classId, date);
+    record = await source.read(centre, input.classId, input.date);
   } catch (e) {
     return { kind: "fail", name: "read", error: { reason: "read_failed", message: e instanceof Error ? e.message : String(e) }, retry: true };
   }
-  if (record.existingPlan) return { kind: "done", name: "read", result: { plan_id: record.existingPlan, reason: "made" } };
-  if (record.closed) return { kind: "done", name: "read", result: { plan_id: null, reason: "closed" } };
+  const plan = record.existingPlan;
+  if (plan?.closed || record.closed) return { kind: "done", name: "read", result: { plan_id: plan?.id ?? null, reason: "closed" } };
+  if (plan && !input.replace) return { kind: "done", name: "read", result: { plan_id: plan.id, reason: "made" } };
   if (record.members.length === 0) return { kind: "done", name: "read", result: { plan_id: null, reason: "no_members" } };
-  if (examMode(record.items, record.members, date)) return { kind: "done", name: "read", result: { plan_id: null, reason: "exam_mode" } };
   return { kind: "continue", name: "read", step: { at: "groups", record } };
 }
 
-/** The rules' input: no hints, no revisions, no holidays, since a day with any of them is the phone's this phase. */
-export function planInput(record: PlanRead, date: string): PlanInput {
+const prepStudent = (m: PlanRead["members"][number]): PrepStudent => ({ id: m.id, name: m.name, classLevel: m.classLevel, schoolID: m.schoolId ?? undefined });
+
+/** Each member's nearest exam with a subject, for the rules' subject choice (SchoolItemRules.hints). */
+export function hintsOf(record: PlanRead, date: string): Hint[] {
+  return record.members.flatMap((m) => {
+    const exam = nearestExam(prepStudent(m), record.items, date);
+    return exam?.subject ? [{ studentID: m.id, subject: exam.subject, date: exam.date }] : [];
+  });
+}
+
+function groups(record: PlanRead, input: Input): StepOutcome {
+  const { revisions, holidays } = revisionLines({
+    members: record.members.map(prepStudent),
+    items: record.items,
+    meetingDays: record.classroom.meetingDays ?? [],
+    date: input.date,
+    chapters: record.chapters,
+    skills: record.skills,
+    gapReports: record.gapReports ?? {},
+  });
+  // Every member on holiday: no plan (the phone's `.holiday`).
+  if (holidays.length === record.members.length) return { kind: "done", name: "groups", result: { plan_id: null, reason: "holiday" } };
+  const draft = planRules(planInput(record, input, { revisions, holidays, hints: hintsOf(record, input.date) }));
+  return { kind: "continue", name: "groups", step: { at: "name", record, draft, revisions } };
+}
+
+/** The rules' input (PlanMaker.input): the batch, the record, the exam lines and holidays, the hints and today's choices. */
+export function planInput(record: PlanRead, input: Pick<Input, "date" | "choices">, exams: { revisions: Record<string, Revision>; holidays: string[]; hints: Hint[] }): PlanInput {
+  const { name: _name, meetingDays: _days, start: _start, end: _end, ...classroom } = record.classroom;
   return {
-    classroom: record.classroom,
-    date,
+    classroom,
+    date: input.date,
     students: record.members.map(({ schoolId: _, ...student }) => student),
     chapters: record.chapters,
     skills: record.skills,
     sessions: record.sessions,
-    hints: [],
-    subjects: {},
-    revisions: {},
-    holidays: [],
+    hints: exams.hints,
+    ...(input.choices?.groups !== undefined ? { groupCount: input.choices.groups } : {}),
+    subjects: input.choices?.subjects ?? {},
+    revisions: exams.revisions,
+    holidays: exams.holidays,
   };
 }
 
-async function name(job: Job, ctx: StepContext, source: PlanRecordSource, centre: string, record: PlanRead, draft: PlanDraft): Promise<StepOutcome> {
-  const unnamed = draft.groups.filter((g) => g.skill === "");
+async function name(job: Job, ctx: StepContext, source: PlanRecordSource, centre: string, step: Extract<Step, { at: "name" }>): Promise<StepOutcome> {
+  const { record, draft, revisions } = step;
+  const next = (named: PlanDraft) => ({ at: "write" as const, record, draft: named, revisions });
+  const unnamed = draft.groups.filter((g) => g.skill === "" && g.examItemID === undefined);
   // As the phone: a member with no chapter in a named group's subject gets its chapter and skill, whoever named it.
-  if (unnamed.length === 0) return { kind: "continue", name: "name", step: { at: "write", record, draft: await writeNamedSkills(draft, record, source, centre) } };
+  if (unnamed.length === 0) return { kind: "continue", name: "name", step: next(await writeNamedSkills(draft, record, source, centre)) };
   const levels = new Map(record.members.map((m) => [m.id, m.classLevel]));
   const highest = (ids: string[]): ClassLevel => {
     const known = ids.flatMap((id) => levels.get(id) ?? []);
@@ -118,16 +197,15 @@ async function name(job: Job, ctx: StepContext, source: PlanRecordSource, centre
     groups: unnamed.map((g) => ({ groupNo: g.number, classLevel: highest(g.memberIDs), subject: g.subject })),
   };
   const call = await recordedCall<PlanOutput>(ctx, { centre, kind: "plan", input: asked, request: planRequest(asked), job: job.id, step: "name" });
-  if (call.kind === "pending") return { kind: "wait", name: "name", step: { at: "name", record, draft }, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) };
+  if (call.kind === "pending") return { kind: "wait", name: "name", step, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) };
   if (call.kind === "failed") {
-    // The groups stay unnamed and the plan is written: the phone's `complete()` names them on open, as today.
-    const written = await writeNamedSkills(draft, record, source, centre);
-    return { kind: "continue", name: "name", step: { at: "write", record, draft: written }, generationId: call.id, costPaise: call.costPaise };
+    // The groups stay unnamed and the plan is written; their material waits for a name.
+    return { kind: "continue", name: "name", step: next(await writeNamedSkills(draft, record, source, centre)), generationId: call.id, costPaise: call.costPaise };
   }
   const topics = new Map<number, { chapter: string; skill: string }>();
   for (const t of call.parsed.groups) if (!topics.has(t.groupNo)) topics.set(t.groupNo, { chapter: t.chapter, skill: t.skill });
   const named = await writeNamedSkills(naming(draft, topics), record, source, centre);
-  return { kind: "continue", name: "name", step: { at: "write", record, draft: named }, generationId: call.id, costPaise: call.costPaise };
+  return { kind: "continue", name: "name", step: next(named), generationId: call.id, costPaise: call.costPaise };
 }
 
 /** Each member of a named group with no skill in its subject gets the group's chapter and skill in their own record, and
@@ -146,7 +224,7 @@ export async function writeNamedSkills(draft: PlanDraft, record: PlanRead, sourc
         const id = existing?.id ?? (chapter ? await source.addSkill(centre, chapter.id, member, group.skill) : await source.addChapter(centre, member, group.subject, group.chapter, group.skill));
         own.set(member, id);
       } catch {
-        // As the phone: the student's line keeps the group's skill; the next open writes it.
+        // As the phone: the student's line keeps the group's skill; the close matches it by name.
       }
     }
   }
@@ -160,14 +238,133 @@ export async function writeNamedSkills(draft: PlanDraft, record: PlanRead, sourc
   };
 }
 
-async function write(source: PlanRecordSource, centre: string, classId: string, date: string, record: PlanRead, draft: PlanDraft): Promise<StepOutcome> {
+async function write(source: PlanRecordSource, centre: string, input: Input, step: Extract<Step, { at: "write" }>): Promise<StepOutcome> {
   try {
-    // The phone may have made the day's plan meanwhile: make_plan would replace it and its material's links.
-    const existing = await source.existingPlan(centre, classId, date);
-    if (existing) return { kind: "done", name: "write", result: { plan_id: existing, reason: "made" } };
-    const planId = await source.makePlan(centre, addingBriefs(draft, new Set(record.briefChapters)));
-    return { kind: "done", name: "write", result: { plan_id: planId } };
+    // The phone may have made the day's plan meanwhile: make_plan would replace it and its material's links. A replacing
+    // job writes over an open plan, never a closed one.
+    const existing = await source.existingPlan(centre, input.classId, input.date);
+    if (existing?.closed) return { kind: "done", name: "write", result: { plan_id: existing.id, reason: "closed" } };
+    if (existing && !input.replace) return { kind: "done", name: "write", result: { plan_id: existing.id, reason: "made" } };
+    const draft = addingBriefs(step.draft, new Set(step.record.briefChapters));
+    const plan = await source.makePlan(centre, draft);
+    return { kind: "continue", name: "write", step: { at: "budget", record: step.record, draft, revisions: step.revisions, plan } };
   } catch (e) {
     return { kind: "fail", name: "write", error: { reason: "write_failed", message: e instanceof Error ? e.message : String(e) }, retry: true };
   }
+}
+
+/** The budget's requests (ArtefactBudget), after linking a mock made before to its exam group's set lines. */
+async function material(source: PlanRecordSource, centre: string, ctx: StepContext, step: Extract<Step, { at: "budget" }>): Promise<StepOutcome> {
+  const { record, draft, plan, revisions } = step;
+  const mocks = record.mocks ?? {};
+  for (const group of draft.groups) {
+    const mock = group.examItemID ? mocks[group.examItemID] : undefined;
+    const onMockDay = draft.lines.some((l) => l.groupNo === group.number && l.kind === "practise" && l.words === MOCK_LINE);
+    if (mock && onMockDay) await source.link(centre, plan, group.number, "practise", mock);
+  }
+  const input: BudgetInput = {
+    students: record.members.map(({ schoolId: _, ...student }) => student),
+    chapters: record.chapters,
+    skills: record.skills,
+    revisions,
+    now: new Date(ctx.clock.now()).toISOString(),
+    briefsMade: record.briefChapters,
+    mocksMade: Object.keys(mocks),
+  };
+  const requests = budget(draft, input);
+  if (requests.length === 0) return { kind: "continue", name: "budget", step: { at: "notify", record, draft, plan, made: 0, notMade: 0 } };
+  return { kind: "continue", name: "budget", step: { at: "make", n: 0, record, draft, plan, requests, made: 0, notMade: 0 } };
+}
+
+/** One request made and kept, or marked not made; the job goes on. A retaken step replays its call by its key and keeps
+ *  once by the same key (review focus 5). A mock is keyed by its exam, so two batches' plans share one call and one
+ *  artefact (review focus 3). */
+async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre: string, step: Extract<Step, { at: "make" }>): Promise<StepOutcome> {
+  const { n, requests, draft, plan, record } = step;
+  const req = requests[n] as MaterialRequest;
+  const name = `make:${n}`;
+  const after = (made: boolean, extra: { generationId?: string; costPaise?: number } = {}): StepOutcome => {
+    const counts = { made: step.made + (made ? 1 : 0), notMade: step.notMade + (made ? 0 : 1) };
+    const next: Step = n + 1 < requests.length ? { ...step, ...counts, n: n + 1 } : { at: "notify", record, draft, plan, ...counts };
+    return { kind: "continue", name, step: next, ...extra };
+  };
+  const wait = (): StepOutcome => ({ kind: "wait", name, step, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) });
+  const place = placeOf(req, draft);
+  const keep = async (artefact: KeptArtefact, key: string) => source.keep(centre, artefact, { plan, ...place }, key);
+  try {
+    if (req.kind === "placement") {
+      const groups = placementGroups(record.chapters[req.student] ?? [], record.skills[req.student] ?? []);
+      const questions: Record<string, unknown>[] = [];
+      let cost = 0;
+      for (const [i, group] of groups.entries()) {
+        const body = { kind: "placement" as const, centreId: centre, classLevel: req.classLevel, subject: group.title, chapters: group.items.map((item) => item.name) };
+        const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key: `${job.id}:${name}:${i}`, ...madeCall(body) });
+        if (call.kind === "pending") return wait();
+        if (call.kind === "failed") return after(false, { costPaise: cost + (call.costPaise ?? 0) });
+        cost += call.costPaise;
+        const answered = (call.parsed as { questions: { question: string; answer: string }[] }).questions;
+        group.items.forEach((item, q) => {
+          const made = answered[q];
+          if (made) questions.push({ skill_id: item.skillID, skill: item.skill, question: made.question, answer: made.answer });
+        });
+      }
+      if (questions.length === 0) return after(false, { costPaise: cost });
+      await keep({ kind: "placement", source: "made", title: "Placement", content: { questions, placement: true } }, `${job.id}:${name}`);
+      return after(true, { costPaise: cost });
+    }
+    if (req.kind === "mock") {
+      const kept = await source.mockFor(centre, req.item);
+      if (kept) {
+        await source.link(centre, plan, place.groupNo, "practise", kept);
+        return after(true);
+      }
+    }
+    const body = materialInput(req, centre);
+    if (!body) return after(false);
+    const key = req.kind === "mock" ? `mock:${req.item}` : undefined;
+    const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key, ...madeCall(body) });
+    if (call.kind === "pending") return wait();
+    // Another plan's mock for the same exam asked at another class level: its mock is linked at the next try.
+    if (call.kind === "failed" && call.reason === "key_reused") return wait();
+    if (call.kind === "failed") return after(false, { generationId: call.id, costPaise: call.costPaise });
+    await keep(artefactOf(req, call.parsed, call.id), key ?? `${job.id}:${name}`);
+    return after(true, { generationId: call.id, costPaise: call.costPaise });
+  } catch (e) {
+    // A keep or a link that did not reach the database: the step is taken again, its call replayed by its key.
+    return { kind: "fail", name, error: { reason: "keep_failed", message: e instanceof Error ? e.message : String(e) }, retry: true };
+  }
+}
+
+/** The call for a body, as `recordedCall` takes it (no student: the plan's material names none, D62). */
+function madeCall(body: Parameters<typeof makeRequest>[0]) {
+  const made = makeRequest(body);
+  return { kind: made.kind, request: made.request, empty: made.empty };
+}
+
+/** "17:00–18:30 · 3 groups. Tap to see it." (P18-Notification-PlanReady), the times left out when the batch has none. */
+export function planReadyBody(record: PlanRead, groups: number): string {
+  const { start, end } = record.classroom;
+  const times = start && end ? `${start.slice(0, 5)}–${end.slice(0, 5)} · ` : start ? `${start.slice(0, 5)} · ` : "";
+  return `${times}${groups} ${groups === 1 ? "group" : "groups"}. Tap to see it.`;
+}
+
+/** Plan ready for each reachable tutor who wants it, and the plan's background fetch for every one (decisions 7, 17). */
+async function notify(source: PlanRecordSource, centre: string, input: Input, step: Extract<Step, { at: "notify" }>, ctx: StepContext): Promise<StepOutcome> {
+  const { record, draft, plan } = step;
+  const now = new Date(ctx.clock.now()).toISOString();
+  const ready: NotificationRow = {
+    kind: "plan_ready",
+    key: `plan_ready:${input.classId}:${input.date}`,
+    due_at: now,
+    title: `${record.classroom.name ?? "Your batch"}: today’s plan is ready`,
+    body: planReadyBody(record, draft.groups.length),
+    link: "tutorcentral://today",
+  };
+  const fetch: NotificationRow = { kind: "plan_fetch", key: `plan_fetch:${input.classId}:${input.date}`, due_at: now, background: true };
+  try {
+    for (const user of await source.pushUsers(centre)) await source.notify(centre, user.user, user.planReady ? [ready, fetch] : [fetch]);
+  } catch (e) {
+    return { kind: "fail", name: "notify", error: { reason: "notify_failed", message: e instanceof Error ? e.message : String(e) }, retry: true };
+  }
+  return { kind: "done", name: "notify", result: { plan_id: plan, made: step.made, not_made: step.notMade } };
 }
