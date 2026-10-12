@@ -130,11 +130,14 @@ export const TRUST = {
         {
           kind: "p",
           text:
-            "To see what is kept about their child: the tutor shows them the student’s page. To have something changed or " +
-            "removed: the tutor edits or deletes it in the app. To withdraw consent: the tutor removes it from the " +
-            "student’s page, and nothing about the child goes to the AI service from then on. To have the child removed " +
-            "altogether: the tutor deletes the student, and every record about them goes with it, including the messages " +
-            "written to their parent.",
+            "To see what is kept about their child: the tutor shows them the student’s page, or makes one file of " +
+            "everything kept about the child and shares it with them; the file is removed from Tutor Central after seven " +
+            "days. To have something changed or removed: the tutor edits or deletes it in the app. To withdraw consent: " +
+            "the tutor records on the student’s page that the parent withdrew, how they said so and the day, and from then " +
+            "on nothing about the child goes to the AI service; a note already written waits unsent. The agreement and " +
+            "the withdrawal stay in the student’s history. To have the child removed altogether: the tutor deletes the " +
+            "student, and every record about them goes with it, including the messages written to their parent and any " +
+            "photo kept with their record.",
         },
         {
           kind: "p",
@@ -158,6 +161,18 @@ export const TRUST = {
             after:
               " says the rest: what is kept about the tutor, how an account is removed, and that nothing watches anyone.",
           },
+        },
+      ],
+    },
+    {
+      heading: "Notifications on the tutor’s iPhone",
+      parts: [
+        {
+          kind: "p",
+          text:
+            "Tutor Central sends the tutor reminders and notices through Apple: a class or an event coming up, fees still " +
+            "due, a plan or the weekly notes ready. They name a batch, an event as the tutor called it, a count or a " +
+            "total; the app never puts a student’s name in them. The details stay in the app.",
         },
       ],
     },
