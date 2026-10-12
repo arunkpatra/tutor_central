@@ -3,11 +3,11 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-12, session 33 (V3's interview and spec, on Fable 5.1). **Session 33:** the owner's interview
-(`docs/v3/interview.md`: six questions answered, the rest decided at his word), the research (`plan/sessions/033/research.md`),
-`docs/spec-v3.md` written and approved, D70 to D82 recorded, Phases 17 to 22 in the phase table with their scope files, resume
-032 for Phase 17's plan; the record in `plan/sessions/033/`.
-**Next:** Phase 17's plan on Fable 5.1 from `resume/032-phase-17-plan.md` (session 034). The order (D81): V3's Phases 17 to 22,
+**Last updated:** 2026-10-12, session 34 (Phase 17's plan, on Fable 5.1). **Session 34:** `plan/phase-17-plan.md` written
+and approved (18 tasks, 15 pull requests, no picture: nothing new on screen); D83 (the job key is the service role), D84
+(idempotency keys) and D85 (no paid plan this phase: pg_cron wakes the worker, Hobby's 300 s holds a step, no database copy
+exists until Pro before the external testing round) recorded; resume 033 for the build; the record in `plan/sessions/034/`.
+**Next:** Phase 17's build on Opus 5.5 from `resume/033-phase-17-build.md` (session 035). The order (D81): V3's Phases 17 to 22,
 then the external testing round (Phase 15's Tasks 20 to 23, by D52 to D55) on the first build that carries them, then Phase 16.
 The round's documents are ready (`docs/release.md`'s build 26 checklist and notes, `docs/testing/tester-guide.md`,
 `plan/phase-15-findings.md`); the owner's own findings on build 26 go into `plan/phase-15-findings.md` (Who = Owner); none
@@ -37,13 +37,13 @@ reported yet.
 | 14 Parents | Done (session 30, 2026-10-11), PRs #135 to #149 | "As built" in `phase-14-parents.md`; device tests T11 to T14 |
 | 15 Make and polish | Built (session 32, 2026-10-12), PRs #152 to #183; hand runs #174; the external testing round waits for V3 (D69, D81) | "As built, the build" in `phase-15-make-and-polish.md`; device test T15; the round's documents ready |
 | 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
-| 17 V3 platform foundation | Not started; the plan next | Scope file `phase-17-platform-foundation.md`; resume 032 |
+| 17 V3 platform foundation | Planned (session 34, 2026-10-12); the build next | `phase-17-plan.md` approved with D83 to D85; scope file `phase-17-platform-foundation.md`; resume 033 |
 | 18 V3 the server's work and push | Not started | Scope file `phase-18-server-work-and-push.md`; depends on 17 |
 | 19 V3 the admin portal, reading | Not started | Scope file `phase-19-admin-portal-reading.md`; depends on 17; boards first |
 | 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
 | 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
 | 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
-| V3 Platform | Spec approved 2026-10-12 (D70 to D82) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phase 17 planned (D83 to D85) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 
@@ -128,6 +128,7 @@ identity). The remote holds `main`,
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today. One environment until the owner says (D80).
+- **Free and Hobby stay through Phase 17 (D85):** no copy of the database exists anywhere (a bad migration or a deletion is final); Vercel's logs keep an hour, Supabase's a day; Vercel's Hobby terms are non-commercial. Supabase Pro and Vercel Pro are bought before the external testing round, as a step of its checklist; point-in-time recovery is Phase 16's call.
 - **V3 covers** the platform-shaped minors below where they are the platform's (duplicate paid calls, the 20 s offline waits, the pending rows, `APPLE_FAKE` in production, the limits copied across layers, orphaned photos): each is closed by the V3 phase that owns it, not on its own.
 - **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U13 to U15, U25, U27 to U30, U48 open; the rest done (Phase 15: U11, U17 to
   U23, U26, U32, U34, U40; U36 by #133).

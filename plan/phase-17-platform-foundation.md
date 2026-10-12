@@ -1,6 +1,6 @@
 # Phase 17: V3 platform foundation
 
-**Status:** Not started. **Depends on:** Phase 15 built (1.0.0 (26)); `docs/spec-v3.md` approved (D70 to D82).
+**Status:** Planned (session 34, 2026-10-12): `phase-17-plan.md`, approved with D83 to D85; the build on Opus 5.5 from `resume/033-phase-17-build.md`. **Depends on:** Phase 15 built (1.0.0 (26)); `docs/spec-v3.md` approved (D70 to D82).
 
 ## Goal
 
@@ -9,14 +9,15 @@ what it cost, and what happens is written where the admin portal will read it. N
 
 ## Scope
 
-1. **Plans bought** (D71): Vercel Pro on `tutor-central-api` (functions to 800 s, cron each minute), Supabase Pro on the hosted
-   project (daily backups, point-in-time recovery, seven-day logs); the owner's steps one at a time.
+1. **Plans** (D71, amended by D85): none bought this phase. pg_cron wakes the worker each minute through pg_net from inside
+   the database; Vercel Hobby's 300 s holds a step; no copy of the database exists until Supabase Pro is bought before the
+   external testing round (a step of its checklist), when Vercel Pro is bought too.
 2. **The job tables** (D71): `jobs` and `job_steps` as spec-v3 section 3, with RLS through `is_member` for the app's reads and
    the server's key for writes; `kind`, `state`, `idempotency_key`, `attempts`, `max_attempts`, `lease_until`, `leased_by`,
    `step`, `input`, `result`, `error`, `run_at`, `started_at`, `finished_at`, `cost_paise`; tested first (the lease, a retry,
    a duplicate key, a cancel).
 3. **The worker** (D71): Hono routes in `api/` that take a lease (`for update skip locked`), do one step, write the row and
-   the step, continue while time allows; woken by Vercel Cron each minute and by a database webhook (`pg_net`) on enqueue; the
+   the step, continue while time allows; woken each minute by pg_cron through `pg_net` and by a `pg_net` trigger on enqueue (D85); the
    job key (Supabase's service role or a dedicated role with the workers' grants, chosen in the plan) in Vercel's environment
    only (D11); `maxDuration` set on each function. One job kind proves it end to end: `plan` for the seed centre, run on the
    local stack and once in production for the owner's own centre.
