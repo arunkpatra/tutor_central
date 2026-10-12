@@ -10,7 +10,16 @@ export type LineKind = "teach" | "practise" | "check" | "homework" | "brief" | "
 
 export type Student = { id: string; name: string; classLevel?: ClassLevel; trackStatus: TrackStatus; nextStep?: NextStep; gender?: string };
 export type Chapter = { id: string; subject: string; position: number; name: string };
-export type Skill = { id: string; chapterID: string; position: number; name: string; state: SkillState; stateAt: string };
+export type Skill = {
+  id: string;
+  chapterID: string;
+  position: number;
+  name: string;
+  state: SkillState;
+  stateAt: string;
+  /** The spaced queue's clock: the last check on it, when there was one. */
+  lastCheckedAt?: string;
+};
 export type Session = { classID: string; date: string; marks: Record<string, "present" | "absent"> };
 /** A school item near enough to choose a student's subject (Phase 13's SchoolItemHint). */
 export type Hint = { studentID: string; subject: string; date: string };
@@ -25,6 +34,11 @@ export type Revision = {
   gapLine?: string;
   pattern?: { marks: number; durationMinutes: number };
   setNumber: number;
+  /** What the budget reads (ArtefactBudget's exam groups): the day's skill names, the exam's portions as parts, the
+   *  student's weakest skills in a marked mock. */
+  skills?: string[];
+  portions?: string[];
+  gapSkills?: string[];
 };
 
 export type PlanInput = {
