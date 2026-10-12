@@ -118,12 +118,17 @@ test("no note day job for a centre idle 14 days", async () => {
   expect(await one(sql`select public.schedule_note_days('2030-11-10T00:15:00+05:30')`)).toBe(0);
 });
 
-test("a class change queues one reminder plan for its centre while one waits", async () => {
+test("each change queues its own reminder plan, even while one waits; one statement over many rows queues one (the review's R-db-5)", async () => {
+  const count = async () => (await sql`select count(*)::int as n from public.jobs where kind = 'reminder_sweep' and centre_id = ${centreA}`)[0].n;
   const id = await batch({ days: [1], start: "17:00" });
+  await batch({ days: [2], start: "18:00" });
+  const before = await count();
+  // A worker may claim the waiting plan and read the classes before this change commits: the change needs its own.
   await a.from("classes").update({ start_time: "17:30" }).eq("id", id);
   await a.from("classes").update({ start_time: "17:45" }).eq("id", id);
-  const rows = await sql`select input from public.jobs where kind = 'reminder_sweep' and centre_id = ${centreA}`;
-  expect([...rows]).toEqual([{ input: { centre_id: centreA } }]);
+  expect(await count()).toBe(before + 2);
+  await a.from("classes").update({ end_time: "19:30" }).eq("centre_id", centreA);
+  expect(await count()).toBe(before + 3);
 });
 
 test("an event, a fee and the settings each queue a reminder plan once the last one is taken", async () => {
