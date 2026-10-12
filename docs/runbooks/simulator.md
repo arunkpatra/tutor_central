@@ -238,6 +238,11 @@ job arrives within the minute with the local Vault secrets set (section 12).
 - **Stop the local API with its listener only:** `kill $(lsof -ti :3000 -sTCP:LISTEN)`. A bare `lsof -ti :3000` also lists
   Docker's own backend (the database's pg_net keeps a connection to `host.docker.internal:3000` for the worker's wake), and
   killing it stops Docker Desktop (session 37, three times).
+- **A preference planted for a run** (build 27's `reminders` key, say): `xcrun simctl spawn booted defaults write
+  in.tutorcentral.app …` writes the simulator's shared domain, which the app never reads. Write to the app's own:
+  `defaults write "$(xcrun simctl get_app_container booted in.tutorcentral.app data)/Library/Preferences/in.tutorcentral.app"
+  reminders -data <hex>` through `simctl spawn`, with the app quit, and read it back the same way (the file on disk lags
+  the preferences daemon).
 - **Never run the API's tests during a hand run:** `jobs-db.test.ts` and `platform-db.test.ts` use the local stack; with a
   local worker running, the worker claims the tests' jobs, and the tests clear the jobs table and reset rows the run made.
   Stop the local API first (and expect to set the run's data again).
