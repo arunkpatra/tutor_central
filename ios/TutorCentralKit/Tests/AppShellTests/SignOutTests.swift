@@ -5,7 +5,7 @@ import Testing
 @testable import AppShell
 
 @MainActor struct SignOutTests {
-    @Test func signOutWipesTheCachesTheQueueAndTheReminders() async throws {
+    @Test func signOutForgetsThePushTokenThenWipesTheCachesTheQueueAndTheReminders() async throws {
         let dir = FileManager.default.temporaryDirectory.appendingPathComponent(
             "signout-\(UUID().uuidString)", isDirectory: true
         )
@@ -17,22 +17,25 @@ import Testing
         ))
         CachedRead<[String]>(centre: centre, key: "tasks", directory: dir).keep(["x"], at: Date())
         let notifications = FakeNotificationCenter(permission: .allowed)
-        let reminder = Reminder(
-            id: "fees-2026-10", kind: .fees, title: "t", body: "b", fireAt: Date(), link: "tutorcentral://fees"
+        // The token is forgotten while the queue is still there: before the wipe.
+        let tokens = FakeDeviceTokenRepository(onForget: { @MainActor in #expect(!queue.pending.isEmpty) })
+        let push = PushRegistrar(
+            notifications: notifications, tokens: tokens, registerForRemote: {}, deviceID: { "device-1" },
+            environment: "sandbox", build: 28
         )
-        await notifications.replace(with: [reminder])
         let defaults = try #require(UserDefaults(suiteName: "signout-\(UUID().uuidString)"))
         defaults.set(false, forKey: "haptics")
         let deps = Fixtures.dependencies(for: .today)
         let auth = try #require(deps.auth as? FakeAuthRepository)
         let session = SessionStore(deps: deps, initial: .ready(FakeCentreRepository.meeraWorkspace))
         await session.signOut(wiping: SignOutWipe(
-            centre: centre, directory: dir, defaults: defaults, queue: queue, notifications: notifications
+            centre: centre, directory: dir, defaults: defaults, queue: queue, notifications: notifications,
+            forgetPush: { await push.forget() }
         ))
         #expect(session.state == .signedOut && auth.signedOut == 1)
         #expect(try FileManager.default.contentsOfDirectory(atPath: dir.path).isEmpty)
-        let pending = await notifications.pending()
-        #expect(queue.pending.isEmpty && pending.isEmpty)
+        #expect(queue.pending.isEmpty && notifications.allRemoved == 1)
+        #expect(await tokens.forgotten == ["device-1"])
         #expect(defaults.object(forKey: "haptics") == nil)
     }
 }

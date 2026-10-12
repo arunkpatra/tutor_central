@@ -89,8 +89,8 @@ struct AbsenceAsk: Identifiable, Hashable {
     /// the centre's log.
     @ObservationIgnored private var openedPending = false
     @ObservationIgnored var runner: QueueRunner?
-    /// The centre's reminder planner, made on first use.
-    @ObservationIgnored var scheduler: ReminderScheduler?
+    /// This iPhone's push registration (Phase 18), made on first use.
+    @ObservationIgnored var push: PushRegistrar?
     /// The network as the monitor last said; every root's status line follows it.
     var online = true
     var runState: RunState = .idle
@@ -215,7 +215,7 @@ struct AbsenceAsk: Identifiable, Hashable {
         queue = nil
         recorder = nil
         runner = nil
-        scheduler = nil
+        push = nil
         runState = .idle
         centre = nil
     }

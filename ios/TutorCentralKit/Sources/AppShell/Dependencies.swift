@@ -34,9 +34,11 @@ public struct Dependencies: Sendable {
     public let aiHistory: any AIHistoryRepository
     /// The API's account route (D38): Apple told to forget the app before a deletion.
     public let account: any AccountRepository
-    /// The device's notification centre and the tutor's reminder choices on this iPhone.
+    /// The device's notification centre, the tutor's reminder choices with the account, and this iPhone's push token
+    /// kept for the server (Phase 18).
     public let notifications: any NotificationCenterClient
-    public let reminderSettings: ReminderSettingsStore
+    public let reminderSettings: any ReminderSettingsRepository
+    public let deviceTokens: any DeviceTokenRepository
     /// The network (D39): the offline bar and the replay follow it.
     public let connectivity: any ConnectivityMonitor
     /// The lists keep a copy on this iPhone (`CachedRead`); the fixtures write theirs into `filesDirectory`.
@@ -75,7 +77,8 @@ public struct Dependencies: Sendable {
         aiHistory: any AIHistoryRepository,
         account: any AccountRepository,
         notifications: any NotificationCenterClient,
-        reminderSettings: ReminderSettingsStore,
+        reminderSettings: any ReminderSettingsRepository,
+        deviceTokens: any DeviceTokenRepository,
         connectivity: any ConnectivityMonitor,
         cachesLists: Bool,
         filesDirectory: URL? = nil,
@@ -107,6 +110,7 @@ public struct Dependencies: Sendable {
         self.account = account
         self.notifications = notifications
         self.reminderSettings = reminderSettings
+        self.deviceTokens = deviceTokens
         self.connectivity = connectivity
         self.cachesLists = cachesLists
         self.filesDirectory = filesDirectory
@@ -151,7 +155,8 @@ public struct Dependencies: Sendable {
             aiHistory: SupabaseAIHistoryRepository(client: client),
             account: api,
             notifications: UNClient(),
-            reminderSettings: ReminderSettingsStore(),
+            reminderSettings: SupabaseReminderSettingsRepository(client: client),
+            deviceTokens: SupabaseDeviceTokenRepository(client: client),
             connectivity: PathMonitor(),
             cachesLists: true,
             cachesRegister: true,

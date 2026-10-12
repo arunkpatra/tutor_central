@@ -8,7 +8,6 @@ extension ScheduleStore {
         lastSavedAt = now()
         lastFailed = nil
         canRetry = false
-        onEventsChanged()
     }
 
     func failed(

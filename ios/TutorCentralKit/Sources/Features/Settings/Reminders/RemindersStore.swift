@@ -3,8 +3,9 @@ import Domain
 import Foundation
 import Observation
 
-/// Teacher reminders (P7-Reminders-*): the permission, the tutor's choices (saved on this iPhone at once, then the
-/// reminders planned again), what is set and its last day. The system's ask is made from Turn on reminders only.
+/// Teacher reminders (P18-Reminders; P7-Reminders-NotAsked, -AllOff, -Refused, -DayPicker): the permission, the
+/// tutor's choices kept with the account and saved as each changes, and the next reminder the server will send. The
+/// system's ask is made from Turn on reminders only; once allowed, the iPhone registers for the server's pushes.
 @MainActor @Observable public final class RemindersStore {
     /// The line at the top: the next reminder, every switch off, or notifications off in iOS; none before the ask.
     public enum Banner: Hashable, Sendable {
@@ -21,68 +22,77 @@ import Observation
         }
     }
 
-    /// What is set on this iPhone: "14 reminders set" and "through Fri 23 Oct".
-    public struct OnThisPhone: Hashable, Sendable {
-        public let count: String
-        public let through: String?
-    }
-
     public private(set) var permission: NotificationPermission = .notAsked
-    public private(set) var scheduled: [Reminder] = []
+    public private(set) var next: NextReminder?
     public private(set) var asking = false
+    /// The words of a failed save, for the system's alert (feedback.md); the switch goes back.
+    public var alert: String?
     public var settings: ReminderSettings {
         didSet {
-            guard settings != oldValue else { return }
-            settingsStore.save(settings)
-            Task { await refresh() }
+            guard loaded, settings != oldValue else { return }
+            let before = oldValue
+            Task { await save(settings, undoing: before) }
         }
     }
 
+    private var loaded = false
     private let notifications: any NotificationCenterClient
-    private let settingsStore: ReminderSettingsStore
+    private let repository: any ReminderSettingsRepository
+    private let centre: UUID
     private let classNames: @MainActor () -> [String]
     private let now: @Sendable () -> Date
     private let calendar: Calendar
-    private let replan: @MainActor () async -> [Reminder]
+    private let onAllowed: @MainActor () async -> Void
 
-    /// `classNames` reads the register's active classes. `replan` is AppShell's scheduler: it plans from the register,
-    /// the events and the fees, replaces what is set, and answers the plan.
+    /// `classNames` reads the register's active classes. `onAllowed` registers this iPhone for the server's pushes once
+    /// the tutor allows notifications.
     public init(
-        notifications: any NotificationCenterClient, settingsStore: ReminderSettingsStore,
-        classNames: @escaping @MainActor () -> [String],
-        now: @escaping @Sendable () -> Date, calendar: Calendar, replan: @escaping @MainActor () async -> [Reminder]
+        notifications: any NotificationCenterClient, repository: any ReminderSettingsRepository, centre: UUID,
+        classNames: @escaping @MainActor () -> [String], now: @escaping @Sendable () -> Date, calendar: Calendar,
+        onAllowed: @escaping @MainActor () async -> Void
     ) {
         self.notifications = notifications
-        self.settingsStore = settingsStore
+        self.repository = repository
+        self.centre = centre
         self.classNames = classNames
         self.now = now
         self.calendar = calendar
-        self.replan = replan
-        settings = settingsStore.load()
+        self.onAllowed = onAllowed
+        settings = ReminderSettings()
     }
 
+    /// The permission, the account's choices (the defaults when they cannot be read) and the next reminder.
     public func load() async {
         permission = await notifications.permission()
-        await refresh()
+        if let read = try? await repository.read(centre: centre) {
+            settings = read
+        }
+        loaded = true
+        next = try? await repository.next(centre: centre)
     }
 
-    /// The system's ask; allowed plans at once.
+    /// The system's ask; allowed registers for pushes at once.
     public func turnOn() async {
         guard !asking else { return }
         asking = true
         defer { asking = false }
-        settingsStore.asked = true
         permission = await notifications.requestPermission() ? .allowed : .refused
-        await refresh()
+        if permission == .allowed {
+            await onAllowed()
+        }
     }
 
-    /// Refresh: plan again (only when allowed).
-    public func refresh() async {
-        guard permission == .allowed else {
-            scheduled = []
-            return
+    /// A change saved with the account; a save that fails puts the choice back and says so.
+    private func save(_ changed: ReminderSettings, undoing before: ReminderSettings) async {
+        do {
+            try await repository.save(changed, centre: centre)
+            next = try? await repository.next(centre: centre)
+        } catch {
+            loaded = false
+            settings = before
+            loaded = true
+            alert = "That didn't go through. Check your connection and try again."
         }
-        scheduled = await replan()
     }
 
     public var banner: Banner? {
@@ -92,21 +102,12 @@ import Observation
         case .allowed:
             if !settings.anyOn {
                 .allOff
-            } else if let first = scheduled.min(by: { $0.fireAt < $1.fireAt }) {
-                .on(next: "\(first.subject), \(when(first.fireAt))")
+            } else if let next {
+                .on(next: "\(next.subject), \(when(next.at))")
             } else {
-                .on(next: "nothing in the next two weeks")
+                .on(next: "nothing in the next day")
             }
         }
-    }
-
-    public var onThisPhone: OnThisPhone {
-        guard permission == .allowed else { return OnThisPhone(count: "Nothing set", through: nil) }
-        guard let last = scheduled.max(by: { $0.fireAt < $1.fireAt }) else {
-            return OnThisPhone(count: "No reminders set", through: nil)
-        }
-        let count = scheduled.count == 1 ? "1 reminder set" : "\(scheduled.count) reminders set"
-        return OnThisPhone(count: count, through: "through \(Day(last.fireAt, calendar: calendar).shortWeekdayText)")
     }
 
     /// "Class 10 Maths and Class 8 Science on their days"; "Your classes on their days" with none. Read each time: the

@@ -38,6 +38,10 @@ import Testing
         off.classOn = false
         off.eventOn = false
         off.feesOn = false
+        // Plan ready and Notes ready are reminders too (P18-Reminders).
+        #expect(ReminderSummary(permission: .allowed, settings: off).value == "On")
+        off.planReady = false
+        off.notesReady = false
         #expect(ReminderSummary(permission: .allowed, settings: off).value == "Off")
     }
 

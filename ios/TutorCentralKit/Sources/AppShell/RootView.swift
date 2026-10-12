@@ -99,27 +99,22 @@ public struct RootView: View {
                     Task {
                         await session.refresh()
                         await runQueue()
-                        // The reminders plan from the classes as they are now, not as first read; every list reads
-                        // what changed while the app was away.
+                        // Every list reads what changed while the app was away; the push token is kept fresh.
                         await shell.register?.refresh()
-                        replanReminders()
+                        startPush()
                         await shell.refreshScreens()
                         shell.inboxHandoff(SharedInbox.live(), signedIn: session.isReady)
                     }
                 }
                 if phase == .background, launch == nil {
                     Task { await shell.recorder?.flush() }
-                    BackgroundRefresh.schedule(at: BackgroundRefresh.nextMorning(
-                        after: deps.now(),
-                        calendar: DayHeading.india
-                    ))
                 }
             }
             .onChange(of: session.state) { _, state in
                 Self.follow(state, shell: shell, deps: deps, launch: launch)
                 if session.isReady {
                     Task { await runQueue() }
-                    replanReminders()
+                    startPush()
                     if launch == nil {
                         shell.inboxHandoff(SharedInbox.live(), signedIn: true)
                     }
@@ -247,7 +242,6 @@ public struct RootView: View {
             // memory.
             languageDefaults: deps.cachesRegister ? .standard : nil
         )
-        made.onChanged = { replanReminders() }
         // Kept at once, in the same pass: the detail pushed by a launch state or a link reads the same register as the
         // list.
         shell.register = made

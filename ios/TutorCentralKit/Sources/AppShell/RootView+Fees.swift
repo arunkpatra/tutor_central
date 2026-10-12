@@ -24,7 +24,6 @@ extension RootView {
         made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
         made.onFeesChanged = { [shell] in
             Task { await shell.register?.refresh() }
-            replanReminders()
         }
         shell.fees = made
         return made

@@ -1,7 +1,8 @@
 import Foundation
 
-/// The tutor's reminder choices on this iPhone (Teacher reminders, P7-Reminders): three switches, the class lead, the
-/// event lead and the fee day. Kept in `UserDefaults`, never on the server.
+/// The tutor's reminder choices (Teacher reminders, P18-Reminders): the class, event and fee switches with the class
+/// lead, the event lead and the fee day, and Plan ready and Notes ready. Kept with the account (`reminder_settings`,
+/// plan/phase-18-plan.md decision 6); the server plans and sends what they choose.
 public struct ReminderSettings: Hashable, Sendable, Codable {
     /// When an event's reminder fires.
     public enum EventLead: String, CaseIterable, Hashable, Sendable, Codable {
@@ -40,11 +41,29 @@ public struct ReminderSettings: Hashable, Sendable, Codable {
     public var eventLead: EventLead = .hour1
     public var feesOn = true
     public var feesDay = 5
+    /// When each batch's plan and material are made (Phase 18).
+    public var planReady = true
+    /// When the note day's notes are written (Phase 18).
+    public var notesReady = true
 
     public init() {}
 
+    /// Builds 27 and earlier kept the six choices before Plan ready and Notes ready: those read as on.
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let defaults = ReminderSettings()
+        classOn = try c.decodeIfPresent(Bool.self, forKey: .classOn) ?? defaults.classOn
+        classMinutesBefore = try c.decodeIfPresent(Int.self, forKey: .classMinutesBefore) ?? defaults.classMinutesBefore
+        eventOn = try c.decodeIfPresent(Bool.self, forKey: .eventOn) ?? defaults.eventOn
+        eventLead = try c.decodeIfPresent(EventLead.self, forKey: .eventLead) ?? defaults.eventLead
+        feesOn = try c.decodeIfPresent(Bool.self, forKey: .feesOn) ?? defaults.feesOn
+        feesDay = try c.decodeIfPresent(Int.self, forKey: .feesDay) ?? defaults.feesDay
+        planReady = try c.decodeIfPresent(Bool.self, forKey: .planReady) ?? defaults.planReady
+        notesReady = try c.decodeIfPresent(Bool.self, forKey: .notesReady) ?? defaults.notesReady
+    }
+
     public var anyOn: Bool {
-        classOn || eventOn || feesOn
+        classOn || eventOn || feesOn || planReady || notesReady
     }
 
     /// "15 min", "1 hour" (the class lead's tile and wheel).

@@ -21,12 +21,10 @@ extension RootView {
 
     /// The schedule's store; ScheduleView keeps the first one made. An event saved plans the reminders again.
     func scheduleStore(for workspace: Workspace) -> ScheduleStore {
-        let store = ScheduleStore(
+        ScheduleStore(
             workspace: workspace, register: register(for: workspace), events: deps.events,
             attendance: deps.attendance, now: deps.now, cache: monthCache(workspace, "schedule")
         )
-        store.onEventsChanged = { replanReminders() }
-        return store
     }
 
     /// One tasks store for the life of the workspace, shared by Today and the Tasks screen.

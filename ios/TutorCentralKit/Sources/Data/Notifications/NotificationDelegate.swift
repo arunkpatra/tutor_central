@@ -46,9 +46,13 @@ import UserNotifications
         received(Self.link(from: response.notification.request.content.userInfo), then: completionHandler)
     }
 
-    /// The reminder's link (`ReminderScheduler` puts it in `userInfo["link"]`).
+    /// The notification's link: a push carries it beside `aps` (api/src/push/payload.ts), a reminder set by builds 27
+    /// and earlier in `userInfo["link"]`; a push with no link opens Today.
     nonisolated static func link(from userInfo: [AnyHashable: Any]) -> URL? {
-        (userInfo["link"] as? String).flatMap(URL.init(string:))
+        if let link = (userInfo["link"] as? String).flatMap(URL.init(string:)) {
+            return link
+        }
+        return userInfo["aps"] == nil ? nil : URL(string: "tutorcentral://today")
     }
 
     /// Opens the link and tells UIKit the tap is handled, both on the main thread, wherever the tap arrived.
