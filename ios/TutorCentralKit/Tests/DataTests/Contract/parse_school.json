@@ -1,0 +1,37 @@
+{
+  "items": [
+    {
+      "classLevel": "8",
+      "date": "2026-10-16",
+      "endDate": null,
+      "kind": "exam",
+      "portions": "Ch 1 Chemical reactions · Ch 2 Acids, bases and salts",
+      "school": "Vidya Niketan",
+      "studentName": null,
+      "subject": "Science",
+      "title": "Science unit test 3"
+    },
+    {
+      "classLevel": "8",
+      "date": "2026-10-12",
+      "endDate": null,
+      "kind": "homework",
+      "portions": null,
+      "school": "Vidya Niketan",
+      "studentName": null,
+      "subject": "Mathematics",
+      "title": "Maths Ex 3.2, Q1 to 10"
+    },
+    {
+      "classLevel": null,
+      "date": "2026-10-19",
+      "endDate": "2026-10-21",
+      "kind": "holiday",
+      "portions": null,
+      "school": "Vidya Niketan",
+      "studentName": null,
+      "subject": null,
+      "title": "Dasara holidays"
+    }
+  ]
+}

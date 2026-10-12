@@ -92,10 +92,19 @@ export const STEPS: Step[] = [
       "ios/TutorCentralKit/Sources/AppShell/LaunchState.swift",
       // cost.test prices by the model table (D67).
       "api/models.json",
+      // The contract (D80): its sources and what it generates; --check fails on drift.
+      "supabase/types.ts",
+      "api/src/schemas.ts",
+      "api/src/contract.ts",
+      "api/src/claude-fake.ts",
+      "api/src/generated/**",
+      "ios/TutorCentralKit/Sources/Domain/Generated/**",
+      "ios/TutorCentralKit/Tests/DataTests/Contract/**",
     ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
       await run("bun test tools");
+      await run("bun tools/contract.ts --check");
     },
   },
   {

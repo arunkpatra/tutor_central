@@ -12,7 +12,7 @@ import Observation
         case failed(String)
     }
 
-    public static let maxPages = 6
+    public static let maxPages = APIContract.pagesMax
 
     public internal(set) var stage: Stage = .intro
     public var studentID: UUID? {

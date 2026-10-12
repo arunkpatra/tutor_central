@@ -61,7 +61,8 @@ public struct NoteRequest: Hashable, Sendable {
     /// The same request with the tutor's words, trimmed and held to the API's 300 (blank is none).
     public func saying(_ words: String) -> NoteRequest {
         let trimmed = words.trimmingCharacters(in: .whitespacesAndNewlines)
-        let kept = trimmed.isEmpty ? nil : String(String.UnicodeScalarView(trimmed.unicodeScalars.prefix(300)))
+        let kept = trimmed
+            .isEmpty ? nil : String(String.UnicodeScalarView(trimmed.unicodeScalars.prefix(APIContract.tutorSaysMax)))
         return NoteRequest(
             studentID: studentID, studentName: studentName, parentName: parentName, tutorName: tutorName,
             centreName: centreName, classLevel: classLevel, language: language, weekMonday: weekMonday, week: week,

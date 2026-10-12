@@ -1,0 +1,9 @@
+{
+  "caption": "3 of 4 parts shaded: three quarters of the whole.",
+  "figure": {
+    "kind": "fraction_bar",
+    "label": "3/4",
+    "parts": 4,
+    "shaded": 3
+  }
+}

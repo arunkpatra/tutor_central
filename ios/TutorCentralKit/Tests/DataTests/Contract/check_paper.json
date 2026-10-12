@@ -1,0 +1,75 @@
+{
+  "questions": [
+    {
+      "marks": 1,
+      "note": "Correct",
+      "number": 1,
+      "of": 1,
+      "text": "Which of these is a quadratic equation?"
+    },
+    {
+      "marks": 1,
+      "note": "Correct, −8",
+      "number": 2,
+      "of": 1,
+      "text": "Discriminant of 2x² − 4x + 3 = 0"
+    },
+    {
+      "marks": 1,
+      "note": "Correct, k = 6",
+      "number": 3,
+      "of": 1,
+      "text": "k when one root is 2"
+    },
+    {
+      "marks": 0,
+      "note": "Says real and distinct; they are equal",
+      "number": 4,
+      "of": 1,
+      "text": "Nature of the roots"
+    },
+    {
+      "marks": 2,
+      "note": "Correct, 3 and 4",
+      "number": 5,
+      "of": 2,
+      "text": "Solve by factorisation"
+    },
+    {
+      "marks": 1,
+      "note": "Method right, one root missing",
+      "number": 6,
+      "of": 2,
+      "text": "Roots of 3x² − 2√6 x + 2 = 0"
+    },
+    {
+      "marks": 0,
+      "note": "Not attempted",
+      "number": 7,
+      "of": 2,
+      "text": "k for equal roots"
+    },
+    {
+      "marks": 2,
+      "note": "Correct, 3/2 and −2",
+      "number": 8,
+      "of": 2,
+      "text": "Roots by the formula"
+    },
+    {
+      "marks": 2,
+      "note": "Equation right, arithmetic slip at the end",
+      "number": 9,
+      "of": 4,
+      "text": "The train's speed"
+    },
+    {
+      "marks": 4,
+      "note": "Correct, 13 and 15",
+      "number": 10,
+      "of": 4,
+      "text": "Two consecutive odd numbers"
+    }
+  ],
+  "summary": "Sign errors in Q4 and Q6; Q7 not attempted."
+}

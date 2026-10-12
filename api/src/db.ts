@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import type { Database, Json } from "./generated/database.js";
 
 export type AIKind = V1Kind | V2Kind;
 export type V1Kind = "paper" | "homework" | "worksheet" | "progress_note" | "scan_register" | "check_paper";
@@ -54,7 +55,7 @@ export class DbFailure extends Error {
 
 export function makeDb(url: string, anonKey: string): Db {
   const client = (token: string) =>
-    createClient(url, anonKey, {
+    createClient<Database>(url, anonKey, {
       global: { headers: { Authorization: `Bearer ${token}` } },
       auth: { persistSession: false, autoRefreshToken: false },
     });
@@ -63,9 +64,9 @@ export function makeDb(url: string, anonKey: string): Db {
       const { data, error } = await client(token).rpc("start_ai_generation", {
         p_centre: centre,
         p_kind: kind,
-        p_input: input,
+        p_input: input as Json,
         p_model: model,
-        p_student: student ?? null,
+        p_student: student,
       });
       if (error) {
         if (error.message.includes("ai_not_a_member")) throw new DbFailure("not_a_member");

@@ -1,0 +1,108 @@
+{
+  "durationMinutes": 40,
+  "sections": [
+    {
+      "marksEach": 1,
+      "name": "Section A",
+      "questions": [
+        {
+          "answer": "(b) rusting iron",
+          "marks": 1,
+          "number": 1,
+          "skill": "Spot a chemical change",
+          "text": "Which of these is a chemical change? (a) melting ice (b) rusting iron (c) breaking glass (d) dissolving salt"
+        },
+        {
+          "answer": "Hydrogen",
+          "marks": 1,
+          "number": 2,
+          "skill": "Spot a chemical change",
+          "text": "Name the gas given off when zinc reacts with dilute hydrochloric acid."
+        },
+        {
+          "answer": "Magnesium + oxygen → magnesium oxide",
+          "marks": 1,
+          "number": 3,
+          "skill": "Write a word equation",
+          "text": "Write the word equation for burning magnesium."
+        },
+        {
+          "answer": "Iron + oxygen + water → rust",
+          "marks": 1,
+          "number": 4,
+          "skill": "Write a word equation",
+          "text": "Write the word equation for iron rusting."
+        },
+        {
+          "answer": "Decomposition",
+          "marks": 1,
+          "number": 5,
+          "skill": "Name the types of reactions",
+          "text": "Name the kind of reaction: CaCO₃ → CaO + CO₂."
+        }
+      ]
+    },
+    {
+      "marksEach": 2,
+      "name": "Section B",
+      "questions": [
+        {
+          "answer": "4Al + 3O₂ → 2Al₂O₃",
+          "marks": 2,
+          "number": 6,
+          "skill": "Balance a chemical equation",
+          "text": "Balance: Al + O₂ → Al₂O₃."
+        },
+        {
+          "answer": "2H₂ + O₂ → 2H₂O",
+          "marks": 2,
+          "number": 7,
+          "skill": "Balance a chemical equation",
+          "text": "Balance: H₂ + O₂ → H₂O."
+        },
+        {
+          "answer": "C + O₂ → CO₂",
+          "marks": 2,
+          "number": 8,
+          "skill": "Name the types of reactions",
+          "text": "Give one example of a combination reaction, with its equation."
+        },
+        {
+          "answer": "Fe + CuSO₄ → FeSO₄ + Cu",
+          "marks": 2,
+          "number": 9,
+          "skill": "Name the types of reactions",
+          "text": "Give one example of a displacement reaction, with its equation."
+        },
+        {
+          "answer": "Zinc + hydrochloric acid → zinc chloride + hydrogen",
+          "marks": 2,
+          "number": 10,
+          "skill": "Write a word equation",
+          "text": "Write the word equation for zinc and dilute hydrochloric acid."
+        }
+      ]
+    },
+    {
+      "marksEach": 5,
+      "name": "Section C",
+      "questions": [
+        {
+          "answer": "A green coat forms; a chemical change; 2Cu + H₂O + CO₂ + O₂ → Cu(OH)₂·CuCO₃",
+          "marks": 5,
+          "number": 11,
+          "skill": "Spot a chemical change",
+          "text": "A shiny strip of copper is left in moist air for a week. Describe what happens, name the change and write its equation."
+        },
+        {
+          "answer": "3Fe + 4H₂O → Fe₃O₄ + 4H₂",
+          "marks": 5,
+          "number": 12,
+          "skill": "Balance a chemical equation",
+          "text": "Balance Fe + H₂O → Fe₃O₄ + H₂, showing each count."
+        }
+      ]
+    }
+  ],
+  "title": "Science unit test 3"
+}

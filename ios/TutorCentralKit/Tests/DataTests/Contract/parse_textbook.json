@@ -1,0 +1,45 @@
+{
+  "chapters": [
+    {
+      "name": "The Fish Tale",
+      "skills": [
+        "Compare lengths and weights",
+        "Read large numbers",
+        "Use units of measure"
+      ]
+    },
+    {
+      "name": "Shapes and Angles",
+      "skills": [
+        "Name angles in shapes",
+        "Tell right, acute and obtuse angles",
+        "Measure turns"
+      ]
+    },
+    {
+      "name": "How Many Squares?",
+      "skills": [
+        "Count squares in a shape",
+        "Find the area on squared paper",
+        "Draw shapes of equal area"
+      ]
+    },
+    {
+      "name": "Parts and Wholes",
+      "skills": [
+        "Name a fraction of a whole",
+        "Find equivalent fractions",
+        "Compare simple fractions"
+      ]
+    },
+    {
+      "name": "Does it Look the Same?",
+      "skills": [
+        "Spot mirror symmetry",
+        "Find a shape's lines of symmetry",
+        "Complete a symmetric figure"
+      ]
+    }
+  ],
+  "title": "Math-Magic 5"
+}

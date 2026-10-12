@@ -1,0 +1,46 @@
+{
+  "instructions": "Balance each equation",
+  "questions": [
+    {
+      "answer": "2Mg + O2 → 2MgO",
+      "number": 1,
+      "text": "Balance: Mg + O2 → MgO"
+    },
+    {
+      "answer": "H2 + Cl2 → 2HCl",
+      "number": 2,
+      "text": "Balance: H2 + Cl2 → HCl"
+    },
+    {
+      "answer": "2Na + Cl2 → 2NaCl",
+      "number": 3,
+      "text": "Balance: Na + Cl2 → NaCl"
+    },
+    {
+      "answer": "4Fe + 3O2 → 2Fe2O3",
+      "number": 4,
+      "text": "Balance: Fe + O2 → Fe2O3"
+    },
+    {
+      "answer": "4Al + 3O2 → 2Al2O3",
+      "number": 5,
+      "text": "Balance: Al + O2 → Al2O3"
+    },
+    {
+      "answer": "CH4 + 2O2 → CO2 + 2H2O",
+      "number": 6,
+      "text": "Balance: CH4 + O2 → CO2 + H2O"
+    },
+    {
+      "answer": "Zn + 2HCl → ZnCl2 + H2",
+      "number": 7,
+      "text": "Balance: Zn + HCl → ZnCl2 + H2"
+    },
+    {
+      "answer": "2KClO3 → 2KCl + 3O2",
+      "number": 8,
+      "text": "Balance: KClO3 → KCl + O2"
+    }
+  ],
+  "title": "Balancing equations"
+}

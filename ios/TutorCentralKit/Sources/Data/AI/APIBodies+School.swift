@@ -66,9 +66,9 @@ struct MakeGapBody: Encodable {
     }
 
     /// The API's limits (`/ai/make` kind `gap_report`): three days, twelve skills, a note of 300.
-    static let maxDays = 3
-    static let maxSkills = 12
-    static let noteLimit = 300
+    static let maxDays = APIContract.gapDaysMax
+    static let maxSkills = APIContract.gapSkillsMax
+    static let noteLimit = APIContract.gapNoteLength
 
     /// The twelve weakest skills (lowest share first, ties in the mock's order), sent in the mock's order with their
     /// notes cut to the limit; the report kept with the exam holds every skill.

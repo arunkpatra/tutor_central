@@ -1,0 +1,83 @@
+{
+  "sections": [
+    {
+      "marksEach": 1,
+      "questions": [
+        {
+          "answer": "(a) x² + 3 = 0",
+          "marks": 1,
+          "number": 1,
+          "text": "Which of the following is a quadratic equation in x? (a) x² + 3 = 0 (b) 2x + 1 = 0 (c) x³ − x = 0 (d) 1/x + x = 2"
+        },
+        {
+          "answer": "−8",
+          "marks": 1,
+          "number": 2,
+          "text": "Write the discriminant of 2x² − 4x + 3 = 0."
+        },
+        {
+          "answer": "k = 6",
+          "marks": 1,
+          "number": 3,
+          "text": "If one root of x² − 5x + k = 0 is 2, find k."
+        },
+        {
+          "answer": "Real and equal (both −2)",
+          "marks": 1,
+          "number": 4,
+          "text": "State the nature of the roots of x² + 4x + 4 = 0."
+        }
+      ],
+      "title": "Section A"
+    },
+    {
+      "marksEach": 2,
+      "questions": [
+        {
+          "answer": "x = 3 or x = 4",
+          "marks": 2,
+          "number": 5,
+          "text": "Solve x² − 7x + 12 = 0 by factorisation."
+        },
+        {
+          "answer": "√6/3, twice (the roots are equal)",
+          "marks": 2,
+          "number": 6,
+          "text": "Find the roots of 3x² − 2√6 x + 2 = 0."
+        },
+        {
+          "answer": "k = 6 or k = −6",
+          "marks": 2,
+          "number": 7,
+          "text": "Find k so that x² + kx + 9 = 0 has equal roots."
+        },
+        {
+          "answer": "x = 3/2 or x = −2",
+          "marks": 2,
+          "number": 8,
+          "text": "Find the roots of 2x² + x − 6 = 0 using the quadratic formula."
+        }
+      ],
+      "title": "Section B"
+    },
+    {
+      "marksEach": 4,
+      "questions": [
+        {
+          "answer": "40 km/h",
+          "marks": 4,
+          "number": 9,
+          "text": "A train travels 360 km at a uniform speed. Had the speed been 5 km/h more, it would have taken 1 hour less. Find the speed of the train."
+        },
+        {
+          "answer": "13 and 15",
+          "marks": 4,
+          "number": 10,
+          "text": "The product of two consecutive odd natural numbers is 195. Find the numbers."
+        }
+      ],
+      "title": "Section C"
+    }
+  ],
+  "title": "Quadratic equations"
+}

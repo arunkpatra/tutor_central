@@ -1,0 +1,44 @@
+{
+  "rows": [
+    {
+      "fee": 1200,
+      "name": "Aarav Mehta",
+      "phone": "9876543210"
+    },
+    {
+      "fee": 1200,
+      "name": "Diya Pillai",
+      "phone": "99887 76655"
+    },
+    {
+      "fee": 1000,
+      "name": "Dev Kumar",
+      "phone": "+91 98848 43831"
+    },
+    {
+      "fee": 1200,
+      "name": "Kavya Nair",
+      "phone": ""
+    },
+    {
+      "fee": 1500,
+      "name": "Rohan Gupta",
+      "phone": "90080 11223"
+    },
+    {
+      "fee": 1200,
+      "name": "Sneha Joshi",
+      "phone": "98450 33221"
+    },
+    {
+      "fee": 1200,
+      "name": "Ishaan Bose",
+      "phone": "97400 55667"
+    },
+    {
+      "fee": 1200,
+      "name": "Tanvi Kulkarni",
+      "phone": "99000 44556"
+    }
+  ]
+}

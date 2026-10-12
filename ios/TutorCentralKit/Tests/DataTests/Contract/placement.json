@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "answer": "1 km",
+      "chapter": "The Fish Tale",
+      "question": "Which is longer, 1 km or 800 m?"
+    },
+    {
+      "answer": "Yes",
+      "chapter": "Shapes and Angles",
+      "question": "Is the corner of a page a right angle?"
+    },
+    {
+      "answer": "12",
+      "chapter": "How Many Squares?",
+      "question": "A rectangle is 3 squares by 4 squares. How many squares?"
+    }
+  ]
+}
