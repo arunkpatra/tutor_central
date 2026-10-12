@@ -233,8 +233,8 @@ job arrives within the minute with the local Vault secrets set (section 12).
 
 - **A payload alone**, no APNs: `xcrun simctl push booted in.tutorcentral.app payload.json` with `{"aps": {"alert":
   {"title": "…", "body": "…"}}, "link": "tutorcentral://today"}`.
-- **The lock screen:** quit the app (swipe it away) and lock the simulator (`xcrun simctl spawn booted notifyutil -p
-  com.apple.springboard.lockcomplete` or Device → Lock); after a lock the simulator's panel can look frozen: section 9.
+- **The lock screen:** quit the app (swipe it away) and press the simulator's lock button (the iOS Simulator tool's
+  `button` LOCK, or Device → Lock in Simulator.app); after a lock the simulator's panel can look frozen: section 9.
 - **Stop the local API with its listener only:** `kill $(lsof -ti :3000 -sTCP:LISTEN)`. A bare `lsof -ti :3000` also lists
   Docker's own backend (the database's pg_net keeps a connection to `host.docker.internal:3000` for the worker's wake), and
   killing it stops Docker Desktop (session 37, three times).
