@@ -86,6 +86,10 @@ test("the worker reaches the database only through its named functions", async (
   // The one table read is the sweep guard's count of live jobs; every write is a function of 0028 or 0029.
   expect(reads).toEqual(["jobs"]);
   expect(source).not.toMatch(/\.(insert|update|upsert|delete)\(/);
+  // The sweep's reach is 0040's and 0041's functions and the Storage API, no table.
+  const sweep = await Bun.file(new URL("../src/jobs/sweep-db.ts", import.meta.url)).text();
+  expect([...sweep.matchAll(/\.from\("(\w+)"\)/g)]).toEqual([]);
+  expect(sweep).not.toMatch(/\.(insert|update|upsert|delete)\(/);
 });
 
 test("the tick sends what is due before it drains, and answers both", async () => {
