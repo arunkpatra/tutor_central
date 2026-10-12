@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import { SAMPLE } from "./claude-fake.js";
+import { noteContent } from "./jobs/kinds/note-day.js";
 import { BODY_BASE64_MAX, CheckPaperInput, MakeInput, PlanInput, ReadMarksInput, ScanRegisterInput, TUTOR_SAYS_MAX } from "./schemas.js";
 
 /** What the app is held to (D80): the limits and lists the API's schemas set, read from the schemas themselves, so a limit
@@ -81,7 +82,16 @@ export function contract(): Contract {
   };
 }
 
-/** The fake's answer per kind, as the API sends `result`: the app's decoders read each (ContractTests). */
+/** The fake's answer per kind, as the API sends `result`, and `kept_note`, a note as the note day's job keeps it: the
+ *  app's decoders read each (ContractTests). */
 export function samples(): Record<string, unknown> {
-  return { ...SAMPLE };
+  const kept_note = noteContent({
+    message: "Aarav had a good week.",
+    english: "Aarav had a good week.",
+    language: "hi",
+    monday: "2026-10-05",
+    facts: [{ label: "Taught", fact: "Fractions", symbol: "book.closed" }],
+    generationId: "11111111-1111-1111-1111-111111111111",
+  });
+  return { ...SAMPLE, kept_note };
 }

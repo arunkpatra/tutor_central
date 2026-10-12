@@ -32,10 +32,19 @@ type Counts = { made: number; held: string[]; kept: number; failed: number };
 type Step = { at?: undefined } | ({ at: "note"; i: number; read: NoteRead } & Counts) | ({ at: "notify"; read: NoteRead } & Counts);
 
 const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
-const dayParts = (day: string) => {
-  const [year, month, d] = day.split("-").map(Number) as [number, number, number];
-  return { year, month, day: d };
-};
+
+/** A note's content as the app keeps it (NoteContent, snake-case keys): the week's Monday is an ISO day, as the app writes
+ *  and reads it. The contract's `kept_note` sample is made here, so the app's decoder reads this very shape (ContractTests). */
+export function noteContent(parts: { message: string; english?: string; language: string; monday: string; facts: { label: string; fact: string; symbol: string }[]; generationId: string }) {
+  return {
+    message: parts.message,
+    ...(parts.language === "en" || parts.english === undefined ? {} : { english: parts.english }),
+    language: parts.language,
+    week_monday: parts.monday,
+    facts: parts.facts,
+    generation_id: parts.generationId,
+  };
+}
 
 /** The note day's job (plan decision 13): input `{class_id, date}` (every member with a parent's number on the batch's
  *  note day) or `{student_id, week}` (a note the job did not write, asked for from the app). One step per student: the
@@ -140,14 +149,7 @@ async function note(job: Job, ctx: StepContext, source: NoteSource, centre: stri
     if (call.reason === "student_consent") return go({ held: [...step.held, student.id] });
     return go({ failed: step.failed + 1 }, { generationId: call.id, costPaise: call.costPaise });
   }
-  const content = {
-    message: call.parsed.message,
-    ...(student.language === "en" ? {} : { english: call.parsed.english }),
-    language: student.language,
-    week_monday: dayParts(week.from),
-    facts,
-    generation_id: call.id,
-  };
+  const content = noteContent({ message: call.parsed.message, english: call.parsed.english, language: student.language, monday: week.from, facts, generationId: call.id });
   const title = ladder ? `${firstName(student.name)} can now do` : `${firstName(student.name)}'s week`;
   try {
     await source.keep(centre, student.id, { kind: ladder ? "can_do" : "note", source: "made", title, content, generation_id: call.id }, key);

@@ -34,6 +34,10 @@ test("the contract lists the event kinds and the error reasons", () => {
   expect(lists.errorReasons).toContain("rate");
 });
 
-test("there is a sample answer for every kind the fake answers", () => {
-  expect(Object.keys(samples()).sort()).toEqual(Object.keys(SAMPLE).sort());
+test("there is a sample answer for every kind the fake answers, and the note day's kept note", () => {
+  expect(Object.keys(samples()).sort()).toEqual([...Object.keys(SAMPLE), "kept_note"].sort());
+});
+
+test("the kept note's week is an ISO day, as the app reads it", () => {
+  expect(samples().kept_note).toMatchObject({ week_monday: "2026-10-05" });
 });

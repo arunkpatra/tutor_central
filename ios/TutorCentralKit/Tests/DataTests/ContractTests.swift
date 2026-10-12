@@ -40,6 +40,11 @@ private let decoders: [String: @Sendable (Data) -> Bool] = {
         "gap_report": decodes(MadeEnvelope<GapResult>.self),
         "read_marks": decodes(MadeEnvelope<ReadMarksResult>.self),
     ]
+    // A note as the note day's job keeps it, read as the plans' read reads a kept note (Phase 18: its week).
+    table["kept_note"] = { data in
+        guard case .note = (try? ArtefactContent.decode(kind: .note, json: data)) ?? .other else { return false }
+        return true
+    }
     for kind in ["note", "can_do", "not_on_track", "test_tomorrow"] {
         table[kind] = decodes(MadeEnvelope<MessageResult>.self)
     }
@@ -53,7 +58,7 @@ private let decoders: [String: @Sendable (Data) -> Bool] = {
 }()
 
 @Test func theContractHoldsASampleForEveryKind() {
-    #expect(samples.count == 22)
+    #expect(samples.count == 23)
 }
 
 /// The API's answers the app no longer asks for: /ai/plan names a group's first topic for build 27's plans; since
