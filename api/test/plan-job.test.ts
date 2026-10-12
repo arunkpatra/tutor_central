@@ -136,6 +136,11 @@ test("read gathers the batch and continues to groups", async () => {
   expect(s.reads()).toBe(1);
 });
 
+test("a batch that no longer meets on the day (its days changed after the job was queued) is done with no write and no call (the review's R-db-7)", async () => {
+  const s = source(taught({ classroom: { id: CLASS, subject: "Science", patterns: {}, name: "Evening batch", meetingDays: [2, 4], start: "17:00:00", end: "18:30:00" } }));
+  expect(await planJob(s).step(job(), ctx())).toMatchObject({ kind: "done", name: "read", result: { plan_id: null, reason: "not_meeting" } });
+});
+
 test("a batch with no active member, a closed session, or a plan already made is done with no write", async () => {
   expect(await planJob(source(read({ members: [] }))).step(job(), ctx())).toMatchObject({ kind: "done", result: { plan_id: null, reason: "no_members" } });
   expect(await planJob(source(read({ closed: true }))).step(job(), ctx())).toMatchObject({ kind: "done", result: { plan_id: null, reason: "closed" } });

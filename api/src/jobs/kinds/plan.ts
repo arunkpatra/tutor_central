@@ -4,6 +4,7 @@ import type { PlanInput as TopicsInput, PlanOutput } from "../../schemas.js";
 import { type BudgetInput, budget, type MaterialRequest } from "../../plan/budget.js";
 import { type GapReport, nearestExam, type PrepItem, type PrepStudent, revisionLines } from "../../plan/exam-prep.js";
 import { type KeptArtefact, artefactOf, materialInput, placementGroups, placeOf } from "../../plan/material.js";
+import { weekday } from "../../plan/dates.js";
 import { MOCK_LINE } from "../../plan/exam.js";
 import { addingBriefs, naming, planRules } from "../../plan/rules.js";
 import {
@@ -131,6 +132,10 @@ async function read(source: PlanRecordSource, centre: string, input: Input): Pro
   if (plan?.closed || record.closed) return { kind: "done", name: "read", result: { plan_id: plan?.id ?? null, reason: "closed" } };
   if (plan && !input.replace) return { kind: "done", name: "read", result: { plan_id: plan.id, reason: "made" } };
   if (record.members.length === 0) return { kind: "done", name: "read", result: { plan_id: null, reason: "no_members" } };
+  // The job was queued at midnight for the day; the batch's days may have changed since (the review's R-db-7). A plan
+  // asked for after the batch began is still wanted, so the start is not checked.
+  const days = record.classroom.meetingDays;
+  if (days && !days.includes(weekday(input.date))) return { kind: "done", name: "read", result: { plan_id: null, reason: "not_meeting" } };
   return { kind: "continue", name: "read", step: { at: "groups", record } };
 }
 
