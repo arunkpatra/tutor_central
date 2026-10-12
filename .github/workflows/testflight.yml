@@ -133,6 +133,17 @@ jobs:
           grep -E 'error:|\*\* ARCHIVE' archive.log || tail -40 archive.log
           grep -q 'ARCHIVE SUCCEEDED' archive.log
 
+      # Phase 18: the build carries push (D88). The archive's signed app shows its entitlements in the log, and the run
+      # stops before the upload when aps-environment is missing. The archive is signed for development; the export
+      # re-signs it for the App Store, which takes APNs' production environment.
+      - name: Push entitlement
+        working-directory: ios
+        run: |
+          codesign -d --entitlements - --xml build/TutorCentral.xcarchive/Products/Applications/TutorCentral.app \
+            > entitlements.plist 2>/dev/null
+          plutil -p entitlements.plist
+          plutil -extract aps-environment raw entitlements.plist
+
       - name: Upload to TestFlight
         working-directory: ios
         env:
