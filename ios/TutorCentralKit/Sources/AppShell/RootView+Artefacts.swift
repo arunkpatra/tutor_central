@@ -19,7 +19,10 @@ extension RootView {
                         ? PlanCache(centre: workspace.centre.id, directory: deps.filesDirectory) : nil,
                     schoolItems: deps.schoolItems, schools: deps.schools, record: deps.record,
                     serverPDF: deps.serverFiles(workspace.centre.id).map {
-                        ServerPDF(files: $0, centre: workspace.centre.id)
+                        ServerPDF(
+                            files: $0, centre: workspace.centre.id,
+                            online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+                        )
                     }
                 ),
                 actions: ArtefactsActions(
