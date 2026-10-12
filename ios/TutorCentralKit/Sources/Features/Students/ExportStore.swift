@@ -113,14 +113,22 @@ import Observation
         }
     }
 
-    /// Reads the job every five seconds while it is made and the page is in front.
+    /// Reads the job every five seconds while it is made, until the page leaves (`stop`): behind (another app in front)
+    /// a read waits, and a failed read is tried again at the next (the review's R-app-2: either ended the follow for
+    /// good, and the card said "Making" after the file was made).
     func follow() {
         guard following == nil else { return }
         following = Task { [weak self] in
             while !Task.isCancelled {
-                guard let pause = self?.pause, await (try? pause()) != nil, let self, inFront(),
-                      let job = try? await jobs.exportJob(centre: register.workspace.centre.id, student: studentID)
-                else { break }
+                guard let pause = self?.pause, await (try? pause()) != nil, let self else { break }
+                guard inFront() else { continue }
+                let read: JobStatus?
+                do {
+                    read = try await jobs.exportJob(centre: register.workspace.centre.id, student: studentID)
+                } catch {
+                    continue
+                }
+                guard let job = read else { break }
                 show(job)
                 guard job.isLive else { break }
             }
