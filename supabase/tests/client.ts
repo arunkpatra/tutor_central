@@ -32,3 +32,8 @@ export async function userClient(l: Local, email: string): Promise<SupabaseClien
 export function anonClient(l: Local): SupabaseClient {
   return createClient(l.url, l.anon, options);
 }
+
+/** The platform's client (D83): the service role, as the worker and the observability client use it. */
+export function serviceClient(l: Local): SupabaseClient {
+  return createClient(l.url, l.service, options);
+}
