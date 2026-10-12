@@ -146,9 +146,10 @@ export const STEPS: Step[] = [
       "supabase/package.json",
       "supabase/tsconfig.json",
       "supabase/syllabi/**",
-      // review-seed.test and run-job.test run their SQL on the local database.
+      // review-seed.test, run-job.test and restore-count.test run their SQL on the local database.
       "tools/review-seed.ts",
       "tools/run-job.ts",
+      "tools/restore-count.sql",
     ],
     skipIf: async () => dbSkipReason(process.env, (await sh(["supabase", "status"], { cwd: "supabase" })).code === 0),
     run: async () => {
