@@ -13,6 +13,14 @@ public enum Fixtures {
     static let goneEvent = UUID(uuidString: "eeeeeeee-0000-0000-0000-00000000dead") ?? UUID()
 
     @MainActor public static func dependencies(for state: LaunchState) -> Dependencies {
+        let deps = boardDependencies(for: state)
+        if let jobs = deps.jobs as? FakeJobsRepository {
+            serveNotes(jobs, deps: deps, state: state)
+        }
+        return deps
+    }
+
+    @MainActor private static func boardDependencies(for state: LaunchState) -> Dependencies {
         let (auth, centres) = session(for: state)
         let counts = FakeCountsRepository(counts: counts(for: state))
         let students = FakeStudentsRepository(students: students(for: state))

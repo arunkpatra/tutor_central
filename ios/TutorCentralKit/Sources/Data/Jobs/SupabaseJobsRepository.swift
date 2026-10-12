@@ -48,6 +48,14 @@ public struct SupabaseJobsRepository: JobsRepository {
         ]).execute()
     }
 
+    public func requestNote(centre: UUID, student: UUID, week: Day) async throws -> UUID {
+        let response = try await client.rpc("request_note", params: [
+            "p_centre": AnyJSON.string(centre.uuidString), "p_student": .string(student.uuidString),
+            "p_week": .string(week.iso),
+        ]).execute()
+        return try PostgRESTDecoder.make().decode(UUID.self, from: response.data)
+    }
+
     /// The choices as the plan job reads them: `{ groups, subjects: { "1": "Mathematics" } }`.
     static func planParams(centre: UUID, classID: UUID, date: Day, choices: PlanChoices?) -> [String: AnyJSON] {
         var params: [String: AnyJSON] = [

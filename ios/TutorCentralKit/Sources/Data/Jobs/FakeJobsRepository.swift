@@ -6,6 +6,7 @@ import Foundation
 @MainActor public final class FakeJobsRepository: JobsRepository {
     public enum Request: Hashable, Sendable {
         case plan(classID: UUID, date: Day, choices: PlanChoices?)
+        case note(student: UUID, week: Day)
     }
 
     /// The plan job a read answers, by batch; set by a test to move a job on.
@@ -14,6 +15,8 @@ import Foundation
     public var afterRequest: JobStatus.State = .queued
     /// The server's work for a plan request, for `bun shots`: the plan written and the job's state after it.
     public var onPlanRequest: (@MainActor (UUID, Day, PlanChoices?) async -> JobStatus.State)?
+    /// The server's work for a note request, for `bun shots` and the tests: the note kept for the student and week.
+    public var onNoteRequest: (@MainActor (UUID, Day) async -> Void)?
     public var failure: (any Error)?
     public private(set) var requested: [Request] = []
     public private(set) var cancelled: [UUID] = []
@@ -46,6 +49,15 @@ import Foundation
         let job = JobStatus(id: UUID(), state: state, createdAt: created)
         planJobs[classID] = job
         return job.id
+    }
+
+    public func requestNote(centre _: UUID, student: UUID, week: Day) async throws -> UUID {
+        if let failure {
+            throw failure
+        }
+        requested.append(.note(student: student, week: week))
+        await onNoteRequest?(student, week)
+        return UUID()
     }
 
     public func cancel(centre _: UUID, job: UUID) async throws {

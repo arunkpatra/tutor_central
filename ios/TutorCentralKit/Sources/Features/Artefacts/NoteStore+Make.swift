@@ -4,7 +4,8 @@ import Foundation
 
 extension NoteStore {
     /// The note kept this week: the copy on this iPhone at once (U47: a connection that hangs takes 20 s to give up),
-    /// then the plans' (the newer when both), else a new one made.
+    /// then the plans' (the newer when both), else asked of the server (the note day's job did not write it); the
+    /// tutor's own words write a new one here.
     public func load() async {
         // A link or a launch state can open the note before the register is read.
         await context.register.loadIfNeeded()
@@ -34,14 +35,25 @@ extension NoteStore {
             show(found)
             return
         }
-        await make(student: student, from: nil)
+        if tutorSays != nil {
+            await make(student: student, from: nil)
+        } else {
+            await ask(student: student)
+        }
     }
 
-    /// Try Again after a failed call.
+    /// Try Again after a failure: the note asked of the server again, or the call made again.
     public func make() async {
         guard let student else { return }
-        await make(student: student, from: kept?.id)
+        if kept == nil, tutorSays == nil {
+            await ask(student: student)
+        } else {
+            await make(student: student, from: kept?.id)
+        }
     }
+
+    /// Reads while an asked note is written: every five seconds for two minutes.
+    static let askedReads = 24
 
     /// A fresh draft, a new call though the facts are the same; the shown one stays kept (`regenerated_from`).
     public func writeAgain() async {
@@ -121,7 +133,9 @@ extension NoteStore {
         stage = .ready
     }
 
-    private func make(student: Student, from previous: UUID?) async {
+    /// The week's record read and its facts shown; nil with the failure shown when the note cannot be written now
+    /// (no consent, offline, the record unread).
+    private func prepare(_ student: Student) async -> NoteRecord? {
         let records = try? await context.reader.read(
             [student], centre: context.workspace.centre.id, from: week.lowerBound, to: noteDay,
             calendar: context.calendar
@@ -132,35 +146,60 @@ extension NoteStore {
         }
         guard student.consent != nil else {
             stage = .failed(NoteConsent.waiting(student))
-            return
+            return nil
         }
         guard await context.online() else {
             stage = .failed(OfflineRefusal.words(for: .weeklyNote))
-            return
+            return nil
         }
         guard let record else {
             stage = .failed("Couldn't read this week's record. Check your connection and try again.")
+            return nil
+        }
+        return record
+    }
+
+    /// The note the note day's job did not write, asked of the server (`request_note`): the writing card while the
+    /// store
+    /// reads again, every five seconds for up to two minutes; then the timed-out words with Try Again.
+    private func ask(student: Student) async {
+        guard await prepare(student) != nil else { return }
+        stage = .writing
+        canRetry = false
+        do {
+            _ = try await context.jobs.requestNote(
+                centre: context.workspace.centre.id, student: student.id, week: week.lowerBound
+            )
+        } catch {
+            canRetry = true
+            stage = .failed("That didn't go through. Check your connection and try again.")
             return
         }
+        // Read at once (a job already done answers the same note), then every five seconds.
+        for read in 0 ..< Self.askedReads {
+            if read > 0 {
+                guard await (try? context.pause()) != nil, !Task.isCancelled else { return }
+            }
+            if let found = await servedNote() {
+                keepCopy(found)
+                show(found)
+                return
+            }
+        }
+        canRetry = true
+        stage = .failed(APIFailure.timedOut.message)
+    }
+
+    /// Written here, at a tap that asks for it (Write again, the tutor's own words).
+    private func make(student: Student, from previous: UUID?) async {
+        guard let record = await prepare(student) else { return }
         stage = .writing
         canRetry = false
         let words = isLadder ? nil : tutorSays ?? content?.tutorSays
         do {
-            let made = try await call(record, student: student, saying: words)
-            let note = NoteContent(
-                message: made.message, english: language == .english ? nil : made.english, language: language,
-                weekMonday: week.lowerBound, facts: facts, generationID: made.generationID, tutorSays: words
+            let artefact = try await context.writer.write(
+                student, record: record, week: week, saying: words, replacing: previous
             )
-            let title = isLadder ? "\(student.firstName) can now do" : "\(student.firstName)'s week"
-            let new = NewNote(
-                studentID: student.id, kind: isLadder ? .canDo : .note, title: title, content: note,
-                regeneratedFrom: previous
-            )
-            // The call is paid for: the note is kept even when the screen was left meanwhile (a task of its own, not
-            // cancelled with the screen's), so the next Read opens it rather than paying again.
-            let plans = context.plans
-            let centre = context.workspace.centre.id
-            let artefact = try await Task { try await plans.keepNote(new, centre: centre) }.value
             keepCopy(artefact)
             show(artefact)
         } catch let failure as APIFailure {
@@ -170,33 +209,6 @@ extension NoteStore {
             canRetry = true
             stage = .failed("That didn't go through. Check your connection and try again.")
         }
-    }
-
-    private func call(
-        _ record: NoteRecord, student: Student, saying words: String?
-    ) async throws(APIFailure) -> MadeMessage {
-        let workspace = context.workspace
-        let tutor = workspace.profile.displayName ?? workspace.centre.name
-        let level = student.classLevel ?? .messageFallback
-        if isLadder {
-            let facts = CanDoWeek.facts(
-                chapters: record.chapters, skills: record.skills, week: week, calendar: context.calendar
-            )
-            return try await context.ai.makeCanDo(
-                CanDoRequest(
-                    studentID: student.id, studentName: student.name, parentName: student.parentName, tutorName: tutor,
-                    centreName: workspace.centre.name, classLevel: level, language: language, facts: facts
-                ),
-                centre: workspace.centre.id
-            )
-        }
-        let facts = NoteWeek.facts(record, week: week, calendar: context.calendar)
-        let request = NoteRequest(
-            studentID: student.id, studentName: student.name, parentName: student.parentName, tutorName: tutor,
-            centreName: workspace.centre.name, classLevel: level, language: language, weekMonday: week.lowerBound,
-            week: NoteRequest.Week(facts)
-        )
-        return try await context.ai.makeNote(words.map(request.saying) ?? request, centre: workspace.centre.id)
     }
 
     /// The facts the screen shows while the note is written, and "Moved up" for the ladder.
