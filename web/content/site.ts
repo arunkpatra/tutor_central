@@ -9,7 +9,7 @@ export const ROUTES = {
 /** When the privacy page and the terms last changed: each its own day. */
 export const PRIVACY_UPDATED = "12 October 2026";
 export const TERMS_UPDATED = "9 October 2026";
-/** The trust page went live (Phase 15, before any tutor's student reaches the AI service in testing). */
+/** When the trust page last changed (Phase 15 put it live; Phase 18 added the export, withdrawal and notifications). */
 export const TRUST_UPDATED = "12 October 2026";
 export const PROMISE = "Made in India for tutors who run their own centre.";
 /** Who makes the app, as the site names them (Owner step 0). */
