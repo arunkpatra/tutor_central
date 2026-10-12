@@ -16,6 +16,18 @@ test("rows are priced by kind and model from api/models.json, in rupees to the p
   ]);
 });
 
+test("a row's recorded cost is summed as it is; a row without one is priced by its tokens", () => {
+  const rows = [
+    { kind: "check", model: "claude-haiku-5-5", tokens_in: 1_000_000, tokens_out: 0, cost_paise: 500 },
+    { kind: "check", model: "claude-haiku-5-5", tokens_in: 1_000_000, tokens_out: 0, cost_paise: null },
+    { kind: "plan", model: "claude-9", tokens_in: 10, tokens_out: 10, cost_paise: 40 },
+  ];
+  expect(costTable(rows, table)).toEqual([
+    { kind: "check", model: "claude-haiku-5-5", calls: 2, tokensIn: 2_000_000, tokensOut: 0, rupees: 13.5 },
+    { kind: "plan", model: "claude-9", calls: 1, tokensIn: 10, tokensOut: 10, rupees: 0.4 },
+  ]);
+});
+
 test("a row whose model the table does not price is listed with no rupees, never priced wrong", () => {
   const [row] = costTable([{ kind: "note", model: "claude-5", tokens_in: 1, tokens_out: 1 }], table);
   expect(row).toMatchObject({ kind: "note", model: "claude-5", rupees: null });

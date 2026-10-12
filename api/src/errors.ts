@@ -42,6 +42,10 @@ export const errors = {
   }),
   service: (): ApiError => ({ status: 502, body: { error: "The AI service didn't answer. Try again." } }),
   badImage: (why: string): ApiError => ({ status: 400, body: { error: why } }),
+  /** The same key's call is still running (D84): the app's timed-out words; it may finish and replay. */
+  inProgress: (): ApiError => ({ status: 409, body: { error: "That took too long to come back. Try again in a minute.", reason: "in_progress" } }),
+  /** The same key with another body (D84): nothing paid; the app's service words. */
+  keyReused: (): ApiError => ({ status: 409, body: { error: "The AI service didn't answer. Try again.", reason: "key_reused" } }),
   /** 20 calls a minute per user, or 60 per address (src/request.ts). */
   rate: (): ApiError => ({ status: 429, body: { error: "Too many requests in a minute. Try again shortly.", reason: "rate" } }),
   /** A body past 4.4 MB, before Vercel's own 4.5 MB would answer in its words: the app's words for too many pages. */

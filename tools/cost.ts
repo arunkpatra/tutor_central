@@ -5,28 +5,35 @@
 import table from "../api/models.json" with { type: "json" };
 import { must } from "./lib/sh";
 
-export type Generation = { kind: string; model: string; tokens_in: number | null; tokens_out: number | null };
+export type Generation = { kind: string; model: string; tokens_in: number | null; tokens_out: number | null; cost_paise?: number | null };
 export type CostRow = { kind: string; model: string; calls: number; tokensIn: number; tokensOut: number; rupees: number | null };
 type Table = { rupeesPerDollar: number; models: Record<string, { inputUsdPerMillion: number; outputUsdPerMillion: number }> };
 
-/** The rows summed by kind and model, in rupees to the paisa; a model the table does not price has no rupees. */
+/** A row's cost in paise: what the API recorded at finish (0029's `cost_paise`), else its tokens priced by the table; null
+ *  when neither is known. */
+function paiseOf(r: Generation, prices: Table): number | null {
+  if (r.cost_paise !== null && r.cost_paise !== undefined) return r.cost_paise;
+  const price = prices.models[r.model];
+  if (!price) return null;
+  const dollars = ((r.tokens_in ?? 0) * price.inputUsdPerMillion + (r.tokens_out ?? 0) * price.outputUsdPerMillion) / 1_000_000;
+  return dollars * prices.rupeesPerDollar * 100;
+}
+
+/** The rows summed by kind and model, in rupees to the paisa; a group with a row neither recorded nor priced has none. */
 export function costTable(rows: Generation[], prices: Table): CostRow[] {
-  const sums = new Map<string, CostRow>();
+  const sums = new Map<string, CostRow & { paise: number | null }>();
   for (const r of rows) {
     const key = `${r.kind} ${r.model}`;
-    const row = sums.get(key) ?? { kind: r.kind, model: r.model, calls: 0, tokensIn: 0, tokensOut: 0, rupees: 0 };
+    const row = sums.get(key) ?? { kind: r.kind, model: r.model, calls: 0, tokensIn: 0, tokensOut: 0, rupees: 0, paise: 0 };
     row.calls += 1;
     row.tokensIn += r.tokens_in ?? 0;
     row.tokensOut += r.tokens_out ?? 0;
+    const paise = paiseOf(r, prices);
+    row.paise = row.paise === null || paise === null ? null : row.paise + paise;
     sums.set(key, row);
   }
   return [...sums.values()]
-    .map((row) => {
-      const price = prices.models[row.model];
-      if (!price) return { ...row, rupees: null };
-      const dollars = (row.tokensIn * price.inputUsdPerMillion + row.tokensOut * price.outputUsdPerMillion) / 1_000_000;
-      return { ...row, rupees: Math.round(dollars * prices.rupeesPerDollar * 100) / 100 };
-    })
+    .map(({ paise, ...row }) => ({ ...row, rupees: paise === null ? null : Math.round(paise) / 100 }))
     .sort((a, b) => a.kind.localeCompare(b.kind) || a.model.localeCompare(b.model));
 }
 
@@ -59,7 +66,7 @@ async function main(args: string[]) {
   const since = flag("--since") ?? "30m";
   const kinds = flag("--kinds")?.split(",").filter(Boolean) ?? [];
   const url = process.env.DATABASE_URL ?? "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
-  const query = `select coalesce(json_agg(json_build_object('kind', kind, 'model', model, 'tokens_in', tokens_in, 'tokens_out', tokens_out)), '[]') from public.ai_generations where ${costWhere(since, kinds)}`;
+  const query = `select coalesce(json_agg(json_build_object('kind', kind, 'model', model, 'tokens_in', tokens_in, 'tokens_out', tokens_out, 'cost_paise', cost_paise)), '[]') from public.ai_generations where ${costWhere(since, kinds)}`;
   const rows = JSON.parse(await must(["psql", url, "-Atc", query])) as Generation[];
   const priced = costTable(rows, table);
   for (const r of priced) {

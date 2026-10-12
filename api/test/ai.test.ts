@@ -187,3 +187,76 @@ test("a V1 progress note names its student for the gate and waits for their pare
   expect(refused.status).toBe(403);
   expect(claude.requests).toHaveLength(0);
 });
+
+const keyed = (a: ReturnType<typeof makeApp>, key: string | null, body: unknown = paper, requestId?: string) =>
+  a.request("/ai/generate", {
+    method: "POST",
+    headers: { ...auth, ...(key ? { "idempotency-key": key } : {}), ...(requestId ? { "x-request-id": requestId } : {}) },
+    body: JSON.stringify(body),
+  });
+
+test("the key and request id reach start, and the row is finished with cost, latency, hash and stop reason", async () => {
+  const db = fakeDb();
+  const requestId = "0f9a1b2c-3d4e-4f5a-8b6c-7d8e9f0a1b2c";
+  const r = await keyed(app(fakeClaude({ answer: SAMPLE.paper }), db), "k", paper, requestId);
+  expect(r.status).toBe(200);
+  expect(r.headers.get("idempotent-replayed")).toBeNull();
+  expect(db.started[0]).toMatchObject({ key: "k", requestId });
+  expect((db.started[0] as { inputHash: string }).inputHash).toMatch(/^[0-9a-f]{64}$/);
+  expect(db.finished[0]).toMatchObject({ status: "ok", costPaise: 138, stopReason: "end_turn", errorReason: null });
+  expect((db.finished[0] as { promptHash: string }).promptHash).toMatch(/^[0-9a-f]{64}$/);
+  expect((db.finished[0] as { latencyMs: number }).latencyMs).toBeGreaterThanOrEqual(0);
+  expect((db.finished[0] as { finishedAt: string }).finishedAt).toBeString();
+});
+
+test("a replayed key answers the stored result with the header and no call", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.paper });
+  const db = fakeDb({ replays: { k: { id: "gen-old", status: "ok", output: JSON.stringify(SAMPLE.paper) } } });
+  const r = await keyed(app(claude, db), "k");
+  expect(r.status).toBe(200);
+  expect(r.headers.get("idempotent-replayed")).toBe("true");
+  expect(await r.json()).toEqual({ id: "gen-old", result: SAMPLE.paper });
+  expect(claude.requests).toHaveLength(0);
+  expect(db.finished).toHaveLength(0);
+});
+
+test("a pending key answers 409 in_progress, in the app's timed-out words", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.paper });
+  const r = await keyed(app(claude, fakeDb({ replays: { k: { id: "gen-old", status: "pending", output: null } } })), "k");
+  expect(r.status).toBe(409);
+  expect(await r.json()).toEqual({ error: "That took too long to come back. Try again in a minute.", reason: "in_progress" });
+  expect(claude.requests).toHaveLength(0);
+});
+
+test("a reused key with another body is 409 key_reused, nothing paid", async () => {
+  const claude = fakeClaude({ answer: SAMPLE.paper });
+  const r = await keyed(app(claude, fakeDb({ keyReused: ["k"] })), "k");
+  expect(r.status).toBe(409);
+  expect(await r.json()).toEqual({ error: "The AI service didn't answer. Try again.", reason: "key_reused" });
+  expect(claude.requests).toHaveLength(0);
+});
+
+test("a call without a key is recorded and never replayed; a key past 200 characters is not used", async () => {
+  const db = fakeDb();
+  const a = app(fakeClaude({ answer: SAMPLE.paper }), db);
+  expect((await keyed(a, null)).status).toBe(200);
+  expect((await keyed(a, "x".repeat(201))).status).toBe(200);
+  expect(db.started.map((s) => (s as { key?: string }).key)).toEqual([undefined, undefined]);
+  expect(db.finished).toHaveLength(2);
+});
+
+test("a truncated answer is 502 in the service's words and the row says truncated with its tokens", async () => {
+  const db = fakeDb();
+  const r = await keyed(app(fakeClaude({ truncate: true }), db), "k");
+  expect(r.status).toBe(502);
+  expect(await r.json()).toEqual({ error: "The AI service didn't answer. Try again." });
+  expect(db.finished[0]).toMatchObject({ status: "failed", errorReason: "truncated", tokensIn: 812, tokensOut: 16000, stopReason: "max_tokens" });
+});
+
+test("a refused answer records its tokens and its reason; a failed one its reason with no tokens", async () => {
+  const db = fakeDb();
+  await keyed(app(fakeClaude({ refuse: true }), db), "k");
+  expect(db.finished[0]).toMatchObject({ status: "failed", errorReason: "refused", tokensIn: 100, tokensOut: 0 });
+  await keyed(app(fakeClaude({ fail: "timeout" }), db), "k2");
+  expect(db.finished[1]).toMatchObject({ status: "failed", errorReason: "timeout", tokensIn: null, costPaise: null });
+});
