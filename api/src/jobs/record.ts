@@ -37,6 +37,16 @@ export function makeRecordSource(url: string, serviceKey: string): PlanRecordSou
     if (r.error || r.data === null || r.data === undefined) throw new Error(`${what}: ${r.error?.message ?? "nothing"}`);
     return r.data as NonNullable<T>;
   };
+  // A name step retaken after a crash writes again: each write first finds what an earlier try wrote (the chapter by
+  // its name in any case, the skill by its name), so a student never gets a second "Fractions".
+  const addSkill = async (centre: string, chapter: string, student: string, name: string): Promise<string> => {
+    const skills = await client.from("skills").select("id, name, position").eq("centre_id", centre).eq("chapter_id", chapter).order("position", { ascending: false });
+    const rows = must(skills, "skills");
+    const found = rows.find((s) => s.name === name);
+    if (found) return found.id;
+    const made = await client.from("skills").insert({ centre_id: centre, chapter_id: chapter, student_id: student, position: (rows[0]?.position ?? 0) + 1, name }).select("id").single();
+    return must(made, "skills").id;
+  };
   const existingPlan = async (centre: string, classId: string, date: string) => {
     const r = await client.from("plans").select("id").eq("centre_id", centre).eq("class_id", classId).eq("date", date).maybeSingle();
     if (r.error) throw new Error(`plans: ${r.error.message}`);
@@ -125,18 +135,15 @@ export function makeRecordSource(url: string, serviceKey: string): PlanRecordSou
       return read;
     },
     async addChapter(centre, student, subject, name, skill) {
-      const last = await client.from("chapters").select("position").eq("centre_id", centre).eq("student_id", student).eq("subject", subject).order("position", { ascending: false }).limit(1);
-      const position = (must(last, "chapters")[0]?.position ?? 0) + 1;
-      const chapter = must(await client.from("chapters").insert({ centre_id: centre, student_id: student, subject, position, name }).select("id").single(), "chapters");
+      const chapters = await client.from("chapters").select("id, name, position").eq("centre_id", centre).eq("student_id", student).eq("subject", subject).order("position", { ascending: false });
+      const rows = must(chapters, "chapters");
+      const found = rows.find((c) => c.name.toLowerCase() === name.toLowerCase());
+      if (found) return await addSkill(centre, found.id, student, skill);
+      const chapter = must(await client.from("chapters").insert({ centre_id: centre, student_id: student, subject, position: (rows[0]?.position ?? 0) + 1, name }).select("id").single(), "chapters");
       const made = await client.from("skills").insert({ centre_id: centre, chapter_id: chapter.id, student_id: student, position: 1, name: skill }).select("id").single();
       return must(made, "skills").id;
     },
-    async addSkill(centre, chapter, student, name) {
-      const last = await client.from("skills").select("position").eq("centre_id", centre).eq("chapter_id", chapter).order("position", { ascending: false }).limit(1);
-      const position = (must(last, "skills")[0]?.position ?? 0) + 1;
-      const made = await client.from("skills").insert({ centre_id: centre, chapter_id: chapter, student_id: student, position, name }).select("id").single();
-      return must(made, "skills").id;
-    },
+    addSkill,
     async makePlan(centre, draft) {
       const made = must(await client.rpc("make_plan", planParams(centre, draft)), "make_plan") as { plan_id: string };
       return made.plan_id;

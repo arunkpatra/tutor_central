@@ -43,8 +43,9 @@ export function makeRequest(observe: Observe): MiddlewareHandler<Vars> {
   };
 }
 
-/** 20 calls a minute per user (a count of their rows in `api_requests`, read before the gate): 429 `rate`. A count that
- *  cannot be read lets the call through; the database's allowance still holds. */
+/** 20 calls a minute per user (a count of their rows in `api_requests` under 429, read before the gate): 429 `rate`. The
+ *  refusals are not counted, so a client retrying past the limit is let through a minute after its last answered call. A
+ *  count that cannot be read lets the call through; the database's allowance still holds. */
 export function makeUserRate(observe: Observe, perMinute = 20): MiddlewareHandler<Vars> {
   return async (c, next) => {
     const userId = c.get("userId");

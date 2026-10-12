@@ -116,6 +116,19 @@ test("a failing step retries with backoff and fails after max_attempts", async (
   expect(await run()).toMatchObject({ claimed: 0 });
 });
 
+test("a job is leased when its turn comes, not at the run's start, so a long first job leaves the next one's lease whole", async () => {
+  const seenQueued: string[] = [];
+  const { jobs, run } = setup((clock, j) =>
+    walker(clock, 1_000, (job, at) => {
+      if (job.id === j.jobs[0]?.id && at === "write") seenQueued.push(j.jobs[1]?.state ?? "");
+    }),
+  );
+  await jobs.enqueue("c1", "plan", "plan:first");
+  await jobs.enqueue("c1", "plan", "plan:second");
+  expect(await run()).toMatchObject({ claimed: 2, done: 2 });
+  expect(seenQueued).toEqual(["queued"]);
+});
+
 test("the lease is extended before each step", async () => {
   const { jobs, run } = setup((clock) => walker(clock));
   await jobs.enqueue("c1", "plan", "plan:g");

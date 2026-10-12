@@ -6,10 +6,11 @@ export const STEP_ROOM_MS = 120_000;
 
 export type DrainResult = { claimed: number; steps: number; done: number; waiting: number; failed: number; lost: number };
 
-/** One run of the worker (D71): claim up to `limit` due jobs and take each through its steps while the budget leaves room
- *  for another, writing each step as it ends. A job the budget stops waits at the step it reached, for the next wake. A
- *  job whose lease another worker took, or that was cancelled, is left as it is. A handler that throws fails its job with
- *  a retry. */
+/** One run of the worker (D71): claim one due job at a time, up to `limit`, and take each through its steps while the
+ *  budget leaves room for another, writing each step as it ends. A job is leased when its turn comes, so the jobs after a
+ *  long one keep their whole lease (the review's finding 4). A job the budget stops waits at the step it reached, for the
+ *  next wake. A job whose lease another worker took, or that was cancelled, is left as it is. A handler that throws fails
+ *  its job with a retry. */
 export async function drain(opts: {
   jobs: JobsDb;
   handlers: Partial<Record<JobKind, JobHandler>>;
@@ -23,9 +24,11 @@ export async function drain(opts: {
   const started = clock.now();
   const result: DrainResult = { claimed: 0, steps: 0, done: 0, waiting: 0, failed: 0, lost: 0 };
   const ctx: StepContext = { ...opts.ctx, jobs, worker };
-  const claimed = await jobs.claim(worker, opts.limit ?? 5);
-  result.claimed = claimed.length;
-  for (const job of claimed) {
+  const limit = opts.limit ?? 5;
+  while (result.claimed < limit && clock.now() - started < budgetMs - STEP_ROOM_MS) {
+    const [job] = await jobs.claim(worker, 1);
+    if (!job) break;
+    result.claimed += 1;
     const handler = handlers[job.kind];
     let current: Job = job;
     for (;;) {
