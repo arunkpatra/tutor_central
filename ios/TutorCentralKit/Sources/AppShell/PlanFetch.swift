@@ -41,13 +41,14 @@ import Foundation
         }
     }
 
-    /// iOS gives a background push 30 seconds and a stalled read takes about 20 s to fail: `run` raced against a deadline,
+    /// iOS gives a background push 30 seconds and a stalled read takes about 20 s to fail: `run` raced against a
+    /// deadline,
     /// false when the deadline comes first (its reads cancelled; a batch already read stays in the copy).
     func run(within deadline: Duration) async -> Bool {
         let answer = Answer()
         return await withCheckedContinuation { continuation in
             answer.continuation = continuation
-            let work = Task { answer.give(await run()) }
+            let work = Task { await answer.give(run()) }
             Task {
                 try? await Task.sleep(for: deadline)
                 work.cancel()
