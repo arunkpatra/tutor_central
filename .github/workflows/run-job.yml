@@ -71,7 +71,8 @@ jobs:
         run: supabase db query --linked -f "$RUNNER_TEMP/job.sql"
 
       - name: Wake the worker
-        run: curl -fsS -H "Authorization: Bearer $WORKER_SECRET" "$SITE/jobs/tick"
+        run: |
+          curl -fsS -H "Authorization: Bearer $WORKER_SECRET" "$SITE/jobs/tick"
 
       - name: The job
         working-directory: supabase
