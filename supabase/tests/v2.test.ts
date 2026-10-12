@@ -1,5 +1,6 @@
 import { beforeAll, expect, test } from "bun:test";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { SQL } from "bun";
 import { anonClient, type Local, local, userClient } from "./client";
 
 let l: Local;
@@ -891,4 +892,76 @@ test("another centre's member cannot read a Make artefact", async () => {
   const b = await userClient(l, `v2-p15-other-${stamp}@example.com`);
   await b.rpc("create_centre", { p_name: "Other 15", p_whatsapp: null });
   expect((await b.from("artefacts").select("id").eq("made_from", "make")).data).toEqual([]);
+});
+
+test("consent given, changed and withdrawn write their history; a member cannot change it or read another centre's", async () => {
+  const b = await userClient(l, `v2-consent-b-${stamp}@example.com`);
+  const s = await a.from("students").insert({ centre_id: centre, name: "History Child" }).select("id").single();
+  await a.from("students").update({ consent_at: "2026-10-01T04:00:00Z", consent_phone: "+919876500011", consent_how: "in_person" }).eq("id", s.data!.id);
+  await a.from("students").update({ consent_phone: "+919876500012" }).eq("id", s.data!.id);
+  await a.from("students").update({ name: "History Child Renamed" }).eq("id", s.data!.id);
+  await a.from("students").update({ consent_at: null, consent_phone: null, consent_how: null }).eq("id", s.data!.id);
+  const rows = await a.from("consent_events").select("kind, phone, how, at, by_user").eq("student_id", s.data!.id).order("created_at");
+  expect(rows.data!.map((r) => [r.kind, r.phone, r.how])).toEqual([
+    ["given", "+919876500011", "in_person"],
+    ["given", "+919876500012", "in_person"],
+    ["withdrawn", null, null],
+  ]);
+  expect(rows.data![0]?.at).toBe("2026-10-01T04:00:00+00:00");
+  expect(rows.data![0]?.by_user).not.toBeNull();
+  expect((await a.from("consent_events").delete().eq("student_id", s.data!.id).select("id")).data).toEqual([]);
+  expect((await a.from("consent_events").update({ kind: "given" }).eq("student_id", s.data!.id).select("id")).data).toEqual([]);
+  expect((await b.from("consent_events").select("id").eq("student_id", s.data!.id)).data).toEqual([]);
+});
+
+test("a student added with consent has it in their history at once", async () => {
+  const s = await a
+    .from("students")
+    .insert({ centre_id: centre, name: "Agreed At Once", consent_at: "2026-10-02T04:00:00Z", consent_phone: "+919876500013", consent_how: "call" })
+    .select("id")
+    .single();
+  const rows = await a.from("consent_events").select("kind, how").eq("student_id", s.data!.id);
+  expect(rows.data).toEqual([{ kind: "given", how: "call" }]);
+});
+
+test("every student with consent has a given in their history (the backfill and the trigger)", async () => {
+  const sql = new SQL(l.db);
+  try {
+    const missing = await sql`select s.id from public.students s where s.consent_at is not null
+      and not exists (select 1 from public.consent_events e where e.student_id = s.id and e.kind = 'given')`;
+    expect(missing.length).toBe(0);
+  } finally {
+    await sql.close();
+  }
+});
+
+test("keep_artefact with a key keeps once", async () => {
+  const params = {
+    p_centre: centre,
+    p_artefact: { kind: "sheet", source: "made", title: "Keyed", content: {} },
+    p_plan: null,
+    p_group_no: null,
+    p_student: null,
+    p_item_kind: null,
+    p_school_item: null,
+    p_made_from: "make",
+    p_key: `gen-keyed-${stamp}`,
+  };
+  const first = await a.rpc("keep_artefact", params);
+  expect(first.error).toBeNull();
+  expect((await a.rpc("keep_artefact", params)).data).toBe(first.data);
+  expect((await a.from("artefacts").select("id").eq("idempotency_key", `gen-keyed-${stamp}`)).data?.length).toBe(1);
+  expect((await a.rpc("keep_artefact", { ...params, p_key: null })).data).not.toBe(first.data);
+  const { p_key: _, ...eight } = params;
+  expect((await a.rpc("keep_artefact", eight)).error).toBeNull();
+});
+
+test("one absence log per child and day", async () => {
+  const s = await a.from("students").insert({ centre_id: centre, name: "Absent Child" }).select("id").single();
+  const first = await a.from("message_log").insert({ centre_id: centre, student_id: s.data!.id, kind: "absence", about_date: "2026-10-09" }).select("id").single();
+  expect(first.error).toBeNull();
+  const again = await a.from("message_log").insert({ centre_id: centre, student_id: s.data!.id, kind: "absence", about_date: "2026-10-09" });
+  expect(again.error?.code).toBe("23505");
+  expect((await a.from("message_log").insert({ centre_id: centre, student_id: s.data!.id, kind: "absence", about_date: "2026-10-10" })).error).toBeNull();
+  expect((await a.from("message_log").insert({ centre_id: centre, student_id: s.data!.id, kind: "reminder", about_date: "2026-10-09" })).error).toBeNull();
 });

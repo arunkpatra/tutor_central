@@ -32,6 +32,7 @@ const CENTRE_TABLES = [
   "school_items",
   "marks",
   "events",
+  "consent_events",
 ] as const;
 
 /** The platform's tables (D71, D77): written by the service role alone; a member reads their centre's rows, or none. */
@@ -164,6 +165,9 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
   expect(plan.error).toBeNull();
   const artefact = await a.from("artefacts").insert({ centre_id: centreA, kind: "sheet", source: "own", title: "Own sheet" }).select("id").single();
   expect(artefact.error).toBeNull();
+  // A consent's history is written by the student's change (0032).
+  const consent = await a.from("students").update({ consent_at: "2026-10-05T04:00:00Z", consent_phone: "+919000000001", consent_how: "call" }).eq("id", student.data!.id);
+  expect(consent.error).toBeNull();
   // A generation comes through the gate alone (0029).
   const generation = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: { topic: "Fractions" }, p_model: "m" });
   expect(generation.error).toBeNull();
@@ -189,6 +193,7 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     school_items: { kind: "notice", date: "2026-10-20" },
     marks: { student_id: student.data!.id, subject: "Maths", test: "FA1", date: "2026-07-20", score: 10, max: 15 },
     events: { kind: "tab_opened", screen: "today", at: new Date().toISOString() },
+    consent_events: null,
   };
   for (const [table, row] of Object.entries(inserts)) {
     if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
