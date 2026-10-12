@@ -24,10 +24,17 @@ public actor ServerFiles {
         }
     }
 
+    /// The file at `bucket/path` when it was downloaded before, with no download: a copy named "<name>.pdf" for Share.
+    public func kept(bucket: String, path: String, named name: String) -> URL? {
+        let kept = keptURL(bucket: bucket, path: path)
+        guard FileManager.default.fileExists(atPath: kept.path) else { return nil }
+        return try? named(kept, name)
+    }
+
     /// The file at `bucket/path`, downloaded once; a copy named "<name>.pdf" for Share. Throws when it cannot be had
     /// (not made yet, offline).
     public func file(bucket: String, path: String, named name: String) async throws -> URL {
-        let kept = folder.appendingPathComponent(bucket, isDirectory: true).appendingPathComponent(path)
+        let kept = keptURL(bucket: bucket, path: path)
         if !FileManager.default.fileExists(atPath: kept.path) {
             let data = try await download(bucket, path)
             try FileManager.default.createDirectory(
@@ -35,6 +42,14 @@ public actor ServerFiles {
             )
             try data.write(to: kept, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
         }
+        return try named(kept, name)
+    }
+
+    private func keptURL(bucket: String, path: String) -> URL {
+        folder.appendingPathComponent(bucket, isDirectory: true).appendingPathComponent(path)
+    }
+
+    private func named(_ kept: URL, _ name: String) throws -> URL {
         let shared = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: shared, withIntermediateDirectories: true)
         let named = shared.appendingPathComponent("\(name).pdf")

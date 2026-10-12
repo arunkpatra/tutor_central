@@ -7,7 +7,9 @@ import Testing
 /// Share takes the server's PDF of a made sheet (plan decision 3): the questions, or the key's form; without it (not
 /// made yet, offline) the phone draws its own.
 @MainActor struct ServerPDFShareTests {
-    func sheet(download: @escaping ServerFiles.Download) async throws -> (SheetStore, UUID) {
+    func sheet(
+        online: Bool = true, wait: Duration = .seconds(5), download: @escaping ServerFiles.Download
+    ) async throws -> (SheetStore, UUID) {
         let plans = FakePlansRepository.evening()
         let plan = try #require(try await ArtefactTest.plan(plans))
         let id = try #require(plan.artefact(group: 1, kind: .sheet, homework: true)?.id)
@@ -21,7 +23,7 @@ import Testing
             centre: centre, directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString),
             download: download
         )
-        store.serverPDF = ServerPDF(files: files, centre: centre)
+        store.serverPDF = ServerPDF(files: files, centre: centre, online: { online }, wait: wait)
         await store.load()
         return (store, id)
     }
@@ -40,5 +42,34 @@ import Testing
         let (store, _) = try await sheet { _, _ in throw URLError(.notConnectedToInternet) }
         let drawn = try #require(await store.sharedPDF())
         #expect(try Data(contentsOf: drawn).starts(with: Data("%PDF".utf8)))
+    }
+
+    /// The review's R-app-7: offline the phone draws at once, no download tried; on a stalled link it draws after the
+    /// short wait, not the read's 20 s.
+    @Test func offlineOrStalledThePhoneDrawsWithoutWaitingForTheDownload() async throws {
+        let tried = Tried()
+        let (offline, _) = try await sheet(online: false) { _, _ in
+            await tried.add()
+            return Data("server".utf8)
+        }
+        let drawn = try #require(await offline.sharedPDF())
+        #expect(try Data(contentsOf: drawn).starts(with: Data("%PDF".utf8)))
+        #expect(await tried.count == 0)
+        let (stalled, _) = try await sheet(wait: .milliseconds(200)) { _, _ in
+            try await Task.sleep(for: .seconds(60))
+            return Data("server".utf8)
+        }
+        let clock = ContinuousClock()
+        var shared: URL?
+        let took = await clock.measure { shared = await stalled.sharedPDF() }
+        #expect(took < .seconds(2), "Share waited for the stalled download")
+        #expect(try Data(contentsOf: #require(shared)).starts(with: Data("%PDF".utf8)))
+    }
+
+    actor Tried {
+        var count = 0
+        func add() {
+            count += 1
+        }
     }
 }
