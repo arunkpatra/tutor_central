@@ -29,13 +29,17 @@ import Observation
     public var alert: String?
     public var settings: ReminderSettings {
         didSet {
-            guard loaded, settings != oldValue else { return }
-            let before = oldValue
-            Task { await save(settings, undoing: before) }
+            guard loaded, settings != oldValue, !saving else { return }
+            Task { await saveChanges() }
         }
     }
 
     private var loaded = false
+    /// The choices the account holds (the last read or save): a failed save puts these back.
+    private var confirmed = ReminderSettings()
+    /// One save at a time, each of the latest choices: saves running side by side could land out of order and leave
+    /// the account on an earlier choice (the review's R-app-3).
+    private var saving = false
     private let notifications: any NotificationCenterClient
     private let repository: any ReminderSettingsRepository
     private let centre: UUID
@@ -67,6 +71,7 @@ import Observation
         if let read = try? await repository.read(centre: centre) {
             settings = read
         }
+        confirmed = settings
         loaded = true
         next = try? await repository.next(centre: centre)
     }
@@ -82,17 +87,25 @@ import Observation
         }
     }
 
-    /// A change saved with the account; a save that fails puts the choice back and says so.
-    private func save(_ changed: ReminderSettings, undoing before: ReminderSettings) async {
-        do {
-            try await repository.save(changed, centre: centre)
-            next = try? await repository.next(centre: centre)
-        } catch {
-            loaded = false
-            settings = before
-            loaded = true
-            alert = "That didn't go through. Check your connection and try again."
+    /// The choices saved with the account until it holds what is shown; a save that fails puts back what the account
+    /// holds and says so.
+    private func saveChanges() async {
+        saving = true
+        defer { saving = false }
+        while settings != confirmed {
+            let changed = settings
+            do {
+                try await repository.save(changed, centre: centre)
+                confirmed = changed
+            } catch {
+                loaded = false
+                settings = confirmed
+                loaded = true
+                alert = "That didn't go through. Check your connection and try again."
+                return
+            }
         }
+        next = try? await repository.next(centre: centre)
     }
 
     public var banner: Banner? {
