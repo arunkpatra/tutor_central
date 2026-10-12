@@ -37,7 +37,7 @@ const CENTRE_TABLES = [
 ] as const;
 
 /** The platform's tables (D71, D77): written by the service role alone; a member reads their centre's rows, or none. */
-const PLATFORM_TABLES = ["jobs", "job_steps", "api_requests", "alerts", "admin_audit", "notifications"] as const;
+const PLATFORM_TABLES = ["jobs", "job_steps", "api_requests", "alerts", "admin_audit", "notifications", "storage_deletions"] as const;
 
 beforeAll(async () => {
   l = await local();
@@ -75,6 +75,7 @@ test("the platform's tables are read by their centre's members alone and written
   const alert = { kind: "cost_day", threshold: 100, value: 120, centre_id: centreA };
   const audit = { admin_user_id: crypto.randomUUID(), action: "open_centre", centre_id: centreA, target: {}, reason: "support" };
   const me = (await a.auth.getUser()).data.user!.id;
+  const deletion = { bucket: "photos", path: `${centreA}/rls-${stamp}.jpg`, why: "rls" };
   const notification = { centre_id: centreA, user_id: me, kind: "fees", key: `fees:rls-${stamp}`, due_at: new Date().toISOString(), title: "t", body: "b" };
   // memberReads: the centre's member reads the row (jobs, steps, requests) or no one but the platform does (alerts, audit).
   type Probe = { id: string; insert: Record<string, unknown>; field: string; change: string | number; memberReads: boolean };
@@ -84,6 +85,7 @@ test("the platform's tables are read by their centre's members alone and written
     api_requests: { id: await made("api_requests", request), insert: { ...request, request_id: crypto.randomUUID() }, field: "status", change: 500, memberReads: true },
     alerts: { id: await made("alerts", alert), insert: alert, field: "kind", change: "changed", memberReads: false },
     admin_audit: { id: await made("admin_audit", audit), insert: audit, field: "action", change: "changed", memberReads: false },
+    storage_deletions: { id: await made("storage_deletions", deletion), insert: deletion, field: "why", change: "changed", memberReads: false },
     notifications: { id: await made("notifications", notification), insert: { ...notification, key: `fees:rls-mine-${stamp}` }, field: "state", change: "sent", memberReads: true },
   };
   for (const table of PLATFORM_TABLES) {
@@ -98,7 +100,7 @@ test("the platform's tables are read by their centre's members alone and written
     expect({ table, kept: after.data !== null && (after.data as unknown as Record<string, unknown>)[field] !== change }).toEqual({ table, kept: true });
   }
   await svc.from("jobs").delete().eq("id", job.data!.id);
-  for (const table of ["api_requests", "alerts", "admin_audit", "notifications"] as const) await svc.from(table).delete().eq("id", rows[table].id);
+  for (const table of ["api_requests", "alerts", "admin_audit", "notifications", "storage_deletions"] as const) await svc.from(table).delete().eq("id", rows[table].id);
 });
 
 test("an event is the member's own, of a kind the check allows, and cannot be changed", async () => {

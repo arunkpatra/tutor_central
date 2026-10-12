@@ -834,6 +834,20 @@ isOneToOne: false
       referencedColumns: ["centre_id","id"]
     }
                   ]
+                },"storage_deletions": {
+                  Row: {
+                    "bucket": string,"created_at": string,"id": string,"path": string,"prefix": boolean,"updated_at": string,"why": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "bucket": string,"created_at"?: string,"id"?: string,"path": string,"prefix"?: boolean,"updated_at"?: string,"why": string
+                  }
+                  Update: {
+                    "bucket"?: string,"created_at"?: string,"id"?: string,"path"?: string,"prefix"?: boolean,"updated_at"?: string,"why"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"students": {
                   Row: {
                     "archived_at": string | null,"board": string | null,"centre_id": string,"class_id": string | null,"class_level": string | null,"consent_at": string | null,"consent_how": string | null,"consent_phone": string | null,"created_at": string,"date_of_birth": string | null,"gender": string | null,"id": string,"message_language": string,"monthly_fee": number | null,"name": string,"next_step": string | null,"notes": string | null,"parent_name": string | null,"parent_phone": string | null,"school_id": string | null,"track_reasons": NonNullable<Json>,"track_since": string | null,"track_status": string,"tracked_at": string | null,"updated_at": string
@@ -1130,6 +1144,22 @@ isOneToOne: false
 "start_ai_generation":
 { Args: { "p_centre": string,"p_input": Json,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_student"?: string }; Returns: string
                            },
+"taken_storage_deletions":
+{ Args: { "p_limit"?: number }; Returns: {
+              "bucket": string,
+"created_at": string,
+"id": string,
+"path": string,
+"prefix": boolean,
+"updated_at": string,
+"why": string
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "storage_deletions"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
 "wait_job":
 { Args: { "p_job": string,"p_run_at": string,"p_step": Json,"p_worker": string }; Returns: undefined
                            },
