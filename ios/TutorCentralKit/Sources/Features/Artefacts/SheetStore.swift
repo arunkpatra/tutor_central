@@ -28,6 +28,8 @@ import UIKit
     @ObservationIgnored public var online: () async -> Bool = { true }
     /// The plans kept on this iPhone: offline the sheet opens from them.
     @ObservationIgnored public var planCache: PlanCache?
+    /// The server's PDF for Share (Phase 18); none in tests and previews (the phone draws its own).
+    @ObservationIgnored public var serverPDF: ServerPDF?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -151,6 +153,16 @@ import UIKit
     /// out of what is shared: P10-Make-Form).
     public var pdfSheet: PDFSheet {
         sheetPDF(withKey: form == .key)
+    }
+
+    /// What Share hands over: the server's PDF of a made sheet when it can be had, else the phone's (an own sheet
+    /// always).
+    public func sharedPDF() async -> URL? {
+        if ownContent == nil, let id = artefact?.id,
+           let file = await serverPDF?.file(id, key: form == .key, title: pdfSheet.title) {
+            return file
+        }
+        return try? PDFMaker.pdf(for: pdfSheet)
     }
 
     /// What Print sends: as shared, with the key after the questions on a Make sheet made with "Key at the end".

@@ -2,7 +2,8 @@ import Domain
 import Foundation
 
 /// Sign-out and deletion wipe the phone (D40): every file of the centre under Application Support/TutorCentral (the
-/// centre's copy, the register, the lists' caches, the queue, the QR image, the activity not yet posted) and this
+/// centre's copy, the register, the lists' caches, the queue, the QR image, the activity not yet posted, the server's
+/// files) and this
 /// iPhone's settings (haptics,
 /// appearance, reminders). Pending notifications are the notification client's; the caller removes them.
 public enum Wipe {
@@ -37,6 +38,6 @@ public enum Wipe {
         name == "workspace.json" || name == "register-\(id).json" || name == "queue-\(id).json"
             || name == "queue-\(id).unreadable.json"
             || name == "upi-qr-\(id).png" || name == "activity-\(id).json"
-            || (name.hasPrefix("cache-\(id)-") && name.hasSuffix(".json"))
+            || (name.hasPrefix("cache-\(id)-") && name.hasSuffix(".json")) || name == "files-\(id)"
     }
 }

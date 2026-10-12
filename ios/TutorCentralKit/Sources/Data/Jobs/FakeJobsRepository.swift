@@ -7,10 +7,13 @@ import Foundation
     public enum Request: Hashable, Sendable {
         case plan(classID: UUID, date: Day, choices: PlanChoices?)
         case note(student: UUID, week: Day)
+        case export(student: UUID)
     }
 
     /// The plan job a read answers, by batch; set by a test to move a job on.
     public var planJobs: [UUID: JobStatus]
+    /// The export job a read answers, by student.
+    public var exportJobs: [UUID: JobStatus] = [:]
     /// What a request leaves for its batch: a live job, unless a test says otherwise.
     public var afterRequest: JobStatus.State = .queued
     /// The server's work for a plan request, for `bun shots`: the plan written and the job's state after it.
@@ -58,6 +61,27 @@ import Foundation
         requested.append(.note(student: student, week: week))
         await onNoteRequest?(student, week)
         return UUID()
+    }
+
+    public func exportJob(centre _: UUID, student: UUID) async throws -> JobStatus? {
+        reads += 1
+        if let failure {
+            throw failure
+        }
+        return exportJobs[student]
+    }
+
+    public func requestExport(centre _: UUID, student: UUID) async throws -> UUID {
+        if let failure {
+            throw failure
+        }
+        requested.append(.export(student: student))
+        if let live = exportJobs[student], live.isLive {
+            return live.id
+        }
+        let job = JobStatus(id: UUID(), state: afterRequest, createdAt: now())
+        exportJobs[student] = job
+        return job.id
     }
 
     public func cancel(centre _: UUID, job: UUID) async throws {

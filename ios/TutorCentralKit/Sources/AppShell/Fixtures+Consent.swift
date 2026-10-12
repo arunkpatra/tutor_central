@@ -29,4 +29,26 @@ extension Fixtures {
         }
         return FakeConsentHistoryRepository(events: [FakeStudentsRepository.hemanth: events])
     }
+
+    /// P18-Export-*: Hemanth's export on Monday 12 October at 16:05, asked at 16:02, made at 16:03 in five pages.
+    static let exportStates: Set<LaunchState> = [
+        .studentExport, .studentExportMaking, .studentExportReady, .studentExportFailed,
+    ]
+    static let exportClock = india(day: 12, hour: 16, minute: 5)
+
+    static func exportJobs(for state: LaunchState) -> [UUID: JobStatus] {
+        let asked = india(day: 12, hour: 16, minute: 2)
+        let made = india(day: 12, hour: 16, minute: 3)
+        let job: JobStatus? = switch state {
+        case .studentExportMaking: JobStatus(id: UUID(), state: .running, createdAt: asked)
+        case .studentExportReady:
+            JobStatus(
+                id: UUID(), state: .done, createdAt: asked, finishedAt: made,
+                file: JobFile(path: "board/hemanth.pdf", pages: 5, madeAt: made)
+            )
+        case .studentExportFailed: JobStatus(id: UUID(), state: .failed, createdAt: asked, finishedAt: made)
+        default: nil
+        }
+        return job.map { [FakeStudentsRepository.hemanth: $0] } ?? [:]
+    }
 }

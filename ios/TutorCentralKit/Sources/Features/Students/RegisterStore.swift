@@ -20,7 +20,7 @@ import Observation
     /// The centre's schools (V2), for the student form's school sheet.
     public internal(set) var schools: [School] = []
 
-    let workspace: Workspace
+    public let workspace: Workspace
     let studentsRepository: any StudentsRepository
     let classesRepository: any ClassesRepository
     private let cache: RegisterCache?

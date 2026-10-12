@@ -141,6 +141,11 @@ extension RootView {
             consentHistory: deps.consentHistory, now: deps.now,
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
         )
+        store.export = ExportStore(
+            studentID: id, register: register, jobs: deps.jobs, files: deps.serverFiles(register.workspace.centre.id),
+            now: deps.now, online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+        )
+        store.export?.inFront = { UIApplication.shared.applicationState == .active }
         store.onStepChanged = { [shell] student in shell.schoolItemsChanged?([student]) }
         let queue = centreQueue()
         store.closeWaits = { [weak queue] student in queue?.pending.closeWaits(for: student) ?? false }
@@ -174,7 +179,8 @@ extension RootView {
         .studentArchiveConfirm: .archiveConfirm, .studentDeleteConfirm: .deleteConfirm, .studentEdit: .edit,
         .studentRecord: .record, .studentMarksEmpty: .record, .studentMarks: .marks, .studentEnd: .end,
         .studentConsentAsk: .consentAsk, .studentConsentRecord: .consentRecord, .studentNextStep: .nextStep,
-        .studentConsentChange: .consentRecord, .studentConsentWithdraw: .consentWithdraw,
+        .studentConsentChange: .consentRecord, .studentConsentWithdraw: .consentWithdraw, .studentExport: .export,
+        .studentExportMaking: .export, .studentExportReady: .export, .studentExportFailed: .export,
         .studentTellParent: .tellParent,
     ]
 }

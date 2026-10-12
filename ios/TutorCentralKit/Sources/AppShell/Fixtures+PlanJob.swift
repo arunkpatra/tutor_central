@@ -44,6 +44,7 @@ extension Fixtures {
             ])
         default:
             let jobs = FakeJobsRepository(now: { at })
+            jobs.exportJobs = exportJobs(for: state)
             // Dev's science checks and Riya's placement still to come on the close's cards.
             let material = state != .closeCards
             jobs.onPlanRequest = { classID, date, choices in

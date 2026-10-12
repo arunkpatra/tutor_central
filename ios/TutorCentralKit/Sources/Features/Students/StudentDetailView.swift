@@ -20,6 +20,8 @@ public enum StudentDetailBoardState: Sendable {
     /// Phase 14: the next-step sheet (P10-NextStep); the message to the parent (P10-NotOnTrack-Message).
     case nextStep
     case tellParent
+    /// Scrolled to the Export section at the page's foot (P18-Export-*).
+    case export
 }
 
 /// One student's hub, to P3-StudentDetail (dark and light) and P3-StudentDetail-Archived: the header, the parent with
@@ -123,7 +125,10 @@ public struct StudentDetailView: View {
                     )
                     attendance
                     NotesSection(notes: store.notesLine, firstName: student.firstName, edit: edit)
-                    buttons(student)
+                    if let export = store.export {
+                        ExportSection(store: export).task { await export.load() }
+                    }
+                    buttons(student).id(Anchor.export)
                 }
             }
             .padding(.horizontal, Tokens.pageSide)

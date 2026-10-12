@@ -7,10 +7,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case placeholder, kit
     case kitFields = "kit-fields", kitSurfaces = "kit-surfaces", kitPatterns = "kit-patterns", kitDialog = "kit-dialog"
     case kitPhase7 = "kit-phase7", kitPhase10 = "kit-phase10", kitPhase10Figures = "kit-phase10-figures"
-    case signin
-    case signinEmail = "signin-email"
-    case signinCode = "signin-code"
-    case signinCodeWrong = "signin-code-wrong"
+    case signin, signinEmail = "signin-email", signinCode = "signin-code", signinCodeWrong = "signin-code-wrong"
     case signinPassword = "signin-password"
     case onboarding
     case todayEmpty = "today-empty"
@@ -79,6 +76,9 @@ public enum LaunchState: String, CaseIterable, Sendable {
     /// (P18-Consent-Withdraw), the page withdrawn with its history (P18-Student-Withdrawn).
     case studentConsentChange = "student-consent-change", studentConsentWithdraw = "student-consent-withdraw"
     case studentWithdrawn = "student-withdrawn"
+    /// The Export section at the foot of Hemanth's page: the ask, being made, ready, not made (P18-Export-*).
+    case studentExport = "student-export", studentExportMaking = "student-export-making"
+    case studentExportReady = "student-export-ready", studentExportFailed = "student-export-failed"
     /// Add a textbook for Riya's Mathematics (P10-Textbook-Intro, -Reading, -Chapters, -Chapter-Edit).
     case textbookIntro = "textbook-intro"
     case textbookReading = "textbook-reading"

@@ -19,7 +19,8 @@ extension RootView {
              .studentsAddMenu, .studentNew, .studentNewFilled, .studentNewInvalid, .studentNewNewClass,
              .studentNewClassMade, .studentNewClass9, .studentNewClassPicker, .studentNewSchool, .studentNewEnd,
              .student, .studentRecord, .studentMarks, .studentMarksEmpty, .studentEnd, .studentNotKnown, .studentLadder,
-             .studentConsentAsk, .studentConsentChange, .studentConsentWithdraw, .studentWithdrawn,
+             .studentConsentAsk, .studentConsentChange, .studentConsentWithdraw, .studentWithdrawn, .studentExport,
+             .studentExportMaking, .studentExportReady, .studentExportFailed,
              .studentConsentRecord, .studentConsentWaiting, .textbookIntro, .textbookReading, .textbookChapters,
              .textbookChapterEdit, .placement, .studentArchived,
              .studentArchiveConfirm, .studentDeleteConfirm, .studentEdit, .classesEmpty, .classes, .classNew,
@@ -183,7 +184,8 @@ extension RootView {
     private static func studentPageRoutes(for state: LaunchState) -> [Route]? {
         switch state {
         case .student, .studentRecord, .studentEnd, .studentMarks, .studentConsentChange, .studentConsentWithdraw,
-             .studentWithdrawn: [.student(FakeStudentsRepository.hemanth)]
+             .studentWithdrawn,
+             _ where Fixtures.exportStates.contains(state): [.student(FakeStudentsRepository.hemanth)]
         case .studentMarksEmpty: [.student(FakeStudentsRepository.riya)]
         case .studentNotKnown, .studentConsentAsk, .studentConsentRecord, .studentConsentWaiting:
             [.student(FakeStudentsRepository.riya)]

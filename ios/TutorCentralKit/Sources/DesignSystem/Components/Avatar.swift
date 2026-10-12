@@ -35,7 +35,8 @@ public struct Avatar: View {
 }
 
 /// The class tile: surface2 with a symbol in text2; 40 with radius 12 in rows, 56 with radiusTile and the symbol at
-/// 28 on the class detail header.
+/// 28 on the class detail header. A tile can take a state's tint behind its symbol (the export's ready and not made,
+/// P18-Export-*) or a spinner while its work runs.
 public struct IconTile: View {
     public enum Size: Sendable {
         case row
@@ -45,6 +46,8 @@ public struct IconTile: View {
     let symbol: String
     let size: Size
     let tint: ColorToken
+    let background: ColorToken
+    let working: Bool
     static var rowSize: CGFloat {
         40
     }
@@ -62,24 +65,47 @@ public struct IconTile: View {
     }
 
     /// `tint` colours the symbol (overdue on Delete account's hero, P7-Delete).
-    public init(symbol: String, size: Size = .row, tint: ColorToken = Tokens.text2) {
+    public init(
+        symbol: String, size: Size = .row, tint: ColorToken = Tokens.text2, background: ColorToken = Tokens.surface2
+    ) {
         self.symbol = symbol
         self.size = size
         self.tint = tint
+        self.background = background
+        working = false
+    }
+
+    /// The row tile with a spinner in text2 (the export being made).
+    public static var working: IconTile {
+        IconTile(symbol: "", size: .row, tint: Tokens.text2, background: Tokens.surface2, working: true)
+    }
+
+    private init(symbol: String, size: Size, tint: ColorToken, background: ColorToken, working: Bool) {
+        self.symbol = symbol
+        self.size = size
+        self.tint = tint
+        self.background = background
+        self.working = working
     }
 
     public var body: some View {
         let header = size == .header
         let side = header ? Self.headerSize : Self.rowSize
-        Image(systemName: symbol)
-            .font(.system(size: header ? Self.headerSymbol : Tokens.iconButton))
-            .foregroundStyle(tint.color)
-            .frame(width: side, height: side)
-            .background(
-                Tokens.surface2.color,
-                in: .rect(cornerRadius: header ? Tokens.radiusTile : Self.rowRadius, style: .continuous)
-            )
-            .accessibilityHidden(true)
+        Group {
+            if working {
+                ProgressView().tint(tint.color)
+            } else {
+                Image(systemName: symbol)
+                    .font(.system(size: header ? Self.headerSymbol : Tokens.iconButton))
+                    .foregroundStyle(tint.color)
+            }
+        }
+        .frame(width: side, height: side)
+        .background(
+            background.color,
+            in: .rect(cornerRadius: header ? Tokens.radiusTile : Self.rowRadius, style: .continuous)
+        )
+        .accessibilityHidden(true)
     }
 }
 

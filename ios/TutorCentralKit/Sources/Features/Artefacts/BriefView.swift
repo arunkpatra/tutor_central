@@ -51,7 +51,7 @@ struct BriefView: View {
         }
         .task { await store.load() }
         .task(id: store.artefact?.id) {
-            pdf = store.brief == nil ? nil : try? PDFMaker.pdf(for: store.pdfSheet)
+            pdf = await store.sharedPDF()
         }
     }
 
