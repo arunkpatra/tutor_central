@@ -291,10 +291,10 @@ test.skipIf(!up)("an alerts job on the local stack raises job_failed for a faile
       { db: fakeDb(), jobs: fakeJobsDb(fakeClock()), claude: fakeClaude({}), clock: { now: () => Date.now(), sleep: async () => {} }, requestId: "r", worker: "w" },
     );
     expect(outcome.kind).toBe("done");
-    const raised = await db.from("alerts").select("kind, centre_id, message").eq("key", `job_failed:${job}`).single();
+    const raised = await db.from("alerts").select("kind, centre_id, message").like("key", `job_failed:${job}:%`).single();
     expect(raised.data).toEqual({ kind: "job_failed", centre_id: CENTRE, message: "an artefact job failed after its last try" });
     expect(sender.sent.some((s) => s.text.includes("an artefact job failed"))).toBe(true);
-    const pushed = await db.from("notifications").select("kind, title, state").eq("user_id", tutor).eq("key", `alert:job_failed:${job}`).single();
+    const pushed = await db.from("notifications").select("kind, title, state").eq("user_id", tutor).like("key", `alert:job_failed:${job}:%`).single();
     expect(pushed.data).toEqual({ kind: "alert", title: "Tutor Central needs a look", state: "due" });
     // The second run raises nothing new.
     const again = await alertsJob(source, sender, "you@example.com").step(
@@ -304,7 +304,7 @@ test.skipIf(!up)("an alerts job on the local stack raises job_failed for a faile
     expect(again).toMatchObject({ kind: "done", result: { raised: 0 } });
   } finally {
     await db.from("notifications").delete().like("key", "alert:%");
-    await db.from("alerts").delete().eq("key", `job_failed:${job}`);
+    await db.from("alerts").delete().like("key", `job_failed:${job}:%`);
     await db.from("jobs").delete().eq("id", job);
     await db.from("admin_users").delete().eq("user_id", adminId);
     await db.auth.admin.deleteUser(adminId);
