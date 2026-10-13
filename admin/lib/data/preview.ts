@@ -3,11 +3,12 @@ import calls from "../../preview/calls.json";
 import centre from "../../preview/centre.json";
 import centres from "../../preview/centres.json";
 import cost from "../../preview/cost.json";
+import errors from "../../preview/errors.json";
 import frame from "../../preview/frame.json";
 import job from "../../preview/job.json";
 import jobs from "../../preview/jobs.json";
 import record from "../../preview/record.json";
-import type { Activity, Call, Calls, Centre, Centres, Cost, Data, Job, JobRow, Jobs, Record } from "./types";
+import type { Activity, Call, Calls, Centre, Centres, Cost, Data, Errors, Job, JobRow, Jobs, Record } from "./types";
 
 /** The preview's one centre is `preview`; any other id is gone. */
 const PREVIEW_ID = "preview";
@@ -29,7 +30,7 @@ export const previewData: Data = {
   call: async (id) => (id === PREVIEW_ID ? (call as Call) : null),
   jobs: async () => jobs as Jobs,
   job: async (id) => (id === job.id ? (job as Job) : null),
-  errors: notYet("errors"),
+  errors: async () => errors as Errors,
   alerts: notYet("alerts"),
   audit: notYet("audit"),
   acknowledge: async () => true,

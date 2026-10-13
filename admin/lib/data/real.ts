@@ -1,6 +1,20 @@
 import "server-only";
 import { serviceClient } from "../supabase/service";
-import type { Activity, Call, Calls, Centre, Centres, Cost, Data, Job, JobRow, Jobs, Record, Tutor } from "./types";
+import type {
+  Activity,
+  Call,
+  Calls,
+  Centre,
+  Centres,
+  Cost,
+  Data,
+  Errors,
+  Job,
+  JobRow,
+  Jobs,
+  Record,
+  Tutor,
+} from "./types";
 
 /** One `admin_*` function, as the platform (D83, D94). A database error is thrown: the page's error, never a guess. */
 export async function rpc<T>(fn: string, args: { [key: string]: unknown } = {}): Promise<T> {
@@ -56,7 +70,13 @@ export function realData(): Data {
     jobs: (f) =>
       rpc<Jobs>("admin_jobs", { p_day: f.day, p_state: f.state, p_kind: f.kind, p_centre: f.centre, p_limit: 200 }),
     job: (id) => rpc<Job | null>("admin_job", { p_id: id }),
-    errors: notYet("errors"),
+    errors: async (hours, limit) => {
+      const [byRoute, recent] = await Promise.all([
+        rpc<Omit<Errors, "recent">>("admin_errors_by_route", { p_hours: hours }),
+        rpc<Errors["recent"]>("admin_errors_recent", { p_limit: limit }),
+      ]);
+      return { ...byRoute, recent };
+    },
     alerts: notYet("alerts"),
     audit: notYet("audit"),
     acknowledge: notYet("acknowledge"),

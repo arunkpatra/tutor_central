@@ -1,0 +1,102 @@
+{
+  "tiles": {
+    "requests": 1842,
+    "errors": 10,
+    "rate_pct": 0.5,
+    "timeouts": 3,
+    "median_latency_ms": 312
+  },
+  "rows": [
+    {
+      "route": "POST /ai/make",
+      "status": 502,
+      "reason": "timeout",
+      "last_24h": 3,
+      "last_7d": 9
+    },
+    {
+      "route": "POST /ai/make",
+      "status": 403,
+      "reason": "student_consent",
+      "last_24h": 2,
+      "last_7d": 11
+    },
+    {
+      "route": "POST /ai/make",
+      "status": 409,
+      "reason": "in_progress",
+      "last_24h": 1,
+      "last_7d": 4
+    },
+    {
+      "route": "POST /ai/check-paper",
+      "status": 413,
+      "reason": null,
+      "last_24h": 0,
+      "last_7d": 2
+    },
+    {
+      "route": "GET /jobs/tick",
+      "status": 503,
+      "reason": "unreachable",
+      "last_24h": 0,
+      "last_7d": 1
+    },
+    {
+      "route": "POST /ai/make",
+      "status": 429,
+      "reason": "rate",
+      "last_24h": 0,
+      "last_7d": 1
+    },
+    {
+      "route": "any",
+      "status": 401,
+      "reason": null,
+      "last_24h": 4,
+      "last_7d": 26
+    }
+  ],
+  "recent": [
+    {
+      "created_at": "2026-10-13T04:42:40Z",
+      "route": "POST /ai/make",
+      "status": 502,
+      "reason": "timeout",
+      "request_id": "7a1e2b3c-9d8e-4f00-a1b2-c3d4e5f6c0d4",
+      "centre": "Sunrise Tuition Centre"
+    },
+    {
+      "created_at": "2026-10-13T04:18:03Z",
+      "route": "POST /ai/make",
+      "status": 403,
+      "reason": "student_consent",
+      "request_id": "b02f1111-0000-4000-8000-0000000077e1",
+      "centre": "Vidya Mandir Tuition"
+    },
+    {
+      "created_at": "2026-10-13T04:17:58Z",
+      "route": "POST /ai/make",
+      "status": 409,
+      "reason": "in_progress",
+      "request_id": "0c9a2222-0000-4000-8000-0000000014b2",
+      "centre": "Vidya Mandir Tuition"
+    },
+    {
+      "created_at": "2026-10-13T03:00:11Z",
+      "route": "GET /account",
+      "status": 401,
+      "reason": null,
+      "request_id": "e1d33333-0000-4000-8000-000000009f00",
+      "centre": null
+    },
+    {
+      "created_at": "2026-10-13T00:03:10Z",
+      "route": "POST /ai/make",
+      "status": 502,
+      "reason": "timeout",
+      "request_id": "5f674444-0000-4000-8000-00000000a3c1",
+      "centre": "Sunrise Tuition Centre"
+    }
+  ]
+}
