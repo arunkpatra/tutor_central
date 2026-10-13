@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { gate } from "./evals-gate";
+import { failedCases, gate, withRetries } from "./evals-gate";
 
 // The evals' gate (D101): every case passes its schema, verify and expectations; the rubric at 85% or more per kind.
 const result = (kind: string, js: boolean, rubric: boolean | null, extra: { repaired?: boolean; cost?: number } = {}) => ({
@@ -39,4 +39,24 @@ test("a fake run reads the rubric as skipped; the table names the cases, the pas
 test("a case the provider could not run is a failure", () => {
   const out = gate({ results: { results: [{ vars: { kind: "brief", id: "b1" }, error: "timeout", gradingResult: null }] } }, { fake: false });
   expect(out.failures).toEqual(["brief: b1: timeout"]);
+});
+
+// D103: a case that fails gets one fresh run; it counts as failed only if it fails again.
+const one = (id: string, js: boolean, rubric: boolean, cost = 0.01) => ({ ...result("check", js, rubric, { cost }), vars: { kind: "check", id } });
+
+test("the failed cases are named for their retry: a free check or the rubric failed, or the provider could not run", () => {
+  const first = results([one("a", true, true), one("b", true, false), one("c", false, true)]);
+  expect(failedCases(first)).toEqual(["b", "c"]);
+});
+
+test("a case that passes on its retry counts as passed; one that fails twice counts as failed; both runs are paid", () => {
+  const first = results([one("a", true, true), one("b", true, false), one("c", true, false), one("d", true, true), one("e", true, true)]);
+  const retry = results([one("b", true, true), one("c", true, false)]);
+  const merged = withRetries(first, retry);
+  const out = gate(merged, { fake: false });
+  expect(out.ok).toBe(false);
+  expect(out.failures).toEqual(["check: the rubric passed 4 of 5 (80%), under 85%"]);
+  expect(out.table).toContain("| check | 5 | 5/5 | 80% (4/5) | 0 | ₹5.95 |");
+  const green = gate(withRetries(first, results([one("b", true, true), one("c", true, true)])), { fake: false });
+  expect(green.ok).toBe(true);
 });
