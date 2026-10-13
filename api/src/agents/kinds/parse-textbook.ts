@@ -17,7 +17,7 @@ export const parseTextbook: Kind<ParseTextbookInput, TextbookOutput> = {
     draft.chapters.flatMap((c) => c.skills.filter((s) => words(s) > 14).map((s): Finding => ({ item: c.name, problem: `"${s.slice(0, 60)}" is a sentence, not a short skill`  }))),
   rubric: [
     "- The chapters are those printed on the page, with their names as printed, in the book's order; none is invented and none printed is left out.",
-    "- Each skill is a short phrase from the page's section headings under its chapter; nothing is copied from inside the book.",
+    "- Each skill is a short phrase of what a student can do, drawn from the page's section headings under its chapter (a heading turned into what a student does, such as 'Use the past perfect tense' from 'Past perfect tense', is right); nothing is added that the headings do not say, and nothing is copied from inside the book.",
     "- Prefaces, acknowledgements, answer keys and appendices are not chapters.",
   ].join("\n"),
 };

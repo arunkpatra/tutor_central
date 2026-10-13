@@ -5,7 +5,7 @@ import { type ClassLevel, TextbookOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 /** One photographed contents page read into chapters, each with the skills a tutor teaches and checks (D58: names
  *  only, nothing from inside the book). */

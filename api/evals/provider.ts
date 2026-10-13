@@ -7,7 +7,7 @@ import { runAgent } from "../src/agents/agent.js";
 import { anthropicClaude } from "../src/claude.js";
 import { fakeClaude, localAnswer } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
-import { agentFor, loadCases, PROBE_CENTRE } from "../src/evals/cases.js";
+import { agentFor, loadCases, pageWords, PROBE_CENTRE } from "../src/evals/cases.js";
 
 type Context = { vars: { kind: string; id: string } };
 
@@ -30,7 +30,8 @@ export default class AgentProvider {
     const tokens = db.rows.reduce((n, r) => ({ prompt: n.prompt + (r.finish?.tokensIn ?? 0), completion: n.completion + (r.finish?.tokensOut ?? 0) }), { prompt: 0, completion: 0 });
     const asked = spec.draft(input);
     const answer = outcome.kind === "ok" ? outcome.parsed : { refused: outcome.kind === "failed" ? outcome.reason : outcome.kind, words: outcome.kind === "failed" ? outcome.words : "service" };
-    const output = JSON.stringify({ asked: [asked.system.own, asked.text].filter(Boolean).join("\n"), answer });
+    const page = pageWords(found);
+    const output = JSON.stringify({ asked: [asked.system.own, asked.text, page && `The photo shows this page:\n${page}`].filter(Boolean).join("\n"), answer });
     return {
       output,
       cost: fake ? 0 : paise / 100 / table.rupeesPerDollar,

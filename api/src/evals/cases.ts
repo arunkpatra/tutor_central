@@ -60,6 +60,22 @@ export function agentFor(c: Case, dir = evalsDir()): { spec: Kind<unknown, unkno
   }
 }
 
+type PageRow = { number: string; name: string; sections?: string[]; page: number };
+type Page = { file: string; title: string; heading: string; rows: PageRow[] };
+
+/** What a case's page prints, in words (`<kind>/pages.json`, the text the page was drawn from), for the graders: they
+ *  read text alone, and without it judged a photo's chapters against the whole book they remember. "" for a case with
+ *  no page. */
+export function pageWords(c: Case, dir = evalsDir()): string {
+  if (typeof c.input.image !== "string") return "";
+  const file = c.input.image.replace(/^.*\//, "").replace(/\.png$/, "");
+  const pages = JSON.parse(readFileSync(join(dir, c.kind, "pages.json"), "utf8")) as Page[];
+  const page = pages.find((p) => p.file === file);
+  if (!page) return "";
+  const rows = page.rows.map((r) => `${r.number} ${r.name}${r.sections?.length ? ` (${r.sections.join("; ")})` : ""}, page ${r.page}`);
+  return [page.title, page.heading, ...rows].join("\n");
+}
+
 /** How many things an answer holds, by kind: the questions, the mistakes, the chapters, the items, the groups. */
 function countOf(kind: AIKind, parsed: Record<string, unknown>): number | undefined {
   const list = (key: string) => (Array.isArray(parsed[key]) ? (parsed[key] as unknown[]).length : undefined);

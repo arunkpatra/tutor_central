@@ -5,7 +5,7 @@ import { runAgent } from "../src/agents/agent.js";
 import { kindFor, rubrics } from "../src/agents/kinds/index.js";
 import { fakeClaude, localAnswer } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
-import { agentFor, EVAL_KINDS, evaluate, evalsDir, kindsOnDisk, loadCases } from "../src/evals/cases.js";
+import { agentFor, EVAL_KINDS, evaluate, evalsDir, kindsOnDisk, loadCases, pageWords } from "../src/evals/cases.js";
 
 // The golden sets (D74, plan decision 10): five cases a kind, the seed's names, no real page, each input the route's.
 const BANNED = [/\+91\s?\d/, /\b\d{10}\b/, /[\w.+-]+@[\w-]+\.\w+/];
@@ -58,4 +58,12 @@ test("evaluate scores a refusal against a case that expects one, and names what 
   expect(scored.expect).toBe(false);
   expect(scored.reasons).toContain('"Hemanth" present');
   expect(scored.reasons).toContain("count 1, expected 6");
+});
+
+test("the grader is told what a case's page prints, so a photo's answer is judged against the page, not the whole book", () => {
+  const page = loadCases(["parse_textbook"]).find((c) => c.id === "textbook-8-science");
+  const words = pageWords(page!);
+  expect(words).toContain("CONTENTS");
+  expect(words).toContain("1 Exploring the Investigative World of Science (Asking questions; Making a fair test), page 1");
+  expect(pageWords(loadCases(["plan"])[0]!)).toBe("");
 });

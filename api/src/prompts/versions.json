@@ -24,8 +24,8 @@
     "hash": "de2a1b41cbd14ae93ce493627923ccbc573275246aea0611343ec705ed2bae8e"
   },
   "plan": {
-    "version": "2",
-    "hash": "c678ef3a93ef15f9a4497b4360e339bc2017e6f5a043bb04c9f11827e2a440af"
+    "version": "3",
+    "hash": "b861dfd7de19e0d1cdf51564b14c8aaa153955339251c838d8ab52dc33945016"
   },
   "sheet": {
     "version": "2",
@@ -80,8 +80,8 @@
     "hash": "f2fd083ec66d4746705aedc6c4160b0a71874adfbcd75d24adf2f6ccdac75953"
   },
   "parse_textbook": {
-    "version": "2",
-    "hash": "404ffc9c1164178765bbac73bea6af29de3b0a571688c9eb393222503b48a582"
+    "version": "3",
+    "hash": "9b712259a1537f6e4e1f88b97e49bcb4faaecebe39f048e48d530bde99100f7d"
   },
   "read_marks": {
     "version": "2",

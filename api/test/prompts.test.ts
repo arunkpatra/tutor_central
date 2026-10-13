@@ -7,6 +7,7 @@ import { normalisePhone, request as scan } from "../src/prompts/scan-register.js
 import { request as brief } from "../src/prompts/brief.js";
 import { request as figure } from "../src/prompts/figure.js";
 import { request as plan } from "../src/prompts/plan.js";
+import { plan as planKind } from "../src/agents/kinds/plan.js";
 import { request as sheet } from "../src/prompts/sheet.js";
 import { request as workedExample } from "../src/prompts/worked-example.js";
 import { GenerateInput } from "../src/schemas.js";
@@ -151,6 +152,12 @@ test("the plan's topics ask Sonnet for a first chapter and skill per group for t
   expect(r.text).toContain("October");
   expect(r.text).toContain("Group 1: class 8 Science");
   expect(systemText(r)).toContain("textbook");
+  // A chapter's number is the fact a model gets wrong most (the evals of 2026-10-13): the title alone is asked.
+  expect(systemText(r)).toContain("the chapter's title alone, without its number");
+});
+
+test("the plan's check accepts a chapter as a current or recent book prints it (the books changed in 2023 to 2025)", () => {
+  expect(planKind.rubric).toContain("a current or a recent book");
 });
 test("parse-school asks for items as the school wrote them, with today's date and the centre's schools and classes, on Sonnet", () => {
   const r = parseSchoolRequest({ text: "Dear Parents, Science Unit Test 3 for Class 8 will be held on Friday 16th Oct.", image: null, today: "2026-10-07", schools: ["Vidya Niketan"], classLevels: ["8", "10"] });
