@@ -3,7 +3,9 @@ import SwiftUI
 /// The check row (components.md "Check row"): the skill as the eyebrow (caption text2), the question (subhead), then
 /// the expected answer (footnote text3) and the Right | Wrong pair on a `well` track 150 wide (radius 13, padding 3,
 /// segments 34 high, radius 10): Right on is `ok` with `okInk`, Wrong on `overdue` with `overdueInk`, off segments
-/// text2 600. Untapped is neither; tapping the lit segment again clears it.
+/// text2 600. Untapped is neither; tapping the lit segment again clears it. The question's and answer's formulae are
+/// drawn
+/// by `MathText` (D102).
 public struct CheckRow: View {
     let skill: String
     let question: String
@@ -44,16 +46,12 @@ public struct CheckRow: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: Tokens.fieldGap) {
             Text(skill).typeStyle(Tokens.caption).foregroundStyle(Tokens.text2.color)
-            Text(question)
-                .typeStyle(Tokens.subhead)
-                .foregroundStyle(Tokens.text.color)
+            MathText(question, style: Tokens.subhead)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: Tokens.inline) {
-                Text(answer)
-                    .typeStyle(Tokens.footnote)
-                    .foregroundStyle(Tokens.text3.color)
+                MathText(answer, style: Tokens.footnote, color: Tokens.text3)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                RightWrongPair(tap: $tap, about: question)
+                RightWrongPair(tap: $tap, about: MathSpeech.words(question))
             }
         }
         .padding(.vertical, Tokens.rowPaddingDense)

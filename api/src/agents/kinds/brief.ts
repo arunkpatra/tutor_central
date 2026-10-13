@@ -10,6 +10,7 @@ export type BriefInput = { classLevel: ClassLevel; subject: string; chapter: str
 export const brief: Kind<BriefInput, BriefOutput> = {
   kind: "brief",
   classLevel: (input) => input.classLevel,
+  maths: true,
   draft: (input) => request(input.classLevel, input.subject, input.chapter),
   verify: (_input, draft) => workedExampleFindings(draft.workedExample, "worked example's "),
   rubric: rubric([

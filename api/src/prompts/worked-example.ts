@@ -1,10 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type ClassLevel, WorkedExampleOutput } from "../schemas.js";
-import { VOICE, blocks, LIMITS, PROOF, syllabusFacts } from "./shared.js";
+import { VOICE, blocks, LIMITS, MATHS, PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 /** The worked example for a skill (P10-WorkedExample): one problem a student of that class meets, solved one step at a
  *  time as the tutor says it aloud, and the common slip. */
@@ -19,6 +19,7 @@ export function request(classLevel: ClassLevel, subject: string, skill: string):
       "Each step has a short title and the working in one or two lines; two to six steps.",
       "The slip is the one mistake students of that class make most on this skill, in one sentence that starts 'A common slip here:'.",
       PROOF,
+      MATHS,
       LIMITS.worked_example,
       syllabusFacts(classLevel, subject),
     ]),

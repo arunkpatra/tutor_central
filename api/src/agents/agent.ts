@@ -5,6 +5,7 @@ import { type Chosen, modelFor, type Step } from "../models.js";
 import { costPaise, promptHash, sha256 } from "../price.js";
 import type { CheckVerdict, ClassLevel } from "../schemas.js";
 import { checkRequest, repairRequest } from "./check.js";
+import { mathsFindings } from "./maths.js";
 
 /** A kind's request before the table chooses its model and effort (D100). */
 export type DraftRequest<T> = Omit<ClaudeRequest<T>, "model" | "effort" | "deadlineMs">;
@@ -17,6 +18,8 @@ export type Kind<I, T> = {
   draft(input: I): DraftRequest<T>;
   /** Deterministic findings over a parsed draft (free); none means it passes. */
   verify?(input: I, draft: T): Finding[];
+  /** The kind writes mathematics in LaTeX (D102): every string of a draft is held to `mathsProblem` (free). */
+  maths?: boolean;
   /** The rubric the checker is held to, in words; also `api/evals/<kind>/rubric.md`. */
   rubric?: string;
   /** A sheet's band is chosen by its class (models.ts). */
@@ -113,7 +116,7 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
 
   /** The free findings and the model's verdict on one answer, under the check's key. */
   const findingsOf = async (parsed: T, suffix: ":check" | ":repair:check"): Promise<Finding[]> => {
-    const own = spec.verify?.(input, parsed) ?? [];
+    const own = [...(spec.verify?.(input, parsed) ?? []), ...(spec.maths ? mathsFindings(parsed) : [])];
     const verdict = await check(ctx, spec, level, rubric, asked, parsed, draftRow.id, suffix, version, call);
     return [...own, ...(verdict && !verdict.pass ? verdict.findings : [])];
   };
