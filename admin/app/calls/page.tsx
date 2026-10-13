@@ -117,7 +117,7 @@ export default async function CallsPage({ searchParams }: { searchParams: Promis
                 </Cell>
                 <Cell
                   label={CALLS.head.kind}
-                  kind="strong"
+                  kind="main"
                   sub={CALLS.sub(modelName(c.model), c.prompt_version, c.student)}
                 >
                   <a className="plain" href={`/calls/${c.id}`}>
