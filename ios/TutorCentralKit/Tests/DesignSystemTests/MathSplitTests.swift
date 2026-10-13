@@ -61,3 +61,13 @@ private struct MathsCase: Decodable {
     #expect(MathText.spaced(MathSplit.runs("आधा $= \\frac{1}{2}$")) == [.text("आधा "), .inline("= \\frac{1}{2}")])
     #expect(MathText.spaced(MathSplit.runs("Half is $x$ here")) == [.text("Half is "), .inline("x"), .text(" here")])
 }
+
+/// A formula in a heavy type token is bold, digits too: `\bm` is bold italic, which has no digits, so a number takes
+/// `\mathbf` inside it (the board view's 2⁵ was drawn regular beside its bold words, hand run 7).
+@Test func aHeavyFormulaIsBoldDigitsAndAll() {
+    #expect(MathText.weighted("2^5", weight: 800) == "\\bm{\\mathbf{2}^\\mathbf{5}}")
+    #expect(MathText.weighted("x + 9 = 25", weight: 800) == "\\bm{x + \\mathbf{9} = \\mathbf{25}}")
+    #expect(MathText
+        .weighted("\\frac{3}{8} = 0.38", weight: 600) == "\\bm{\\frac{\\mathbf{3}}{\\mathbf{8}} = \\mathbf{0.38}}")
+    #expect(MathText.weighted("2^5", weight: 400) == "2^5")
+}
