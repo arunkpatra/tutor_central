@@ -1078,3 +1078,28 @@ in `overdue` 600, the actions, then a nested data table.
 "Opened at … by you · reason: … · written to the audit").
 
 The texts are on the boards' sources and in `admin/content/words.ts`.
+
+## Phase 20 parts (session 40, 2026-10-13): mathematics
+
+**MathText:** text with `$…$` runs drawn as mathematics by SwiftMath (D75) in the maths face (XITS Math), at the type
+style's point size and in the row's colour, inline with SF Pro; `$$…$$` is a display line, centred, 1.25× the size, with
+`rowPaddingDense` above and below. A run that cannot be parsed is shown as written in `text2`. Used wherever an artefact's
+content is shown: the question row, the key row, the step row, the board view, the result hero's title, the mock's rows,
+the brief's working. VoiceOver reads a run in words.
+
+**Board view with maths:** the Phase 10 board view; the question drawn by `MathText` at `displayHero` (44/52 700); the
+key under it in `ok` at `title3`.
+
+**The Kit's mathematics rows** (`kit-phase20`): Mathematics in a row (two question rows and a key row); Display formula;
+Board view type with maths; Hindi and Kannada beside a formula (three rows); Maths that could not be read (one row); a
+footnote naming the faces.
+
+**The switched-off alert:** U33's system alert with one button (OK): the title names the kind, the message is the
+board's.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| A kind switched off | "Sheets can't be made right now" · "Making sheets is switched off for a short while so we can fix something. Everything else works as usual. Try again later." · OK |
+| The Kit's footnote | "The maths face: XITS Math on the iPhone (SwiftMath), STIX Two Math in the PDF (Typst with mitex), the same family. Letters italic, numbers upright, fractions stacked, roots with their bar. Dynamic Type scales a formula with the words around it." |

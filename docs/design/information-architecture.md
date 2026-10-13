@@ -1503,3 +1503,56 @@ What the build settled (Phase 19, session 39), states no board draws, in the boa
   (closes, messages, fees, material made again) show a dash for who.
 - **Not found** (an unknown address, a centre, call or job that is gone) is the website's words in the portal's frame:
   "There is nothing at this address.", "Go to Centres".
+
+## Phase 20 boards (session 40, 2026-10-13): mathematics on the material, the Kit's maths rows, a PDF page, a kind switched off
+
+Row 28 of the canvas (y 82000; the title note at 81700); sources `mockups/P20-*.dc.html`, dark and light twins side by side.
+Drawn by session 40 in the Phase 10 artefact boards' grammar (step 10.4), with every formula drawn as SwiftMath and Typst
+draw it (D75): a serif maths face beside SF Pro, letters italic, numbers upright, fractions stacked, roots with their bar.
+Awaiting the owner's approval.
+
+| Board | Source |
+|---|---|
+| The sheet for the younger band (class 4 fractions, the Haiku band): fractions in the questions | `P20-Sheet-To5`, `-Light` |
+| The sheet for the older band (class 8 linear equations, the Sonnet band): equations in the questions | `P20-Sheet-From6`, `-Light` |
+| The board view: one equation in the display size, the key shown under it | `P20-Sheet-Board`, `-Light` |
+| The worked example: the problem in the hero, each step's working with its equations | `P20-WorkedExample`, `-Light` |
+| The mock: inline maths in the questions, a display formula centred inside a question | `P20-Mock`, `-Light` |
+| The Kit's mathematics rows: inline in a row and a key row, a display formula, the board view's type, Hindi and Kannada beside a formula, maths that could not be read | `P20-Kit-Maths`, `-Light` |
+| A sheet's PDF page as Typst renders it with mitex: words in Noto Sans, formulae in STIX Two Math | `P20-PDF-Sheet` |
+| A kind switched off (D73's kill switch): the system alert over the Make form, in the tutor's words | `P20-Switched-Off`, `-Light` |
+
+The launch states (the light twins from `--appearance light`):
+
+| State | Shows |
+|---|---|
+| `sheet-maths-to5` | A class 4 fractions sheet, Paper |
+| `sheet-maths-from6` | A class 8 linear equations sheet, Paper |
+| `sheet-board-maths` | The board view at question 2 with the key shown |
+| `worked-example-maths` | The worked example with two of four steps shown |
+| `mock-maths` | The mock with its sections and the display formula |
+| `kit-phase20` | The Kit's mathematics rows |
+| `make-switched-off` | The Make form with the alert of a kind switched off |
+
+What the boards settle:
+
+- **A formula is written in LaTeX maths mode inside the content's text** (`$…$` inline, `$$…$$` on a line of its own) and
+  drawn in place: on the iPhone by SwiftMath, in the server's PDF by Typst with mitex, in the phone's own PDF by the same
+  renderer as the screen. Nothing else about the sheet, the worked example, the mock or the board view changes: the hero,
+  the three-form control, the rows, the footer band are Phase 10's.
+- **The maths face** is XITS Math on the iPhone (SwiftMath's bundled font, OFL) and STIX Two Math in the PDF (OFL): the same
+  family, so a sheet reads the same on the phone and on paper. Letters are italic, numbers upright, operators spaced as TeX
+  spaces them. Inline maths takes the row's type size; a display formula is centred at 1.25× with the row's padding above
+  and below; the board view draws a formula at the display size (44/52) with the key under it in `ok`.
+- **Dynamic Type** scales a formula with the words around it (the type style's point size is the formula's).
+- **Words in Hindi or Kannada stay outside a formula**: the prompts ask for symbols and digits inside `$…$` and the
+  language's words around it; a `\text{…}` holding non-Latin letters is drawn as words, not maths, so no renderer meets a
+  script its maths font lacks.
+- **Maths that could not be read** (a formula the renderer cannot parse) is shown as written, in `text2`, nothing hidden
+  and nothing crashed; the check step should have refused it before it was kept.
+- **A kind switched off** (`ai_models.enabled` false, D73) tells the tutor in the system alert (U33's row for a refused
+  write): "Sheets can't be made right now" · "Making sheets is switched off for a short while so we can fix something.
+  Everything else works as usual. Try again later." · OK. The kind's name changes with the kind (sheets, worked examples,
+  figures, briefs, mock tests, notes, …). In the plan, material of a kind switched off reads as not made, with Phase 10's
+  mark; nothing is paid.
+- **VoiceOver** reads a formula in words ("x over 4 minus 2 equals 1").

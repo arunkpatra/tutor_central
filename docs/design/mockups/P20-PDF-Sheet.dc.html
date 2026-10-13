@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 20 · A sheet's PDF page with equations (Typst, mitex, STIX Two Math)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+input::placeholder,textarea::placeholder{color:#958B80;opacity:1}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.m{font-family: 'STIX Two Math', 'STIX Two Text', 'XITS Math', 'Latin Modern Math', 'Times New Roman', serif; font-style: normal; font-size: 1.08em}
+.m i{font-style: italic}
+.fr{display: inline-block; vertical-align: middle; text-align: center; line-height: 1.1; margin: 0 .12em}
+.fr > span{display: block}
+.fr > span:first-child{border-bottom: 1px solid currentColor; padding: 0 .15em .04em}
+.fr > span:last-child{padding: .04em .15em 0}
+.sq{display: inline-flex; align-items: stretch; margin: 0 .05em}
+.sq > span:first-child{align-self: flex-end}
+.sq > span:last-child{border-top: 1px solid currentColor; padding: .05em .15em 0 .1em}
+.disp{display: block; text-align: center; padding: 6px 0 2px}
+</style>
+</helmet>
+<div style="--bg:#F8F4EE; --s1:#FFFFFF; --s2:#F1EBE2; --btn2:#FFFFFF; --well:#F3EEE6; --line:#E8E0D5; --line2:#D5CBBE; --t:#1F1B17; --t2:#625A52; --t3:#766D66; --acc:#FFAB38; --accText:#A35F00; --accInk:#231500; --accTint:rgba(224,138,0,.14); --ok:#0F7F59; --okTint:rgba(15,127,89,.12); --okInk:#0B2A1D; --due:#A85F00; --dueTint:rgba(168,95,0,.12); --over:#D13B2C; --overTint:rgba(209,59,44,.12); --overInk:#2B0906; --glass:rgba(255,255,255,.74); --glassLine:rgba(0,0,0,.06); --dim:rgba(40,30,20,.35); --halo:0 0 0 3px rgba(224,138,0,.16); --glow:inset 0 1px 0 rgba(255,255,255,.4), 0 8px 22px rgba(224,138,0,.26); --shadowWell:none; --shadowButton:0 1px 2px rgba(40,30,20,.08); --shadowRaised:0 1px 2px rgba(40,30,20,.05), 0 10px 28px rgba(40,30,20,.07); --shadowFloat:0 10px 30px rgba(40,30,20,.14), inset 0 1px 0 rgba(255,255,255,.6); --shadowDialog:0 24px 64px rgba(40,30,20,.2); --shadowSegment:0 1px 3px rgba(40,30,20,.14); --onStatus:#FFFFFF; width: 595px; height: 842px; box-sizing: border-box; position: relative; overflow: hidden; background: #FFFFFF; color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+<div style="position: absolute; inset: 0; background: #FFFFFF; color: #141414; padding: 40pt; box-sizing: border-box; font-family: 'Noto Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 11pt; line-height: 1.5"><div style="font-size: 20pt; font-weight: 700; line-height: 1.2">Equations in one variable · sheet 1</div><div style="color: #5A5A5A; margin-top: 4pt">Solve for x</div><div style="margin-top: 14pt; display: flex; flex-direction: column; gap: 12pt"><div style="display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: baseline"><div style="color: #5A5A5A">1.</div><div style="font-size: 11pt; line-height: 1.45">Solve <span class="m">3<i>x</i>  +  5  =  20</span>.<div style="height: 28pt"></div></div><div style="font-size: 9pt; color: #6E6E6E">1</div></div><div style="display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: baseline"><div style="color: #5A5A5A">2.</div><div style="font-size: 11pt; line-height: 1.45">Solve <span class="m"><span class="fr"><span><i>x</i></span><span>4</span></span>  −  2  =  1</span>.<div style="height: 28pt"></div></div><div style="font-size: 9pt; color: #6E6E6E">1</div></div><div style="display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: baseline"><div style="color: #5A5A5A">3.</div><div style="font-size: 11pt; line-height: 1.45">Solve <span class="m">2(<i>x</i>  −  3)  =  <i>x</i>  +  4</span>.<div style="height: 28pt"></div></div><div style="font-size: 9pt; color: #6E6E6E">1</div></div><div style="display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: baseline"><div style="color: #5A5A5A">4.</div><div style="font-size: 11pt; line-height: 1.45">Find <span class="m"><i>x</i></span> if <span class="m"><span class="fr"><span>2<i>x</i>  +  1</span><span>3</span></span>  =  5</span>.<div style="height: 28pt"></div></div><div style="font-size: 9pt; color: #6E6E6E">1</div></div><div style="display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: baseline"><div style="color: #5A5A5A">5.</div><div style="font-size: 11pt; line-height: 1.45">The sum of three consecutive numbers is 48. Find them.<div style="height: 28pt"></div></div><div style="font-size: 9pt; color: #6E6E6E">1</div></div><div style="display: grid; grid-template-columns: auto 1fr auto; column-gap: 8px; align-items: baseline"><div style="color: #5A5A5A">6.</div><div style="font-size: 11pt; line-height: 1.45">Solve <span class="m"><span class="fr"><span><i>x</i></span><span>2</span></span>  +  <span class="fr"><span><i>x</i></span><span>3</span></span>  =  10</span>.<div style="height: 28pt"></div></div><div style="font-size: 9pt; color: #6E6E6E">1</div></div></div><div style="position: absolute; left: 40pt; right: 40pt; bottom: 24pt; display: flex; justify-content: space-between; font-size: 8pt; color: #6E6E6E"><span>Bright Minds Tuition · Class 8 Maths</span><span>Page 1 of 1</span></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":595,"height":842}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

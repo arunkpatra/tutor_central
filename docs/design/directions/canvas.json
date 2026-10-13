@@ -3299,6 +3299,111 @@
    "w": 1280,
    "x": 3660,
    "y": 77000
+  },
+  "P20-Sheet-To5.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 0,
+   "y": 82000,
+   "title": "Phase 20 · A sheet for the younger band (class 4 fractions) with its fractions drawn as mathematics · dark"
+  },
+  "P20-Sheet-From6.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 946,
+   "y": 82000,
+   "title": "Phase 20 · A sheet for the older band (class 8 linear equations) with equations drawn as mathematics · dark"
+  },
+  "P20-Sheet-Board.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 1892,
+   "y": 82000,
+   "title": "Phase 20 · The board view: one equation in the display size, the key shown under it · dark"
+  },
+  "P20-WorkedExample.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 2838,
+   "y": 82000,
+   "title": "Phase 20 · The worked example: the problem and each step's working with equations · dark"
+  },
+  "P20-Mock.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 3784,
+   "y": 82000,
+   "title": "Phase 20 · The mock: inline maths in questions and a centred display formula · dark"
+  },
+  "P20-Kit-Maths.dc.html": {
+   "h": 1240,
+   "w": 393,
+   "x": 4730,
+   "y": 82000,
+   "title": "Phase 20 · The Kit's mathematics rows: inline, display, the board type, Hindi and Kannada beside a formula, maths that could not be read · dark"
+  },
+  "P20-Switched-Off.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 5676,
+   "y": 82000,
+   "title": "Phase 20 · A kind switched off (D73): the system alert over the Make form, in the tutor's words · dark"
+  },
+  "P20-Sheet-To5-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 473,
+   "y": 82000,
+   "title": "Phase 20 · A sheet for the younger band (class 4 fractions) with its fractions drawn as mathematics · light"
+  },
+  "P20-Sheet-From6-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 1419,
+   "y": 82000,
+   "title": "Phase 20 · A sheet for the older band (class 8 linear equations) with equations drawn as mathematics · light"
+  },
+  "P20-Sheet-Board-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 2365,
+   "y": 82000,
+   "title": "Phase 20 · The board view: one equation in the display size, the key shown under it · light"
+  },
+  "P20-WorkedExample-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 3311,
+   "y": 82000,
+   "title": "Phase 20 · The worked example: the problem and each step's working with equations · light"
+  },
+  "P20-Mock-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 4257,
+   "y": 82000,
+   "title": "Phase 20 · The mock: inline maths in questions and a centred display formula · light"
+  },
+  "P20-Kit-Maths-Light.dc.html": {
+   "h": 1240,
+   "w": 393,
+   "x": 5203,
+   "y": 82000,
+   "title": "Phase 20 · The Kit's mathematics rows: inline, display, the board type, Hindi and Kannada beside a formula, maths that could not be read · light"
+  },
+  "P20-Switched-Off-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 6149,
+   "y": 82000,
+   "title": "Phase 20 · A kind switched off (D73): the system alert over the Make form, in the tutor's words · light"
+  },
+  "P20-PDF-Sheet.dc.html": {
+   "h": 842,
+   "w": 595,
+   "x": 6622,
+   "y": 82000,
+   "title": "Phase 20 · A sheet's PDF page as Typst renders it with mitex: words in Noto Sans, formulae in STIX Two Math"
   }
  },
  "createdOnFiles": {
@@ -3541,6 +3646,14 @@
    "w": 240,
    "x": 0,
    "y": 76700
+  },
+  "p20_1": {
+   "kind": "title1",
+   "maxW": 7200,
+   "w": 240,
+   "x": 0,
+   "y": 81700,
+   "text": "Phase 20 · AI quality, the material (D73 to D75): mathematics on the sheet (the younger band and the older band), the board view, the worked example and the mock, dark and light; the Kit's mathematics rows; a sheet's PDF page as Typst renders it; the words a kind switched off says to the tutor"
   }
  },
  "order": [
@@ -4000,7 +4113,22 @@
   "P19-Pending-Dialog.dc.html",
   "P19-Pending-Dialog-Light.dc.html",
   "P19-Pending-Dialog-Phone.dc.html",
-  "P19-Pending-Dialog-Phone-Light.dc.html"
+  "P19-Pending-Dialog-Phone-Light.dc.html",
+  "P20-Sheet-To5.dc.html",
+  "P20-Sheet-To5-Light.dc.html",
+  "P20-Sheet-From6.dc.html",
+  "P20-Sheet-From6-Light.dc.html",
+  "P20-Sheet-Board.dc.html",
+  "P20-Sheet-Board-Light.dc.html",
+  "P20-WorkedExample.dc.html",
+  "P20-WorkedExample-Light.dc.html",
+  "P20-Mock.dc.html",
+  "P20-Mock-Light.dc.html",
+  "P20-Kit-Maths.dc.html",
+  "P20-Kit-Maths-Light.dc.html",
+  "P20-Switched-Off.dc.html",
+  "P20-Switched-Off-Light.dc.html",
+  "P20-PDF-Sheet.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
