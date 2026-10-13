@@ -117,7 +117,7 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
   /** The free findings and the model's verdict on one answer, under the check's key. */
   const findingsOf = async (parsed: T, suffix: ":check" | ":repair:check"): Promise<Finding[]> => {
     const own = [...(spec.verify?.(input, parsed) ?? []), ...(spec.maths ? mathsFindings(parsed) : [])];
-    const verdict = await check(ctx, spec, level, rubric, asked, parsed, draftRow.id, suffix, version, call);
+    const verdict = await check(ctx, spec, level, rubric, asked, parsed, draftRow.id, suffix, version, call, student?.id);
     return [...own, ...(verdict && !verdict.pass ? verdict.findings : [])];
   };
   const refuse = async (findings: Finding[]) => {
@@ -147,6 +147,11 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
   const repaired = await call(repairAsked, repairChoice.model, repairChoice.effort);
   await ctx.db.finish(ctx.token, repairRow.id, finished(repaired, { ...repairAsked, model: repairChoice.model }, version, null, repaired.kind === "ok" ? repaired.parsed : null));
   if (repaired.kind !== "ok") return refuse(first);
+  if (spec.empty?.(repaired.parsed)) {
+    // A repair that leaves nothing (every item dropped) is refused in the kind's words, as an empty first draft is.
+    await finishDraft({ ...finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, null), status: "failed", output: null, errorReason: "refused" });
+    return { kind: "failed", id: draftRow.id, costPaise: cost, reason: "refused", words: "refused" };
+  }
   const second = await findingsOf(repaired.parsed, ":repair:check");
   if (second.length > 0) return refuse(second);
   const kept = keep(repaired.parsed);
@@ -167,12 +172,13 @@ async function check<T>(
   suffix: ":check" | ":repair:check",
   version: string,
   call: <R>(request: DraftRequest<R>, model: Chosen["model"], effort: Chosen["effort"], cap?: number) => Promise<ClaudeAnswer<R>>,
+  student?: string,
 ): Promise<CheckVerdict | null> {
   const chosen = modelFor(spec.kind, "check", level);
   const request = checkRequest(rubric, asked, parsed);
   let row: { id: string };
   try {
-    row = await ctx.db.startCall(ctx.token, stepCall(ctx, spec.kind, chosen.model, draftId, suffix));
+    row = await ctx.db.startCall(ctx.token, stepCall(ctx, spec.kind, chosen.model, draftId, suffix, student));
   } catch (e) {
     log.error({ at: "agent", requestId: ctx.requestId, kind: spec.kind, step: "check", error: e instanceof Error ? e : String(e) });
     return null;

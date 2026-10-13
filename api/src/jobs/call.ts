@@ -3,6 +3,11 @@ import { DbFailure } from "../db.js";
 import { sha256 } from "../price.js";
 import type { StepContext } from "./types.js";
 
+/** A job's agent may take 170 s on the job's clock, not a route's 110 s: no one waits, and the worker starts a step only
+ *  while 120 s of its 200 s are left (runner.ts), so a step ends by 250 s inside the 300 s function, with room for the
+ *  repair after a slow draft (the review's finding 1). */
+export const JOB_AGENT_BUDGET_MS = 170_000;
+
 export type RecordedCall<T> =
   | { kind: "ok"; id: string; parsed: T; costPaise: number; repaired?: boolean }
   | { kind: "pending" }
@@ -21,7 +26,7 @@ export async function recordedCall<I, T>(
   const recorded = args.recorded ?? args.input;
   try {
     const outcome = await runAgent(
-      { db: ctx.db, claude: ctx.claude, token: "", requestId: ctx.requestId, centre: args.centre, key: args.key ?? `${args.job}:${args.step}`, inputHash: sha256(JSON.stringify(recorded)), job: args.job },
+      { db: ctx.db, claude: ctx.claude, token: "", requestId: ctx.requestId, centre: args.centre, key: args.key ?? `${args.job}:${args.step}`, inputHash: sha256(JSON.stringify(recorded)), job: args.job, budgetMs: JOB_AGENT_BUDGET_MS, now: ctx.clock.now },
       args.spec,
       args.input,
       recorded,

@@ -168,3 +168,24 @@ test("every call's deadline is whole milliseconds: Node's AbortSignal.timeout re
   await runAgent(ctx(fakeDb(), claude, { now: () => (clock += 0.467) }), kind, { x: 5 });
   expect(claude.requests.map((r) => Number.isInteger(r.deadlineMs))).toEqual([true, true]);
 });
+
+test("a repaired answer that holds nothing is refused in words, not kept (the review's finding 2)", async () => {
+  const empty: Kind<{ x: number }, Answer> = { ...kind, empty: (draft) => draft.answer === 0 };
+  let drafts = 0;
+  const claude = fakeClaude((r) => {
+    if (isCheck(r)) return pass;
+    drafts += 1;
+    return { answer: drafts === 1 ? { answer: 20, proof: { expression: "3*6+5", equals: 20 } } : { answer: 0, proof: null } };
+  });
+  const db = fakeDb();
+  expect(await runAgent(ctx(db, claude), empty, { x: 5 })).toMatchObject({ kind: "failed", reason: "refused", words: "refused" });
+  expect(db.rows[0]?.finish).toMatchObject({ status: "failed", errorReason: "refused" });
+});
+
+test("the check names the call's student as the repair does, so a personal kind's check passes the consent gate (finding 6)", async () => {
+  const personal: Kind<{ x: number }, Answer> = { ...kind, student: () => ({ id: "s1" }) };
+  const claude = fakeClaude((r) => (isCheck(r) ? pass : { answer: { answer: 20, proof: { expression: "3*5+5", equals: 20 } } }));
+  const db = fakeDb();
+  await runAgent(ctx(db, claude), personal, { x: 5 });
+  expect(db.started.map((s) => s.student)).toEqual(["s1", "s1"]);
+});
