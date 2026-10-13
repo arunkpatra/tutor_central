@@ -226,9 +226,10 @@ function cell(kind: "plant" | "animal", names: string[]): string[] {
     out.push(`#place(top + left, dx: 116pt, dy: 106pt, circle(radius: 24pt, fill: ${SHADE}, stroke: 1pt + ${INK}))`);
   }
   const step = (H - 60) / Math.max(names.length, 1);
-  names.forEach((name, i) => {
+  // The names in the order of their parts' heights, so no two lines cross.
+  const placed = names.map((name) => ({ name, target: points[partOf(name)] as Point })).sort((a, b) => a.target.y - b.target.y);
+  placed.forEach(({ name, target }, i) => {
     const y = 40 + step * (i + 0.5);
-    const target = points[partOf(name)] as Point;
     out.push(line(300, y, target.x, target.y, `0.8pt + ${SOFT}`), dot(target.x, target.y, 2));
     out.push(label(306, y, name, { size: 10, bold: true, align: "left", width: 114 }));
   });
