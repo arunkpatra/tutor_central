@@ -148,7 +148,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
           >
             {kinds.map((k) => (
               <Row key={k.kind} cols={KIND_COLS}>
-                <Cell label={COST.kindHead.kind} kind="strong">
+                <Cell label={COST.kindHead.kind} kind="main">
                   {k.kind}
                 </Cell>
                 <Cell label={COST.kindHead.model} kind="dim">

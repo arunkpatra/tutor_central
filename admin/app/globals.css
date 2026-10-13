@@ -883,13 +883,9 @@ a.plain {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
-  .cols2,
-  .facts {
+  .cols2 {
     grid-template-columns: 1fr;
     gap: 20px;
-  }
-  .facts {
-    gap: 8px;
   }
   .grid {
     grid-template-columns: 1fr 1fr;
