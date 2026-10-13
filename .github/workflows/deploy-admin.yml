@@ -96,7 +96,8 @@ jobs:
           bun x "$VERCEL_CLI" pull --yes --environment=production
           bun x "$VERCEL_CLI" build --prod
 
-      # The deployment production served before this one is written down: promoting it back is the rollback.
+      # The deployment production served before this one is written down: promoting it back is the rollback. The commit
+      # goes to the running functions too: /health reads it at request time, as the API's does.
       - name: Deploy
         timeout-minutes: 5
         env:
@@ -105,7 +106,7 @@ jobs:
         run: |
           domain="${SITE#https://}"
           previous=$(bun x "$VERCEL_CLI" inspect "$domain" 2>&1 | awk '$1 == "url" { print $2; exit }' || true)
-          out=$(bun x "$VERCEL_CLI" deploy --prebuilt --prod)
+          out=$(bun x "$VERCEL_CLI" deploy --prebuilt --prod --env TC_COMMIT="$COMMIT")
           url=$(jq -r '.deployment.url // empty' <<< "$out" 2>/dev/null || true)
           url="${url:-$out}"
           {
