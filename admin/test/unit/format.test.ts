@@ -32,6 +32,8 @@ test("seconds, latency, counts, ids, addresses, months", () => {
   expect(seconds(840)).toBe("14 min");
   expect(latency(2200)).toBe("2.2 s");
   expect(latency(110004)).toBe("110 s");
+  expect(latency(12400)).toBe("12.4 s");
+  expect(count(110004)).toBe("110,004");
   expect(count(1842)).toBe("1,842");
   expect(shortId("7a1e2b3c-0000-0000-0000-00000000c0d4")).toBe("7a1e…c0d4");
   expect(maskIp("49.207.1.1")).toBe("49.207.x.x");

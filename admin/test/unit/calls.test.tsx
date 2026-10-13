@@ -1,0 +1,78 @@
+import { afterAll, beforeAll, expect, test } from "bun:test";
+import { renderToStaticMarkup } from "react-dom/server";
+import CallPage from "../../app/calls/[id]/page";
+import CallsPage from "../../app/calls/page";
+import { outcomeChip, shortCentre, shortKey } from "../../content/calls";
+import { withData } from "../../lib/data";
+import { previewData } from "../../lib/data/preview";
+import type { Call } from "../../lib/data/types";
+import held from "./call-held.json";
+
+beforeAll(() => {
+  process.env.ADMIN_PREVIEW = "1";
+});
+afterAll(() => {
+  delete process.env.ADMIN_PREVIEW;
+});
+
+test("the calls: the tiles, today newest first, each outcome, who started it", async () => {
+  const html = renderToStaticMarkup(await CallsPage({ searchParams: Promise.resolve({}) }));
+  for (const words of [
+    "AI calls",
+    "Today, newest first",
+    "calls today",
+    "median latency",
+    "failed · timeout",
+    "refused",
+    "job plan",
+    "tap",
+    "deploy",
+    "Haiku 5.5 · v3",
+    "v4 · student",
+    "742 · 69",
+    'href="/calls/preview-2"',
+  ])
+    expect(html).toContain(words);
+});
+
+test("one call: its facts, the input, Open the job", async () => {
+  const html = renderToStaticMarkup(await CallPage({ params: Promise.resolve({ id: "preview" }) }));
+  for (const words of [
+    "sheet · a group kind (no student)",
+    "no fallback",
+    "the deadline",
+    "Open the job",
+    "&quot;kind&quot;: &quot;sheet&quot;",
+    "7a1e…c0d4",
+    "c9f2…e4a1:make:4",
+    "₹0.06 (6 paise)",
+  ])
+    expect(html).toContain(words);
+});
+
+test("a held input shows the consent line and no input", async () => {
+  const fake = { ...previewData, call: async () => held as Call };
+  const html = await withData(fake, async () =>
+    renderToStaticMarkup(await CallPage({ params: Promise.resolve({ id: "preview" }) })),
+  );
+  expect(html).toContain("Held: the student’s consent is not current");
+  expect(html).toContain("note · a personal kind (a student)");
+  expect(html).not.toContain("&quot;kind&quot;:");
+});
+
+test("a call that is gone is not found", async () => {
+  const thrown = await CallPage({ params: Promise.resolve({ id: "gone" }) }).catch((e: { digest?: string }) => e);
+  expect((thrown as { digest?: string }).digest).toContain("404");
+});
+
+test("outcomes, centres and keys in the boards' words", () => {
+  expect(outcomeChip("ok", null)).toEqual({ tone: "ok", text: "ok" });
+  expect(outcomeChip("failed", "timeout")).toEqual({ tone: "overdue", text: "failed · timeout" });
+  expect(outcomeChip("failed", "refused")).toEqual({ tone: "due", text: "refused" });
+  expect(outcomeChip("failed", "unfit")).toEqual({ tone: "due", text: "unfit" });
+  expect(outcomeChip("pending", null)).toEqual({ tone: "neutral", text: "pending" });
+  expect(shortCentre("Sunrise Tuition Centre")).toBe("Sunrise");
+  expect(shortCentre("Bright Minds, Jayanagar")).toBe("Bright Minds");
+  expect(shortCentre(null)).toBe("—");
+  expect(shortKey("smoke-6d973b9")).toBe("smoke-6d973b9");
+});

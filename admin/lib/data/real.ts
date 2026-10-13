@@ -1,6 +1,6 @@
 import "server-only";
 import { serviceClient } from "../supabase/service";
-import type { Activity, Centre, Centres, Cost, Data, JobRow, Record, Tutor } from "./types";
+import type { Activity, Call, Calls, Centre, Centres, Cost, Data, JobRow, Record, Tutor } from "./types";
 
 /** One `admin_*` function, as the platform (D83, D94). A database error is thrown: the page's error, never a guess. */
 export async function rpc<T>(fn: string, args: { [key: string]: unknown } = {}): Promise<T> {
@@ -50,8 +50,9 @@ export function realData(): Data {
       ]);
       return { tiles, byDay, byCentre, byKind };
     },
-    calls: notYet("calls"),
-    call: notYet("call"),
+    calls: (f) =>
+      rpc<Calls>("admin_calls", { p_day: f.day, p_centre: f.centre, p_kind: f.kind, p_status: f.status, p_limit: 200 }),
+    call: (id) => rpc<Call | null>("admin_call", { p_id: id }),
     jobs: notYet("jobs"),
     job: notYet("job"),
     errors: notYet("errors"),
