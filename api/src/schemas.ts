@@ -326,21 +326,32 @@ export const WorkedExampleOutput = z.object({
 });
 export type WorkedExampleOutput = z.infer<typeof WorkedExampleOutput>;
 
-/** The seven figure templates (D59), each with the rule the app checks again before drawing (Domain's FigureSpec). */
+/** The seven figure templates (D59), each with the rule the app checks again before drawing (Domain's FigureSpec). The
+ *  draft's shapes carry no rule (`FigureDraftOutput`): the figure's agent checks the rules as findings and repairs a
+ *  figure once before refusing it (D99); what is kept passes `FigureOutput`. */
 const Label = z.string().min(1).max(40);
+const NumberLine = z.object({ kind: z.literal("number_line"), from: z.number().int(), to: z.number().int(), step: z.number().int().min(1), start: z.number().int(), jumps: z.array(z.number().int()).min(1).max(8) });
+const FractionBar = z.object({ kind: z.literal("fraction_bar"), parts: z.number().int().min(1).max(24), shaded: z.number().int().min(0), label: Label });
+const PlaceValue = z.object({ kind: z.literal("place_value"), number: z.number().int().min(0).max(9_999_999) });
+const UnitCircle = z.object({ kind: z.literal("unit_circle"), angleDegrees: z.number().int().min(0).max(360) });
+const Triangle = z.object({ kind: z.literal("triangle"), angles: z.array(z.number().int().min(1).max(178)).length(3), labels: z.array(Label).length(3) });
+const LabelledCell = z.object({ kind: z.literal("labelled_cell"), cell: z.enum(["plant", "animal"]), labels: z.array(Label).min(1).max(5) });
+const FoodChain = z.object({ kind: z.literal("food_chain"), links: z.array(Label).min(2).max(6) });
 export const Figure = z.discriminatedUnion("kind", [
-  z
-    .object({ kind: z.literal("number_line"), from: z.number().int(), to: z.number().int(), step: z.number().int().min(1), start: z.number().int(), jumps: z.array(z.number().int()).min(1).max(8) })
+  NumberLine
     .refine((f) => f.from < f.to && (f.to - f.from) / f.step <= 40, { message: "the line has 1 to 40 steps" })
     .refine((f) => f.start >= f.from && f.start <= f.to, { message: "start is on the line" })
     .refine((f) => f.jumps.every((j) => j !== 0) && f.start + f.jumps.reduce((a, b) => a + b, 0) >= f.from && f.start + f.jumps.reduce((a, b) => a + b, 0) <= f.to, { message: "the landing is on the line" }),
-  z.object({ kind: z.literal("fraction_bar"), parts: z.number().int().min(1).max(24), shaded: z.number().int().min(0), label: Label }).refine((f) => f.shaded <= f.parts, { message: "shaded parts fit the whole" }),
-  z.object({ kind: z.literal("place_value"), number: z.number().int().min(0).max(9_999_999) }),
-  z.object({ kind: z.literal("unit_circle"), angleDegrees: z.number().int().min(0).max(360) }),
-  z.object({ kind: z.literal("triangle"), angles: z.array(z.number().int().min(1).max(178)).length(3), labels: z.array(Label).length(3) }).refine((f) => f.angles.reduce((a, b) => a + b, 0) === 180, { message: "the angles sum to 180" }),
-  z.object({ kind: z.literal("labelled_cell"), cell: z.enum(["plant", "animal"]), labels: z.array(Label).min(1).max(5) }),
-  z.object({ kind: z.literal("food_chain"), links: z.array(Label).min(2).max(6) }),
+  FractionBar.refine((f) => f.shaded <= f.parts, { message: "shaded parts fit the whole" }),
+  PlaceValue,
+  UnitCircle,
+  Triangle.refine((f) => f.angles.reduce((a, b) => a + b, 0) === 180, { message: "the angles sum to 180" }),
+  LabelledCell,
+  FoodChain,
 ]);
+export const FigureDraft = z.discriminatedUnion("kind", [NumberLine, FractionBar, PlaceValue, UnitCircle, Triangle, LabelledCell, FoodChain]);
+export const FigureDraftOutput = z.object({ figure: FigureDraft, caption: z.string().min(1).max(200) });
+export type FigureDraftOutput = z.infer<typeof FigureDraftOutput>;
 export type Figure = z.infer<typeof Figure>;
 export const FigureOutput = z.object({ figure: Figure, caption: z.string().min(1).max(200) });
 export type FigureOutput = z.infer<typeof FigureOutput>;

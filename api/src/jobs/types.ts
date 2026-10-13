@@ -18,7 +18,8 @@ export type Job = {
 /** What one step did: go on to the next step, finish, wait (a key in progress, the budget), or fail. A step that paid
  *  for a call names its generation and cost, so the step row and the job's cost carry them. */
 export type StepOutcome =
-  | { kind: "continue"; name: string; step: Record<string, unknown>; generationId?: string; costPaise?: number }
+  /** `error` notes why a request went unmade while the job goes on (a kind switched off: `paused`). */
+  | { kind: "continue"; name: string; step: Record<string, unknown>; generationId?: string; costPaise?: number; error?: { reason: string } }
   | { kind: "done"; name: string; result: Record<string, unknown>; generationId?: string; costPaise?: number }
   | { kind: "wait"; name: string; step: Record<string, unknown>; runAt: Date; generationId?: string }
   | { kind: "fail"; name: string; error: { reason: string; message?: string }; retry: boolean; generationId?: string };

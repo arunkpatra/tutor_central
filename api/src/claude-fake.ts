@@ -1,4 +1,5 @@
 import type { ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
+import { CheckVerdict } from "./schemas.js";
 import type {
   BriefOutput,
   CheckOutput,
@@ -42,8 +43,10 @@ export function fakeClaude(
       const answered = { model: request.model, tokensIn: 812, tokensOut: 1460, tokensCached: 0, tokensWritten: 0, stopReason: "end_turn", latencyMs };
       if (step.refuse) return { kind: "refused", reason: "refused", ...answered, tokensIn: 100, tokensOut: 0, stopReason: "refusal" };
       if (step.truncate) return { kind: "truncated", ...answered, tokensOut: 16000, stopReason: "max_tokens" };
+      // A script written for a draft passes an agent's check (D99): a check is scripted only where a test means it.
+      const answer = isCheckRequest(request) && !CheckVerdict.safeParse(step.answer).success ? PASS : step.answer;
       // An answer the schema refuses (a figure that does not add up) is refused, as the real client reports an unfit one.
-      const parsed = request.schema.safeParse(step.answer);
+      const parsed = request.schema.safeParse(answer);
       if (!parsed.success) return { kind: "refused", reason: "unfit", ...answered };
       return { kind: "ok", parsed: parsed.data, ...answered };
     },
@@ -406,6 +409,13 @@ export const SAMPLE = {
 /** A request's system words as one text (tests read what a prompt says). */
 export const systemText = (request: Pick<ClaudeRequest<unknown>, "system">) => `${request.system.shared}\n${request.system.own}`;
 
+/** An agent's check (src/agents/check.ts), told apart by its words; the fake passes every draft (D99). */
+export const isCheckRequest = (request: Pick<ClaudeRequest<unknown>, "system">) => request.system.shared.startsWith("You check a draft");
+export const PASS = { pass: true, findings: [] };
+
+/** The sample for a request: a check passes, a draft gets its kind's sample. */
+export const sampleFor = (request: ClaudeRequest<unknown>): unknown => (isCheckRequest(request) ? PASS : SAMPLE[kindOf(request)]);
+
 /** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
 export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
   if (request.text.toLowerCase().includes("what the school sent")) return "parse_school";
@@ -437,16 +447,23 @@ export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
  *  states show; a register photo under 1 KB (tools/samples/blank.png) reads as no rows, for the "No names found"
  *  hand run. */
 export function localScript(request: ClaudeRequest<unknown>): FakeScript {
+  return { answer: localAnswer(request), delayMs: isCheckRequest(request) ? 500 : 1500 };
+}
+
+/** The answer the local fake gives a request: a check passes; a draft gets its kind's sample fitted to what was asked
+ *  (the skills, the chapters, the template, the count, the groups, the pattern, the tutor's words). */
+export function localAnswer(request: ClaudeRequest<unknown>): unknown {
+  if (isCheckRequest(request)) return PASS;
   const kind = kindOf(request);
   const blank = kind === "scan_register" && (request.images?.[0]?.base64.length ?? 0) < 1400;
-  if (kind === "check" || kind === "placement") return { answer: fitted(kind, quoted(request.text)), delayMs: 1500 };
-  if (kind === "figure") return { answer: FIGURES[templateOf(request.text)], delayMs: 1500 };
-  if (kind === "sheet") return { answer: counted(Number(request.text.match(/Exactly (\d+) questions/)?.[1] ?? 8)), delayMs: 1500 };
-  if (kind === "plan") return { answer: topics(request.text), delayMs: 1500 };
-  if (kind === "parse_school") return { answer: request.images?.length ? PHOTO_ITEMS : SAMPLE.parse_school, delayMs: 1500 };
-  if (kind === "note") return { answer: withTutorsWords(request.text), delayMs: 1500 };
-  if (kind === "mock") return { answer: patterned(Number(request.text.match(/Pattern: (\d+) marks/)?.[1] ?? 25)), delayMs: 1500 };
-  return { answer: blank ? { rows: [] } : SAMPLE[kind], delayMs: 1500 };
+  if (kind === "check" || kind === "placement") return fitted(kind, quoted(request.text));
+  if (kind === "figure") return FIGURES[templateOf(request.text)];
+  if (kind === "sheet") return counted(Number(request.text.match(/Exactly (\d+) questions/)?.[1] ?? 8));
+  if (kind === "plan") return topics(request.text);
+  if (kind === "parse_school") return request.images?.length ? PHOTO_ITEMS : SAMPLE.parse_school;
+  if (kind === "note") return withTutorsWords(request.text);
+  if (kind === "mock") return patterned(Number(request.text.match(/Pattern: (\d+) marks/)?.[1] ?? 25));
+  return blank ? { rows: [] } : SAMPLE[kind];
 }
 
 /** The weekly note, ending with the tutor's own words when the prompt carries them (Make's note, Phase 15). */

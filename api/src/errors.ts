@@ -17,6 +17,34 @@ const REFUSED: Partial<Record<AIKind, string>> = {
   not_on_track: "Couldn't write this message. Try again.",
   test_tomorrow: "Couldn't write this message. Try again.",
 };
+/** Each kind in the tutor's words, in the plural, with what is done to it (a reader reads, a paper is checked): the
+ *  switched-off words name it (P20-Switched-Off). */
+const KIND_WORDS: Record<AIKind, { plural: string; done: "made" | "read" | "checked" }> = {
+  paper: { plural: "question papers", done: "made" },
+  homework: { plural: "homework sheets", done: "made" },
+  worksheet: { plural: "worksheets", done: "made" },
+  progress_note: { plural: "progress notes", done: "made" },
+  scan_register: { plural: "register photos", done: "read" },
+  check_paper: { plural: "papers", done: "checked" },
+  plan: { plural: "topics", done: "made" },
+  sheet: { plural: "sheets", done: "made" },
+  worked_example: { plural: "worked examples", done: "made" },
+  figure: { plural: "figures", done: "made" },
+  brief: { plural: "briefs", done: "made" },
+  check: { plural: "checks", done: "made" },
+  placement: { plural: "placements", done: "made" },
+  mock: { plural: "mock tests", done: "made" },
+  note: { plural: "notes", done: "made" },
+  can_do: { plural: "notes", done: "made" },
+  test_tomorrow: { plural: "messages to parents", done: "made" },
+  gap_report: { plural: "gap reports", done: "made" },
+  parse_school: { plural: "school messages", done: "read" },
+  parse_textbook: { plural: "chapter lists", done: "made" },
+  not_on_track: { plural: "messages to parents", done: "made" },
+  read_marks: { plural: "marks from photos", done: "read" },
+};
+const DOING = { made: "Making", read: "Reading", checked: "Checking" } as const;
+
 const V1_KINDS: readonly AIKind[] = ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"] satisfies V1Kind[];
 
 export const errors = {
@@ -40,8 +68,14 @@ export const errors = {
     status: 422,
     body: { error: REFUSED[kind] ?? "Couldn't make this one. Change the topic and try again." },
   }),
-  /** A kind switched off in ai_models (D100): before any call or row. Task 7 gives it the board's words. */
-  paused: (kind: AIKind): ApiError => ({ status: 503, body: { error: REFUSED[kind] ?? "Couldn't make this one. Try again later.", reason: "paused" } }),
+  /** A kind switched off in ai_models (D100), before any call or row: the board's words (P20-Switched-Off); the app shows
+   *  the first sentence as the alert's title and the rest as its message. */
+  paused: (kind: AIKind): ApiError => {
+    const { plural, done } = KIND_WORDS[kind];
+    const title = `${plural[0]?.toUpperCase()}${plural.slice(1)} can't be ${done} right now.`;
+    const message = `${DOING[done]} ${plural} is switched off for a short while so we can fix something. Everything else works as usual. Try again later.`;
+    return { status: 503, body: { error: `${title} ${message}`, reason: "paused" } };
+  },
   service: (): ApiError => ({ status: 502, body: { error: "The AI service didn't answer. Try again." } }),
   badImage: (why: string): ApiError => ({ status: 400, body: { error: why } }),
   /** The same key's call is still running (D84): the app's timed-out words; it may finish and replay. */

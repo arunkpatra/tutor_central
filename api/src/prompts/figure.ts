@@ -1,6 +1,6 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
-import { type ClassLevel, type FigureKind, FigureOutput } from "../schemas.js";
+import { type ClassLevel, FigureDraftOutput, type FigureKind } from "../schemas.js";
 import { VOICE, blocks, LIMITS, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
@@ -17,7 +17,7 @@ const RULES: Record<FigureKind, string> = {
 };
 
 /** A figure's spec (D59): the app draws it; the model only fills the template's numbers and labels. */
-export function request(kind: FigureKind, classLevel: ClassLevel, subject: string, skill: string): ClaudeRequest<FigureOutput> {
+export function request(kind: FigureKind, classLevel: ClassLevel, subject: string, skill: string): ClaudeRequest<FigureDraftOutput> {
   return {
     model: modelFor("figure", "draft", classLevel).model,
     effort: "medium",
@@ -32,6 +32,6 @@ export function request(kind: FigureKind, classLevel: ClassLevel, subject: strin
       syllabusFacts(classLevel, subject),
     ]),
     text: `Class ${classLevel} ${subject}, the skill "${skill}". Fill the template ${kind}.`,
-    schema: FigureOutput,
+    schema: FigureDraftOutput,
   };
 }

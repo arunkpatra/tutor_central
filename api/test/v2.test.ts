@@ -1,18 +1,21 @@
 import { expect, test } from "bun:test";
 import { fakeApple } from "../src/apple-fake.js";
-import { fakeClaude, kindOf, localScript, SAMPLE, systemText } from "../src/claude-fake.js";
+import { fakeClaude, kindOf, localScript, PASS, SAMPLE, sampleFor, systemText } from "../src/claude-fake.js";
 import { request as noteRequestForFake } from "../src/prompts/note.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 import { fakeObserve } from "../src/observe-fake.js";
 import { MessageOutput } from "../src/schemas.js";
-import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
+import { applyModelOverrides, installModelTable, resetModelOverrides } from "../src/models.js";
+import { fakeModelSource } from "../src/models-db.js";
+import { errors } from "../src/errors.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
 const verify = async (t: string) => (t === "good" ? { id: "u1" } : null);
-const app = (claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), db = fakeDb()) => makeApp({ observe: fakeObserve(), verify, claude, db, apple: fakeApple({}) });
+const app = (claude = fakeClaude((r) => ({ answer: sampleFor(r) })), db = fakeDb()) => makeApp({ observe: fakeObserve(), verify, claude, db, apple: fakeApple({}) });
 const post = (a: ReturnType<typeof makeApp>, path: string, body: unknown) => a.request(path, { method: "POST", headers: auth, body: JSON.stringify(body) });
+const drafts = (db: ReturnType<typeof fakeDb>) => db.rows.filter((r) => r.agentStep === "draft");
 const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0]).toString("base64");
 const image = { imageBase64: jpeg, mediaType: "image/jpeg" };
 
@@ -88,7 +91,7 @@ test("a check, a placement and the mock need no student's consent", async () => 
   expect((await post(app(undefined, db), "/ai/make", check)).status).toBe(200);
   const mock = await post(app(undefined, db), "/ai/make", { kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test 3", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 } });
   expect(mock.status).toBe(200);
-  expect(db.started).toHaveLength(2);
+  expect(drafts(db)).toHaveLength(2);
 });
 
 // ---- Phase 12: /ai/plan and the four artefacts ----
@@ -103,9 +106,10 @@ test("make sheet answers a question set on Sonnet for class 8 and Haiku for clas
   expect(body.result.questions).toHaveLength(8);
   expect(db.started[0]).toMatchObject({ kind: "sheet", model: "claude-sonnet-5-5", input: { skills: sheet.skills, forHomework: false } });
   expect(JSON.stringify(db.started[0])).not.toContain("studentId");
-  const young = await post(app(fakeClaude({ answer: SAMPLE.sheet }), db), "/ai/make", { ...sheet, classLevel: "5", forHomework: true, questions: 5 });
+  const five = { ...SAMPLE.sheet, questions: SAMPLE.sheet.questions.slice(0, 5) };
+  const young = await post(app(fakeClaude({ answer: five }), db), "/ai/make", { ...sheet, classLevel: "5", forHomework: true, questions: 5 });
   expect(young.status).toBe(200);
-  expect(db.started[1]).toMatchObject({ model: "claude-haiku-5-5" });
+  expect(drafts(db)[1]).toMatchObject({ model: "claude-haiku-5-5" });
 });
 
 test("make sheet with a reason passes it to the prompt and records it", async () => {
@@ -127,15 +131,48 @@ test("make worked_example, figure and brief answer their shapes on Sonnet", asyn
   const brief = await post(app(fakeClaude({ answer: SAMPLE.brief }), db), "/ai/make", { kind: "brief", centreId, classLevel: "8", subject: "Science", chapter: "Chemical reactions" });
   expect(brief.status).toBe(200);
   expect(((await brief.json()) as { result: { mistakes: unknown[] } }).result.mistakes).toHaveLength(3);
-  expect(db.started.map((s) => (s as { model: string }).model)).toEqual(["claude-sonnet-5-5", "claude-sonnet-5-5", "claude-sonnet-5-5"]);
+  expect(drafts(db).map((r) => r.model)).toEqual(["claude-sonnet-5-5", "claude-sonnet-5-5", "claude-sonnet-5-5"]);
+  // Each is checked by the other tier (D99).
+  expect(db.rows.filter((r) => r.agentStep === "check").map((r) => r.model)).toEqual(["claude-haiku-5-5", "claude-haiku-5-5", "claude-haiku-5-5"]);
 });
 
-test("a figure that fails its rule is refused in words and recorded as failed", async () => {
+test("a figure that fails its rule is a finding, repaired once, and refused in its words when still wrong (D99)", async () => {
   const db = fakeDb();
-  const r = await post(app(fakeClaude({ answer: { figure: { kind: "fraction_bar", parts: 4, shaded: 5, label: "5/4" }, caption: "x" } }), db), "/ai/make", { kind: "figure", centreId, figure: "fraction_bar", classLevel: "5", subject: "Mathematics", skill: "Compare simple fractions" });
+  const claude = fakeClaude({ answer: { figure: { kind: "triangle", angles: [100, 50, 40], labels: ["a", "b", "c"] }, caption: "A triangle." } });
+  const r = await post(app(claude, db), "/ai/make", { kind: "figure", centreId, figure: "triangle", classLevel: "7", subject: "Mathematics", skill: "Angle sum of a triangle" });
   expect(r.status).toBe(422);
   expect(await r.json()).toEqual({ error: "Couldn't draw a figure for this skill. The plan goes on without it." });
-  expect(db.finished[0]).toMatchObject({ status: "failed" });
+  expect(db.rows.map((row) => row.agentStep)).toEqual(["draft", "check", "repair", "check"]);
+  expect(db.rows[0]?.finish).toMatchObject({ status: "failed", errorReason: "check:figure" });
+  expect(claude.requests[2]?.system.own).toContain("figure: the angles sum to 180");
+});
+
+test("a figure repaired into its rule is kept (D99)", async () => {
+  let drafts = 0;
+  const claude = fakeClaude((r) => {
+    if (r.system.shared.startsWith("You check a draft")) return { answer: PASS };
+    drafts += 1;
+    return { answer: { figure: { kind: "triangle", angles: drafts === 1 ? [100, 50, 40] : [90, 50, 40], labels: ["a", "b", "c"] }, caption: "A right triangle." } };
+  });
+  const r = await post(app(claude), "/ai/make", { kind: "figure", centreId, figure: "triangle", classLevel: "7", subject: "Mathematics", skill: "Angle sum of a triangle" });
+  expect(r.status).toBe(200);
+  expect(((await r.json()) as { result: { figure: { angles: number[] } } }).result.figure.angles).toEqual([90, 50, 40]);
+});
+
+test("make sheet with a planted wrong key repairs it and answers the repaired sheet (D99)", async () => {
+  let drafts = 0;
+  const q = (proof: string) => ({ number: 1, text: "Solve 3x + 5 = 20.", answer: "x = 5", proof: { expression: proof, equals: 20 } });
+  const claude = fakeClaude((r) => {
+    if (r.system.shared.startsWith("You check a draft")) return { answer: PASS };
+    drafts += 1;
+    const first = q(drafts === 1 ? "3*6+5" : "3*5+5");
+    return { answer: { title: "Linear equations", instructions: null, questions: [1, 2, 3, 4].map((number) => (number === 1 ? first : { ...q("3*5+5"), number })) } };
+  });
+  const db = fakeDb();
+  const r = await post(app(claude, db), "/ai/make", { ...sheet, subject: "Mathematics", skills: ["Solve a linear equation"], questions: 4 });
+  expect(r.status).toBe(200);
+  expect(((await r.json()) as { result: { questions: { proof: { expression: string } }[] } }).result.questions[0]?.proof.expression).toBe("3*5+5");
+  expect(db.rows.map((row) => row.agentStep)).toEqual(["draft", "check", "repair", "check"]);
 });
 
 test("plan names a first topic per group on Sonnet, with no student in the record", async () => {
@@ -167,10 +204,11 @@ test("parse-school reads a message into items on Sonnet, records no text of the 
   expect(body.result.items.map((i) => i.kind)).toEqual(["exam", "homework", "holiday"]);
   expect(db.started[0]).toMatchObject({ kind: "parse_school", model: "claude-sonnet-5-5", input: { kind: "parse_school", source: "text", characters: 78, pages: 0 } });
   expect(JSON.stringify(db.started[0])).not.toContain("Dear Parents");
-  const photo = await post(app(claude, db), "/ai/parse-school", { centreId, image, today });
+  const photo = await post(app(claude, db), "/ai/parse-school", { centreId, image, today, schools: ["Vidya Niketan"], classLevels: ["8"] });
   expect(photo.status).toBe(200);
-  expect(db.started[1]).toMatchObject({ input: { source: "photo", pages: 1, bytes: 8 } });
-  expect(JSON.stringify(db.started[1])).not.toContain(jpeg);
+  const started = db.started.filter((s) => (s as { agentStep: string }).agentStep === "draft");
+  expect(started[1]).toMatchObject({ input: { source: "photo", pages: 1, bytes: 8 } });
+  expect(JSON.stringify(db.started)).not.toContain(jpeg);
 });
 
 test("parse-school answers a null date when the message gives none, and refuses a message with nothing in it", async () => {
@@ -369,4 +407,32 @@ test("the local fake ends its note with the tutor's words, so a hand run shows t
   const r = noteRequestForFake({ kind: "note", centreId, ...student, classLevel: "8", language: "hi", week, tutorSays: "Ask him to read aloud." });
   const made = localScript(r).answer as { message: string; english: string };
   expect(made.english.endsWith("Ask him to read aloud.")).toBe(true);
+});
+
+test("a switched-off kind answers 503 paused with the board's words and no row (D100, P20-Switched-Off)", async () => {
+  const t = installModelTable(fakeModelSource([{ kind: "sheet_from_6", step: "draft", model: "claude-sonnet-5-5", effort: "medium", fallbackModel: null, enabled: false }]));
+  await t.refresh();
+  try {
+    const claude = fakeClaude({ answer: SAMPLE.sheet });
+    const db = fakeDb();
+    const r = await post(app(claude, db), "/ai/make", sheet);
+    expect(r.status).toBe(503);
+    expect(await r.json()).toEqual({
+      error: "Sheets can't be made right now. Making sheets is switched off for a short while so we can fix something. Everything else works as usual. Try again later.",
+      reason: "paused",
+    });
+    expect(db.rows).toHaveLength(0);
+    expect(claude.requests).toHaveLength(0);
+    // The younger band is its own row: still on.
+    expect((await post(app(claude, db), "/ai/make", { ...sheet, classLevel: "4", questions: 8 })).status).toBe(200);
+  } finally {
+    t.stop();
+  }
+});
+
+test("each kind's paused words name it in the plural, and a reader's say read (D100)", () => {
+  expect(errors.paused("worked_example").body.error).toStartWith("Worked examples can't be made right now. Making worked examples is switched off");
+  expect(errors.paused("parse_school").body.error).toStartWith("School messages can't be read right now. Reading school messages is switched off");
+  expect(errors.paused("check_paper").body.error).toStartWith("Papers can't be checked right now. Checking papers is switched off");
+  expect(errors.paused("mock").body.error).toStartWith("Mock tests can't be made right now.");
 });

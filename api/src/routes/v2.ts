@@ -3,8 +3,7 @@ import type { Vars } from "../auth.js";
 import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
-import { request as textbookRequest } from "../prompts/parse-textbook.js";
-import { request as planRequest } from "../prompts/plan.js";
+import { parseTextbook, plan } from "../agents/kinds/index.js";
 import { request as readMarksRequest } from "../prompts/read-marks.js";
 import { type DecodedImage, decodeImage } from "../images.js";
 import { makeAgent } from "../make.js";
@@ -25,13 +24,12 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
     if (typeof image === "string") return answer(c, errors.badImage(image));
     const { classLevel, subject } = body.value;
     const input = { kind: "parse_textbook", pages: 1, bytes: image.bytes, classLevel, subject };
-    const request = textbookRequest(image, classLevel, subject);
-    return runCall(c, deps, body.centre, { kind: "parse_textbook", input, request, empty: (read) => read.chapters.length === 0 });
+    return run(c, deps, body.centre, parseTextbook, { image, classLevel, subject }, input);
   });
   routes.post("/plan", async (c) => {
     const body = await parse(c, PlanInput);
     if (!isParsed(body)) return body;
-    return runCall(c, deps, body.centre, { kind: "plan", input: body.value, request: planRequest(body.value) });
+    return run(c, deps, body.centre, plan, body.value);
   });
   routes.post("/make", async (c) => {
     const body = await parse(c, MakeInput);
