@@ -4,13 +4,12 @@ The single place that says where the project stands. Every session reads it firs
 short and true. History belongs in git and in the phase files, not here.
 
 **Last updated:** 2026-10-13, session 39 (Phase 19's build, on Opus 5.5). **Session 39:** the admin portal built and live at
-admin.tutorcentral.in (#262 to #287; hand runs #286); migrations 0046 to 0050 in production; the alerts job live; the owner
-signed in with his second factor and received a real alert by email and on his iPhone, and acknowledged it. The record in
-`plan/sessions/039/`.
-**Next:** the API's deploy of `main` (`gh workflow run deploy`), refused today by Vercel Hobby's 100 deployments a day (the
-website's and the API's projects were linked to GitHub and every push counted; both disconnected), as soon as the rolling
-window frees; then read 14 October's first morning `alerts` rows. Then Phase 20 (AI quality, the material): boards and plan
-on Fable 5.1. The order (D81): V3's Phases 17 to 22, then the external testing round, then Phase 16. The owner tests the
+admin.tutorcentral.in (#262 to #289; hand runs #286); migrations 0046 to 0050 in production; the alerts job live; the owner
+signed in with his second factor and received a real alert by email and on his iPhone, and acknowledged it. After the owner's
+finding that the portal felt frozen: its functions moved to `bom1` beside the database (#288), and it moves the Next.js way
+with a loading state per page and pending buttons (D97, #289). Vercel is on Pro (D98). The record in `plan/sessions/039/`.
+**Next:** resume 038 on Fable 5.1: read 14 October's first morning `alerts` rows, then Phase 20 (AI quality, the material),
+boards first, then the plan. The order (D81): V3's Phases 17 to 22, then the external testing round, then Phase 16. The owner tests the
 builds at the end (D68).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
@@ -20,7 +19,7 @@ builds at the end (D68).
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12), row 27 (y 58000) Phase 19's sixty boards, the admin portal's fifteen pages at 1280 and 390 (approved 2026-10-13) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12), row 27 (y 58000) Phase 19's sixty boards, the admin portal's fifteen pages at 1280 and 390 (approved 2026-10-13), and below them (y 77000) its twelve loading boards (D97, approved 2026-10-13) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -39,7 +38,7 @@ builds at the end (D68).
 | 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
 | 17 V3 platform foundation | Done (session 35, 2026-10-12), PRs #184 to #214; hand runs #212 | "As built" in `phase-17-platform-foundation.md`; deployed; 1.0.0 (27) |
 | 18 V3 the server's work and push | Done (session 37, 2026-10-13), PRs #215 to #261; hand runs #260 | "As built" in `phase-18-server-work-and-push.md`; deployed (0036 to 0045); 1.0.0 (29); device tests T16, T17 |
-| 19 V3 the admin portal, reading | Done (session 39, 2026-10-13), PRs #262 to #287; hand runs #286 | "As built" in `phase-19-admin-portal-reading.md`; admin.tutorcentral.in live; 0046 to 0050 deployed; the API's last deploy pending (Vercel's daily limit) |
+| 19 V3 the admin portal, reading | Done (session 39, 2026-10-13), PRs #262 to #289; hand runs #286 | "As built" in `phase-19-admin-portal-reading.md`; admin.tutorcentral.in live in `bom1` with loading states (D97); 0046 to 0050 and the API at `8231731` deployed |
 | 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
 | 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
 | 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
@@ -55,13 +54,15 @@ delete.
 ## Production
 
 - **Admin portal:** admin.tutorcentral.in on Vercel `tutor-central-admin` (id in `VERCEL_ADMIN_PROJECT_ID`, root `admin`, no git
-  link), deployed only by `deploy-admin.yml` (D78), at `f37ffc3` (run 38347870083; the smoke green). GoDaddy: `CNAME admin` →
+  link), deployed only by `deploy-admin.yml` (D78), at `5cc7b7b` (run 38354450043, the loading states; before it `8231731`, run 38351407848, and `f37ffc3`, run 38347870083). GoDaddy: `CNAME admin` →
   `508a3866c0199c9f.vercel-dns-017.com`. Production's variables: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (the publishable key),
   `SUPABASE_SERVICE_ROLE_KEY` (the default secret key), set from `supabase projects api-keys --reveal`. The owner's admin
   account (his Gmail's `+admin` alias) is on `admin_users` with TOTP, his tutor account the alerts' push target. Repo variable
-  `ADMIN_ORIGIN`. The `#287` footer fix reaches it with the next deploy.
+  `ADMIN_ORIGIN`. Functions in `bom1` (`vercel.json` and the project's `serverlessFunctionRegion`): a page answers in about
+  0.2 to 0.6 s against 2 s from `iad1`.
 - **Vercel's Git links:** none of the three projects is linked to GitHub since 2026-10-13 (each push had made a cancelled
-  deployment that counted against Hobby's 100 a day); deploys are the workflows' alone.
+  deployment that counted against Hobby's 100 a day); deploys are the workflows' alone. The account is on Pro since 2026-10-13
+  (D98).
 - **Website:** tutorcentral.in on Vercel `tutor-central-web` (id in `VERCEL_WEB_PROJECT_ID`, root `web`, git deploys off),
   deployed only by `deploy-web.yml` (D45), at `f37ffc3` (run 38347873084: `/trust`'s staff sentence); before it `54adb24` (run
   38181756154: the trust page `/trust` with its corrected words; first live by run 38169497847), smoke green on five pages. GoDaddy DNS:
@@ -83,7 +84,7 @@ delete.
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `4d8294e` (deploy run 38345041694, 2026-10-13: Phase 19's alerts job; `RESEND_API_KEY` and `ALERT_EMAIL` in Production; run 38347866740's deploy of `f37ffc3` refused by Vercel's daily limit, to retry); before it `6d973b9` (deploy run 38311560782, 2026-10-13:
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `8231731` (deploy run 38351404374, 2026-10-13: Phase 19 whole, 0049's stuck rule and the failure's key); before it `4d8294e` (run 38345041694: the alerts job; `RESEND_API_KEY` and `ALERT_EMAIL` in Production); before it `6d973b9` (deploy run 38311560782, 2026-10-13:
   Phase 18 with its review fixes; before it `ed0077f`, run 38282034144, and `a3c6012`, run 38256073141); the deploy is gated on `main`'s
   green check and smokes a real check and a tick. Vercel's Production holds `SUPABASE_SERVICE_ROLE_KEY` (the new `sb_secret`
   key, D83) and `WORKER_SECRET`; GitHub's `Production` holds `SMOKE_EMAIL`, `SMOKE_PASSWORD`, `WORKER_SECRET`. The model
@@ -153,7 +154,7 @@ delete.
   and 7 done in #81).
 - **Sign-in's buttons** follow Google's and Apple's guidelines since #74 (P7-SignIn-Google).
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today. One environment until the owner says (D80).
-- **Free and Hobby stay until the external testing round (D85):** the worker lives within Hobby's 300 s (a 200 s run budget; the wakes hold their request 290 s); no copy of the database exists anywhere (a bad migration or a deletion is final); Vercel's logs keep an hour, Supabase's a day; Vercel's Hobby terms are non-commercial. Supabase Pro and Vercel Pro are bought before the external testing round, as a step of its checklist; point-in-time recovery is Phase 16's call.
+- **Supabase Free stays until the external testing round (D85); Vercel is on Pro (D98).** The worker lives within 300 s (a 200 s run budget; the wakes hold their request 290 s); no copy of the database exists anywhere (a bad migration or a deletion is final); Vercel's logs keep an hour, Supabase's a day; Supabase Pro is bought before the external testing round, as a step of its checklist; point-in-time recovery is Phase 16's call.
 - **V3 covers** the platform-shaped minors below where they are the platform's (duplicate paid calls, the 20 s offline waits, the pending rows, `APPLE_FAKE` in production, the limits copied across layers, orphaned photos): each is closed by the V3 phase that owns it, not on its own.
 - **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U13 to U15, U25, U27 to U30, U48 open; the rest done (Phase 15: U11, U17 to
   U23, U26, U32, U34, U40; U36 by #133).

@@ -67,15 +67,20 @@ production.
 Vercel), deployed by `deploy-admin.yml` (run 38347870083 at `f37ffc3`, the smoke green), its three variables in Vercel's
 Production (the URL, the publishable key, the default secret key). The owner's admin account on `admin_users`, his tutor
 account the push target; TOTP enrolled 2026-10-13. Migrations 0046 to 0050 by deploy runs 38345041694 and 38347866740.
-The API at `4d8294e` (the alerts job); the API's deploy of `f37ffc3` was refused by Vercel Hobby's 100 deployments a day:
-the website's and the API's projects were still linked to GitHub, so every push made a cancelled deployment that counted.
-Both were disconnected (no project is linked now); the API's deploy is retried as the window frees. `RESEND_API_KEY` and
+The API at `8231731` (run 38351404374) after the owner bought Vercel Pro (D98): Hobby's 100 deployments a day had refused
+it, because the website's and the API's projects were still linked to GitHub and every push made a cancelled deployment that
+counted. No project is linked now. `RESEND_API_KEY` and
 `ALERT_EMAIL` on `tutor-central-api`'s Production. `/trust` carries the staff sentence (deploy-web run 38347873084).
 
 **Proved in production (Task 17).** The owner signed in with his second factor and saw the four centres; a job made to fail
 for the Smoke centre raised `job_failed` at the next ten minutes, the email reached him, the push reached his iPhone, and
 he acknowledged it in the portal; each step is in the audit.
 
-**Open.** The first morning's `alerts` rows are read on 14 October. The API's deploy of `f37ffc3` (0049's stuck rule and
-the failure's key in the job's code) when Vercel's window frees. Hand run 7's push on a simulator was not driven (the
+**After the close: the portal felt frozen (the owner).** Each click took about 2 s with nothing on screen. Two causes, both
+fixed: the functions ran in `iad1` while the database is in Mumbai (#288: `bom1`, a page now 0.2 to 0.6 s), and every link was
+a plain `<a>` with no loading state and no pending button (D97, #289: `PageLink` on Next's `Link`, a `loading.tsx` per page
+from the approved `P19-Loading-Centres` board, `useLinkStatus` on links within the page, `SubmitButton` with `useFormStatus`
+from `P19-Pending-SignIn` and `P19-Pending-Dialog`). Deployed by deploy-admin at `5cc7b7b` (run 38354450043).
+
+**Open.** The first morning's `alerts` rows are read on 14 October (resume 038). Hand run 7's push on a simulator was not driven (the
 owner's iPhone proved it).

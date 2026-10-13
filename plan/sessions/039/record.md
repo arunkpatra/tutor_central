@@ -44,7 +44,13 @@ fix and finding is `ledger.md`.
 - Reading `auth.users` in SQL as the platform: refused (42501); the Auth admin API instead.
 - Functions taking a table's row: PostgREST exposes them as columns and the generated types demand them of every row.
 
+## After the close
+
+- The owner found the portal unusable: each click took about 2 s with nothing on screen. The functions ran in `iad1`, far
+  from the database (#288 moved them to `bom1`). The links were plain `<a>` with no loading state (D97, #289: Next's `Link`,
+  `loading.tsx`, pending buttons, to three boards approved the same day). The owner bought Vercel Pro (D98); the API and the
+  portal deployed at `8231731`.
+
 ## What is next
 
-The API's deploy of `main` when Vercel's window frees (the alerts job's code then matches 0049); 14 October's first morning
-`alerts` rows; then Phase 20 (AI quality, the material) on Fable 5.1, boards first.
+14 October's first morning `alerts` rows, then Phase 20 (AI quality, the material) on Fable 5.1, boards first: resume 038.
