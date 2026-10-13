@@ -1,6 +1,6 @@
 import type { BatchItem, ClaudeAnswer, ClaudeRequest } from "../../claude.js";
 import { DbFailure } from "../../db.js";
-import { type CaseScore, batchFinish, checkItems, draftItem, outcomeOf, type Ready, ready, scoreCase, scoreKinds } from "../../evals/runner.js";
+import { batchId, type CaseScore, batchFinish, caseOfBatchId, checkItems, draftItem, outcomeOf, type Ready, ready, scoreCase, scoreKinds } from "../../evals/runner.js";
 import { EVAL_KINDS, loadCases } from "../../evals/cases.js";
 import { log } from "../../log.js";
 import { modelFor } from "../../models.js";
@@ -138,7 +138,7 @@ async function checks(job: Job, ctx: StepContext, _centre: string): Promise<Step
   let paise = 0;
   for (const item of items) {
     const answer = answers.get(item.customId) ?? { kind: "failed" as const, reason: "batch missing", latencyMs: 0 };
-    const [id] = item.customId.split(":");
+    const id = caseOfBatchId(item.customId);
     const r = asked.find((x) => x.c.id === id) as Ready;
     const verdict = answer.kind === "ok" ? CheckVerdict.safeParse(answer.parsed) : null;
     const finish = batchFinish(answer, item.request, `${r.c.kind}@${r.asked.version}`, verdict?.success ? verdict.data : null);
@@ -149,7 +149,7 @@ async function checks(job: Job, ctx: StepContext, _centre: string): Promise<Step
   }
   const scores: CaseScore[] = asked.map((r) => {
     const d = step.drafts[r.c.id] as Drafts[string];
-    return scoreCase(r, d.outcome, verdicts.get(`${r.c.id}:check`) ?? null, verdicts.get(`${r.c.id}:grade`) ?? null, d.paise);
+    return scoreCase(r, d.outcome, verdicts.get(batchId(r.c.id, "check")) ?? null, verdicts.get(batchId(r.c.id, "grade")) ?? null, d.paise);
   });
   const kinds = scoreKinds(scores, (id) => cases.find((r) => r.c.id === id)?.c.expect.refused === true);
   const failures = scores.filter((s) => !(s.schema && s.verify && s.expect) || s.grade === false).map((s) => ({ id: s.id, reasons: s.reasons.slice(0, 4) }));

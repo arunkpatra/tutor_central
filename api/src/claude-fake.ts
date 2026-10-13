@@ -38,8 +38,11 @@ export function fakeClaude(
   const client = {
     requests,
     batches,
-    /** A batch is answered as each request would be, after `batchPolls` reads that find it running. */
+    /** A batch is answered as each request would be, after `batchPolls` reads that find it running. A custom id the
+     *  Batches API refuses (letters, digits, `_` and `-`, 1 to 64) is refused here too, as the real API answers 400. */
     async batch(items: BatchItem[]) {
+      const refused = items.find((i) => !/^[a-zA-Z0-9_-]{1,64}$/.test(i.customId));
+      if (refused) throw new Error(`400 requests: custom_id ${refused.customId} does not match ^[a-zA-Z0-9_-]{1,64}$`);
       batches.push(items);
       return { id: `batch-${batches.length}` };
     },
