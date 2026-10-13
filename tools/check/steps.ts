@@ -185,7 +185,8 @@ export const STEPS: Step[] = [
       // A clean schema for the tests, then the seed back for the app.
       await run("bun run --cwd .. tsc -p supabase/tsconfig.json", "supabase");
       await run("supabase db reset --no-seed > /dev/null", "supabase");
-      await run("bun test tests", "supabase");
+      // A file's beforeAll signs up a user and makes a centre: on a busy CI runner that passed bun's 5 s default (#300).
+      await run("bun test tests --timeout 20000", "supabase");
       // types.ts is what the migrations produce, or the step says how to regenerate it.
       await run(
         "supabase gen types typescript --local > .types.generated.ts && diff -q .types.generated.ts types.ts > /dev/null && rm .types.generated.ts || (rm -f .types.generated.ts; echo 'supabase/types.ts is stale: run supabase gen types typescript --local > types.ts'; exit 1)",

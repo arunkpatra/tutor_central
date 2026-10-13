@@ -2,6 +2,6 @@
   "name": "tutor-central-db",
   "private": true,
   "type": "module",
-  "scripts": { "test": "bun test tests" },
+  "scripts": { "test": "bun test tests --timeout 20000" },
   "dependencies": { "@supabase/supabase-js": "2.117.2" }
 }
