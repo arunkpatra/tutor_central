@@ -15,6 +15,15 @@ export function snakeKey(key: string): string {
 }
 
 /** An answer's keys as `keep_artefact` stores them (the app's encoder: snake case, objects nested alike). */
+/** The app's snake-cased keys back to the API's camel case (a kept figure read for its PDF). */
+export function camel(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(camel);
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([k, v]) => [k.replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase()), camel(v)]));
+  }
+  return value;
+}
+
 export function snake(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(snake);
   if (value !== null && typeof value === "object") {

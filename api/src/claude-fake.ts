@@ -230,7 +230,7 @@ const workedExample: WorkedExampleOutput = {
 };
 
 /** One spec per template, the figure boards' (P10-Figure-*). */
-const FIGURES: Record<FigureKind, { figure: Figure; caption: string }> = {
+export const FIGURES: Record<FigureKind, { figure: Figure; caption: string }> = {
   number_line: { figure: { kind: "number_line", from: 0, to: 10, step: 1, start: 3, jumps: [1, 1, 1, 1] }, caption: "Start at 3, jump 4 times, land on 7." },
   fraction_bar: { figure: { kind: "fraction_bar", parts: 4, shaded: 3, label: "3/4" }, caption: "3 of 4 parts shaded: three quarters of the whole." },
   place_value: { figure: { kind: "place_value", number: 347 }, caption: "Each digit in its place, with what it is worth." },

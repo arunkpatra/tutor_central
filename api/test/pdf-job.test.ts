@@ -69,3 +69,13 @@ test("the job hands the artefact's foot to its forms (P20-PDF-Sheet)", async () 
   expect(sources).toHaveLength(2);
   expect(sources.every((source) => source.includes("Bright Minds Tuition · Class 8"))).toBe(true);
 });
+
+test("a figure artefact's PDF is drawn from its spec and uploaded at its path, one file (D90)", async () => {
+  const s = storage({ kind: "figure", title: "A right triangle", content: { figure: { kind: "unit_circle", angle_degrees: 30 }, caption: "The angle and its ratios." } });
+  const out = await pdfJob(s).step(job(), ctx());
+  expect(s.uploads.map((u) => [u.bucket, u.path, u.head])).toEqual([["pdfs", `${CENTRE}/a0000000-0000-4000-8000-000000000001.pdf`, "%PDF-"]]);
+  expect(out).toMatchObject({ kind: "done", result: { pages: 1 } });
+  const broken = storage({ kind: "figure", title: "t", content: { figure: { kind: "triangle", angles: [100, 50, 40], labels: ["a", "b", "c"] }, caption: "c" } });
+  expect(await pdfJob(broken).step(job(), ctx())).toMatchObject({ kind: "done", result: { reason: "not_printable" } });
+  expect(broken.uploads).toEqual([]);
+});
