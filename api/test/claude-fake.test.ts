@@ -105,3 +105,20 @@ test("the fake tells the four parents' kinds apart by their words, and its sampl
   expect(MessageOutput.safeParse(SAMPLE.test_tomorrow).success).toBe(true);
   expect(SAMPLE.test_tomorrow.message).not.toContain("Meera");
 });
+
+test("TC_FAKE_SCRIPT=wrong-proof plants a key that does not add up in every sheet draft, so the agent refuses it after one repair", async () => {
+  const { runAgent } = await import("../src/agents/agent.js");
+  const { sheet } = await import("../src/agents/kinds/sheet.js");
+  const { fakeDb } = await import("../src/db-fake.js");
+  const { proofHolds } = await import("../src/agents/arith.js");
+  const input = { kind: "sheet" as const, centreId: "c1", classLevel: "8" as const, subject: "Mathematics", skills: ["Linear equations"], questions: 4, forHomework: true };
+  const planted = localScript(sheet.draft(input) as never, "wrong-proof").answer as { questions: { proof: { expression: string; equals: number } | null }[] };
+  expect(proofHolds(planted.questions[0]!.proof!)).toBe(false);
+  const db = fakeDb();
+  const out = await runAgent({ db, claude: fakeClaude((r) => ({ answer: localScript(r, "wrong-proof").answer })), token: "t", requestId: "r", centre: "c1", key: "k", inputHash: "h" }, sheet, input);
+  expect(out).toMatchObject({ kind: "failed", words: "refused" });
+  expect(db.rows.map((r) => r.agentStep)).toEqual(["draft", "check", "repair", "check"]);
+  // Without the script the fake's sheet adds up.
+  const plain = localScript(sheet.draft(input) as never).answer as { questions: { proof: { expression: string; equals: number } | null }[] };
+  expect(plain.questions.every((q) => !q.proof || proofHolds(q.proof))).toBe(true);
+});
