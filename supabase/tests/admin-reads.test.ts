@@ -1,0 +1,214 @@
+import { SQL } from "bun";
+import { afterAll, beforeAll, expect, test } from "bun:test";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { type Local, local, serviceClient, userClient } from "./client";
+
+// Phase 19 (D78, D79, D94): the admin portal's reads (migration 0047), granted to the platform alone. The db step resets
+// with no seed, so the test builds its own centre: two students (one with consent), a batch, three calls, two jobs, four
+// requests and an app_opened event.
+let l: Local;
+let sql: SQL;
+let svc: SupabaseClient;
+let a: SupabaseClient;
+let centreA: string;
+let adminId: string;
+let sheetCall: string;
+let noteWithConsent: string;
+let noteWithoutConsent: string;
+let failedJob: string;
+const stamp = Date.now();
+const india = (d: Date) => new Date(d.getTime() + 5.5 * 3600_000).toISOString().slice(0, 10);
+const today = () => india(new Date());
+const monthStart = () => `${today().slice(0, 8)}01`;
+
+beforeAll(async () => {
+  l = await local();
+  sql = new SQL(l.db);
+  svc = serviceClient(l);
+  a = await userClient(l, `admin-r-a-${stamp}@example.com`);
+  const me = (await a.auth.getUser()).data.user!.id;
+  centreA = (await a.rpc("create_centre", { p_name: "Reads A", p_whatsapp: "+919999999999" })).data as string;
+  const batch = (await a.from("classes").insert({ centre_id: centreA, name: "Evening batch", meeting_days: [1, 2, 3, 4, 5] }).select("id").single()).data!.id as string;
+  const given = (await a.from("students").insert({ centre_id: centreA, name: "Aarav Sharma", class_id: batch, class_level: "8", parent_phone: "+919876543210" }).select("id").single()).data!.id as string;
+  const none = (await a.from("students").insert({ centre_id: centreA, name: "Akshita Rao", class_id: batch, class_level: "10", parent_phone: "+919812345678" }).select("id").single()).data!.id as string;
+  await sql`update public.students set consent_at = now(), consent_phone = '+919876543210', consent_how = 'whatsapp' where id = ${given}`;
+  const call = async (kind: string, student: string | null, paise: number) => {
+    const [{ id }] = await sql`insert into public.ai_generations (centre_id, kind, input, model, status, student_id, cost_paise, latency_ms, tokens_in, tokens_out, user_id, finished_at)
+      values (${centreA}, ${kind}, ${JSON.stringify({ kind, studentName: student ? "named" : null })}::text::jsonb, 'claude-haiku-5-5', 'ok', ${student}, ${paise}, 900, 700, 60, ${me}, now()) returning id`;
+    return id as string;
+  };
+  sheetCall = await call("sheet", null, 120);
+  noteWithConsent = await call("note", given, 7);
+  noteWithoutConsent = await call("note", none, 0);
+  await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, input, result, started_at, finished_at)
+    values (${centreA}, 'plan', ${`reads-done-${stamp}`}, 'done', ${JSON.stringify({ class_id: batch, date: today() })}::text::jsonb, '{"made": 11, "not_made": []}', now() - interval '1 minute', now())`;
+  [{ id: failedJob }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, attempts, input, step, error, started_at, finished_at)
+    values (${centreA}, 'plan', ${`reads-failed-${stamp}`}, 'failed', 3, ${JSON.stringify({ class_id: batch, date: today() })}::text::jsonb, '{"at":"make","n":2}', '{"reason":"attempts"}', now() - interval '8 minutes', now()) returning id`;
+  await sql`insert into public.job_steps (centre_id, job_id, step, attempt, state) values (${centreA}, ${failedJob}, 'read', 1, 'done')`;
+  await sql`insert into public.job_steps (centre_id, job_id, step, attempt, state, generation_id, cost_paise) values
+    (${centreA}, ${failedJob}, 'make:2', 1, 'failed', ${sheetCall}, 6), (${centreA}, ${failedJob}, 'make:2', 2, 'failed', ${sheetCall}, 6)`;
+  await svc.from("api_requests").insert([
+    { request_id: crypto.randomUUID(), route: "/ai/make", method: "POST", status: 502, latency_ms: 110000, centre_id: centreA, reason: "timeout" },
+    { request_id: crypto.randomUUID(), route: "/ai/make", method: "POST", status: 403, latency_ms: 40, centre_id: centreA, reason: "student_consent" },
+    { request_id: crypto.randomUUID(), route: "/ai/make", method: "POST", status: 200, latency_ms: 2000, centre_id: centreA },
+    { request_id: crypto.randomUUID(), route: "/account", method: "GET", status: 401, latency_ms: 5, reason: "sign in again" },
+  ]);
+  await a.from("events").insert({ centre_id: centreA, kind: "app_opened", screen: "today", at: new Date().toISOString() });
+  // A batch or student change queues the reminders' plan (0045); this test counts the plan jobs alone.
+  await sql`delete from public.jobs where centre_id = ${centreA} and kind = 'reminder_sweep'`;
+  const admin = await userClient(l, `admin-r-admin-${stamp}@example.com`);
+  adminId = (await admin.auth.getUser()).data.user!.id;
+  await sql`insert into public.admin_users (user_id, email) values (${adminId}, ${`admin-r-admin-${stamp}@example.com`})`;
+});
+afterAll(async () => {
+  await sql`delete from public.jobs where centre_id = ${centreA}`;
+  await sql.close();
+});
+
+type Row = { id: string; students: number; tutors: number; cost_paise: number; in_use: boolean; jobs_today: number; failed_today: number };
+
+test("admin_centres counts the centre, its students and tutors, its cost and jobs, and says it is in use", async () => {
+  const { data, error } = await svc.rpc("admin_centres", { p_month: monthStart() });
+  expect(error).toBeNull();
+  const row = (data as { rows: Row[] }).rows.find((r) => r.id === centreA)!;
+  expect(row).toMatchObject({ students: 2, tutors: 1, cost_paise: 127, in_use: true, jobs_today: 2, failed_today: 1 });
+  expect((data as { tiles: { failed_today: number } }).tiles.failed_today).toBeGreaterThanOrEqual(1);
+});
+
+test("admin_centre names the tutors (their emails come from the Auth admin API) and never a parent's number", async () => {
+  const { data, error } = await svc.rpc("admin_centre", { p_centre: centreA, p_month: monthStart() });
+  expect(error).toBeNull();
+  const text = JSON.stringify(data);
+  expect(text).toContain((await a.auth.getUser()).data.user!.id);
+  expect(text).not.toContain("+91");
+  expect(data).toMatchObject({ students: 2, batches: 1, cost_paise: 127, calls: 3, cost_by_kind: { plan: 120, notes: 7, exams: 0, other: 0 } });
+  expect((data as { tutors: unknown[] }).tutors.length).toBe(1);
+  expect((await svc.rpc("admin_centre", { p_centre: crypto.randomUUID(), p_month: monthStart() })).data).toBeNull();
+});
+
+test("admin_activity names what the tutor did by kind, never the content", async () => {
+  const { data } = await svc.rpc("admin_activity", { p_centre: centreA, p_limit: 20 });
+  expect((data as { kind: string; screen: string }[])[0]).toMatchObject({ kind: "app_opened", screen: "today" });
+});
+
+test("admin_centre_jobs names a job's subject by its batch and day, and its made count", async () => {
+  const { data } = await svc.rpc("admin_centre_jobs", { p_centre: centreA, p_limit: 5 });
+  const rows = data as { subject: string; state: string; made: number | null; not_made: number | null }[];
+  expect(rows.length).toBe(2);
+  const day = new Date(`${today()}T12:00:00Z`).toLocaleString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+  expect(rows.map((r) => r.subject)).toEqual([`Evening batch · ${day}`, `Evening batch · ${day}`]);
+  expect(rows.find((r) => r.state === "done")).toMatchObject({ made: 11, not_made: 0 });
+});
+
+test("admin_open_record writes the audit first and answers the students' consent states; an empty reason is refused", async () => {
+  const r = await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "a support ask", p_ip: "1.1.1.1" });
+  expect(r.error).toBeNull();
+  const students = (r.data as { students: { name: string; consent: { state: string } }[] }).students;
+  expect(students.map((s) => s.consent.state).sort()).toEqual(["given", "not_asked"]);
+  expect(JSON.stringify(r.data)).not.toContain("+91");
+  expect((await sql`select count(*)::int as n from public.admin_audit where action = 'open_record' and centre_id = ${centreA}`)[0].n).toBe(1);
+  const blank = await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "  ", p_ip: null });
+  expect(blank.error?.message).toContain("reason_required");
+  expect((await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "x".repeat(201), p_ip: null })).error?.message).toContain("reason_required");
+});
+
+test("admin_record_opened answers for a fresh open_record row and not for one eleven minutes old or of another action", async () => {
+  const opened = await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "again", p_ip: null });
+  const audit = (opened.data as { audit_id: string }).audit_id;
+  expect(((await svc.rpc("admin_record_opened", { p_audit: audit })).data as { reason: string }).reason).toBe("again");
+  await sql`update public.admin_audit set created_at = now() - interval '11 minutes' where id = ${audit}`;
+  expect((await svc.rpc("admin_record_opened", { p_audit: audit })).data).toBeNull();
+  const other = (await svc.rpc("admin_audit_write", { p_admin: adminId, p_action: "sign_in", p_centre: centreA, p_target: {}, p_reason: null, p_ip: null })).data as string;
+  expect((await svc.rpc("admin_record_opened", { p_audit: other })).data).toBeNull();
+});
+
+test("admin_call hides a personal kind's input without consent and shows a group kind's and a consented one's", async () => {
+  const held = await svc.rpc("admin_call", { p_id: noteWithoutConsent });
+  expect(held.data).toMatchObject({ input: null, input_held: true, student: true });
+  const sheet = (await svc.rpc("admin_call", { p_id: sheetCall })).data as { input: unknown; input_held: boolean; started_by: string };
+  expect(sheet).toMatchObject({ input_held: false, started_by: "tap" });
+  expect(sheet.input).not.toBeNull();
+  expect(((await svc.rpc("admin_call", { p_id: noteWithConsent })).data as { input_held: boolean }).input_held).toBe(false);
+  expect((await svc.rpc("admin_call", { p_id: crypto.randomUUID() })).data).toBeNull();
+});
+
+test("admin_calls lists the day's calls with the tiles, filtered by kind", async () => {
+  const { data } = await svc.rpc("admin_calls", { p_day: today(), p_centre: centreA, p_kind: "note", p_status: null, p_limit: 50 });
+  const calls = data as { tiles: { calls: number }; rows: { kind: string }[] };
+  expect(calls.tiles.calls).toBe(2);
+  expect(calls.rows.every((r) => r.kind === "note")).toBe(true);
+});
+
+test("the cost functions add up to the same rupees", async () => {
+  const byCentre = (await svc.rpc("admin_cost_by_centre", { p_month: monthStart() })).data as { id: string; paise: number }[];
+  const byKind = (await svc.rpc("admin_cost_by_kind", { p_month: monthStart() })).data as { paise: number }[];
+  const byDay = (await svc.rpc("admin_cost_by_day", { p_month: monthStart() })).data as { paise: number }[];
+  const total = byCentre.reduce((s, r) => s + r.paise, 0);
+  expect(byKind.reduce((s, r) => s + r.paise, 0)).toBe(total);
+  expect(byDay.reduce((s, r) => s + r.paise, 0)).toBe(total);
+  expect(byDay.length).toBeGreaterThanOrEqual(28);
+  expect(byCentre.find((r) => r.id === centreA)?.paise).toBe(127);
+  const mine = (await svc.rpc("admin_cost_by_day", { p_month: monthStart(), p_centre: centreA })).data as { paise: number }[];
+  expect(mine.reduce((s, r) => s + r.paise, 0)).toBe(127);
+  const tiles = (await svc.rpc("admin_cost_tiles", { p_month: monthStart() })).data as { month_paise: number };
+  expect(tiles.month_paise).toBe(total);
+});
+
+test("admin_jobs filters by state and admin_job lists the steps, one row a step with its last try", async () => {
+  const failed = (await svc.rpc("admin_jobs", { p_day: today(), p_state: "failed", p_kind: null, p_centre: centreA, p_limit: 50 })).data as { tiles: { today: number }; rows: { id: string }[] };
+  expect(failed.rows.map((r) => r.id)).toEqual([failedJob]);
+  expect(failed.tiles.today).toBe(2);
+  const job = (await svc.rpc("admin_job", { p_id: failedJob })).data as { steps: { step: string; state: string; attempt: number; cost_paise: number }[]; step: string };
+  expect(job.steps.map((s) => `${s.step}:${s.state}`)).toEqual(["read:done", "make:2:failed"]);
+  expect(job.steps[1]).toMatchObject({ attempt: 2, cost_paise: 12 });
+  expect(job.step).toBe("make:2");
+});
+
+test("admin_errors_by_route groups by route, status and reason; admin_errors_recent is newest first", async () => {
+  const by = (await svc.rpc("admin_errors_by_route", { p_hours: 24 })).data as { rows: { route: string; status: number; reason: string; last_24h: number }[] };
+  expect(by.rows.find((r) => r.route === "POST /ai/make" && r.status === 502)?.last_24h).toBeGreaterThanOrEqual(1);
+  expect(by.rows.find((r) => r.status === 401)?.route).toBe("any");
+  const recent = (await svc.rpc("admin_errors_recent", { p_limit: 10 })).data as { status: number; created_at: string }[];
+  expect(recent.every((r) => r.status >= 400)).toBe(true);
+  expect(recent.map((r) => r.created_at)).toEqual([...recent.map((r) => r.created_at)].sort().reverse());
+});
+
+test("admin_alerts, admin_audit: open first; the audit names the admin's email", async () => {
+  await svc.rpc("raise_alert", { p_key: `reads-open-${stamp}`, p_kind: "job_failed", p_centre: centreA, p_threshold: 0, p_value: 1, p_message: "m" });
+  await svc.rpc("raise_alert", { p_key: `reads-ack-${stamp}`, p_kind: "job_stuck", p_centre: centreA, p_threshold: 10, p_value: 14, p_message: "m" });
+  const [{ id }] = await sql`select id from public.alerts where key = ${`reads-ack-${stamp}`}`;
+  await svc.rpc("admin_acknowledge_alert", { p_admin: adminId, p_alert: id, p_ip: null });
+  const alerts = (await svc.rpc("admin_alerts", { p_open_first: true })).data as { rows: { acknowledged_at: string | null; acknowledged_by_email: string | null }[] };
+  const firstAck = alerts.rows.findIndex((r) => r.acknowledged_at !== null);
+  expect(firstAck).toBeGreaterThan(0);
+  expect(alerts.rows.slice(firstAck).every((r) => r.acknowledged_at !== null)).toBe(true);
+  expect(alerts.rows[firstAck]!.acknowledged_by_email).toBe(`admin-r-admin-${stamp}@example.com`);
+  const audit = (await svc.rpc("admin_audit", { p_days: 30, p_admin: null, p_action: "open_record", p_limit: 10 })).data as { admin_email: string }[];
+  expect(audit[0]?.admin_email).toBe(`admin-r-admin-${stamp}@example.com`);
+});
+
+test("a member cannot call any admin read", async () => {
+  const id = "00000000-0000-0000-0000-000000000000";
+  const calls: [string, Record<string, unknown>][] = [
+    ["admin_centres", { p_month: monthStart() }],
+    ["admin_centre", { p_centre: id, p_month: monthStart() }],
+    ["admin_activity", { p_centre: id, p_limit: 1 }],
+    ["admin_centre_jobs", { p_centre: id, p_limit: 1 }],
+    ["admin_record", { p_centre: id }],
+    ["admin_open_record", { p_admin: id, p_centre: id, p_reason: "x", p_ip: null }],
+    ["admin_record_opened", { p_audit: id }],
+    ["admin_cost_by_day", { p_month: monthStart() }],
+    ["admin_cost_by_centre", { p_month: monthStart() }],
+    ["admin_cost_by_kind", { p_month: monthStart() }],
+    ["admin_cost_tiles", { p_month: monthStart() }],
+    ["admin_calls", { p_day: null, p_centre: null, p_kind: null, p_status: null, p_limit: 1 }],
+    ["admin_call", { p_id: id }],
+    ["admin_jobs", { p_day: null, p_state: null, p_kind: null, p_centre: null, p_limit: 1 }],
+    ["admin_job", { p_id: id }],
+    ["admin_errors_by_route", { p_hours: 24 }],
+    ["admin_errors_recent", { p_limit: 1 }],
+    ["admin_alerts", { p_open_first: true }],
+    ["admin_audit", { p_days: 1, p_admin: null, p_action: null, p_limit: 1 }],
+  ];
+  for (const [fn, args] of calls) expect({ fn, code: (await a.rpc(fn, args)).error?.code }).toEqual({ fn, code: "42501" });
+});
