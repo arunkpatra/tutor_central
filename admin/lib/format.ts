@@ -90,7 +90,7 @@ export function latency(ms: number): string {
 
 /** The first day of the month an ISO day (or a "YYYY-MM" query) is in, as YYYY-MM-01. */
 export function monthOf(value: string | undefined, now: Date): string {
-  if (value && /^\d{4}-\d{2}$/.test(value)) return `${value}-01`;
+  if (value && /^\d{4}-(0[1-9]|1[0-2])$/.test(value)) return `${value}-01`;
   return `${istDay(now).slice(0, 7)}-01`;
 }
 

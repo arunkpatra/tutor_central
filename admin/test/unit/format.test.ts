@@ -66,3 +66,9 @@ test("a cost per student: whole rupees, but under ₹1 in paise", () => {
   expect(perStudent(27)).toBe("₹0.27");
   expect(perStudent(0)).toBe("₹0");
 });
+
+test("a month outside 01 to 12 is this month, never a database error (R-a3)", () => {
+  expect(monthOf("2026-13", now)).toBe("2026-10-01");
+  expect(monthOf("2026-00", now)).toBe("2026-10-01");
+  expect(monthOf("2026-12", now)).toBe("2026-12-01");
+});
