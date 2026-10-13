@@ -22,7 +22,7 @@
   through `deploy.yml`'s `migrate` job, before the API (D26); never `supabase db push` by hand. A migration is
   additive while any installed build uses what it would remove (expand now, contract later): the database leads
   the app, and the TestFlight lane refuses a build while migrations are pending. Run it with
-  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0051 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
+  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0056 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
 - App Review's demo centre (D51): `gh workflow run seed-review -f email=… -f parent_phone=…` fills an existing account's
@@ -82,3 +82,8 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
   SQL: the portal asks the Auth admin API for emails. A function of a table's row becomes a PostgREST column of that table
   (the generated types demand it of every row): a helper takes an id. Alerts are raised once by `key` (`raise_alert`);
   `job_kind` has `alerts`; `notifications.kind` has `alert`. Local TOTP is on in `config.toml` (`[auth.mfa.totp]`).
+- Phase 20 (D100): `ai_models` (0052) is append-only, read through `ai_models_current()` by the platform alone; its newest row
+  per kind and step is current (0056 moved the placement to Sonnet). A call's `agent_step` (draft, check, repair, grade) and
+  `tokens_cached`; only a draft counts against the allowance; a check, repair or grade hangs off a live draft of the centre by
+  its key's grammar, and one guarding another draft (a step taken again) is a new row (0055). `schedule_evals` queues the
+  nightly `eval_run` at 02:05 IST; `admin_calls` counts a draft refused after its check (`check:…`) as refused (0054).

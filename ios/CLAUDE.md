@@ -208,5 +208,14 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - A note's week is an ISO day in its content (`week_monday`); the API's `noteContent` writes the same, and the contract's
   `kept_note` sample is read by the app's decoder (ContractTests).
 
+- Phase 20 (D102): mathematics in a text is LaTeX (`$…$` inline, `$$…$$` on its own line); `MathText` (DesignSystem) draws
+  it with SwiftMath 1.7.3 (`MathRenderer`, XITS Math) inline with the words at the token's Dynamic Type size, a display
+  formula centred at 1.25×, a formula wider than its line drawn smaller to fit, a heavy token's formula bold (`\bm`, digits
+  `\mathbf`), and anything that does not parse shown as written in `text2`. VoiceOver reads `MathSpeech.words`. Every place
+  a question, answer, step, caption or the phone's PDF shows material text goes through `MathText`. The split's rules are
+  shared with the PDFs by `tools/contract/maths-cases.json` (`bun contract`). A 503 `paused` is `APIFailure.paused`, shown
+  as the system alert in the API's words; the alert's action (a lone OK, Try Again, Open Settings) is the default action,
+  tinted by `AlertTint` at launch (SwiftUI's tint does not reach the alert).
+
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

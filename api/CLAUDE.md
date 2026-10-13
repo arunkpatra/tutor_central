@@ -110,3 +110,21 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
   API (`RESEND_API_KEY`, sending only, from `hello@tutorcentral.in`) and pushed ("Tutor Central needs a look", the line in
   words, no link) to each `admin_users` row's tutor account through `replace_notifications`. A failed email or push is
   logged and the step ends done. Production refuses to start without both variables; a local run without the key logs the email.
+
+- Phase 20 (D99 to D104): nine kinds run on their agent (`src/agents/agent.ts`: draft → the free `verify` and, for a kind with
+  `maths: true`, `mathsFindings` → a check by the other tier against the kind's rubric → one repair with the findings quoted →
+  the checks again → refused in words; every call a row with `agent_step`, keys `<key>`, `:check`, `:repair`, `:repair:check`,
+  `:grade`). A route's run has 110 s; a job's 170 s on the job's clock (`JOB_AGENT_BUDGET_MS`). The models are `ai_models`
+  (0052, append-only, the newest row of a kind and step current; `env > table > models.json`), read each minute; a row with
+  `enabled` false answers 503 `paused` with the kind's words (`errors.paused`) and a job's line counts not made. A prompt is a
+  file with a `VERSION`, its shared block cached; `bun prompts --write` pins `versions.json` (the hash of the words and the
+  rubric) and `bun check` refuses words changed under the same version. The golden sets are `api/evals/<kind>/` (five cases,
+  a rubric read by the check and the graders alike); `bun evals [--kinds a,b] [--fake]` runs promptfoo over the agent, graded
+  by Opus 5.5, gated at every free check and the rubric at 85% per kind, a failed case retried once (D103); `evals.yml` runs
+  the kinds a pull request touches (a shared file names all nine; each nine-kind run is about ₹95). The nightly `eval_run`
+  job (02:05 IST) batches drafts, checks and grades at half price under the Smoke centre (`SMOKE_CENTRE_ID`); a batch's
+  custom ids take only letters, digits, `_` and `-` (`<case>__check`). Mathematics is LaTeX in the text (`$…$`, `$$…$$`; the
+  `MATHS` words): the PDFs draw it with mitex 0.2.7 (vendored in `api/typst/mitex`, carried to the function by the literal
+  `new URL("../../typst", import.meta.url)`, since `includeFiles` is ignored by this builder) in STIX Two Math; a formula
+  mitex cannot draw falls back to words. The figure has its PDF (`src/pdf/figure.ts`). Never run the API's tests during a
+  hand run: the database tests clear the local jobs table.

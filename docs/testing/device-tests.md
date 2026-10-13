@@ -129,6 +129,7 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 |---|---|---|
 | T16 | More → Settings → Teacher reminders → Turn on reminders → Allow. Leave "Before each class" on, 30 minutes, and "Plan ready" on. Do not open the app the next day until after the first batch. | A reminder "<batch> at <time>" arrives on the lock screen 30 minutes before each batch, though the app was not opened that day. "Today's plan is ready" arrives before the first batch; tapping it opens Today on that batch's plan with every mark ticked. |
 | T17 | On a day with a batch: wait for "Today's plan is ready" to arrive (do not open the app). Then turn on airplane mode and open the app. | Today shows the day's plan with its groups and lines, from the iPhone; a line's sheet opens; Share as PDF works. Nothing says "Couldn't load". |
+| T18 | Settings (iOS) → Accessibility → VoiceOver on. Open a sheet with maths (Make → Sheet, class 8, Mathematics, Linear equations) → Board, and swipe to the question. | VoiceOver reads the formula in words ("Solve x over 4 minus 2 equals 1"), never dollar signs, backslashes or "frac". |
 
 ## Log
 

@@ -35,6 +35,9 @@ screen, several as a polish slice, or not at all.
 | U30 | 2026-10-09 | The "Sign in again" status line | It has no way forward but Account → Sign out, which warns the saved changes are lost | The Phase 7 review (minor 7) |
 | U48 | 2026-10-12 | Students, the empty card (P10-Students-Empty) | "Create a batch" is the width of its text; the board draws it at full width like the two ways above it | Session 32, U34's pictures |
 | U49 | 2026-10-13 | Teacher reminders, before the ask (P7-Reminders-NotAsked) | The intro says "Set on this iPhone only"; since Phase 18 the settings go with the account to any iPhone (the footnote after the ask says so) | Session 37's hand run 9 |
+| U50 | 2026-10-13 | The board view at the largest text size | "Previous" wraps onto two lines ("Previou / s") beside Next | Session 41's hand run 7 |
+| U51 | 2026-10-13 | A sheet at the largest text size | The footer band (the AI line, Make it again, Share as PDF and Print) takes half the screen, so two question rows show at a time | Session 41's hand run 7 |
+| U52 | 2026-10-13 | The photo dialogs (School "From a photo", the page chooser, an item's menu) | Since the alert tint (Phase 20), their choices are drawn in the accent; before they were the system blue; the boards draw them in the text colour | Session 41's app review |
 
 ## Done
 

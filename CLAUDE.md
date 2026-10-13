@@ -87,6 +87,8 @@ change per pull request, described by what it does and how it was checked.
 | `bun admin-shots [--pages /centres,/jobs?open=preview-failed] [--widths 1280,390] [--appearance dark\|light\|both]` | The admin portal built and started in preview mode (fixtures, no session, D96) and photographed by headless Chrome, full page at 2×, into `.shots/admin/`; with no pages, the fifteen boards' pages |
 | `bun store-shots` | The App Store screenshots: the approved `Store-*` boards rendered with fresh simulator screens (dark, 9:41) at 1206 × 2622 JPEG into `docs/store/screenshots/` (D51); needs the `bun check` build. The listing's words are `docs/store/listing.md` |
 | `bun cost [--since 30m\|2h\|7d] [--kinds note,can_do]` | What the local AI calls cost, by kind and model, priced by `api/models.json` (D67) |
+| `bun evals [--kinds a,b] [--cases id] [--fake]` | The golden sets through each kind's agent by promptfoo, graded by Opus 5.5; the gate: every free check and the rubric at 85% per kind, a failed case retried once (D101, D103). The real run costs about ₹10 a kind (`api/.env.local`'s key); `--fake` is free |
+| `bun prompts [--write\|--check]` | Pin each prompt's version to the hash of its words and rubric (`api/src/prompts/versions.json`, D74); `--check` is in `bun check` |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
 | `bun contract [--check]` | Write the generated contract (the API's database types, the app's `APIContract.swift`, the fake's samples, the plan cases' copy); `--check` (in `bun check`'s tools step) names what is stale (D80) |
 | `cd supabase && supabase start` | The local database stack (Docker) |

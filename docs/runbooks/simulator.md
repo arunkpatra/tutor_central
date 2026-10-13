@@ -282,3 +282,21 @@ Not used:
 - **XCUITest kept outside `bun check`:** `typeText` waits for delivery and `waitForExistence` settles, so it would be
   the most deterministic driver, but it is a UI test suite (D15 says none), costs a target and its upkeep, and does
   not give the owner a watched run. Not needed while the rules above hold.
+
+## 14. The agents, the maths and the nightly locally (Phase 20)
+
+- **Real models:** `api/.env.local` holds `ANTHROPIC_API_KEY`; start the API without `AI_FAKE`. Restart it after switching
+  branches: `bun run dev`'s `--hot` does not reload every module (session 41's API served 11:04's prompts for hours).
+- **A planted wrong key:** `AI_FAKE=1 TC_FAKE_SCRIPT=wrong-proof` makes every fake sheet draft and repair carry a proof that
+  does not add up, so the agent refuses it after one repair ("Couldn't make it." with Retry; rows draft failed
+  `check:question 1`, check, repair, check).
+- **A kind switched off:** `insert into public.ai_models (kind, step, model, effort, enabled, set_by) values ('sheet_from_6',
+  'draft', 'claude-sonnet-5-5', 'medium', false, 'hand run')` with `supabase db query --local`; within a minute Make shows the
+  alert, a plan made again counts that line not made (`{"reason":"paused"}` on its step). Delete the row after.
+- **The nightly:** queue `eval_run` with the service key (`enqueue_job`, `p_centre` null, input `{"day": …, "kinds": ["check",
+  "placement"]}`) and tick each minute; it waits on Anthropic's batches (about 40 minutes for two kinds) and ends done with its
+  result on the job.
+- **Cost:** read a run's calls by job id (`ai_generations.job_id`); `bun cost --since` also counts the rows the API's database
+  tests leave on the local stack.
+- **Never run the API's tests, or `bun check` with the api or db step, during a hand run:** the database tests clear the local
+  jobs table (session 41 lost a PDF job and two nightly tries that way).
