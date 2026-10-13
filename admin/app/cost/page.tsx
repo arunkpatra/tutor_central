@@ -8,7 +8,7 @@ import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
 import { environment, preview } from "@/lib/env";
-import { count, istDay, monthName, monthOf, rupees } from "@/lib/format";
+import { count, istDay, monthName, monthOf, perStudent, rupees } from "@/lib/format";
 import { idOf } from "@/lib/ids";
 
 export const metadata: Metadata = { title: "Cost" };
@@ -127,7 +127,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
                   {rupees(r.paise)}
                 </Cell>
                 <Cell label={COST.centreHead.perStudent} kind="r">
-                  {r.per_student_paise === null ? NONE : `₹${Math.round(r.per_student_paise / 100)}`}
+                  {r.per_student_paise === null ? NONE : perStudent(r.per_student_paise)}
                 </Cell>
                 <Cell label={COST.centreHead.share}>
                   {Math.round((r.paise / PLAN_PAISE) * 100)}%

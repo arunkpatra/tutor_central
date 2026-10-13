@@ -8,7 +8,7 @@
   "prompt_version": "v3",
   "status": "failed",
   "error_reason": "timeout",
-  "tokens_in": 736,
+  "tokens_in": 1736,
   "tokens_out": 0,
   "latency_ms": 110004,
   "cost_paise": 6,
