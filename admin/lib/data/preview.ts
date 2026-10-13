@@ -1,3 +1,5 @@
+import alerts from "../../preview/alerts.json";
+import audit from "../../preview/audit.json";
 import call from "../../preview/call.json";
 import calls from "../../preview/calls.json";
 import centre from "../../preview/centre.json";
@@ -8,14 +10,25 @@ import frame from "../../preview/frame.json";
 import job from "../../preview/job.json";
 import jobs from "../../preview/jobs.json";
 import record from "../../preview/record.json";
-import type { Activity, Call, Calls, Centre, Centres, Cost, Data, Errors, Job, JobRow, Jobs, Record } from "./types";
+import type {
+  Activity,
+  Alerts,
+  AuditRow,
+  Call,
+  Calls,
+  Centre,
+  Centres,
+  Cost,
+  Data,
+  Errors,
+  Job,
+  JobRow,
+  Jobs,
+  Record,
+} from "./types";
 
 /** The preview's one centre is `preview`; any other id is gone. */
 const PREVIEW_ID = "preview";
-
-const notYet = (what: string) => (): never => {
-  throw new Error(`the preview has no ${what} yet`);
-};
 
 /** Preview mode's `Data` (D96): the boards' figures from `preview/*.json`; writes change nothing. */
 export const previewData: Data = {
@@ -31,8 +44,8 @@ export const previewData: Data = {
   jobs: async () => jobs as Jobs,
   job: async (id) => (id === job.id ? (job as Job) : null),
   errors: async () => errors as Errors,
-  alerts: notYet("alerts"),
-  audit: notYet("audit"),
+  alerts: async () => alerts as Alerts,
+  audit: async () => audit as AuditRow[],
   acknowledge: async () => true,
   retry: async () => true,
   cancel: async () => true,

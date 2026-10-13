@@ -1,0 +1,118 @@
+[
+  {
+    "id": "preview-2026-10-13 10:42:16",
+    "created_at": "2026-10-13T05:12:16Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "open_record",
+    "centre_id": "preview",
+    "centre": "Sunrise Tuition Centre",
+    "target": {},
+    "reason": "Meera wrote: her Class 8 plan failed this morning",
+    "ip": "49.207.12.40",
+    "subject": null
+  },
+  {
+    "id": "preview-2026-10-13 10:41:50",
+    "created_at": "2026-10-13T05:11:50Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "retry_job",
+    "centre_id": "preview",
+    "centre": "Sunrise Tuition Centre",
+    "target": {
+      "job": "preview-failed",
+      "kind": "plan",
+      "step": "make:2"
+    },
+    "reason": null,
+    "ip": "49.207.12.40",
+    "subject": "Class 8 Science · 13 Oct"
+  },
+  {
+    "id": "preview-2026-10-13 10:40:02",
+    "created_at": "2026-10-13T05:10:02Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "acknowledge_alert",
+    "centre_id": "preview",
+    "centre": "Bright Minds, Jayanagar",
+    "target": {
+      "alert": "preview-a2",
+      "kind": "cost_day"
+    },
+    "reason": null,
+    "ip": "49.207.12.40",
+    "subject": null
+  },
+  {
+    "id": "preview-2026-10-13 10:38:21",
+    "created_at": "2026-10-13T05:08:21Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "sign_in",
+    "centre_id": null,
+    "centre": null,
+    "target": {},
+    "reason": "second factor verified",
+    "ip": "49.207.12.40",
+    "subject": null
+  },
+  {
+    "id": "preview-2026-10-12 22:31:09",
+    "created_at": "2026-10-12T17:01:09Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "enrol_totp",
+    "centre_id": null,
+    "centre": null,
+    "target": {},
+    "reason": "second factor set up",
+    "ip": "49.207.12.40",
+    "subject": null
+  },
+  {
+    "id": "preview-2026-10-12 22:30:40",
+    "created_at": "2026-10-12T17:00:40Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "sign_in",
+    "centre_id": null,
+    "centre": null,
+    "target": {},
+    "reason": "first sign-in",
+    "ip": "49.207.12.40",
+    "subject": null
+  },
+  {
+    "id": "preview-2026-10-12 21:10:05",
+    "created_at": "2026-10-12T15:40:05Z",
+    "admin_user_id": "u-someone",
+    "admin_email": "someone@example.com",
+    "action": "refused",
+    "centre_id": null,
+    "centre": null,
+    "target": {
+      "email": "someone@example.com"
+    },
+    "reason": "not on the admin list",
+    "ip": "103.5.1.9",
+    "subject": null
+  },
+  {
+    "id": "preview-2026-10-12 19:02:44",
+    "created_at": "2026-10-12T13:32:44Z",
+    "admin_user_id": "preview",
+    "admin_email": "you@tutorcentral.in",
+    "action": "cancel_job",
+    "centre_id": "preview",
+    "centre": "Lakshmi Classes",
+    "target": {
+      "job": "p11",
+      "kind": "export"
+    },
+    "reason": null,
+    "ip": "49.207.12.40",
+    "subject": "a student"
+  }
+]

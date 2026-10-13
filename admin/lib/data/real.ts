@@ -2,6 +2,8 @@ import "server-only";
 import { serviceClient } from "../supabase/service";
 import type {
   Activity,
+  Alerts,
+  AuditRow,
   Call,
   Calls,
   Centre,
@@ -22,10 +24,6 @@ export async function rpc<T>(fn: string, args: { [key: string]: unknown } = {}):
   if (error) throw new Error(`${fn}: ${error.message}`);
   return data as T;
 }
-
-const notYet = (what: string) => (): never => {
-  throw new Error(`${what} is not built yet`);
-};
 
 /** The tutors' emails and sign-in times from the Auth admin API: SQL cannot read auth.users as the platform. */
 async function withEmails(tutors: Tutor[]): Promise<Tutor[]> {
@@ -77,9 +75,11 @@ export function realData(): Data {
       ]);
       return { ...byRoute, recent };
     },
-    alerts: notYet("alerts"),
-    audit: notYet("audit"),
-    acknowledge: notYet("acknowledge"),
+    alerts: (openFirst) => rpc<Alerts>("admin_alerts", { p_open_first: openFirst }),
+    audit: (f) =>
+      rpc<AuditRow[]>("admin_audit", { p_days: f.days, p_admin: f.admin, p_action: f.action, p_limit: 300 }),
+    acknowledge: (admin, alert, ip) =>
+      rpc<boolean>("admin_acknowledge_alert", { p_admin: admin, p_alert: alert, p_ip: ip }),
     retry: (admin, job, ip) => rpc<boolean>("admin_retry_job", { p_admin: admin, p_job: job, p_ip: ip }),
     cancel: (admin, job, ip) => rpc<boolean>("admin_cancel_job", { p_admin: admin, p_job: job, p_ip: ip }),
     auditWrite: async (admin, action, centre, target, reason, ip) => {
