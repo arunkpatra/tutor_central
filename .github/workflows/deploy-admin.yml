@@ -1,0 +1,135 @@
+name: deploy-admin
+
+# The one way the admin portal reaches production (D78, D94), started by hand as deploy.yml and deploy-web.yml are: the
+# gate first (a commit whose check is not green never deploys, D80), then the commit is built on the runner with Vercel's
+# CLI, uploaded prebuilt to the project tutor-central-admin, and smoke-tested at the portal's address: /health must serve
+# that very commit, Sign in must answer, every gated page must send a request without a session to Sign in, and http must
+# go to https. The smoke never signs in (no script holds a second factor). The run's summary prints the rollback.
+# Every action is pinned to a commit (D14); the tag it was is in the comment.
+
+run-name: deploy ${{ inputs.commit || 'the head of main' }} to admin.tutorcentral.in
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: The commit of main to deploy (full SHA). Empty, the head of main.
+        required: false
+        default: ""
+
+concurrency:
+  group: deploy-admin-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_CLI: vercel@59.19.0
+  VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+  SITE: ${{ vars.ADMIN_ORIGIN }}
+
+jobs:
+  # The gate (D80), as deploy.yml's: the one commit of the run, and its check green.
+  gate:
+    name: the check is green
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: The commit
+        id: commit
+        env:
+          ASKED: ${{ inputs.commit }}
+        run: |
+          sha="${ASKED:-$(git rev-parse origin/main)}"
+          if ! [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then echo "::error::\"$sha\" is not a whole commit SHA."; exit 1; fi
+          if ! git merge-base --is-ancestor "$sha" origin/main 2>/dev/null; then echo "::error::$sha is not a commit of main."; exit 1; fi
+          git checkout -q "$sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.11
+
+      - name: The check for the commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: bun tools/check-gate.ts "$SHA"
+
+  deploy:
+    name: the admin portal to production
+    needs: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: Production
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.gate.outputs.sha }}
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.11
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      # Built here, not on Vercel; the commit goes into /health and every page's head (the smoke reads it back). The
+      # project's root directory is admin, so `vercel build` runs `next build` there; `vercel pull` brings production's
+      # three variables (the service key stays in the server's code, D83; the build tests hold it there).
+      - name: Build
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          TC_COMMIT: ${{ needs.gate.outputs.sha }}
+        run: |
+          bun x "$VERCEL_CLI" pull --yes --environment=production
+          bun x "$VERCEL_CLI" build --prod
+
+      # The deployment production served before this one is written down: promoting it back is the rollback. The commit
+      # goes to the running functions too: /health reads it at request time, as the API's does.
+      - name: Deploy
+        timeout-minutes: 5
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          COMMIT: ${{ needs.gate.outputs.sha }}
+        run: |
+          domain="${SITE#https://}"
+          previous=$(bun x "$VERCEL_CLI" inspect "$domain" 2>&1 | awk '$1 == "url" { print $2; exit }' || true)
+          out=$(bun x "$VERCEL_CLI" deploy --prebuilt --prod --env TC_COMMIT="$COMMIT")
+          url=$(jq -r '.deployment.url // empty' <<< "$out" 2>/dev/null || true)
+          url="${url:-$out}"
+          {
+            echo "### Production: the admin portal"
+            echo "| | |"; echo "|---|---|"
+            echo "| Commit | \`$COMMIT\` |"
+            echo "| Deployment | $url |"
+            echo "| Served at | $SITE |"
+            if [ -n "$previous" ]; then
+              echo ""
+              echo "Roll back: \`vercel promote $previous --scope aruns-projects-abe1e969\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Smoke
+        env:
+          COMMIT: ${{ needs.gate.outputs.sha }}
+        run: |
+          status=0
+          bun tools/admin-smoke.ts "$SITE" --commit "$COMMIT" > smoke.txt 2>&1 || status=$?
+          cat smoke.txt
+          { echo "### The smoke"; echo '```'; cat smoke.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" != 0 ]; then
+            echo "::error::The smoke of $SITE failed. Roll back with the command in this run's summary."
+          fi
+          exit "$status"
