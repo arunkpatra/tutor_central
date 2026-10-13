@@ -465,9 +465,19 @@ export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
 
 /** What `bun run dev` with AI_FAKE=1 answers: the boards' sample for the kind, after a short wait so the creating
  *  states show; a register photo under 1 KB (tools/samples/blank.png) reads as no rows, for the "No names found"
- *  hand run. */
-export function localScript(request: ClaudeRequest<unknown>): FakeScript {
-  return { answer: localAnswer(request), delayMs: isCheckRequest(request) ? 500 : 1500 };
+ *  hand run. `TC_FAKE_SCRIPT=wrong-proof` plants a key that does not add up in every sheet draft and repair, for the
+ *  hand run of a refusal after its repair. */
+export function localScript(request: ClaudeRequest<unknown>, script = process.env.TC_FAKE_SCRIPT): FakeScript {
+  const answer = localAnswer(request);
+  const planted = script === "wrong-proof" && !isCheckRequest(request) && kindOf(request) === "sheet" ? wrongProof(answer as SheetOutput) : answer;
+  return { answer: planted, delayMs: isCheckRequest(request) ? 500 : 1500 };
+}
+
+/** The first question's proof made not to equal its value. */
+function wrongProof(sheet: SheetOutput): SheetOutput {
+  const [first, ...rest] = sheet.questions;
+  if (!first) return sheet;
+  return { ...sheet, questions: [{ ...first, proof: { expression: "3*6+5", equals: 20 } }, ...rest] };
 }
 
 /** The answer the local fake gives a request: a check passes; a draft gets its kind's sample fitted to what was asked
