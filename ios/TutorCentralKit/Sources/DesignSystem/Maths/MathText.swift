@@ -97,10 +97,17 @@ public struct MathText: View {
         .padding(.vertical, Tokens.rowPaddingDense)
     }
 
-    /// A formula in a semibold or heavier token (the board view's 44/52 800, its key's title3) set in bold italic, as
-    /// the words beside it.
+    /// A formula in a semibold or heavier token (the board view's 44/52 800, its key's title3) set bold, as the words
+    /// beside it: letters bold italic (`\\bm`), and each number bold upright (`\\mathbf`), since bold italic has no
+    /// digits and SwiftMath draws them regular.
+    nonisolated static func weighted(_ latex: String, weight: Int) -> String {
+        guard weight >= 600 else { return latex }
+        let digits = latex.replacing(/[0-9]+(\.[0-9]+)?/) { "\\mathbf{\($0.output.0)}" }
+        return "\\bm{\(digits)}"
+    }
+
     private func weighted(_ latex: String) -> String {
-        token.weightNumber >= 600 ? "\\bm{\(latex)}" : latex
+        Self.weighted(latex, weight: token.weightNumber)
     }
 
     private func uiColor(_ token: ColorToken) -> UIColor {
