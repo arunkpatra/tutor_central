@@ -6,11 +6,12 @@ import { sessionClient } from "./supabase/server";
 import { serviceClient } from "./supabase/service";
 
 const PREVIEW_ADMIN: Admin = { userId: "preview", email: "you@tutorcentral.in" };
+type Session = Awaited<ReturnType<typeof sessionClient>>;
 
 /** What the gate says of this request: the session checked with Supabase's server (`getUser`), the assurance level,
  *  the verified TOTP factors, and the `admin_users` row read as the platform. */
-export async function currentDecision(): Promise<Decision> {
-  const session = await sessionClient();
+export async function currentDecision(given?: Session): Promise<Decision> {
+  const session = given ?? (await sessionClient());
   const { data: got } = await session.auth.getUser();
   const user = got.user;
   if (!user) return decide({ user: null, admin: null, verifiedFactors: 0, currentLevel: null });

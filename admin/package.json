@@ -6,7 +6,7 @@
     "dev": "next dev -p 3100",
     "build": "next build",
     "start": "next start",
-    "check": "biome ci . && next typegen && tsc --noEmit -p tsconfig.json && bun test --preload ./test/preload.ts test/unit && SUPABASE_SERVICE_ROLE_KEY=sb_secret_build_probe_do_not_use SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_ANON_KEY=probe next build && bun test test/build",
+    "check": "biome ci . && next typegen && tsc --noEmit -p tsconfig.json && bun test --preload ./test/preload.ts test/unit && SUPABASE_SERVICE_ROLE_KEY=sb_secret_build_probe_do_not_use SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_ANON_KEY=probe next build && bun test test/build && bun test test/db",
     "test": "bun test --preload ./test/preload.ts test/unit"
   },
   "dependencies": {

@@ -1,0 +1,36 @@
+import type { Metadata } from "next";
+import { AuthFrame } from "@/components/Frame";
+import { Button, Field } from "@/components/parts";
+import { SIGN_IN } from "@/content/door";
+import { signIn } from "./actions";
+
+export const metadata: Metadata = { title: "Sign in" };
+
+export default async function SignInPage({ searchParams }: { searchParams: Promise<{ failed?: string }> }) {
+  const { failed } = await searchParams;
+  return (
+    <AuthFrame>
+      <div className="pageTitle">
+        <div className="eyebrow">{SIGN_IN.eyebrow}</div>
+        <h1 className="t1">{SIGN_IN.title}</h1>
+        <p className="lead">{SIGN_IN.lead}</p>
+      </div>
+      <form action={signIn} className="auth">
+        <Field
+          label={SIGN_IN.email}
+          name="email"
+          type="email"
+          placeholder={SIGN_IN.emailHint}
+          autoComplete="username"
+          required
+        />
+        <Field label={SIGN_IN.password} name="password" type="password" autoComplete="current-password" required />
+        {failed ? <p className="fieldError">{SIGN_IN.failed}</p> : null}
+        <Button kind="primary" big>
+          {SIGN_IN.button}
+        </Button>
+      </form>
+      <p className="note">{SIGN_IN.note}</p>
+    </AuthFrame>
+  );
+}
