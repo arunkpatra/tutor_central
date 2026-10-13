@@ -1,0 +1,101 @@
+[
+  {
+    "id": "school-exam",
+    "input": {
+      "today": "2026-10-13",
+      "schools": [
+        "Vidya Niketan"
+      ],
+      "classLevels": [
+        "8",
+        "9"
+      ],
+      "text": "Dear Parents, the Science Unit Test 3 for Class VIII will be held on Friday 16th Oct. Portions: Chapters 4 and 5. Regards, Vidya Niketan"
+    },
+    "expect": {
+      "count": 1,
+      "contains": [
+        "2026-10-16",
+        "exam"
+      ]
+    }
+  },
+  {
+    "id": "school-holiday",
+    "input": {
+      "today": "2026-10-13",
+      "schools": [
+        "Vidya Niketan"
+      ],
+      "classLevels": [
+        "8",
+        "9"
+      ],
+      "text": "The school will remain closed from 20th October to 24th October for Deepavali. Classes resume on Monday 26th October."
+    },
+    "expect": {
+      "count": 1,
+      "contains": [
+        "holiday",
+        "2026-10-20",
+        "2026-10-24"
+      ]
+    }
+  },
+  {
+    "id": "school-homework",
+    "input": {
+      "today": "2026-10-13",
+      "schools": [
+        "Vidya Niketan"
+      ],
+      "classLevels": [
+        "8",
+        "9"
+      ],
+      "text": "Class 9 Maths homework: complete Exercise 2.3, questions 1 to 6, and bring the notebook on Thursday."
+    },
+    "expect": {
+      "count": 1,
+      "contains": [
+        "homework"
+      ]
+    }
+  },
+  {
+    "id": "school-ptm",
+    "input": {
+      "today": "2026-10-13",
+      "schools": [
+        "Vidya Niketan"
+      ],
+      "classLevels": [
+        "8",
+        "9"
+      ],
+      "text": "PTM for classes 8 and 9 on Saturday 17 October, 9 am to 12 noon. Fee for term 2 is due by 31 October."
+    },
+    "expect": {
+      "contains": [
+        "notice"
+      ]
+    }
+  },
+  {
+    "id": "school-greeting",
+    "input": {
+      "today": "2026-10-13",
+      "schools": [
+        "Vidya Niketan"
+      ],
+      "classLevels": [
+        "8",
+        "9"
+      ],
+      "text": "Wishing all our students and parents a very happy Dussehra! Warm regards, Principal."
+    },
+    "expect": {
+      "refused": true
+    }
+  }
+]

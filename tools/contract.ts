@@ -3,7 +3,8 @@
  *  Writes the API's database types from supabase/types.ts, the app's limits and lists from the API's schemas
  *  (api/src/contract.ts), the fake's sample answers, which the app's decoders read in ContractTests, and the shared
  *  case files' copies for DomainTests (the plan, the exam split in the budget's file, the note week; the reminders' cases
- *  stay the API's alone, since the server plans them). --check writes nothing: it names each generated file that is stale, missing or left over, and exits 1. */
+ *  stay the API's alone, since the server plans them), the syllabi's chapter names, and each agent's rubric as
+ *  api/evals/<kind>/rubric.md. --check writes nothing: it names each generated file that is stale, missing or left over, and exits 1. */
 import { readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 
@@ -95,12 +96,13 @@ export function renderSample(value: unknown): string {
 async function fromAPI(): Promise<{
 	contract: Contract;
 	samples: Record<string, unknown>;
+	rubrics: Record<string, string>;
 }> {
 	const p = Bun.spawn(
 		[
 			"bun",
 			"-e",
-			'import { contract, samples } from "./src/contract.ts"; console.log(JSON.stringify({ contract: contract(), samples: samples() }))',
+			'import { contract, samples } from "./src/contract.ts"; import { rubrics } from "./src/agents/kinds/index.ts"; console.log(JSON.stringify({ contract: contract(), samples: samples(), rubrics: rubrics() }))',
 		],
 		{ cwd: join(ROOT, "api"), stdout: "pipe", stderr: "pipe" },
 	);
@@ -114,7 +116,7 @@ async function fromAPI(): Promise<{
 
 /** Every generated file by its path from the repository's root. */
 export async function expected(): Promise<Map<string, string>> {
-	const { contract, samples } = await fromAPI();
+	const { contract, samples, rubrics } = await fromAPI();
 	const files = new Map<string, string>();
 	files.set(
 		DATABASE,
@@ -129,6 +131,9 @@ export async function expected(): Promise<Map<string, string>> {
 	for (const path of (await listed(ROOT, "supabase/syllabi")).filter((p) => p.endsWith(".json")))
 		syllabi.push(await Bun.file(join(ROOT, path)).json());
 	files.set(SYLLABI, renderSyllabi(syllabi));
+	// Each kind's rubric (D101): the agent's check and promptfoo's graders read one text.
+	for (const [kind, rubric] of Object.entries(rubrics))
+		files.set(`api/evals/${kind}/rubric.md`, `${rubric}\n`);
 	return files;
 }
 

@@ -25,31 +25,31 @@
   },
   "plan": {
     "version": "2",
-    "hash": "e0c278732e0223055f9aa6f653aa9ae937e8eefec1e40820a057387b91b00e8e"
+    "hash": "c678ef3a93ef15f9a4497b4360e339bc2017e6f5a043bb04c9f11827e2a440af"
   },
   "sheet": {
     "version": "2",
-    "hash": "248631706c77d6b1cfd2808e61522676f3da8dcf82712b75dfc8abf4a95214be"
+    "hash": "f5b96152997277c0926fc5a0261b468b6ccd80570ae16d5098850b45c8a3c042"
   },
   "worked_example": {
     "version": "2",
-    "hash": "46787b697126c4a97fcf4df8dd938bc41c51ba0448036bc6b8bf746126461e73"
+    "hash": "3fbd213d35455d83b3259619e98c6e99b2ad9fb350400745667cec1b3fce03df"
   },
   "figure": {
     "version": "2",
-    "hash": "cad7bc6e00ea4d71958af2caf026d37a279ff7e5b6e8cf97c253917009d2b539"
+    "hash": "dc06238b793945a1ba59568b45a3adce4e3fe0b6b91a066dabfcec9c88646221"
   },
   "brief": {
     "version": "2",
-    "hash": "7df72e249c27abe347c27b74ec314ea03c0194b5967a25483190583c041320ef"
+    "hash": "790fd5d5dae6bdd87325920d90a3b365f83064576586c941a52700933f6b0e60"
   },
   "check": {
     "version": "2",
-    "hash": "94a87619d05bd51f59f9af73ae637fb1e0f64ef53b7b143be1068c2e37ef3fe6"
+    "hash": "39bd135a970e2e04c3178db2811769c4b5ba9d637135b593293e4212d6fdf879"
   },
   "placement": {
     "version": "2",
-    "hash": "7f723d8a802e3648d4245ccb8f3564dfd2d5b657bc8ab77517be28ff18a292a3"
+    "hash": "0284cc12681656f58dc94213028aedd36b0b846ac4fab52a20919b6cccc10e87"
   },
   "mock": {
     "version": "2",

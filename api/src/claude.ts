@@ -85,7 +85,7 @@ export function anthropicClaude(
             output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
             messages: [{ role: "user", content }],
           },
-          { signal: AbortSignal.timeout(Math.min(deadline, request.deadlineMs ?? deadline)) },
+          { signal: AbortSignal.timeout(Math.floor(Math.min(deadline, request.deadlineMs ?? deadline))) },
         );
         const written = response.usage.cache_creation_input_tokens ?? 0;
         const answered: Answered = {

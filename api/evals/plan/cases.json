@@ -1,0 +1,107 @@
+[
+  {
+    "id": "plan-oct-8-science",
+    "input": {
+      "classId": null,
+      "date": "2026-10-13",
+      "month": 10,
+      "groups": [
+        {
+          "groupNo": 1,
+          "classLevel": "8",
+          "subject": "Science"
+        }
+      ]
+    },
+    "expect": {
+      "count": 1
+    }
+  },
+  {
+    "id": "plan-jul-two-groups",
+    "input": {
+      "classId": null,
+      "date": "2026-07-14",
+      "month": 7,
+      "groups": [
+        {
+          "groupNo": 1,
+          "classLevel": "4",
+          "subject": "Mathematics"
+        },
+        {
+          "groupNo": 2,
+          "classLevel": "6",
+          "subject": "Mathematics"
+        }
+      ]
+    },
+    "expect": {
+      "count": 2
+    }
+  },
+  {
+    "id": "plan-dec-10-maths",
+    "input": {
+      "classId": null,
+      "date": "2026-12-08",
+      "month": 12,
+      "groups": [
+        {
+          "groupNo": 1,
+          "classLevel": "10",
+          "subject": "Mathematics"
+        }
+      ]
+    },
+    "expect": {
+      "count": 1
+    }
+  },
+  {
+    "id": "plan-jan-three-groups",
+    "input": {
+      "classId": null,
+      "date": "2027-01-12",
+      "month": 1,
+      "groups": [
+        {
+          "groupNo": 1,
+          "classLevel": "9",
+          "subject": "Science"
+        },
+        {
+          "groupNo": 2,
+          "classLevel": "9",
+          "subject": "Mathematics"
+        },
+        {
+          "groupNo": 3,
+          "classLevel": "8",
+          "subject": "English"
+        }
+      ]
+    },
+    "expect": {
+      "count": 3
+    }
+  },
+  {
+    "id": "plan-jun-5-evs",
+    "input": {
+      "classId": null,
+      "date": "2026-06-16",
+      "month": 6,
+      "groups": [
+        {
+          "groupNo": 1,
+          "classLevel": "5",
+          "subject": "EVS"
+        }
+      ]
+    },
+    "expect": {
+      "count": 1
+    }
+  }
+]

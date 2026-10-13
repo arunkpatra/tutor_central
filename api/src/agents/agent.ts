@@ -82,7 +82,8 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
 
   let cost = 0;
   const call = async <R>(request: DraftRequest<R>, model: Chosen["model"], effort: Chosen["effort"], cap?: number): Promise<ClaudeAnswer<R>> => {
-    const answer = await ctx.claude.complete({ ...request, model, effort, deadlineMs: Math.max(1, Math.min(left(), cap ?? Number.POSITIVE_INFINITY)) });
+    // Whole milliseconds: Node's AbortSignal.timeout refuses a fraction (performance.now() gives one).
+    const answer = await ctx.claude.complete({ ...request, model, effort, deadlineMs: Math.max(1, Math.floor(Math.min(left(), cap ?? Number.POSITIVE_INFINITY))) });
     cost += costOf(answer) ?? 0;
     return answer;
   };

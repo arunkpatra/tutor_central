@@ -1,0 +1,82 @@
+[
+  {
+    "id": "brief-8-comparing-quantities",
+    "input": {
+      "classLevel": "8",
+      "subject": "Mathematics",
+      "chapter": "Comparing Quantities"
+    },
+    "expect": {
+      "count": 3,
+      "never": [
+        "Hemanth",
+        "Aarav",
+        "Diya"
+      ]
+    }
+  },
+  {
+    "id": "brief-8-chemical-reactions",
+    "input": {
+      "classLevel": "8",
+      "subject": "Science",
+      "chapter": "Chemical reactions"
+    },
+    "expect": {
+      "count": 3,
+      "never": [
+        "Hemanth",
+        "Aarav",
+        "Diya"
+      ]
+    }
+  },
+  {
+    "id": "brief-10-quadratic",
+    "input": {
+      "classLevel": "10",
+      "subject": "Mathematics",
+      "chapter": "Quadratic Equations"
+    },
+    "expect": {
+      "count": 3,
+      "never": [
+        "Hemanth",
+        "Aarav",
+        "Diya"
+      ]
+    }
+  },
+  {
+    "id": "brief-4-fractions",
+    "input": {
+      "classLevel": "4",
+      "subject": "Mathematics",
+      "chapter": "Fractions"
+    },
+    "expect": {
+      "count": 3,
+      "never": [
+        "Hemanth",
+        "Aarav",
+        "Diya"
+      ]
+    }
+  },
+  {
+    "id": "brief-9-matter",
+    "input": {
+      "classLevel": "9",
+      "subject": "Science",
+      "chapter": "Matter in Our Surroundings"
+    },
+    "expect": {
+      "count": 3,
+      "never": [
+        "Hemanth",
+        "Aarav",
+        "Diya"
+      ]
+    }
+  }
+]

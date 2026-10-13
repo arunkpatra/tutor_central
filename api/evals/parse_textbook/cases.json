@@ -1,0 +1,72 @@
+[
+  {
+    "id": "textbook-8-science",
+    "input": {
+      "image": "pages/science-8.png",
+      "classLevel": "8",
+      "subject": "Science"
+    },
+    "expect": {
+      "count": 5,
+      "contains": [
+        "Exploring Forces",
+        "Health: The Ultimate Treasure"
+      ]
+    }
+  },
+  {
+    "id": "textbook-5-maths",
+    "input": {
+      "image": "pages/maths-5.png",
+      "classLevel": "5",
+      "subject": "Mathematics"
+    },
+    "expect": {
+      "count": 4,
+      "contains": [
+        "The Fish Tale",
+        "Parts and Wholes"
+      ]
+    }
+  },
+  {
+    "id": "textbook-9-english",
+    "input": {
+      "image": "pages/english-9.png",
+      "classLevel": "9",
+      "subject": "English"
+    },
+    "expect": {
+      "count": 3,
+      "contains": [
+        "The Last Leaf"
+      ]
+    }
+  },
+  {
+    "id": "textbook-10-maths",
+    "input": {
+      "image": "pages/maths-10.png",
+      "classLevel": "10",
+      "subject": "Mathematics"
+    },
+    "expect": {
+      "count": 5,
+      "contains": [
+        "Quadratic Equations",
+        "Arithmetic Progressions"
+      ]
+    }
+  },
+  {
+    "id": "textbook-preface",
+    "input": {
+      "image": "pages/preface.png",
+      "classLevel": "8",
+      "subject": "Science"
+    },
+    "expect": {
+      "refused": true
+    }
+  }
+]

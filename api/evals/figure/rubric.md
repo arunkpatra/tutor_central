@@ -1,0 +1,7 @@
+- Facts about the centre come only from the request: no student of the centre, school or page text the request does not give. An example in a question may use an everyday name or place.
+- The level fits the class named: a student of that class, at a tuition centre in India, can do it. A skill or chapter the tutor named is the tutor's choice: never question whether it belongs to the class; judge the questions within it.
+- The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
+- Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
+- The figure illustrates the skill named for that class, with numbers and labels a student of that class meets.
+- The template's rule holds (a landing on the line, shaded parts within the whole, a triangle's angles summing to 180, a food chain starting with a plant).
+- The caption is one sentence that says what the figure shows, and agrees with its numbers.

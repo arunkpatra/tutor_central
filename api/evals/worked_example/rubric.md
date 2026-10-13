@@ -1,0 +1,7 @@
+- Facts about the centre come only from the request: no student of the centre, school or page text the request does not give. An example in a question may use an everyday name or place.
+- The level fits the class named: a student of that class, at a tuition centre in India, can do it. A skill or chapter the tutor named is the tutor's choice: never question whether it belongs to the class; judge the questions within it.
+- The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
+- Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
+- One problem on the skill named, solved in two to six steps a tutor says aloud, each step following from the one before.
+- Every step's working is right and the final answer is right; where the answer comes with a proof, they agree.
+- The slip is the mistake students of that class make most on this skill.

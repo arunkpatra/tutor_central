@@ -1,0 +1,76 @@
+[
+  {
+    "id": "placement-5-maths",
+    "input": {
+      "classLevel": "5",
+      "subject": "Mathematics",
+      "chapters": [
+        "The Fish Tale",
+        "Shapes and Angles",
+        "How Many Squares?"
+      ]
+    },
+    "expect": {
+      "count": 3
+    }
+  },
+  {
+    "id": "placement-8-science",
+    "input": {
+      "classLevel": "8",
+      "subject": "Science",
+      "chapters": [
+        "Exploring Forces",
+        "Health: The Ultimate Treasure",
+        "Electricity: Magnetic and Heating Effects",
+        "Exploring the Investigative World of Science"
+      ]
+    },
+    "expect": {
+      "count": 4
+    }
+  },
+  {
+    "id": "placement-4-english",
+    "input": {
+      "classLevel": "4",
+      "subject": "English",
+      "chapters": [
+        "Wake Up!",
+        "Nasruddin's Aim"
+      ]
+    },
+    "expect": {
+      "count": 2
+    }
+  },
+  {
+    "id": "placement-9-maths",
+    "input": {
+      "classLevel": "9",
+      "subject": "Mathematics",
+      "chapters": [
+        "Number Systems",
+        "Polynomials",
+        "Linear Equations in Two Variables"
+      ]
+    },
+    "expect": {
+      "count": 3
+    }
+  },
+  {
+    "id": "placement-7-science",
+    "input": {
+      "classLevel": "7",
+      "subject": "Science",
+      "chapters": [
+        "Nutrition in Plants",
+        "Heat"
+      ]
+    },
+    "expect": {
+      "count": 2
+    }
+  }
+]

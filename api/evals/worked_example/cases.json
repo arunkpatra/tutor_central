@@ -1,0 +1,69 @@
+[
+  {
+    "id": "we-8-compound-interest",
+    "input": {
+      "classLevel": "8",
+      "subject": "Mathematics",
+      "skill": "Find compound interest for 2 years"
+    },
+    "expect": {
+      "proofs": true,
+      "contains": [
+        "A common slip here:"
+      ]
+    }
+  },
+  {
+    "id": "we-4-fractions",
+    "input": {
+      "classLevel": "4",
+      "subject": "Mathematics",
+      "skill": "Add fractions with the same denominator"
+    },
+    "expect": {
+      "contains": [
+        "A common slip here:"
+      ]
+    }
+  },
+  {
+    "id": "we-10-quadratic",
+    "input": {
+      "classLevel": "10",
+      "subject": "Mathematics",
+      "skill": "Solve a quadratic equation by factorisation"
+    },
+    "expect": {
+      "contains": [
+        "A common slip here:"
+      ]
+    }
+  },
+  {
+    "id": "we-8-balance",
+    "input": {
+      "classLevel": "8",
+      "subject": "Science",
+      "skill": "Balance a chemical equation"
+    },
+    "expect": {
+      "contains": [
+        "A common slip here:"
+      ]
+    }
+  },
+  {
+    "id": "we-7-area",
+    "input": {
+      "classLevel": "7",
+      "subject": "Mathematics",
+      "skill": "Find the area of a rectangle"
+    },
+    "expect": {
+      "proofs": true,
+      "contains": [
+        "A common slip here:"
+      ]
+    }
+  }
+]

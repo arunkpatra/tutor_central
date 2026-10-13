@@ -109,6 +109,8 @@ export const STEPS: Step[] = [
       "api/src/prompts/**",
       "api/src/agents/**",
       "supabase/syllabi/**",
+      // evals.test writes the tests from the golden sets; the contract writes their rubrics.
+      "api/evals/**",
     ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
@@ -119,7 +121,7 @@ export const STEPS: Step[] = [
   {
     name: "api",
     // schemas.test parses the class 10 blueprints of the syllabus data.
-    inputs: ["api/src/**", "api/test/**", "api/fonts/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**", "tools/contract/*-cases.json"],
+    inputs: ["api/src/**", "api/test/**", "api/fonts/**", "api/evals/**", "api/models.json", "api/package.json", "api/tsconfig.json", "api/vercel.json", "bun.lock", "supabase/syllabi/**", "tools/contract/*-cases.json"],
     run: () => run("bun run check", "api"),
   },
   {

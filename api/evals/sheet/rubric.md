@@ -1,0 +1,8 @@
+- Facts about the centre come only from the request: no student of the centre, school or page text the request does not give. An example in a question may use an everyday name or place.
+- The level fits the class named: a student of that class, at a tuition centre in India, can do it. A skill or chapter the tutor named is the tutor's choice: never question whether it belongs to the class; judge the questions within it.
+- The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
+- Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
+- Exactly the number of questions asked, on the skills named, every skill named covered, the skills taken in the order named.
+- The title is the first skill named (the app's rule), whatever the other skills are.
+- Every answer is right. Where an answer comes with a proof, the answer says the same value as the proof.
+- A practice set fits one class sitting; homework fits one evening.

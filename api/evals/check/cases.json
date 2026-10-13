@@ -1,0 +1,71 @@
+[
+  {
+    "id": "check-8-maths",
+    "input": {
+      "classLevel": "8",
+      "subject": "Mathematics",
+      "skills": [
+        "Solve linear equations in one variable",
+        "Find compound interest for 2 years"
+      ]
+    },
+    "expect": {
+      "count": 2
+    }
+  },
+  {
+    "id": "check-4-fractions",
+    "input": {
+      "classLevel": "4",
+      "subject": "Mathematics",
+      "skills": [
+        "Compare fractions"
+      ]
+    },
+    "expect": {
+      "count": 1
+    }
+  },
+  {
+    "id": "check-8-science",
+    "input": {
+      "classLevel": "8",
+      "subject": "Science",
+      "skills": [
+        "Balance a chemical equation",
+        "Spot a chemical change",
+        "Name the reactants"
+      ]
+    },
+    "expect": {
+      "count": 3
+    }
+  },
+  {
+    "id": "check-10-maths",
+    "input": {
+      "classLevel": "10",
+      "subject": "Mathematics",
+      "skills": [
+        "Find the nature of roots",
+        "Find the nth term of an AP"
+      ]
+    },
+    "expect": {
+      "count": 2
+    }
+  },
+  {
+    "id": "check-6-english",
+    "input": {
+      "classLevel": "6",
+      "subject": "English",
+      "skills": [
+        "Use the simple past tense"
+      ]
+    },
+    "expect": {
+      "count": 1
+    }
+  }
+]
