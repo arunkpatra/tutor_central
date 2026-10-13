@@ -66,14 +66,14 @@ isOneToOne: false
                   ]
                 },"ai_generations": {
                   Row: {
-                    "centre_id": string,"cost_paise": number | null,"created_at": string,"error_reason": string | null,"fallback_model": string | null,"finished_at": string | null,"id": string,"idempotency_key": string | null,"input": NonNullable<Json>,"input_hash": string | null,"job_id": string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms": number | null,"model": string | null,"output": string | null,"prompt_hash": string | null,"prompt_version": string | null,"request_id": string | null,"status": Database["public"]['Enums']["ai_status"],"stop_reason": string | null,"student_id": string | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string,"user_id": string | null
+                    "agent_step": string,"centre_id": string,"cost_paise": number | null,"created_at": string,"error_reason": string | null,"fallback_model": string | null,"finished_at": string | null,"id": string,"idempotency_key": string | null,"input": NonNullable<Json>,"input_hash": string | null,"job_id": string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms": number | null,"model": string | null,"output": string | null,"prompt_hash": string | null,"prompt_version": string | null,"request_id": string | null,"status": Database["public"]['Enums']["ai_status"],"stop_reason": string | null,"student_id": string | null,"tokens_cached": number | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input": NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
+                    "agent_step"?: string,"centre_id": string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input": NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_cached"?: number | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Update: {
-                    "centre_id"?: string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input"?: NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind"?: Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
+                    "agent_step"?: string,"centre_id"?: string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input"?: NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind"?: Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_cached"?: number | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -95,6 +95,20 @@ isOneToOne: false
       referencedRelation: "jobs"
       referencedColumns: ["centre_id","id"]
     }
+                  ]
+                },"ai_models": {
+                  Row: {
+                    "created_at": string,"effort": string,"enabled": boolean,"fallback_model": string | null,"id": string,"kind": string,"model": string,"note": string | null,"set_by": string,"since": string,"step": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"effort": string,"enabled"?: boolean,"fallback_model"?: string | null,"id"?: string,"kind": string,"model": string,"note"?: string | null,"set_by"?: string,"since"?: string,"step": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"effort"?: string,"enabled"?: boolean,"fallback_model"?: string | null,"id"?: string,"kind"?: string,"model"?: string,"note"?: string | null,"set_by"?: string,"since"?: string,"step"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
                   ]
                 },"alerts": {
                   Row: {
@@ -1060,6 +1074,11 @@ isOneToOne: false
 "admin_today":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
+"ai_models_current":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "effort": string,"enabled": boolean,"fallback_model": string,"kind": string,"model": string,"since": string,"step": string
+            }[]
+                           },
 "alert_facts":
 { Args: { "p_now": string }; Returns: Json
                            },
@@ -1258,6 +1277,9 @@ isOneToOne: false
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
                            },
+"schedule_evals":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
 "schedule_note_days":
 { Args: { "p_now"?: string }; Returns: number
                            },
@@ -1268,7 +1290,7 @@ isOneToOne: false
 { Args: { "p_now"?: string }; Returns: number
                            },
 "start_ai_call":
-{ Args: { "p_centre": string,"p_input": Json,"p_input_hash"?: string,"p_job"?: string,"p_key"?: string,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_request_id"?: string,"p_student"?: string }; Returns: Json
+{ Args: { "p_agent_step"?: string,"p_centre": string,"p_input": Json,"p_input_hash"?: string,"p_job"?: string,"p_key"?: string,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_request_id"?: string,"p_student"?: string }; Returns: Json
                            },
 "start_ai_generation":
 { Args: { "p_centre": string,"p_input": Json,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_student"?: string }; Returns: string

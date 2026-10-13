@@ -154,9 +154,10 @@ test("schedule_reminders queues a plan for each centre with a live token, and no
   expect(rows.map((r: { centre_id: string }) => r.centre_id)).toEqual([centreA]);
 });
 
-test("the three schedules are on pg_cron", async () => {
+test("the four schedules are on pg_cron (the nightly evals' since 0052)", async () => {
   const jobs = await sql`select jobname, schedule from cron.job where jobname like 'schedule_%' order by jobname`;
   expect([...jobs]).toEqual([
+    { jobname: "schedule_evals", schedule: "35 20 * * *" },
     { jobname: "schedule_note_days", schedule: "*/15 * * * *" },
     { jobname: "schedule_plans", schedule: "*/15 * * * *" },
     { jobname: "schedule_reminders", schedule: "5 * * * *" },
