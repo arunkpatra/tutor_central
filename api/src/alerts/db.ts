@@ -14,10 +14,10 @@ export type AlertsSource = {
 };
 
 type RawFacts = {
-  failed_jobs: { id: string; kind: string; centre_id: string | null }[];
+  failed_jobs: { id: string; kind: string; centre_id: string | null; finished_at: string }[];
   cost_today: { centre_id: string; paise: number }[];
   requests_hour: { total: number; errors: number };
-  stuck_jobs: { id: string; kind: string; centre_id: string | null; started_at: string }[];
+  stuck_jobs: { id: string; kind: string; centre_id: string | null; since: string }[];
 };
 
 export function makeAlertsDb(url: string, serviceKey: string, outbox: OutboxDb): AlertsSource {
@@ -31,10 +31,10 @@ export function makeAlertsDb(url: string, serviceKey: string, outbox: OutboxDb):
       check("read their facts", error);
       const raw = data as RawFacts;
       return {
-        failedJobs: raw.failed_jobs.map((j) => ({ id: j.id, kind: j.kind, centreId: j.centre_id })),
+        failedJobs: raw.failed_jobs.map((j) => ({ id: j.id, kind: j.kind, centreId: j.centre_id, finishedAt: new Date(j.finished_at).toISOString() })),
         costToday: raw.cost_today.map((c) => ({ centreId: c.centre_id, paise: Number(c.paise) })),
         requestsHour: { total: Number(raw.requests_hour.total), errors: Number(raw.requests_hour.errors) },
-        stuckJobs: raw.stuck_jobs.map((j) => ({ id: j.id, kind: j.kind, centreId: j.centre_id, startedAt: j.started_at })),
+        stuckJobs: raw.stuck_jobs.map((j) => ({ id: j.id, kind: j.kind, centreId: j.centre_id, since: j.since })),
       };
     },
     async raise(alert) {

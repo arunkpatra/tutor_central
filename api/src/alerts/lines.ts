@@ -1,10 +1,11 @@
 /** The alerts job's four lines (D95): what `alert_facts` (0046) answers, compared; each alert keyed so it is raised once.
  *  The numbers are constants until Phase 22 moves them to the portal. Pure: facts in, alerts out. */
 export type Facts = {
-  failedJobs: { id: string; kind: string; centreId: string | null }[];
+  failedJobs: { id: string; kind: string; centreId: string | null; finishedAt: string }[];
   costToday: { centreId: string; paise: number }[];
   requestsHour: { total: number; errors: number };
-  stuckJobs: { id: string; kind: string; centreId: string | null; startedAt: string }[];
+  /** Running with no progress: `since` is the last step's time, or the start. */
+  stuckJobs: { id: string; kind: string; centreId: string | null; since: string }[];
 };
 
 export type AlertKind = "job_failed" | "cost_day" | "error_rate" | "job_stuck";
@@ -32,7 +33,8 @@ function aJob(kind: string): string {
 export function alertsFor(facts: Facts, now: Date): Alert[] {
   const alerts: Alert[] = [];
   for (const j of facts.failedJobs) {
-    alerts.push({ key: `job_failed:${j.id}`, kind: "job_failed", centreId: j.centreId, threshold: 0, value: 1, message: `${aJob(j.kind)} failed after its last try` });
+    // Keyed by the failure (to the minute), so a job retried and failing again is raised again.
+    alerts.push({ key: `job_failed:${j.id}:${j.finishedAt.slice(0, 16)}`, kind: "job_failed", centreId: j.centreId, threshold: 0, value: 1, message: `${aJob(j.kind)} failed after its last try` });
   }
   for (const c of facts.costToday) {
     if (c.paise <= LINES.costDayPaise) continue;
@@ -58,7 +60,7 @@ export function alertsFor(facts: Facts, now: Date): Alert[] {
     });
   }
   for (const j of facts.stuckJobs) {
-    const minutes = Math.floor((now.getTime() - Date.parse(j.startedAt)) / 60_000);
+    const minutes = Math.floor((now.getTime() - Date.parse(j.since)) / 60_000);
     if (minutes <= LINES.stuckMinutes) continue;
     alerts.push({
       key: `job_stuck:${j.id}`,

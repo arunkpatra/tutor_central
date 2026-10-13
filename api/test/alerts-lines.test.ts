@@ -7,9 +7,9 @@ const none: Facts = { failedJobs: [], costToday: [], requestsHour: { total: 0, e
 test("no facts, no alerts", () => expect(alertsFor(none, now)).toEqual([]));
 
 test("a failed job is one alert keyed by the job, its kind in words", () => {
-  expect(alertsFor({ ...none, failedJobs: [{ id: "j0", kind: "export", centreId: null }] }, now)[0]?.message).toBe("an export job failed after its last try");
-  const alerts = alertsFor({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1" }] }, now);
-  expect(alerts).toEqual([{ key: "job_failed:j1", kind: "job_failed", centreId: "c1", threshold: 0, value: 1, message: "a plan job failed after its last try" }]);
+  expect(alertsFor({ ...none, failedJobs: [{ id: "j0", kind: "export", centreId: null, finishedAt: "2026-10-13T05:11:30Z" }] }, now)[0]?.message).toBe("an export job failed after its last try");
+  const alerts = alertsFor({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:11:30Z" }] }, now);
+  expect(alerts).toEqual([{ key: "job_failed:j1:2026-10-13T05:11", kind: "job_failed", centreId: "c1", threshold: 0, value: 1, message: "a plan job failed after its last try" }]);
 });
 
 test("a centre at ₹60.00 is not over the line, ₹60.01 is, keyed by the centre and India's day", () => {
@@ -27,9 +27,15 @@ test("the error rate needs 20 requests, and is keyed by the hour", () => {
   expect(alert).toEqual({ key: "error_rate:2026-10-13T05", kind: "error_rate", centreId: null, threshold: 5, value: 10, message: "errors over 5% of requests in an hour: 10%" });
 });
 
-test("a job running 9 minutes is not stuck, 11 is", () => {
+test("a retried job that fails again is a new alert: the key names the failure (R-db-4)", () => {
+  const first = alertsFor({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:11:30Z" }] }, now)[0]?.key;
+  const again = alertsFor({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:40:02Z" }] }, now)[0]?.key;
+  expect(first).not.toBe(again);
+});
+
+test("a job with no progress for 9 minutes is not stuck, 11 is", () => {
   const at = (minutes: number) => new Date(now.getTime() - minutes * 60_000).toISOString();
-  expect(alertsFor({ ...none, stuckJobs: [{ id: "j2", kind: "plan", centreId: "c1", startedAt: at(9) }] }, now)).toEqual([]);
-  const [alert] = alertsFor({ ...none, stuckJobs: [{ id: "j2", kind: "plan", centreId: "c1", startedAt: at(11) }] }, now);
+  expect(alertsFor({ ...none, stuckJobs: [{ id: "j2", kind: "plan", centreId: "c1", since: at(9) }] }, now)).toEqual([]);
+  const [alert] = alertsFor({ ...none, stuckJobs: [{ id: "j2", kind: "plan", centreId: "c1", since: at(11) }] }, now);
   expect(alert).toEqual({ key: "job_stuck:j2", kind: "job_stuck", centreId: "c1", threshold: 10, value: 11, message: "a job running over 10 minutes: plan, 11 min" });
 });

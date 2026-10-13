@@ -10,8 +10,8 @@ export const ALERTS_PAGE = "https://admin.tutorcentral.in/alerts";
 export const ALERT_TITLE = "Tutor Central needs a look";
 
 /** The alerts job (D95), one step each ten minutes: the facts, the four lines, each alert raised once by its key; a new
- *  one is emailed to ALERT_EMAIL and pushed to each admin's tutor account. An email that fails is logged and the step
- *  still ends done: the alert row stands and the push went (Phase 22 retries). */
+ *  one is emailed to ALERT_EMAIL and pushed to each admin's tutor account. An email or a push that fails is logged and the
+ *  step still ends done: the alert row stands (Phase 22 retries). */
 export function alertsJob(source: AlertsSource, sender: Sender, alertEmail: string): JobHandler {
   return {
     async step(job, ctx) {
@@ -30,9 +30,15 @@ export function alertsJob(source: AlertsSource, sender: Sender, alertEmail: stri
         } catch (e) {
           log.error({ requestId: ctx.requestId, job: job.id, message: "an alert email was not sent", alert: alert.key, error: e });
         }
+        // A push that cannot be written is logged like a failed email: the alert row stands, and a retry of the step
+        // would find it raised and push nothing (the review's R-db-5).
         for (const t of targets) {
-          await source.notify(t.centre, t.user, [{ kind: "alert", key: `alert:${alert.key}`, due_at: now.toISOString(), title: ALERT_TITLE, body: alert.message }], now);
-          pushed += 1;
+          try {
+            await source.notify(t.centre, t.user, [{ kind: "alert", key: `alert:${alert.key}`, due_at: now.toISOString(), title: ALERT_TITLE, body: alert.message }], now);
+            pushed += 1;
+          } catch (e) {
+            log.error({ requestId: ctx.requestId, job: job.id, message: "an alert push was not written", alert: alert.key, error: e });
+          }
         }
       }
       return { kind: "done", name: "check", result: { checked: alerts.length, raised, emailed, pushed } };

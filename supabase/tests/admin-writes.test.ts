@@ -137,3 +137,31 @@ test("the platform queues an alerts job with no centre, as it does the sweep", a
   expect(error).toBeNull();
   await sql`delete from public.jobs where id = ${data as string}`;
 });
+
+test("a long job still making progress is not stuck; one with no step for over ten minutes is, from its last step (R-db-1)", async () => {
+  const [{ id: busy }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, started_at, lease_until) values (${centreA}, 'plan', ${`busy-${stamp}`}, 'running', now() - interval '20 minutes', now() + interval '1 minute') returning id`;
+  await sql`insert into public.job_steps (centre_id, job_id, step, attempt, state, created_at, updated_at) values (${centreA}, ${busy}, 'make:3', 1, 'done', now() - interval '2 minutes', now() - interval '2 minutes')`;
+  const [{ id: idle }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, started_at, lease_until) values (${centreA}, 'plan', ${`idle-${stamp}`}, 'running', now() - interval '20 minutes', now() + interval '1 minute') returning id`;
+  await sql`insert into public.job_steps (centre_id, job_id, step, attempt, state, created_at, updated_at) values (${centreA}, ${idle}, 'make:1', 1, 'done', now() - interval '12 minutes', now() - interval '12 minutes')`;
+  const facts = (await svc.rpc("alert_facts", { p_now: new Date().toISOString() })).data as { stuck_jobs: { id: string; since: string }[] };
+  const ids = facts.stuck_jobs.map((j) => j.id);
+  expect(ids).toContain(idle);
+  expect(ids).not.toContain(busy);
+  const since = Date.parse(facts.stuck_jobs.find((j) => j.id === idle)!.since);
+  expect(Math.round((Date.now() - since) / 60_000)).toBe(12);
+});
+
+test("the hour's requests are the API's answers, not the worker's ticks (R-db-2)", async () => {
+  const before = (await svc.rpc("alert_facts", { p_now: new Date().toISOString() })).data as { requests_hour: { total: number; errors: number } };
+  const tick = () => ({ request_id: crypto.randomUUID(), route: "/jobs/tick", method: "GET", status: 200, latency_ms: 1 });
+  await svc.from("api_requests").insert([tick(), tick(), tick(), { request_id: crypto.randomUUID(), route: "/ai/make", method: "POST", status: 502, latency_ms: 1, reason: "timeout" }]);
+  const after = (await svc.rpc("alert_facts", { p_now: new Date().toISOString() })).data as { requests_hour: { total: number; errors: number } };
+  expect(after.requests_hour.total - before.requests_hour.total).toBe(1);
+  expect(after.requests_hour.errors - before.requests_hour.errors).toBe(1);
+});
+
+test("trim_platform removes the alerts jobs done over seven days ago, as the sweeps' (R-db-3)", async () => {
+  const [{ id }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, finished_at) values (null, 'alerts', ${`alerts:old-${stamp}`}, 'done', now() - interval '8 days') returning id`;
+  await svc.rpc("trim_platform", { p_now: new Date().toISOString() });
+  expect((await sql`select id from public.jobs where id = ${id}`).length).toBe(0);
+});

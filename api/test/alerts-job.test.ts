@@ -17,22 +17,22 @@ function context(): StepContext {
 const targets = [{ user: "owner", centre: "c-owner" }];
 
 test("a new alert is raised, emailed to ALERT_EMAIL and pushed to each target", async () => {
-  const source = fakeAlertsSource({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1" }] }, targets);
+  const source = fakeAlertsSource({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:11:30Z" }] }, targets);
   const sender = fakeSender();
   const outcome = await alertsJob(source, sender, "you@example.com").step(job, context());
   expect(outcome).toMatchObject({ kind: "done", name: "check", result: { checked: 1, raised: 1, emailed: 1, pushed: 1 } });
-  expect(source.raised.map((a) => a.key)).toEqual(["job_failed:j1"]);
+  expect(source.raised.map((a) => a.key)).toEqual(["job_failed:j1:2026-10-13T05:11"]);
   expect(sender.sent).toHaveLength(1);
   expect(sender.sent[0]).toMatchObject({ to: "you@example.com", subject: "Tutor Central alert: job_failed" });
   expect(sender.sent[0]?.text).toContain("a plan job failed after its last try");
   expect(sender.sent[0]?.text).toContain("https://admin.tutorcentral.in/alerts");
   expect(source.notified).toHaveLength(1);
   expect(source.notified[0]).toMatchObject({ centre: "c-owner", user: "owner" });
-  expect(source.notified[0]?.rows[0]).toMatchObject({ kind: "alert", key: "alert:job_failed:j1", title: "Tutor Central needs a look", body: "a plan job failed after its last try" });
+  expect(source.notified[0]?.rows[0]).toMatchObject({ kind: "alert", key: "alert:job_failed:j1:2026-10-13T05:11", title: "Tutor Central needs a look", body: "a plan job failed after its last try" });
 });
 
 test("the same failed job raises one alert across two runs: no second email, no second push", async () => {
-  const source = fakeAlertsSource({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1" }] }, targets);
+  const source = fakeAlertsSource({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:11:30Z" }] }, targets);
   const sender = fakeSender();
   const handler = alertsJob(source, sender, "you@example.com");
   await handler.step(job, context());
@@ -58,9 +58,21 @@ test("the error rate alert is keyed by the hour: two runs in one hour raise one,
 });
 
 test("a failing email leaves the step done: the alert stands and the push went", async () => {
-  const source = fakeAlertsSource({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1" }] }, targets);
+  const source = fakeAlertsSource({ ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:11:30Z" }] }, targets);
   const sender = fakeSender({ fail: true });
   const outcome = await alertsJob(source, sender, "you@example.com").step(job, context());
   expect(outcome).toMatchObject({ kind: "done", result: { raised: 1, emailed: 0, pushed: 1 } });
   expect(source.notified).toHaveLength(1);
+});
+
+test("a push that cannot be written is logged; the step ends done and the next alert is still raised (R-db-5)", async () => {
+  const source = fakeAlertsSource(
+    { ...none, failedJobs: [{ id: "j1", kind: "plan", centreId: "c1", finishedAt: "2026-10-13T05:11:30Z" }, { id: "j2", kind: "pdf", centreId: "c1", finishedAt: "2026-10-13T05:12:00Z" }] },
+    targets,
+  );
+  source.notify = async () => {
+    throw new Error("the outbox could not be written");
+  };
+  const outcome = await alertsJob(source, fakeSender(), "you@example.com").step(job, context());
+  expect(outcome).toMatchObject({ kind: "done", result: { raised: 2, emailed: 2, pushed: 0 } });
 });
