@@ -22,7 +22,7 @@
   through `deploy.yml`'s `migrate` job, before the API (D26); never `supabase db push` by hand. A migration is
   additive while any installed build uses what it would remove (expand now, contract later): the database leads
   the app, and the TestFlight lane refuses a build while migrations are pending. Run it with
-  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0050 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
+  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0051 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
 - App Review's demo centre (D51): `gh workflow run seed-review -f email=… -f parent_phone=…` fills an existing account's
