@@ -4,7 +4,7 @@ import { Frame } from "@/components/Frame";
 import { Button, Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
 import { shortCentre } from "@/content/calls";
 import { cutIds, inputLine, JOBS, span, stateChip, stepNote } from "@/content/jobs";
-import { ENVIRONMENT } from "@/content/words";
+import { ENVIRONMENT, NONE } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
@@ -192,7 +192,7 @@ export default async function JobsPage({ searchParams }: { searchParams: Promise
                   <Cell label={JOBS.head.centre} kind="dim">
                     {j.centre ? shortCentre(j.centre) : "—"}
                   </Cell>
-                  <Cell label={JOBS.head.subject}>{j.subject}</Cell>
+                  <Cell label={JOBS.head.subject}>{j.subject ?? NONE}</Cell>
                   <Cell label={JOBS.head.state}>
                     <Chip tone={chip.tone}>{chip.text}</Chip>
                   </Cell>

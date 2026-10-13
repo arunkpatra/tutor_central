@@ -15,7 +15,8 @@
         "state": "given",
         "day": "2026-10-12"
       },
-      "tracking": "on_track"
+      "tracking": "on_track",
+      "id": "preview-student-0"
     },
     {
       "name": "Diya Patel",
@@ -25,7 +26,8 @@
         "state": "withdrawn",
         "day": "2026-10-12"
       },
-      "tracking": "not_known"
+      "tracking": "not_known",
+      "id": "preview-student-1"
     },
     {
       "name": "Hemanth Reddy",
@@ -35,7 +37,8 @@
         "state": "given",
         "day": "2026-10-01"
       },
-      "tracking": "not_on_track"
+      "tracking": "not_on_track",
+      "id": "preview-student-2"
     },
     {
       "name": "Kavya Nair",
@@ -45,7 +48,8 @@
         "state": "given",
         "day": "2026-10-03"
       },
-      "tracking": "on_track"
+      "tracking": "on_track",
+      "id": "preview-student-3"
     },
     {
       "name": "Rohan Das",
@@ -55,7 +59,8 @@
         "state": "asked",
         "day": null
       },
-      "tracking": "on_track"
+      "tracking": "on_track",
+      "id": "preview-student-4"
     },
     {
       "name": "Akshita Rao",
@@ -65,7 +70,8 @@
         "state": "not_asked",
         "day": null
       },
-      "tracking": "on_track"
+      "tracking": "on_track",
+      "id": "preview-student-5"
     }
   ],
   "batches": [
@@ -90,21 +96,24 @@
       "kind": "sheet",
       "title": "Practise set 1",
       "student": null,
-      "cost_paise": 9
+      "cost_paise": 9,
+      "id": "preview-made-0"
     },
     {
       "at": "2026-10-12T10:32:00Z",
       "kind": "note",
       "title": null,
       "student": "Aarav Sharma",
-      "cost_paise": 7
+      "cost_paise": 7,
+      "id": "preview-made-1"
     },
     {
       "at": "2026-10-11T13:10:00Z",
       "kind": "gap_report",
       "title": "Science unit test 2",
       "student": "Hemanth Reddy",
-      "cost_paise": 112
+      "cost_paise": 112,
+      "id": "preview-made-2"
     }
   ]
 }

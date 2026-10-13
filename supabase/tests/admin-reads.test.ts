@@ -212,3 +212,22 @@ test("a member cannot call any admin read", async () => {
   ];
   for (const [fn, args] of calls) expect({ fn, code: (await a.rpc(fn, args)).error?.code }).toEqual({ fn, code: "42501" });
 });
+
+test("every activity row, record student and made row carries its own id (two rows at one time are two rows)", async () => {
+  const [{ id: inv }] = await sql`insert into public.fee_invoices (centre_id, student_id, period, amount, status, paid_at)
+    select ${centreA}, s.id, date '2026-10-01', 500, 'paid', now() from public.students s where s.centre_id = ${centreA} limit 1 returning id`;
+  await sql`insert into public.fee_invoices (centre_id, student_id, period, amount, status, paid_at)
+    select ${centreA}, s.id, date '2026-09-01', 500, 'paid', (select paid_at from public.fee_invoices where id = ${inv}) from public.students s where s.centre_id = ${centreA} limit 1`;
+  const activity = (await svc.rpc("admin_activity", { p_centre: centreA, p_limit: 50 })).data as { id: string; kind: string }[];
+  const fees = activity.filter((a) => a.kind === "fee_paid");
+  expect(fees).toHaveLength(2);
+  expect(new Set(activity.map((a) => a.id)).size).toBe(activity.length);
+  const record = (await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "ids", p_ip: null })).data as { students: { id: string }[]; made: { id: string }[] };
+  expect(record.students.every((s) => typeof s.id === "string")).toBe(true);
+  expect(record.made.every((m) => typeof m.id === "string")).toBe(true);
+});
+
+test("a job kind with nothing to name has no subject", async () => {
+  const [{ id }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state) values (${centreA}, 'artefact', ${`subject-${stamp}`}, 'failed') returning id`;
+  expect(((await svc.rpc("admin_job", { p_id: id })).data as { subject: string | null }).subject).toBeNull();
+});

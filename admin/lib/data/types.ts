@@ -48,7 +48,14 @@ export type Centre = {
   tutors: Tutor[];
 };
 
-export type Activity = { at: string; kind: string; screen: string | null; what: string | null; who: string | null };
+export type Activity = {
+  id: string;
+  at: string;
+  kind: string;
+  screen: string | null;
+  what: string | null;
+  who: string | null;
+};
 
 export type JobState = "queued" | "running" | "waiting" | "done" | "failed" | "cancelled";
 export type JobRow = {
@@ -56,7 +63,8 @@ export type JobRow = {
   kind: string;
   centre_id: string | null;
   centre: string | null;
-  subject: string;
+  /** Null for a kind with nothing to name (an artefact, an eval run). */
+  subject: string | null;
   state: JobState;
   step: string | null;
   run_at: string;
@@ -74,6 +82,7 @@ export type JobRow = {
 
 export type Consent = { state: "given" | "withdrawn" | "asked" | "not_asked"; day: string | null };
 export type RecordStudent = {
+  id: string;
   name: string;
   class_level: string | null;
   batch: string | null;
@@ -94,7 +103,7 @@ export type Record = {
   reason: string;
   students: RecordStudent[];
   batches: RecordBatch[];
-  made: { at: string; kind: string; title: string | null; student: string | null; cost_paise: number }[];
+  made: { id: string; at: string; kind: string; title: string | null; student: string | null; cost_paise: number }[];
 };
 
 export type Cost = {
@@ -135,7 +144,7 @@ export type Call = CallRow & {
   stop_reason: string | null;
   prompt_hash: string | null;
   finished_at: string | null;
-  job: { id: string; kind: string; subject: string; step: string | null } | null;
+  job: { id: string; kind: string; subject: string | null; step: string | null } | null;
 };
 
 export type Jobs = { tiles: { today: number; failed: number; running: number; waiting: number }; rows: JobRow[] };

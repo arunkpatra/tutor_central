@@ -160,42 +160,48 @@
       "kind": "tab_opened",
       "screen": "today",
       "what": null,
-      "who": "Meera"
+      "who": "Meera",
+      "id": "preview-activity-0"
     },
     {
       "at": "2026-10-13T01:18:00Z",
       "kind": "app_opened",
       "screen": null,
       "what": null,
-      "who": "Meera"
+      "who": "Meera",
+      "id": "preview-activity-1"
     },
     {
       "at": "2026-10-12T13:46:00Z",
       "kind": "fee_paid",
       "screen": null,
       "what": "Marked a fee paid",
-      "who": null
+      "who": null,
+      "id": "preview-activity-2"
     },
     {
       "at": "2026-10-12T13:45:00Z",
       "kind": "message",
       "screen": null,
       "what": "Sent a note · WhatsApp",
-      "who": null
+      "who": null,
+      "id": "preview-activity-3"
     },
     {
       "at": "2026-10-12T13:42:00Z",
       "kind": "close",
       "screen": null,
       "what": "Closed a class · Evening batch · 11 present",
-      "who": null
+      "who": null,
+      "id": "preview-activity-4"
     },
     {
       "at": "2026-10-11T12:10:00Z",
       "kind": "made_again",
       "screen": null,
       "what": "Made a sheet again",
-      "who": null
+      "who": null,
+      "id": "preview-activity-5"
     }
   ]
 }

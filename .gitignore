@@ -52,3 +52,5 @@ admin/next-env.d.ts
 admin/*.tsbuildinfo
 admin/.env.local
 admin/.vercel/
+# `next dev` writes its own agent notes beside the app.
+admin/AGENTS.md
