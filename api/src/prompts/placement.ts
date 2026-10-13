@@ -18,6 +18,7 @@ export function request(classLevel: ClassLevel, subject: string, chapters: strin
       "You write one question per chapter that tells whether a student has the chapter's most basic idea, in the chapters' order.",
       "A student who knows the chapter answers it aloud in a few words; give the expected answer in at most twelve words.",
       "No multiple choice, no trick questions.",
+      "Ask about what the chapter teaches, never a question its title answers; leave a title's exclamation mark out of the question.",
       MATHS,
       LIMITS.placement,
       syllabusFacts(classLevel, subject),

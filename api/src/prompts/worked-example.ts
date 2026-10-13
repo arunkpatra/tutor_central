@@ -16,6 +16,7 @@ export function request(classLevel: ClassLevel, subject: string, skill: string):
     system: blocks([
       VOICE,
       "You write one worked example a tutor shows a class one step at a time, saying each step aloud before the next.",
+      "Make up your own problem and numbers; never a textbook's worked example or exercise.",
       "Each step has a short title and the working in one or two lines; two to six steps.",
       "The slip is the one mistake students of that class make most on this skill, in one sentence that starts 'A common slip here:'.",
       PROOF,

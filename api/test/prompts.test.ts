@@ -144,6 +144,13 @@ test("the material's prompts ask for mathematics in LaTeX between dollars, words
   }
 });
 
+test("a worked example makes up its own problem; a placement asks about what a chapter teaches (#312's evals)", () => {
+  expect(systemText(workedExample("10", "Mathematics", "Quadratic equations"))).toContain("Make up your own problem and numbers; never a textbook's worked example or exercise");
+  const placement = systemText(placementRequest("4", "English", ["Wake Up!", "Nasruddin's Aim"]));
+  expect(placement).toContain("Ask about what the chapter teaches, never a question its title answers");
+  expect(placement).toContain("leave a title's exclamation mark out of the question");
+});
+
 test("a worked example asks Sonnet for steps the tutor says aloud and the common slip", () => {
   const r = workedExample("8", "Science", "Balance a chemical equation");
   expect(r.model).toBe("claude-sonnet-5-5");
