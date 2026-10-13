@@ -36,5 +36,6 @@
     "kind": "plan",
     "subject": "Evening batch · 13 Oct",
     "step": "make:4"
-  }
+  },
+  "agent_step": "draft"
 }

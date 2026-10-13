@@ -31,6 +31,8 @@ export const CALLS = {
     cost: "Cost",
     from: "From",
   },
+  /** A check, repair or grade beside its kind ("sheet · check"); a draft is its kind alone. */
+  kindStep: (kind: string, step: string) => (step === "draft" ? kind : `${kind} · ${step}`),
   sub: (model: string, version: string | null, student: boolean) =>
     [model, version, student ? "student" : null].filter(Boolean).join(" · "),
 } as const;
@@ -44,6 +46,7 @@ export const CALL = {
     kind: "Kind",
     model: "Model",
     prompt: "Prompt",
+    step: "Step",
     outcome: "Outcome",
     tokens: "Tokens",
     latency: "Latency",
@@ -55,6 +58,14 @@ export const CALL = {
   kindOf: (kind: string, personal: boolean) =>
     `${kind} · ${personal ? "a personal kind (a student)" : "a group kind (no student)"}`,
   model: (model: string, fallback: string | null) => `${model} · ${fallback ? `fallback ${fallback}` : "no fallback"}`,
+  /** The agent's step in the trade's words (D99). */
+  step: (step: string) =>
+    ({
+      draft: "draft · the first answer",
+      check: "check · the other model held it to the rubric",
+      repair: "repair · the draft fixed once",
+      grade: "grade · the nightly evals' grader",
+    })[step] ?? step,
   prompt: (kind: string, version: string | null, hash: string | null) =>
     `${kind} ${version ?? ""}${hash ? ` · hash ${shortId(hash)}` : ""}`,
   outcomeMore: (stop: string | null, error: string | null) =>
@@ -84,6 +95,8 @@ export function outcomeChip(status: string, reason: string | null): { tone: Tone
   if (status === "ok") return { tone: "ok", text: "ok" };
   if (status === "pending") return { tone: "neutral", text: "pending" };
   if (reason === "refused" || reason === "unfit") return { tone: "due", text: reason };
+  // Refused after its check and one repair (D99): the tutor read the kind's refusal.
+  if (reason?.startsWith("check:")) return { tone: "due", text: `refused · ${reason}` };
   return { tone: "overdue", text: reason ? `failed · ${reason}` : "failed" };
 }
 

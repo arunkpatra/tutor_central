@@ -278,3 +278,14 @@ test("a call carries its agent step in the list and on its page; the nightly eva
   expect(((await svc.rpc("admin_job", { p_id: job.id })).data as { subject: string }).subject).toBe("nightly evals");
   await sql`delete from public.jobs where id = ${job.id}`;
 });
+
+test("a draft refused after its check counts as refused in the tiles and the filter (0054)", async () => {
+  const day = (await sql`select (now() at time zone 'Asia/Kolkata')::date::text as d`)[0].d as string;
+  const before = ((await svc.rpc("admin_calls", { p_day: day, p_centre: centreA, p_kind: null, p_status: null, p_limit: 100 })).data as { tiles: { refused: number; failed: number } }).tiles;
+  const [{ id }] = await sql`insert into public.ai_generations (centre_id, kind, input, model, status, error_reason, cost_paise, finished_at)
+    values (${centreA}, 'sheet', '{}'::jsonb, 'claude-sonnet-5-5', 'failed', 'check:question 1', 3, now()) returning id`;
+  const after = ((await svc.rpc("admin_calls", { p_day: day, p_centre: centreA, p_kind: null, p_status: null, p_limit: 100 })).data as { tiles: { refused: number; failed: number } }).tiles;
+  expect(after).toEqual({ ...after, refused: before.refused + 1, failed: before.failed });
+  const refused = (await svc.rpc("admin_calls", { p_day: day, p_centre: centreA, p_kind: null, p_status: "refused", p_limit: 100 })).data as { rows: { id: string }[] };
+  expect(refused.rows.map((r) => r.id)).toContain(id);
+});

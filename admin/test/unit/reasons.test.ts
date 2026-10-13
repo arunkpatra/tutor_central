@@ -15,3 +15,7 @@ test("the short reason, for the latest", () => {
   expect(reasonShort("timeout", 502)).toBe("timeout");
   expect(reasonShort(null, 401)).toBe("sign in again");
 });
+
+test("a switched-off kind's answer is named (Phase 20, D100)", () => {
+  expect(reasonWords("paused", 503)).toBe("paused · the kind is switched off");
+});

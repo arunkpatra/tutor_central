@@ -129,6 +129,8 @@ export type CallRow = {
   cost_paise: number | null;
   student: boolean;
   started_by: string;
+  /** The agent's step (0052, D99): a draft, its check, its repair, or the nightly's grade. */
+  agent_step: "draft" | "check" | "repair" | "grade";
 };
 export type Calls = {
   tiles: { calls: number; failed: number; refused: number; median_latency_ms: number | null };
