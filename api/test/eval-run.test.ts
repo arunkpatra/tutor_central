@@ -86,3 +86,37 @@ test("a run with no smoke centre fails without a retry", async () => {
   const out = await evalRun({ smokeCentre: "" }).step(job(), ctx());
   expect(out).toMatchObject({ kind: "fail", retry: false, error: { reason: "no_smoke_centre" } });
 });
+
+test("a night that started no case ends with the gate false and says why, never green on nothing (the review's finding 3)", async () => {
+  const c = ctx(undefined, fakeDb({ limit: 0 }));
+  const out = await drain(evalRun({ smokeCentre: SMOKE }), c, { day: "2026-10-20", kinds: ["placement"] });
+  const done = out.at(-1) as unknown as { kind: string; result: { gate: boolean; reason?: string; not_started: number } };
+  expect(done.kind).toBe("done");
+  expect(done.result).toMatchObject({ gate: false, reason: "no_cases", not_started: 5 });
+});
+
+test("a sheet band switched off skips its own cases; a kind switched off mid-run is skipped, not a crash (finding 7)", async () => {
+  const t = installModelTable(fakeModelSource([{ kind: "sheet_to_5", step: "draft", model: "claude-haiku-5-5", effort: "medium", fallbackModel: null, enabled: false }]));
+  stop = t.stop;
+  await t.refresh();
+  const c = ctx();
+  await drain(evalRun({ smokeCentre: SMOKE }), c, { day: "2026-10-20", kinds: ["sheet"] });
+  expect(c.claude.batches[0]?.map((i) => i.customId)).toEqual(["sheet-8-linear", "sheet-8-reactions", "sheet-10-quadratic", "sheet-6-past-tense"]);
+  t.stop();
+  const later = installModelTable(fakeModelSource([]));
+  stop = later.stop;
+  await later.refresh();
+  const c2 = ctx();
+  const handler = evalRun({ smokeCentre: SMOKE });
+  let current = job({ day: "2026-10-20", kinds: ["placement"] });
+  let o = await handler.step(current, c2);
+  current = { ...current, step: (o as { step: Record<string, unknown> }).step };
+  o = await handler.step(current, c2);
+  current = { ...current, step: (o as { step: Record<string, unknown> }).step };
+  later.stop();
+  const off = installModelTable(fakeModelSource([{ kind: "placement", step: "draft", model: "claude-haiku-5-5", effort: "medium", fallbackModel: null, enabled: false }]));
+  stop = off.stop;
+  await off.refresh();
+  const last = await handler.step(current, c2);
+  expect(last.kind).toBe("done");
+});

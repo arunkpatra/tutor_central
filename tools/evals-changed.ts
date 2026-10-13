@@ -5,7 +5,7 @@
  *  anything else names none. Prints them comma-separated, or `none`. */
 import { KINDS } from "./evals";
 
-const EVERY = ["api/src/prompts/shared.ts", "api/src/agents/agent.ts", "api/src/agents/check.ts", "api/src/agents/kinds/rubric.ts", "api/src/agents/kinds/index.ts", "api/src/schemas.ts", "api/evals/provider.ts", "api/evals/assert.ts", "api/evals/promptfooconfig.yaml", "api/src/evals/cases.ts"];
+const EVERY = ["api/src/prompts/shared.ts", "api/src/agents/agent.ts", "api/src/agents/check.ts", "api/src/agents/kinds/rubric.ts", "api/src/agents/kinds/index.ts", "api/src/schemas.ts", "api/evals/provider.ts", "api/evals/assert.ts", "api/evals/promptfooconfig.yaml", "api/src/evals/cases.ts", "api/src/agents/maths.ts", "api/src/evals/runner.ts"];
 
 /** A file name in kebab case for a kind in snake case (`worked-example.ts` for `worked_example`). */
 const fileOf = (kind: string) => kind.replaceAll("_", "-");

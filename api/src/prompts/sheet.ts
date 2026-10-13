@@ -4,7 +4,7 @@ import { type SheetInput, SheetOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 const REASONS: Record<string, string> = {
   easier: "Make it easier: recall and one-step questions only.",

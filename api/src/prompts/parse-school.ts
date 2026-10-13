@@ -5,7 +5,7 @@ import { type ClassLevel, ParseSchoolOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 export type ParseSchoolSource = { text: string | null; image: DecodedImage | null; today: string; schools: string[]; classLevels: ClassLevel[] };
 
@@ -21,6 +21,7 @@ export function request(source: ParseSchoolSource): ClaudeRequest<ParseSchoolOut
       "You read a message or a photo a school sent to parents and list what it announces: exams (kind exam), homework the school set (homework), notices such as a PTM or a fee circular (notice), and holidays (holiday).",
       "One item per announcement. The title is short, in the school's own words (\"Science unit test 3\"). The subject only when one is named. The portions as written, shortened to 500 characters.",
       "Dates are ISO (YYYY-MM-DD), resolved from today's date and the school year; a date the message does not give is null, never guessed. A holiday's endDate is its last day; otherwise endDate is null.",
+      "When school reopens or classes resume after a holiday, that is the holiday's end, not an item of its own.",
       "classLevel is the class named (VIII, 8th, Class 8 all mean \"8\"; LKG and UKG as such), else null. school is the school's name when the message names one of the schools given, else null. studentName is a student's name only when the message is about one student, else null.",
       "No item for a greeting or a signature. An empty list when nothing is announced.",
       LIMITS.parse_school,

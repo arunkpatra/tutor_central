@@ -35,7 +35,10 @@ export function evalRun(source: { smokeCentre: string }): JobHandler {
 
 type Input = { day: string; kinds?: string[] };
 type Drafts = Record<string, { row: string; parsed: unknown; outcome: ReturnType<typeof outcomeOf>; paise: number }>;
-type Step = { at: "submit" } | { at: "drafts"; batch: string; rows: Record<string, string>; paused: string[] } | { at: "checks"; batch: string; drafts: Drafts; rows: Record<string, string>; paused: string[] };
+type Step =
+  | { at: "submit" }
+  | { at: "drafts"; batch: string; rows: Record<string, string>; paused: string[]; notStarted?: number }
+  | { at: "checks"; batch: string; drafts: Drafts; rows: Record<string, string>; paused: string[]; notStarted?: number };
 
 const inputOf = (job: Job): Input => {
   const raw = job.input as { day?: unknown; kinds?: unknown };
@@ -43,11 +46,14 @@ const inputOf = (job: Job): Input => {
   return { day: typeof raw.day === "string" ? raw.day : new Date().toISOString().slice(0, 10), kinds };
 };
 
-/** The cases of the kinds asked that are switched on, made ready; the kinds switched off. */
+/** Every case of the kinds asked, made ready (its model chosen by its own class: a sheet's band). */
+const allCases = (input: Input): Ready[] => loadCases(input.kinds ?? [...EVAL_KINDS]).map(ready);
+
+/** At the start: the cases switched on, and the kinds with a case switched off (a sheet band alone counts). The later
+ *  steps take the cases the run started, by id, and never read the table again (the review's finding 7). */
 function casesOf(input: Input): { cases: Ready[]; paused: string[] } {
-  const kinds = input.kinds ?? [...EVAL_KINDS];
-  const paused = kinds.filter((k) => !modelFor(k as never, "draft", k === "sheet" ? "8" : undefined).enabled);
-  return { cases: loadCases(kinds.filter((k) => !paused.includes(k))).map(ready), paused };
+  const all = allCases(input);
+  return { cases: all.filter((r) => r.chosen.enabled), paused: [...new Set(all.filter((r) => !r.chosen.enabled).map((r) => r.c.kind))] };
 }
 
 const keyOf = (day: string, id: string) => `evals:${day}:${id}`;
@@ -69,7 +75,7 @@ async function submit(job: Job, ctx: StepContext, centre: string): Promise<StepO
     }
   }
   const batch = await batchOf(ctx, items);
-  return { kind: "wait", name: "submit", step: { at: "drafts", batch, rows, paused }, runAt: later(ctx) };
+  return { kind: "wait", name: "submit", step: { at: "drafts", batch, rows, paused, notStarted: cases.length - items.length }, runAt: later(ctx) };
 }
 
 async function batchOf(ctx: StepContext, items: BatchItem[]): Promise<string> {
@@ -87,8 +93,7 @@ async function resultsOf(ctx: StepContext, batch: string, items: BatchItem[]): P
 async function drafts(job: Job, ctx: StepContext, centre: string): Promise<StepOutcome> {
   const input = inputOf(job);
   const step = job.step as Extract<Step, { at: "drafts" }>;
-  const { cases } = casesOf(input);
-  const asked = cases.filter((r) => step.rows[r.c.id]);
+  const asked = allCases(input).filter((r) => step.rows[r.c.id]);
   const items = asked.map(draftItem);
   const answers = await resultsOf(ctx, step.batch, items);
   if (answers === "running") return { kind: "wait", name: "drafts", step, runAt: later(ctx) };
@@ -118,13 +123,13 @@ async function drafts(job: Job, ctx: StepContext, centre: string): Promise<StepO
     }
   }
   const batch = await batchOf(ctx, next);
-  return { kind: "wait", name: "drafts", step: { at: "checks", batch, drafts: done, rows, paused: step.paused }, runAt: later(ctx), costPaise: paise };
+  return { kind: "wait", name: "drafts", step: { at: "checks", batch, drafts: done, rows, paused: step.paused, notStarted: step.notStarted }, runAt: later(ctx), costPaise: paise };
 }
 
 async function checks(job: Job, ctx: StepContext, _centre: string): Promise<StepOutcome> {
   const input = inputOf(job);
   const step = job.step as Extract<Step, { at: "checks" }>;
-  const { cases } = casesOf(input);
+  const cases = allCases(input);
   const asked = cases.filter((r) => step.drafts[r.c.id]);
   const items = asked.flatMap((r) => {
     const parsed = step.drafts[r.c.id]?.parsed;
@@ -156,7 +161,17 @@ async function checks(job: Job, ctx: StepContext, _centre: string): Promise<Step
   return {
     kind: "done",
     name: "checks",
-    result: { day: input.day, gate: Object.values(kinds).every((k) => k.gate), kinds, paused: step.paused, cost_paise: scores.reduce((n, s) => n + s.paise, 0), failures },
+    // A night that measured nothing, or not every case, is never green (the review's finding 3).
+    result: {
+      day: input.day,
+      gate: scores.length > 0 && (step.notStarted ?? 0) === 0 && Object.values(kinds).every((k) => k.gate),
+      ...(scores.length === 0 ? { reason: "no_cases" } : (step.notStarted ?? 0) > 0 ? { reason: "not_started" } : {}),
+      not_started: step.notStarted ?? 0,
+      kinds,
+      paused: step.paused,
+      cost_paise: scores.reduce((n, s) => n + s.paise, 0),
+      failures,
+    },
     costPaise: paise,
   };
 }

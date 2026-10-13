@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
-import { recordedCall } from "../src/jobs/call.js";
+import { JOB_AGENT_BUDGET_MS, recordedCall } from "../src/jobs/call.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import type { StepContext } from "../src/jobs/types.js";
 import { makeAgent, makeRequest } from "../src/make.js";
@@ -108,4 +108,23 @@ test("an empty answer is failed refused with its tokens recorded", async () => {
   expect(out).toMatchObject({ kind: "failed", reason: "refused" });
   expect(db.finished[0]).toMatchObject({ status: "failed", errorReason: "refused" });
   expect((db.finished[0] as { tokensIn: number }).tokensIn).toBeGreaterThan(0);
+});
+
+test("a job's agent has 170 s on the job's clock, so a slow draft still gets its repair (the review's finding 1)", async () => {
+  const clock = fakeClock();
+  const c: StepContext = { ...ctx(fakeDb()), clock };
+  let drafts = 0;
+  const claude = fakeClaude((r) => {
+    if (r.system.shared.includes("You check")) {
+      clock.advance(15_000);
+      return { answer: { pass: true, findings: [] } };
+    }
+    drafts += 1;
+    clock.advance(80_000);
+    return { answer: drafts === 1 ? { ...SAMPLE.sheet, questions: SAMPLE.sheet.questions.map((q, i) => (i === 0 ? { ...q, proof: { expression: "3*6+5", equals: 20 } } : q)) } : SAMPLE.sheet };
+  });
+  const input = { kind: "sheet" as const, centreId, classLevel: "8" as const, subject: "Mathematics", skills: ["Linear equations"], questions: SAMPLE.sheet.questions.length, forHomework: false };
+  const out = await recordedCall({ ...c, claude }, { centre: centreId, input, job: "job-1", step: "make:0", spec: makeAgent(input) });
+  expect(out).toMatchObject({ kind: "ok", repaired: true });
+  expect(JOB_AGENT_BUDGET_MS).toBe(170_000);
 });

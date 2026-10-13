@@ -23,7 +23,7 @@
     "parse_school": "claude-sonnet-5-5",
     "parse_textbook": "claude-sonnet-5-5",
     "check": "claude-haiku-5-5",
-    "placement": "claude-haiku-5-5",
+    "placement": "claude-sonnet-5-5",
     "note": "claude-haiku-5-5",
     "can_do": "claude-haiku-5-5",
     "test_tomorrow": "claude-haiku-5-5",

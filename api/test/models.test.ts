@@ -27,7 +27,7 @@ test("the defaults are the spec's (D63) with marking apart from reading a report
   expect(modelFor("note", "draft").model).toBe("claude-haiku-5-5");
   expect(modelFor("sheet", "draft", "5").model).toBe("claude-haiku-5-5");
   expect(modelFor("sheet", "draft", "6").model).toBe("claude-sonnet-5-5");
-  for (const kind of ["check", "placement", "note", "can_do", "test_tomorrow", "not_on_track"] as const) expect({ kind, model: modelFor(kind, "draft").model }).toEqual({ kind, model: "claude-haiku-5-5" });
+  for (const kind of ["check", "note", "can_do", "test_tomorrow", "not_on_track"] as const) expect({ kind, model: modelFor(kind, "draft").model }).toEqual({ kind, model: "claude-haiku-5-5" });
   for (const kind of ["worked_example", "figure", "brief", "mock", "parse_school", "parse_textbook", "plan", "gap_report"] as const) expect({ kind, model: modelFor(kind, "draft").model }).toEqual({ kind, model: "claude-sonnet-5-5" });
 });
 
@@ -129,4 +129,9 @@ test("fresh() reads the table at most once a minute and gives up on a slow datab
   expect(Date.now() - started).toBeLessThan(500);
   expect(modelFor("brief", "draft").model).toBe("claude-sonnet-5-5");
   slow.stop();
+});
+
+test("a placement drafts on Sonnet: Haiku told primary chapters wrongly and the repair could not fix it (#312's evals)", () => {
+  expect(modelFor("placement", "draft").model).toBe("claude-sonnet-5-5");
+  expect(modelFor("placement", "check").model).toBe("claude-haiku-5-5");
 });

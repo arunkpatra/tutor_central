@@ -4,7 +4,7 @@ import { type ClassLevel, PlacementOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 /** The placement (P10-Placement): one question per chapter, or per step of the ladder, that tells whether a student has
  *  its most basic idea. Chapters and a class only; no student is named. */
@@ -18,6 +18,8 @@ export function request(classLevel: ClassLevel, subject: string, chapters: strin
       "You write one question per chapter that tells whether a student has the chapter's most basic idea, in the chapters' order.",
       "A student who knows the chapter answers it aloud in a few words; give the expected answer in at most twelve words.",
       "No multiple choice, no trick questions.",
+      "Ask about what the chapter teaches, never a question its title answers; quote a chapter's title as printed, its punctuation included.",
+      "For a story or a poem you have only its title: ask the plainest thing the title promises at that class (who or what it is about), never an event of its plot.",
       MATHS,
       LIMITS.placement,
       syllabusFacts(classLevel, subject),

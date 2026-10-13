@@ -138,7 +138,20 @@ test("the material's prompts ask for mathematics in LaTeX between dollars, words
     expect(words).toContain("$\\frac{x}{4} - 2 = 1$");
     expect(words).toContain("$$…$$");
     expect(words).toContain("never inside \\text{}");
+    // Hand run 4: the answers came as words ("-2/3") and money as a fraction ("₹1575/4").
+    expect(words).toContain("An answer's formula is written the same way ($x = 18$, $\\frac{1}{12}$)");
+    expect(words).toContain("money in rupees and paise (₹393.75), never as a fraction");
   }
+});
+
+test("a worked example makes up its own problem; a placement asks about what a chapter teaches (#312's evals)", () => {
+  expect(systemText(workedExample("10", "Mathematics", "Quadratic equations"))).toContain("Make up your own problem and numbers; never a textbook's worked example or exercise");
+  const placement = systemText(placementRequest("4", "English", ["Wake Up!", "Nasruddin's Aim"]));
+  expect(placement).toContain("Ask about what the chapter teaches, never a question its title answers");
+  // The checker and the grader disagreed on a title's "!" (#312's evals): a title is quoted as printed.
+  expect(placement).toContain("quote a chapter's title as printed, its punctuation included");
+  // D104: a story or poem's question is on what its title promises, never its plot (only the title is given).
+  expect(placement).toContain("ask the plainest thing the title promises at that class (who or what it is about), never an event of its plot");
 });
 
 test("a worked example asks Sonnet for steps the tutor says aloud and the common slip", () => {
@@ -177,6 +190,11 @@ test("the plan's topics ask Sonnet for a first chapter and skill per group for t
 test("the plan's check accepts a chapter as a current or recent book prints it (the books changed in 2023 to 2025)", () => {
   expect(planKind.rubric).toContain("a current or a recent book");
 });
+test("a holiday's end is part of the holiday, not an item of its own (#312's evals: \"classes resume\" split out)", () => {
+  const r = parseSchoolRequest({ text: "School closed 20 to 24 Oct for Deepavali. Classes resume Monday 26th.", image: null, today: "2026-10-13", schools: [], classLevels: [] });
+  expect(systemText(r)).toContain("When school reopens or classes resume after a holiday, that is the holiday's end, not an item of its own.");
+});
+
 test("parse-school asks for items as the school wrote them, with today's date and the centre's schools and classes, on Sonnet", () => {
   const r = parseSchoolRequest({ text: "Dear Parents, Science Unit Test 3 for Class 8 will be held on Friday 16th Oct.", image: null, today: "2026-10-07", schools: ["Vidya Niketan"], classLevels: ["8", "10"] });
   expect(r.model).toBe("claude-sonnet-5-5");
