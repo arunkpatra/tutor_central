@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { AuthFrame, Frame } from "../../components/Frame";
 
 test("the frame carries the brand with its ADMIN mark, the seven pages marking the current one, Sign out and the footer", () => {
-  process.env.TC_COMMIT = "6d973b9";
+  process.env.TC_COMMIT = "6d973b9b5ea6db2c34586cb9689439fd7dbe3ef9";
   const html = renderToStaticMarkup(<Frame current="Jobs">page</Frame>);
   delete process.env.TC_COMMIT;
   expect(html).toContain("Tutor Central");

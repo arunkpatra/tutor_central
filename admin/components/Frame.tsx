@@ -40,7 +40,7 @@ export function Frame({ current, children }: { current: PageLabel | ""; children
       <main>{children}</main>
       <footer className="wrap">
         <div className="ftr">
-          <span>{FRAME.footer(environment(), commit())}</span>
+          <span>{FRAME.footer(environment(), commit().slice(0, 7))}</span>
           <span>{FRAME.audited}</span>
         </div>
       </footer>
