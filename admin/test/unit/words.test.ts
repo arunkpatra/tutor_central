@@ -52,3 +52,9 @@ test("the service key is read in one module, which is server-only", () => {
   expect(readFileSync(join(root, "lib", "supabase", "service.ts"), "utf8")).toContain('import "server-only"');
   expect(readFileSync(join(root, "lib", "env.ts"), "utf8")).not.toContain("NEXT_PUBLIC_");
 });
+
+test("a refusal is written to the audit once, at the sign-in, not on each view of the page (R-a4)", () => {
+  const app = join(import.meta.dir, "..", "..", "app");
+  expect(readFileSync(join(app, "refused", "page.tsx"), "utf8")).not.toContain("audit(");
+  expect(readFileSync(join(app, "sign-in", "actions.ts"), "utf8")).toContain('"refused"');
+});

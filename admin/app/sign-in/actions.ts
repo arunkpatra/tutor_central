@@ -16,9 +16,11 @@ export async function signIn(form: FormData): Promise<void> {
   const next = String(form.get("next") ?? "") || null;
   if (error) redirect(`/sign-in?failed=1${next ? `&next=${encodeURIComponent(next)}` : ""}`);
   const decision = await currentDecision(session);
-  if (decision.to === "enrol") {
-    const { data } = await session.auth.getUser();
-    if (data.user) await audit(data.user.id, "sign_in", { reason: AUDITED.firstSignIn });
-  }
+  // The door's two audited moments at a password sign-in: an admin's first, and a refusal (once here, not on each view
+  // of the refusal page).
+  const { data } = await session.auth.getUser();
+  if (data.user && decision.to === "enrol") await audit(data.user.id, "sign_in", { reason: AUDITED.firstSignIn });
+  if (data.user && decision.to === "refused")
+    await audit(data.user.id, "refused", { target: { email: decision.email }, reason: AUDITED.refused });
   redirect(afterSignIn(decision, next));
 }
