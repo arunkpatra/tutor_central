@@ -10,8 +10,9 @@ export function rupees(paise: number): string {
   return `₹${Math.round(r).toLocaleString("en-IN")}`;
 }
 
+/** Counts as the boards write them: 1,842 and 110,004. */
 export function count(n: number): string {
-  return n.toLocaleString("en-IN");
+  return n.toLocaleString("en-US");
 }
 
 /** The calendar day in India, as YYYY-MM-DD. */
@@ -72,10 +73,10 @@ export function seconds(s: number): string {
   return s < 10 && !Number.isInteger(s) ? `${s.toFixed(1)} s` : `${Math.round(s)} s`;
 }
 
-/** Milliseconds as the calls list writes latency: "2.2 s", "110 s". */
+/** Milliseconds as the calls list writes latency: "2.2 s", "12.4 s", "41 s". */
 export function latency(ms: number): string {
   const s = ms / 1000;
-  return s < 10 ? `${s.toFixed(1)} s` : `${Math.round(s)} s`;
+  return s < 20 ? `${s.toFixed(1)} s` : `${Math.round(s)} s`;
 }
 
 /** The first day of the month an ISO day (or a "YYYY-MM" query) is in, as YYYY-MM-01. */
@@ -104,8 +105,8 @@ export function maskIp(ip: string | null): string {
   return v6.length > 2 ? `${v6.slice(0, 2).join(":")}:…` : ip;
 }
 
-/** Today's time alone ("05:31"); else "Yesterday 19:20" or "11 Oct 16:02". */
-export function short(iso: string, now: Date): string {
-  const w = when(iso, now);
-  return w.startsWith("Today ") ? w.slice(6) : w;
+/** Today's time alone ("05:31", or "10:41:08"); else "Yesterday 19:20" or "11 Oct 16:02". */
+export function short(iso: string, now: Date, withSeconds = false): string {
+  const today = when(iso, now, withSeconds);
+  return today.startsWith("Today ") ? today.slice(6) : when(iso, now);
 }

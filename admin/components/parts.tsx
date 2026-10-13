@@ -87,11 +87,14 @@ export function Table({
   head,
   children,
   empty,
+  bare,
 }: {
   cols: string;
   head: Column[];
   children: ReactNode[];
   empty?: string;
+  /** A table of facts: its header row is drawn empty, as the board's (the labels stay for phone width). */
+  bare?: boolean;
 }) {
   const style = { "--cols": cols } as CSSProperties;
   return (
@@ -99,7 +102,7 @@ export function Table({
       <div className="grid head" style={style}>
         {head.map((c) => (
           <div key={c.label} className={c.right ? "cell r" : "cell"}>
-            {c.label}
+            {bare ? null : c.label}
           </div>
         ))}
       </div>
