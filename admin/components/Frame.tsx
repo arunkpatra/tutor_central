@@ -3,16 +3,17 @@ import { PAGES, type PageLabel, SITE } from "@/content/site";
 import { FRAME } from "@/content/words";
 import { commit, environment } from "@/lib/env";
 import { BookIcon } from "./Icon";
+import { PageLink } from "./PageLink";
 
 function Brand() {
   return (
-    <a href="/centres" className="brand">
+    <PageLink href="/centres" className="brand">
       <span className="brandTile" aria-hidden="true">
         <BookIcon />
       </span>
       <span className="brandName">{FRAME.brand}</span>
       <span className="brandMark">{FRAME.mark}</span>
-    </a>
+    </PageLink>
   );
 }
 
@@ -25,9 +26,9 @@ export function Frame({ current, children }: { current: PageLabel | ""; children
           <Brand />
           <nav className="nav" aria-label={FRAME.navLabel}>
             {PAGES.map((p) => (
-              <a key={p.href} href={p.href} aria-current={p.label === current ? "page" : undefined}>
+              <PageLink key={p.href} href={p.href} aria-current={p.label === current ? "page" : undefined}>
                 {p.label}
-              </a>
+              </PageLink>
             ))}
           </nav>
           <form action="/sign-out" method="post" className="signoutForm">

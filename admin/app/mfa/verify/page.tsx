@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthFrame } from "@/components/Frame";
-import { Button, Field } from "@/components/parts";
+import { Field } from "@/components/parts";
+import { SubmitButton } from "@/components/SubmitButton";
 import { VERIFY, WRONG_CODE } from "@/content/door";
+import { PENDING } from "@/content/words";
 import { currentDecision } from "@/lib/admin";
 import { preview } from "@/lib/env";
 import { DOOR, sameSite } from "@/lib/gate";
@@ -47,9 +49,9 @@ export default async function VerifyPage({
           maxLength={6}
         />
         {failed ? <p className="fieldError">{WRONG_CODE}</p> : null}
-        <Button kind="primary" big>
+        <SubmitButton kind="primary" big working={PENDING.verify}>
           {VERIFY.button}
-        </Button>
+        </SubmitButton>
       </form>
       <div className="signedAs">
         <span className="dim">{VERIFY.signedInAs(email)}</span>

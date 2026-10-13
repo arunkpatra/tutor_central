@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthFrame } from "@/components/Frame";
-import { Button } from "@/components/parts";
 import { REFUSED } from "@/content/door";
 import { currentDecision } from "@/lib/admin";
 import { preview } from "@/lib/env";
@@ -28,9 +27,9 @@ export default async function RefusedPage() {
         <p className="lead">{REFUSED.lead(email)}</p>
       </div>
       <form action="/sign-out" method="post">
-        <Button kind="secondary" big>
+        <button type="submit" className="btn secondary big">
           {REFUSED.signOut}
-        </Button>
+        </button>
       </form>
       <p className="note">{REFUSED.note}</p>
     </AuthFrame>

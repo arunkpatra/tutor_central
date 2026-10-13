@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/Frame";
-import { Button, Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import { Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import { SubmitButton } from "@/components/SubmitButton";
 import { ALERTS, valueLine } from "@/content/alerts";
 import { shortCentre } from "@/content/calls";
-import { ENVIRONMENT, NONE } from "@/content/words";
+import { ENVIRONMENT, NONE, PENDING } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
@@ -86,7 +87,9 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
                   <form action={acknowledge}>
                     <input type="hidden" name="alert" value={a.id} />
                     <input type="hidden" name="show" value={show} />
-                    <Button kind="secondary">{ALERTS.acknowledge}</Button>
+                    <SubmitButton kind="secondary" working={PENDING.acknowledge}>
+                      {ALERTS.acknowledge}
+                    </SubmitButton>
                   </form>
                 )}
               </Cell>

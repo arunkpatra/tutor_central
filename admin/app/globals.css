@@ -8,6 +8,8 @@
   --iconRim: rgba(255, 171, 56, 0.25);
   /* The authenticator's square is read by a phone's camera: dark on white in both schemes. */
   --qrGround: #ffffff;
+  /* Motion (design-tokens.md, Motion): \`breathe\` for a skeleton and the loading bar and spinner (D97). */
+  --breathe: 1600ms;
   --ground: #f8f4ee;
   --surface1: #ffffff;
   --surface2: #f1ebe2;
@@ -987,4 +989,93 @@ a.plain {
     right: auto;
     left: 0;
   }
+}
+
+/* Loading (D97, P19-Loading-Centres): grey blocks in place of words, breathing; a bar moving along the top. */
+.skel {
+  display: block;
+  border-radius: 6px;
+  background: var(--surface2);
+  animation: breathe var(--breathe) ease-in-out infinite alternate;
+}
+.pillSkel {
+  height: 36px;
+  width: 140px;
+  border-radius: 12px;
+}
+.skelLine {
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+.skelLine.big {
+  height: 34px;
+}
+.loadBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 38%;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+  z-index: 3;
+  animation: travel var(--breathe) ease-in-out infinite;
+}
+@keyframes breathe {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+@keyframes travel {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(270%);
+  }
+}
+
+/* A form at work (D97, P19-Pending-SignIn, P19-Pending-Dialog): the button turning with its words, the rest dimmed. */
+.btn[aria-busy="true"] {
+  opacity: 0.75;
+  cursor: default;
+}
+.spinner {
+  animation: turn var(--breathe) linear infinite;
+}
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+form:has([aria-busy="true"]) .field {
+  opacity: 0.6;
+}
+.dialog:has([aria-busy="true"]) .btn.quiet {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Reduced motion: nothing moves; the bar stands at the board's 38%. */
+@media (prefers-reduced-motion: reduce) {
+  .skel,
+  .loadBar,
+  .spinner {
+    animation: none;
+  }
+}
+
+/* The option just picked, while its page is asked for. */
+.menu a:has(.loadBar) {
+  color: var(--accentText);
+  background: var(--accentTint);
+}
+.menu:has(.loadBar) a[aria-current="true"]:not(:has(.loadBar)) {
+  color: var(--text);
+  background: transparent;
+  font-weight: 400;
 }

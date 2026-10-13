@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/Frame";
+import { PageLink } from "@/components/PageLink";
 import { Cell, Meter, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
 import { PLAN_PAISE } from "@/content/centres";
 import { COST, DAY_LINE_PAISE, kindRows } from "@/content/cost";
@@ -116,9 +117,9 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
             {cost.byCentre.map((r) => (
               <Row key={r.id} cols={CENTRE_COLS}>
                 <Cell label={COST.centreHead.centre} kind="main">
-                  <a className="plain" href={`/centres/${r.id}`}>
+                  <PageLink className="plain" href={`/centres/${r.id}`}>
                     {r.name}
-                  </a>
+                  </PageLink>
                 </Cell>
                 <Cell label={COST.centreHead.calls} kind="r">
                   {count(r.calls)}

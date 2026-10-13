@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { NOTHING_YET } from "@/content/words";
 import { ChevronIcon } from "./Icon";
+import { PageLink } from "./PageLink";
 
 /** The page's head: the eyebrow (where it runs), the title, the lead, and the filters on the right. */
 export function Title({
@@ -141,12 +142,13 @@ export function Cell({
   );
 }
 
-/** A filter as a select pill (P19 boards): the menu is a list of links that change the page's query, no script. */
+/** A filter as a select pill (P19 boards): the menu is a list of Next's links that change the page's query; keyed by
+ *  its value, so it closes once a choice is made. */
 export type Option = { label: string; href: string; current: boolean };
 export function Pill({ label, options }: { label: string; options: Option[] }) {
   const current = options.find((o) => o.current) ?? options[0];
   return (
-    <details className="pillMenu">
+    <details key={current?.href} className="pillMenu">
       <summary className="pill">
         <span className="pillLabel">{label}</span>
         <span className="pillValue">{current?.label}</span>
@@ -154,9 +156,9 @@ export function Pill({ label, options }: { label: string; options: Option[] }) {
       </summary>
       <div className="menu">
         {options.map((o) => (
-          <a key={o.href} href={o.href} aria-current={o.current ? "true" : undefined}>
+          <PageLink key={o.href} href={o.href} aria-current={o.current ? "true" : undefined}>
             {o.label}
-          </a>
+          </PageLink>
         ))}
       </div>
     </details>
@@ -174,14 +176,6 @@ export function Meter({ share }: { share: number }) {
 }
 
 export type ButtonKind = "primary" | "secondary" | "destructive" | "quiet";
-export function Button({ kind, big, children }: { kind: ButtonKind; big?: boolean; children: ReactNode }) {
-  return (
-    <button type="submit" className={`btn ${kind}${big ? " big" : ""}`}>
-      {children}
-    </button>
-  );
-}
-
 export function LinkButton({
   kind,
   big,
@@ -194,9 +188,9 @@ export function LinkButton({
   children: ReactNode;
 }) {
   return (
-    <a href={href} className={`btn ${kind}${big ? " big" : ""}`}>
+    <PageLink href={href} className={`btn ${kind}${big ? " big" : ""}`}>
       {children}
-    </a>
+    </PageLink>
   );
 }
 

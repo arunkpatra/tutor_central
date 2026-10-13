@@ -25,3 +25,16 @@ export const NOTHING_YET = "Nothing yet";
 
 /** The empty cell. */
 export const NONE = "—";
+
+/** A form's button while its action runs (D97; P19-Pending-SignIn, P19-Pending-Dialog). */
+export const PENDING = {
+  signIn: "Signing in…",
+  verify: "Verifying…",
+  open: "Opening the record…",
+  retry: "Retrying…",
+  cancel: "Cancelling…",
+  acknowledge: "Acknowledging…",
+} as const;
+
+/** What a screen reader hears while a page loads (D97; P19-Loading-Centres). */
+export const LOADING = "Loading";

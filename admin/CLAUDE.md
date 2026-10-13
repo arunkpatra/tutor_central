@@ -18,7 +18,13 @@ writes its own audit row.
   it is not the gate.
 - Reads through `Data` (`lib/data/`): `real.ts` calls the `admin_*` functions as the platform (D83); `preview.ts` answers
   the boards' figures from `preview/*.json`. Aggregations live in SQL (0047), not here. Writes are server actions on a
-  `<form>`; no client JavaScript of the portal's own (the filters are `<details>` menus of links).
+  `<form>`; the filters are `<details>` menus of links.
+- Moving and working (D97, boards `P19-Loading-Centres`, `P19-Pending-*`): every link is `PageLink` (Next's `Link`, never
+  `<a>` or `next/link` elsewhere; `test/unit/loading.test.tsx`), so a click never reloads the page. Every signed-in page
+  has a `loading.tsx` (`PageLoading`: the frame, the title, blocks, the bar) that Next shows at once from the prefetch; a
+  link within the page on screen is not prefetched and shows the bar through `useLinkStatus`. Every action's button is
+  `SubmitButton` (`useFormStatus`: the spinner and its `PENDING` words, disabled, the form dimmed). Those two are the
+  portal's own client JavaScript. Pictures of these states: throttle the network after the page loads, act, capture.
 - Never shown: a parent's number, a photo, a message's text, a personal kind's input while the student's consent is not
   current (D79); a student's name only on the record page, served only after its audit row (`admin_open_record`).
 - Words live in `content/`, each from its board (`docs/design/mockups/P19-*.dc.html`); the trade's words are allowed

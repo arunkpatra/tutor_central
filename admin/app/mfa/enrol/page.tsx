@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AuthFrame } from "@/components/Frame";
-import { Button, Field } from "@/components/parts";
+import { PageLink } from "@/components/PageLink";
+import { Field } from "@/components/parts";
+import { SubmitButton } from "@/components/SubmitButton";
 import { ENROL, WRONG_CODE } from "@/content/door";
+import { PENDING } from "@/content/words";
 import { currentDecision } from "@/lib/admin";
 import { preview } from "@/lib/env";
 import { DOOR } from "@/lib/gate";
@@ -73,14 +76,14 @@ export default async function EnrolPage({ searchParams }: { searchParams: Promis
               maxLength={6}
             />
             {failed ? <p className="fieldError">{WRONG_CODE}</p> : null}
-            <Button kind="primary" big>
+            <SubmitButton kind="primary" big working={PENDING.verify}>
               {ENROL.button}
-            </Button>
+            </SubmitButton>
           </form>
           {f.qr ? null : (
-            <a className="linkButton" href="/mfa/enrol">
+            <PageLink className="linkButton" href="/mfa/enrol" prefetch={false}>
               {ENROL.again}
-            </a>
+            </PageLink>
           )}
         </>
       ) : null}

@@ -35,3 +35,23 @@ export function ChevronIcon() {
     </svg>
   );
 }
+
+/** A button's working state (P19-Pending-SignIn): a quarter arc over a faint ring, turning. */
+export function SpinnerIcon() {
+  return (
+    <svg
+      className="spinner"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" opacity=".25" />
+      <path d="M21 12a9 9 0 0 0-9-9" />
+    </svg>
+  );
+}

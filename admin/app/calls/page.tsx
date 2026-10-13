@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/Frame";
+import { PageLink } from "@/components/PageLink";
 import { Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
 import { CALL_KINDS, CALLS, outcomeChip, shortCentre } from "@/content/calls";
 import { modelName } from "@/content/models";
@@ -120,9 +121,9 @@ export default async function CallsPage({ searchParams }: { searchParams: Promis
                   kind="main"
                   sub={CALLS.sub(modelName(c.model), c.prompt_version, c.student)}
                 >
-                  <a className="plain" href={`/calls/${c.id}`}>
+                  <PageLink className="plain" href={`/calls/${c.id}`}>
                     {c.kind}
-                  </a>
+                  </PageLink>
                 </Cell>
                 <Cell label={CALLS.head.outcome}>
                   <Chip tone={chip.tone}>{chip.text}</Chip>
