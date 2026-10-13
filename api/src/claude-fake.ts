@@ -1,4 +1,4 @@
-import type { ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
+import type { BatchItem, ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
 import { CheckVerdict } from "./schemas.js";
 import type {
   BriefOutput,
@@ -30,10 +30,27 @@ export type FakeScript = { answer?: unknown; refuse?: boolean; truncate?: boolea
  *  request is recorded; an answer is still parsed by the request's schema, as the real client's is. */
 export function fakeClaude(
   script: FakeScript | ((request: ClaudeRequest<unknown>) => FakeScript),
-): ClaudeClient & { requests: ClaudeRequest<unknown>[] } {
+  options: { batchPolls?: number } = {},
+): ClaudeClient & { requests: ClaudeRequest<unknown>[]; batches: BatchItem[][] } {
   const requests: ClaudeRequest<unknown>[] = [];
-  return {
+  const batches: BatchItem[][] = [];
+  const polls = new Map<string, number>();
+  const client = {
     requests,
+    batches,
+    /** A batch is answered as each request would be, after `batchPolls` reads that find it running. */
+    async batch(items: BatchItem[]) {
+      batches.push(items);
+      return { id: `batch-${batches.length}` };
+    },
+    async batchResults(id: string, items: BatchItem[]): Promise<"running" | Map<string, ClaudeAnswer<unknown>>> {
+      const seen = (polls.get(id) ?? 0) + 1;
+      polls.set(id, seen);
+      if (seen <= (options.batchPolls ?? 0)) return "running";
+      const answers = new Map<string, ClaudeAnswer<unknown>>();
+      for (const item of items) answers.set(item.customId, await client.complete(item.request));
+      return answers;
+    },
     async complete<T>(request: ClaudeRequest<T>): Promise<ClaudeAnswer<T>> {
       requests.push(request as ClaudeRequest<unknown>);
       const step = typeof script === "function" ? script(request as ClaudeRequest<unknown>) : script;
@@ -51,6 +68,7 @@ export function fakeClaude(
       return { kind: "ok", parsed: parsed.data, ...answered };
     },
   };
+  return client;
 }
 
 const paper: PaperOutput = {
@@ -409,8 +427,10 @@ export const SAMPLE = {
 /** A request's system words as one text (tests read what a prompt says). */
 export const systemText = (request: Pick<ClaudeRequest<unknown>, "system">) => `${request.system.shared}\n${request.system.own}`;
 
-/** An agent's check (src/agents/check.ts), told apart by its words; the fake passes every draft (D99). */
-export const isCheckRequest = (request: Pick<ClaudeRequest<unknown>, "system">) => request.system.shared.startsWith("You check a draft");
+/** An agent's check (src/agents/check.ts) or the nightly's grade (src/evals/runner.ts), told apart by its words; the fake
+ *  passes every draft (D99). */
+export const isCheckRequest = (request: Pick<ClaudeRequest<unknown>, "system">) =>
+  request.system.shared.startsWith("You check a draft") || request.system.shared.startsWith("You grade an answer");
 export const PASS = { pass: true, findings: [] };
 
 /** The sample for a request: a check passes, a draft gets its kind's sample. */

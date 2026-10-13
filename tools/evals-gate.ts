@@ -3,8 +3,10 @@
  *  its javascript assertion (the schema, the kind's verify, the case's expectations); each kind's rubric, graded by Opus
  *  5.5, must pass at least 85% of its cases (a fake run skips the rubric). Prints a table; exit 1 naming each failure. */
 import table from "../api/models.json" with { type: "json" };
+import { RUBRIC_GATE } from "../api/src/evals/gate";
 
-export const RUBRIC_GATE = 0.85;
+export { RUBRIC_GATE };
+
 
 type Component = { pass: boolean; assertion?: { type?: string }; reason?: string };
 type Row = {

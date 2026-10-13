@@ -21,7 +21,7 @@ export type StepOutcome =
   /** `error` notes why a request went unmade while the job goes on (a kind switched off: `paused`). */
   | { kind: "continue"; name: string; step: Record<string, unknown>; generationId?: string; costPaise?: number; error?: { reason: string } }
   | { kind: "done"; name: string; result: Record<string, unknown>; generationId?: string; costPaise?: number }
-  | { kind: "wait"; name: string; step: Record<string, unknown>; runAt: Date; generationId?: string }
+  | { kind: "wait"; name: string; step: Record<string, unknown>; runAt: Date; generationId?: string; costPaise?: number }
   | { kind: "fail"; name: string; error: { reason: string; message?: string }; retry: boolean; generationId?: string };
 
 export type Clock = { now(): number; sleep(ms: number): Promise<void> };

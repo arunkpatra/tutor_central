@@ -167,6 +167,26 @@
       "by_member": false
     },
     {
+      "id": "p-evals",
+      "kind": "eval_run",
+      "centre_id": null,
+      "centre": null,
+      "subject": "nightly evals",
+      "state": "done",
+      "step": "checks",
+      "run_at": "2026-10-12T20:30:00Z",
+      "started_at": "2026-10-12T20:35:04Z",
+      "finished_at": "2026-10-12T21:02:40Z",
+      "created_at": "2026-10-12T20:35:00Z",
+      "seconds": 1656,
+      "attempts": 1,
+      "cost_paise": 1180,
+      "made": null,
+      "not_made": null,
+      "reason": null,
+      "by_member": false
+    },
+    {
       "id": "p9",
       "kind": "sweep",
       "centre_id": null,

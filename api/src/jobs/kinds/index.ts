@@ -2,6 +2,7 @@ import type { AlertsSource } from "../../alerts/db.js";
 import type { Sender } from "../../alerts/resend.js";
 import type { JobHandler, JobKind } from "../types.js";
 import { alertsJob } from "./alerts.js";
+import { evalRun } from "./eval-run.js";
 import { type ExportSource, exportJob } from "./export.js";
 import { type NoteSource, noteDay } from "./note-day.js";
 import { type PdfSource, pdfJob } from "./pdf.js";
@@ -18,6 +19,8 @@ export type Sources = {
   exports?: ExportSource;
   storage?: SweepSource;
   alerts?: { source: AlertsSource; sender: Sender; email: string };
+  /** The nightly evals (D101): their calls are the Smoke centre's. */
+  evals?: { smokeCentre: string };
 };
 
 /** The kinds the worker runs. A job of a kind not here fails at once, without a retry. */
@@ -30,5 +33,6 @@ export function makeHandlers(sources: Sources = {}): Partial<Record<JobKind, Job
     ...(sources.files ? { pdf: pdfJob(sources.files) } : {}),
     ...(sources.exports ? { export: exportJob(sources.exports) } : {}),
     ...(sources.alerts ? { alerts: alertsJob(sources.alerts.source, sources.alerts.sender, sources.alerts.email) } : {}),
+    ...(sources.evals ? { eval_run: evalRun(sources.evals) } : {}),
   };
 }

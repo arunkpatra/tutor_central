@@ -185,6 +185,8 @@ jobs:
             # Mathematics (D102): STIX Two Math and the vendored mitex.
             if ! find -L "$dir" -path '*fonts/STIXTwoMath-Regular.otf' | grep -q .; then echo "::error::$dir has no fonts/STIXTwoMath-Regular.otf."; exit 1; fi
             if ! find -L "$dir" -path '*typst/mitex/mitex.wasm' | grep -q .; then echo "::error::$dir has no typst/mitex/mitex.wasm."; exit 1; fi
+            # The nightly evals (D101): the golden sets go with the function.
+            if ! find -L "$dir" -path '*evals/sheet/cases.json' | grep -q .; then echo "::error::$dir has no evals/sheet/cases.json."; exit 1; fi
           done
           echo "the Typst module, the fonts and mitex are with the function"
 

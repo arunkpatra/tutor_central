@@ -102,3 +102,31 @@ test("a request's own deadline, when shorter, ends the call", async () => {
   expect(answer).toMatchObject({ kind: "failed", reason: "timeout" });
   expect(Date.now() - started).toBeLessThan(2000);
 });
+
+test("a batch is sent as one request, read as running, then each answer parsed by its own schema (the nightly evals)", async () => {
+  const seen: { method: string; url: string; body?: unknown }[] = [];
+  let ended = false;
+  const batch = (status: string) => ({ id: "msgbatch_1", type: "message_batch", processing_status: status, request_counts: { processing: 0, succeeded: 2, errored: 0, canceled: 0, expired: 0 }, ended_at: null, created_at: "2026-10-13T00:00:00Z", expires_at: "2026-10-14T00:00:00Z", archived_at: null, cancel_initiated_at: null, results_url: status === "ended" ? "https://api.anthropic.com/v1/messages/batches/msgbatch_1/results" : null });
+  const message = (text: string) => ({ id: "m", type: "message", role: "assistant", model: "claude-sonnet-5-5", content: [{ type: "text", text }], stop_reason: "end_turn", stop_sequence: null, usage: { input_tokens: 100, output_tokens: 20, cache_read_input_tokens: 50 } });
+  const router = (async (url: string | URL, init?: RequestInit) => {
+    const u = String(url);
+    seen.push({ method: init?.method ?? "GET", url: u, body: init?.body ? JSON.parse(String(init.body)) : undefined });
+    if (u.endsWith("/v1/messages/batches") && init?.method === "POST") return Response.json(batch("in_progress"));
+    if (u.endsWith("/results")) {
+      const lines = [{ custom_id: "a", result: { type: "succeeded", message: message('{"a":"x"}') } }, { custom_id: "b", result: { type: "errored", error: { type: "error", error: { type: "overloaded_error", message: "busy" } } } }];
+      return new Response(lines.map((l) => JSON.stringify(l)).join("\n"), { headers: { "content-type": "application/x-jsonl" } });
+    }
+    return Response.json(batch(ended ? "ended" : "in_progress"));
+  }) as unknown as typeof fetch;
+  const client = anthropicClaude("sk-test", { fetch: router });
+  const items = [{ customId: "a", request }, { customId: "b", request }];
+  expect(await client.batch!(items)).toEqual({ id: "msgbatch_1" });
+  const sent = seen[0]!.body as { requests: { custom_id: string; params: { system: unknown[]; model: string } }[] };
+  expect(sent.requests.map((r) => r.custom_id)).toEqual(["a", "b"]);
+  expect(sent.requests[0]!.params.model).toBe("claude-sonnet-5-5");
+  expect(await client.batchResults!("msgbatch_1", items)).toBe("running");
+  ended = true;
+  const answers = (await client.batchResults!("msgbatch_1", items)) as Map<string, { kind: string; tokensCached?: number; reason?: string }>;
+  expect(answers.get("a")).toMatchObject({ kind: "ok", parsed: { a: "x" }, tokensCached: 50 });
+  expect(answers.get("b")).toMatchObject({ kind: "failed", reason: "batch errored" });
+});

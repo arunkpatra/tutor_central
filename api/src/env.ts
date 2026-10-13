@@ -14,7 +14,8 @@ export function env(
     | "APNS_TEAM_ID"
     | "APNS_TOPIC"
     | "RESEND_API_KEY"
-    | "ALERT_EMAIL",
+    | "ALERT_EMAIL"
+    | "SMOKE_CENTRE_ID",
 ): string {
   const v = process.env[name];
   if (!v) throw new Error(`${name} is not set`);
