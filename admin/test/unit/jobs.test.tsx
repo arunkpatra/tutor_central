@@ -115,3 +115,18 @@ test("a step's note", () => {
     }),
   ).toBe("check · Haiku · ₹0.04");
 });
+
+test("a job with nothing to name shows a dash for its subject", async () => {
+  const listed = await previewData.jobs({ day: null, state: null, kind: null, centre: null });
+  const fake = {
+    ...previewData,
+    jobs: async () => ({
+      ...listed,
+      rows: [{ ...listed.rows[0]!, id: "x", kind: "artefact", subject: null, state: "failed" as const }],
+    }),
+  };
+  const html = await withData(fake, () => page({}));
+  expect(html).toContain("artefact");
+  expect(html).not.toContain("artefact · artefact");
+  expect(html).toMatch(/Subject<\/span>—</);
+});

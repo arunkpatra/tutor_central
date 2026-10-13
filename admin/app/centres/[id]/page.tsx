@@ -192,7 +192,7 @@ export default async function CentrePage({
                   </a>
                 </Cell>
                 <Cell label={CENTRE.jobsHead.subject} kind="dim">
-                  {j.subject}
+                  {j.subject ?? NONE}
                 </Cell>
                 <Cell label={CENTRE.jobsHead.state}>
                   <Chip tone={chip.tone}>{chip.text}</Chip>
@@ -219,7 +219,7 @@ export default async function CentrePage({
             ]}
           >
             {activity.map((a) => (
-              <Row key={`${a.at}-${a.kind}-${a.what ?? a.screen}`} cols={ACTIVITY_COLS}>
+              <Row key={a.id} cols={ACTIVITY_COLS}>
                 <Cell label={CENTRE.activityHead.when}>{when(a.at, at)}</Cell>
                 <Cell label={CENTRE.activityHead.what}>{a.what ?? activityWords(a.kind, a.screen)}</Cell>
                 <Cell label={CENTRE.activityHead.who} kind="dim">

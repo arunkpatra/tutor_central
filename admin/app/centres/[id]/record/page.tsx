@@ -58,7 +58,7 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
           {record.students.map((s) => {
             const chip = consentChip(s.consent);
             return (
-              <Row key={`${s.name}-${s.batch}`} cols={STUDENT_COLS}>
+              <Row key={s.id} cols={STUDENT_COLS}>
                 <Cell label={RECORD.head.student} kind="main">
                   {s.name}
                 </Cell>
@@ -114,7 +114,7 @@ export default async function RecordPage({ params }: { params: Promise<{ id: str
           empty={RECORD.nothingKept}
         >
           {record.made.map((m) => (
-            <Row key={`${m.at}-${m.kind}`} cols={MADE_COLS}>
+            <Row key={m.id} cols={MADE_COLS}>
               <Cell label={RECORD.madeHead.when}>{when(m.at, at)}</Cell>
               <Cell label={RECORD.madeHead.what}>{madeWords(m)}</Cell>
               <Cell label={RECORD.madeHead.cost} kind="r">
