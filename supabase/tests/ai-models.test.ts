@@ -77,16 +77,31 @@ test("a check row counts against the cost and not the allowance", async () => {
       ...(step ? { p_agent_step: step } : {}),
     });
   expect((await start(`d-${stamp}`, "claude-haiku-5-5", "draft")).error).toBeNull();
-  expect((await start(`c-${stamp}`, "claude-sonnet-5-5", "check")).error).toBeNull();
-  expect((await start(`r-${stamp}`, "claude-haiku-5-5", "repair")).error).toBeNull();
+  expect((await start(`d-${stamp}:check`, "claude-sonnet-5-5", "check")).error).toBeNull();
+  expect((await start(`d-${stamp}:repair`, "claude-haiku-5-5", "repair")).error).toBeNull();
+  expect((await start(`d-${stamp}:repair:check`, "claude-sonnet-5-5", "check")).error).toBeNull();
   expect((await start(`d2-${stamp}`, "claude-haiku-5-5")).error?.message).toContain("ai_limit_reached");
   const rows = await sql`select idempotency_key, agent_step from public.ai_generations where centre_id = ${centreA} order by created_at`;
-  expect(rows.map((r: { agent_step: string }) => r.agent_step)).toEqual(["draft", "check", "repair"]);
+  expect(rows.map((r: { agent_step: string }) => r.agent_step)).toEqual(["draft", "check", "repair", "check"]);
   expect((await a.rpc("start_ai_call", { p_centre: centreA, p_kind: "sheet", p_input: {}, p_model: "m", p_key: `x-${stamp}`, p_agent_step: "nonsense" })).error).not.toBeNull();
 });
 
+test("a check, repair or grade only hangs off a live draft of the centre, by its key", async () => {
+  const step = (key: string | null, agent: string) =>
+    a.rpc("start_ai_call", { p_centre: centreA, p_kind: "sheet", p_input: {}, p_model: "claude-sonnet-5-5", p_key: key, p_agent_step: agent });
+  expect((await step(null, "check")).error?.message).toContain("ai_step_orphan");
+  expect((await step(`nothing-${stamp}:check`, "check")).error?.message).toContain("ai_step_orphan");
+  expect((await step(`free-${stamp}`, "check")).error?.message).toContain("ai_step_orphan");
+  expect((await step(`d-${stamp}:grade`, "grade")).error).toBeNull();
+  // A draft of another centre is no parent.
+  const b = await userClient(l, `models-b-${stamp}@example.com`);
+  const centreB = (await b.rpc("create_centre", { p_name: "Centre B", p_whatsapp: "+919999999998" })).data as string;
+  const other = await b.rpc("start_ai_call", { p_centre: centreB, p_kind: "sheet", p_input: {}, p_model: "m", p_key: `d-${stamp}:check`, p_agent_step: "check" });
+  expect(other.error?.message).toContain("ai_step_orphan");
+});
+
 test("the platform finishes a row with its cached tokens", async () => {
-  const [row] = await sql`select id from public.ai_generations where idempotency_key = ${`c-${stamp}`}`;
+  const [row] = await sql`select id from public.ai_generations where idempotency_key = ${`d-${stamp}:check`}`;
   const done = await svc.from("ai_generations").update({ status: "ok", tokens_in: 1000, tokens_out: 100, tokens_cached: 1000, finished_at: new Date().toISOString() }).eq("id", row.id).select("tokens_cached").single();
   expect(done.error).toBeNull();
   expect(done.data?.tokens_cached).toBe(1000);
