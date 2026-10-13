@@ -7,11 +7,13 @@ export function Title({
   eyebrow,
   title,
   lead,
+  badge,
   children,
 }: {
   eyebrow: string;
   title: string;
   lead?: ReactNode;
+  badge?: ReactNode;
   children?: ReactNode;
 }) {
   return (
@@ -21,6 +23,7 @@ export function Title({
           <div className="eyebrow">{eyebrow}</div>
           <h1 className="t1">{title}</h1>
           {lead ? <p className="lead">{lead}</p> : null}
+          {badge ? <div>{badge}</div> : null}
         </div>
         {children ? <div className="filters">{children}</div> : null}
       </div>
@@ -113,7 +116,7 @@ export function Row({ cols, children }: { cols: string; children: ReactNode }) {
   );
 }
 
-export type CellKind = "main" | "r" | "dim" | "wide" | "acts" | "";
+export type CellKind = "main" | "strong" | "r" | "dim" | "wide" | "acts" | "";
 export function Cell({
   label,
   kind = "",

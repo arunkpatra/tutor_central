@@ -9,7 +9,7 @@ test("rupees from paise: two decimals under ₹10, none above, with India's comm
   expect(rupees(284)).toBe("₹2.84");
   expect(rupees(18200)).toBe("₹182");
   expect(rupees(124000)).toBe("₹1,240");
-  expect(rupees(0)).toBe("₹0.00");
+  expect(rupees(0)).toBe("₹0");
 });
 
 test("when: today, yesterday, then the day, in India's clock", () => {

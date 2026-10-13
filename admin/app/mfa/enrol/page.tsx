@@ -53,6 +53,7 @@ export default async function EnrolPage({ searchParams }: { searchParams: Promis
       {f ? (
         <>
           <div className="qrRow">
+            {/* biome-ignore lint/performance/noImgElement: Supabase's square is a data URL; next/image adds nothing to it. */}
             {f.qr ? <img className="qr" src={f.qr} alt={ENROL.squareAlt} width={168} height={168} /> : null}
             <div className="qrKey">
               <div className="note">{ENROL.key}</div>

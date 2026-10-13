@@ -2,8 +2,9 @@
 const IST = "Asia/Kolkata";
 const DAY_MS = 86_400_000;
 
-/** ₹0.07, ₹2.84 under ₹10; ₹182, ₹1,240 above. */
+/** ₹0.07, ₹2.84 under ₹10; ₹182, ₹1,240 above; nothing is ₹0. */
 export function rupees(paise: number): string {
+  if (paise === 0) return "₹0";
   const r = paise / 100;
   if (Math.abs(r) < 10) return `₹${r.toFixed(2)}`;
   return `₹${Math.round(r).toLocaleString("en-IN")}`;
@@ -101,4 +102,10 @@ export function maskIp(ip: string | null): string {
   if (v4.length === 4) return `${v4[0]}.${v4[1]}.x.x`;
   const v6 = ip.split(":");
   return v6.length > 2 ? `${v6.slice(0, 2).join(":")}:…` : ip;
+}
+
+/** Today's time alone ("05:31"); else "Yesterday 19:20" or "11 Oct 16:02". */
+export function short(iso: string, now: Date): string {
+  const w = when(iso, now);
+  return w.startsWith("Today ") ? w.slice(6) : w;
 }

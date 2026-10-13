@@ -1,0 +1,201 @@
+{
+  "centre": {
+    "id": "preview",
+    "name": "Sunrise Tuition Centre",
+    "owner_name": "Meera Iyer",
+    "since": "2026-10-08T04:30:00Z",
+    "students": 12,
+    "batches": 2,
+    "in_use": true,
+    "cost_paise": 18200,
+    "calls": 118,
+    "allowance": 600,
+    "allowance_paise": 0,
+    "cost_by_kind": {
+      "plan": 12100,
+      "notes": 1800,
+      "exams": 4300,
+      "other": 0
+    },
+    "cost_by_model": [
+      {
+        "model": "claude-sonnet-5-5",
+        "paise": 12900
+      },
+      {
+        "model": "claude-haiku-5-5",
+        "paise": 5300
+      }
+    ],
+    "jobs_today": 5,
+    "failed_today": 1,
+    "last_close": "2026-10-12T13:42:00Z",
+    "tutors": [
+      {
+        "user_id": "u1",
+        "name": "Meera Iyer",
+        "role": "owner",
+        "email": "meera@example.com",
+        "last_sign_in": "2026-10-13T01:18:00Z",
+        "push": {
+          "build": 29,
+          "env": "production"
+        }
+      },
+      {
+        "user_id": "u2",
+        "name": "Arjun Iyer",
+        "role": "teacher",
+        "email": "arjun@example.com",
+        "last_sign_in": "2026-10-11T12:40:00Z",
+        "push": null
+      }
+    ]
+  },
+  "jobs": [
+    {
+      "id": "preview-done",
+      "kind": "plan",
+      "centre_id": "preview",
+      "centre": "Sunrise Tuition Centre",
+      "subject": "Evening batch · 13 Oct",
+      "state": "done",
+      "step": "notify",
+      "run_at": "2026-10-13T00:00:00Z",
+      "started_at": "2026-10-13T00:00:00Z",
+      "finished_at": "2026-10-13T00:01:56Z",
+      "created_at": "2026-10-13T00:00:00Z",
+      "seconds": 56,
+      "attempts": 1,
+      "cost_paise": 284,
+      "made": 11,
+      "not_made": 0,
+      "reason": null,
+      "by_member": false
+    },
+    {
+      "id": "preview-pdf",
+      "kind": "pdf",
+      "centre_id": "preview",
+      "centre": "Sunrise Tuition Centre",
+      "subject": "Practise set 1",
+      "state": "done",
+      "step": "make",
+      "run_at": "2026-10-13T00:01:00Z",
+      "started_at": "2026-10-13T00:01:00Z",
+      "finished_at": "2026-10-13T00:01:03Z",
+      "created_at": "2026-10-13T00:01:00Z",
+      "seconds": 3,
+      "attempts": 1,
+      "cost_paise": 0,
+      "made": null,
+      "not_made": null,
+      "reason": null,
+      "by_member": false
+    },
+    {
+      "id": "preview-failed",
+      "kind": "plan",
+      "centre_id": "preview",
+      "centre": "Sunrise Tuition Centre",
+      "subject": "Class 8 Science · 13 Oct",
+      "state": "failed",
+      "step": "make:2",
+      "run_at": "2026-10-13T00:00:00Z",
+      "started_at": "2026-10-13T00:00:00Z",
+      "finished_at": "2026-10-13T00:08:00Z",
+      "created_at": "2026-10-13T00:00:00Z",
+      "seconds": 480,
+      "attempts": 3,
+      "cost_paise": 41,
+      "made": null,
+      "not_made": null,
+      "reason": "attempts",
+      "by_member": false
+    },
+    {
+      "id": "preview-note",
+      "kind": "note_day",
+      "centre_id": "preview",
+      "centre": "Sunrise Tuition Centre",
+      "subject": "Evening batch · 11 Oct",
+      "state": "done",
+      "step": "note:9",
+      "run_at": "2026-10-11T10:30:00Z",
+      "started_at": "2026-10-11T10:30:00Z",
+      "finished_at": "2026-10-11T10:32:00Z",
+      "created_at": "2026-10-11T10:30:00Z",
+      "seconds": 110,
+      "attempts": 1,
+      "cost_paise": 21,
+      "made": null,
+      "not_made": null,
+      "reason": null,
+      "by_member": false
+    },
+    {
+      "id": "preview-rem",
+      "kind": "reminder_sweep",
+      "centre_id": "preview",
+      "centre": "Sunrise Tuition Centre",
+      "subject": "hourly",
+      "state": "done",
+      "step": "plan",
+      "run_at": "2026-10-13T01:35:00Z",
+      "started_at": "2026-10-13T01:35:00Z",
+      "finished_at": "2026-10-13T01:35:01Z",
+      "created_at": "2026-10-13T01:35:00Z",
+      "seconds": 1,
+      "attempts": 1,
+      "cost_paise": 0,
+      "made": null,
+      "not_made": null,
+      "reason": null,
+      "by_member": false
+    }
+  ],
+  "activity": [
+    {
+      "at": "2026-10-13T01:19:00Z",
+      "kind": "tab_opened",
+      "screen": "today",
+      "what": null,
+      "who": "Meera"
+    },
+    {
+      "at": "2026-10-13T01:18:00Z",
+      "kind": "app_opened",
+      "screen": null,
+      "what": null,
+      "who": "Meera"
+    },
+    {
+      "at": "2026-10-12T13:46:00Z",
+      "kind": "fee_paid",
+      "screen": null,
+      "what": "Marked a fee paid",
+      "who": null
+    },
+    {
+      "at": "2026-10-12T13:45:00Z",
+      "kind": "message",
+      "screen": null,
+      "what": "Sent a note · WhatsApp",
+      "who": null
+    },
+    {
+      "at": "2026-10-12T13:42:00Z",
+      "kind": "close",
+      "screen": null,
+      "what": "Closed a class · Evening batch · 11 present",
+      "who": null
+    },
+    {
+      "at": "2026-10-11T12:10:00Z",
+      "kind": "made_again",
+      "screen": null,
+      "what": "Made a sheet again",
+      "who": null
+    }
+  ]
+}

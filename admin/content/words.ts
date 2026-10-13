@@ -22,3 +22,6 @@ export const ENVIRONMENT = { production: "Production", preview: "Preview", local
 
 /** A list or card with no rows (no board draws it; plan constraint: the board's own words for it). */
 export const NOTHING_YET = "Nothing yet";
+
+/** The empty cell. */
+export const NONE = "—";
