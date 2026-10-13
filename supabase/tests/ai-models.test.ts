@@ -93,6 +93,9 @@ test("a check, repair or grade only hangs off a live draft of the centre, by its
   expect((await step(`nothing-${stamp}:check`, "check")).error?.message).toContain("ai_step_orphan");
   expect((await step(`free-${stamp}`, "check")).error?.message).toContain("ai_step_orphan");
   expect((await step(`d-${stamp}:grade`, "grade")).error).toBeNull();
+  // A finite grammar: a draft has at most a check, a repair, the repair's check and a grade.
+  expect((await step(`d-${stamp}:check:check`, "check")).error?.message).toContain("ai_step_orphan");
+  expect((await step(`d-${stamp}:grade:repair`, "repair")).error?.message).toContain("ai_step_orphan");
   // A draft of another centre is no parent.
   const b = await userClient(l, `models-b-${stamp}@example.com`);
   const centreB = (await b.rpc("create_centre", { p_name: "Centre B", p_whatsapp: "+919999999998" })).data as string;

@@ -134,7 +134,7 @@ declare
   v_month timestamptz := date_trunc('month', now() at time zone 'Asia/Kolkata') at time zone 'Asia/Kolkata';
   v_prior record;
   v_id uuid;
-  v_root text := regexp_replace(p_key, '(:(check|repair|grade))+$', '');
+  v_root text := regexp_replace(p_key, ':(check|repair|repair:check|grade)$', '');
 begin
   if not public.is_member(p_centre) then
     raise exception 'ai_not_a_member';
@@ -142,7 +142,8 @@ begin
   perform pg_advisory_xact_lock(hashtextextended('ai_call:' || p_centre::text, 0));
 
   -- A check, repair or grade guards a draft already allowed, so it is not counted; it must hang off one: its key is the
-  -- draft's with `:check`, `:repair` or `:grade` after it, a draft of this centre within a day.
+  -- draft's with `:check`, `:repair`, `:repair:check` or `:grade` after it (a key replays its own row, so a draft has four at
+  -- most), a draft of this centre within a day.
   if p_agent_step <> 'draft' and (p_key is null or v_root = p_key or not exists (
        select 1 from public.ai_generations g
         where g.centre_id = p_centre and g.idempotency_key = v_root and g.agent_step = 'draft'
