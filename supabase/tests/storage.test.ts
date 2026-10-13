@@ -5,7 +5,7 @@ import { type Local, local, serviceClient, userClient } from "./client";
 
 // Phase 18: the server's files (plan decision 20). Two private buckets, `exports` and `pdfs`, read by the centre's
 // members and written by the platform; a deleted row's files are queued in `storage_deletions` for the sweep; a kept
-// sheet, mock or brief queues its PDF's job.
+// sheet, mock, brief or figure queues its PDF's job.
 let l: Local;
 let sql: SQL;
 let svc: SupabaseClient;
@@ -114,6 +114,13 @@ test("a kept sheet queues its PDF job once; a check does not", async () => {
   await keep("check", `pdf-check-${stamp}`);
   const jobs = await sql`select idempotency_key, input from public.jobs where centre_id = ${centreA} and kind = 'pdf'`;
   expect([...jobs]).toEqual([{ idempotency_key: `pdf:${sheet}`, input: { artefact_id: sheet } }]);
+});
+
+test("a kept figure queues its PDF job too (0053: the figure's PDF is drawn on the server)", async () => {
+  await sql`delete from public.jobs where centre_id = ${centreA} and kind = 'pdf'`;
+  const figure = (await a.rpc("keep_artefact", { p_centre: centreA, p_artefact: { kind: "figure", title: "A figure", content: {} }, p_plan: null, p_group_no: 0, p_student: null, p_item_kind: "figure", p_key: `pdf-figure-${stamp}` })).data as string;
+  const jobs = await sql`select idempotency_key from public.jobs where centre_id = ${centreA} and kind = 'pdf'`;
+  expect([...jobs]).toEqual([{ idempotency_key: `pdf:${figure}` }]);
 });
 
 test("a member reads their centre's exports and pdfs objects, never another's, and writes none", async () => {

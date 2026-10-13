@@ -2,6 +2,9 @@ import { type BriefContent, briefPdf } from "../../pdf/brief.js";
 import { type MockContent, mockPdf } from "../../pdf/mock.js";
 import { renderPdf } from "../../pdf/render.js";
 import { type SheetContent, sheetPdf } from "../../pdf/sheet.js";
+import { figurePdf } from "../../pdf/figure.js";
+import { camel } from "../../plan/material.js";
+import { FigureOutput } from "../../schemas.js";
 import type { JobHandler } from "../types.js";
 
 /** What the PDF job reads and writes as the platform (D83): the artefact, and the private bucket `pdfs`. */
@@ -14,7 +17,7 @@ export type PdfSource = {
 /** The paths of an artefact's PDFs: the questions, and the same with the key on its own page (Share's two forms). */
 export const pdfPaths = (centre: string, artefact: string) => ({ path: `${centre}/${artefact}.pdf`, keyPath: `${centre}/${artefact}-key.pdf` });
 
-/** The `pdf` job (D90; plan decision 3): a sheet's, mock's or brief's PDF made on the server when it is kept, in the
+/** The `pdf` job (D90; plan decision 3; Phase 20 adds the figure, drawn from its spec): a sheet's, mock's, brief's or figure's PDF made on the server when it is kept, in the
  *  phone's layout for its kind, written to `pdfs/<centre>/<artefact>.pdf` (and `-key.pdf` for a sheet or mock, the form
  *  with the answers). One step: the render and the upload together (the bytes never sit in the job's row); a retake
  *  writes the same paths again. */
@@ -37,6 +40,11 @@ export function pdfJob(source: PdfSource, deps: { render: typeof renderPdf } = {
           forms.push({ path, source: mockPdf(content, meta, false) }, { path: keyPath, source: mockPdf(content, meta, true) });
         } else if (artefact.kind === "brief") {
           forms.push({ path, source: briefPdf(artefact.content as unknown as BriefContent, meta) });
+        } else if (artefact.kind === "figure") {
+          // Kept snake-cased (the app's keys); drawn only when the spec keeps its template's rule.
+          const figure = FigureOutput.safeParse(camel(artefact.content));
+          if (!figure.success) return { kind: "done", name: "make", result: { reason: "not_printable" } };
+          forms.push({ path, source: figurePdf(figure.data.figure, { ...meta, caption: figure.data.caption }) });
         } else {
           return { kind: "done", name: "make", result: { reason: "not_printable" } };
         }
