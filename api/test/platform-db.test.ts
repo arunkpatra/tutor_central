@@ -25,6 +25,7 @@ import { makeOutboxDb } from "../src/push/db.js";
 import { makeReminderSource } from "../src/reminders/source.js";
 import { sendDue } from "../src/push/send-due.js";
 import { makeModelSource } from "../src/models-db.js";
+import { makePdfSource } from "../src/pdf/source.js";
 import table from "../models.json" with { type: "json" };
 
 // The platform's reads and writes over the local stack's service role (the review's findings 3 and 8). It needs
@@ -318,4 +319,21 @@ test.skipIf(!up)("the platform reads ai_models' current rows: three per work typ
   expect(rows.length).toBe(Object.keys(table.work).length * 3);
   expect(rows.find((r) => r.kind === "sheet_to_5" && r.step === "check")).toMatchObject({ model: "claude-sonnet-5-5", enabled: true });
   await expect(makeModelSource(url as string, anon as string).current()).rejects.toThrow();
+});
+
+test.skipIf(!up)("the PDF source reads an artefact's foot: the centre's name and, from its plan, the batch's (P20-PDF-Sheet)", async () => {
+  const db = admin();
+  const source = makePdfSource(url as string, service as string);
+  const centre = ((await db.from("centres").select("id, name").eq("id", CENTRE).single()).data) as { id: string; name: string };
+  const batch = ((await db.from("classes").select("id, name").eq("centre_id", CENTRE).limit(1).single()).data) as { id: string; name: string };
+  const plan = ((await db.from("plans").insert({ centre_id: CENTRE, class_id: batch.id, date: "2030-01-01" }).select("id").single()).data) as { id: string };
+  const made = async (planId: string | null) =>
+    ((await db.from("artefacts").insert({ centre_id: CENTRE, kind: "sheet", source: "made", title: "Foot", content: {}, plan_id: planId }).select("id").single()).data as { id: string }).id;
+  try {
+    expect((await source.artefact(CENTRE, await made(plan.id)))?.foot).toBe(`${centre.name} · ${batch.name}`);
+    expect((await source.artefact(CENTRE, await made(null)))?.foot).toBe(centre.name);
+  } finally {
+    await db.from("artefacts").delete().eq("centre_id", CENTRE).eq("title", "Foot");
+    await db.from("plans").delete().eq("id", plan.id);
+  }
 });

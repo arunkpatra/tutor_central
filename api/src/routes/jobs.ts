@@ -88,13 +88,16 @@ export function jobRoutes(worker: Worker, claude: ClaudeClient) {
     return c.json({ ...(await run(c.get("requestId"))), ...(pushed ? { push: pushed } : {}) });
   });
   r.post("/wake", async (c) => c.json(await run(c.get("requestId"))));
-  /** The deploy's proof of the new parts (plan decision 26): one page rendered with a Devanagari line (the module and the
-   *  fonts are with the function), and APNs asked once in production with a token no device has: "BadDeviceToken" means
-   *  Apple took the key, the team and the topic. */
+  /** The deploy's proof of the new parts (plan decision 26): one page rendered with a Devanagari line and a formula (the
+   *  module, the fonts and mitex are with the function: `maths` when the page embeds STIX Two Math, D102), and APNs asked
+   *  once in production with a token no device has: "BadDeviceToken" means Apple took the key, the team and the topic. */
   r.get("/health", async (c) => {
     let pdf = 0;
+    let maths = false;
     try {
-      pdf = (await renderPdf(`${preamble()}\n${t("Tutor Central · नमस्ते")}`)).pages;
+      const page = await renderPdf(`${preamble()}\n${t("Tutor Central · नमस्ते · $\\frac{1}{2}$")}`);
+      pdf = page.pages;
+      maths = new TextDecoder("latin1").decode(page.bytes).includes("STIXTwoMath");
     } catch (e) {
       log.error({ requestId: c.get("requestId"), message: "the health page did not render", error: e });
     }
@@ -108,7 +111,7 @@ export function jobRoutes(worker: Worker, claude: ClaudeClient) {
         await pusher.close();
       }
     }
-    return c.json({ pdf, apns });
+    return c.json({ pdf, maths, apns });
   });
   return r;
 }

@@ -10,10 +10,10 @@ export type BriefContent = {
 
 /** A brief as the phone draws it (BriefStore.pdfSheet): the title, then what the chapter is about, three common mistakes,
  *  the worked example to use and the words to say. */
-export function briefPdf(content: BriefContent, meta: { title: string }): string {
+export function briefPdf(content: BriefContent, meta: { title: string; foot?: string }): string {
   const block = (head: string, lines: string[]) => ["#v(12pt)", heading(head), ...lines.map((l) => `#par[${t(l)}]`)].join("\n\n");
   return [
-    preamble(),
+    preamble(meta.foot),
     title(meta.title),
     block("What the chapter is about", [content.about]),
     block("Three common mistakes", content.mistakes.flatMap((m, i) => [`${i + 1}. ${m.title}`, m.how_to_catch])),

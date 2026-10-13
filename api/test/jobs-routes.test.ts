@@ -131,7 +131,7 @@ test("/jobs/health renders one page and answers apns true behind the bearer", as
   });
   expect((await app.request("/jobs/health")).status).toBe(401);
   const r = await app.request("/jobs/health", { headers: bearer });
-  expect(await r.json()).toEqual({ pdf: 1, apns: true });
+  expect(await r.json()).toEqual({ pdf: 1, maths: true, apns: true });
   expect(pusher.sent.map((p) => p.environment)).toEqual(["production"]);
   expect(pusher.closed).toBe(1);
 });

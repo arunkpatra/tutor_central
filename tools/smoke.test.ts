@@ -7,7 +7,7 @@ let healthStatus = 200;
 let aiStatus = 401;
 let questions: unknown[] = [{ prompt: "1/2 + 1/4" }];
 let tickStatus = 200;
-let health: { pdf: number; apns: boolean } = { pdf: 1, apns: true };
+let health: { pdf: number; maths?: boolean; apns: boolean } = { pdf: 1, maths: true, apns: true };
 const seen: { make?: { headers: Headers; body: Record<string, unknown> }; token?: { headers: Headers; body: Record<string, unknown> }; tick?: Headers } = {};
 const server = Bun.serve({
   port: 0,
@@ -107,7 +107,10 @@ test("the worker's health must render a page and reach APNs (plan decision 26)",
   expect(await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).toEqual([]);
   health = { pdf: 0, apns: true };
   expect((await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).join("\n")).toContain("/jobs/health rendered no page");
-  health = { pdf: 1, apns: false };
+  health = { pdf: 1, maths: true, apns: false };
   expect((await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).join("\n")).toContain("/jobs/health could not reach APNs");
-  health = { pdf: 1, apns: true };
+  // Phase 20 (D102): the page's formula drawn in STIX Two Math, mitex in the function.
+  health = { pdf: 1, maths: false, apns: true };
+  expect((await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).join("\n")).toContain("/jobs/health drew no formula");
+  health = { pdf: 1, maths: true, apns: true };
 });
