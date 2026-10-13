@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { DEFAULT_PAGES, parseAdminShotsArgs, shotName, wrongStatus } from "./admin-shots";
+import { DEFAULT_PAGES, parseAdminShotsArgs, shotName, wrongStatus, LOADING_SHOWN } from "./admin-shots";
 
 test("the defaults are the fifteen boards' pages at both widths and appearances", () => {
   expect(parseAdminShotsArgs([])).toEqual({ pages: DEFAULT_PAGES, widths: [1280, 390], appearances: ["dark", "light"], out: ".shots/admin" });
@@ -29,4 +29,9 @@ test("a page must answer 200, the not-found page 404", () => {
   expect(wrongStatus("/cost", 200)).toBeNull();
   expect(wrongStatus("/cost", 307)).toBe("/cost answered 307, not 200");
   expect(wrongStatus("/nothing-here", 404)).toBeNull();
+});
+
+test("a page is photographed once its loading frame has gone: the check reads the frame's marks (D97)", () => {
+  expect(LOADING_SHOWN).toContain('section[aria-busy="true"]');
+  expect(LOADING_SHOWN).toContain(".loadBar");
 });

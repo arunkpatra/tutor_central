@@ -77,3 +77,20 @@ test("outcomes, centres and keys in the boards' words", () => {
   expect(shortCentre(null)).toBe("—");
   expect(shortKey("smoke-6d973b9")).toBe("smoke-6d973b9");
 });
+
+// Phase 20 (D99): the agent's step on a call.
+test("the list shows a check's step beside its kind; a draft shows its kind alone", async () => {
+  const html = renderToStaticMarkup(await CallsPage({ searchParams: Promise.resolve({ day: "today" }) }));
+  expect(html).toContain("sheet · check");
+  expect(html).toMatch(/>sheet</);
+});
+
+test("a call's page names its step", async () => {
+  const html = renderToStaticMarkup(await CallPage({ params: Promise.resolve({ id: "preview" }) }));
+  expect(html).toContain("Step");
+  expect(html).toContain("draft · the first answer");
+});
+
+test("a draft refused after its check reads refused, with the finding's item", () => {
+  expect(outcomeChip("failed", "check:question 1")).toEqual({ tone: "due", text: "refused · check:question 1" });
+});

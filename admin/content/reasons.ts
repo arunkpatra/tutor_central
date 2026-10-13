@@ -9,6 +9,7 @@ const WORDS: { [reason: string]: string } = {
   invalid: "a request that broke its checks",
   refused: "the model refused",
   unfit: "an answer that broke its rules",
+  paused: "the kind is switched off",
 };
 
 /** The short reason: the row's own, or the status's when the answer carries none (401, 413). */

@@ -72,6 +72,9 @@ export function wrongStatus(path: string, status: number): string | null {
   return status === want ? null : `${path} answered ${status}, not ${want}`;
 }
 
+/** True while the portal's loading frame (`PageLoading`: `section[aria-busy]`, the `.loadBar`) is on screen. */
+export const LOADING_SHOWN = `!!document.querySelector('section[aria-busy="true"], .loadBar')`;
+
 async function freePort(): Promise<number> {
   const server = Bun.serve({ port: 0, fetch: () => new Response() });
   const port = server.port as number;
@@ -116,6 +119,13 @@ if (import.meta.main) {
           const loaded = chrome.once("Page.loadEventFired");
           await chrome.send("Page.navigate", { url: origin + path });
           await loaded;
+          // The load event can fire while Next still streams the page behind its loading frame (D97): the first page on
+          // a cold server was photographed loading. Wait for the frame to go.
+          for (let i = 0; i < 40; i++) {
+            const busy = await chrome.send<{ result: { value: boolean } }>("Runtime.evaluate", { expression: LOADING_SHOWN, returnByValue: true });
+            if (!busy.result.value) break;
+            await Bun.sleep(250);
+          }
           const scroll = await chrome.send<{ result: { value: number } }>("Runtime.evaluate", {
             expression: "document.documentElement.scrollWidth",
             returnByValue: true,

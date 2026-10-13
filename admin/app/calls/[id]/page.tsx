@@ -41,6 +41,7 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
     [CALL.facts.kind, CALL.kindOf(call.kind, call.student)],
     [CALL.facts.model, CALL.model(call.model ?? NONE, call.fallback_model)],
     [CALL.facts.prompt, CALL.prompt(call.kind, call.prompt_version, call.prompt_hash)],
+    [CALL.facts.step, CALL.step(call.agent_step)],
     [
       CALL.facts.outcome,
       <>

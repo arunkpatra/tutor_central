@@ -122,7 +122,7 @@ export default async function CallsPage({ searchParams }: { searchParams: Promis
                   sub={CALLS.sub(modelName(c.model), c.prompt_version, c.student)}
                 >
                   <PageLink className="plain" href={`/calls/${c.id}`}>
-                    {c.kind}
+                    {CALLS.kindStep(c.kind, c.agent_step)}
                   </PageLink>
                 </Cell>
                 <Cell label={CALLS.head.outcome}>

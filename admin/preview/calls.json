@@ -21,7 +21,26 @@
       "latency_ms": 2200,
       "cost_paise": 1,
       "student": false,
-      "started_by": "tap"
+      "started_by": "tap",
+      "agent_step": "draft"
+    },
+    {
+      "id": "preview-check",
+      "created_at": "2026-10-13T00:03:10Z",
+      "centre_id": "preview",
+      "centre": "Sunrise Tuition Centre",
+      "kind": "sheet",
+      "model": "claude-haiku-5-5",
+      "prompt_version": "v3",
+      "status": "ok",
+      "error_reason": null,
+      "tokens_in": 1062,
+      "tokens_out": 58,
+      "latency_ms": 1900,
+      "cost_paise": 1,
+      "student": false,
+      "started_by": "job plan",
+      "agent_step": "check"
     },
     {
       "id": "preview-2",
@@ -38,7 +57,8 @@
       "latency_ms": 110004,
       "cost_paise": 6,
       "student": false,
-      "started_by": "job plan"
+      "started_by": "job plan",
+      "agent_step": "draft"
     },
     {
       "id": "preview-3",
@@ -55,7 +75,8 @@
       "latency_ms": 7900,
       "cost_paise": 47,
       "student": false,
-      "started_by": "job plan"
+      "started_by": "job plan",
+      "agent_step": "draft"
     },
     {
       "id": "preview-4",
@@ -72,7 +93,8 @@
       "latency_ms": 12400,
       "cost_paise": 157,
       "student": false,
-      "started_by": "job plan"
+      "started_by": "job plan",
+      "agent_step": "draft"
     },
     {
       "id": "preview-5",
@@ -89,7 +111,8 @@
       "latency_ms": 4100,
       "cost_paise": 4,
       "student": false,
-      "started_by": "job plan"
+      "started_by": "job plan",
+      "agent_step": "draft"
     },
     {
       "id": "preview-6",
@@ -106,7 +129,8 @@
       "latency_ms": 3000,
       "cost_paise": 17,
       "student": false,
-      "started_by": "job plan"
+      "started_by": "job plan",
+      "agent_step": "draft"
     },
     {
       "id": "preview-7",
@@ -123,7 +147,8 @@
       "latency_ms": 2800,
       "cost_paise": 1,
       "student": false,
-      "started_by": "deploy"
+      "started_by": "deploy",
+      "agent_step": "draft"
     },
     {
       "id": "preview-8",
@@ -140,7 +165,8 @@
       "latency_ms": 3400,
       "cost_paise": 7,
       "student": true,
-      "started_by": "tap"
+      "started_by": "tap",
+      "agent_step": "draft"
     },
     {
       "id": "preview-9",
@@ -157,7 +183,8 @@
       "latency_ms": 41000,
       "cost_paise": 818,
       "student": true,
-      "started_by": "tap"
+      "started_by": "tap",
+      "agent_step": "draft"
     }
   ]
 }
