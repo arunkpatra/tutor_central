@@ -2,7 +2,7 @@
 
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Opus 5.5
 (D17: plans on Fable, builds on Opus). Session 40 drew Phase 20's 15 boards (row 28 of the canvas) and wrote
-`plan/phase-20-plan.md` with D99 to D102; the owner has reviewed both. This session builds the phase from the plan, task by
+`plan/phase-20-plan.md` with D99 to D102; the owner approved both ("Boards approved, go ahead with the plan"). This session builds the phase from the plan, task by
 task, in pull requests, with the hand runs, the cost run, the review and the documents.
 
 ---

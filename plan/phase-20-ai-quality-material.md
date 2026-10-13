@@ -1,7 +1,7 @@
 # Phase 20: V3 AI quality, the material
 
 **Status:** Planned (session 40, 2026-10-13): the 15 boards of row 28 drawn (`docs/design/mockups/P20-*`) and `phase-20-plan.md`
-written, both awaiting the owner's approval; then the build on Opus 5.5 from `resume/039-phase-20-build.md`. **Depends on:** Phases
+written, both approved by the owner the same day; the build on Opus 5.5 from `resume/039-phase-20-build.md`. **Depends on:** Phases
 17 and 18 (the jobs run the agents); the boards for the sheet, worked example, mock and board view with mathematics, and the Kit's
 maths preview, approved first.
 

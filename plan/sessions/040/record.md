@@ -53,12 +53,11 @@ the owner's approval, as sessions 31 and 36 did.
 D102 in the README, eight review-focus lines with their tests, the file structure, the order, the cost (one new standing
 cost, the nightly's ₹360 a month, said for the owner to keep or cut) and the self-review. Resume 039 written and indexed.
 
-## One question for the owner
+## The owner's answer
 
-The boards' approval (the plan's work changes what the tutor sees only to them). Offered, not asked: "Make the plan again" on
+"Boards approved, go ahead with the plan": the 15 boards and the plan approved together on 2026-10-13. Offered, not asked: "Make the plan again" on
 his iPhone today, so the material path is proved in production before the 20th.
 
 ## What is next
 
-Session 41: Phase 20's build on Opus 5.5 from `plan/resume/039-phase-20-build.md`, after the owner's review of the boards and
-the plan.
+Session 41: Phase 20's build on Opus 5.5 from `plan/resume/039-phase-20-build.md`.

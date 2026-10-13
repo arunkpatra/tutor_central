@@ -1509,7 +1509,7 @@ What the build settled (Phase 19, session 39), states no board draws, in the boa
 Row 28 of the canvas (y 82000; the title note at 81700); sources `mockups/P20-*.dc.html`, dark and light twins side by side.
 Drawn by session 40 in the Phase 10 artefact boards' grammar (step 10.4), with every formula drawn as SwiftMath and Typst
 draw it (D75): a serif maths face beside SF Pro, letters italic, numbers upright, fractions stacked, roots with their bar.
-Awaiting the owner's approval.
+Approved by the owner 2026-10-13 ("Boards approved, go ahead with the plan").
 
 | Board | Source |
 |---|---|

@@ -22,3 +22,4 @@ Ruling: the one new secret is `ANTHROPIC_API_KEY` as a GitHub repository secret 
 Ruling: the nightly's standing cost (about ₹360 a month at 45 cases) is said in the plan's cost table for the owner to keep or cut; not asked as a question — cost if wrong: a month's evals at that price.
 Plan: plan/phase-20-plan.md with superpowers:writing-plans in Phase 19's form: 18 tasks, 14 pull requests, 22 decisions, D99 to D102 in the README, eight review-focus lines with their tests, the file structure, the order, the cost, the self-review. Resume 039 written and indexed.
 Dependencies pinned (D14): promptfoo 0.124.1 (`bun info`), SwiftMath 1.7.3 (the newest tag), mitex 0.2.7 (the Typst universe page, 7 April 2026), STIX Two Math (the stixfonts release, OFL).
+Owner: "Boards approved, go ahead with the plan" — the 15 boards of row 28 and phase-20-plan.md approved 2026-10-13; the mirror marked approved; the build is resume 039's on Opus 5.5.

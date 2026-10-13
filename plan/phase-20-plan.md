@@ -7,7 +7,7 @@ Written 2026-10-13 (session 40, Fable 5.1) from `phase-20-ai-quality-material.md
 agents, the models, the cost levers, the prompts, the evals, mathematics), Phase 18's and 19's "As built" and ledgers
 (`plan/sessions/037/`, `039/`), the 15 boards of row 28 (`docs/design/mockups/P20-*`, "Phase 20 boards" in
 `docs/design/information-architecture.md`), Phase 15's cost run (`phase-15-make-and-polish.md`, the figure this phase's
-run is set against) and the code as it is. Shown whole to the owner for approval. The build runs on Opus 5.5 from
+run is set against) and the code as it is. Approved by the owner 2026-10-13 ("Boards approved, go ahead with the plan"). The build runs on Opus 5.5 from
 `resume/039-phase-20-build.md`, inline, task by task, with one ledger (`plan/sessions/041/ledger.md`) as sessions 22 to
 39 kept.
 
@@ -58,8 +58,7 @@ Vercel or Supabase plan.
 
 ## Decisions this plan takes
 
-The boards are shown to the owner with this plan (session 40); each is listed in "Phase 20 boards" as drawn, awaiting his
-approval. Everything below was mine to decide and is stated so it can be pushed back on. D99 to D102 go into
+The boards were shown to the owner with this plan (session 40) and approved with it; each is listed in "Phase 20 boards". Everything below was mine to decide and is stated so it can be pushed back on. D99 to D102 go into
 `plan/README.md` with the plan's approval, as D94 to D96 did.
 
 1. **The pipeline's shape (D99).** `runAgent` does, in order: the draft (the kind's model, structured output); the schema
