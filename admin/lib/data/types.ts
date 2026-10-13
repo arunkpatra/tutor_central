@@ -229,7 +229,8 @@ export type Data = {
   activity(id: string, limit: number): Promise<Activity[]>;
   centreJobs(id: string, limit: number): Promise<JobRow[]>;
   openRecord(admin: string, centre: string, reason: string, ip: string | null): Promise<Record | null>;
-  record(audit: string): Promise<Record | null>;
+  /** The record again for a fresh open by this admin. */
+  record(audit: string, admin: string): Promise<Record | null>;
   cost(month: string, centre: string | null): Promise<Cost>;
   calls(filters: CallFilters): Promise<Calls>;
   call(id: string): Promise<Call | null>;

@@ -52,7 +52,7 @@ export function realData(): Data {
     centreJobs: (id, limit) => rpc<JobRow[]>("admin_centre_jobs", { p_centre: id, p_limit: limit }),
     openRecord: (admin, centre, reason, ip) =>
       rpc<Record | null>("admin_open_record", { p_admin: admin, p_centre: centre, p_reason: reason, p_ip: ip }),
-    record: (audit) => rpc<Record | null>("admin_record_opened", { p_audit: audit }),
+    record: (audit, admin) => rpc<Record | null>("admin_record_opened", { p_audit: audit, p_admin: admin }),
     cost: async (month, centre) => {
       const [tiles, byDay, byCentre, byKind] = await Promise.all([
         rpc<Cost["tiles"]>("admin_cost_tiles", { p_month: month }),
