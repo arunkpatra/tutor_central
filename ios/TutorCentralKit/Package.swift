@@ -14,10 +14,16 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/supabase/supabase-swift.git", exact: "2.55.3"),
+        // Mathematics on the phone (D75, D102): SwiftMath draws LaTeX with Core Text, offline; MIT.
+        .package(url: "https://github.com/mgriebling/SwiftMath.git", exact: "1.7.3"),
     ],
     targets: [
         // Marks.xcassets: Google's "G" for Sign in with Google, in its own colours.
-        .target(name: "DesignSystem", resources: [.process("Resources")]),
+        .target(
+            name: "DesignSystem",
+            dependencies: [.product(name: "SwiftMath", package: "SwiftMath")],
+            resources: [.process("Resources")]
+        ),
         .target(name: "Domain"),
         .target(name: "Data", dependencies: [
             "Domain",
@@ -32,7 +38,8 @@ let package = Package(
                 name: "AppShell",
                 dependencies: ["Domain", "Data", "DesignSystem"] + features.map { Target.Dependency(stringLiteral: $0) }
             ),
-            .testTarget(name: "DesignSystemTests", dependencies: ["DesignSystem"]),
+            // Cases: the maths split's shared cases (tools/contract/maths-cases.json, copied by bun contract).
+            .testTarget(name: "DesignSystemTests", dependencies: ["DesignSystem"], resources: [.copy("Cases")]),
             .testTarget(name: "DomainTests", dependencies: ["Domain"], resources: [.copy("Cases")]),
             .testTarget(name: "DataTests", dependencies: ["Data"], resources: [.copy("Contract")]),
             .testTarget(name: "AppShellTests", dependencies: ["AppShell"]),

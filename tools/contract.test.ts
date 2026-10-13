@@ -78,6 +78,10 @@ test("each shared case file is copied into DomainTests' Cases (Phase 18: the exa
 			"tools/contract/note-cases.json",
 			"ios/TutorCentralKit/Tests/DomainTests/Cases/note-cases.json",
 		],
+		[
+			"tools/contract/maths-cases.json",
+			"ios/TutorCentralKit/Tests/DesignSystemTests/Cases/maths-cases.json",
+		],
 	]);
 });
 

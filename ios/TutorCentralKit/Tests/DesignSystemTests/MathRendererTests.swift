@@ -1,0 +1,24 @@
+import Testing
+import UIKit
+@testable import DesignSystem
+
+/// SwiftMath draws a formula into an image at the type's size and colour (D102); nonsense draws nothing, so the
+/// text is shown as written.
+@Test @MainActor func rendersAFractionAndRefusesNonsense() throws {
+    let fraction = try #require(MathRenderer.rendered(
+        latex: "\\frac{x}{4}",
+        pointSize: 15,
+        color: .white,
+        display: false
+    ))
+    #expect(fraction.image.size.width > 0)
+    #expect(fraction.image.size.height > 15)
+    #expect(fraction.descent > 0)
+    #expect(MathRenderer.image(latex: "\\frac{x}{4", pointSize: 15, color: .white, display: false) == nil)
+}
+
+@Test @MainActor func aFormulaGrowsWithItsSize() throws {
+    let small = try #require(MathRenderer.rendered(latex: "x^{2} + 1", pointSize: 17, color: .white, display: false))
+    let large = try #require(MathRenderer.rendered(latex: "x^{2} + 1", pointSize: 34, color: .white, display: false))
+    #expect(large.image.size.height > small.image.size.height * 1.6)
+}

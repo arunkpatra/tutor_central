@@ -366,6 +366,7 @@ extension RootView {
             case .kitPhase7: .phase7
             case .kitPhase10: .phase10
             case .kitPhase10Figures: .phase10Figures
+            case .kitPhase20: .phase20
             default: nil
             }
         }

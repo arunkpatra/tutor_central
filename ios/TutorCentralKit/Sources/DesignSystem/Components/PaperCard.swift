@@ -76,9 +76,8 @@ public struct QuestionRow: View {
                 .foregroundStyle(Tokens.text2.color)
                 .frame(minWidth: Self.numberColumn, alignment: .leading)
                 .fixedSize()
-            Text(text)
-                .typeStyle(Tokens.subhead)
-                .foregroundStyle(Tokens.text.color)
+            // A formula in the question is drawn in place (D102); a question with no `$` is plain text.
+            MathText(text, style: Tokens.subhead)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
