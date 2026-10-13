@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Frame } from "@/components/Frame";
+import { PageLink } from "@/components/PageLink";
 import {
-  Button,
   Cell,
   Chip,
   Dialog,
@@ -17,12 +17,13 @@ import {
   Tiles,
   Title,
 } from "@/components/parts";
+import { SubmitButton } from "@/components/SubmitButton";
 import { activityWords } from "@/content/activity";
 import { CENTRE, PLAN_PAISE } from "@/content/centres";
 import { finished, stateChip } from "@/content/jobs";
 import { family } from "@/content/models";
 import { ASK } from "@/content/record";
-import { NONE } from "@/content/words";
+import { NONE, PENDING } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
@@ -187,9 +188,9 @@ export default async function CentrePage({
             return (
               <Row key={j.id} cols={JOB_COLS}>
                 <Cell label={CENTRE.jobsHead.kind}>
-                  <a className="plain" href={`/jobs?centre=${id}&day=all&open=${j.id}`}>
+                  <PageLink className="plain" href={`/jobs?centre=${id}&day=all&open=${j.id}`}>
                     {j.kind}
-                  </a>
+                  </PageLink>
                 </Cell>
                 <Cell label={CENTRE.jobsHead.subject} kind="dim">
                   {j.subject ?? NONE}
@@ -249,7 +250,9 @@ export default async function CentrePage({
               <LinkButton kind="quiet" href={`/centres/${id}`}>
                 {ASK.cancel}
               </LinkButton>
-              <Button kind="primary">{ASK.open}</Button>
+              <SubmitButton kind="primary" working={PENDING.open}>
+                {ASK.open}
+              </SubmitButton>
             </div>
           </form>
         </Dialog>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/Frame";
+import { PageLink } from "@/components/PageLink";
 import { Cell, Chip, Meter, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
 import { CENTRES, PLAN_PAISE } from "@/content/centres";
 import { ENVIRONMENT } from "@/content/words";
@@ -88,9 +89,9 @@ export default async function CentresPage({ searchParams }: { searchParams: Prom
           {rows.map((r) => (
             <Row key={r.id} cols={COLS}>
               <Cell label={CENTRES.head.centre} kind="main" sub={CENTRES.since(r.owner_name, dayMonth(r.since))}>
-                <a className="plain" href={`/centres/${r.id}`}>
+                <PageLink className="plain" href={`/centres/${r.id}`}>
                   {r.name}
-                </a>
+                </PageLink>
               </Cell>
               <Cell label={CENTRES.head.students} kind="r">
                 {count(r.students)}

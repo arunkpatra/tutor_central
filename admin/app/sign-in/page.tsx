@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { AuthFrame } from "@/components/Frame";
-import { Button, Field } from "@/components/parts";
+import { Field } from "@/components/parts";
+import { SubmitButton } from "@/components/SubmitButton";
 import { SIGN_IN } from "@/content/door";
+import { PENDING } from "@/content/words";
 import { sameSite } from "@/lib/gate";
 import { signIn } from "./actions";
 
@@ -32,9 +34,9 @@ export default async function SignInPage({
         />
         <Field label={SIGN_IN.password} name="password" type="password" autoComplete="current-password" required />
         {failed ? <p className="fieldError">{SIGN_IN.failed}</p> : null}
-        <Button kind="primary" big>
+        <SubmitButton kind="primary" big working={PENDING.signIn}>
           {SIGN_IN.button}
-        </Button>
+        </SubmitButton>
       </form>
       <p className="note">{SIGN_IN.note}</p>
     </AuthFrame>

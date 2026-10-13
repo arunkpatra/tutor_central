@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Fragment } from "react";
 import { Frame } from "@/components/Frame";
-import { Button, Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import { PageLink } from "@/components/PageLink";
+import { Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import { SubmitButton } from "@/components/SubmitButton";
 import { shortCentre } from "@/content/calls";
 import { cutIds, inputLine, JOBS, span, stateChip, stepNote } from "@/content/jobs";
-import { ENVIRONMENT, NONE } from "@/content/words";
+import { ENVIRONMENT, NONE, PENDING } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
@@ -52,14 +54,18 @@ function Opened({ job, q }: { job: Job; q: Query }) {
             <form action={cancelJob}>
               <input type="hidden" name="job" value={job.id} />
               <input type="hidden" name="back" value={back} />
-              <Button kind="destructive">{JOBS.cancel}</Button>
+              <SubmitButton kind="destructive" working={PENDING.cancel}>
+                {JOBS.cancel}
+              </SubmitButton>
             </form>
           ) : null}
           {job.state === "failed" ? (
             <form action={retryJob}>
               <input type="hidden" name="job" value={job.id} />
               <input type="hidden" name="back" value={back} />
-              <Button kind="primary">{JOBS.retry}</Button>
+              <SubmitButton kind="primary" working={PENDING.retry}>
+                {JOBS.retry}
+              </SubmitButton>
             </form>
           ) : null}
         </div>
@@ -185,9 +191,9 @@ export default async function JobsPage({ searchParams }: { searchParams: Promise
               <Fragment key={j.id}>
                 <Row cols={COLS}>
                   <Cell label={JOBS.head.kind} kind="main">
-                    <a className="plain" href={href(q, { open: j.id === open?.id ? undefined : j.id })}>
+                    <PageLink className="plain" href={href(q, { open: j.id === open?.id ? undefined : j.id })}>
                       {j.kind}
-                    </a>
+                    </PageLink>
                   </Cell>
                   <Cell label={JOBS.head.centre} kind="dim">
                     {j.centre ? shortCentre(j.centre) : "—"}

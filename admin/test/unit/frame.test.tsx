@@ -8,8 +8,8 @@ test("the frame carries the brand with its ADMIN mark, the seven pages marking t
   delete process.env.TC_COMMIT;
   expect(html).toContain("Tutor Central");
   expect(html).toContain(">ADMIN<");
-  for (const p of ["centres", "cost", "calls", "errors", "alerts", "audit"]) expect(html).toContain(`href="/${p}">`);
-  expect(html).toContain('href="/jobs" aria-current="page"');
+  for (const p of ["centres", "cost", "calls", "errors", "alerts", "audit"]) expect(html).toContain(`<a href="/${p}">`);
+  expect(html).toContain('<a aria-current="page" href="/jobs">');
   expect(html).toContain('action="/sign-out" method="post"');
   expect(html).toContain("Sign out");
   expect(html).toContain("Tutor Central admin · local · 6d973b9 · times in India (IST)");

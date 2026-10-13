@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Frame } from "@/components/Frame";
+import { PageLink } from "@/components/PageLink";
 import { Cell, Chip, Code, LinkButton, Row, Section, Table, Title } from "@/components/parts";
 import { CALL, DEADLINE_MS, outcomeChip } from "@/content/calls";
 import { NONE } from "@/content/words";
@@ -60,7 +61,7 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
         {jobHref ? (
           <>
             {" · "}
-            <a href={jobHref}>{CALL.openJobLink}</a>
+            <PageLink href={jobHref}>{CALL.openJobLink}</PageLink>
           </>
         ) : null}
       </>,
@@ -69,9 +70,9 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
     [
       CALL.facts.centre,
       call.centre ? (
-        <a key="centre" href={`/centres/${call.centre_id}`}>
+        <PageLink key="centre" href={`/centres/${call.centre_id}`}>
           {call.centre}
-        </a>
+        </PageLink>
       ) : (
         NONE
       ),
