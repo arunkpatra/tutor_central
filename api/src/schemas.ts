@@ -302,7 +302,7 @@ export type Proof = z.infer<typeof Proof>;
 /** A model check's verdict on a draft against the kind's rubric (D99). */
 export const CheckVerdict = z.object({
   pass: z.boolean(),
-  findings: z.array(z.object({ item: z.string().min(1).max(80), problem: z.string().min(1).max(300) })).max(12),
+  findings: z.array(z.object({ item: z.string().min(1).max(200), problem: z.string().min(1).max(300) })).max(12),
 });
 export type CheckVerdict = z.infer<typeof CheckVerdict>;
 

@@ -148,7 +148,10 @@ test("a worked example makes up its own problem; a placement asks about what a c
   expect(systemText(workedExample("10", "Mathematics", "Quadratic equations"))).toContain("Make up your own problem and numbers; never a textbook's worked example or exercise");
   const placement = systemText(placementRequest("4", "English", ["Wake Up!", "Nasruddin's Aim"]));
   expect(placement).toContain("Ask about what the chapter teaches, never a question its title answers");
-  expect(placement).toContain("leave a title's exclamation mark out of the question");
+  // The checker and the grader disagreed on a title's "!" (#312's evals): a title is quoted as printed.
+  expect(placement).toContain("quote a chapter's title as printed, its punctuation included");
+  // D104: a story or poem's question is on what its title promises, never its plot (only the title is given).
+  expect(placement).toContain("ask the plainest thing the title promises at that class (who or what it is about), never an event of its plot");
 });
 
 test("a worked example asks Sonnet for steps the tutor says aloud and the common slip", () => {

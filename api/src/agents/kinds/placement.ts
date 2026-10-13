@@ -19,7 +19,8 @@ export const placement: Kind<PlacementInput, PlacementOutput> = {
     return findings;
   },
   rubric: rubric([
-    "One question per chapter named, on the chapter's most basic idea, answered aloud in a few words.",
+    "One question per chapter named, on the chapter's most basic idea, answered aloud in a few words; for a story or a poem, the plainest thing its title promises (who or what it is about), never an event of its plot, since only the title is given.",
     "Each expected answer is right.",
+    "A chapter's title is quoted as printed, its punctuation included (a book's exclamation mark is not the writer's).",
   ]),
 };
