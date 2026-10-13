@@ -43,17 +43,71 @@ export type ClaudeAnswer<T> =
   | ({ kind: "refused"; reason: "refused" | "unfit" } & Answered)
   | ({ kind: "truncated" } & Answered)
   | { kind: "failed"; reason: string; latencyMs: number };
-export type ClaudeClient = { complete<T>(request: ClaudeRequest<T>): Promise<ClaudeAnswer<T>> };
+/** A request of a batch, by its own id (D101: the nightly evals through the Message Batches API, at half price). */
+export type BatchItem = { customId: string; request: ClaudeRequest<unknown> };
+export type ClaudeClient = {
+  complete<T>(request: ClaudeRequest<T>): Promise<ClaudeAnswer<T>>;
+  /** Sends the requests as one batch; answers its id. */
+  batch?(items: BatchItem[]): Promise<{ id: string }>;
+  /** A batch still running, or each request's answer by its id, parsed by its own schema; one with no answer is failed. */
+  batchResults?(id: string, items: BatchItem[]): Promise<"running" | Map<string, ClaudeAnswer<unknown>>>;
+};
 
 /** How long one request may take, its retry included: under the app's 125 s (`APIClient.timeout`), so the API
  *  answers 502 and marks the row failed before the app gives up on it. */
 export const CLAUDE_DEADLINE_MS = 110_000;
 
-/** One call per request: images first ("Page 1:" and so on), then the text. The answer's text is parsed against the
- *  schema here (not by the SDK's `parse`), so the usage and the stop reason are known for every answer that came back
- *  (plan decision 11): a refusal or an answer that does not fit is "refused" with its tokens; max_tokens is
- *  "truncated"; anything the SDK throws is "failed" in a word, with no tokens. A fallback model is the agent's to ask
- *  (src/agents/agent.ts), not the client's. */
+/** The Messages API's body for a request: images first ("Page 1:" and so on), then the text; the shared system block
+ *  cache-marked; the schema as the output format. */
+function paramsOf(request: ClaudeRequest<unknown>): Anthropic.MessageCreateParamsNonStreaming {
+  const content: Anthropic.ContentBlockParam[] = [];
+  (request.images ?? []).forEach((image, i) => {
+    content.push({ type: "text", text: `Page ${i + 1}:` });
+    content.push({ type: "image", source: { type: "base64", media_type: image.mediaType, data: image.base64 } });
+  });
+  content.push({ type: "text", text: request.text });
+  return {
+    model: request.model,
+    max_tokens: 16000,
+    // The shared block carries the cache mark: everything up to it is cached for five minutes and read back at a tenth
+    // of the price by the next request of the kind and class (a prefix under the model's minimum is not).
+    system: [
+      { type: "text", text: request.system.shared, cache_control: { type: "ephemeral" } },
+      ...(request.system.own ? [{ type: "text" as const, text: request.system.own }] : []),
+    ],
+    output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
+    messages: [{ role: "user", content }],
+  } as Anthropic.MessageCreateParamsNonStreaming;
+}
+
+/** A response read against its request's schema: a refusal or an answer that does not fit is "refused" with its tokens;
+ *  max_tokens is "truncated". */
+function answerOf<T>(response: Anthropic.Message, request: ClaudeRequest<T>, latencyMs: number): ClaudeAnswer<T> {
+  const written = response.usage.cache_creation_input_tokens ?? 0;
+  const answered: Answered = {
+    model: response.model,
+    tokensIn: response.usage.input_tokens + written,
+    tokensOut: response.usage.output_tokens,
+    tokensCached: response.usage.cache_read_input_tokens ?? 0,
+    tokensWritten: written,
+    stopReason: response.stop_reason,
+    latencyMs,
+  };
+  if (response.stop_reason === "refusal") return { kind: "refused", reason: "refused", ...answered };
+  if (response.stop_reason === "max_tokens") return { kind: "truncated", ...answered };
+  const text = response.content.flatMap((block) => (block.type === "text" ? [block.text] : [])).join("");
+  const parsed = request.schema.safeParse(json(text));
+  if (!parsed.success) {
+    log.error({ at: "claude", reason: "unfit", message: parsed.error.message.slice(0, 500) });
+    return { kind: "refused", reason: "unfit", ...answered };
+  }
+  return { kind: "ok", parsed: parsed.data, ...answered };
+}
+
+/** One call per request, parsed against the schema here (not by the SDK's `parse`), so the usage and the stop reason
+ *  are known for every answer that came back (plan decision 11); anything the SDK throws is "failed" in a word, with no
+ *  tokens. A fallback model is the agent's to ask (src/agents/agent.ts), not the client's. The batch methods send and
+ *  read a Message Batch (the nightly evals). */
 export function anthropicClaude(
   apiKey: string,
   options: { deadlineMs?: number; fetch?: typeof fetch } = {},
@@ -63,49 +117,13 @@ export function anthropicClaude(
   const client = new Anthropic({ apiKey, timeout: deadline + 1_000, maxRetries: 1, fetch: options.fetch });
   return {
     async complete<T>(request: ClaudeRequest<T>): Promise<ClaudeAnswer<T>> {
-      const content: Anthropic.ContentBlockParam[] = [];
-      (request.images ?? []).forEach((image, i) => {
-        content.push({ type: "text", text: `Page ${i + 1}:` });
-        content.push({ type: "image", source: { type: "base64", media_type: image.mediaType, data: image.base64 } });
-      });
-      content.push({ type: "text", text: request.text });
       const started = performance.now();
       const elapsed = () => Math.round(performance.now() - started);
       try {
-        const response = await client.messages.create(
-          {
-            model: request.model,
-            max_tokens: 16000,
-            // The shared block carries the cache mark: everything up to it is cached for five minutes and read back at a
-            // tenth of the price by the next request of the kind and class (a prefix under the model's minimum is not).
-            system: [
-              { type: "text", text: request.system.shared, cache_control: { type: "ephemeral" } },
-              ...(request.system.own ? [{ type: "text" as const, text: request.system.own }] : []),
-            ],
-            output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
-            messages: [{ role: "user", content }],
-          },
-          { signal: AbortSignal.timeout(Math.floor(Math.min(deadline, request.deadlineMs ?? deadline))) },
-        );
-        const written = response.usage.cache_creation_input_tokens ?? 0;
-        const answered: Answered = {
-          model: response.model,
-          tokensIn: response.usage.input_tokens + written,
-          tokensOut: response.usage.output_tokens,
-          tokensCached: response.usage.cache_read_input_tokens ?? 0,
-          tokensWritten: written,
-          stopReason: response.stop_reason,
-          latencyMs: elapsed(),
-        };
-        if (response.stop_reason === "refusal") return { kind: "refused", reason: "refused", ...answered };
-        if (response.stop_reason === "max_tokens") return { kind: "truncated", ...answered };
-        const text = response.content.flatMap((block) => (block.type === "text" ? [block.text] : [])).join("");
-        const parsed = request.schema.safeParse(json(text));
-        if (!parsed.success) {
-          log.error({ at: "claude", reason: "unfit", message: parsed.error.message.slice(0, 500) });
-          return { kind: "refused", reason: "unfit", ...answered };
-        }
-        return { kind: "ok", parsed: parsed.data, ...answered };
+        const response = await client.messages.create(paramsOf(request as ClaudeRequest<unknown>), {
+          signal: AbortSignal.timeout(Math.floor(Math.min(deadline, request.deadlineMs ?? deadline))),
+        });
+        return answerOf(response, request, elapsed());
       } catch (e) {
         if (e instanceof Anthropic.APIConnectionTimeoutError || e instanceof Anthropic.APIUserAbortError) {
           return failed("timeout", e, elapsed());
@@ -113,6 +131,23 @@ export function anthropicClaude(
         if (e instanceof Anthropic.APIError) return failed(`api ${e.status}`, e, elapsed());
         return failed("error", e, elapsed());
       }
+    },
+    async batch(items) {
+      const created = await client.messages.batches.create({ requests: items.map((i) => ({ custom_id: i.customId, params: paramsOf(i.request) })) });
+      return { id: created.id };
+    },
+    async batchResults(id, items) {
+      const batch = await client.messages.batches.retrieve(id);
+      if (batch.processing_status !== "ended") return "running";
+      const byId = new Map(items.map((i) => [i.customId, i.request]));
+      const answers = new Map<string, ClaudeAnswer<unknown>>();
+      for await (const entry of await client.messages.batches.results(id)) {
+        const request = byId.get(entry.custom_id);
+        if (!request) continue;
+        answers.set(entry.custom_id, entry.result.type === "succeeded" ? answerOf(entry.result.message, request, 0) : { kind: "failed", reason: `batch ${entry.result.type}`, latencyMs: 0 });
+      }
+      for (const i of items) if (!answers.has(i.customId)) answers.set(i.customId, { kind: "failed", reason: "batch missing", latencyMs: 0 });
+      return answers;
     },
   };
 }

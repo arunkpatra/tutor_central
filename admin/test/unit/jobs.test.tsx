@@ -130,3 +130,9 @@ test("a job with nothing to name shows a dash for its subject", async () => {
   expect(html).not.toContain("artefact · artefact");
   expect(html).toMatch(/Subject<\/span>—</);
 });
+
+test("the nightly evals' job is listed as any job: its kind, no centre, its subject (Phase 20, D101)", async () => {
+  const html = await page({ kind: "eval_run" });
+  expect(html).toContain("nightly evals");
+  expect(html).toContain("eval_run");
+});

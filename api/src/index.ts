@@ -82,6 +82,9 @@ const outbox = makeOutboxDb(supabaseUrl, serviceKey);
 const alertSender =
   process.env.RESEND_API_KEY || process.env.VERCEL_ENV === "production" ? makeResend(env("RESEND_API_KEY")) : fakeSender();
 const alertEmail = process.env.VERCEL_ENV === "production" ? env("ALERT_EMAIL") : (process.env.ALERT_EMAIL ?? "alerts@localhost");
+/** The nightly evals' calls are the Smoke centre's (D101): production must name it (the deploy's smoke account's centre);
+ *  a local run takes the seed's centre. */
+const smokeCentre = process.env.VERCEL_ENV === "production" ? env("SMOKE_CENTRE_ID") : (process.env.SMOKE_CENTRE_ID ?? "22222222-2222-2222-2222-222222222222");
 /** The record the plan and note jobs read and write as the platform (D83), with the outbox for their pushes. */
 const record = makeRecordSource(supabaseUrl, serviceKey, outbox);
 
@@ -101,7 +104,7 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail } }),
+    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail }, evals: { smokeCentre } }),
     push: { outbox, pusher },
   },
   models: modelTable,
