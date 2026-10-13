@@ -1,8 +1,9 @@
 import centre from "../../preview/centre.json";
 import centres from "../../preview/centres.json";
+import cost from "../../preview/cost.json";
 import frame from "../../preview/frame.json";
 import record from "../../preview/record.json";
-import type { Activity, Centre, Centres, Data, JobRow, Record } from "./types";
+import type { Activity, Centre, Centres, Cost, Data, JobRow, Record } from "./types";
 
 /** The preview's one centre is `preview`; any other id is gone. */
 const PREVIEW_ID = "preview";
@@ -19,7 +20,7 @@ export const previewData: Data = {
   centreJobs: async (id) => (id === PREVIEW_ID ? (centre.jobs as JobRow[]) : []),
   openRecord: async (_admin, id) => (id === PREVIEW_ID ? (record as Record) : null),
   record: async () => record as Record,
-  cost: notYet("cost"),
+  cost: async () => cost as Cost,
   calls: notYet("calls"),
   call: notYet("call"),
   jobs: notYet("jobs"),

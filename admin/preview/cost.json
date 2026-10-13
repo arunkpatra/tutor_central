@@ -1,0 +1,258 @@
+{
+  "tiles": {
+    "month_paise": 99100,
+    "per_active_centre_paise": 19800,
+    "today_paise": 6300,
+    "active_centres": 5
+  },
+  "byDay": [
+    {
+      "day": "2026-10-01",
+      "paise": 6300
+    },
+    {
+      "day": "2026-10-02",
+      "paise": 6000
+    },
+    {
+      "day": "2026-10-03",
+      "paise": 8300
+    },
+    {
+      "day": "2026-10-04",
+      "paise": 7500
+    },
+    {
+      "day": "2026-10-05",
+      "paise": 300
+    },
+    {
+      "day": "2026-10-06",
+      "paise": 7000
+    },
+    {
+      "day": "2026-10-07",
+      "paise": 7800
+    },
+    {
+      "day": "2026-10-08",
+      "paise": 9700
+    },
+    {
+      "day": "2026-10-09",
+      "paise": 8700
+    },
+    {
+      "day": "2026-10-10",
+      "paise": 9200
+    },
+    {
+      "day": "2026-10-11",
+      "paise": 10000
+    },
+    {
+      "day": "2026-10-12",
+      "paise": 9400
+    },
+    {
+      "day": "2026-10-13",
+      "paise": 6300
+    },
+    {
+      "day": "2026-10-14",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-15",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-16",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-17",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-18",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-19",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-20",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-21",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-22",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-23",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-24",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-25",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-26",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-27",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-28",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-29",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-30",
+      "paise": 0
+    },
+    {
+      "day": "2026-10-31",
+      "paise": 0
+    }
+  ],
+  "byCentre": [
+    {
+      "id": "c2",
+      "name": "Bright Minds, Jayanagar",
+      "calls": 214,
+      "paise": 40600,
+      "per_student_paise": 1300
+    },
+    {
+      "id": "c3",
+      "name": "Vidya Mandir Tuition",
+      "calls": 161,
+      "paise": 29800,
+      "per_student_paise": 1400
+    },
+    {
+      "id": "preview",
+      "name": "Sunrise Tuition Centre",
+      "calls": 118,
+      "paise": 18200,
+      "per_student_paise": 1500
+    },
+    {
+      "id": "c4",
+      "name": "Lakshmi Classes",
+      "calls": 40,
+      "paise": 6100,
+      "per_student_paise": 800
+    },
+    {
+      "id": "c5",
+      "name": "Anand Coaching",
+      "calls": 29,
+      "paise": 4400,
+      "per_student_paise": 300
+    },
+    {
+      "id": "c7",
+      "name": "Smoke",
+      "calls": 3,
+      "paise": 2,
+      "per_student_paise": null
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "sheet",
+      "model": "claude-sonnet-5-5",
+      "calls": 120,
+      "paise": 24000
+    },
+    {
+      "kind": "sheet",
+      "model": "claude-haiku-5-5",
+      "calls": 78,
+      "paise": 6100
+    },
+    {
+      "kind": "check_paper",
+      "model": "claude-opus-5-5",
+      "calls": 22,
+      "paise": 18000
+    },
+    {
+      "kind": "worked_example",
+      "model": "claude-sonnet-5-5",
+      "calls": 96,
+      "paise": 14100
+    },
+    {
+      "kind": "brief",
+      "model": "claude-sonnet-5-5",
+      "calls": 61,
+      "paise": 11800
+    },
+    {
+      "kind": "mock",
+      "model": "claude-sonnet-5-5",
+      "calls": 9,
+      "paise": 8400
+    },
+    {
+      "kind": "gap_report",
+      "model": "claude-sonnet-5-5",
+      "calls": 11,
+      "paise": 7200
+    },
+    {
+      "kind": "note",
+      "model": "claude-haiku-5-5",
+      "calls": 100,
+      "paise": 3500
+    },
+    {
+      "kind": "can_do",
+      "model": "claude-haiku-5-5",
+      "calls": 40,
+      "paise": 1400
+    },
+    {
+      "kind": "check",
+      "model": "claude-haiku-5-5",
+      "calls": 90,
+      "paise": 2400
+    },
+    {
+      "kind": "placement",
+      "model": "claude-haiku-5-5",
+      "calls": 28,
+      "paise": 700
+    },
+    {
+      "kind": "plan",
+      "model": "claude-sonnet-5-5",
+      "calls": 20,
+      "paise": 1100
+    },
+    {
+      "kind": "read_marks",
+      "model": "claude-opus-5-5",
+      "calls": 7,
+      "paise": 400
+    }
+  ]
+}

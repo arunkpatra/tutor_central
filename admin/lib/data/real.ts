@@ -1,6 +1,6 @@
 import "server-only";
 import { serviceClient } from "../supabase/service";
-import type { Activity, Centre, Centres, Data, JobRow, Record, Tutor } from "./types";
+import type { Activity, Centre, Centres, Cost, Data, JobRow, Record, Tutor } from "./types";
 
 /** One `admin_*` function, as the platform (D83, D94). A database error is thrown: the page's error, never a guess. */
 export async function rpc<T>(fn: string, args: { [key: string]: unknown } = {}): Promise<T> {
@@ -41,7 +41,15 @@ export function realData(): Data {
     openRecord: (admin, centre, reason, ip) =>
       rpc<Record | null>("admin_open_record", { p_admin: admin, p_centre: centre, p_reason: reason, p_ip: ip }),
     record: (audit) => rpc<Record | null>("admin_record_opened", { p_audit: audit }),
-    cost: notYet("cost"),
+    cost: async (month, centre) => {
+      const [tiles, byDay, byCentre, byKind] = await Promise.all([
+        rpc<Cost["tiles"]>("admin_cost_tiles", { p_month: month }),
+        rpc<Cost["byDay"]>("admin_cost_by_day", { p_month: month, p_centre: centre }),
+        rpc<Cost["byCentre"]>("admin_cost_by_centre", { p_month: month }),
+        rpc<Cost["byKind"]>("admin_cost_by_kind", { p_month: month, p_centre: centre }),
+      ]);
+      return { tiles, byDay, byCentre, byKind };
+    },
     calls: notYet("calls"),
     call: notYet("call"),
     jobs: notYet("jobs"),
