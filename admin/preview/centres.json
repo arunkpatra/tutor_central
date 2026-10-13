@@ -1,0 +1,101 @@
+{
+  "tiles": {
+    "centres": 7,
+    "active_week": 5,
+    "cost_paise": 99100,
+    "failed_today": 1
+  },
+  "rows": [
+    {
+      "id": "preview",
+      "name": "Sunrise Tuition Centre",
+      "owner_name": "Meera Iyer",
+      "since": "2026-10-08T04:30:00Z",
+      "students": 12,
+      "tutors": 2,
+      "last_opened": "2026-10-13T01:18:00Z",
+      "cost_paise": 18200,
+      "in_use": true,
+      "jobs_today": 5,
+      "failed_today": 0
+    },
+    {
+      "id": "c2",
+      "name": "Bright Minds, Jayanagar",
+      "owner_name": "Rahul Nair",
+      "since": "2026-10-09T04:30:00Z",
+      "students": 31,
+      "tutors": 4,
+      "last_opened": "2026-10-12T13:50:00Z",
+      "cost_paise": 40600,
+      "in_use": true,
+      "jobs_today": 9,
+      "failed_today": 1
+    },
+    {
+      "id": "c3",
+      "name": "Vidya Mandir Tuition",
+      "owner_name": "Suresh Kumar",
+      "since": "2026-10-09T05:30:00Z",
+      "students": 22,
+      "tutors": 3,
+      "last_opened": "2026-10-13T01:32:00Z",
+      "cost_paise": 29800,
+      "in_use": true,
+      "jobs_today": 7,
+      "failed_today": 0
+    },
+    {
+      "id": "c4",
+      "name": "Lakshmi Classes",
+      "owner_name": "Lakshmi Rao",
+      "since": "2026-10-10T04:30:00Z",
+      "students": 8,
+      "tutors": 1,
+      "last_opened": "2026-10-10T12:30:00Z",
+      "cost_paise": 6100,
+      "in_use": true,
+      "jobs_today": 2,
+      "failed_today": 0
+    },
+    {
+      "id": "c5",
+      "name": "Anand Coaching",
+      "owner_name": "Anand Pillai",
+      "since": "2026-10-10T06:30:00Z",
+      "students": 15,
+      "tutors": 2,
+      "last_opened": "2026-10-04T12:30:00Z",
+      "cost_paise": 4400,
+      "in_use": true,
+      "jobs_today": 0,
+      "failed_today": 0
+    },
+    {
+      "id": "c6",
+      "name": "Riya’s Study Room",
+      "owner_name": "Riya Menon",
+      "since": "2026-10-11T04:30:00Z",
+      "students": 6,
+      "tutors": 1,
+      "last_opened": "2026-09-22T12:30:00Z",
+      "cost_paise": 0,
+      "in_use": false,
+      "jobs_today": 0,
+      "failed_today": 0
+    },
+    {
+      "id": "c7",
+      "name": "Smoke",
+      "owner_name": null,
+      "since": "2026-10-12T04:30:00Z",
+      "students": 0,
+      "tutors": 1,
+      "last_opened": "2026-10-12T21:35:00Z",
+      "cost_paise": 2,
+      "in_use": true,
+      "jobs_today": 1,
+      "failed_today": 0
+    }
+  ]
+}

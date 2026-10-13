@@ -422,6 +422,10 @@ form {
 .cell.dim {
   color: var(--text2);
 }
+.cell.strong {
+  font-weight: 600;
+  color: var(--text);
+}
 a.plain {
   color: var(--text);
   text-decoration: none;
