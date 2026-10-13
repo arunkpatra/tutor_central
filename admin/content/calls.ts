@@ -102,18 +102,6 @@ export function shortKey(key: string): string {
   return m?.[1] ? `${shortId(m[1])}${m[2] ?? ""}` : key;
 }
 
-/** The kinds that name a student (D62, D79): their input is held without consent. */
-export const PERSONAL_KINDS = new Set([
-  "note",
-  "can_do",
-  "test_tomorrow",
-  "not_on_track",
-  "progress_note",
-  "gap_report",
-  "check_paper",
-  "read_marks",
-]);
-
 /** The kinds a call can be, for the filter (0012's ai_kind and later). */
 export const CALL_KINDS = [
   "plan",

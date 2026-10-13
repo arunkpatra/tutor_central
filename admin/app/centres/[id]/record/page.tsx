@@ -25,13 +25,13 @@ const hhmm = (t: string | null) => (t ? t.slice(0, 5) : NONE);
 /** The record, served only from a fresh open's audit row (0047's admin_record_opened): a bookmark asks again. */
 export default async function RecordPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: raw } = await params;
-  await requireAdmin(`/centres/${raw}`);
+  const admin = await requireAdmin(`/centres/${raw}`);
   const id = idOf(raw, preview());
   if (!id) notFound();
   const audit = preview() ? undefined : (await cookies()).get(recordCookie(id))?.value;
   const ask = recordAsk(id, audit, preview());
   if (ask) redirect(ask);
-  const record = await data().record(audit ?? "preview");
+  const record = await data().record(audit ?? "preview", admin.userId);
   if (!record || record.centre.id !== id) redirect(`/centres/${id}?ask=1`);
   const at = now();
   return (

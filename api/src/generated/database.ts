@@ -1052,7 +1052,7 @@ isOneToOne: false
 { Args: { "p_centre": string }; Returns: Json
                            },
 "admin_record_opened":
-{ Args: { "p_audit": string }; Returns: Json
+{ Args: { "p_admin": string,"p_audit": string }; Returns: Json
                            },
 "admin_retry_job":
 { Args: { "p_admin": string,"p_ip": string,"p_job": string }; Returns: boolean

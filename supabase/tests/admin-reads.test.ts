@@ -115,11 +115,11 @@ test("admin_open_record writes the audit first and answers the students' consent
 test("admin_record_opened answers for a fresh open_record row and not for one eleven minutes old or of another action", async () => {
   const opened = await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "again", p_ip: null });
   const audit = (opened.data as { audit_id: string }).audit_id;
-  expect(((await svc.rpc("admin_record_opened", { p_audit: audit })).data as { reason: string }).reason).toBe("again");
+  expect(((await svc.rpc("admin_record_opened", { p_audit: audit, p_admin: adminId })).data as { reason: string }).reason).toBe("again");
   await sql`update public.admin_audit set created_at = now() - interval '11 minutes' where id = ${audit}`;
-  expect((await svc.rpc("admin_record_opened", { p_audit: audit })).data).toBeNull();
+  expect((await svc.rpc("admin_record_opened", { p_audit: audit, p_admin: adminId })).data).toBeNull();
   const other = (await svc.rpc("admin_audit_write", { p_admin: adminId, p_action: "sign_in", p_centre: centreA, p_target: {}, p_reason: null, p_ip: null })).data as string;
-  expect((await svc.rpc("admin_record_opened", { p_audit: other })).data).toBeNull();
+  expect((await svc.rpc("admin_record_opened", { p_audit: other, p_admin: adminId })).data).toBeNull();
 });
 
 test("admin_call hides a personal kind's input without consent and shows a group kind's and a consented one's", async () => {
@@ -196,7 +196,7 @@ test("a member cannot call any admin read", async () => {
     ["admin_centre_jobs", { p_centre: id, p_limit: 1 }],
     ["admin_record", { p_centre: id }],
     ["admin_open_record", { p_admin: id, p_centre: id, p_reason: "x", p_ip: null }],
-    ["admin_record_opened", { p_audit: id }],
+    ["admin_record_opened", { p_audit: id, p_admin: id }],
     ["admin_cost_by_day", { p_month: monthStart() }],
     ["admin_cost_by_centre", { p_month: monthStart() }],
     ["admin_cost_by_kind", { p_month: monthStart() }],
@@ -230,4 +230,38 @@ test("every activity row, record student and made row carries its own id (two ro
 test("a job kind with nothing to name has no subject", async () => {
   const [{ id }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state) values (${centreA}, 'artefact', ${`subject-${stamp}`}, 'failed') returning id`;
   expect(((await svc.rpc("admin_job", { p_id: id })).data as { subject: string | null }).subject).toBeNull();
+});
+
+test("a V1 call that names its student without an id is held (R-a2: progress_note, a typed-scheme check_paper)", async () => {
+  const [{ id }] = await sql`insert into public.ai_generations (centre_id, kind, input, model, status, cost_paise, finished_at)
+    values (${centreA}, 'progress_note', ${JSON.stringify({ studentName: "Hemanth", parentName: "Mr Reddy", observations: "quiet" })}::text::jsonb, 'claude-sonnet-5-5', 'ok', 5, now()) returning id`;
+  const held = (await svc.rpc("admin_call", { p_id: id })).data as { input: unknown; input_held: boolean };
+  expect(held).toMatchObject({ input: null, input_held: true });
+  expect(JSON.stringify(held)).not.toContain("Hemanth");
+});
+
+test("admin_job's step shows the attempt of its latest row, after a retry too (R-db-6)", async () => {
+  const [{ id }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, attempts) values (${centreA}, 'plan', ${`attempt-${stamp}`}, 'running', 1) returning id`;
+  await sql`insert into public.job_steps (centre_id, job_id, step, attempt, state, created_at) values
+    (${centreA}, ${id}, 'make:0', 2, 'failed', now() - interval '5 minutes'), (${centreA}, ${id}, 'make:0', 1, 'done', now())`;
+  const job = (await svc.rpc("admin_job", { p_id: id })).data as { steps: { attempt: number; state: string }[] };
+  expect(job.steps[0]).toMatchObject({ attempt: 1, state: "done" });
+});
+
+test("admin_record_opened answers only the admin who opened it (R-db-7, R-a5)", async () => {
+  const other = await userClient(l, `admin-r-other-${stamp}@example.com`);
+  const otherId = (await other.auth.getUser()).data.user!.id;
+  const opened = await svc.rpc("admin_open_record", { p_admin: adminId, p_centre: centreA, p_reason: "mine", p_ip: null });
+  const audit = (opened.data as { audit_id: string }).audit_id;
+  expect(((await svc.rpc("admin_record_opened", { p_audit: audit, p_admin: adminId })).data as { reason: string }).reason).toBe("mine");
+  expect((await svc.rpc("admin_record_opened", { p_audit: audit, p_admin: otherId })).data).toBeNull();
+});
+
+test("an open alert older than the newest 200 is still listed, first (R-db-8)", async () => {
+  await sql`insert into public.alerts (key, kind, raised_at, message) values (${`old-open-${stamp}`}, 'job_failed', now() - interval '30 days', 'old')`;
+  await sql`insert into public.alerts (key, kind, raised_at, acknowledged_at, message)
+    select 'acked-' || ${String(stamp)} || '-' || n, 'job_failed', now() - make_interval(mins => n), now(), 'acked' from generate_series(1, 205) n`;
+  const alerts = (await svc.rpc("admin_alerts", { p_open_first: true })).data as { rows: { message: string; acknowledged_at: string | null }[] };
+  expect(alerts.rows.some((r) => r.message === "old")).toBe(true);
+  await sql`delete from public.alerts where key like ${`acked-${stamp}-%`} or key = ${`old-open-${stamp}`}`;
 });
