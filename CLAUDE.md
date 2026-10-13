@@ -60,14 +60,15 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | iOS app and package | `ios/` | `ios/CLAUDE.md` |
 | API (Hono on Vercel) | `api/` | `api/CLAUDE.md` |
 | Website, tutorcentral.in (Next.js static export on Vercel) | `web/` | `web/CLAUDE.md` |
+| Admin portal, admin.tutorcentral.in (Next.js with server code on Vercel, behind TOTP) | `admin/` | `admin/CLAUDE.md` |
 | Database (Supabase) | `supabase/` | `supabase/CLAUDE.md` |
 | Design: boards, tokens, components, guidelines | `docs/design/` | `docs/design/README.md`; messages to the tutor: `docs/design/feedback.md` |
 | Reference app and the functional contract | `docs/reference/` | |
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
 | UI polish list: small visual and copy fixes, taken when the owner chooses | `plan/ui-polish.md` | Its "How it works" |
-| Scripts: check, shots, web-shots, store-shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
-| Runbooks: driving the app in the simulator against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32) |
+| Scripts: check, shots, web-shots, admin-shots, store-shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
+| Runbooks: driving the app in the simulator, and the admin portal in the browser, against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32), `docs/runbooks/admin.md` |
 | Device tests: what a tester checks on a real iPhone (camera, WhatsApp, network, real handwriting), with a log | `docs/testing/device-tests.md` | Its "How to run" |
 
 ## Engineering standard
@@ -79,10 +80,11 @@ change per pull request, described by what it does and how it was checked.
 ## Commands
 | Command | Use |
 |---|---|
-| `bun check` | Every check in order, stopping at the first failure: format, lint, ios (build and tests on the iPhone 17 simulator), tools, api, web, db. A step whose inputs have not changed since it was last green is not run, and the summary says so; `db` is skipped with a line when local Supabase is down. `--fresh` ignores the cache; `--only=a,b` runs some |
+| `bun check` | Every check in order, stopping at the first failure: format, lint, ios (build and tests on the iPhone 17 simulator), tools, api, web, admin, db. A step whose inputs have not changed since it was last green is not run, and the summary says so; `db` is skipped with a line when local Supabase is down. `--fresh` ignores the cache; `--only=a,b` runs some |
 | `bun gen` | Regenerate `ios/TutorCentral.xcodeproj` from `ios/project.yml` |
 | `bun shots <state> [--appearance dark\|light\|both]` | Screenshots of the app in the simulator at a launch state, both appearances by default, into `.shots/<state>/` |
 | `bun web-shots [--pages /,/privacy] [--widths 1280,390] [--appearance dark\|light\|both]` | Pictures of the website's export (build it first with `bun check --only=web`) by headless Chrome, full page at 2×, into `.shots/web/` (D46) |
+| `bun admin-shots [--pages /centres,/jobs?open=preview-failed] [--widths 1280,390] [--appearance dark\|light\|both]` | The admin portal built and started in preview mode (fixtures, no session, D96) and photographed by headless Chrome, full page at 2×, into `.shots/admin/`; with no pages, the fifteen boards' pages |
 | `bun store-shots` | The App Store screenshots: the approved `Store-*` boards rendered with fresh simulator screens (dark, 9:41) at 1206 × 2622 JPEG into `docs/store/screenshots/` (D51); needs the `bun check` build. The listing's words are `docs/store/listing.md` |
 | `bun cost [--since 30m\|2h\|7d] [--kinds note,can_do]` | What the local AI calls cost, by kind and model, priced by `api/models.json` (D67) |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
@@ -92,7 +94,9 @@ change per pull request, described by what it does and how it was checked.
 | `gh workflow run deploy` | Deploy `main`'s head to production: pending migrations first (D26), then the API with its smoke (D21) |
 | `gh workflow run run-job -f email=… -f batch=… [-f date=YYYY-MM-DD]` | Queue one `plan` job in production for a centre's batch and day (default tomorrow in India) and report its state; the email and batch are typed at the run, never written to a file (D55) |
 | `gh workflow run restore-drill` | Dump production, restore it into a blank database on the runner and compare every table's count (`docs/runbooks/restore.md`) |
+| `gh workflow run deploy-admin` | Deploy `main`'s head of the admin portal to admin.tutorcentral.in: the gate (D80), the build, the deploy and its smoke (no sign-in) |
 | `gh workflow run testflight` | Archive `main`'s head with cloud signing and upload it to TestFlight (D24); stops while migrations are pending |
 
 CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`, except a commit of
-documents only (D31): iOS on the `xcode-27` image, api, web and db on Ubuntu (D22).
+documents only (D31): iOS on the `xcode-27` image, api, web, admin and db on Ubuntu (D22). On `main` a newer push cancels a
+pending check: a deploy waits for the check of the commit it takes, so no merge goes in while a deploy waits.

@@ -1480,3 +1480,19 @@ What the boards settle:
   and the primary Retry, then its steps as a nested table.
 - **What is never shown:** a parent's number, a photo, a message's text, a personal kind's input for a student without
   current consent; a student's name only on the record page after the audited open.
+
+What the build settled (Phase 19, session 39), states no board draws, in the boards' grammar:
+
+- **A wrong first code** keeps the same square: the page shows "That code did not match. Codes change every 30 seconds.",
+  the key and the code field, and a link "Start again with a new square" (Supabase's square is too large to keep; the phone
+  has it already).
+- **The reason left empty** in the record's dialog: "Say why: the reason goes into the audit." under the field.
+- **A job open in place** offers Cancel only while it can be cancelled (queued, waiting, running) and Retry only when it
+  failed; after either, a banner in the open row: "Queued again", "Cancelled", or "Nothing changed: the job is no longer
+  in that state". The list's lead names the job open ("The failed plan is open: its steps, the error, Retry and Cancel.").
+- **A list with no rows** reads "Nothing yet" in the card; the record's made list "Nothing kept".
+- **The filters** open as a menu of links under the pill; the current one in `accentTint`.
+- **A job with nothing to name** (an artefact) shows a dash for its subject; the activity rows the record's tables give
+  (closes, messages, fees, material made again) show a dash for who.
+- **Not found** (an unknown address, a centre, call or job that is gone) is the website's words in the portal's frame:
+  "There is nothing at this address.", "Go to Centres".

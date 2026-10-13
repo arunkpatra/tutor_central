@@ -22,7 +22,7 @@
   through `deploy.yml`'s `migrate` job, before the API (D26); never `supabase db push` by hand. A migration is
   additive while any installed build uses what it would remove (expand now, contract later): the database leads
   the app, and the TestFlight lane refuses a build while migrations are pending. Run it with
-  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0035 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
+  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0048 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
 - App Review's demo centre (D51): `gh workflow run seed-review -f email=… -f parent_phone=…` fills an existing account's
@@ -71,3 +71,14 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
   `photos`; a deleted row with a file queues it in `storage_deletions` (a centre's delete queues its prefixes), which the
   sweep empties. Retention (0041): an export is kept seven days; `trim_platform` deletes notifications after 30 days and
   the sweeps' done jobs after seven.
+- Phase 19 (the admin portal, D78, D94): `admin_users` (0046) is the allow-list, keyed by the user, read by no member and
+  written by the session with `supabase db query --linked`, never by the portal; its `notify_user_id` and `notify_centre_id`
+  name the tutor account whose iPhone gets the alert pushes. The portal reads only through `admin_*` functions (0047, 0048)
+  and writes only through `admin_audit_write`, `admin_open_record`, `admin_acknowledge_alert`, `admin_retry_job` and
+  `admin_cancel_job`, each writing its own audit row; all are `security invoker` and granted to `service_role` alone (a
+  member gets 42501). They never select a parent's number, a photo path, a message's body, or a personal kind's input
+  while the student's consent is not current (`admin_call`'s `input_held`); a student's name only through the record,
+  answered after its `open_record` row (`admin_record_opened`: ten minutes). `auth.users` is not readable by the platform in
+  SQL: the portal asks the Auth admin API for emails. A function of a table's row becomes a PostgREST column of that table
+  (the generated types demand it of every row): a helper takes an id. Alerts are raised once by `key` (`raise_alert`);
+  `job_kind` has `alerts`; `notifications.kind` has `alert`. Local TOTP is on in `config.toml` (`[auth.mfa.totp]`).

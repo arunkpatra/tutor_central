@@ -102,3 +102,11 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
 - A call's key replays its answer within a day, the fake's too: a local run on the real models after a fake run under the
   same keys gets the fake's text at no cost (clear those `ai_generations` rows locally first).
 
+- Phase 19: the `alerts` job (D95), queued by the tick each ten minutes beside the sweep (`alerts:<UTC ten minutes>`, only
+  where the entry gives its source): `alert_facts` (0046) against four lines in `src/alerts/lines.ts` (a job failed after its
+  last try, a centre over ₹60 in India's day, answers over 400 above 5% of an hour's requests with at least 20, the worker's
+  ticks left out, a job with no step for ten minutes), each raised once by its key (`raise_alert`; a failure is keyed by its
+  minute, so a retried job failing again alerts again); a new one is emailed to `ALERT_EMAIL` through Resend's HTTP
+  API (`RESEND_API_KEY`, sending only, from `hello@tutorcentral.in`) and pushed ("Tutor Central needs a look", the line in
+  words, no link) to each `admin_users` row's tutor account through `replace_notifications`. A failed email or push is
+  logged and the step ends done. Production refuses to start without both variables; a local run without the key logs the email.
