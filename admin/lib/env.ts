@@ -21,6 +21,9 @@ export function preview(): boolean {
   return on;
 }
 
+// Refused at import too: the proxy and every page import this module, so the portal cannot serve (nor build) at all.
+preview();
+
 /** Where the portal runs, for the footer and the pages' eyebrow. */
 export function environment(): "production" | "preview" | "local" {
   if (preview()) return "preview";
