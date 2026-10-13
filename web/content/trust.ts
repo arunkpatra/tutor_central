@@ -152,8 +152,10 @@ export const TRUST = {
         {
           kind: "p",
           text:
-            "Records are kept in India, by the companies that host the app. Only the tutor, signed in, can see a centre’s " +
-            "records; one tutor can never read another’s. Nothing is sold and nothing is shared, except with the services " +
+            "Records are kept in India, by the companies that host the app. The tutor, signed in, sees the centre’s records; " +
+            "one tutor can never read another’s. Tutor Central’s own staff can open a centre’s records only to help with a " +
+            "problem, with the reason and the time written down. They never see a parent’s number or a photo. Nothing is " +
+            "sold and nothing is shared, except with the services " +
             "that run the app and the AI service as described above. The ",
           link: {
             label: "privacy page",
