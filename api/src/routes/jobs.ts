@@ -42,8 +42,13 @@ export function sweepKey(now: number): string {
   return `sweep:${bucket.toISOString().slice(0, 16).replace("T", "-")}`;
 }
 
+/** The alerts job's key, by the UTC ten minutes as the sweep's (D95). */
+export function alertsKey(now: number): string {
+  return `alerts:${sweepKey(now).slice("sweep:".length)}`;
+}
+
 /** GET /jobs/tick (pg_cron, each minute) and POST /jobs/wake (the enqueue trigger): the worker's bearer, then one run.
- *  The tick first queues the ten minutes' sweep when none is live. Without the bearer, the AI routes' 401, so nothing new leaks. */
+ *  The tick first queues the ten minutes' sweep and alerts when none is live. Without the bearer, the AI routes' 401, so nothing new leaks. */
 export function jobRoutes(worker: Worker, claude: ClaudeClient) {
   const r = new Hono<Vars>();
   const clock = worker.clock ?? realClock;
@@ -78,6 +83,8 @@ export function jobRoutes(worker: Worker, claude: ClaudeClient) {
   r.get("/tick", async (c) => {
     const pushed = await push(c.get("requestId"));
     if ((await worker.jobs.live("sweep")) === 0) await worker.jobs.enqueue(null, "sweep", sweepKey(clock.now()));
+    // The alerts job runs only where its source is given (the entry's; a test's).
+    if (handlers.alerts && (await worker.jobs.live("alerts")) === 0) await worker.jobs.enqueue(null, "alerts", alertsKey(clock.now()));
     return c.json({ ...(await run(c.get("requestId"))), ...(pushed ? { push: pushed } : {}) });
   });
   r.post("/wake", async (c) => c.json(await run(c.get("requestId"))));

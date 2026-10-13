@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Hono } from "hono";
+import { makeAlertsDb } from "./alerts/db.js";
+import { fakeSender, makeResend } from "./alerts/resend.js";
 import { appleHttp } from "./apple.js";
 import { fakeApple } from "./apple-fake.js";
 import type { Vars } from "./auth.js";
@@ -69,6 +71,12 @@ const pusher =
     : () => fakePusher({});
 
 const outbox = makeOutboxDb(supabaseUrl, serviceKey);
+
+/** The alerts' email (D95): Resend's key and the address they go to. Production must have both (a deploy without them
+ *  fails at start); a local run without them logs the email instead. */
+const alertSender =
+  process.env.RESEND_API_KEY || process.env.VERCEL_ENV === "production" ? makeResend(env("RESEND_API_KEY")) : fakeSender();
+const alertEmail = process.env.VERCEL_ENV === "production" ? env("ALERT_EMAIL") : (process.env.ALERT_EMAIL ?? "alerts@localhost");
 /** The record the plan and note jobs read and write as the platform (D83), with the outbox for their pushes. */
 const record = makeRecordSource(supabaseUrl, serviceKey, outbox);
 
@@ -88,7 +96,7 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey) }),
+    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail } }),
     push: { outbox, pusher },
   },
 });

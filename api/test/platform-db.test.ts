@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test";
 import { createClient } from "@supabase/supabase-js";
+import { makeAlertsDb } from "../src/alerts/db.js";
+import { fakeSender } from "../src/alerts/resend.js";
+import { alertsJob } from "../src/jobs/kinds/alerts.js";
 import { makeDb } from "../src/db.js";
 import { makeRecordSource } from "../src/jobs/record.js";
 import { fakeClock } from "../src/jobs/db-fake.js";
@@ -268,4 +271,42 @@ test.skipIf(!up)("a deleted student's marks photo leaves Storage at the next swe
   expect(removed).toBeGreaterThanOrEqual(1);
   const left = (await db.storage.from("photos").list(`${CENTRE}/mark`, { search: photo.split("/").at(-1) })).data ?? [];
   expect(left).toEqual([]);
+});
+
+test.skipIf(!up)("an alerts job on the local stack raises job_failed for a failed job and writes the push row for the admin's tutor account", async () => {
+  const db = admin();
+  const tutor = (await db.from("centre_members").select("user_id").eq("centre_id", CENTRE).limit(1).single()).data?.user_id as string;
+  const email = `alerts-admin-${Date.now()}@example.com`;
+  const made = await db.auth.admin.createUser({ email, password: "alerts-test-password-1", email_confirm: true });
+  const adminId = made.data.user?.id as string;
+  const job = (await db.rpc("enqueue_job", { p_centre: CENTRE, p_kind: "artefact", p_key: `alerts-proof-${Date.now()}` })).data as string;
+  try {
+    await db.from("admin_users").insert({ user_id: adminId, email, notify_user_id: tutor, notify_centre_id: CENTRE });
+    // A kind no handler runs fails at once (the runner's no_handler): the proof the plan's Task 17 uses in production.
+    await db.from("jobs").update({ state: "failed", finished_at: new Date().toISOString(), error: { reason: "no_handler" } }).eq("id", job);
+    const sender = fakeSender();
+    const source = makeAlertsDb(url as string, service as string, makeOutboxDb(url as string, service as string));
+    const outcome = await alertsJob(source, sender, "you@example.com").step(
+      { id: "alerts-test", centreId: null, kind: "alerts", attempts: 1, step: {}, input: {}, leaseUntil: "" },
+      { db: fakeDb(), jobs: fakeJobsDb(fakeClock()), claude: fakeClaude({}), clock: { now: () => Date.now(), sleep: async () => {} }, requestId: "r", worker: "w" },
+    );
+    expect(outcome.kind).toBe("done");
+    const raised = await db.from("alerts").select("kind, centre_id, message").eq("key", `job_failed:${job}`).single();
+    expect(raised.data).toEqual({ kind: "job_failed", centre_id: CENTRE, message: "an artefact job failed after its last try" });
+    expect(sender.sent.some((s) => s.text.includes("an artefact job failed"))).toBe(true);
+    const pushed = await db.from("notifications").select("kind, title, state").eq("user_id", tutor).eq("key", `alert:job_failed:${job}`).single();
+    expect(pushed.data).toEqual({ kind: "alert", title: "Tutor Central needs a look", state: "due" });
+    // The second run raises nothing new.
+    const again = await alertsJob(source, sender, "you@example.com").step(
+      { id: "alerts-test", centreId: null, kind: "alerts", attempts: 1, step: {}, input: {}, leaseUntil: "" },
+      { db: fakeDb(), jobs: fakeJobsDb(fakeClock()), claude: fakeClaude({}), clock: { now: () => Date.now(), sleep: async () => {} }, requestId: "r", worker: "w" },
+    );
+    expect(again).toMatchObject({ kind: "done", result: { raised: 0 } });
+  } finally {
+    await db.from("notifications").delete().like("key", "alert:%");
+    await db.from("alerts").delete().eq("key", `job_failed:${job}`);
+    await db.from("jobs").delete().eq("id", job);
+    await db.from("admin_users").delete().eq("user_id", adminId);
+    await db.auth.admin.deleteUser(adminId);
+  }
 });
