@@ -144,6 +144,11 @@ test("the material's prompts ask for mathematics in LaTeX between dollars, words
   }
 });
 
+test("a brief's worked example states its slip as the worked example's does, so the free check passes it unrepaired", () => {
+  // The cost run: every brief was repaired because its slip did not start "A common slip here:" (verify's rule).
+  expect(systemText(brief("8", "Mathematics", "Linear equations"))).toContain("The worked example's slip is one sentence that starts 'A common slip here:'.");
+});
+
 test("a worked example makes up its own problem; a placement asks about what a chapter teaches (#312's evals)", () => {
   expect(systemText(workedExample("10", "Mathematics", "Quadratic equations"))).toContain("Make up your own problem and numbers; never a textbook's worked example or exercise");
   const placement = systemText(placementRequest("4", "English", ["Wake Up!", "Nasruddin's Aim"]));
