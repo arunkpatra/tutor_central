@@ -19,7 +19,7 @@ import { request as noteRequest } from "../src/prompts/note.js";
 import { request as notOnTrackRequest } from "../src/prompts/not-on-track.js";
 import { request as readMarksRequest } from "../src/prompts/read-marks.js";
 
-const request = { model: "claude-sonnet-5-5" as const, effort: "medium" as const, system: "s", text: "t", schema: PaperOutput };
+const request = { model: "claude-sonnet-5-5" as const, effort: "medium" as const, system: { shared: "s", own: "" }, version: "1", text: "t", schema: PaperOutput };
 
 test("the fake answers what its script says and records the request", async () => {
   const ok = fakeClaude({ answer: SAMPLE.paper });

@@ -3,21 +3,25 @@ import type { AIKind } from "../db.js";
 import type { DecodedImage } from "../images.js";
 import { modelFor } from "../models.js";
 import { CheckOutput, MockOutput, PaperOutput, QuestionSetOutput } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 /** A photographed answer sheet marked against the scheme: a suggested mark and a note for every question. */
 export function request(pages: DecodedImage[], scheme: string, studentName: string): ClaudeRequest<CheckOutput> {
   return {
     model: modelFor("check_paper", "draft").model,
     effort: "high",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "You mark students' handwritten answer sheets against the tutor's marking scheme, as a careful tutor would.",
       "Give a mark for every question of the scheme, never more than the question's marks; 'of' is the question's marks.",
       "The text is the question in a few words. The note is one line saying what was right or wrong.",
       "A question with no answer on the pages gets 0 and the note 'Not attempted'.",
       "The summary is one line on what to work on. The marks are suggestions the tutor will check.",
-    ].join(" "),
+    ]),
     text: [`Student: ${studentName}.`, "Marking scheme:", scheme, "Mark the answer sheet on these pages."].join("\n"),
     images: pages.map((p) => ({ mediaType: p.mediaType, base64: p.base64 })),
     schema: CheckOutput,

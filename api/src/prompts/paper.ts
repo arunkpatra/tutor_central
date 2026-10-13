@@ -1,7 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type PaperInput, PaperOutput } from "../schemas.js";
-import { LEVEL_WORDS, VOICE } from "./shared.js";
+import { LEVEL_WORDS, VOICE, blocks } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 export type PlannedSection = { title: string; count: number; marksEach: number };
 
@@ -56,13 +59,14 @@ export function request(input: PaperInput): ClaudeRequest<PaperOutput> {
   return {
     model: modelFor("paper", "draft").model,
     effort: "medium",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "You set question papers. Follow the section plan you are given exactly: the same sections, in order, with the same number of questions and the same marks for each question.",
       "Harder questions go in the sections with more marks.",
       "Give every question an answer the tutor can mark against: the final answer, with the key step where there is one.",
       "Number the questions from 1 across the whole paper. The title is the topic.",
-    ].join(" "),
+    ]),
     text: [
       `Write a question paper for ${input.classLevel}, ${input.subject}.`,
       `Topic: ${input.topic}.`,

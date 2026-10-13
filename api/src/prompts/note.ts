@@ -2,7 +2,10 @@ import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { MessageOutput, type WeeklyNoteInput } from "../schemas.js";
 import { MESSAGE, spokenDate, whoLines } from "./message.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 /** The weekly note to a parent (P10-Note): the week's facts from the student's record, worked out on the phone, in the
  *  parent's language with the English beside it. A fact that is empty is left out of the text, and the model is told to
@@ -12,7 +15,8 @@ export function request(input: WeeklyNoteInput): ClaudeRequest<MessageOutput> {
   return {
     model: modelFor("note", "draft").model,
     effort: "medium",
-    system: [VOICE, MESSAGE, "This is the weekly note.", input.tutorSays ? TUTOR_ADDS : ""].filter(Boolean).join(" "),
+    version: VERSION,
+    system: blocks([VOICE, MESSAGE, "This is the weekly note."], [input.tutorSays ? TUTOR_ADDS : ""]),
     text: [
       ...whoLines(input),
       `Week of ${spokenDate(w.monday)}.`,

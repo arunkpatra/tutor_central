@@ -5,7 +5,7 @@ import { CLAUDE_DEADLINE_MS, anthropicClaude } from "../src/claude.js";
 const request = {
   model: "claude-sonnet-5-5" as const,
   effort: "medium" as const,
-  system: "s",
+  system: { shared: "s", own: "" }, version: "1",
   text: "t",
   schema: z.object({ a: z.string() }),
 };
@@ -70,4 +70,35 @@ test("an API error is failed with its status and no tokens", async () => {
   const down = (async () => Response.json({ type: "error", error: { type: "invalid_request_error", message: "no" } }, { status: 400 })) as unknown as typeof fetch;
   const answer = await anthropicClaude("sk-test", { fetch: down }).complete(request);
   expect(answer).toMatchObject({ kind: "failed", reason: "api 400" });
+});
+
+test("the system is two blocks and the first carries cache_control; an empty own block is left out (plan decision 5)", async () => {
+  const bodies: { system: unknown }[] = [];
+  const capture = (async (_url: unknown, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body)));
+    return reply('{"a":"x"}', "end_turn")("", init);
+  }) as typeof fetch;
+  const client = anthropicClaude("sk-test", { fetch: capture });
+  await client.complete({ ...request, system: { shared: "rules", own: "facts" } });
+  await client.complete({ ...request, system: { shared: "rules", own: "" } });
+  expect(bodies[0]?.system).toEqual([
+    { type: "text", text: "rules", cache_control: { type: "ephemeral" } },
+    { type: "text", text: "facts" },
+  ]);
+  expect(bodies[1]?.system).toEqual([{ type: "text", text: "rules", cache_control: { type: "ephemeral" } }]);
+});
+
+test("cache_read_input_tokens is answered as tokensCached; tokens written to the cache count in tokensIn", async () => {
+  const usage = { input_tokens: 50, output_tokens: 45, cache_read_input_tokens: 2000, cache_creation_input_tokens: 300 } as unknown as { input_tokens: number; output_tokens: number };
+  const answer = await anthropicClaude("sk-test", { fetch: reply('{"a":"x"}', "end_turn", usage) }).complete(request);
+  expect(answer).toMatchObject({ kind: "ok", tokensIn: 350, tokensCached: 2000, tokensWritten: 300, tokensOut: 45 });
+});
+
+test("a request's own deadline, when shorter, ends the call", async () => {
+  const hang = ((_url: unknown, init?: RequestInit) =>
+    new Promise<Response>((_, reject) => init?.signal?.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError"))))) as typeof fetch;
+  const started = Date.now();
+  const answer = await anthropicClaude("sk-test", { fetch: hang, deadlineMs: 60_000 }).complete({ ...request, deadlineMs: 40 });
+  expect(answer).toMatchObject({ kind: "failed", reason: "timeout" });
+  expect(Date.now() - started).toBeLessThan(2000);
 });

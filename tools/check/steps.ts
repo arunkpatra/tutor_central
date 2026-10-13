@@ -105,6 +105,10 @@ export const STEPS: Step[] = [
       "ios/TutorCentralKit/Tests/DataTests/Contract/**",
       "tools/contract/*-cases.json",
       "ios/TutorCentralKit/Tests/DomainTests/Cases/**",
+      // prompts.test runs bun prompts over the prompt files and their table (D74); the contract writes the syllabi.
+      "api/src/prompts/**",
+      "api/src/agents/**",
+      "supabase/syllabi/**",
     ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");

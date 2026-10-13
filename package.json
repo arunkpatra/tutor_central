@@ -13,7 +13,8 @@
     "store-shots": "bun tools/store-shots.ts",
     "syllabi": "bun tools/syllabi.ts",
     "cost": "bun tools/cost.ts",
-    "contract": "bun tools/contract.ts"
+    "contract": "bun tools/contract.ts",
+    "prompts": "bun tools/prompts.ts"
   },
   "devDependencies": {
     "@types/bun": "1.3.11",

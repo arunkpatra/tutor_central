@@ -1,7 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type PlanInput, PlanOutput } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks, LIMITS, syllabusFacts } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -11,11 +14,13 @@ export function request(input: PlanInput): ClaudeRequest<PlanOutput> {
   return {
     model: modelFor("plan", "draft", input.groups[0]?.classLevel ?? "8").model,
     effort: "medium",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "For each group, name the chapter a class of that level is usually at in the given month of the school year (June to March) and one skill from it, as a short skill name a tutor can teach in one class and check with one question.",
       "Chapter names as the common textbook for that board and class prints them; no text from inside a book.",
-    ].join(" "),
+      LIMITS.plan,
+    ], [...new Set(input.groups.map((g) => syllabusFacts(g.classLevel, g.subject)))]),
     text: [`${MONTHS[input.month - 1]}.`, ...input.groups.map((g) => `Group ${g.groupNo}: class ${g.classLevel} ${g.subject}.`)].join("\n"),
     schema: PlanOutput,
   };

@@ -403,7 +403,7 @@ test("the material is kept in the app's shape: snake-case keys, the check's skil
   expect(check.title).toBe("Checks · Science 1.1");
   expect(s.kept[1]).toMatchObject({ title: "Science 1.1 · set 1", content: { for_homework: false, light: false } });
   expect(s.kept[2]).toMatchObject({ title: "Science 1.1 · sheet 1", content: { for_homework: true, light: false } });
-  expect(Object.keys(s.kept[3]?.content ?? {}).sort()).toEqual(["problem", "slip", "steps"]);
+  expect(Object.keys(s.kept[3]?.content ?? {}).sort()).toEqual(["problem", "proof", "slip", "steps"]);
 });
 
 test("a material step retaken after its call keeps once and pays once", async () => {

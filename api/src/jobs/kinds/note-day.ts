@@ -1,4 +1,5 @@
-import { makeRequest } from "../../make.js";
+import type { Kind } from "../../agents/agent.js";
+import { makeAgent } from "../../make.js";
 import { addDays, weekday } from "../../plan/dates.js";
 import type { NotificationRow } from "../../push/db.js";
 import { MakeInput } from "../../schemas.js";
@@ -131,19 +132,11 @@ async function note(job: Job, ctx: StepContext, source: NoteSource, centre: stri
   }
   const parsed = MakeInput.safeParse(body);
   if (!parsed.success) return go({ failed: step.failed + 1 });
-  const made = makeRequest(parsed.data);
   const key = `note:${student.id}:${week.from}`;
-  const call = await recordedCall<{ message: string; english: string }>(ctx, {
-    centre,
-    input: parsed.data,
-    job: job.id,
-    step: name,
-    key,
-    kind: made.kind,
-    request: made.request as never,
-    student: made.student,
-  });
+  const call = await recordedCall(ctx, { centre, spec: makeAgent(parsed.data) as Kind<unknown, { message: string; english: string }>, input: parsed.data, job: job.id, step: name, key });
   if (call.kind === "pending") return { kind: "wait", name, step, runAt: new Date(ctx.clock.now() + WAIT_MS) };
+  // A kind switched off (D100): not made, nothing paid.
+  if (call.kind === "paused") return go({ failed: step.failed + 1 });
   if (call.kind === "failed") {
     // No consent (never given, or withdrawn while the job ran): held, nothing paid (review focus 4).
     if (call.reason === "student_consent") return go({ held: [...step.held, student.id] });

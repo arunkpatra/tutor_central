@@ -40,6 +40,8 @@ export const errors = {
     status: 422,
     body: { error: REFUSED[kind] ?? "Couldn't make this one. Change the topic and try again." },
   }),
+  /** A kind switched off in ai_models (D100): before any call or row. Task 7 gives it the board's words. */
+  paused: (kind: AIKind): ApiError => ({ status: 503, body: { error: REFUSED[kind] ?? "Couldn't make this one. Try again later.", reason: "paused" } }),
   service: (): ApiError => ({ status: 502, body: { error: "The AI service didn't answer. Try again." } }),
   badImage: (why: string): ApiError => ({ status: 400, body: { error: why } }),
   /** The same key's call is still running (D84): the app's timed-out words; it may finish and replay. */

@@ -1,6 +1,7 @@
 import { request as planRequest } from "../../prompts/plan.js";
-import { makeRequest } from "../../make.js";
-import type { PlanInput as TopicsInput, PlanOutput } from "../../schemas.js";
+import { fromRequest } from "../../agents/agent.js";
+import { makeAgent } from "../../make.js";
+import type { PlanInput as TopicsInput } from "../../schemas.js";
 import { type BudgetInput, budget, type MaterialRequest } from "../../plan/budget.js";
 import { type GapReport, nearestExam, type PrepItem, type PrepStudent, revisionLines } from "../../plan/exam-prep.js";
 import { type KeptArtefact, artefactOf, materialInput, placementGroups, placeOf } from "../../plan/material.js";
@@ -201,11 +202,12 @@ async function name(job: Job, ctx: StepContext, source: PlanRecordSource, centre
     month: Number(draft.date.slice(5, 7)),
     groups: unnamed.map((g) => ({ groupNo: g.number, classLevel: highest(g.memberIDs), subject: g.subject })),
   };
-  const call = await recordedCall<PlanOutput>(ctx, { centre, kind: "plan", input: asked, request: planRequest(asked), job: job.id, step: "name" });
+  const call = await recordedCall(ctx, { centre, spec: fromRequest("plan", planRequest(asked)), input: asked, job: job.id, step: "name" });
   if (call.kind === "pending") return { kind: "wait", name: "name", step, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) };
-  if (call.kind === "failed") {
+  if (call.kind === "paused" || call.kind === "failed") {
     // The groups stay unnamed and the plan is written; their material waits for a name.
-    return { kind: "continue", name: "name", step: next(await writeNamedSkills(draft, record, source, centre)), generationId: call.id, costPaise: call.costPaise };
+    const spent = call.kind === "failed" ? { generationId: call.id, costPaise: call.costPaise } : {};
+    return { kind: "continue", name: "name", step: next(await writeNamedSkills(draft, record, source, centre)), ...spent };
   }
   const topics = new Map<number, { chapter: string; skill: string }>();
   for (const t of call.parsed.groups) if (!topics.has(t.groupNo)) topics.set(t.groupNo, { chapter: t.chapter, skill: t.skill });
@@ -305,6 +307,7 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
         const body = { kind: "placement" as const, centreId: centre, classLevel: req.classLevel, subject: group.title, chapters: group.items.map((item) => item.name) };
         const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key: `${job.id}:${name}:${i}`, ...madeCall(body) });
         if (call.kind === "pending") return wait();
+        if (call.kind === "paused") return after(false, { costPaise: cost });
         if (call.kind === "failed") return after(false, { costPaise: cost + (call.costPaise ?? 0) });
         cost += call.costPaise;
         const answered = (call.parsed as { questions: { question: string; answer: string }[] }).questions;
@@ -329,6 +332,7 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
     const key = req.kind === "mock" ? `mock:${req.item}` : undefined;
     const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key, ...madeCall(body) });
     if (call.kind === "pending") return wait();
+    if (call.kind === "paused") return after(false);
     // Another plan's mock for the same exam asked at another class level: its mock is linked at the next try.
     if (call.kind === "failed" && call.reason === "key_reused") return wait();
     if (call.kind === "failed") return after(false, { generationId: call.id, costPaise: call.costPaise });
@@ -341,9 +345,8 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
 }
 
 /** The call for a body, as `recordedCall` takes it (no student: the plan's material names none, D62). */
-function madeCall(body: Parameters<typeof makeRequest>[0]) {
-  const made = makeRequest(body);
-  return { kind: made.kind, request: made.request, empty: made.empty };
+function madeCall(body: Parameters<typeof makeAgent>[0]) {
+  return { spec: makeAgent(body) };
 }
 
 /** "17:00–18:30 · 3 groups. Tap to see it." (P18-Notification-PlanReady), the times left out when the batch has none. */

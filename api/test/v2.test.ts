@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { fakeApple } from "../src/apple-fake.js";
-import { fakeClaude, kindOf, localScript, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, kindOf, localScript, SAMPLE, systemText } from "../src/claude-fake.js";
 import { request as noteRequestForFake } from "../src/prompts/note.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
@@ -244,7 +244,7 @@ test("make note writes the week's note in the parent's language with the English
   expect(db.started[0]).toMatchObject({ kind: "note", model: "claude-haiku-5-5", student: student.studentId });
   expect(claude.requests[0]?.text).toContain("Taught: Balancing equations, Types of reactions.");
   expect(claude.requests[0]?.text).toContain("Attendance: absent 2 of 3 classes.");
-  expect(claude.requests[0]?.system).not.toContain("signed");
+  expect(systemText(claude.requests[0]!)).not.toContain("signed");
 });
 
 test("a note for a student whose parent has not agreed is refused before any call, in the student's words", async () => {
@@ -263,7 +263,7 @@ test("a note with no taught skills says nothing new (decision 2), asks for no ta
   expect(text).not.toContain("what was taught");
   expect(text).not.toContain("Got right:");
   expect(text).toContain("Attendance: absent all week (3 classes).");
-  expect(claude.requests[0]?.system).toContain("leave out");
+  expect(systemText(claude.requests[0]!)).toContain("leave out");
 });
 
 test("make can_do writes from the ladder, naming what moved up, what the student can do, what to do at home and what is next", async () => {
@@ -288,14 +288,14 @@ test("make not_on_track writes what is hard, what we are doing and what helps at
   });
   expect(r.status).toBe(200);
   expect(db.started[0]).toMatchObject({ kind: "not_on_track", model: "claude-haiku-5-5", student: student.studentId });
-  expect(claude.requests[0]?.system).toContain("five minutes");
+  expect(systemText(claude.requests[0]!)).toContain("five minutes");
 });
 
 test("the three message kinds hold the model to 500 characters and the schema to 600, with no signature", async () => {
   const claude = fakeClaude({ answer: SAMPLE.note });
   await post(app(claude, fakeDb()), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week });
-  expect(claude.requests[0]?.system).toContain("at most 500 characters");
-  expect(claude.requests[0]?.system).toContain("no signature");
+  expect(systemText(claude.requests[0]!)).toContain("at most 500 characters");
+  expect(systemText(claude.requests[0]!)).toContain("no signature");
   expect(MessageOutput.safeParse({ message: "x".repeat(601), english: "y" }).success).toBe(false);
 });
 
@@ -309,7 +309,7 @@ test("read-marks reads a report card into rows the tutor checks, records the pag
   expect(body.result.marks[2]?.date).toBeNull();
   expect(db.started[0]).toMatchObject({ kind: "read_marks", model: "claude-sonnet-5-5", student: student.studentId, input: { pages: 1, bytes: 8 } });
   expect(JSON.stringify(db.started[0])).not.toContain(jpeg);
-  expect(claude.requests[0]?.system).toContain("report card");
+  expect(systemText(claude.requests[0]!)).toContain("report card");
   expect(claude.requests[0]?.text).toContain("Subjects the student takes here: Mathematics, Science.");
 });
 
@@ -328,7 +328,7 @@ test("read-marks refuses a photo with no marks in words, and a student without c
 test("test tomorrow no longer asks the model to sign (the app signs each message once)", async () => {
   const claude = fakeClaude({ answer: SAMPLE.test_tomorrow });
   await post(app(claude, fakeDb()), "/ai/make", testTomorrowBody);
-  expect(claude.requests[0]?.system).toContain("no signature");
+  expect(systemText(claude.requests[0]!)).toContain("no signature");
   expect(claude.requests[0]?.text).not.toContain("Signed:");
 });
 
@@ -345,7 +345,7 @@ test("an unfit message is refused in words about the message, never about a topi
     const r = await post(app(claude, fakeDb()), "/ai/make", body);
     expect({ kind, status: r.status }).toEqual({ kind, status: 422 });
     expect(await r.json()).toEqual({ error: "Couldn't write this message. Try again." });
-    expect(claude.requests[0]?.system).toContain("the English at most 700 characters");
+    expect(systemText(claude.requests[0]!)).toContain("the English at most 700 characters");
   }
 });
 

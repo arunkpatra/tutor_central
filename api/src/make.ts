@@ -1,3 +1,4 @@
+import { fromRequest, type Kind } from "./agents/agent.js";
 import type { ClaudeRequest } from "./claude.js";
 import type { AIKind } from "./db.js";
 import { request as briefRequest } from "./prompts/brief.js";
@@ -60,4 +61,11 @@ export function makeRequest(v: MakeInput): Made {
     case "not_on_track":
       return made("not_on_track", notOnTrackRequest(v), { student: v.studentId, studentName: v.studentName });
   }
+}
+
+/** The kind's agent for a body (D99): the route and the jobs run the same agent for the same kind. Task 6 gives the
+ *  group material its own kinds; until then each is its request drafted alone. */
+export function makeAgent(v: MakeInput): Kind<unknown, unknown> {
+  const made = makeRequest(v);
+  return fromRequest(made.kind, made.request, { student: made.student, studentName: made.studentName, empty: made.empty, classLevel: "classLevel" in v ? v.classLevel : undefined });
 }

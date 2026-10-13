@@ -1,7 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type ClassLevel, type FigureKind, FigureOutput } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks, LIMITS, syllabusFacts } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 const RULES: Record<FigureKind, string> = {
   number_line: "number_line: from, to, step, start and jumps; start and the landing (start plus the jumps) lie on the line; at most 40 steps.",
@@ -18,12 +21,16 @@ export function request(kind: FigureKind, classLevel: ClassLevel, subject: strin
   return {
     model: modelFor("figure", "draft", classLevel).model,
     effort: "medium",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "You fill one figure template with the numbers and labels that illustrate a skill; the app draws it.",
-      RULES[kind],
+      "The templates and their rules:",
+      ...Object.values(RULES),
       "The caption is one sentence the tutor can say while pointing at the figure.",
-    ].join(" "),
+      LIMITS.figure,
+      syllabusFacts(classLevel, subject),
+    ]),
     text: `Class ${classLevel} ${subject}, the skill "${skill}". Fill the template ${kind}.`,
     schema: FigureOutput,
   };

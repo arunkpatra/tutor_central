@@ -39,7 +39,7 @@ export function fakeClaude(
       if (step.delayMs) await new Promise((resolve) => setTimeout(resolve, step.delayMs));
       const latencyMs = step.delayMs ?? 0;
       if (step.fail) return { kind: "failed", reason: step.fail, latencyMs };
-      const answered = { model: request.model, tokensIn: 812, tokensOut: 1460, stopReason: "end_turn", latencyMs };
+      const answered = { model: request.model, tokensIn: 812, tokensOut: 1460, tokensCached: 0, tokensWritten: 0, stopReason: "end_turn", latencyMs };
       if (step.refuse) return { kind: "refused", reason: "refused", ...answered, tokensIn: 100, tokensOut: 0, stopReason: "refusal" };
       if (step.truncate) return { kind: "truncated", ...answered, tokensOut: 16000, stopReason: "max_tokens" };
       // An answer the schema refuses (a figure that does not add up) is refused, as the real client reports an unfit one.
@@ -207,7 +207,7 @@ const sheet: SheetOutput = {
     ["CH4 + O2 → CO2 + H2O", "CH4 + 2O2 → CO2 + 2H2O"],
     ["Zn + HCl → ZnCl2 + H2", "Zn + 2HCl → ZnCl2 + H2"],
     ["KClO3 → KCl + O2", "2KClO3 → 2KCl + 3O2"],
-  ].map(([text, answer], i) => ({ number: i + 1, text: `Balance: ${text}`, answer: answer ?? "" })),
+  ].map(([text, answer], i) => ({ number: i + 1, text: `Balance: ${text}`, answer: answer ?? "", proof: null })),
 };
 
 /** The worked example (P10-WorkedExample): four steps and the slip. */
@@ -223,6 +223,7 @@ const workedExample: WorkedExampleOutput = {
     { title: "Check every element once more", working: "Fe: 4 and 4. O: 6 and 6. Balanced." },
   ],
   slip: "A common slip here: changing the small numbers inside a formula. Only the numbers in front change.",
+  proof: null,
 };
 
 /** One spec per template, the figure boards' (P10-Figure-*). */
@@ -289,7 +290,7 @@ const PHOTO_ITEMS: ParseSchoolOutput = {
 };
 
 /** The mock (P10-Mock): 25 marks in 40 minutes, three sections, each question on one skill. */
-const mockQuestion = (number: number, text: string, marks: number, answer: string, skill: string) => ({ number, text, marks, answer, skill });
+const mockQuestion = (number: number, text: string, marks: number, answer: string, skill: string) => ({ number, text, marks, answer, skill, proof: null });
 const mock: MockOutput = {
   title: "Science unit test 3",
   durationMinutes: 40,
@@ -402,23 +403,26 @@ export const SAMPLE = {
   read_marks: readMarks,
 };
 
+/** A request's system words as one text (tests read what a prompt says). */
+export const systemText = (request: Pick<ClaudeRequest<unknown>, "system">) => `${request.system.shared}\n${request.system.own}`;
+
 /** The kind a request is for, read from the prompt's model and words (the fake has no route to ask). */
 export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
   if (request.text.toLowerCase().includes("what the school sent")) return "parse_school";
   if (request.text.includes("Pattern:")) return "mock";
   if (request.text.includes("By skill:")) return "gap_report";
-  if (request.system.includes("test is tomorrow")) return "test_tomorrow";
-  if (request.system.includes("weekly note")) return "note";
-  if (request.system.includes("can now do")) return "can_do";
+  if (systemText(request).includes("test is tomorrow")) return "test_tomorrow";
+  if (systemText(request).includes("weekly note")) return "note";
+  if (systemText(request).includes("can now do")) return "can_do";
   if (request.text.includes("Finding hard:")) return "not_on_track";
-  if (request.images?.length && request.system.includes("report card")) return "read_marks";
+  if (request.images?.length && systemText(request).includes("report card")) return "read_marks";
   if (request.images?.length) {
     if (request.text.includes("contents page")) return "parse_textbook";
     return request.text.includes("register") ? "scan_register" : "check_paper";
   }
   if (request.text.includes("Fill the template")) return "figure";
   if (request.text.includes("worked example")) return "worked_example";
-  if (request.system.includes("colleague's note")) return "brief";
+  if (systemText(request).includes("colleague's note")) return "brief";
   if (request.text.includes("Group 1:")) return "plan";
   if (request.text.includes("a practice set on:") || request.text.includes("homework on:")) return "sheet";
   if (request.text.includes("placement")) return "placement";
@@ -484,7 +488,7 @@ function templateOf(text: string): FigureKind {
 /** The sample sheet at the asked count: cut, or its questions repeated and numbered on, so a homework of five reads five. */
 function counted(count: number): SheetOutput {
   const questions = Array.from({ length: count }, (_, i) => {
-    const q = SAMPLE.sheet.questions[i % SAMPLE.sheet.questions.length] ?? { number: 1, text: "", answer: "" };
+    const q = SAMPLE.sheet.questions[i % SAMPLE.sheet.questions.length] ?? { number: 1, text: "", answer: "", proof: null };
     return { ...q, number: i + 1 };
   });
   return { ...SAMPLE.sheet, questions };

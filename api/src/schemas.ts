@@ -294,14 +294,35 @@ export type WeeklyNoteInput = Extract<MakeInput, { kind: "note" }>;
 export type CanDoInput = Extract<MakeInput, { kind: "can_do" }>;
 export type NotOnTrackInput = Extract<MakeInput, { kind: "not_on_track" }>;
 
-/** A sheet is a question set (V1's homework and worksheet shape): the app's `SheetContent` decodes it. */
-export const SheetOutput = QuestionSetOutput;
+/** A numeric answer's proof (D99): an arithmetic expression over numbers alone and the value it equals, evaluated by
+ *  the server (src/agents/arith.ts). The app ignores it. */
+export const Proof = z.object({ expression: z.string().min(1).max(200), equals: z.number() });
+export type Proof = z.infer<typeof Proof>;
+
+/** A model check's verdict on a draft against the kind's rubric (D99). */
+export const CheckVerdict = z.object({
+  pass: z.boolean(),
+  findings: z.array(z.object({ item: z.string().min(1).max(80), problem: z.string().min(1).max(300) })).max(12),
+});
+export type CheckVerdict = z.infer<typeof CheckVerdict>;
+
+/** A sheet is a question set (V1's homework and worksheet shape, which the app's `SheetContent` decodes) with a proof per
+ *  numeric answer. */
+export const SheetOutput = z.object({
+  title: z.string().min(1).max(120),
+  instructions: z.string().max(300).nullable(),
+  questions: z
+    .array(z.object({ number: z.number().int().min(1), text: z.string().min(1).max(700), answer: z.string().min(1).max(400), proof: Proof.nullish() }))
+    .min(1),
+});
 export type SheetOutput = z.infer<typeof SheetOutput>;
 
 export const WorkedExampleOutput = z.object({
   problem: z.string().min(1).max(300),
   steps: z.array(z.object({ title: z.string().min(1).max(80), working: z.string().min(1).max(400) })).min(2).max(6),
   slip: z.string().min(1).max(300),
+  /** The problem's final answer, when it is a number. */
+  proof: Proof.nullish(),
 });
 export type WorkedExampleOutput = z.infer<typeof WorkedExampleOutput>;
 
@@ -375,7 +396,7 @@ export const MockOutput = z.object({
         name: z.string().min(1).max(40),
         marksEach: z.number().int().min(1),
         questions: z
-          .array(z.object({ number: z.number().int().min(1), text: z.string().min(1).max(600), marks: z.number().int().min(1), answer: z.string().min(1).max(600), skill: Name }))
+          .array(z.object({ number: z.number().int().min(1), text: z.string().min(1).max(600), marks: z.number().int().min(1), answer: z.string().min(1).max(600), skill: Name, proof: Proof.nullish() }))
           .min(1),
       }),
     )
