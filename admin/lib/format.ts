@@ -11,6 +11,12 @@ export function rupees(paise: number): string {
 }
 
 /** Counts as the boards write them: 1,842 and 110,004. */
+/** A cost per student: whole rupees, or the paise when it is under ₹1 (₹0.27, not ₹0). */
+export function perStudent(paise: number): string {
+  if (paise === 0) return "₹0";
+  return paise < 100 ? rupees(paise) : `₹${Math.round(paise / 100)}`;
+}
+
 export function count(n: number): string {
   return n.toLocaleString("en-US");
 }
@@ -30,10 +36,13 @@ function clock(at: Date, seconds = false): string {
   });
 }
 
-/** "12 Oct" in India. */
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "12 Oct", "23 Sep" in India: three letters always (en-GB's short September is "Sept"). */
 export function dayMonth(at: Date | string): string {
   const d = typeof at === "string" ? new Date(at.length === 10 ? `${at}T12:00:00+05:30` : at) : at;
-  return d.toLocaleDateString("en-GB", { timeZone: IST, day: "numeric", month: "short" });
+  const [, month, day] = istDay(d).split("-").map(Number) as [number, number, number];
+  return `${day} ${MONTHS[month - 1]}`;
 }
 
 function daysBetween(at: Date, now: Date): number {

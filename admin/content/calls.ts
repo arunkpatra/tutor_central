@@ -1,5 +1,5 @@
 import type { Tone } from "@/components/parts";
-import { shortId } from "@/lib/format";
+import { count, shortId } from "@/lib/format";
 
 /** The calls' words (P19-Calls, P19-Call). */
 export const CALLS = {
@@ -60,7 +60,7 @@ export const CALL = {
   outcomeMore: (stop: string | null, error: string | null) =>
     ` · stop reason ${stop ?? "none"}${error ? ` · error_reason ${error}` : ""}`,
   tokens: (inn: number | null, out: number | null) =>
-    `${inn ?? 0} in · ${out ?? 0} out${inn === null ? "" : " · billed"}`,
+    `${count(inn ?? 0)} in · ${count(out ?? 0)} out${inn === null ? "" : " · billed"}`,
   latency: (ms: string, deadline: boolean) => `${ms} ms${deadline ? " (the deadline)" : ""}`,
   cost: (rupees: string, paise: number) => `${rupees} (${paise} paise)`,
   started: (by: string, subject: string | null, step: string | null) =>

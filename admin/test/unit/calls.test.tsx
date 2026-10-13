@@ -46,6 +46,7 @@ test("one call: its facts, the input, Open the job", async () => {
     "7a1e…c0d4",
     "c9f2…e4a1:make:4",
     "₹0.06 (6 paise)",
+    "1,736 in · 0 out · billed",
   ])
     expect(html).toContain(words);
 });

@@ -1,5 +1,17 @@
 import { expect, test } from "bun:test";
-import { ago, count, latency, maskIp, monthOf, rupees, seconds, shortId, when } from "../../lib/format";
+import {
+  ago,
+  count,
+  dayMonth,
+  latency,
+  maskIp,
+  monthOf,
+  perStudent,
+  rupees,
+  seconds,
+  shortId,
+  when,
+} from "../../lib/format";
 
 // 13 Oct 2026, 10:42 in India.
 const now = new Date("2026-10-13T05:12:00Z");
@@ -41,4 +53,16 @@ test("seconds, latency, counts, ids, addresses, months", () => {
   expect(monthOf("2026-09", now)).toBe("2026-09-01");
   expect(monthOf(undefined, now)).toBe("2026-10-01");
   expect(monthOf("junk", now)).toBe("2026-10-01");
+});
+
+test("a day and month in three letters, September too", () => {
+  expect(dayMonth("2026-09-23")).toBe("23 Sep");
+  expect(dayMonth("2026-10-12")).toBe("12 Oct");
+  expect(when("2026-09-23T06:00:00Z", now)).toBe("23 Sep 11:30");
+});
+
+test("a cost per student: whole rupees, but under ₹1 in paise", () => {
+  expect(perStudent(1300)).toBe("₹13");
+  expect(perStudent(27)).toBe("₹0.27");
+  expect(perStudent(0)).toBe("₹0");
 });
