@@ -1,4 +1,5 @@
 import Data
+import DesignSystem
 import UIKit
 import UserNotifications
 
@@ -11,6 +12,7 @@ public final class AppDelegate: NSObject, UIApplicationDelegate {
         _: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
+        MainActor.assumeIsolated { AlertTint.apply() }
         return true
     }
 

@@ -53,7 +53,8 @@ extension RootView {
     /// The AI Assistant's states, all on the More tab's stack.
     nonisolated static let aiStates: Set<LaunchState> = [
         .make, .makeEmpty, .makeSheet, .makeFor, .makeForStudent, .makeWorkedExample, .makeFigure, .makeBrief,
-        .makeMock, .makeNote, .makeMaking, .makeMade, .makeSheetNoClass, .aiPaper, .aiPaperClassWheel, .aiPaperNoClass,
+        .makeMock, .makeNote, .makeMaking, .makeMade, .makeSheetNoClass, .makeSwitchedOff, .aiPaper, .aiPaperClassWheel,
+        .aiPaperNoClass,
         .aiHomework,
         .aiWorksheet,
         .aiNote, .aiNoteStudent, .aiGenerating,

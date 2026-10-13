@@ -20,6 +20,9 @@ public enum APIFailure: Error, Hashable, Sendable {
     /// A named student's parent has not agreed (403 `student_consent`, D62): the API's words are kept; every screen
     /// says the one alert (`studentAlert`), never the centre's notice words.
     case studentConsent(String)
+    /// The kind is switched off for a while (D73's kill switch, 503 `paused`): the API's words, shown as the system
+    /// alert (P20-Switched-Off).
+    case paused(String)
 
     public var message: String {
         switch self {
@@ -28,7 +31,7 @@ public enum APIFailure: Error, Hashable, Sendable {
         case .consent: "Agree to the notice before the first photo."
         case let .limit(limit): "You've made today's \(limit). Try again tomorrow."
         case let .allowance(allowance): "You've made this month's \(allowance). More next month."
-        case let .refused(words), let .server(words): words
+        case let .refused(words), let .server(words), let .paused(words): words
         case .studentConsent: Self.studentAlert
         case .service: "The AI service didn't answer. Try again."
         case .timedOut: "That took too long to come back. Try again in a minute."

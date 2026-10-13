@@ -180,6 +180,18 @@ extension APIClientTests {
         #expect(APIFailure.allowance(600).message == "You've made this month's 600. More next month.")
     }
 
+    /// D73's kill switch: a kind switched off answers 503 `paused` with the tutor's words (P20-Switched-Off); a 503
+    /// without it is still the database out of reach.
+    @Test func a503WithReasonPausedIsPausedWithTheWords() {
+        let words = "Sheets can't be made right now. Making sheets is switched off for a short while "
+            + "so we can fix something. Everything else works as usual. Try again later."
+        #expect(APIClient.failure(status: 503, body: ErrorBody(error: words, reason: "paused", limit: nil))
+            == .paused(words))
+        #expect(APIFailure.paused(words).message == words)
+        #expect(APIClient.failure(status: 503, body: ErrorBody(error: "x", reason: nil, limit: nil)) == .offline)
+        #expect(APIClient.failure(status: 503, body: nil) == .offline)
+    }
+
     @Test func theTextbookIsReadIntoNumberedChapters() async throws {
         let body = #"{"id":"6b2d0f3e-1c2d-4e8f-a1b2-c3d4e5f60901","result":{"title":"Math-Magic 5","chapters":"#
             + #"[{"name":"The Fish Tale","skills":["Compare lengths"]},{"name":"Shapes","skills":["Angles"]}]}}"#

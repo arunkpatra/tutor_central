@@ -103,6 +103,22 @@ import Testing
         #expect(kit.ai.sheetRequests.last?.questions == 15 && kit.ai.sheetRequests.last?.reason == "easier")
     }
 
+    /// A kind switched off (D73, P20-Switched-Off): the system alert in the API's words, OK only, the form kept as it
+    /// was and no failure row under it.
+    @Test func aPausedAnswerShowsTheAlertWithOKAndKeepsTheForm() async {
+        let ai = FakeAIRepository()
+        let words = "Sheets can't be made right now. Making sheets is switched off for a short while "
+            + "so we can fix something. Everything else works as usual. Try again later."
+        ai.scriptByKind[.sheet] = .failure(.paused(words))
+        let kit = await Self.kit(.sheet, ai: ai)
+        kit.store.choose(Self.groupOne)
+        let outcome = await kit.store.make()
+        #expect(outcome == .refused)
+        #expect(kit.store.alert == words)
+        #expect(kit.make.failure == nil)
+        #expect(kit.store.canMake)
+    }
+
     @Test func theHelperNamesTheTarget() async {
         let kit = await Self.kit(.sheet)
         kit.store.choose(Self.groupOne)

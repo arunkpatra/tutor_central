@@ -147,13 +147,15 @@ public struct APIClient: AIRepository, AccountRepository {
 
     /// The platform's answers (Phase 17): the same key still running (D84) may finish and answer again, so the
     /// timed-out words; another body under the same key, or any other conflict, the service's words; too many calls in
-    /// a minute, try again shortly, never the day's limit; a body past the limit, too many pages.
+    /// a minute, try again shortly, never the day's limit; a body past the limit, too many pages; a kind switched off.
     private static func platformFailure(status: Int, body: ErrorBody?) -> APIFailure? {
         switch status {
         case 409 where body?.reason == "in_progress": .timedOut
         case 409: .service
         case 429 where body?.reason == "rate": .timedOut
         case 413: .tooLarge
+        // A kind switched off (D73's kill switch): its words, the system alert.
+        case 503 where body?.reason == "paused": .paused(body?.error ?? APIFailure.service.message)
         default: nil
         }
     }

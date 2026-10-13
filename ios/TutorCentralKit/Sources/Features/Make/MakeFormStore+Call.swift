@@ -25,7 +25,13 @@ public extension MakeFormStore {
             return .refused
         }
         remember()
-        return await task.value.map(MakeOutcome.made) ?? .failed
+        let made = await task.value
+        if made == nil, let paused = make.paused, paused.kind == kind {
+            make.paused = nil
+            alert = paused.words
+            return .refused
+        }
+        return made.map(MakeOutcome.made) ?? .failed
     }
 
     /// The note's student with consent: the note day of their batch, with the tutor's words; without consent, refused

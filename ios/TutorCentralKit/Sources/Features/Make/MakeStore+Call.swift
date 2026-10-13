@@ -17,6 +17,12 @@ public extension MakeStore {
         public let canRetry: Bool
     }
 
+    /// A kind switched off (D73): its words, for the form's alert, not a failure row.
+    struct Paused: Hashable, Sendable {
+        public let kind: MakeKind
+        public let words: String
+    }
+
     /// Stops waiting; a late answer is dropped (the call is still counted, the safe side).
     func cancel() {
         task?.cancel()
@@ -37,6 +43,7 @@ extension MakeStore {
     func run(_ kind: MakeKind, job: @escaping @MainActor () async throws -> Artefact) -> Task<Artefact?, Never>? {
         guard running == nil else { return nil }
         failure = nil
+        paused = nil
         running = Running(kind: kind, title: kind.making)
         let task = Task { [weak self] () -> Artefact? in
             do {
@@ -50,7 +57,11 @@ extension MakeStore {
                 guard !Task.isCancelled, let self else { return nil }
                 running = nil
                 self.task = nil
-                failure = Failure(kind: kind, message: Self.words(for: error), canRetry: Self.canRetry(error))
+                if case let .paused(words)? = error as? APIFailure {
+                    paused = Paused(kind: kind, words: words)
+                } else {
+                    failure = Failure(kind: kind, message: Self.words(for: error), canRetry: Self.canRetry(error))
+                }
                 return nil
             }
         }
@@ -68,7 +79,7 @@ extension MakeStore {
 
     static func canRetry(_ error: any Error) -> Bool {
         switch error as? APIFailure {
-        case .limit?, .allowance?, .studentConsent?, .consent?, .signedOut?: false
+        case .limit?, .allowance?, .studentConsent?, .consent?, .signedOut?, .paused?: false
         default: true
         }
     }

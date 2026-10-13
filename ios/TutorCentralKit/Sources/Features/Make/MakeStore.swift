@@ -38,6 +38,8 @@ import Observation
     public internal(set) var running: Running?
     /// The last call's failure, for its form's error row.
     public internal(set) var failure: Failure?
+    /// The last call's kind was switched off: the form shows the alert and takes it.
+    public internal(set) var paused: Paused?
     @ObservationIgnored var task: Task<Artefact?, Never>?
 
     let register: any Register
