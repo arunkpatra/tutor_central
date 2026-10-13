@@ -1,8 +1,11 @@
 import { expect, test } from "bun:test";
+import { fakeAlertsSource } from "../src/alerts/db.js";
+import { fakeSender } from "../src/alerts/resend.js";
 import { fakeApple } from "../src/apple-fake.js";
 import { fakeClaude } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
+import { makeHandlers } from "../src/jobs/kinds/index.js";
 import { makeApp } from "../src/make-app.js";
 import { fakeObserve } from "../src/observe-fake.js";
 import { fakePusher } from "../src/push/apns-fake.js";
@@ -131,4 +134,26 @@ test("/jobs/health renders one page and answers apns true behind the bearer", as
   expect(await r.json()).toEqual({ pdf: 1, apns: true });
   expect(pusher.sent.map((p) => p.environment)).toEqual(["production"]);
   expect(pusher.closed).toBe(1);
+});
+
+test("the tick queues alerts:<ten minutes> beside the sweep when the alerts' source is given", async () => {
+  const clock = fakeClock();
+  const jobs = fakeJobsDb(clock);
+  const source = fakeAlertsSource({ failedJobs: [], costToday: [], requestsHour: { total: 0, errors: 0 }, stuckJobs: [] }, []);
+  const app = makeApp({
+    verify: async () => null,
+    claude: fakeClaude({}),
+    db: fakeDb(),
+    apple: fakeApple({}),
+    observe: fakeObserve(),
+    worker: { jobs, db: fakeDb(), secret: "s3cret", clock, handlers: makeHandlers({ alerts: { source, sender: fakeSender(), email: "you@example.com" } }) },
+  });
+  await app.request("/jobs/tick", { headers: bearer });
+  clock.advance(60_000);
+  await app.request("/jobs/tick", { headers: bearer });
+  expect(jobs.jobs.map((j) => j.key).sort()).toEqual(["alerts:2026-10-12-12:00", "sweep:2026-10-12-12:00"]);
+  expect(jobs.jobs.find((j) => j.kind === "alerts")).toMatchObject({ centreId: null, state: "done", result: { checked: 0, raised: 0 } });
+  clock.advance(600_000);
+  await app.request("/jobs/tick", { headers: bearer });
+  expect(jobs.jobs.filter((j) => j.kind === "alerts").map((j) => j.key)).toEqual(["alerts:2026-10-12-12:00", "alerts:2026-10-12-12:10"]);
 });
