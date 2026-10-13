@@ -9,6 +9,7 @@ export type PlacementInput = { classLevel: ClassLevel; subject: string; chapters
 export const placement: Kind<PlacementInput, PlacementOutput> = {
   kind: "placement",
   classLevel: (input) => input.classLevel,
+  maths: true,
   draft: (input) => request(input.classLevel, input.subject, input.chapters),
   verify: (input, draft) => {
     const findings: Finding[] = [];

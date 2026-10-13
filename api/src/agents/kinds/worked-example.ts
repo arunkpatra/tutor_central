@@ -17,6 +17,7 @@ export function workedExampleFindings(example: WorkedExampleOutput, at = ""): Fi
 export const workedExample: Kind<WorkedExampleInput, WorkedExampleOutput> = {
   kind: "worked_example",
   classLevel: (input) => input.classLevel,
+  maths: true,
   draft: (input) => request(input.classLevel, input.subject, input.skill),
   verify: (_input, draft) => workedExampleFindings(draft),
   rubric: rubric([

@@ -9,6 +9,7 @@ export type CheckInput = { classLevel: ClassLevel; subject: string; skills: stri
 export const check: Kind<CheckInput, ChecksOutput> = {
   kind: "check",
   classLevel: (input) => input.classLevel,
+  maths: true,
   draft: (input) => request(input.classLevel, input.subject, input.skills),
   verify: (input, draft) => {
     const findings: Finding[] = [];

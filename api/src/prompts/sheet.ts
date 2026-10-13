@@ -1,10 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type SheetInput, SheetOutput } from "../schemas.js";
-import { VOICE, blocks, LIMITS, PROOF, syllabusFacts } from "./shared.js";
+import { VOICE, blocks, LIMITS, MATHS, PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 const REASONS: Record<string, string> = {
   easier: "Make it easier: recall and one-step questions only.",
@@ -29,6 +29,7 @@ export function request(input: SheetInput): ClaudeRequest<SheetOutput> {
       "Write your own questions and numbers; never reuse a textbook's exercise word for word.",
       "Give every question its answer, for the tutor. Instructions are one line for the student, or null. Number from 1. The title is the first skill.",
       PROOF,
+      MATHS,
       LIMITS.sheet,
       syllabusFacts(input.classLevel, input.subject),
     ], [

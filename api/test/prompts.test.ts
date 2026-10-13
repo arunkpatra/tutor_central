@@ -10,6 +10,8 @@ import { request as plan } from "../src/prompts/plan.js";
 import { plan as planKind } from "../src/agents/kinds/plan.js";
 import { request as sheet } from "../src/prompts/sheet.js";
 import { request as workedExample } from "../src/prompts/worked-example.js";
+import { request as checksRequest } from "../src/prompts/check.js";
+import { request as placementRequest } from "../src/prompts/placement.js";
 import { GenerateInput } from "../src/schemas.js";
 import { SAMPLE, systemText } from "../src/claude-fake.js";
 import { request as gapReportRequest } from "../src/prompts/gap-report.js";
@@ -121,6 +123,22 @@ test("a sheet asks Haiku up to class 5 and Sonnet from class 6, names the skills
   expect(older.text).toContain('"Balance a chemical equation"');
   expect(older.text).toContain("Make it easier");
   expect(systemText(older)).not.toContain("student's name");
+});
+
+test("the material's prompts ask for mathematics in LaTeX between dollars, words outside (D102)", () => {
+  const asked = [
+    systemText(sheet({ kind: "sheet", centreId, classLevel: "8", subject: "Mathematics", skills: ["Linear equations"], questions: 6, forHomework: true })),
+    systemText(workedExample("8", "Mathematics", "Linear equations")),
+    systemText(brief("8", "Mathematics", "Linear equations")),
+    systemText(mockRequest({ kind: "mock", centreId, classLevel: "10", subject: "Mathematics", title: "Maths unit test", portions: ["Quadratic equations"], pattern: { marks: 25, durationMinutes: 40 } })),
+    systemText(checksRequest("8", "Mathematics", ["Linear equations"])),
+    systemText(placementRequest("5", "Mathematics", ["Fractions"])),
+  ];
+  for (const words of asked) {
+    expect(words).toContain("$\\frac{x}{4} - 2 = 1$");
+    expect(words).toContain("$$…$$");
+    expect(words).toContain("never inside \\text{}");
+  }
 });
 
 test("a worked example asks Sonnet for steps the tutor says aloud and the common slip", () => {

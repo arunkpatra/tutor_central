@@ -9,6 +9,7 @@ import { rubric } from "./rubric.js";
 export const sheet: Kind<SheetInput, SheetOutput> = {
   kind: "sheet",
   classLevel: (input) => input.classLevel,
+  maths: true,
   draft: (input) => request(input),
   verify: (input, draft) => {
     const findings: Finding[] = [];

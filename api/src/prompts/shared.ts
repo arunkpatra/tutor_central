@@ -30,6 +30,14 @@ export const PROOF = [
   "Where the answer is not a number, the proof is null.",
 ].join(" ");
 
+/** Asked of the material's kinds (D102): the app and the PDFs draw a formula written this way; anything else is words. */
+export const MATHS = [
+  "Write mathematics in LaTeX inside the text: $…$ around a formula in a sentence (Solve $\\frac{x}{4} - 2 = 1$.), $$…$$ around a formula on a line of its own.",
+  "Inside the dollars put only symbols, digits and letters that stand for numbers; keep every word outside the dollars, in the text's language, never inside \\text{}.",
+  "Plain numbers and units in a sentence need no dollars (48 mangoes, 360 km); money is written as ₹40, never with a dollar sign.",
+  "A subject without mathematics has no dollars.",
+].join(" ");
+
 /** Each kind's length limits in words (Phase 13: a model overruns a schema's limits unless the prompt states them),
  *  asked a little under what the schema in src/schemas.ts allows. */
 export const LIMITS = {

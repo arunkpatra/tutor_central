@@ -28,32 +28,32 @@
     "hash": "b861dfd7de19e0d1cdf51564b14c8aaa153955339251c838d8ab52dc33945016"
   },
   "sheet": {
-    "version": "2",
-    "hash": "f5b96152997277c0926fc5a0261b468b6ccd80570ae16d5098850b45c8a3c042"
+    "version": "3",
+    "hash": "33918648ed47a27de23a2e185d59272b8a18cfb641227334f2f90561f5df35f6"
   },
   "worked_example": {
-    "version": "2",
-    "hash": "3fbd213d35455d83b3259619e98c6e99b2ad9fb350400745667cec1b3fce03df"
+    "version": "3",
+    "hash": "b1a0ee6cea5520afb1dd9e85c7a285c3797a46873ff22de3cfb58b4b77f136bb"
   },
   "figure": {
     "version": "2",
     "hash": "dc06238b793945a1ba59568b45a3adce4e3fe0b6b91a066dabfcec9c88646221"
   },
   "brief": {
-    "version": "2",
-    "hash": "790fd5d5dae6bdd87325920d90a3b365f83064576586c941a52700933f6b0e60"
+    "version": "3",
+    "hash": "4faa3ab797f18d3c9e757057ad3ee35f5d09a79e699636330739349e4f0ea7d1"
   },
   "check": {
-    "version": "2",
-    "hash": "39bd135a970e2e04c3178db2811769c4b5ba9d637135b593293e4212d6fdf879"
+    "version": "3",
+    "hash": "2382c67047dd47ab959f00225be071b99c40e3110f70ca123a699d1ba334a3a3"
   },
   "placement": {
-    "version": "2",
-    "hash": "0284cc12681656f58dc94213028aedd36b0b846ac4fab52a20919b6cccc10e87"
+    "version": "3",
+    "hash": "1b3d93b7457d9a831f52c88d371f85bb00932086cfcb40cc15e94c92274e07d6"
   },
   "mock": {
-    "version": "2",
-    "hash": "c00f2f28ade4fc5447676ea764294ea1daeb8b37fbf15bcbb28cb74862d151ee"
+    "version": "3",
+    "hash": "79066257a6921fac92b8b8ae526dd8ba2501db2be2956bfd590aff78ddc76834"
   },
   "gap_report": {
     "version": "2",
