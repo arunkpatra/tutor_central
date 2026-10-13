@@ -15,6 +15,7 @@ extension Fixtures {
         case .scanReading, .checkChecking, .textbookReading, .schoolReading: ai.delay = .seconds(3600)
         case .scanNothing: ai.scanRows = []
         case .sheetRegenerating, .makeMaking: ai.delayByKind[.sheet] = .seconds(3600)
+        case .makeSwitchedOff: ai.scriptByKind[.sheet] = .failure(.paused(switchedOff))
         case .closeCards:
             // Dev's science checks still being made; Riya's mathematics placement offline.
             ai.delay = .seconds(3600)
@@ -23,6 +24,10 @@ extension Fixtures {
         }
         return ai
     }
+
+    /// The API's words for the sheet switched off (D73's `paused`, P20-Switched-Off).
+    static let switchedOff = "Sheets can't be made right now. Making sheets is switched off for a short while so we "
+        + "can fix something. Everything else works as usual. Try again later."
 
     /// The seven students a scan added (P6-Scan-Saved): the board's rows but Dev Kumar, already here, in Class 10
     /// Maths.

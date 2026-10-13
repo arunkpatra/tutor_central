@@ -9,7 +9,7 @@ extension Fixtures {
     static let makeForms: [LaunchState: MakeKind] = [
         .makeSheet: .sheet, .makeFor: .sheet, .makeForStudent: .sheet, .makeMaking: .sheet,
         .makeWorkedExample: .workedExample, .makeFigure: .figure, .makeBrief: .brief, .makeMock: .mock,
-        .makeNote: .noteToParent, .makeSheetNoClass: .sheet,
+        .makeNote: .noteToParent, .makeSheetNoClass: .sheet, .makeSwitchedOff: .sheet,
     ]
 
     /// The states that read the Evening batch's register, books and plan.
@@ -19,7 +19,7 @@ extension Fixtures {
         switch state {
         case .makeFor: .forSheet(.group)
         case .makeForStudent: .forSheet(.student)
-        case .makeMaking: .making
+        case .makeMaking, .makeSwitchedOff: .making
         default: nil
         }
     }
@@ -28,7 +28,7 @@ extension Fixtures {
     @MainActor static func prepareMakeForm(_ form: MakeFormStore, for state: LaunchState) {
         let dev = FakeStudentsRepository.dev
         switch state {
-        case .makeSheet, .makeFor, .makeForStudent, .makeMaking:
+        case .makeSheet, .makeFor, .makeForStudent, .makeMaking, .makeSwitchedOff:
             form.choose(.group(plan: FakePlansRepository.planID, number: 1))
         case .makeWorkedExample:
             form.choose(.student(dev))

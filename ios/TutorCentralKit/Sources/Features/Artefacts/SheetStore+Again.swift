@@ -4,7 +4,7 @@ import Foundation
 
 /// Make it again (plan decision 12): one tap and a reason; the new sheet replaces this one on screen and in the plan
 /// (`keep_artefact` relinks the lines), the old stays in the record; offline it is refused in words; a failure keeps
-/// the old one and says so.
+/// the old one and says so; a kind switched off says that in the API's words (D73).
 extension SheetStore {
     static let againFailed = "Couldn't make it again. The sheet you have is still here."
 
@@ -35,6 +35,8 @@ extension SheetStore {
             )
             let kept = try await plans.keep(ArtefactWords.carrying(new, from: artefact), to: link, centre: centre)
             await reload(kept)
+        } catch let APIFailure.paused(words) {
+            message = words
         } catch {
             message = Self.againFailed
         }

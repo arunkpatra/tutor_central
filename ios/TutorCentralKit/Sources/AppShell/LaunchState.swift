@@ -229,7 +229,8 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case reportsProgressExport = "reports-progress-export", reportsProgressEmpty = "reports-progress-empty"
     case make, makeEmpty = "make-empty", makeSheet = "make-sheet", makeFor = "make-for"
     case makeForStudent = "make-for-student", makeWorkedExample = "make-worked-example", makeFigure = "make-figure"
-    case aiPaper = "ai-paper", makeSheetNoClass = "make-sheet-no-class"
+    /// The sheet's form with the alert of a kind switched off (P20-Switched-Off).
+    case aiPaper = "ai-paper", makeSheetNoClass = "make-sheet-no-class", makeSwitchedOff = "make-switched-off"
     /// The paper's Class tile open on the class wheel; the paper with nothing chosen yet (P12-Form-Paper-ClassWheel,
     /// -NoClass).
     case aiPaperClassWheel = "ai-paper-class-wheel"
@@ -239,8 +240,7 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case aiNote = "ai-note", aiNoteStudent = "ai-note-student", aiNoteConsent = "ai-note-consent"
     case aiGenerating = "ai-generating"
     case aiGenerateFailed = "ai-generate-failed", aiHomeworkFailed = "ai-homework-failed"
-    case aiResultPaper = "ai-result-paper"
-    case aiResultCopied = "ai-result-copied"
+    case aiResultPaper = "ai-result-paper", aiResultCopied = "ai-result-copied"
     case aiResultRegenerating = "ai-result-regenerating"
     case aiResultNote = "ai-result-note"
     case aiNoteSend = "ai-note-send"

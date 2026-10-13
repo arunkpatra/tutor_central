@@ -91,9 +91,13 @@ struct NoticeHost: ViewModifier {
             }
         )
         content.alert(notices.current?.title ?? "", isPresented: shown, presenting: notices.current) { notice in
-            Button(notice.cancel, role: .cancel) {}
+            // The alert's action is drawn in the accent: Try Again or Open Settings beside a plain OK or Not Now
+            // (U33-Attendance-SaveFailed, U33-Scan-CameraOff), a lone OK itself (U33-Event-Gone, P20-Switched-Off).
             if let action = notice.action {
-                Button(action.label) { action.run() }
+                Button(notice.cancel, role: .cancel) {}
+                Button(action.label) { action.run() }.keyboardShortcut(.defaultAction)
+            } else {
+                Button(notice.cancel) {}.keyboardShortcut(.defaultAction)
             }
         } message: { notice in
             if !notice.message.isEmpty {

@@ -45,6 +45,19 @@ import Testing
         #expect(store.again == .idle)
     }
 
+    /// A kind switched off (D73): the alert in the API's words, the sheet the tutor has kept.
+    @Test func aPausedRegenerateKeepsTheOldAndSaysItIsSwitchedOff() async throws {
+        let ai = FakeAIRepository()
+        let words = "Sheets can't be made right now. Making sheets is switched off for a short while "
+            + "so we can fix something. Everything else works as usual. Try again later."
+        ai.scriptByKind[.sheet] = .failure(.paused(words))
+        let store = try await SheetStoreTests().store(ai: ai)
+        let old = store.artefact?.id
+        await store.makeAgain(.harder)
+        #expect(store.artefact?.id == old)
+        #expect(store.message == words)
+    }
+
     @Test func regenerateOfflineIsRefusedInWords() async throws {
         let ai = FakeAIRepository()
         let store = try await SheetStoreTests().store(ai: ai)
