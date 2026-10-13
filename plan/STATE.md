@@ -8,7 +8,7 @@ admin.tutorcentral.in (#262 to #289; hand runs #286); migrations 0046 to 0050 in
 signed in with his second factor and received a real alert by email and on his iPhone, and acknowledged it. After the owner's
 finding that the portal felt frozen: its functions moved to `bom1` beside the database (#288), and it moves the Next.js way
 with a loading state per page and pending buttons (D97, #289). Vercel is on Pro (D98). The record in `plan/sessions/039/`.
-**Next:** resume 038 on Fable 5.1: read 14 October's first morning `alerts` rows, then Phase 20 (AI quality, the material),
+**Next:** resume 038 on Fable 5.1: read 14 October's first real morning plan job (its steps, calls and cost) and `alerts` rows, then Phase 20 (AI quality, the material),
 boards first, then the plan. The order (D81): V3's Phases 17 to 22, then the external testing round, then Phase 16. The owner tests the
 builds at the end (D68).
 

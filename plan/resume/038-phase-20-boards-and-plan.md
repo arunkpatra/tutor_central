@@ -30,9 +30,22 @@ anything:
    the worked example, the figure, the mock and the board view (`ios/`), the Kit's boards on the canvas, and Phase 15's cost
    run (`plan/phase-15-make-and-polish.md`), which is the figure Phase 20's cost run is set against.
 
-**First, before the boards:** read the first morning's `alerts` rows in production (14 October, the jobs at 05:30 India time
-and after) with `supabase db query --linked`: what was raised, emailed and pushed, and whether any is a false alarm. Put it in
-the ledger and in one line to the owner. A wrong line is Phase 19's to fix (D68) before Phase 20 starts.
+**First, before the boards:** two reads in production, both with `supabase db query --linked`. Put each in the ledger and in
+one line to the owner.
+
+1. **The first real morning plan job** (14 October, the owner's centre). It is the first `plan` job on Phase 18's code, the
+   one with the material. Read:
+   - when it was queued and when it ran;
+   - its steps;
+   - its Claude calls (`ai_generations` by `job_id`): kind, model, tokens and `cost_paise`;
+   - the plan and the material it wrote;
+   - its total cost against Phase 15's figures.
+
+   Before it, the only plan job ever was a hand-run proof on 12 October, on Phase 17's code: no material and no call
+   (`plan/sessions/038/record.md`). A job that did not run, failed, made no material, or made a call with no cost is Phase
+   18's to fix (D68) before Phase 20 starts.
+2. **The first morning's `alerts` rows:** what was raised, emailed and pushed, and whether any is a false alarm. A wrong line
+   is Phase 19's to fix (D68) before Phase 20 starts.
 
 **What is already true:** production holds 0001 to 0050. The API and the portal are at `main`'s head of 13 October, both in
 `bom1` beside the database in Mumbai. The portal moves with Next's `Link`, a loading state per page and pending buttons (D97,
@@ -44,7 +57,7 @@ asking; be judicious. The cost of a call is in `bun cost` and on the portal's Co
 **Your work:**
 
 1. Reality against `STATE.md` (`git fetch`, `git status`, `gh pr list`); `bun check` green; open `plan/sessions/040/ledger.md`;
-   the morning alerts above.
+   the morning plan job and alerts above.
 2. Phase 20's boards, on the design canvas (https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D, a new row below row 27's
    loading boards at y 77000): the sheet (both bands), the worked example, the mock and the board view with equations in
    both appearances, the Kit's maths preview, a sheet's PDF page with an equation, and the words a kind switched off says to
