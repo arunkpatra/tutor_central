@@ -67,3 +67,7 @@ test("the grader is told what a case's page prints, so a photo's answer is judge
   expect(words).toContain("1 Exploring the Investigative World of Science (Asking questions; Making a fair test), page 1");
   expect(pageWords(loadCases(["plan"])[0]!)).toBe("");
 });
+
+test("every case id, with __check or __grade after it, is an id the Batches API takes", () => {
+  for (const c of loadCases()) expect(`${c.id}__grade`).toMatch(/^[a-zA-Z0-9_-]{1,64}$/);
+});

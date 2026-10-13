@@ -30,6 +30,11 @@ export function ready(c: Case): Ready {
   return { c, spec, input, asked: spec.draft(input), chosen: modelFor(spec.kind, "draft", level), level };
 }
 
+/** A batch request's id: the case's for its draft, `<case>__check` and `<case>__grade` for the rest (the Batches API takes
+ *  letters, digits, `_` and `-` alone; run 38384… of 2026-10-13 failed on a colon). */
+export const batchId = (caseId: string, step?: "check" | "grade"): string => (step ? `${caseId}__${step}` : caseId);
+export const caseOfBatchId = (id: string): string => id.split("__")[0] ?? id;
+
 export const draftItem = (r: Ready): BatchItem => ({ customId: r.c.id, request: { ...r.asked, model: r.chosen.model, effort: r.chosen.effort } as ClaudeRequest<unknown> });
 
 /** The check (the other tier, as the agent's) and the grade (Opus) of a draft that came back. */
@@ -37,8 +42,8 @@ export function checkItems(r: Ready, parsed: unknown): { check: BatchItem; grade
   const rubric = r.spec.rubric ?? "";
   const checker = modelFor(r.spec.kind, "check", r.level);
   return {
-    check: { customId: `${r.c.id}:check`, request: { ...checkRequest(rubric, r.asked, parsed), model: checker.model, effort: checker.effort } as ClaudeRequest<unknown> },
-    grade: { customId: `${r.c.id}:grade`, request: { ...gradeRequest(rubric, r.asked, parsed), model: GRADER, effort: "medium" } as ClaudeRequest<unknown> },
+    check: { customId: batchId(r.c.id, "check"), request: { ...checkRequest(rubric, r.asked, parsed), model: checker.model, effort: checker.effort } as ClaudeRequest<unknown> },
+    grade: { customId: batchId(r.c.id, "grade"), request: { ...gradeRequest(rubric, r.asked, parsed), model: GRADER, effort: "medium" } as ClaudeRequest<unknown> },
   };
 }
 
