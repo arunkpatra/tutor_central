@@ -969,19 +969,96 @@ isOneToOne: false
             "admin_acknowledge_alert":
 { Args: { "p_admin": string,"p_alert": string,"p_ip": string }; Returns: boolean
                            },
+"admin_activity":
+{ Args: { "p_centre": string,"p_limit": number }; Returns: Json
+                           },
+"admin_alerts":
+{ Args: { "p_open_first": boolean }; Returns: Json
+                           },
+"admin_audit":
+{ Args: { "p_action": string,"p_admin": string,"p_days": number,"p_limit": number }; Returns: Json
+                           },
 "admin_audit_write":
 { Args: { "p_action": string,"p_admin": string,"p_centre": string,"p_ip": string,"p_reason": string,"p_target": Json }; Returns: string
                            },
+"admin_call":
+{ Args: { "p_id": string }; Returns: Json
+                           },
+"admin_call_row":
+{ Args: { "p_id": string }; Returns: Json
+                           },
+"admin_calls":
+{ Args: { "p_centre": string,"p_day": string,"p_kind": string,"p_limit": number,"p_status": string }; Returns: Json
+                           },
 "admin_cancel_job":
 { Args: { "p_admin": string,"p_ip": string,"p_job": string }; Returns: boolean
+                           },
+"admin_centre":
+{ Args: { "p_centre": string,"p_month": string }; Returns: Json
+                           },
+"admin_centre_jobs":
+{ Args: { "p_centre": string,"p_limit": number }; Returns: Json
+                           },
+"admin_centres":
+{ Args: { "p_month": string }; Returns: Json
+                           },
+"admin_cost_by_centre":
+{ Args: { "p_month": string }; Returns: Json
+                           },
+"admin_cost_by_day":
+{ Args: { "p_centre"?: string,"p_month": string }; Returns: Json
+                           },
+"admin_cost_by_kind":
+{ Args: { "p_centre"?: string,"p_month": string }; Returns: Json
+                           },
+"admin_cost_tiles":
+{ Args: { "p_month": string }; Returns: Json
+                           },
+"admin_errors_by_route":
+{ Args: { "p_hours": number }; Returns: Json
+                           },
+"admin_errors_recent":
+{ Args: { "p_limit": number }; Returns: Json
+                           },
+"admin_job":
+{ Args: { "p_id": string }; Returns: Json
+                           },
+"admin_job_row":
+{ Args: { "p_id": string }; Returns: Json
+                           },
+"admin_job_subject":
+{ Args: { "p_input": Json,"p_key": string,"p_kind": Database["public"]['Enums']["job_kind"] }; Returns: string
+                           },
+"admin_jobs":
+{ Args: { "p_centre": string,"p_day": string,"p_kind": string,"p_limit": number,"p_state": string }; Returns: Json
+                           },
+"admin_kind_group":
+{ Args: { "p_kind": string }; Returns: string
+                           },
+"admin_month_cost":
+{ Args: { "p_centre": string,"p_month": string }; Returns: {
+              "calls": number,"paise": number
+            }[]
+                           },
+"admin_open_record":
+{ Args: { "p_admin": string,"p_centre": string,"p_ip": string,"p_reason": string }; Returns: Json
                            },
 "admin_push_targets":
 { Args: Record<PropertyKey, never>; Returns: {
               "centre_id": string,"user_id": string
             }[]
                            },
+"admin_record":
+{ Args: { "p_centre": string }; Returns: Json
+                           },
+"admin_record_opened":
+{ Args: { "p_audit": string }; Returns: Json
+                           },
 "admin_retry_job":
 { Args: { "p_admin": string,"p_ip": string,"p_job": string }; Returns: boolean
+                           },
+"admin_today":
+{ Args: Record<PropertyKey, never>; Returns: string
                            },
 "alert_facts":
 { Args: { "p_now": string }; Returns: Json
