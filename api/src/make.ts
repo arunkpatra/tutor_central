@@ -1,4 +1,5 @@
 import { fromRequest, type Kind } from "./agents/agent.js";
+import { kindFor } from "./agents/kinds/index.js";
 import type { ClaudeRequest } from "./claude.js";
 import type { AIKind } from "./db.js";
 import { request as briefRequest } from "./prompts/brief.js";
@@ -63,9 +64,12 @@ export function makeRequest(v: MakeInput): Made {
   }
 }
 
-/** The kind's agent for a body (D99): the route and the jobs run the same agent for the same kind. Task 6 gives the
- *  group material its own kinds; until then each is its request drafted alone. */
+/** The kind's agent for a body (D99): the route and the jobs run the same agent for the same kind, with the body as its
+ *  input. The group material has its own (src/agents/kinds); the mock and the personal kinds are drafted alone until
+ *  Phase 21. */
 export function makeAgent(v: MakeInput): Kind<unknown, unknown> {
+  const moved = kindFor(v.kind);
+  if (moved) return moved;
   const made = makeRequest(v);
   return fromRequest(made.kind, made.request, { student: made.student, studentName: made.studentName, empty: made.empty, classLevel: "classLevel" in v ? v.classLevel : undefined });
 }

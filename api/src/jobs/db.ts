@@ -52,7 +52,7 @@ export function makeJobsDb(url: string, serviceKey: string): JobsDb {
           p_step: outcome.name,
           p_state: STATE[outcome.kind],
           p_generation: outcome.generationId,
-          p_error: outcome.kind === "fail" ? (outcome.error as Json) : undefined,
+          p_error: outcome.kind === "fail" || (outcome.kind === "continue" && outcome.error) ? (outcome.error as Json) : undefined,
           p_cost_paise: "costPaise" in outcome ? (outcome.costPaise ?? 0) : 0,
           p_step_data: outcome.kind === "continue" || outcome.kind === "wait" ? (outcome.step as Json) : undefined,
         }),

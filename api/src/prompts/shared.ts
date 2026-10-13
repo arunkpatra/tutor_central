@@ -56,5 +56,9 @@ export function syllabusFacts(classLevel: string, subject: string): string {
   const boards = name ? SYLLABI[classLevel]?.[name] : undefined;
   if (!boards) return "";
   const lines = Object.entries(boards).map(([board, chapters]) => `${BOARDS[board] ?? board}: ${chapters.join("; ")}.`);
-  return [`The chapters of class ${classLevel} ${name}, by board (the centre follows one of them):`, ...lines].join(" ");
+  return [
+    `For reference, the chapters of class ${classLevel} ${name} in the current books, by board (the centre follows one; a tutor may name a chapter by an older book's title):`,
+    ...lines,
+    "Take the chapter or skill as the tutor names it; never comment on this list or on how a book names its chapters.",
+  ].join(" ");
 }

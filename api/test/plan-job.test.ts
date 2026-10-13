@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
-import { fakeClaude, kindOf, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, kindOf, SAMPLE, isCheckRequest, localAnswer, PASS } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
+import { installModelTable } from "../src/models.js";
+import { fakeModelSource } from "../src/models-db.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import { type PlanRead, type PlanRecordSource, planJob } from "../src/jobs/kinds/plan.js";
 import type { Job, StepContext, StepOutcome } from "../src/jobs/types.js";
@@ -160,11 +162,12 @@ test("name calls plan once through start_ai_call with the key <job>:name and the
   const s = source(read());
   const steps = await walk(planJob(s), ctx(db));
   expect(steps.slice(0, 4).map((o) => [o.name, o.kind])).toEqual([["read", "continue"], ["groups", "continue"], ["name", "continue"], ["write", "continue"]]);
-  expect(db.started.filter((c) => (c as { kind: string }).kind === "plan")).toHaveLength(1);
+  expect(db.rows.filter((r) => r.kind === "plan").map((r) => [r.agentStep, r.key])).toEqual([["draft", "job-1:name"], ["check", "job-1:name:check"]]);
   expect(db.started[0]).toMatchObject({ centre: CENTRE, kind: "plan", key: "job-1:name", job: "job-1", requestId: "r1" });
   expect((db.started[0] as { input: { month: number; groups: unknown[] } }).input).toMatchObject({ month: 10, classId: CLASS, date: "2026-10-07" });
-  expect(db.finished[0]).toMatchObject({ status: "ok", costPaise: 138 });
-  expect(steps[2]).toMatchObject({ generationId: "gen-1", costPaise: 138 });
+  expect(db.rows[0]?.finish).toMatchObject({ status: "ok", costPaise: 138 });
+  // The step's cost is every row's: the draft's and its check's.
+  expect(steps[2]).toMatchObject({ generationId: "gen-1", costPaise: 138 + (db.rows[1]?.finish?.costPaise ?? 0) });
   expect(s.chapters).toHaveLength(2);
   const plan = s.made[0] as { groups: { chapter: string; skill: string }[]; lines: { studentID?: string; kind: string; skillID?: string; words: string }[] };
   expect(plan.groups.map((g) => g.skill)).toEqual(["Kinds of crops", "Parts of a plant"]);
@@ -319,7 +322,7 @@ function taught(over: Partial<PlanRead> = {}): PlanRead {
     ...over,
   });
 }
-const answers = (over: Partial<Record<string, unknown>> = {}) => fakeClaude((r) => ({ answer: over[kindOf(r)] ?? SAMPLE[kindOf(r)] }));
+const answers = (over: Partial<Record<string, unknown>> = {}) => fakeClaude((r) => ({ answer: isCheckRequest(r) ? PASS : (over[kindOf(r)] ?? localAnswer(r)) }));
 const planJobFor = (classId = CLASS, date = "2026-10-07", extra: Record<string, unknown> = {}): Job => ({ ...job(), input: { class_id: classId, date, ...extra } });
 
 /** Every step of a job to its end, a wait taken again at once (the worker's later claim). */
@@ -373,7 +376,9 @@ function rememberingDb() {
     },
   };
 }
-const kinds = (claude: { requests: { text: string }[] }) => (claude as unknown as { requests: Parameters<typeof kindOf>[0][] }).requests.map(kindOf);
+/** The kinds of the drafts asked (an agent's checks left out). */
+const kinds = (claude: { requests: { text: string }[] }) =>
+  (claude as unknown as { requests: Parameters<typeof kindOf>[0][] }).requests.filter((r) => !isCheckRequest(r)).map(kindOf);
 
 test("after the write, the budget's requests are made one a step, kept and linked; the job ends by notifying", async () => {
   const s = source(taught());
@@ -416,7 +421,7 @@ test("a material step retaken after its call keeps once and pays once", async ()
 });
 
 test("a failed call leaves its mark not made and the job goes on", async () => {
-  const claude = fakeClaude((r) => (kindOf(r) === "sheet" ? { fail: "timeout" } : { answer: SAMPLE[kindOf(r)] }));
+  const claude = fakeClaude((r) => (!isCheckRequest(r) && kindOf(r) === "sheet" ? { fail: "timeout" } : { answer: localAnswer(r) }));
   const s = source(taught());
   const out = await drainAll(planJob(s), planJobFor(), ctx(fakeDb(), claude));
   expect(s.kept.map((k) => k.kind)).toEqual(["check", "worked_example"]);
@@ -510,4 +515,45 @@ test("Plan ready is not queued for a tutor who turned it off; the fetch still is
   const s = source(taught(), { users: [{ user: "u1", planReady: false, notesReady: true }, { user: "u2", planReady: true, notesReady: true }] });
   await drainAll(planJob(s), planJobFor(), ctx(fakeDb(), answers()));
   expect(s.notified.map((n) => [n.user, n.kind])).toEqual([["u1", "plan_fetch"], ["u2", "plan_ready"], ["u2", "plan_fetch"]]);
+});
+
+test("a make step whose draft is repaired keeps the repaired artefact and sums the cost of its rows (D99)", async () => {
+  let sheets = 0;
+  const claude = fakeClaude((r) => {
+    if (isCheckRequest(r) || kindOf(r) !== "sheet") return { answer: localAnswer(r) };
+    sheets += 1;
+    const answer = localAnswer(r) as { questions: { proof: unknown }[] };
+    // The first sheet's first draft carries a key that does not add up; its repair carries the right one.
+    const proof = { expression: sheets === 1 ? "2*2" : "2*2+1", equals: 5 };
+    return { answer: { ...answer, questions: answer.questions.map((q, i) => (i === 0 ? { ...q, proof } : q)) } };
+  });
+  const db = fakeDb();
+  const s = source(taught());
+  const out = await drainAll(planJob(s), planJobFor(), ctx(db, claude));
+  const step = out.find((o) => o.name === "make:1") as { costPaise: number };
+  const rows = db.rows.filter((r) => r.key?.startsWith("job-1:make:1"));
+  expect(rows.map((r) => r.agentStep)).toEqual(["draft", "check", "repair", "check"]);
+  expect(step.costPaise).toBe(rows.reduce((n, r) => n + (r.finish?.costPaise ?? 0), 0));
+  const kept = s.kept.find((k) => k.kind === "sheet") as unknown as { content: { questions: { proof: { expression: string } }[] } };
+  expect(kept.content.questions[0]?.proof.expression).toBe("2*2+1");
+});
+
+test("a paused kind is not made and not paid; the plan ends done with it counted not made (D100, review focus 5)", async () => {
+  const t = installModelTable(fakeModelSource([{ kind: "sheet_from_6", step: "draft", model: "claude-sonnet-5-5", effort: "medium", fallbackModel: null, enabled: false }]));
+  await t.refresh();
+  try {
+    const db = fakeDb();
+    const s = source(taught());
+    const out = await drainAll(planJob(s), planJobFor(), ctx(db, answers()));
+    const paused = out.filter((o) => o.kind === "continue" && (o as { error?: { reason: string } }).error?.reason === "paused");
+    expect(paused.map((o) => o.name)).toEqual(["make:1", "make:2"]);
+    expect(paused.every((o) => !(o as { costPaise?: number }).costPaise)).toBe(true);
+    expect(db.rows.filter((r) => r.kind === "sheet")).toHaveLength(0);
+    expect(s.kept.map((k) => k.kind)).not.toContain("sheet");
+    const done = out.at(-1) as unknown as { kind: string; result: { not_made: number } };
+    expect(done.kind).toBe("done");
+    expect(done.result.not_made).toBe(2);
+  } finally {
+    t.stop();
+  }
 });

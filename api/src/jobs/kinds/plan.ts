@@ -1,5 +1,4 @@
-import { request as planRequest } from "../../prompts/plan.js";
-import { fromRequest } from "../../agents/agent.js";
+import { plan as planKind } from "../../agents/kinds/index.js";
 import { makeAgent } from "../../make.js";
 import type { PlanInput as TopicsInput } from "../../schemas.js";
 import { type BudgetInput, budget, type MaterialRequest } from "../../plan/budget.js";
@@ -202,7 +201,7 @@ async function name(job: Job, ctx: StepContext, source: PlanRecordSource, centre
     month: Number(draft.date.slice(5, 7)),
     groups: unnamed.map((g) => ({ groupNo: g.number, classLevel: highest(g.memberIDs), subject: g.subject })),
   };
-  const call = await recordedCall(ctx, { centre, spec: fromRequest("plan", planRequest(asked)), input: asked, job: job.id, step: "name" });
+  const call = await recordedCall(ctx, { centre, spec: planKind, input: asked, job: job.id, step: "name" });
   if (call.kind === "pending") return { kind: "wait", name: "name", step, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) };
   if (call.kind === "paused" || call.kind === "failed") {
     // The groups stay unnamed and the plan is written; their material waits for a name.
@@ -290,7 +289,7 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
   const { n, requests, draft, plan, record } = step;
   const req = requests[n] as MaterialRequest;
   const name = `make:${n}`;
-  const after = (made: boolean, extra: { generationId?: string; costPaise?: number } = {}): StepOutcome => {
+  const after = (made: boolean, extra: { generationId?: string; costPaise?: number; error?: { reason: string } } = {}): StepOutcome => {
     const counts = { made: step.made + (made ? 1 : 0), notMade: step.notMade + (made ? 0 : 1) };
     const next: Step = n + 1 < requests.length ? { ...step, ...counts, n: n + 1 } : { at: "notify", record, draft, plan, ...counts };
     return { kind: "continue", name, step: next, ...extra };
@@ -307,7 +306,7 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
         const body = { kind: "placement" as const, centreId: centre, classLevel: req.classLevel, subject: group.title, chapters: group.items.map((item) => item.name) };
         const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key: `${job.id}:${name}:${i}`, ...madeCall(body) });
         if (call.kind === "pending") return wait();
-        if (call.kind === "paused") return after(false, { costPaise: cost });
+        if (call.kind === "paused") return after(false, { costPaise: cost, error: { reason: "paused" } });
         if (call.kind === "failed") return after(false, { costPaise: cost + (call.costPaise ?? 0) });
         cost += call.costPaise;
         const answered = (call.parsed as { questions: { question: string; answer: string }[] }).questions;
@@ -332,7 +331,8 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
     const key = req.kind === "mock" ? `mock:${req.item}` : undefined;
     const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key, ...madeCall(body) });
     if (call.kind === "pending") return wait();
-    if (call.kind === "paused") return after(false);
+    // A kind switched off (D100): not made, nothing paid, the reason on the step.
+    if (call.kind === "paused") return after(false, { error: { reason: "paused" } });
     // Another plan's mock for the same exam asked at another class level: its mock is linked at the next try.
     if (call.kind === "failed" && call.reason === "key_reused") return wait();
     if (call.kind === "failed") return after(false, { generationId: call.id, costPaise: call.costPaise });

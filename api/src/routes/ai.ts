@@ -7,12 +7,12 @@ import { type DecodedImage, decodeImage } from "../images.js";
 import { request as checkRequest, schemeText } from "../prompts/check-paper.js";
 import { request as homeworkRequest } from "../prompts/homework.js";
 import { request as paperRequest } from "../prompts/paper.js";
-import { request as parseSchoolRequest } from "../prompts/parse-school.js";
+import { parseSchool } from "../agents/kinds/index.js";
 import { request as noteRequest } from "../prompts/progress-note.js";
 import { normalisePhone, request as scanRequest } from "../prompts/scan-register.js";
 import { request as worksheetRequest } from "../prompts/worksheet.js";
 import { CheckPaperInput, GenerateInput, ParseSchoolInput, type ScanOutput, ScanRegisterInput } from "../schemas.js";
-import { answer, isParsed, parse, runCall, safeJSON } from "./common.js";
+import { answer, isParsed, parse, run, runCall, safeJSON } from "./common.js";
 import { v2Routes } from "./v2.js";
 
 /** The three V1 AI routes, `/parse-school` and the other live V2 routes (routes/v2.ts). Each: validate the body, check any photo, start the record (consent, the day's limit), call
@@ -91,8 +91,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     const input = image
       ? { kind: "parse_school", source: "photo", pages: 1, bytes: image.bytes, characters: 0 }
       : { kind: "parse_school", source: "text", pages: 0, characters: [...(text ?? "")].length };
-    const request = parseSchoolRequest({ text: text ?? null, image, today, schools, classLevels });
-    return runCall(c, deps, body.centre, { kind: "parse_school", input, request, empty: (read) => read.items.length === 0 });
+    return run(c, deps, body.centre, parseSchool, { text: text ?? null, image, today, schools, classLevels }, input);
   });
 
   routes.route("/", v2Routes(deps));
