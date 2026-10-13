@@ -115,7 +115,7 @@ insert into public.ai_models (kind, step, model, effort, fallback_model, note) v
 
 -- start_ai_call takes the call's agent step; the allowance counts drafts alone (a check and a repair are the platform's
 -- guard, not the tutor's use), the cost every row. 0035's body otherwise. The old signature goes: PostgREST resolves a
--- function by its argument names, and only the API calls it.
+-- function by its argument names, and only the API calls it. A step other than a draft must name its draft by its key.
 drop function public.start_ai_call(uuid, public.ai_kind, jsonb, text, uuid, text, text, uuid, uuid);
 create function public.start_ai_call(p_centre uuid, p_kind public.ai_kind, p_input jsonb, p_model text,
                                      p_student uuid default null, p_key text default null, p_input_hash text default null,
@@ -134,11 +134,21 @@ declare
   v_month timestamptz := date_trunc('month', now() at time zone 'Asia/Kolkata') at time zone 'Asia/Kolkata';
   v_prior record;
   v_id uuid;
+  v_root text := regexp_replace(p_key, '(:(check|repair|grade))+$', '');
 begin
   if not public.is_member(p_centre) then
     raise exception 'ai_not_a_member';
   end if;
   perform pg_advisory_xact_lock(hashtextextended('ai_call:' || p_centre::text, 0));
+
+  -- A check, repair or grade guards a draft already allowed, so it is not counted; it must hang off one: its key is the
+  -- draft's with `:check`, `:repair` or `:grade` after it, a draft of this centre within a day.
+  if p_agent_step <> 'draft' and (p_key is null or v_root = p_key or not exists (
+       select 1 from public.ai_generations g
+        where g.centre_id = p_centre and g.idempotency_key = v_root and g.agent_step = 'draft'
+          and g.created_at >= now() - interval '24 hours')) then
+    raise exception 'ai_step_orphan';
+  end if;
 
   -- The same key within a day: a finished or pending call answers again; another body is refused; a failed one is new.
   if p_key is not null then
