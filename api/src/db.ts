@@ -30,11 +30,16 @@ export type Finish = {
   model: string;
   tokensIn: number | null;
   tokensOut: number | null;
+  /** Read from the cache (plan decision 5); null when no tokens came back. */
+  tokensCached: number | null;
   /** Priced by api/models.json at finish (src/price.ts); null when no tokens came back. */
   costPaise: number | null;
   latencyMs: number;
-  /** The SHA-256 of the prompt's system words. */
+  /** The SHA-256 of the prompt's system words, and `<kind>@<VERSION>` of its file (D74). */
   promptHash: string;
+  promptVersion: string;
+  /** The model asked when the first failed quickly (D99); null otherwise. */
+  fallbackModel: string | null;
   stopReason: string | null;
   /** timeout, api <status>, unfit, refused, truncated or error; null for an answer kept. */
   errorReason: string | null;
@@ -53,6 +58,9 @@ export type StartCall = {
   inputHash?: string;
   requestId?: string;
   job?: string;
+  /** The agent's step (D99, 0052): only a draft counts against the allowance; a check, repair or grade names its draft
+   *  by its key. */
+  agentStep?: "draft" | "check" | "repair" | "grade";
 };
 /** The gate's answer: a new pending row, or a replay of the key's row (pending, or finished with its output). */
 export type Started = { id: string; replay: boolean; status: "pending" | "ok"; output: string | null };
@@ -100,7 +108,7 @@ export function makePlatformDb(url: string, serviceKey: string): Db {
 
 function dbOver(client: (token: string) => SupabaseClient<Database>, platform: SupabaseClient<Database>): Db {
   return {
-    async startCall(token, { centre, kind, input, model, student, key, inputHash, requestId, job }) {
+    async startCall(token, { centre, kind, input, model, student, key, inputHash, requestId, job, agentStep }) {
       const { data, error } = await client(token).rpc("start_ai_call", {
         p_centre: centre,
         p_kind: kind,
@@ -111,6 +119,7 @@ function dbOver(client: (token: string) => SupabaseClient<Database>, platform: S
         p_input_hash: inputHash,
         p_request_id: requestId,
         p_job: job,
+        p_agent_step: agentStep ?? "draft",
       });
       if (error) {
         if (error.message.includes("ai_not_a_member")) throw new DbFailure("not_a_member");
@@ -131,9 +140,12 @@ function dbOver(client: (token: string) => SupabaseClient<Database>, platform: S
           model: r.model,
           tokens_in: r.tokensIn,
           tokens_out: r.tokensOut,
+          tokens_cached: r.tokensCached,
           cost_paise: r.costPaise,
           latency_ms: r.latencyMs,
           prompt_hash: r.promptHash,
+          prompt_version: r.promptVersion,
+          fallback_model: r.fallbackModel,
           stop_reason: r.stopReason,
           error_reason: r.errorReason,
           finished_at: r.finishedAt,

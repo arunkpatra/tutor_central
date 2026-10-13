@@ -236,12 +236,14 @@ test("a reused key with another body is 409 key_reused, nothing paid", async () 
   expect(claude.requests).toHaveLength(0);
 });
 
-test("a call without a key is recorded and never replayed; a key past 200 characters is not used", async () => {
+test("a call without a key gets a fresh one and is never replayed; a key past 160 characters is not used", async () => {
   const db = fakeDb();
   const a = app(fakeClaude({ answer: SAMPLE.paper }), db);
   expect((await keyed(a, null)).status).toBe(200);
-  expect((await keyed(a, "x".repeat(201))).status).toBe(200);
-  expect(db.started.map((s) => (s as { key?: string }).key)).toEqual([undefined, undefined]);
+  expect((await keyed(a, "x".repeat(161))).status).toBe(200);
+  const keys = db.started.map((s) => (s as { key: string }).key);
+  expect(keys.every((k) => /^call:[0-9a-f-]{36}$/.test(k))).toBe(true);
+  expect(new Set(keys).size).toBe(2);
   expect(db.finished).toHaveLength(2);
 });
 

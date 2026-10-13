@@ -2,7 +2,10 @@ import type { ClaudeRequest } from "../claude.js";
 import type { DecodedImage } from "../images.js";
 import { modelFor } from "../models.js";
 import { ReadMarksOutput } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 /** Marks read from a photo of a printed report card or a marked test (P14-Marks-Reading): one row per subject's test,
  *  which the tutor checks before anything is kept. A work type of its own, apart from marking a paper (D67). */
@@ -10,12 +13,13 @@ export function request(pages: DecodedImage[], studentName: string, subjects: st
   return {
     model: modelFor("read_marks", "draft").model,
     effort: "medium",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "You read a printed school report card or a marked test paper photographed by a tutor.",
       "Give one row per subject's test you can read: the subject as printed (matched to the tutor's subject names when one fits), the test's name, the date when printed (ISO, YYYY-MM-DD; null when none is printed), the score and the maximum.",
       "Leave out a row you cannot read; give none when the photo holds no marks. At most twelve rows; a test's name at most 100 characters; a subject at most 60 characters.",
-    ].join(" "),
+    ]),
     text: [
       `Student: ${studentName}.`,
       subjects.length > 0 ? `Subjects the student takes here: ${subjects.join(", ")}.` : "",

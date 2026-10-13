@@ -1,7 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { ChecksOutput, type ClassLevel } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks, LIMITS, syllabusFacts } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 const COUNT = ["One question", "Two questions", "Three questions"];
 
@@ -11,13 +14,15 @@ export function request(classLevel: ClassLevel, subject: string, skills: string[
   return {
     model: modelFor("check", "draft", classLevel).model,
     effort: "medium",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "You write questions a tutor asks a student aloud at the end of a class, one per skill, in the skill's order.",
       "Each question is one sentence a student of that class answers in a few words or one line of working; give the expected answer in at most twelve words.",
       "Use numbers and examples a student would meet in the textbook for that class; no multiple choice, no trick questions.",
-      `Return exactly ${skills.length} question${skills.length === 1 ? "" : "s"}, the skill field repeating the skill as given.`,
-    ].join(" "),
+      LIMITS.check,
+      syllabusFacts(classLevel, subject),
+    ], [`Return exactly ${skills.length} question${skills.length === 1 ? "" : "s"}, the skill field repeating the skill as given.`]),
     text: `Class ${classLevel} ${subject}. ${COUNT[skills.length - 1] ?? "Questions"}, one for each skill: ${skills.map((s) => `"${s}"`).join(", ")}.`,
     schema: ChecksOutput,
   };

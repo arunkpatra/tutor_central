@@ -4,7 +4,7 @@ import { fakeDb } from "../src/db-fake.js";
 import { recordedCall } from "../src/jobs/call.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import type { StepContext } from "../src/jobs/types.js";
-import { makeRequest } from "../src/make.js";
+import { makeAgent, makeRequest } from "../src/make.js";
 import { request as briefRequest } from "../src/prompts/brief.js";
 import { request as canDoRequest } from "../src/prompts/can-do.js";
 import { request as checkRequest } from "../src/prompts/check.js";
@@ -42,7 +42,7 @@ const parsed = (kind: string) => MakeInput.parse({ centreId, ...bodies[kind] });
 
 test("every made kind builds the route's call: its kind, its request, the student it names", () => {
   // biome-ignore lint/suspicious/noExplicitAny: each builder takes its own kind's body.
-  const route: Record<string, (v: any) => { model: string; system: string }> = {
+  const route: Record<string, (v: any) => { model: string; system: { shared: string; own: string } }> = {
     sheet: sheetRequest,
     worked_example: (v) => workedExampleRequest(v.classLevel, v.subject, v.skill),
     figure: (v) => figureRequest(v.figure, v.classLevel, v.subject, v.skill),
@@ -61,7 +61,7 @@ test("every made kind builds the route's call: its kind, its request, the studen
     const v = parsed(kind);
     const made = makeRequest(v);
     const expected = route[kind]!(v);
-    const got: Record<string, string> = { kind, made: made.kind, model: made.request.model, system: made.request.system };
+    const got: Record<string, unknown> = { kind, made: made.kind, model: made.request.model, system: made.request.system };
     expect(got).toEqual({ kind, made: kind, model: expected.model, system: expected.system });
     expect({ kind, student: made.student ?? null }).toEqual({ kind, student: kind === "gap_report" || personal.includes(kind) ? studentId : null });
     expect({ kind, name: made.studentName ?? null }).toEqual({ kind, name: personal.includes(kind) ? "Dev Kumar" : null });
@@ -85,17 +85,16 @@ const ctx = (db = fakeDb(), claude = fakeClaude({ answer: SAMPLE.note })): StepC
 
 test("recordedCall passes the student to the gate and keys by the step unless a key is given", async () => {
   const db = fakeDb();
-  const made = makeRequest(parsed("note"));
-  const out = await recordedCall(ctx(db), { centre: centreId, input: parsed("note"), job: "job-1", step: "note:x", ...made });
+  const out = await recordedCall(ctx(db), { centre: centreId, input: parsed("note"), job: "job-1", step: "note:x", spec: makeAgent(parsed("note")) });
   expect(out.kind).toBe("ok");
   expect(db.started[0]).toMatchObject({ kind: "note", student: studentId, key: "job-1:note:x", job: "job-1" });
-  await recordedCall(ctx(db), { centre: centreId, input: parsed("note"), job: "job-1", step: "note:y", key: "note:s:2026-10-05", ...made });
+  await recordedCall(ctx(db), { centre: centreId, input: parsed("note"), job: "job-1", step: "note:y", key: "note:s:2026-10-05", spec: makeAgent(parsed("note")) });
   expect(db.started[1]).toMatchObject({ key: "note:s:2026-10-05" });
 });
 
 test("a personal kind without the parent's consent comes back failed student_consent and costs nothing", async () => {
   const claude = fakeClaude({ answer: SAMPLE.note });
-  const out = await recordedCall(ctx(fakeDb({ studentConsent: false }), claude), { centre: centreId, input: {}, job: "job-1", step: "note", ...makeRequest(parsed("note")) });
+  const out = await recordedCall(ctx(fakeDb({ studentConsent: false }), claude), { centre: centreId, input: {}, job: "job-1", step: "note", spec: makeAgent(parsed("note")) });
   expect(out).toEqual({ kind: "failed", reason: "student_consent" });
   expect(claude.requests).toHaveLength(0);
 });
@@ -105,7 +104,7 @@ test("an empty answer is failed refused with its tokens recorded", async () => {
   // The sample mock's marks do not sum to 99: an unfit mock, refused.
   const claude = fakeClaude({ answer: SAMPLE.mock });
   const odd = MakeInput.parse({ centreId, ...bodies.mock, pattern: { marks: 99, durationMinutes: 40 } });
-  const out = await recordedCall(ctx(db, claude), { centre: centreId, input: {}, job: "job-1", step: "make:4", ...makeRequest(odd) });
+  const out = await recordedCall(ctx(db, claude), { centre: centreId, input: {}, job: "job-1", step: "make:4", spec: makeAgent(odd) });
   expect(out).toMatchObject({ kind: "failed", reason: "refused" });
   expect(db.finished[0]).toMatchObject({ status: "failed", errorReason: "refused" });
   expect((db.finished[0] as { tokensIn: number }).tokensIn).toBeGreaterThan(0);

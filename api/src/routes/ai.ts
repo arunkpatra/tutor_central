@@ -12,7 +12,7 @@ import { request as noteRequest } from "../prompts/progress-note.js";
 import { normalisePhone, request as scanRequest } from "../prompts/scan-register.js";
 import { request as worksheetRequest } from "../prompts/worksheet.js";
 import { CheckPaperInput, GenerateInput, ParseSchoolInput, type ScanOutput, ScanRegisterInput } from "../schemas.js";
-import { answer, isParsed, parse, run, safeJSON } from "./common.js";
+import { answer, isParsed, parse, runCall, safeJSON } from "./common.js";
 import { v2Routes } from "./v2.js";
 
 /** The three V1 AI routes, `/parse-school` and the other live V2 routes (routes/v2.ts). Each: validate the body, check any photo, start the record (consent, the day's limit), call
@@ -28,7 +28,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     // A progress note is about one student: the gate asks their parent's consent (D62, migration 0027).
     const student = body.value.kind === "progress_note" ? body.value.studentId : undefined;
     const studentName = body.value.kind === "progress_note" ? body.value.studentName : undefined;
-    return run(c, deps, body.centre, { kind: body.value.kind, input: body.value, request, student, studentName });
+    return runCall(c, deps, body.centre, { kind: body.value.kind, input: body.value, request, student, studentName });
   });
 
   routes.post("/scan-register", async (c) => {
@@ -40,7 +40,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
       rows: parsed.rows.map((row) => ({ ...row, phone: normalisePhone(row.phone) })),
     });
     const input = { kind: "scan_register", pages: 1, bytes: image.bytes };
-    return run(c, deps, body.centre, { kind: "scan_register", input, request: scanRequest(image), keep });
+    return runCall(c, deps, body.centre, { kind: "scan_register", input, request: scanRequest(image), keep });
   });
 
   routes.post("/check-paper", async (c) => {
@@ -74,7 +74,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     };
     // A paper marked for a named student (a mock) needs that student's consent (D62, migration 0021).
     const request = checkRequest(pages, text ?? "", studentName);
-    return run(c, deps, body.centre, { kind: "check_paper", input, request, student: studentId, studentName });
+    return runCall(c, deps, body.centre, { kind: "check_paper", input, request, student: studentId, studentName });
   });
 
   routes.post("/parse-school", async (c) => {
@@ -92,7 +92,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
       ? { kind: "parse_school", source: "photo", pages: 1, bytes: image.bytes, characters: 0 }
       : { kind: "parse_school", source: "text", pages: 0, characters: [...(text ?? "")].length };
     const request = parseSchoolRequest({ text: text ?? null, image, today, schools, classLevels });
-    return run(c, deps, body.centre, { kind: "parse_school", input, request, empty: (read) => read.items.length === 0 });
+    return runCall(c, deps, body.centre, { kind: "parse_school", input, request, empty: (read) => read.items.length === 0 });
   });
 
   routes.route("/", v2Routes(deps));

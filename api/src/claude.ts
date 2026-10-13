@@ -6,10 +6,17 @@ import type { ZodType } from "zod";
 import { log } from "./log.js";
 
 export type ImageInput = { mediaType: "image/jpeg" | "image/png" | "image/webp"; base64: string };
+/** A prompt's system words (plan decision 5): `shared` is the same for every request of a kind and class and carries
+ *  the cache mark; `own` changes with the input. */
+export type SystemBlocks = { shared: string; own: string };
 export type ClaudeRequest<T> = {
   model: "claude-haiku-5-5" | "claude-sonnet-5-5" | "claude-opus-5-5";
   effort: "low" | "medium" | "high";
-  system: string;
+  system: SystemBlocks;
+  /** The prompt file's VERSION (D74); the row records `<kind>@<version>`. */
+  version: string;
+  /** This call's own deadline when shorter than the client's (an agent's later steps share one budget). */
+  deadlineMs?: number;
   /** The user turn's text, after the images. */
   text: string;
   /** Labelled "Page 1:" and so on, before the text. */
@@ -19,7 +26,18 @@ export type ClaudeRequest<T> = {
 };
 /** What came back, with what the row records (D76): billed tokens on every answer that came back, a refusal and an unfit
  *  one included; `truncated` is an answer cut at max_tokens, a service failure and never a refusal of the topic. */
-type Answered = { model: string; tokensIn: number; tokensOut: number; stopReason: string | null; latencyMs: number };
+type Answered = {
+  model: string;
+  /** The input billed at the full price or above: fresh tokens and those written to the cache. */
+  tokensIn: number;
+  tokensOut: number;
+  /** Read from the cache, at a tenth of the input price. */
+  tokensCached: number;
+  /** Of `tokensIn`, written to the cache, at a quarter more than the input price. */
+  tokensWritten: number;
+  stopReason: string | null;
+  latencyMs: number;
+};
 export type ClaudeAnswer<T> =
   | ({ kind: "ok"; parsed: T } & Answered)
   | ({ kind: "refused"; reason: "refused" | "unfit" } & Answered)
@@ -34,7 +52,8 @@ export const CLAUDE_DEADLINE_MS = 110_000;
 /** One call per request: images first ("Page 1:" and so on), then the text. The answer's text is parsed against the
  *  schema here (not by the SDK's `parse`), so the usage and the stop reason are known for every answer that came back
  *  (plan decision 11): a refusal or an answer that does not fit is "refused" with its tokens; max_tokens is
- *  "truncated"; anything the SDK throws is "failed" in a word, with no tokens. No fallbacks: one model per route. */
+ *  "truncated"; anything the SDK throws is "failed" in a word, with no tokens. A fallback model is the agent's to ask
+ *  (src/agents/agent.ts), not the client's. */
 export function anthropicClaude(
   apiKey: string,
   options: { deadlineMs?: number; fetch?: typeof fetch } = {},
@@ -57,16 +76,24 @@ export function anthropicClaude(
           {
             model: request.model,
             max_tokens: 16000,
-            system: request.system,
+            // The shared block carries the cache mark: everything up to it is cached for five minutes and read back at a
+            // tenth of the price by the next request of the kind and class (a prefix under the model's minimum is not).
+            system: [
+              { type: "text", text: request.system.shared, cache_control: { type: "ephemeral" } },
+              ...(request.system.own ? [{ type: "text" as const, text: request.system.own }] : []),
+            ],
             output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
             messages: [{ role: "user", content }],
           },
-          { signal: AbortSignal.timeout(deadline) },
+          { signal: AbortSignal.timeout(Math.min(deadline, request.deadlineMs ?? deadline)) },
         );
+        const written = response.usage.cache_creation_input_tokens ?? 0;
         const answered: Answered = {
           model: response.model,
-          tokensIn: response.usage.input_tokens,
+          tokensIn: response.usage.input_tokens + written,
           tokensOut: response.usage.output_tokens,
+          tokensCached: response.usage.cache_read_input_tokens ?? 0,
+          tokensWritten: written,
           stopReason: response.stop_reason,
           latencyMs: elapsed(),
         };

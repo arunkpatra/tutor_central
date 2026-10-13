@@ -2,21 +2,25 @@ import type { ClaudeRequest } from "../claude.js";
 import type { DecodedImage } from "../images.js";
 import { modelFor } from "../models.js";
 import { ScanOutput } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 /** One photographed page of a paper register read into rows. Phones and fees as written; the API normalises. */
 export function request(image: DecodedImage): ClaudeRequest<ScanOutput> {
   return {
     model: modelFor("scan_register", "draft").model,
     effort: "high",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
       "You read photographs of handwritten or printed student registers from tuition centres.",
       "Return every row of the table that is a person, in the order on the page, and no row twice.",
       "Name: as written, with each word capitalised. Phone: the digits as written, or null when there is none or it cannot be read.",
       "Fee: a whole number of rupees, or null when there is none. Skip headings, totals, dates and blank rows.",
       "If nothing on the page reads as a name, return no rows.",
-    ].join(" "),
+    ]),
     text: "Read this register page.",
     images: [{ mediaType: image.mediaType, base64: image.base64 }],
     schema: ScanOutput,

@@ -1,58 +1,35 @@
-import type { ClaudeRequest } from "../claude.js";
-import { type AIKind, DbFailure } from "../db.js";
+import { type Kind, runAgent } from "../agents/agent.js";
+import { DbFailure } from "../db.js";
 import { sha256 } from "../price.js";
-import { finishOf } from "../routes/common.js";
 import type { StepContext } from "./types.js";
 
 export type RecordedCall<T> =
-  | { kind: "ok"; id: string; parsed: T; costPaise: number }
+  | { kind: "ok"; id: string; parsed: T; costPaise: number; repaired?: boolean }
   | { kind: "pending" }
+  | { kind: "paused" }
   | { kind: "failed"; id?: string; costPaise?: number; reason: string };
 
-/** A paid call made by a job step (D84): asked of the gate as the platform with the key `<job>:<step>` (or the key given:
- *  a mock shared by two plans, a week's note), so a step taken again after a lost lease replays the finished call or
- *  meets it still running, and pays once. A call naming a student asks the gate for their consent: without it the call
- *  fails `student_consent` before anything is paid. Finished as a route finishes its row (`finishOf`), an empty answer
- *  failed as refused. */
-export async function recordedCall<T>(
+/** A paid call made by a job step (D84), run by the kind's agent (D99): asked of the gate as the platform with the key
+ *  `<job>:<step>` (or the key given: a mock shared by two plans, a week's note), so a step taken again after a lost lease
+ *  replays the finished call or meets it still running, and pays once; its check and repair hang off that key. A call
+ *  naming a student asks the gate for their consent: without it the call fails `student_consent` before anything is
+ *  paid. A kind switched off is `paused`, with no row. The cost is every row's. */
+export async function recordedCall<I, T>(
   ctx: StepContext,
-  args: {
-    centre: string;
-    kind: AIKind;
-    input: unknown;
-    request: ClaudeRequest<T>;
-    job: string;
-    step: string;
-    key?: string;
-    student?: string;
-    empty?: (parsed: T) => boolean;
-  },
+  args: { centre: string; spec: Kind<I, T>; input: I; recorded?: unknown; job: string; step: string; key?: string },
 ): Promise<RecordedCall<T>> {
-  const key = args.key ?? `${args.job}:${args.step}`;
-  let started: Awaited<ReturnType<StepContext["db"]["startCall"]>>;
+  const recorded = args.recorded ?? args.input;
   try {
-    started = await ctx.db.startCall("", {
-      centre: args.centre,
-      kind: args.kind,
-      input: args.input,
-      model: args.request.model,
-      student: args.student,
-      key,
-      inputHash: sha256(JSON.stringify(args.input)),
-      requestId: ctx.requestId,
-      job: args.job,
-    });
+    const outcome = await runAgent(
+      { db: ctx.db, claude: ctx.claude, token: "", requestId: ctx.requestId, centre: args.centre, key: args.key ?? `${args.job}:${args.step}`, inputHash: sha256(JSON.stringify(recorded)), job: args.job },
+      args.spec,
+      args.input,
+      recorded,
+    );
+    if (outcome.kind === "ok") return { kind: "ok", id: outcome.id, parsed: outcome.parsed, costPaise: outcome.costPaise, repaired: outcome.repaired };
+    if (outcome.kind === "failed") return { kind: "failed", id: outcome.id, costPaise: outcome.costPaise, reason: outcome.reason };
+    return outcome;
   } catch (e) {
     return { kind: "failed", reason: e instanceof DbFailure ? e.reason : "start" };
   }
-  if (started.replay) {
-    if (started.status !== "ok" || started.output === null) return { kind: "pending" };
-    return { kind: "ok", id: started.id, parsed: JSON.parse(started.output) as T, costPaise: 0 };
-  }
-  const result = await ctx.claude.complete(args.request);
-  const outcome = finishOf({ request: args.request, empty: args.empty }, result);
-  await ctx.db.finish("", started.id, outcome.finish);
-  const costPaise = outcome.finish.costPaise ?? 0;
-  if (outcome.kept !== undefined) return { kind: "ok", id: started.id, parsed: outcome.kept, costPaise };
-  return { kind: "failed", id: started.id, costPaise, reason: outcome.finish.errorReason ?? "error" };
 }

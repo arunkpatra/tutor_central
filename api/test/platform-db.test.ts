@@ -81,7 +81,7 @@ test.skipIf(!up)("a route's call is started as the tutor and finished as the pla
   const key = `platform-finish-${Date.now()}`;
   const started = await db.startCall(token, { centre: CENTRE, kind: "sheet", input: {}, model: "claude-haiku-5-5", key, inputHash: "h" });
   try {
-    await db.finish(token, started.id, { status: "ok", output: "{}", model: "claude-haiku-5-5", tokensIn: 1, tokensOut: 1, costPaise: 1, latencyMs: 5, promptHash: "p", stopReason: "end_turn", errorReason: null, finishedAt: new Date().toISOString() });
+    await db.finish(token, started.id, { status: "ok", output: "{}", model: "claude-haiku-5-5", tokensIn: 1, tokensOut: 1, costPaise: 1, latencyMs: 5, promptHash: "p", promptVersion: "sheet@2", fallbackModel: null, tokensCached: null, stopReason: "end_turn", errorReason: null, finishedAt: new Date().toISOString() });
     const row = await admin().from("ai_generations").select("status, cost_paise, user_id").eq("id", started.id).single();
     expect(row.data).toMatchObject({ status: "ok", cost_paise: 1 });
     expect(row.data?.user_id).not.toBeNull();

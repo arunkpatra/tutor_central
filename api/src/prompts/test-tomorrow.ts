@@ -2,7 +2,10 @@ import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type TestTomorrowInput, TestTomorrowOutput } from "../schemas.js";
 import { MESSAGE, spokenDay, whoLines } from "./message.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 
 /** Test tomorrow in the parent's language (P10-TestTomorrow), with the English beside it for the tutor. The student
@@ -11,7 +14,8 @@ export function request(input: TestTomorrowInput): ClaudeRequest<TestTomorrowOut
   return {
     model: modelFor("test_tomorrow", "draft").model,
     effort: "medium",
-    system: [VOICE, MESSAGE, "Say the student's test is tomorrow, the portions, and one thing to go over this evening; four sentences at most."].join(" "),
+    version: VERSION,
+    system: blocks([VOICE, MESSAGE, "Say the student's test is tomorrow, the portions, and one thing to go over this evening; four sentences at most."]),
     text: [
       ...whoLines(input),
       `Test: ${input.title} (${input.subject}), ${spokenDay(input.date)}.`,

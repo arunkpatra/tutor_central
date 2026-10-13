@@ -1,7 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type SheetInput, SheetOutput } from "../schemas.js";
-import { VOICE } from "./shared.js";
+import { VOICE, blocks, LIMITS, PROOF, syllabusFacts } from "./shared.js";
+
+/** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
+export const VERSION = "2";
 
 const REASONS: Record<string, string> = {
   easier: "Make it easier: recall and one-step questions only.",
@@ -18,14 +21,20 @@ export function request(input: SheetInput): ClaudeRequest<SheetOutput> {
   return {
     model: modelFor("sheet", "draft", input.classLevel).model,
     effort: "medium",
-    system: [
+    version: VERSION,
+    system: blocks([
       VOICE,
+      "You write questions for a class of a tuition centre: a practice set for one class sitting, or homework.",
+      "Spread the questions across the skills named, in their order, easiest first.",
+      "Give every question its answer, for the tutor. Instructions are one line for the student, or null. Number from 1. The title is the first skill.",
+      PROOF,
+      LIMITS.sheet,
+      syllabusFacts(input.classLevel, input.subject),
+    ], [
       input.forHomework
         ? "You set homework: short practice questions a student finishes in one evening, lighter for the younger classes."
         : "You write a practice set for one class sitting: questions the students work through while the tutor moves between them.",
-      "Spread the questions across the skills named, in their order, easiest first.",
-      "Give every question its answer, for the tutor. Instructions are one line for the student, or null. Number from 1. The title is the first skill.",
-    ].join(" "),
+    ]),
     text: [
       `Class ${input.classLevel} ${input.subject}, ${input.forHomework ? "homework" : "a practice set"} on: ${input.skills.map((s) => `"${s}"`).join(", ")}.`,
       `Exactly ${input.questions} questions.`,
