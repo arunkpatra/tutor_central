@@ -1,6 +1,6 @@
 import "server-only";
 import { serviceClient } from "../supabase/service";
-import type { Activity, Call, Calls, Centre, Centres, Cost, Data, JobRow, Record, Tutor } from "./types";
+import type { Activity, Call, Calls, Centre, Centres, Cost, Data, Job, JobRow, Jobs, Record, Tutor } from "./types";
 
 /** One `admin_*` function, as the platform (D83, D94). A database error is thrown: the page's error, never a guess. */
 export async function rpc<T>(fn: string, args: { [key: string]: unknown } = {}): Promise<T> {
@@ -53,14 +53,15 @@ export function realData(): Data {
     calls: (f) =>
       rpc<Calls>("admin_calls", { p_day: f.day, p_centre: f.centre, p_kind: f.kind, p_status: f.status, p_limit: 200 }),
     call: (id) => rpc<Call | null>("admin_call", { p_id: id }),
-    jobs: notYet("jobs"),
-    job: notYet("job"),
+    jobs: (f) =>
+      rpc<Jobs>("admin_jobs", { p_day: f.day, p_state: f.state, p_kind: f.kind, p_centre: f.centre, p_limit: 200 }),
+    job: (id) => rpc<Job | null>("admin_job", { p_id: id }),
     errors: notYet("errors"),
     alerts: notYet("alerts"),
     audit: notYet("audit"),
     acknowledge: notYet("acknowledge"),
-    retry: notYet("retry"),
-    cancel: notYet("cancel"),
+    retry: (admin, job, ip) => rpc<boolean>("admin_retry_job", { p_admin: admin, p_job: job, p_ip: ip }),
+    cancel: (admin, job, ip) => rpc<boolean>("admin_cancel_job", { p_admin: admin, p_job: job, p_ip: ip }),
     auditWrite: async (admin, action, centre, target, reason, ip) => {
       await rpc("admin_audit_write", {
         p_admin: admin,
