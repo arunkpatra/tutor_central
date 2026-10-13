@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>admin.tutorcentral.in/calls/<id> · dark · 1280</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.tc{container-type:inline-size}
+a{color:var(--accText)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px;box-sizing:border-box}
+.hdr{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:16px 0}
+.hdr .nav{margin-left:auto}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{text-decoration:none;font-size:15px;line-height:20px;font-weight:600;color:var(--t2);padding:8px 12px;border-radius:10px;white-space:nowrap}
+.nav a[aria-current=page]{color:var(--accText);background:var(--accTint)}
+.t1{font-size:34px;line-height:40px;font-weight:700;letter-spacing:-0.02em;margin:0}
+.h2{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-0.015em;margin:0}
+.h3{font-size:17px;line-height:24px;font-weight:600;margin:0}
+.lead{font-size:17px;line-height:26px;color:var(--t2);margin:0;text-wrap:pretty}
+.sec{padding:36px 0 0}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.card{display:flex;flex-direction:column;background:var(--s1);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadowRaised);overflow:hidden}
+.grid{display:grid;grid-template-columns:var(--cols);gap:8px 16px;align-items:center;padding:13px 20px;border-bottom:1px solid var(--line);font-size:15px;line-height:22px}
+.grid:last-child{border-bottom:none}
+.grid.head{font-size:12px;line-height:16px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;padding:12px 20px}
+.cell{min-width:0;overflow-wrap:anywhere}
+.cell .k{display:none}
+.cell.r{text-align:right;font-variant-numeric:tabular-nums}
+.cell .v{font-variant-numeric:tabular-nums}
+.cell.main{font-weight:600;color:var(--t)}
+.cell .sub{display:block;font-size:13px;line-height:18px;color:var(--t3)}
+.cell.dim{color:var(--t2)}
+.acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.bars{display:flex;align-items:flex-end;gap:6px;height:140px;margin-top:22px}
+.bar{flex:1;background:var(--acc);border-radius:4px 4px 2px 2px;min-width:4px;position:relative}
+.bar.dim{background:var(--s2)}
+.bar.over{background:var(--over)}
+.barlabels{display:flex;gap:6px;font-size:11px;line-height:14px;color:var(--t3);font-variant-numeric:tabular-nums}
+.barlabels span{flex:1;text-align:center}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ftr{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);padding:24px 0 40px;margin-top:48px;font-size:13px;line-height:18px;color:var(--t3)}
+.centered{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:720px;padding:48px 24px}
+.auth{width:100%;max-width:420px;display:flex;flex-direction:column;gap:20px}
+@container (max-width:760px){
+.hdr{padding:14px 0 10px}
+.nav{flex-wrap:nowrap;overflow-x:auto;width:100%;gap:2px;padding-bottom:6px;order:3}
+.hdr .signout{margin-left:auto}
+.t1{font-size:28px;line-height:34px}
+.h2{font-size:20px;line-height:26px}
+.sec{padding:28px 0 0}
+.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cols2,.cols3{grid-template-columns:1fr;gap:20px}
+.grid{grid-template-columns:1fr 1fr;gap:6px 14px;padding:14px 16px}
+.grid.head{display:none}
+.cell .k{display:block;font-size:11px;line-height:14px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.cell.r{text-align:left}
+.cell.wide,.cell.main{grid-column:1 / -1}
+.acts{justify-content:flex-start;grid-column:1 / -1}
+.bars{height:110px;gap:3px}
+.barlabels{gap:3px}
+.barlabels span:nth-child(even){visibility:hidden}
+.centered{min-height:640px;padding:32px 16px}
+.hidephone{display:none}
+}
+</style>
+</helmet>
+<div class="tc" style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --ok:#56D9A6; --okTint:rgba(86,217,166,.14); --okInk:#0B2A1D; --due:#FFB84D; --dueTint:rgba(255,184,77,.14); --over:#FF6F61; --overTint:rgba(255,111,97,.14); --overInk:#2B0906; --glass:rgba(28,25,23,.74); --glassLine:rgba(255,255,255,.08); --dim:rgba(8,6,5,.6); --halo:0 0 0 3px rgba(255,171,56,.18); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); --shadowDialog:0 24px 64px rgba(0,0,0,.55); --shadowSegment:inset 0 1px 0 rgba(255,255,255,.1), 0 1px 3px rgba(0,0,0,.55); --onStatus:#FFFFFF; box-sizing: border-box; min-height: 100%; background: var(--bg); color: var(--t); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 17px; line-height: 27px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; position: relative">
+<header class="wrap"><div class="hdr" style="border-bottom: 1px solid var(--line)"><a href="/centres" style="text-decoration: none; color: var(--t); display: inline-flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 8px; background: #131110; color: #FFAB38; display: inline-flex; align-items: center; justify-content: center; flex: none; box-shadow: inset 0 0 0 1px rgba(255,171,56,.25)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v16"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path></svg></span><span style="font-size: 17px; line-height: 22px; font-weight: 700; letter-spacing: -0.01em">Tutor Central</span><span style="font-size: 12px; line-height: 16px; font-weight: 700; color: var(--accText); background: var(--accTint); border-radius: 6px; padding: 2px 7px; letter-spacing: .04em">ADMIN</span></a><nav class="nav" aria-label="Pages"><a href="/centres">Centres</a><a href="/cost">Cost</a><a href="/calls" aria-current="page">Calls</a><a href="/jobs">Jobs</a><a href="/errors">Errors</a><a href="/alerts">Alerts</a><a href="/audit">Audit</a></nav><a href="/sign-out" class="signout" style="text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 600; color: var(--t2); white-space: nowrap">Sign out</a></div></header><div class="wrap"><div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; padding: 36px 0 0"><div style="display: flex; flex-direction: column; gap: 8px; max-width: 760px"><div style="font-size: 14px; line-height: 20px; font-weight: 600; color: var(--accText)">AI call · 13 Oct 05:33:10</div><h1 class="t1">sheet, Sunrise Tuition Centre</h1></div><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center"><span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 13px; line-height: 16px; font-weight: 700; white-space: nowrap; background: var(--overTint); color: var(--over)">failed · timeout</span><a href="/jobs/1" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 11px; font-size: 14px; line-height: 1; white-space: nowrap; box-sizing: border-box; background: var(--btn2); color: var(--t); font-weight: 600; border: 1px solid var(--line2); box-shadow: var(--shadowButton)">Open the job</a></div></div></div><section class="wrap"><div class="sec"><div class="cols2"><div class="card"><div class="grid head" style="--cols: 1fr 2fr"><div class="cell"></div><div class="cell"></div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Kind</div><div class="cell ">sheet · a group kind (no student)</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Model</div><div class="cell ">claude-sonnet-5-5 · no fallback</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Prompt</div><div class="cell ">sheet v3 · hash 4f1c…9a2e</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Outcome</div><div class="cell "><span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 13px; line-height: 16px; font-weight: 700; white-space: nowrap; background: var(--overTint); color: var(--over)">failed · timeout</span> <span style="color: var(--t2)">· stop reason none · error_reason timeout</span></div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Tokens</div><div class="cell ">736 in · 0 out · billed</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Latency</div><div class="cell ">110,004 ms (the deadline)</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Cost</div><div class="cell ">₹0.06 (6 paise)</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Started by</div><div class="cell ">job plan · Evening batch · 13 Oct · step make:4 <a href="/jobs/1">open the job</a></div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Request</div><div class="cell ">request id 7a1e…c0d4 · idempotency key c9f2…:make:4</div></div><div class="grid" style="--cols: 1fr 2fr"><div class="cell dim">Centre</div><div class="cell "><a href="/centres/1">Sunrise Tuition Centre</a></div></div></div><div style="display: flex; flex-direction: column; gap: 16px"><div><div class="h3" style="margin-bottom: 8px">Input</div><pre style="margin: 0; padding: 16px 18px; background: var(--well); border: 1px solid var(--line); border-radius: 14px; font-family: 'SF Mono', ui-monospace, Menlo, monospace; font-size: 13px; line-height: 19px; color: var(--t2); white-space: pre-wrap; word-break: break-word">{
+  "kind": "sheet",
+  "classLevel": "8",
+  "subject": "Mathematics",
+  "chapter": "Comparing Quantities",
+  "skill": "Finding compound interest for 2 years",
+  "count": 8,
+  "language": "en"
+}</pre></div><div><div class="h3" style="margin-bottom: 8px">Output</div><pre style="margin: 0; padding: 16px 18px; background: var(--well); border: 1px solid var(--line); border-radius: 14px; font-family: 'SF Mono', ui-monospace, Menlo, monospace; font-size: 13px; line-height: 19px; color: var(--t2); white-space: pre-wrap; word-break: break-word">No output: the call timed out at 110 s on the first try and the second. The job’s step marked the sheet not made and went on; the plan shows the line without its sheet.</pre></div></div></div></div></section><footer class="wrap"><div class="ftr"><span>Tutor Central admin · production · 6d973b9 · times in India (IST)</span><span>Every open of a centre’s record and every action is written to the audit.</span></div></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":926}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

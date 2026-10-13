@@ -1,6 +1,6 @@
 # Phase 19: V3 the admin portal, reading
 
-**Status:** Not started. **Depends on:** Phase 17 (the tables); its own boards, drawn and approved first (rule 1).
+**Status:** Boards approved and plan written (session 38, 2026-10-13): the 60 boards of row 27 (`docs/design/mockups/P19-*`, "Phase 19 boards" in `docs/design/information-architecture.md`); `phase-19-plan.md` (18 tasks, 16 pull requests, decisions 1 to 24, D94 to D96) awaits the owner's review; the build runs from `resume/037-phase-19-build.md` on Opus 5.5. **Depends on:** Phase 17 (the tables); Phase 18 (the jobs the portal reads).
 
 ## Goal
 

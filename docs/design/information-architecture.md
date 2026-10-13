@@ -1421,3 +1421,62 @@ What the boards settle:
   written"), both on by default; "On this iPhone" and Refresh are gone; the footnote "Sent by Tutor Central, so they arrive
   even on days you have not opened the app. These settings go with your account to any iPhone you sign in on." The status line
   keeps "Reminders are on. Next: <reminder>." and "Notifications are off for Tutor Central." with Open Settings.
+
+## Phase 19 boards (session 38, 2026-10-13): the admin portal, reading
+
+Row 27 of the canvas (y 58000 on; the title note at 57700; three page groups to a row, five rows); sources
+`mockups/P19-*.dc.html`. The admin portal, admin.tutorcentral.in (D78), is drawn as the website was (Phase 8): fluid pages,
+one source per page and appearance, container queries on the root, rendered at 1280 and 390 (`-Phone`), dark and light
+(`-Light`). Fifteen pages, 60 boards. Approved by the owner 2026-10-13 ("Approve all", after one question: the second
+factor costs nothing).
+
+| Board | Source |
+|---|---|
+| Sign in: email and password, then the second factor; "Only accounts on the admin list can sign in" | `P19-SignIn`, `-Light`, `-Phone`, `-Phone-Light` |
+| The authenticator set up: the QR code, the key typed, the first code, "Verify and finish" | `P19-TOTP-Enrol` and the three |
+| The code at each sign-in (and again when the verified session has lapsed), signed in as whom, Sign out | `P19-TOTP-Verify` and the three |
+| Not an admin: the account refused, nothing shown, the attempt audited | `P19-Refused` and the three |
+| Centres: four tiles, the list with students, tutors, last opened, cost of ₹499 as a bar, jobs today; "idle" past 14 days | `P19-Centres` and the three |
+| A centre: the title line, "in use", four tiles, Tutors and cost, Jobs (the last five), Activity, "The centre's record" card | `P19-Centre` and the three |
+| Opening the record: the dialog asking the reason over the page | `P19-Centre-OpenAsk` and the three |
+| The record opened: the banner (when, by whom, the reason, written to the audit), Students with consent and tracking, Batches, what the AI service made about them | `P19-Centre-Record` and the three |
+| Cost: four tiles, by day (bars, the alert line), by centre of ₹499, by kind and model | `P19-Cost` and the three |
+| AI calls: filters, four tiles, the list (kind with model and prompt version, outcome chip, tokens, latency, cost, from) | `P19-Calls` and the three |
+| One call: the facts, Input, Output; "Open the job" | `P19-Call` and the three |
+| Jobs: filters, four tiles, the list with one failed job open (the error, Cancel, Retry from the failed step, the steps) | `P19-Jobs` and the three |
+| Errors: four tiles, by route and reason (24 h, 7 days), the latest with request ids | `P19-Errors` and the three |
+| Alerts: four tiles, open first with Acknowledge, the acknowledged ones, the lines card | `P19-Alerts` and the three |
+| Audit: when, who, action, centre, reason or target, from | `P19-Audit` and the three |
+
+The portal has no launch states: its pages are proven by `bun admin-shots` (each page and state at both widths and both
+appearances, from the preview fixtures; `plan/phase-19-plan.md` Task 14).
+
+What the boards settle:
+
+- **The frame.** The website's header with the brand and an ADMIN mark, a nav of seven pages (Centres, Cost, Calls, Jobs,
+  Errors, Alerts, Audit; the current one in `accentTint`) and Sign out; at phone width the nav scrolls sideways under
+  the brand. A footer with the environment, the API's commit, "times in India (IST)" and "Every open of a centre's record
+  and every action is written to the audit." One column of at most 1120 px with 24 px gutters.
+- **Type and colour.** The system stack; the web's scale with the portal's sizes: page title 34/40 (28/34 at phone), h2
+  22/28 (20/26), h3 17/24 600, lead 17/26 `text2`, table rows 15/22, table heads 12/16 700 upper-case `text3`, tile value
+  28/34 700, tile label 14/20 `text2`, chips 13/16 700. The app's tokens, dark and light; the status tokens for chips
+  (`ok` done and given, `due` waiting, running and asked, `overdue` failed and withdrawn, neutral cancelled, replayed and
+  not asked, `accentTint` in use).
+- **Tables** are the list card: a header row and grid rows 13 × 20 with a `line` divider; the first column 600 with a
+  `text3` sub-line; numbers right-aligned and tabular; under 760 px a row becomes two labelled columns (the label 11/14
+  700 upper-case `text3` above each value), the first cell spanning both.
+- **Stat tiles** four across (two at phone width), 16 px apart, `surface1` with the `line` border, radius 16, value 28/34
+  700 (a status colour when it is a status: failed in `overdue`, today's cost in `due`), label 14/20 `text2`.
+- **Filters** are select pills (36 high, `buttonFill`, `lineStrong` border, "Label  Value ⌄") that change the page's
+  query; filter chips (32 high) where a set is shown.
+- **The sign-in pages** are centred in the frame without the nav: an eyebrow, the title, a lead, the fields (48 high,
+  `well`, `line` border, radius 12), the primary button full width, a small `text3` line; the code field in monospace with
+  letter-spacing. The refusal's eyebrow is in `overdue`.
+- **The dialog** (the record's reason) sits over a dimmed page 140 px from the top, at most 440 wide, radius 20,
+  `shadowDialog`: the question as an h2, a lead, the Reason field, Cancel (quiet) and the primary action.
+- **The cost chart** is bars by day (`accent`; a day over the line in `overdue`), the highest labelled, day numbers under
+  (every second hidden at phone width), 140 high (110 at phone).
+- **A job open in place** shows under its row on `surface2`: the error line, Cancel (`overdue` text on `buttonFill`)
+  and the primary Retry, then its steps as a nested table.
+- **What is never shown:** a parent's number, a photo, a message's text, a personal kind's input for a student without
+  current consent; a student's name only on the record page after the audited open.

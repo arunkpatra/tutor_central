@@ -2723,6 +2723,486 @@
    "x": 6351,
    "y": 56600,
    "title": "Phase 18 · Teacher reminders sent by Tutor Central, scrolled: Classes, Events, Fees as before, Plans and notes (Plan ready, Notes ready), \"On this iPhone\" gone · dark"
+  },
+  "P19-SignIn.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 0,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · sign in: email and password, then the second factor · dark · desktop 1280"
+  },
+  "P19-SignIn-Phone.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 2720,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · sign in: email and password, then the second factor · dark · phone 390"
+  },
+  "P19-SignIn-Light.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 1360,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · sign in: email and password, then the second factor · light · desktop 1280"
+  },
+  "P19-SignIn-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 3190,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · sign in: email and password, then the second factor · light · phone 390"
+  },
+  "P19-TOTP-Enrol.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 3660,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/enrol · the second factor enrolled: the QR code, the key, the first code · dark · desktop 1280"
+  },
+  "P19-TOTP-Enrol-Phone.dc.html": {
+   "expand": "fill",
+   "h": 898,
+   "w": 390,
+   "x": 6380,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/enrol · the second factor enrolled: the QR code, the key, the first code · dark · phone 390"
+  },
+  "P19-TOTP-Enrol-Light.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 5020,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/enrol · the second factor enrolled: the QR code, the key, the first code · light · desktop 1280"
+  },
+  "P19-TOTP-Enrol-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 898,
+   "w": 390,
+   "x": 6850,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/enrol · the second factor enrolled: the QR code, the key, the first code · light · phone 390"
+  },
+  "P19-TOTP-Verify.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 7320,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/verify · the second factor asked at each sign-in, and again when the verified session has lapsed · dark · desktop 1280"
+  },
+  "P19-TOTP-Verify-Phone.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 10040,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/verify · the second factor asked at each sign-in, and again when the verified session has lapsed · dark · phone 390"
+  },
+  "P19-TOTP-Verify-Light.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 8680,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/verify · the second factor asked at each sign-in, and again when the verified session has lapsed · light · desktop 1280"
+  },
+  "P19-TOTP-Verify-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 10510,
+   "y": 58000,
+   "title": "Phase 19 · admin.tutorcentral.in/mfa/verify · the second factor asked at each sign-in, and again when the verified session has lapsed · light · phone 390"
+  },
+  "P19-Refused.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 0,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/refused · an account not on the admin list, or a request without the second factor: refused, nothing shown · dark · desktop 1280"
+  },
+  "P19-Refused-Phone.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 2720,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/refused · an account not on the admin list, or a request without the second factor: refused, nothing shown · dark · phone 390"
+  },
+  "P19-Refused-Light.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 1360,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/refused · an account not on the admin list, or a request without the second factor: refused, nothing shown · light · desktop 1280"
+  },
+  "P19-Refused-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 3190,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/refused · an account not on the admin list, or a request without the second factor: refused, nothing shown · light · phone 390"
+  },
+  "P19-Centres.dc.html": {
+   "expand": "fill",
+   "h": 1157,
+   "w": 1280,
+   "x": 3660,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · the centres list: tutors, students, last opened, cost against ₹499, jobs today · dark · desktop 1280"
+  },
+  "P19-Centres-Phone.dc.html": {
+   "expand": "fill",
+   "h": 2624,
+   "w": 390,
+   "x": 6380,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · the centres list: tutors, students, last opened, cost against ₹499, jobs today · dark · phone 390"
+  },
+  "P19-Centres-Light.dc.html": {
+   "expand": "fill",
+   "h": 1157,
+   "w": 1280,
+   "x": 5020,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · the centres list: tutors, students, last opened, cost against ₹499, jobs today · light · desktop 1280"
+  },
+  "P19-Centres-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 2624,
+   "w": 390,
+   "x": 6850,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · the centres list: tutors, students, last opened, cost against ₹499, jobs today · light · phone 390"
+  },
+  "P19-Centre.dc.html": {
+   "expand": "fill",
+   "h": 1649,
+   "w": 1280,
+   "x": 7320,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · a centre: tutors, this month's cost, its jobs, its activity, and the audited way into its record · dark · desktop 1280"
+  },
+  "P19-Centre-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3652,
+   "w": 390,
+   "x": 10040,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · a centre: tutors, this month's cost, its jobs, its activity, and the audited way into its record · dark · phone 390"
+  },
+  "P19-Centre-Light.dc.html": {
+   "expand": "fill",
+   "h": 1649,
+   "w": 1280,
+   "x": 8680,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · a centre: tutors, this month's cost, its jobs, its activity, and the audited way into its record · light · desktop 1280"
+  },
+  "P19-Centre-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3652,
+   "w": 390,
+   "x": 10510,
+   "y": 59360,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · a centre: tutors, this month's cost, its jobs, its activity, and the audited way into its record · light · phone 390"
+  },
+  "P19-Centre-OpenAsk.dc.html": {
+   "expand": "fill",
+   "h": 1649,
+   "w": 1280,
+   "x": 0,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · opening a centre's record: the reason asked before anything is shown · dark · desktop 1280"
+  },
+  "P19-Centre-OpenAsk-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3652,
+   "w": 390,
+   "x": 2720,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · opening a centre's record: the reason asked before anything is shown · dark · phone 390"
+  },
+  "P19-Centre-OpenAsk-Light.dc.html": {
+   "expand": "fill",
+   "h": 1649,
+   "w": 1280,
+   "x": 1360,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · opening a centre's record: the reason asked before anything is shown · light · desktop 1280"
+  },
+  "P19-Centre-OpenAsk-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3652,
+   "w": 390,
+   "x": 3190,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id> · opening a centre's record: the reason asked before anything is shown · light · phone 390"
+  },
+  "P19-Centre-Record.dc.html": {
+   "expand": "fill",
+   "h": 1425,
+   "w": 1280,
+   "x": 3660,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>/record · the record opened: students with consent, batches, what was made about them; the open banner · dark · desktop 1280"
+  },
+  "P19-Centre-Record-Phone.dc.html": {
+   "expand": "fill",
+   "h": 2720,
+   "w": 390,
+   "x": 6380,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>/record · the record opened: students with consent, batches, what was made about them; the open banner · dark · phone 390"
+  },
+  "P19-Centre-Record-Light.dc.html": {
+   "expand": "fill",
+   "h": 1425,
+   "w": 1280,
+   "x": 5020,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>/record · the record opened: students with consent, batches, what was made about them; the open banner · light · desktop 1280"
+  },
+  "P19-Centre-Record-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 2720,
+   "w": 390,
+   "x": 6850,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>/record · the record opened: students with consent, batches, what was made about them; the open banner · light · phone 390"
+  },
+  "P19-Cost.dc.html": {
+   "expand": "fill",
+   "h": 1470,
+   "w": 1280,
+   "x": 7320,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/cost · cost per day, per centre against the allowance and ₹499, per kind and model · dark · desktop 1280"
+  },
+  "P19-Cost-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3755,
+   "w": 390,
+   "x": 10040,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/cost · cost per day, per centre against the allowance and ₹499, per kind and model · dark · phone 390"
+  },
+  "P19-Cost-Light.dc.html": {
+   "expand": "fill",
+   "h": 1470,
+   "w": 1280,
+   "x": 8680,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/cost · cost per day, per centre against the allowance and ₹499, per kind and model · light · desktop 1280"
+  },
+  "P19-Cost-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3755,
+   "w": 390,
+   "x": 10510,
+   "y": 63412,
+   "title": "Phase 19 · admin.tutorcentral.in/cost · cost per day, per centre against the allowance and ₹499, per kind and model · light · phone 390"
+  },
+  "P19-Calls.dc.html": {
+   "expand": "fill",
+   "h": 1368,
+   "w": 1280,
+   "x": 0,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls · the AI calls: kind, model, prompt version, outcome, tokens, latency, cost, what started it · dark · desktop 1280"
+  },
+  "P19-Calls-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3647,
+   "w": 390,
+   "x": 2720,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls · the AI calls: kind, model, prompt version, outcome, tokens, latency, cost, what started it · dark · phone 390"
+  },
+  "P19-Calls-Light.dc.html": {
+   "expand": "fill",
+   "h": 1368,
+   "w": 1280,
+   "x": 1360,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls · the AI calls: kind, model, prompt version, outcome, tokens, latency, cost, what started it · light · desktop 1280"
+  },
+  "P19-Calls-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3647,
+   "w": 390,
+   "x": 3190,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls · the AI calls: kind, model, prompt version, outcome, tokens, latency, cost, what started it · light · phone 390"
+  },
+  "P19-Call.dc.html": {
+   "expand": "fill",
+   "h": 926,
+   "w": 1280,
+   "x": 3660,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls/<id> · one AI call: its facts, input and output, the job or tap that started it · dark · desktop 1280"
+  },
+  "P19-Call-Phone.dc.html": {
+   "expand": "fill",
+   "h": 1742,
+   "w": 390,
+   "x": 6380,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls/<id> · one AI call: its facts, input and output, the job or tap that started it · dark · phone 390"
+  },
+  "P19-Call-Light.dc.html": {
+   "expand": "fill",
+   "h": 926,
+   "w": 1280,
+   "x": 5020,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls/<id> · one AI call: its facts, input and output, the job or tap that started it · light · desktop 1280"
+  },
+  "P19-Call-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 1742,
+   "w": 390,
+   "x": 6850,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/calls/<id> · one AI call: its facts, input and output, the job or tap that started it · light · phone 390"
+  },
+  "P19-Jobs.dc.html": {
+   "expand": "fill",
+   "h": 1832,
+   "w": 1280,
+   "x": 7320,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/jobs · jobs and their steps, a failed one open with Retry and Cancel · dark · desktop 1280"
+  },
+  "P19-Jobs-Phone.dc.html": {
+   "expand": "fill",
+   "h": 4706,
+   "w": 390,
+   "x": 10040,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/jobs · jobs and their steps, a failed one open with Retry and Cancel · dark · phone 390"
+  },
+  "P19-Jobs-Light.dc.html": {
+   "expand": "fill",
+   "h": 1832,
+   "w": 1280,
+   "x": 8680,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/jobs · jobs and their steps, a failed one open with Retry and Cancel · light · desktop 1280"
+  },
+  "P19-Jobs-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 4706,
+   "w": 390,
+   "x": 10510,
+   "y": 67567,
+   "title": "Phase 19 · admin.tutorcentral.in/jobs · jobs and their steps, a failed one open with Retry and Cancel · light · phone 390"
+  },
+  "P19-Errors.dc.html": {
+   "expand": "fill",
+   "h": 1542,
+   "w": 1280,
+   "x": 0,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/errors · the API's errors by route and reason, and the latest with their request ids · dark · desktop 1280"
+  },
+  "P19-Errors-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3410,
+   "w": 390,
+   "x": 2720,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/errors · the API's errors by route and reason, and the latest with their request ids · dark · phone 390"
+  },
+  "P19-Errors-Light.dc.html": {
+   "expand": "fill",
+   "h": 1542,
+   "w": 1280,
+   "x": 1360,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/errors · the API's errors by route and reason, and the latest with their request ids · light · desktop 1280"
+  },
+  "P19-Errors-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3410,
+   "w": 390,
+   "x": 3190,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/errors · the API's errors by route and reason, and the latest with their request ids · light · phone 390"
+  },
+  "P19-Alerts.dc.html": {
+   "expand": "fill",
+   "h": 1161,
+   "w": 1280,
+   "x": 3660,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/alerts · alerts open and acknowledged, with Acknowledge; the lines · dark · desktop 1280"
+  },
+  "P19-Alerts-Phone.dc.html": {
+   "expand": "fill",
+   "h": 2350,
+   "w": 390,
+   "x": 6380,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/alerts · alerts open and acknowledged, with Acknowledge; the lines · dark · phone 390"
+  },
+  "P19-Alerts-Light.dc.html": {
+   "expand": "fill",
+   "h": 1161,
+   "w": 1280,
+   "x": 5020,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/alerts · alerts open and acknowledged, with Acknowledge; the lines · light · desktop 1280"
+  },
+  "P19-Alerts-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 2350,
+   "w": 390,
+   "x": 6850,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/alerts · alerts open and acknowledged, with Acknowledge; the lines · light · phone 390"
+  },
+  "P19-Audit.dc.html": {
+   "expand": "fill",
+   "h": 1002,
+   "w": 1280,
+   "x": 7320,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/audit · the audit: who did what, to which centre, when, from where · dark · desktop 1280"
+  },
+  "P19-Audit-Phone.dc.html": {
+   "expand": "fill",
+   "h": 2475,
+   "w": 390,
+   "x": 10040,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/audit · the audit: who did what, to which centre, when, from where · dark · phone 390"
+  },
+  "P19-Audit-Light.dc.html": {
+   "expand": "fill",
+   "h": 1002,
+   "w": 1280,
+   "x": 8680,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/audit · the audit: who did what, to which centre, when, from where · light · desktop 1280"
+  },
+  "P19-Audit-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 2475,
+   "w": 390,
+   "x": 10510,
+   "y": 72673,
+   "title": "Phase 19 · admin.tutorcentral.in/audit · the audit: who did what, to which centre, when, from where · light · phone 390"
   }
  },
  "createdOnFiles": {
@@ -2949,6 +3429,14 @@
    "x": 0,
    "y": 56300,
    "text": "Phase 18 · The server's work and push — the states no earlier step drew: consent withdrawn (an event in the student's history), the student's export (asked, being made, ready to share, failed, and the file), plan ready (the notification, Today while the material is still being made, the reminders screen)"
+  },
+  "p19_1": {
+   "kind": "title1",
+   "maxW": 10900,
+   "w": 240,
+   "x": 0,
+   "y": 57700,
+   "text": "Phase 19 · The admin portal, reading (admin.tutorcentral.in) — fluid pages at 1280 and 390, dark and light: sign in and the second factor (enrol, verify, refused), the centres, a centre and the audited open of its record, cost, the AI calls and one call, jobs with their steps (retry, cancel), errors by route and reason, alerts (acknowledge), the audit"
   }
  },
  "order": [
@@ -3336,7 +3824,67 @@
   "P18-Notification-PlanReady.dc.html",
   "P18-Today-Plan-Making.dc.html",
   "P18-Today-Plan-Making-Light.dc.html",
-  "P18-Reminders.dc.html"
+  "P18-Reminders.dc.html",
+  "P19-SignIn.dc.html",
+  "P19-SignIn-Phone.dc.html",
+  "P19-SignIn-Light.dc.html",
+  "P19-SignIn-Phone-Light.dc.html",
+  "P19-TOTP-Enrol.dc.html",
+  "P19-TOTP-Enrol-Phone.dc.html",
+  "P19-TOTP-Enrol-Light.dc.html",
+  "P19-TOTP-Enrol-Phone-Light.dc.html",
+  "P19-TOTP-Verify.dc.html",
+  "P19-TOTP-Verify-Phone.dc.html",
+  "P19-TOTP-Verify-Light.dc.html",
+  "P19-TOTP-Verify-Phone-Light.dc.html",
+  "P19-Refused.dc.html",
+  "P19-Refused-Phone.dc.html",
+  "P19-Refused-Light.dc.html",
+  "P19-Refused-Phone-Light.dc.html",
+  "P19-Centres.dc.html",
+  "P19-Centres-Phone.dc.html",
+  "P19-Centres-Light.dc.html",
+  "P19-Centres-Phone-Light.dc.html",
+  "P19-Centre.dc.html",
+  "P19-Centre-Phone.dc.html",
+  "P19-Centre-Light.dc.html",
+  "P19-Centre-Phone-Light.dc.html",
+  "P19-Centre-OpenAsk.dc.html",
+  "P19-Centre-OpenAsk-Phone.dc.html",
+  "P19-Centre-OpenAsk-Light.dc.html",
+  "P19-Centre-OpenAsk-Phone-Light.dc.html",
+  "P19-Centre-Record.dc.html",
+  "P19-Centre-Record-Phone.dc.html",
+  "P19-Centre-Record-Light.dc.html",
+  "P19-Centre-Record-Phone-Light.dc.html",
+  "P19-Cost.dc.html",
+  "P19-Cost-Phone.dc.html",
+  "P19-Cost-Light.dc.html",
+  "P19-Cost-Phone-Light.dc.html",
+  "P19-Calls.dc.html",
+  "P19-Calls-Phone.dc.html",
+  "P19-Calls-Light.dc.html",
+  "P19-Calls-Phone-Light.dc.html",
+  "P19-Call.dc.html",
+  "P19-Call-Phone.dc.html",
+  "P19-Call-Light.dc.html",
+  "P19-Call-Phone-Light.dc.html",
+  "P19-Jobs.dc.html",
+  "P19-Jobs-Phone.dc.html",
+  "P19-Jobs-Light.dc.html",
+  "P19-Jobs-Phone-Light.dc.html",
+  "P19-Errors.dc.html",
+  "P19-Errors-Phone.dc.html",
+  "P19-Errors-Light.dc.html",
+  "P19-Errors-Phone-Light.dc.html",
+  "P19-Alerts.dc.html",
+  "P19-Alerts-Phone.dc.html",
+  "P19-Alerts-Light.dc.html",
+  "P19-Alerts-Phone-Light.dc.html",
+  "P19-Audit.dc.html",
+  "P19-Audit-Phone.dc.html",
+  "P19-Audit-Light.dc.html",
+  "P19-Audit-Phone-Light.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

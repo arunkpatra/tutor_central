@@ -3,17 +3,17 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-13, session 37 (Phase 18's build, on Opus 5.5). **Session 37:** Phase 18 built in #215 to #259
-(hand runs #260): the server makes each batch's plan and material, the note day's notes, the PDFs and a student's export, and
-reaches the iPhone through APNs; consent withdrawal and its history; the copies first offline. Two fresh reviews' sixteen
-findings handled (#244 to #259); D93 written. Deploy 2 (0042 to 0045) green; 1.0.0 (29) on TestFlight (28 too; 29 adds the run's push check, #261). The record in
-`plan/sessions/037/`.
-**Next:** read the owner's centre's first morning plan job on the server (13 October, 05:30: steps, made and not made, cost);
-then Phase 19 (the admin portal, reading) on Fable 5.1: its boards and plan, from `resume/036-phase-19-boards-and-plan.md`
-(the first step reads that job). The order
-(D81): V3's Phases 17 to 22, then the external testing round on the first build that carries them, then Phase 16. The owner
-tests the builds at the end (D68): device tests T16 and T17 are Phase 18's. The round's documents are ready
-(`docs/release.md`, `docs/testing/tester-guide.md`, `plan/phase-15-findings.md`).
+**Last updated:** 2026-10-13, session 38 (Phase 19's boards and plan, on Fable 5.1). **Session 38:** the owner's centre's
+first morning plan job read (none ran at 05:30: the 13 October plan already existed from a `run-job` on Phase 17's API the
+evening before; the schedule skipped the day as designed; nothing to fix); the admin portal's 60 boards drawn as fluid pages
+and approved ("Approve all", row 27); `plan/phase-19-plan.md` written (18 tasks, 16 pull requests, D94 to D96); resume 037.
+The record in `plan/sessions/038/`.
+**Next:** the owner reviews `plan/phase-19-plan.md`; then Phase 19's build on Opus 5.5 from `resume/037-phase-19-build.md`
+(its first message asks the owner's steps A, the admin account, and B, the Resend key). The order (D81): V3's Phases 17 to
+22, then the external testing round on the first build that carries them, then Phase 16. The owner tests the builds at the
+end (D68): device tests T16 and T17 are Phase 18's. The round's documents are ready (`docs/release.md`,
+`docs/testing/tester-guide.md`, `plan/phase-15-findings.md`). 14 October is the first true morning plan job in production;
+no device token is registered yet (build 28 or 29 with reminders on registers the owner's iPhone).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -22,7 +22,7 @@ tests the builds at the end (D68): device tests T16 and T17 are Phase 18's. The 
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12), row 27 (y 58000) Phase 19's sixty boards, the admin portal's fifteen pages at 1280 and 390 (approved 2026-10-13) |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -41,11 +41,11 @@ tests the builds at the end (D68): device tests T16 and T17 are Phase 18's. The 
 | 16 Release | Not started | Scope file `phase-16-release.md`; after V3 and the external testing round (D81) |
 | 17 V3 platform foundation | Done (session 35, 2026-10-12), PRs #184 to #214; hand runs #212 | "As built" in `phase-17-platform-foundation.md`; deployed; 1.0.0 (27) |
 | 18 V3 the server's work and push | Done (session 37, 2026-10-13), PRs #215 to #261; hand runs #260 | "As built" in `phase-18-server-work-and-push.md`; deployed (0036 to 0045); 1.0.0 (29); device tests T16, T17 |
-| 19 V3 the admin portal, reading | Not started | Scope file `phase-19-admin-portal-reading.md`; depends on 17; boards first |
+| 19 V3 the admin portal, reading | Boards approved and plan written (session 38, 2026-10-13) | `phase-19-plan.md` (18 tasks, 16 PRs, D94 to D96) awaits the owner's review; the build from `resume/037-phase-19-build.md`; the 60 boards in row 27 |
 | 20 V3 AI quality, the material | Not started | Scope file `phase-20-ai-quality-material.md`; depends on 17, 18; boards first |
 | 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
 | 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
-| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17 and 18 built and deployed (D83 to D93) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17 and 18 built and deployed (D83 to D93); Phase 19 planned (D94 to D96) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 

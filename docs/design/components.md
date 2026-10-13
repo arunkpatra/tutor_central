@@ -1028,3 +1028,53 @@ The texts:
 | Notifications | "<batch>: today's plan is ready" "<start>–<end> · <n> groups. Tap to see it." · "<n> weekly notes are ready" "For the note day. Read each as the parent will, then send." |
 | Today | "Made at <time>, before the batch. The sheets and checks are still being made; each mark turns green when it is ready." · "Next batch · at <time>" · "its plan is ready before the batch on <day>" · "Couldn't make today's plan. Try again in a minute." |
 | Reminders | "Plans and notes" · "Plan ready" "When each batch's plan and material are made, before the batch" · "Notes ready" "When the note day's notes for parents are written" · "Sent by Tutor Central, so they arrive even on days you have not opened the app. These settings go with your account to any iPhone you sign in on." |
+
+## Phase 19 parts (session 38, 2026-10-13): the admin portal
+
+The portal is built from the website's parts (Phase 8 parts) and these, all in the trade's words (D78):
+
+**Admin header:** the site header's brand with an ADMIN mark (12/700 `accentText` on `accentTint`, radius 6) and a nav of
+seven page links 15/600 `text2`, 8 × 12 padding, radius 10, the current page `accentText` on `accentTint`; Sign out on the
+right. At phone width the nav takes the full width under the brand and scrolls sideways.
+
+**Stat tile (web):** `surface1`, `line` border, radius 16, padding 16 × 18, `shadowRaised`; the value 28/34 700
+tabular (a status colour when it is a status), the label 14/20 `text2`. Four across; two at phone width.
+
+**Data table:** the list card with a head row (12/16 700 upper-case `text3`, letter-spacing .05em) and grid rows (15/22,
+padding 13 × 20, `line` dividers); the first column 600 `text` with an optional 13/18 `text3` sub-line; numeric columns
+right-aligned and tabular; under 760 px each row is a two-column grid of labelled cells (label 11/14 700 upper-case
+`text3`), the first cell spanning both columns, actions in a row of their own.
+
+**Status chip (web):** 26 high, radius 13, padding 0 10, 13/16 700: `ok` on `okTint` (done, given, ok), `due` on
+`dueTint` (waiting, running, asked, refused), `overdue` on `overdueTint` (failed, withdrawn), neutral `text2` on
+`surface2` (cancelled, replayed, not asked, acknowledged), `accentText` on `accentTint` (in use).
+
+**Select pill:** 36 high, radius 12, `buttonFill` with a `lineStrong` border and `shadowButton`, "Label" in `text3` then
+the value 600 in `text`, a chevron; changes the page's query.
+
+**Filter chip (web):** 32 high, radius 16, padding 0 14, 14/600 `text2` on `surface2`; on, `accentText` 700 on `accentTint`.
+
+**Buttons (web, small):** 36 high, radius 11, padding 0 14, 14; the primary `accent` with `textOnAccent` 700 and
+`shadowPrimary`; the secondary `buttonFill` with a `lineStrong` border 600; the destructive secondary the same with
+`overdue` text (Cancel); the quiet one no fill, `text2` 600.
+
+**Field (web):** a 14/20 600 `text2` label over a 48-high `well` box with a `line` border, radius 12, 17 in `text`
+(placeholder `text3`); a code field in the monospace stack, 22, letter-spacing .12em; an optional 13/18 `text3` help line.
+
+**Progress bar (web):** 6 high, radius 3, `surface2` track, `accent` fill (`due` over 80% of ₹499, `overdue` over the line).
+
+**Bars:** a row of bars 6 apart on a 140-high baseline (110 at phone), `accent` (a day over the line `overdue`), radius 4
+on top; the highest bar labelled 12/16 700 above it; day numbers 11/14 `text3` under, every second hidden at phone width.
+
+**Dialog (web):** over `dim`, 140 px from the top, at most 440 wide, `surface1`, `line` border, radius 20, `shadowDialog`,
+padding 24: an h2, a lead, a field, the actions right-aligned.
+
+**Open row (a job's steps):** the expanded part on `surface2` under the row: the error line 14/20 `text2` with the reason
+in `overdue` 600, the actions, then a nested data table.
+
+**Code block:** `well` with a `line` border, radius 14, padding 16 × 18, the monospace stack 13/19 `text2`, wrapped.
+
+**Banner (web):** `accentTint`, radius 14, padding 12 × 16, 14/20 `accentText` with the first phrase 700 (the record's
+"Opened at … by you · reason: … · written to the audit").
+
+The texts are on the boards' sources and in `admin/content/words.ts`.
