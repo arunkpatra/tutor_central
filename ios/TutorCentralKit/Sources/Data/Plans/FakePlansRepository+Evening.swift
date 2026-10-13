@@ -44,8 +44,8 @@ public extension FakePlansRepository {
     }
 
     nonisolated static let planID = UUID(uuidString: "abababab-0000-0000-0000-000000000001")!
-    private nonisolated static let madeAt = india(7, 16, minute: 40)
-    private nonisolated static func artefactID(_ number: Int) -> UUID {
+    internal nonisolated static let madeAt = india(7, 16, minute: 40)
+    internal nonisolated static func artefactID(_ number: Int) -> UUID {
         UUID(uuidString: String(format: "abababab-0000-0000-0001-%012d", number))!
     }
 

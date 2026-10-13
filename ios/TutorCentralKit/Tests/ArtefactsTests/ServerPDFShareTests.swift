@@ -66,6 +66,26 @@ import Testing
         #expect(try Data(contentsOf: #require(shared)).starts(with: Data("%PDF".utf8)))
     }
 
+    /// Task 14: a figure's Share takes the server's page of it when the iPhone has it, else draws its own.
+    @Test func aFiguresShareTakesTheServersFileWhenItIsOnTheIPhone() async throws {
+        let centre = FakeCentreRepository.meeraWorkspace.centre.id
+        let store = await FigureStore(
+            artefactID: FakePlansRepository.figureID, workspace: FakeCentreRepository.meeraWorkspace,
+            register: ArtefactTest.register(), plans: FakePlansRepository.figure(.fractionBar)
+        )
+        let files = ServerFiles(
+            centre: centre, directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        ) { _, path in Data(path.utf8) }
+        store.serverPDF = ServerPDF(files: files, centre: centre)
+        await store.load()
+        let shared = try #require(await store.sharedPDF { nil })
+        let id = FakePlansRepository.figureID.uuidString.lowercased()
+        #expect(try String(contentsOf: shared, encoding: .utf8) == "\(centre.uuidString.lowercased())/\(id).pdf")
+        store.serverPDF = nil
+        let drawn = URL(filePath: "/drawn.pdf")
+        #expect(await store.sharedPDF { drawn } == drawn)
+    }
+
     actor Tried {
         private(set) var none = true
         func add() {

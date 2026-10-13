@@ -17,6 +17,8 @@ import Observation
     /// Show large: the figure full screen.
     public var large = false
     @ObservationIgnored public var planCache: PlanCache?
+    /// The server's page of the figure (the `pdf` job draws it from the spec, Phase 20).
+    @ObservationIgnored public var serverPDF: ServerPDF?
     let artefactID: UUID
     let workspace: Workspace
     let register: any Register
@@ -99,5 +101,15 @@ import Observation
 
     public var aiLine: String {
         Self.aiLine
+    }
+
+    /// Share and Print: the server's page of the figure when the iPhone has it or can fetch it, else the phone's own
+    /// (`local`), as a sheet's Share does.
+    public func sharedPDF(local: () -> URL?) async -> URL? {
+        if let id = artefact?.id, figure != nil,
+           let file = await serverPDF?.file(id, key: false, title: "\(title) · \(eyebrow)") {
+            return file
+        }
+        return local()
     }
 }

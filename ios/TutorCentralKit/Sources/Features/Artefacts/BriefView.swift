@@ -135,7 +135,7 @@ private struct BriefText: View {
 
     var body: some View {
         Card {
-            Text(text).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
+            MathText(text, style: Tokens.subhead, color: Tokens.text2)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(Tokens.rowPaddingHorizontal)

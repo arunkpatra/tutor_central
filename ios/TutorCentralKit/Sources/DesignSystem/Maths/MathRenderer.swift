@@ -34,4 +34,27 @@ public enum MathRenderer {
         guard error == nil, let image, image.size.width > 0 else { return nil }
         return Rendered(image: image, descent: layout?.descent ?? 0)
     }
+
+    /// The formula at `pointSize`, drawn smaller when it is wider than `width`, so at the largest text sizes it fits
+    /// its line instead of being cut off.
+    @MainActor public static func rendered(
+        latex: String,
+        pointSize: CGFloat,
+        color: UIColor,
+        display: Bool,
+        fitting width: CGFloat
+    ) -> Rendered? {
+        guard let drawn = rendered(latex: latex, pointSize: pointSize, color: color, display: display) else {
+            return nil
+        }
+        guard width.isFinite, width > 0, drawn.image.size.width > width else { return drawn }
+        var size = pointSize * width / drawn.image.size.width
+        while size > 1, let smaller = rendered(latex: latex, pointSize: size, color: color, display: display) {
+            if smaller.image.size.width <= width {
+                return smaller
+            }
+            size *= 0.95
+        }
+        return drawn
+    }
 }

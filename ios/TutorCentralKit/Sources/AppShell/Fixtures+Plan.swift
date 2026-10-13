@@ -11,7 +11,12 @@ extension Fixtures {
         .today, .todayScrolled, .todayPlanning, .todayPlanMaking, .todayPlanFailed, .todayLineMenu, .todayPlanChanged,
         .todayPlanChange,
         .todayAfterClose, .workedExample, .brief, .todayRevision,
-    ]).union(sheetStates).union(figureStates.keys)
+    ]).union(sheetStates).union(figureStates.keys).union(mathsStates)
+
+    /// Phase 20's material states over the boards' plan with its maths groups (P20-*); the mock's is apart.
+    static let mathsStates: Set<LaunchState> = [
+        .sheetMathsTo5, .sheetMathsFrom6, .sheetBoardMaths, .workedExampleMaths,
+    ]
 
     /// The figure boards' states and their templates (P10-Figure-*).
     static let figureStates: [LaunchState: FigureSpec.Kind] = [
@@ -70,7 +75,7 @@ extension Fixtures {
     }
 
     @MainActor static func plans(for state: LaunchState) -> FakePlansRepository {
-        if let make = makePlans(for: state) ?? jobPlans(for: state) {
+        if let make = makePlans(for: state) ?? jobPlans(for: state) ?? mathsPlans(for: state) {
             return make
         }
         switch state {
@@ -95,6 +100,14 @@ extension Fixtures {
         default:
             return FakePlansRepository()
         }
+    }
+
+    /// Phase 20's material: the boards' plan with its maths groups, or Dev's maths mock alone.
+    @MainActor static func mathsPlans(for state: LaunchState) -> FakePlansRepository? {
+        if mathsStates.contains(state) {
+            return FakePlansRepository.eveningMaths()
+        }
+        return state == .mockMaths ? FakePlansRepository.mathsMock() : nil
     }
 
     /// The plan job's states: none written yet (its job live, P10-Today-Planning), none for a failed job, or the plan
