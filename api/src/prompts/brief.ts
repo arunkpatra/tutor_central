@@ -4,7 +4,7 @@ import { BriefOutput, type ClassLevel } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 /** The tutor's brief for a chapter (P10-Brief): five minutes of reading before the class, as a colleague's note. */
 export function request(classLevel: ClassLevel, subject: string, chapter: string): ClaudeRequest<BriefOutput> {

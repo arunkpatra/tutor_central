@@ -138,6 +138,9 @@ test("the material's prompts ask for mathematics in LaTeX between dollars, words
     expect(words).toContain("$\\frac{x}{4} - 2 = 1$");
     expect(words).toContain("$$…$$");
     expect(words).toContain("never inside \\text{}");
+    // Hand run 4: the answers came as words ("-2/3") and money as a fraction ("₹1575/4").
+    expect(words).toContain("An answer's formula is written the same way ($x = 18$, $\\frac{1}{12}$)");
+    expect(words).toContain("money in rupees and paise (₹393.75), never as a fraction");
   }
 });
 

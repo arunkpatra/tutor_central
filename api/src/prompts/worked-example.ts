@@ -4,7 +4,7 @@ import { type ClassLevel, WorkedExampleOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 /** The worked example for a skill (P10-WorkedExample): one problem a student of that class meets, solved one step at a
  *  time as the tutor says it aloud, and the common slip. */

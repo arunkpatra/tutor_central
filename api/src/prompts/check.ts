@@ -4,7 +4,7 @@ import { ChecksOutput, type ClassLevel } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 const COUNT = ["One question", "Two questions", "Three questions"];
 

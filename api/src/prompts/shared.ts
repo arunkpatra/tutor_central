@@ -34,6 +34,7 @@ export const PROOF = [
 export const MATHS = [
   "Write mathematics in LaTeX inside the text: $…$ around a formula in a sentence (Solve $\\frac{x}{4} - 2 = 1$.), $$…$$ around a formula on a line of its own.",
   "Inside the dollars put only symbols, digits and letters that stand for numbers; keep every word outside the dollars, in the text's language, never inside \\text{}.",
+  "An answer's formula is written the same way ($x = 18$, $\\frac{1}{12}$); money in rupees and paise (₹393.75), never as a fraction of a rupee.",
   "Plain numbers and units in a sentence need no dollars (48 mangoes, 360 km); money is written as ₹40, never with a dollar sign.",
   "A subject without mathematics has no dollars.",
 ].join(" ");
