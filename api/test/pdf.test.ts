@@ -105,3 +105,12 @@ test("the sheet, mock and brief carry the foot the job names (P20-PDF-Sheet): th
 test("an inline formula is drawn at the text's size, as the board draws a fraction (math.display)", () => {
   expect(sheetPdf(MATHS, { title: "t" }, false)).toContain("#show math.equation.where(block: false): it => math.display(it)");
 });
+
+test("the folders the function reads are named by a literal new URL, which is what carries them into Vercel's function", async () => {
+  // Deploy B's run 38374751512: vercel.json's includeFiles did not carry typst/; Vercel's file tracer follows
+  // `new URL("../../<folder>", import.meta.url)` and takes the folder (as fontsDir always carried the fonts).
+  const source = (path: string) => Bun.file(new URL(path, import.meta.url)).text();
+  expect(await source("../src/pdf/render.ts")).toContain('new URL("../../fonts", import.meta.url)');
+  expect(await source("../src/pdf/render.ts")).toContain('new URL("../../typst", import.meta.url)');
+  expect(await source("../src/evals/cases.ts")).toContain('new URL("../../evals", import.meta.url)');
+});

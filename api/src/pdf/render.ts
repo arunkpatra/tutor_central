@@ -13,9 +13,14 @@ export function fontsDir(): string {
   return found;
 }
 
-/** The function's Typst workspace: the directory holding `fonts/` and `typst/` (mitex, D102). */
+/** The function's Typst workspace: the directory holding `fonts/` and `typst/` (mitex, D102). The `new URL` of
+ *  `typst` is what carries the folder into the function: Vercel's file tracer follows it, as `fontsDir`'s carries the
+ *  fonts (`includeFiles` alone did not, Deploy B's run 38374751512). */
 export function workspaceDir(): string {
-  return dirname(fontsDir());
+  const candidates = [join(process.cwd(), "typst"), fileURLToPath(new URL("../../typst", import.meta.url)), join(process.cwd(), "api", "typst")];
+  const found = candidates.find((dir) => existsSync(join(dir, "mitex", "lib.typ")));
+  if (!found) throw new Error("mitex is not with the function");
+  return dirname(found);
 }
 
 let compiler: NodeCompiler | undefined;
