@@ -1481,6 +1481,13 @@ What the boards settle:
 - **What is never shown:** a parent's number, a photo, a message's text, a personal kind's input for a student without
   current consent; a student's name only on the record page after the audited open.
 
+Loading states (D97), row 27 below the pages (y 77000 on; the note at 76700): `P19-Loading-Centres` (a page loading after a
+click: the title and lead real, the filters, tiles and rows as grey blocks in `surface2`, a 3 px `accent` bar at the top),
+`P19-Pending-SignIn` (Sign in's button working: the spinner and "Signing in…", the fields dimmed) and `P19-Pending-Dialog`
+(the record's reason dialog working: "Opening the record…", Cancel dimmed), each dark and light at 1280 and 390, twelve
+boards. Approved by the owner 2026-10-13 ("Approved, go ahead with D97 and the loading states"). Every signed-in page loads
+in `P19-Loading-Centres`' grammar with its own title and shape; every form's button works in `P19-Pending-SignIn`'s.
+
 What the build settled (Phase 19, session 39), states no board draws, in the boards' grammar:
 
 - **A wrong first code** keeps the same square: the page shows "That code did not match. Codes change every 30 seconds.",

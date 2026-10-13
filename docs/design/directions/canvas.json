@@ -3203,6 +3203,102 @@
    "x": 10510,
    "y": 72673,
    "title": "Phase 19 · admin.tutorcentral.in/audit · the audit: who did what, to which centre, when, from where · light · phone 390"
+  },
+  "P19-Loading-Centres-Light.dc.html": {
+   "expand": "fill",
+   "h": 915,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · navigating: the top bar at once, the page as a skeleton until its data comes · light · desktop 1280",
+   "w": 1280,
+   "x": 1360,
+   "y": 77000
+  },
+  "P19-Loading-Centres-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 1636,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · navigating: the top bar at once, the page as a skeleton until its data comes · light · phone 390",
+   "w": 390,
+   "x": 3190,
+   "y": 77000
+  },
+  "P19-Loading-Centres-Phone.dc.html": {
+   "expand": "fill",
+   "h": 1636,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · navigating: the top bar at once, the page as a skeleton until its data comes · dark · phone 390",
+   "w": 390,
+   "x": 2720,
+   "y": 77000
+  },
+  "P19-Loading-Centres.dc.html": {
+   "expand": "fill",
+   "h": 915,
+   "title": "Phase 19 · admin.tutorcentral.in/centres · navigating: the top bar at once, the page as a skeleton until its data comes · dark · desktop 1280",
+   "w": 1280,
+   "x": 0,
+   "y": 77000
+  },
+  "P19-Pending-Dialog-Light.dc.html": {
+   "expand": "fill",
+   "h": 1667,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>?ask=1 · the record's dialog working: \"Opening the record…\", Cancel dimmed · light · desktop 1280",
+   "w": 1280,
+   "x": 8680,
+   "y": 77000
+  },
+  "P19-Pending-Dialog-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3674,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>?ask=1 · the record's dialog working: \"Opening the record…\", Cancel dimmed · light · phone 390",
+   "w": 390,
+   "x": 10510,
+   "y": 77000
+  },
+  "P19-Pending-Dialog-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3674,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>?ask=1 · the record's dialog working: \"Opening the record…\", Cancel dimmed · dark · phone 390",
+   "w": 390,
+   "x": 10040,
+   "y": 77000
+  },
+  "P19-Pending-Dialog.dc.html": {
+   "expand": "fill",
+   "h": 1667,
+   "title": "Phase 19 · admin.tutorcentral.in/centres/<id>?ask=1 · the record's dialog working: \"Opening the record…\", Cancel dimmed · dark · desktop 1280",
+   "w": 1280,
+   "x": 7320,
+   "y": 77000
+  },
+  "P19-Pending-SignIn-Light.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · a button working: \"Signing in…\" with its spinner, the fields dimmed, no second press · light · desktop 1280",
+   "w": 1280,
+   "x": 5020,
+   "y": 77000
+  },
+  "P19-Pending-SignIn-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 900,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · a button working: \"Signing in…\" with its spinner, the fields dimmed, no second press · light · phone 390",
+   "w": 390,
+   "x": 6850,
+   "y": 77000
+  },
+  "P19-Pending-SignIn-Phone.dc.html": {
+   "expand": "fill",
+   "h": 900,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · a button working: \"Signing in…\" with its spinner, the fields dimmed, no second press · dark · phone 390",
+   "w": 390,
+   "x": 6380,
+   "y": 77000
+  },
+  "P19-Pending-SignIn.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "title": "Phase 19 · admin.tutorcentral.in/sign-in · a button working: \"Signing in…\" with its spinner, the fields dimmed, no second press · dark · desktop 1280",
+   "w": 1280,
+   "x": 3660,
+   "y": 77000
   }
  },
  "createdOnFiles": {
@@ -3437,6 +3533,14 @@
    "x": 0,
    "y": 57700,
    "text": "Phase 19 · The admin portal, reading (admin.tutorcentral.in) — fluid pages at 1280 and 390, dark and light: sign in and the second factor (enrol, verify, refused), the centres, a centre and the audited open of its record, cost, the AI calls and one call, jobs with their steps (retry, cancel), errors by route and reason, alerts (acknowledge), the audit"
+  },
+  "p19_2": {
+   "kind": "title1",
+   "maxW": 10900,
+   "text": "Phase 19 · The admin portal's loading states (D97, session 39): navigating (a top bar and the page as a skeleton), a button working, the record's dialog working",
+   "w": 240,
+   "x": 0,
+   "y": 76700
   }
  },
  "order": [
@@ -3884,7 +3988,19 @@
   "P19-Audit.dc.html",
   "P19-Audit-Phone.dc.html",
   "P19-Audit-Light.dc.html",
-  "P19-Audit-Phone-Light.dc.html"
+  "P19-Audit-Phone-Light.dc.html",
+  "P19-Loading-Centres.dc.html",
+  "P19-Loading-Centres-Light.dc.html",
+  "P19-Loading-Centres-Phone.dc.html",
+  "P19-Loading-Centres-Phone-Light.dc.html",
+  "P19-Pending-SignIn.dc.html",
+  "P19-Pending-SignIn-Light.dc.html",
+  "P19-Pending-SignIn-Phone.dc.html",
+  "P19-Pending-SignIn-Phone-Light.dc.html",
+  "P19-Pending-Dialog.dc.html",
+  "P19-Pending-Dialog-Light.dc.html",
+  "P19-Pending-Dialog-Phone.dc.html",
+  "P19-Pending-Dialog-Phone-Light.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",
