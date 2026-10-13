@@ -53,14 +53,12 @@ public struct BoardView: View {
                 if let eyebrow {
                     Eyebrow(eyebrow)
                 }
-                Text(question)
-                    .typeStyle(Tokens.displayHero)
-                    .foregroundStyle(Tokens.text.color)
+                MathText(question, style: Tokens.displayHero)
                     .fixedSize(horizontal: false, vertical: true)
                     .minimumScaleFactor(SingleLineTitle.smallest)
                 Text("Question \(number)").typeStyle(Tokens.title2).foregroundStyle(Tokens.text2.color)
                 if showsKey, let answer {
-                    Text(answer).typeStyle(Tokens.title3).foregroundStyle(Tokens.ok.color)
+                    MathText(answer, style: Tokens.title3, color: Tokens.ok)
                 }
             }
             Spacer()
@@ -117,8 +115,9 @@ public struct KeyRow: View {
 }
 
 /// A step (P10-WorkedExample, the brief's mistakes): a 28 pt disc with the number (`accentTint` and `accentText` when
-/// shown; `surface2` and `text2` to come, the row at 0.45 with its title only), the title `rowTitle`, the working
-/// `subhead` `text2`.
+/// shown; `surface2` and `text2` to come, the row at 0.45 with its title only, in `subhead` `text2` centred on the
+/// disc,
+/// P20-WorkedExample), the title `rowTitle`, the working `subhead` `text2`; formulae drawn by `MathText`.
 public struct StepRow: View {
     let number: Int
     let title: String
@@ -145,17 +144,21 @@ public struct StepRow: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: Tokens.rowPaddingDense) {
+        HStack(alignment: shown ? .top : .center, spacing: Tokens.rowPaddingDense) {
             Text("\(number)")
                 .typeStyle(Tokens.footnoteStrong)
                 .foregroundStyle((shown ? Tokens.accentText : Tokens.text2).color)
                 .frame(width: Self.disc, height: Self.disc)
                 .background((shown ? Tokens.accentTint : Tokens.surface2).color, in: .circle)
             VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                    .fixedSize(horizontal: false, vertical: true)
+                MathText(
+                    title,
+                    style: shown ? Tokens.rowTitle : Tokens.subhead,
+                    color: shown ? Tokens.text : Tokens.text2
+                )
+                .fixedSize(horizontal: false, vertical: true)
                 if Self.showsWorking(shown: shown, working: working), let working {
-                    Text(working).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
+                    MathText(working, style: Tokens.subhead, color: Tokens.text2)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -210,9 +213,7 @@ public struct FigureCard<Figure: View>: View {
                     .padding(Self.inner)
                     .frame(maxWidth: .infinity)
                     .background(Tokens.surface2.color, in: .rect(cornerRadius: Self.inner, style: .continuous))
-                Text(caption)
-                    .typeStyle(Tokens.footnote)
-                    .foregroundStyle(Tokens.text2.color)
+                MathText(caption, style: Tokens.footnote, color: Tokens.text2, alignment: .center)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
             }

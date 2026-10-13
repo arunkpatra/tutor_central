@@ -5,11 +5,13 @@ import Domain
 import PhotosUI
 import SwiftUI
 
-/// What a launch state sets up on an artefact: a sheet's (P10-Sheet-Key, -Board, -Regenerate, -Regenerating, -OwnMenu)
-/// or the worked example's second step shown (P10-WorkedExample).
+/// What a launch state sets up on an artefact: a sheet's (P10-Sheet-Key, -Board, -Regenerate, -Regenerating, -OwnMenu;
+/// P20-Sheet-Board, the board at question 2 with its key) or the worked example's second step shown
+/// (P10-WorkedExample).
 public enum ArtefactBoardState: Hashable, Sendable {
     case key
     case board
+    case boardWithKey
     case reasons
     case regenerating
     case ownMenu
@@ -202,6 +204,10 @@ struct SheetView: View {
         case .board:
             store.form = .board
             store.boardIndex = 2
+        case .boardWithKey:
+            store.form = .board
+            store.boardIndex = 1
+            store.boardShowsKey = true
         case .reasons: menu = .reasons
         case .regenerating: Task { await store.makeAgain(.easier) }
         case .ownMenu: menu = .own

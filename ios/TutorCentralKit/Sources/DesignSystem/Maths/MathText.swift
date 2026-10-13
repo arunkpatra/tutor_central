@@ -15,6 +15,8 @@ public struct MathText: View {
 
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.colorScheme) private var scheme
+    /// The line's width, so a formula wider than it is drawn to fit (the largest text sizes).
+    @State private var width = CGFloat.infinity
 
     public init(
         _ text: String,
@@ -42,6 +44,7 @@ public struct MathText: View {
                         }
                     }
                 }
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
             }
         }
         .typeStyle(token)
@@ -63,7 +66,8 @@ public struct MathText: View {
                     latex: weighted(latex),
                     pointSize: size,
                     color: ink,
-                    display: true
+                    display: true,
+                    fitting: width
                 )
                 else {
                     return Text("\(line)\(Text(verbatim: latex).foregroundStyle(Tokens.text2.color))")
@@ -81,7 +85,8 @@ public struct MathText: View {
                 latex: weighted(latex),
                 pointSize: size,
                 color: uiColor(color),
-                display: true
+                display: true,
+                fitting: width
             ) {
                 Image(uiImage: drawn.image)
             } else {

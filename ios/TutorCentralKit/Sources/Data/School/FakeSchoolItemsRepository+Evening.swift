@@ -23,6 +23,17 @@ public extension FakeSchoolItemsRepository {
     nonisolated static let dasara = UUID(uuidString: "66666666-6666-6666-6666-666666666663")!
     nonisolated static let ptm = UUID(uuidString: "66666666-6666-6666-6666-666666666664")!
     nonisolated static let devsTest = UUID(uuidString: "66666666-6666-6666-6666-666666666665")!
+    nonisolated static let devsMathsTest = UUID(uuidString: "66666666-6666-6666-6666-666666666666")!
+
+    /// P20-Mock: Dev's own Maths unit test on Thursday 15 October, quadratic equations; only the mock's state has it.
+    nonisolated static let devsMathsTestItem: SchoolItem = {
+        var item = shared(devsMathsTest, .exam, .student(FakeStudentsRepository.dev), "Maths unit test", date: 15)
+        item.subject = "Maths"
+        item.portions = "quadratic equations"
+        item.source = .typed
+        item.sourceText = nil
+        return item
+    }()
 
     /// The boards' items for the Evening batch (plan/phase-13-plan.md "Launch states"): Science unit test 3 for class 8
     /// at Vidya Niketan on Friday 16 October, the Maths homework due Monday 12, Dasara 19 to 21 October, a PTM for

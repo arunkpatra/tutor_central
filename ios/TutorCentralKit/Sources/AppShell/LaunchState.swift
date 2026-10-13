@@ -183,8 +183,12 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case sheetOwnMenu = "sheet-own-menu"
     case sheetOwn = "sheet-own"
     /// Group 1's worked example at its second step (P10-WorkedExample); the Chemical reactions brief (P10-Brief).
-    case workedExample = "worked-example"
-    case brief
+    case workedExample = "worked-example", brief
+    /// Phase 20's material with formulae (P20-Sheet-To5, -From6, -Sheet-Board, -WorkedExample, -Mock): Group 2's
+    /// fractions sheet, Group 1's equations sheet, its board at question 2 with the key, its worked example at the
+    /// second step, Dev's maths mock.
+    case sheetMathsTo5 = "sheet-maths-to5", sheetMathsFrom6 = "sheet-maths-from6", sheetBoardMaths = "sheet-board-maths"
+    case workedExampleMaths = "worked-example-maths", mockMaths = "mock-maths"
     /// The seven figures (P10-Figure-*), each on its board's skill.
     case figureNumberLine = "figure-number-line"
     case figureFractionBar = "figure-fraction-bar"

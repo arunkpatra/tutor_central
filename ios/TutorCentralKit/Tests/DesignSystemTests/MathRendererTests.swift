@@ -22,3 +22,20 @@ import UIKit
     let large = try #require(MathRenderer.rendered(latex: "x^{2} + 1", pointSize: 34, color: .white, display: false))
     #expect(large.image.size.height > small.image.size.height * 1.6)
 }
+
+/// At the largest text sizes a formula wider than its line is drawn smaller to fit, never cut off.
+@Test @MainActor func aFormulaWiderThanItsLineIsDrawnToFit() throws {
+    let latex = "2(x - 3) = x + 4"
+    let full = try #require(MathRenderer.rendered(latex: latex, pointSize: 60, color: .white, display: true))
+    #expect(full.image.size.width > 200)
+    let fitted = try #require(MathRenderer.rendered(
+        latex: latex, pointSize: 60, color: .white, display: true, fitting: 200
+    ))
+    #expect(fitted.image.size.width <= 200)
+    #expect(fitted.image.size.width > 150)
+    let narrow = try #require(MathRenderer.rendered(
+        latex: "x", pointSize: 17, color: .white, display: true, fitting: 200
+    ))
+    #expect(narrow.image.size == MathRenderer.rendered(latex: "x", pointSize: 17, color: .white, display: true)?
+        .image.size)
+}

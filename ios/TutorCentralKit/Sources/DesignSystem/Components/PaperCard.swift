@@ -16,7 +16,7 @@ public struct ResultHero: View {
         Card(.hero) {
             VStack(alignment: .leading, spacing: Tokens.tileGap) {
                 Eyebrow(eyebrow)
-                Text(title).typeStyle(Tokens.title2).foregroundStyle(Tokens.text.color)
+                MathText(title, style: Tokens.title2)
                 Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
             .accessibilityElement(children: .combine)

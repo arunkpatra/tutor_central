@@ -116,6 +116,7 @@ public struct ArtefactScreen: View {
             artefactID: artefactID, workspace: context.workspace, register: context.register, plans: context.plans
         )
         store.planCache = context.planCache
+        store.serverPDF = context.serverPDF
         return store
     }
 

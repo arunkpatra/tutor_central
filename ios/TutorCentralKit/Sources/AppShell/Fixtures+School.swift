@@ -70,6 +70,7 @@ extension Fixtures {
         case .todayRevision: FakeSchoolItemsRepository.boardItems.filter {
                 $0.id == FakeSchoolItemsRepository.scienceTest3
             }
+        case .mockMaths: FakeSchoolItemsRepository.boardItems + [FakeSchoolItemsRepository.devsMathsTestItem]
         default: FakeSchoolItemsRepository.boardItems
         }
         return FakeSchoolItemsRepository(items: items, now: clock(for: state))

@@ -36,8 +36,8 @@ public struct PDFSheet: Hashable, Sendable {
 
 /// Share as PDF and Print (P6-Result-Paper, P10-Sheet): the sheet drawn on A4 pages (595 × 842 pt, 40 pt margins) in
 /// the
-/// app's type, light, as a file in the temporary directory named after the title. Rendered on the phone (spec section
-/// 7).
+/// app's type, light, as a file in the temporary directory named after the title, its formulae drawn as on the screen
+/// (`MathText`). Rendered on the phone (spec section 7).
 public enum PDFMaker {
     static var page: CGRect {
         CGRect(x: 0, y: 0, width: 595, height: 842)
@@ -102,9 +102,9 @@ private struct PDFContent: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-            Text(sheet.title).typeStyle(Tokens.title2).foregroundStyle(Tokens.text.color)
+            MathText(sheet.title, style: Tokens.title2)
             if let instructions = sheet.instructions {
-                Text(instructions).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
+                MathText(instructions, style: Tokens.subhead, color: Tokens.text2)
             }
             ForEach(Array(sheet.blocks.enumerated()), id: \.offset) { _, block in
                 switch block {
@@ -113,7 +113,7 @@ private struct PDFContent: View {
                 case let .key(answers):
                     section("Answer key") { ForEach(answers, id: \.self) { line($0) } }
                 case let .text(text):
-                    Text(text).typeStyle(Tokens.body).foregroundStyle(Tokens.text.color)
+                    MathText(text, style: Tokens.body)
                         .fixedSize(horizontal: false, vertical: true)
                 case let .image(image):
                     Image(uiImage: image).resizable().scaledToFit().frame(maxWidth: .infinity)
@@ -136,7 +136,7 @@ private struct PDFContent: View {
     private func line(_ line: PDFLine) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: Tokens.tileGap) {
             Text("\(line.number).").typeStyle(Tokens.buttonSecondary).foregroundStyle(Tokens.text2.color)
-            Text(line.text).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text.color)
+            MathText(line.text, style: Tokens.subhead)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             if let marks = line.marks {

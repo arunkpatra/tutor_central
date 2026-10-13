@@ -57,14 +57,26 @@ extension RootView {
         }
     }
 
+    /// Phase 20's material on Today's stack: the two sheets, the worked example, Dev's maths mock.
+    static func mathsRoutes(for state: LaunchState) -> [Route]? {
+        switch state {
+        case .sheetMathsTo5: [.artefact(FakePlansRepository.mathsSheetTo5)]
+        case .sheetMathsFrom6, .sheetBoardMaths: [.artefact(FakePlansRepository.mathsSheetFrom6)]
+        case .workedExampleMaths: [.artefact(FakePlansRepository.mathsExample)]
+        case .mockMaths: [.artefact(FakePlansRepository.mathsMockID)]
+        default: nil
+        }
+    }
+
     static func artefactBoardState(_ state: LaunchState) -> ArtefactBoardState? {
         switch state {
         case .sheetKey, .mockKey: .key
         case .sheetBoard: .board
+        case .sheetBoardMaths: .boardWithKey
         case .sheetRegenerate: .reasons
         case .sheetRegenerating: .regenerating
         case .sheetOwnMenu: .ownMenu
-        case .workedExample: .secondStep
+        case .workedExample, .workedExampleMaths: .secondStep
         default: nil
         }
     }

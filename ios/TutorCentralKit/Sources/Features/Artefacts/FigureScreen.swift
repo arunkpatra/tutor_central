@@ -44,7 +44,7 @@ struct FigureScreen: View {
         }
         .task {
             await store.load()
-            pdf = makePDF()
+            pdf = await store.sharedPDF { makePDF() }
         }
     }
 
@@ -116,7 +116,7 @@ private struct LargeFigure: View {
             Spacer()
             if let figure = store.figure {
                 FigureView(spec: figure.figure)
-                Text(figure.caption).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
+                MathText(figure.caption, style: Tokens.subhead, color: Tokens.text2, alignment: .center)
                     .multilineTextAlignment(.center)
             }
             Spacer()
