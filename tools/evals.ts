@@ -2,12 +2,12 @@
 /** bun evals [--kinds a,b] [--cases id,id] [--fake]: the golden sets (api/evals/<kind>/cases.json) run through each kind's agent by
  *  promptfoo (D101): a free javascript assertion (the schema, verify, the case's expectations) and the kind's rubric
  *  graded by Opus 5.5, a model other than any generator. Writes the tests to api/evals/output/tests.yaml, runs promptfoo
- *  (Node, through `bun run`; never npx), then the gate (tools/evals-gate.ts). --fake answers from the fake (AI_FAKE=1),
+ *  (Node, through `bun run`; never npx), runs each failed case once more (D103), then the gate (tools/evals-gate.ts). --fake answers from the fake (AI_FAKE=1),
  *  costs nothing and skips the rubric. The real run needs ANTHROPIC_API_KEY (api/.env.local locally; the repository's
  *  secret in CI). */
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { gate } from "./evals-gate";
+import { failedCases, gate, type Results, withRetries } from "./evals-gate";
 
 const ROOT = join(import.meta.dir, "..");
 const EVALS = join(ROOT, "api/evals");
@@ -67,13 +67,24 @@ if (import.meta.main) {
     PROMPTFOO_DISABLE_UPDATE: "1",
     PROMPTFOO_CONFIG_DIR: join(EVALS, ".promptfoo"),
   };
-  const run = Bun.spawnSync(
-    ["bun", "run", "promptfoo", "eval", "-c", "promptfooconfig.yaml", "-o", "output/results.json", "--no-cache", "--no-progress-bar", "-j", "4"],
-    { cwd: EVALS, env, stdout: "inherit", stderr: "inherit" },
-  );
-  const results = Bun.file(join(EVALS, "output/results.json"));
-  if (!(await results.exists())) throw new Error(`promptfoo wrote no results (exit ${run.exitCode})`);
-  const out = gate(await results.json(), { fake });
+  const promptfoo = async (output: string): Promise<Results> => {
+    const run = Bun.spawnSync(
+      ["bun", "run", "promptfoo", "eval", "-c", "promptfooconfig.yaml", "-o", output, "--no-cache", "--no-progress-bar", "-j", "4"],
+      { cwd: EVALS, env, stdout: "inherit", stderr: "inherit" },
+    );
+    const results = Bun.file(join(EVALS, output));
+    if (!(await results.exists())) throw new Error(`promptfoo wrote no results (exit ${run.exitCode})`);
+    return (await results.json()) as Results;
+  };
+  let results = await promptfoo("output/results.json");
+  // D103: each failed case gets one fresh run; it counts as failed only if it fails again.
+  const failed = fake ? [] : failedCases(results);
+  if (failed.length > 0) {
+    console.log(`\nretrying ${failed.length} failed case(s) once: ${failed.join(", ")}`);
+    await Bun.write(join(EVALS, "output/tests.yaml"), JSON.stringify(await testsFor(kinds, { fake, cases: failed }), null, 2));
+    results = withRetries(results, await promptfoo("output/retry.json"));
+  }
+  const out = gate(results, { fake });
   console.log(`\n${out.table}`);
   if (!out.ok) {
     console.error(`\nthe evals' gate is red:\n${out.failures.map((f) => `  - ${f}`).join("\n")}`);

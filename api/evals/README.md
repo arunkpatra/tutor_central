@@ -12,7 +12,8 @@ or real page.
 
 Run: `bun evals --fake` (free: the schema, verify and expectations on the fake's answers), `bun evals --kinds sheet,check`
 (the real models, graded by Opus 5.5; about ₹5 a kind). The gate: every case's free checks, and the rubric at 85% or
-more per kind. CI runs the kinds a pull request touches (`.github/workflows/evals.yml`).
+more per kind; a case that fails gets one fresh run and counts as failed only if it fails again (D103: one judgement a
+case made a nine-kind run red almost every time). CI runs the kinds a pull request touches (`.github/workflows/evals.yml`).
 
 In CI: `.github/workflows/evals.yml` runs on a pull request that touches the prompts, the agents, the schemas or the
 evals; `tools/evals-changed.ts` names the kinds from the diff (a kind's prompt, agent or folder names it; what every kind
