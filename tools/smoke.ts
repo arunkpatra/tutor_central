@@ -41,13 +41,15 @@ async function tick(site: string, secret: string): Promise<string[]> {
   return res.status === 200 ? [] : [`/jobs/tick answered ${res.status}`];
 }
 
-/** The worker's health (plan decision 26): a page rendered with the bundled fonts, and APNs taking the key. */
+/** The worker's health (plan decision 26): a page rendered with the bundled fonts and a formula (D102), and APNs taking
+ *  the key. */
 async function workerHealth(site: string, secret: string): Promise<string[]> {
   const res = await fetch(`${site}/jobs/health`, { headers: { authorization: `Bearer ${secret}` } });
   if (res.status !== 200) return [`/jobs/health answered ${res.status}`];
-  const body = (await res.json()) as { pdf?: number; apns?: boolean };
+  const body = (await res.json()) as { pdf?: number; maths?: boolean; apns?: boolean };
   const problems: string[] = [];
   if (!body.pdf || body.pdf < 1) problems.push("/jobs/health rendered no page");
+  else if (body.maths !== true) problems.push("/jobs/health drew no formula (mitex or STIX Two Math is not with the function)");
   if (body.apns !== true) problems.push("/jobs/health could not reach APNs");
   return problems;
 }

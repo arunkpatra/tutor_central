@@ -9,7 +9,7 @@ import { snake } from "../src/plan/material.js";
 
 // The PDF job (D90): a kept sheet, mock or brief rendered in the phone's layout and written under the centre in `pdfs`.
 const CENTRE = "c0000000-0000-4000-8000-0000000000aa";
-function storage(artefact: { kind: string; title: string; content: Record<string, unknown> } | null) {
+function storage(artefact: { kind: string; title: string; content: Record<string, unknown>; foot?: string } | null) {
   const uploads: { bucket: string; path: string; head: string; size: number }[] = [];
   const reads: string[] = [];
   const s: PdfSource & { uploads: typeof uploads; reads: string[] } = {
@@ -60,4 +60,12 @@ test("an upload that fails is taken again", async () => {
     throw new Error("storage down");
   };
   expect(await pdfJob(s).step(job(), ctx())).toMatchObject({ kind: "fail", error: { reason: "pdf_failed" }, retry: true });
+});
+
+test("the job hands the artefact's foot to its forms (P20-PDF-Sheet)", async () => {
+  const sources: string[] = [];
+  const s = storage({ kind: "sheet", title: "Linear equations · sheet 1", foot: "Bright Minds Tuition · Class 8", content: { title: sheet.title, instructions: sheet.instructions, questions: sheet.questions, for_homework: false, light: false } });
+  await pdfJob(s, { render: async (source) => (sources.push(source), { bytes: new Uint8Array([37, 80, 68, 70, 45]), pages: 1 }) }).step(job(), ctx());
+  expect(sources).toHaveLength(2);
+  expect(sources.every((source) => source.includes("Bright Minds Tuition · Class 8"))).toBe(true);
 });

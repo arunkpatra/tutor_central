@@ -19,9 +19,9 @@ const marksEach = (marks: number) => (marks === 1 ? "1 mark each" : `${marks} ma
 
 /** A mock as the phone draws it (MockStore.pdfSheet): the title, "40 marks · 60 minutes · <portions>", each section with
  *  its marks and questions; with the key, the answers on a page of their own. */
-export function mockPdf(content: MockContent, meta: { title: string }, withKey: boolean): string {
+export function mockPdf(content: MockContent, meta: { title: string; foot?: string }, withKey: boolean): string {
   const head = `${content.pattern.marks} marks · ${content.pattern.duration_minutes} minutes`;
-  const parts = [preamble(), title(meta.title), subtitle(content.portions.length ? `${head} · ${listAnd(content.portions)}` : head)];
+  const parts = [preamble(meta.foot), title(meta.title), subtitle(content.portions.length ? `${head} · ${listAnd(content.portions)}` : head)];
   for (const section of content.sections) {
     parts.push("#v(14pt)", heading(`${section.name} · ${marksEach(section.marks_each)}`), "#v(6pt)", numbered(section.questions.map((q) => ({ number: q.number, text: q.text, marks: String(q.marks) })), true));
   }

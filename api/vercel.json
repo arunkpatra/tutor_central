@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["bom1"],
   "git": { "deploymentEnabled": false },
-  "functions": { "**/*": { "maxDuration": 300, "includeFiles": "fonts/**" } }
+  "functions": { "**/*": { "maxDuration": 300, "includeFiles": "{fonts,typst}/**" } }
 }
