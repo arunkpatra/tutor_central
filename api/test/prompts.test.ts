@@ -190,6 +190,11 @@ test("the plan's topics ask Sonnet for a first chapter and skill per group for t
 test("the plan's check accepts a chapter as a current or recent book prints it (the books changed in 2023 to 2025)", () => {
   expect(planKind.rubric).toContain("a current or a recent book");
 });
+test("a holiday's end is part of the holiday, not an item of its own (#312's evals: \"classes resume\" split out)", () => {
+  const r = parseSchoolRequest({ text: "School closed 20 to 24 Oct for Deepavali. Classes resume Monday 26th.", image: null, today: "2026-10-13", schools: [], classLevels: [] });
+  expect(systemText(r)).toContain("When school reopens or classes resume after a holiday, that is the holiday's end, not an item of its own.");
+});
+
 test("parse-school asks for items as the school wrote them, with today's date and the centre's schools and classes, on Sonnet", () => {
   const r = parseSchoolRequest({ text: "Dear Parents, Science Unit Test 3 for Class 8 will be held on Friday 16th Oct.", image: null, today: "2026-10-07", schools: ["Vidya Niketan"], classLevels: ["8", "10"] });
   expect(r.model).toBe("claude-sonnet-5-5");

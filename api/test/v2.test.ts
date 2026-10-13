@@ -83,7 +83,8 @@ test("make placement asks one question per chapter in the book's order", async (
   expect(r.status).toBe(200);
   const body = (await r.json()) as { result: { questions: { chapter: string; question: string; answer: string }[] } };
   expect(body.result.questions.map((q) => q.chapter)).toEqual(["The Fish Tale", "Shapes and Angles", "How Many Squares?"]);
-  expect(claude.requests[0]?.model).toBe("claude-haiku-5-5");
+  // Placements draft on Sonnet (D104's PR): Haiku told primary chapters wrongly.
+  expect(claude.requests[0]?.model).toBe("claude-sonnet-5-5");
 });
 
 test("a check, a placement and the mock need no student's consent", async () => {
