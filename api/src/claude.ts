@@ -8,7 +8,7 @@ import { log } from "./log.js";
 export type ImageInput = { mediaType: "image/jpeg" | "image/png" | "image/webp"; base64: string };
 export type ClaudeRequest<T> = {
   model: "claude-haiku-5-5" | "claude-sonnet-5-5" | "claude-opus-5-5";
-  effort: "medium" | "high";
+  effort: "low" | "medium" | "high";
   system: string;
   /** The user turn's text, after the images. */
   text: string;

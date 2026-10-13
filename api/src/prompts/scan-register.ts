@@ -7,7 +7,7 @@ import { VOICE } from "./shared.js";
 /** One photographed page of a paper register read into rows. Phones and fees as written; the API normalises. */
 export function request(image: DecodedImage): ClaudeRequest<ScanOutput> {
   return {
-    model: modelFor("scan_register"),
+    model: modelFor("scan_register", "draft").model,
     effort: "high",
     system: [
       VOICE,

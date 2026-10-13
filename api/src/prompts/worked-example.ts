@@ -7,7 +7,7 @@ import { VOICE } from "./shared.js";
  *  time as the tutor says it aloud, and the common slip. */
 export function request(classLevel: ClassLevel, subject: string, skill: string): ClaudeRequest<WorkedExampleOutput> {
   return {
-    model: modelFor("worked_example", classLevel),
+    model: modelFor("worked_example", "draft", classLevel).model,
     effort: "medium",
     system: [
       VOICE,

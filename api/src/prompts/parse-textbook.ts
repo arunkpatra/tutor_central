@@ -8,7 +8,7 @@ import { VOICE } from "./shared.js";
  *  only, nothing from inside the book). */
 export function request(image: DecodedImage, classLevel: ClassLevel, subject: string): ClaudeRequest<TextbookOutput> {
   return {
-    model: modelFor("parse_textbook", classLevel),
+    model: modelFor("parse_textbook", "draft", classLevel).model,
     effort: "medium",
     system: [
       VOICE,

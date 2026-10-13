@@ -9,7 +9,7 @@ import { VOICE } from "./shared.js";
 export function request(input: MockInput): ClaudeRequest<MockOutput> {
   const { marks, durationMinutes, sections } = input.pattern;
   return {
-    model: modelFor("mock", input.classLevel),
+    model: modelFor("mock", "draft", input.classLevel).model,
     effort: "high",
     system: [
       VOICE,

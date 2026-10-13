@@ -16,7 +16,7 @@ const REASONS: Record<string, string> = {
 export function request(input: SheetInput): ClaudeRequest<SheetOutput> {
   const reason = input.reason ? (REASONS[input.reason.toLowerCase()] ?? `The tutor asks: ${input.reason}`) : null;
   return {
-    model: modelFor("sheet", input.classLevel),
+    model: modelFor("sheet", "draft", input.classLevel).model,
     effort: "medium",
     system: [
       VOICE,

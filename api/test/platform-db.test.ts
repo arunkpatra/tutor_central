@@ -24,6 +24,8 @@ import { fakeDb } from "../src/db-fake.js";
 import { makeOutboxDb } from "../src/push/db.js";
 import { makeReminderSource } from "../src/reminders/source.js";
 import { sendDue } from "../src/push/send-due.js";
+import { makeModelSource } from "../src/models-db.js";
+import table from "../models.json" with { type: "json" };
 
 // The platform's reads and writes over the local stack's service role (the review's findings 3 and 8). It needs
 // `supabase start`; without it the file says so and skips.
@@ -309,4 +311,11 @@ test.skipIf(!up)("an alerts job on the local stack raises job_failed for a faile
     await db.from("admin_users").delete().eq("user_id", adminId);
     await db.auth.admin.deleteUser(adminId);
   }
+});
+
+test.skipIf(!up)("the platform reads ai_models' current rows: three per work type of models.json (0052)", async () => {
+  const rows = await makeModelSource(url as string, service as string).current();
+  expect(rows.length).toBe(Object.keys(table.work).length * 3);
+  expect(rows.find((r) => r.kind === "sheet_to_5" && r.step === "check")).toMatchObject({ model: "claude-sonnet-5-5", enabled: true });
+  await expect(makeModelSource(url as string, anon as string).current()).rejects.toThrow();
 });

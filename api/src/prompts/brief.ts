@@ -6,7 +6,7 @@ import { VOICE } from "./shared.js";
 /** The tutor's brief for a chapter (P10-Brief): five minutes of reading before the class, as a colleague's note. */
 export function request(classLevel: ClassLevel, subject: string, chapter: string): ClaudeRequest<BriefOutput> {
   return {
-    model: modelFor("brief", classLevel),
+    model: modelFor("brief", "draft", classLevel).model,
     effort: "medium",
     system: [
       VOICE,

@@ -8,7 +8,7 @@ import { VOICE } from "./shared.js";
 export function request(input: NoteInput): ClaudeRequest<NoteOutput> {
   const tone = input.tone === "warm" ? "warm and encouraging, still honest" : "plain and factual, still kind";
   return {
-    model: modelFor("progress_note"),
+    model: modelFor("progress_note", "draft").model,
     effort: "medium",
     system: [
       VOICE,

@@ -10,7 +10,7 @@ import { VOICE } from "./shared.js";
 export function request(input: WeeklyNoteInput): ClaudeRequest<MessageOutput> {
   const w = input.week;
   return {
-    model: modelFor("note"),
+    model: modelFor("note", "draft").model,
     effort: "medium",
     system: [VOICE, MESSAGE, "This is the weekly note.", input.tutorSays ? TUTOR_ADDS : ""].filter(Boolean).join(" "),
     text: [

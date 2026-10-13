@@ -12,8 +12,18 @@ import { accountRoutes } from "./routes/account.js";
 import { aiRoutes } from "./routes/ai.js";
 import { jobRoutes, type Worker } from "./routes/jobs.js";
 
-/** `worker` mounts /jobs/* (the platform's jobs, D71); the entry always gives it, a test only when it runs the worker. */
-export type Deps = { verify: Verify; commit?: string; claude: ClaudeClient; db: Db; apple: AppleClient; observe: Observe; worker?: Worker };
+/** `worker` mounts /jobs/* (the platform's jobs, D71); the entry always gives it, a test only when it runs the worker.
+ *  `models` is the database's model table (D100): a request for AI work and a worker's run read it no older than a minute. */
+export type Deps = {
+  verify: Verify;
+  commit?: string;
+  claude: ClaudeClient;
+  db: Db;
+  apple: AppleClient;
+  observe: Observe;
+  worker?: Worker;
+  models?: { fresh(): Promise<void> };
+};
 
 /** Past this a body is refused in words before it is read: Vercel's own 4.5 MB would answer first otherwise. */
 export const BODY_LIMIT_BYTES = 4_400_000;
@@ -29,6 +39,17 @@ export function makeApp(deps: Deps) {
   app.get("/health", (c) => c.json({ ok: true, commit: deps.commit ?? "local" }));
   app.use("/ai/*", byAddress, bodyLimit({ maxSize: BODY_LIMIT_BYTES, onError: (c) => c.json(tooLarge.body, tooLarge.status) }));
   app.use("/ai/*", makeRequireUser(deps.verify), byUser);
+  const models = deps.models;
+  if (models) {
+    app.use("/ai/*", async (_c, next) => {
+      await models.fresh();
+      await next();
+    });
+    app.use("/jobs/*", async (_c, next) => {
+      await models.fresh();
+      await next();
+    });
+  }
   app.route("/ai", aiRoutes(deps));
   app.use("/account/*", byAddress, makeRequireUser(deps.verify), byUser);
   app.route("/account", accountRoutes(deps.apple));

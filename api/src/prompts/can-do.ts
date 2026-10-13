@@ -9,7 +9,7 @@ import { VOICE } from "./shared.js";
 export function request(input: CanDoInput): ClaudeRequest<MessageOutput> {
   const l = input.ladder;
   return {
-    model: modelFor("can_do"),
+    model: modelFor("can_do", "draft").model,
     effort: "medium",
     system: [VOICE, MESSAGE, "This is a short note on what a young student can now do."].join(" "),
     text: [

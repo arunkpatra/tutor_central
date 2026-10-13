@@ -8,7 +8,7 @@ import { VOICE } from "./shared.js";
 /** A photographed answer sheet marked against the scheme: a suggested mark and a note for every question. */
 export function request(pages: DecodedImage[], scheme: string, studentName: string): ClaudeRequest<CheckOutput> {
   return {
-    model: modelFor("check_paper"),
+    model: modelFor("check_paper", "draft").model,
     effort: "high",
     system: [
       VOICE,

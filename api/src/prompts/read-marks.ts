@@ -8,7 +8,7 @@ import { VOICE } from "./shared.js";
  *  which the tutor checks before anything is kept. A work type of its own, apart from marking a paper (D67). */
 export function request(pages: DecodedImage[], studentName: string, subjects: string[]): ClaudeRequest<ReadMarksOutput> {
   return {
-    model: modelFor("read_marks"),
+    model: modelFor("read_marks", "draft").model,
     effort: "medium",
     system: [
       VOICE,

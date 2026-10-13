@@ -9,7 +9,7 @@ const MONTHS = ["January", "February", "March", "April", "May", "June", "July", 
  *  month of the Indian school year, and its first skill, as a skill name the app can teach and check. */
 export function request(input: PlanInput): ClaudeRequest<PlanOutput> {
   return {
-    model: modelFor("plan", input.groups[0]?.classLevel ?? "8"),
+    model: modelFor("plan", "draft", input.groups[0]?.classLevel ?? "8").model,
     effort: "medium",
     system: [
       VOICE,
