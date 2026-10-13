@@ -45,6 +45,16 @@ test("privacy says what it must, in order, and marks itself current", () => {
 test("the terms keep their own date; privacy and trust say when they changed (the review's minor 7)", () => {
   expect(renderToStaticMarkup(createElement(Terms))).toContain("Last changed 9 October 2026.");
   expect(renderToStaticMarkup(createElement(Privacy))).toContain("Last changed 12 October 2026.");
+  expect(renderToStaticMarkup(createElement(Trust))).toContain("Last changed 13 October 2026.");
+});
+
+test("trust says who else can open the records: staff, for a problem, with the reason written down (Phase 19)", () => {
+  const html = renderToStaticMarkup(createElement(Trust));
+  expect(html).toContain(
+    "Tutor Central’s own staff can open a centre’s records only to help with a problem, with the reason and the time written down. They never see a parent’s number or a photo.",
+  );
+  // "Only the tutor" would no longer be true.
+  expect(html).not.toContain("Only the tutor, signed in, can see");
 });
 
 test("terms name the maker, the cost today, the limits, the notice and Indian law", () => {
