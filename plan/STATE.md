@@ -9,7 +9,8 @@ reaches the iPhone through APNs; consent withdrawal and its history; the copies 
 findings handled (#244 to #259); D93 written. Deploy 2 (0042 to 0045) green; 1.0.0 (29) on TestFlight (28 too; 29 adds the run's push check, #261). The record in
 `plan/sessions/037/`.
 **Next:** read the owner's centre's first morning plan job on the server (13 October, 05:30: steps, made and not made, cost);
-then Phase 19 (the admin portal, reading) on Fable 5.1: its boards and plan, from a resume the owner asks for. The order
+then Phase 19 (the admin portal, reading) on Fable 5.1: its boards and plan, from `resume/036-phase-19-boards-and-plan.md`
+(the first step reads that job). The order
 (D81): V3's Phases 17 to 22, then the external testing round on the first build that carries them, then Phase 16. The owner
 tests the builds at the end (D68): device tests T16 and T17 are Phase 18's. The round's documents are ready
 (`docs/release.md`, `docs/testing/tester-guide.md`, `plan/phase-15-findings.md`).
