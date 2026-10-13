@@ -111,15 +111,16 @@ test("an empty answer is failed refused with its tokens recorded", async () => {
 });
 
 test("a job's agent has 170 s on the job's clock, so a slow draft still gets its repair (the review's finding 1)", async () => {
-  const c = ctx(fakeDb());
+  const clock = fakeClock();
+  const c: StepContext = { ...ctx(fakeDb()), clock };
   let drafts = 0;
   const claude = fakeClaude((r) => {
     if (r.system.shared.includes("You check")) {
-      (c.clock as { advance(ms: number): void }).advance(15_000);
+      clock.advance(15_000);
       return { answer: { pass: true, findings: [] } };
     }
     drafts += 1;
-    (c.clock as { advance(ms: number): void }).advance(80_000);
+    clock.advance(80_000);
     return { answer: drafts === 1 ? { ...SAMPLE.sheet, questions: SAMPLE.sheet.questions.map((q, i) => (i === 0 ? { ...q, proof: { expression: "3*6+5", equals: 20 } } : q)) } : SAMPLE.sheet };
   });
   const input = { kind: "sheet" as const, centreId, classLevel: "8" as const, subject: "Mathematics", skills: ["Linear equations"], questions: SAMPLE.sheet.questions.length, forHomework: false };

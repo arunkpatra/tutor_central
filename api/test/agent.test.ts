@@ -187,5 +187,5 @@ test("the check names the call's student as the repair does, so a personal kind'
   const claude = fakeClaude((r) => (isCheck(r) ? pass : { answer: { answer: 20, proof: { expression: "3*5+5", equals: 20 } } }));
   const db = fakeDb();
   await runAgent(ctx(db, claude), personal, { x: 5 });
-  expect(db.started.map((s) => s.student)).toEqual(["s1", "s1"]);
+  expect(db.started.map((s) => (s as { student?: string }).student)).toEqual(["s1", "s1"]);
 });
