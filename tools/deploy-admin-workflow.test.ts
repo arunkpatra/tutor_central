@@ -14,3 +14,10 @@ test("the deploy job takes the gate's commit and resolves none of its own", () =
 test("the commit reaches the running portal: the deploy sets TC_COMMIT, as the API's does", () => {
   expect(workflow).toMatch(/vercel deploy --prebuilt --prod --env TC_COMMIT="\$COMMIT"|"\$VERCEL_CLI" deploy --prebuilt --prod --env TC_COMMIT="\$COMMIT"/);
 });
+
+test("the portal's functions run in Mumbai beside the database, as the API's do (every page makes several calls to it)", async () => {
+  const admin = JSON.parse(await Bun.file(`${import.meta.dir}/../admin/vercel.json`).text()) as { regions?: string[] };
+  const api = JSON.parse(await Bun.file(`${import.meta.dir}/../api/vercel.json`).text()) as { regions?: string[] };
+  expect(admin.regions).toEqual(["bom1"]);
+  expect(admin.regions).toEqual(api.regions);
+});
