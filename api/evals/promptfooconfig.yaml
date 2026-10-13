@@ -1,0 +1,8 @@
+# The golden sets run through each kind's agent (D74, D101): `bun evals [--kinds a,b] [--fake]` writes output/tests.yaml
+# from <kind>/cases.json and runs this; tools/evals-gate.ts reads output/results.json.
+description: Tutor Central's material made by its agents
+prompts:
+  - "{{kind}} {{id}}"
+providers:
+  - file://provider.ts
+tests: file://output/tests.yaml

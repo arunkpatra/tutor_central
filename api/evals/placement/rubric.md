@@ -1,0 +1,6 @@
+- Facts about the centre come only from the request: no student of the centre, school or page text the request does not give. An example in a question may use an everyday name or place.
+- The level fits the class named: a student of that class, at a tuition centre in India, can do it. A skill or chapter the tutor named is the tutor's choice: never question whether it belongs to the class; judge the questions within it.
+- The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
+- Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
+- One question per chapter named, on the chapter's most basic idea, answered aloud in a few words.
+- Each expected answer is right.

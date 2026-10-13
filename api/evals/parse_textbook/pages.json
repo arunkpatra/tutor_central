@@ -1,0 +1,206 @@
+[
+  {
+    "file": "science-8",
+    "title": "Science · Class VIII",
+    "heading": "CONTENTS",
+    "rows": [
+      {
+        "number": "1",
+        "name": "Exploring the Investigative World of Science",
+        "sections": [
+          "Asking questions",
+          "Making a fair test"
+        ],
+        "page": 1
+      },
+      {
+        "number": "2",
+        "name": "The Invisible Living World: Beyond Our Naked Eye",
+        "sections": [
+          "Microorganisms around us",
+          "Useful and harmful microbes"
+        ],
+        "page": 13
+      },
+      {
+        "number": "3",
+        "name": "Health: The Ultimate Treasure",
+        "sections": [
+          "Diseases and their causes",
+          "Staying healthy"
+        ],
+        "page": 31
+      },
+      {
+        "number": "4",
+        "name": "Electricity: Magnetic and Heating Effects",
+        "sections": [
+          "Heating effect of current",
+          "Electromagnets"
+        ],
+        "page": 47
+      },
+      {
+        "number": "5",
+        "name": "Exploring Forces",
+        "sections": [
+          "Contact and non-contact forces",
+          "Friction"
+        ],
+        "page": 63
+      }
+    ]
+  },
+  {
+    "file": "maths-5",
+    "title": "Mathematics · Class 5",
+    "heading": "CONTENTS",
+    "rows": [
+      {
+        "number": "1",
+        "name": "The Fish Tale",
+        "sections": [
+          "Reading large numbers",
+          "Comparing weights"
+        ],
+        "page": 1
+      },
+      {
+        "number": "2",
+        "name": "Shapes and Angles",
+        "sections": [
+          "Angles in shapes",
+          "Right angles"
+        ],
+        "page": 14
+      },
+      {
+        "number": "3",
+        "name": "How Many Squares?",
+        "sections": [
+          "Area by counting squares",
+          "Perimeter"
+        ],
+        "page": 31
+      },
+      {
+        "number": "4",
+        "name": "Parts and Wholes",
+        "sections": [
+          "Halves and quarters",
+          "Fractions of a group"
+        ],
+        "page": 45
+      }
+    ]
+  },
+  {
+    "file": "english-9",
+    "title": "English · Class 9",
+    "heading": "CONTENTS",
+    "rows": [
+      {
+        "number": "1",
+        "name": "How I Taught My Grandmother to Read",
+        "sections": [
+          "Reading for meaning",
+          "Writing a letter to the editor"
+        ],
+        "page": 1
+      },
+      {
+        "number": "2",
+        "name": "The Last Leaf",
+        "sections": [
+          "Understanding characters",
+          "Past perfect tense"
+        ],
+        "page": 19
+      },
+      {
+        "number": "3",
+        "name": "A Visit to the Lake",
+        "sections": [
+          "Describing a place",
+          "Adjectives of quality"
+        ],
+        "page": 37
+      }
+    ]
+  },
+  {
+    "file": "maths-10",
+    "title": "Mathematics · Class X",
+    "heading": "CONTENTS",
+    "rows": [
+      {
+        "number": "1",
+        "name": "Real Numbers",
+        "sections": [
+          "Euclid's division lemma",
+          "Prime factorisation"
+        ],
+        "page": 1
+      },
+      {
+        "number": "2",
+        "name": "Polynomials",
+        "sections": [
+          "Zeroes of a polynomial",
+          "Relation of zeroes and coefficients"
+        ],
+        "page": 20
+      },
+      {
+        "number": "3",
+        "name": "Pair of Linear Equations in Two Variables",
+        "sections": [
+          "Graphical method",
+          "Substitution and elimination"
+        ],
+        "page": 38
+      },
+      {
+        "number": "4",
+        "name": "Quadratic Equations",
+        "sections": [
+          "Solving by factorisation",
+          "Nature of roots"
+        ],
+        "page": 70
+      },
+      {
+        "number": "5",
+        "name": "Arithmetic Progressions",
+        "sections": [
+          "nth term",
+          "Sum of n terms"
+        ],
+        "page": 93
+      }
+    ]
+  },
+  {
+    "file": "preface",
+    "title": "Science · Class VIII",
+    "heading": "FOREWORD",
+    "rows": [
+      {
+        "name": "Foreword",
+        "page": 3
+      },
+      {
+        "name": "Preface",
+        "page": 5
+      },
+      {
+        "name": "A note for teachers",
+        "page": 7
+      },
+      {
+        "name": "Acknowledgements",
+        "page": 9
+      }
+    ]
+  }
+]

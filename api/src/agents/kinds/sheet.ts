@@ -21,7 +21,8 @@ export const sheet: Kind<SheetInput, SheetOutput> = {
     return findings;
   },
   rubric: rubric([
-    "Exactly the number of questions asked, on the skills named, in their order, easiest first.",
+    "Exactly the number of questions asked, on the skills named, every skill named covered, the skills taken in the order named.",
+    "The title is the first skill named (the app's rule), whatever the other skills are.",
     "Every answer is right. Where an answer comes with a proof, the answer says the same value as the proof.",
     "A practice set fits one class sitting; homework fits one evening.",
   ]),

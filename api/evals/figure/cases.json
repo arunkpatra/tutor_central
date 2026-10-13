@@ -1,0 +1,62 @@
+[
+  {
+    "id": "figure-4-fraction-bar",
+    "input": {
+      "figure": "fraction_bar",
+      "classLevel": "4",
+      "subject": "Mathematics",
+      "skill": "Compare simple fractions"
+    },
+    "expect": {
+      "figure": "fraction_bar"
+    }
+  },
+  {
+    "id": "figure-3-number-line",
+    "input": {
+      "figure": "number_line",
+      "classLevel": "3",
+      "subject": "Mathematics",
+      "skill": "Add on a number line"
+    },
+    "expect": {
+      "figure": "number_line"
+    }
+  },
+  {
+    "id": "figure-7-triangle",
+    "input": {
+      "figure": "triangle",
+      "classLevel": "7",
+      "subject": "Mathematics",
+      "skill": "Angle sum property of a triangle"
+    },
+    "expect": {
+      "figure": "triangle"
+    }
+  },
+  {
+    "id": "figure-7-food-chain",
+    "input": {
+      "figure": "food_chain",
+      "classLevel": "7",
+      "subject": "Science",
+      "skill": "Food chains in a pond"
+    },
+    "expect": {
+      "figure": "food_chain"
+    }
+  },
+  {
+    "id": "figure-4-place-value",
+    "input": {
+      "figure": "place_value",
+      "classLevel": "4",
+      "subject": "Mathematics",
+      "skill": "Place value of a five-digit number"
+    },
+    "expect": {
+      "figure": "place_value"
+    }
+  }
+]

@@ -54,3 +54,5 @@ admin/.env.local
 admin/.vercel/
 # `next dev` writes its own agent notes beside the app.
 admin/AGENTS.md
+api/evals/.promptfoo
+api/evals/output

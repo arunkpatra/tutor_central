@@ -25,7 +25,8 @@ export function request(input: SheetInput): ClaudeRequest<SheetOutput> {
     system: blocks([
       VOICE,
       "You write questions for a class of a tuition centre: a practice set for one class sitting, or homework.",
-      "Spread the questions across the skills named, in their order, easiest first.",
+      "Spread the questions across the skills named, taking the skills in the order named; within each skill, easier questions first.",
+      "Write your own questions and numbers; never reuse a textbook's exercise word for word.",
       "Give every question its answer, for the tutor. Instructions are one line for the student, or null. Number from 1. The title is the first skill.",
       PROOF,
       LIMITS.sheet,

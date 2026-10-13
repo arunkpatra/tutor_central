@@ -160,3 +160,11 @@ test("the check is told the request and the draft, and compares an answer with i
   expect(check?.text).toContain("Solve 3x + 5 = 20.");
   expect(check?.text).toContain('"expression":"3*5+5"');
 });
+
+test("every call's deadline is whole milliseconds: Node's AbortSignal.timeout refuses a fraction (a Vercel function runs on Node)", async () => {
+  let clock = 0;
+  const claude = fakeClaude((r) => (isCheck(r) ? pass : { answer: { answer: 20, proof: null } }));
+  // performance.now() is fractional, and each read is later than the last.
+  await runAgent(ctx(fakeDb(), claude, { now: () => (clock += 0.467) }), kind, { x: 5 });
+  expect(claude.requests.map((r) => Number.isInteger(r.deadlineMs))).toEqual([true, true]);
+});

@@ -1,0 +1,3 @@
+- The chapters are those printed on the page, with their names as printed, in the book's order; none is invented and none printed is left out.
+- Each skill is a short phrase from the page's section headings under its chapter; nothing is copied from inside the book.
+- Prefaces, acknowledgements, answer keys and appendices are not chapters.
