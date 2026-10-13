@@ -6,7 +6,7 @@ import { LEVEL_WORDS, VOICE } from "./shared.js";
 /** Homework: a short set of practice questions for one evening, with the answers for the tutor. */
 export function request(input: HomeworkInput): ClaudeRequest<QuestionSetOutput> {
   return {
-    model: modelFor("homework"),
+    model: modelFor("homework", "draft").model,
     effort: "medium",
     system: [
       VOICE,

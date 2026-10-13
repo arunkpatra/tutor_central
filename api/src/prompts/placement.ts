@@ -7,7 +7,7 @@ import { VOICE } from "./shared.js";
  *  its most basic idea. Chapters and a class only; no student is named. */
 export function request(classLevel: ClassLevel, subject: string, chapters: string[]): ClaudeRequest<PlacementOutput> {
   return {
-    model: modelFor("placement", classLevel),
+    model: modelFor("placement", "draft", classLevel).model,
     effort: "medium",
     system: [
       VOICE,

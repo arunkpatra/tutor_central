@@ -7,7 +7,7 @@ import { VOICE } from "./shared.js";
  *  tallies by skill are the app's arithmetic; the student is named only for the consent gate, never in the prompt. */
 export function request(input: GapReportInput): ClaudeRequest<GapReportOutput> {
   return {
-    model: modelFor("gap_report", input.classLevel),
+    model: modelFor("gap_report", "draft", input.classLevel).model,
     effort: "medium",
     system: [
       VOICE,

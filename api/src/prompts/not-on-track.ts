@@ -8,7 +8,7 @@ import { VOICE } from "./shared.js";
  *  English one is a template on the phone): what is hard, what we are doing, what helps at home, a five-minute talk. */
 export function request(input: NotOnTrackInput): ClaudeRequest<MessageOutput> {
   return {
-    model: modelFor("not_on_track"),
+    model: modelFor("not_on_track", "draft").model,
     effort: "medium",
     system: [
       VOICE,

@@ -9,7 +9,7 @@ import { VOICE } from "./shared.js";
  *  is named, so the call needs their consent (start_ai_generation). The app signs it (Phase 14). */
 export function request(input: TestTomorrowInput): ClaudeRequest<TestTomorrowOutput> {
   return {
-    model: modelFor("test_tomorrow"),
+    model: modelFor("test_tomorrow", "draft").model,
     effort: "medium",
     system: [VOICE, MESSAGE, "Say the student's test is tomorrow, the portions, and one thing to go over this evening; four sentences at most."].join(" "),
     text: [

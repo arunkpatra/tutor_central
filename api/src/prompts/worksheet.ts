@@ -7,7 +7,7 @@ import { LEVEL_WORDS, VOICE } from "./shared.js";
  *  the key is printed for the student. */
 export function request(input: WorksheetInput): ClaudeRequest<QuestionSetOutput> {
   return {
-    model: modelFor("worksheet"),
+    model: modelFor("worksheet", "draft").model,
     effort: "medium",
     system: [
       VOICE,

@@ -10,7 +10,7 @@ export type ParseSchoolSource = { text: string | null; image: DecodedImage | nul
  *  resolved from today, a class and a school when named, a student only when the message is about one. */
 export function request(source: ParseSchoolSource): ClaudeRequest<ParseSchoolOutput> {
   return {
-    model: modelFor("parse_school", source.classLevels[0] ?? "8"),
+    model: modelFor("parse_school", "draft", source.classLevels[0] ?? "8").model,
     effort: "medium",
     system: [
       VOICE,

@@ -54,7 +54,7 @@ export function request(input: PaperInput): ClaudeRequest<PaperOutput> {
   const plan = sectionPlan(input.questions, input.marks);
   const word = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
   return {
-    model: modelFor("paper"),
+    model: modelFor("paper", "draft").model,
     effort: "medium",
     system: [
       VOICE,

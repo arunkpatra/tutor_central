@@ -43,3 +43,12 @@ test("the parents' kinds are live (Phase 14): a whole body reaches Claude, a ske
   const anon = await app.request(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
   expect(anon.status).toBe(401);
 });
+
+test("a request for AI work reads the model table first; /health does not (D100)", async () => {
+  let reads = 0;
+  const withTable = makeApp({ observe: fakeObserve(), verify: async () => ({ id: "u1" }), ...deps, models: { fresh: async () => void (reads += 1) } });
+  await withTable.request("/health");
+  expect(reads).toBe(0);
+  await withTable.request("/ai/generate", { method: "POST", headers: auth, body: "{not json" });
+  expect(reads).toBe(1);
+});

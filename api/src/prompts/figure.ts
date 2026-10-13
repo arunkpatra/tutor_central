@@ -16,7 +16,7 @@ const RULES: Record<FigureKind, string> = {
 /** A figure's spec (D59): the app draws it; the model only fills the template's numbers and labels. */
 export function request(kind: FigureKind, classLevel: ClassLevel, subject: string, skill: string): ClaudeRequest<FigureOutput> {
   return {
-    model: modelFor("figure", classLevel),
+    model: modelFor("figure", "draft", classLevel).model,
     effort: "medium",
     system: [
       VOICE,

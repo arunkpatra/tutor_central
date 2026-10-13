@@ -9,7 +9,7 @@ const COUNT = ["One question", "Two questions", "Three questions"];
  *  Skills and a class only; no student is named. */
 export function request(classLevel: ClassLevel, subject: string, skills: string[]): ClaudeRequest<ChecksOutput> {
   return {
-    model: modelFor("check", classLevel),
+    model: modelFor("check", "draft", classLevel).model,
     effort: "medium",
     system: [
       VOICE,

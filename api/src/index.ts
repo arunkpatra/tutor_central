@@ -14,7 +14,8 @@ import { makeSweepSource } from "./jobs/sweep-db.js";
 import { makeHandlers } from "./jobs/kinds/index.js";
 import { makeRecordSource } from "./jobs/record.js";
 import { makeApp } from "./make-app.js";
-import { applyModelOverrides } from "./models.js";
+import { applyModelOverrides, installModelTable } from "./models.js";
+import { makeModelSource } from "./models-db.js";
 import { makeObserve } from "./observe.js";
 import { makeApnsPusher } from "./push/apns.js";
 import { fakePusher } from "./push/apns-fake.js";
@@ -40,6 +41,10 @@ const supabaseAnonKey = env("SUPABASE_ANON_KEY");
 /** The platform's identity (D83): read here alone and handed to the observability client and the worker, never to the
  *  tutor routes' database client, which carries the tutor's own token. */
 const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
+/** The model table in the database (D100), read by the platform: at start without waiting (a database down for a moment
+ *  leaves models.json in charge, review focus 4), then by each request for AI work and each worker run once a minute. */
+const modelTable = installModelTable(makeModelSource(supabaseUrl, serviceKey));
+void modelTable.refresh();
 /** The bearer pg_cron and the enqueue trigger send to /jobs/* (D85). */
 const workerSecret = env("WORKER_SECRET");
 const claude = process.env.AI_FAKE === "1" ? fakeClaude(localScript) : anthropicClaude(env("ANTHROPIC_API_KEY"));
@@ -99,5 +104,6 @@ const app: Hono<Vars> = makeApp({
     handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail } }),
     push: { outbox, pusher },
   },
+  models: modelTable,
 });
 export default app;
