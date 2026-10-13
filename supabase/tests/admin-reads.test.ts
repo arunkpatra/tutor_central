@@ -265,3 +265,16 @@ test("an open alert older than the newest 200 is still listed, first (R-db-8)", 
   expect(alerts.rows.some((r) => r.message === "old")).toBe(true);
   await sql`delete from public.alerts where key like ${`acked-${stamp}-%`} or key = ${`old-open-${stamp}`}`;
 });
+
+test("a call carries its agent step in the list and on its page; the nightly evals' job is named so (0052)", async () => {
+  const [{ id }] = await sql`insert into public.ai_generations (centre_id, kind, input, model, status, cost_paise, finished_at, agent_step)
+    values (${centreA}, 'sheet', '{}'::jsonb, 'claude-haiku-5-5', 'ok', 1, now(), 'check') returning id`;
+  const call = (await svc.rpc("admin_call", { p_id: id })).data as { agent_step: string };
+  expect(call.agent_step).toBe("check");
+  const list = (await svc.rpc("admin_calls", { p_day: today(), p_centre: centreA, p_kind: "sheet", p_status: null, p_limit: 50 })).data as { rows: { id: string; agent_step: string }[] };
+  expect(list.rows.find((r) => r.id === id)?.agent_step).toBe("check");
+  expect(list.rows.find((r) => r.id === sheetCall)?.agent_step).toBe("draft");
+  const [job] = await sql`insert into public.jobs (kind, idempotency_key, state, input) values ('eval_run', ${`evals-subject-${stamp}`}, 'done', '{"day":"2026-10-20"}') returning id`;
+  expect(((await svc.rpc("admin_job", { p_id: job.id })).data as { subject: string }).subject).toBe("nightly evals");
+  await sql`delete from public.jobs where id = ${job.id}`;
+});
