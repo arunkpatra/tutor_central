@@ -1,0 +1,110 @@
+{
+  "centre": {
+    "id": "preview",
+    "name": "Sunrise Tuition Centre"
+  },
+  "audit_id": "preview",
+  "opened_at": "2026-10-13T05:12:00Z",
+  "reason": "Meera wrote: her Class 8 plan failed this morning",
+  "students": [
+    {
+      "name": "Aarav Sharma",
+      "class_level": "8",
+      "batch": "Evening batch",
+      "consent": {
+        "state": "given",
+        "day": "2026-10-12"
+      },
+      "tracking": "on_track"
+    },
+    {
+      "name": "Diya Patel",
+      "class_level": "8",
+      "batch": "Evening batch",
+      "consent": {
+        "state": "withdrawn",
+        "day": "2026-10-12"
+      },
+      "tracking": "not_known"
+    },
+    {
+      "name": "Hemanth Reddy",
+      "class_level": "10",
+      "batch": "Class 10 Maths",
+      "consent": {
+        "state": "given",
+        "day": "2026-10-01"
+      },
+      "tracking": "not_on_track"
+    },
+    {
+      "name": "Kavya Nair",
+      "class_level": "7",
+      "batch": "Evening batch",
+      "consent": {
+        "state": "given",
+        "day": "2026-10-03"
+      },
+      "tracking": "on_track"
+    },
+    {
+      "name": "Rohan Das",
+      "class_level": "6",
+      "batch": "Evening batch",
+      "consent": {
+        "state": "asked",
+        "day": null
+      },
+      "tracking": "on_track"
+    },
+    {
+      "name": "Akshita Rao",
+      "class_level": "10",
+      "batch": "Class 10 Maths",
+      "consent": {
+        "state": "not_asked",
+        "day": null
+      },
+      "tracking": "on_track"
+    }
+  ],
+  "batches": [
+    {
+      "name": "Evening batch",
+      "days": [1, 2, 3, 4, 5],
+      "start_time": "17:00:00",
+      "end_time": "18:00:00",
+      "students": 9
+    },
+    {
+      "name": "Class 10 Maths",
+      "days": [2, 4, 6],
+      "start_time": "18:15:00",
+      "end_time": "19:15:00",
+      "students": 3
+    }
+  ],
+  "made": [
+    {
+      "at": "2026-10-13T00:01:00Z",
+      "kind": "sheet",
+      "title": "Practise set 1",
+      "student": null,
+      "cost_paise": 9
+    },
+    {
+      "at": "2026-10-12T10:32:00Z",
+      "kind": "note",
+      "title": null,
+      "student": "Aarav Sharma",
+      "cost_paise": 7
+    },
+    {
+      "at": "2026-10-11T13:10:00Z",
+      "kind": "gap_report",
+      "title": "Science unit test 2",
+      "student": "Hemanth Reddy",
+      "cost_paise": 112
+    }
+  ]
+}

@@ -245,3 +245,18 @@ export function Code({ title, children }: { title: string; children: ReactNode }
     </div>
   );
 }
+
+/** A dialog over the dimmed page (P19-Centre-OpenAsk): the question, a lead, its form. */
+export function Dialog({ title, lead, children }: { title: string; lead: string; children: ReactNode }) {
+  return (
+    <div className="scrim">
+      <div className="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+        <h2 className="h2" id="dialog-title">
+          {title}
+        </h2>
+        <p className="lead small">{lead}</p>
+        {children}
+      </div>
+    </div>
+  );
+}

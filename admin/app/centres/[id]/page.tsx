@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Frame } from "@/components/Frame";
-import { Cell, Chip, LinkButton, Meter, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import {
+  Button,
+  Cell,
+  Chip,
+  Dialog,
+  Field,
+  LinkButton,
+  Meter,
+  Pill,
+  Row,
+  Section,
+  Table,
+  Tile,
+  Tiles,
+  Title,
+} from "@/components/parts";
 import { activityWords } from "@/content/activity";
 import { CENTRE, PLAN_PAISE } from "@/content/centres";
 import { finished, stateChip } from "@/content/jobs";
 import { family } from "@/content/models";
+import { ASK } from "@/content/record";
 import { NONE } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
@@ -14,6 +30,7 @@ import type { Centre } from "@/lib/data/types";
 import { preview } from "@/lib/env";
 import { count, dayMonth, monthName, monthOf, rupees, when } from "@/lib/format";
 import { idOf } from "@/lib/ids";
+import { openRecord } from "./actions";
 
 export const metadata: Metadata = { title: "Centre" };
 
@@ -54,14 +71,15 @@ export default async function CentrePage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ month?: string }>;
+  searchParams: Promise<{ month?: string; ask?: string; empty?: string }>;
 }) {
   const { id: raw } = await params;
   await requireAdmin(`/centres/${raw}`);
   const id = idOf(raw, preview());
   if (!id) notFound();
   const at = now();
-  const month = monthOf((await searchParams).month, at);
+  const query = await searchParams;
+  const month = monthOf(query.month, at);
   const c = await data().centre(id, month);
   if (!c) notFound();
   const [jobs, activity] = await Promise.all([data().centreJobs(id, 5), data().activity(id, 12)]);
@@ -221,6 +239,21 @@ export default async function CentrePage({
           </div>
         </div>
       </Section>
+      {query.ask ? (
+        <Dialog title={ASK.title(c.name)} lead={ASK.lead}>
+          <form action={openRecord} className="stack">
+            <input type="hidden" name="centre" value={id} />
+            <Field label={ASK.reason} name="reason" placeholder={ASK.reasonHint} required maxLength={200} />
+            {query.empty ? <p className="fieldError">{ASK.empty}</p> : null}
+            <div className="dialogActions">
+              <LinkButton kind="quiet" href={`/centres/${id}`}>
+                {ASK.cancel}
+              </LinkButton>
+              <Button kind="primary">{ASK.open}</Button>
+            </div>
+          </form>
+        </Dialog>
+      ) : null}
     </Frame>
   );
 }
