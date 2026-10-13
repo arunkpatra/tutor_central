@@ -16,7 +16,7 @@ test("in CI the db step runs only on the runner that asks for it", () => {
 });
 
 test("steps run in the documented order", () => {
-  expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "web", "db"]);
+  expect(STEPS.map((s) => s.name)).toEqual(["format", "lint", "ios", "tools", "api", "web", "admin", "db"]);
 });
 
 test("the simulator is the iPhone 17 unless TC_SIMULATOR names another", () => {
@@ -39,4 +39,8 @@ test("the web step runs again when a file its tests read changes", () => {
   // pages.test.ts holds /support's answers to Help's in the app; tokens.test.ts reads the token document.
   expect(web?.inputs).toContain("ios/TutorCentralKit/Sources/Features/Settings/Help/HelpView.swift");
   expect(web?.inputs).toContain("docs/design/design-tokens.md");
+});
+
+test("the admin step runs again when the token document changes", () => {
+  expect(STEPS.find((s) => s.name === "admin")?.inputs).toContain("docs/design/design-tokens.md");
 });

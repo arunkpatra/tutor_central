@@ -140,6 +140,27 @@ export const STEPS: Step[] = [
     run: () => run("bun run check", "web"),
   },
   {
+    name: "admin",
+    // The token test reads the document, as the website's does.
+    inputs: [
+      "admin/app/**",
+      "admin/components/**",
+      "admin/content/**",
+      "admin/lib/**",
+      "admin/preview/**",
+      "admin/test/**",
+      "admin/proxy.ts",
+      "admin/package.json",
+      "admin/tsconfig.json",
+      "admin/next.config.ts",
+      "admin/biome.json",
+      "admin/vercel.json",
+      "bun.lock",
+      "docs/design/design-tokens.md",
+    ],
+    run: () => run("bun run check", "admin"),
+  },
+  {
     name: "db",
     inputs: [
       "supabase/migrations/**",

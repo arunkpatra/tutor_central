@@ -125,4 +125,4 @@ jobs:
           start || { echo "::warning::supabase start failed once; stopping and starting again"; supabase stop --no-backup || true; start; }
 
       - name: bun check
-        run: bun check --only=api,web,db $FRESH
+        run: bun check --only=api,web,admin,db $FRESH
