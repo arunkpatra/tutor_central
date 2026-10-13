@@ -1,0 +1,192 @@
+[
+  {
+    "name": "plain text",
+    "text": "Name the reactants.",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Name the reactants."
+      }
+    ]
+  },
+  {
+    "name": "inline in words",
+    "text": "Solve $3x + 5 = 20$.",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Solve "
+      },
+      {
+        "kind": "inline",
+        "text": "3x + 5 = 20"
+      },
+      {
+        "kind": "text",
+        "text": "."
+      }
+    ]
+  },
+  {
+    "name": "display alone",
+    "text": "$$x = 1$$",
+    "runs": [
+      {
+        "kind": "display",
+        "text": "x = 1"
+      }
+    ]
+  },
+  {
+    "name": "display between words",
+    "text": "Find x: $$\\frac{x}{4} - 2 = 1$$ then check.",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Find x: "
+      },
+      {
+        "kind": "display",
+        "text": "\\frac{x}{4} - 2 = 1"
+      },
+      {
+        "kind": "text",
+        "text": " then check."
+      }
+    ]
+  },
+  {
+    "name": "two inline runs",
+    "text": "Add $\\frac{1}{4}$ and $\\frac{2}{4}$.",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Add "
+      },
+      {
+        "kind": "inline",
+        "text": "\\frac{1}{4}"
+      },
+      {
+        "kind": "text",
+        "text": " and "
+      },
+      {
+        "kind": "inline",
+        "text": "\\frac{2}{4}"
+      },
+      {
+        "kind": "text",
+        "text": "."
+      }
+    ]
+  },
+  {
+    "name": "an unbalanced dollar is text",
+    "text": "Solve $\\frac{x}{4 - 2 = 1",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Solve $\\frac{x}{4 - 2 = 1"
+      }
+    ]
+  },
+  {
+    "name": "a dollar after a closed run is text",
+    "text": "Pay $5$ and $6",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Pay "
+      },
+      {
+        "kind": "inline",
+        "text": "5"
+      },
+      {
+        "kind": "text",
+        "text": " and $6"
+      }
+    ]
+  },
+  {
+    "name": "an escaped dollar is a dollar",
+    "text": "It costs \\$5.",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "It costs $5."
+      }
+    ]
+  },
+  {
+    "name": "a non-Latin text is drawn as words",
+    "text": "$\\text{आधा} = \\frac{1}{2}$",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "आधा"
+      },
+      {
+        "kind": "inline",
+        "text": " = \\frac{1}{2}"
+      }
+    ]
+  },
+  {
+    "name": "a Kannada text inside words",
+    "text": "ಅರ್ಧ $\\text{ಅರ್ಧ} = \\frac{1}{2}$ ಆಗಿದೆ",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "ಅರ್ಧ ಅರ್ಧ"
+      },
+      {
+        "kind": "inline",
+        "text": " = \\frac{1}{2}"
+      },
+      {
+        "kind": "text",
+        "text": " ಆಗಿದೆ"
+      }
+    ]
+  },
+  {
+    "name": "a Latin text stays in the formula",
+    "text": "$\\text{area} = l \\times b$",
+    "runs": [
+      {
+        "kind": "inline",
+        "text": "\\text{area} = l \\times b"
+      }
+    ]
+  },
+  {
+    "name": "an empty pair is text",
+    "text": "Fill in $$ here",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "Fill in $$ here"
+      }
+    ]
+  },
+  {
+    "name": "a rupee amount beside a formula",
+    "text": "₹1,000 at $10\\%$ for 2 years",
+    "runs": [
+      {
+        "kind": "text",
+        "text": "₹1,000 at "
+      },
+      {
+        "kind": "inline",
+        "text": "10\\%"
+      },
+      {
+        "kind": "text",
+        "text": " for 2 years"
+      }
+    ]
+  }
+]

@@ -42,12 +42,18 @@ export function renderSyllabi(syllabi: Syllabus[]): string {
 	].join("\n");
 }
 
+/** The maths split's cases (D102), read by the API's PDF split and by DesignSystemTests' MathSplit. */
+const MATHS_COPY = "ios/TutorCentralKit/Tests/DesignSystemTests/Cases";
+
 /** Each case file and where its copy goes. */
 export function caseCopies(): [string, string][] {
-	return CASES.map((name) => [
-		`tools/contract/${name}-cases.json`,
-		`${CASES_COPY}/${name}-cases.json`,
-	]);
+	return [
+		...CASES.map((name): [string, string] => [
+			`tools/contract/${name}-cases.json`,
+			`${CASES_COPY}/${name}-cases.json`,
+		]),
+		["tools/contract/maths-cases.json", `${MATHS_COPY}/maths-cases.json`],
+	];
 }
 
 export function databaseFile(types: string): string {
@@ -185,7 +191,7 @@ export async function write(
 
 if (import.meta.main) {
 	const files = await expected();
-	const generated = [SAMPLES, CASES_COPY];
+	const generated = [SAMPLES, CASES_COPY, MATHS_COPY];
 	if (process.argv.includes("--check")) {
 		const paths = await stale(ROOT, files, generated);
 		if (paths.length > 0) {

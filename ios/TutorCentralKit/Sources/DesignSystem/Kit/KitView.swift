@@ -14,6 +14,7 @@
             case phase7
             case phase10
             case phase10Figures
+            case phase20
         }
 
         let startAt: Section
@@ -33,6 +34,7 @@
                         KitSurfaces()
                         KitPhase7()
                         KitPhase10(figures: figures)
+                        KitPhase20()
                     }
                     .padding(.horizontal, Tokens.pageSide)
                     .padding(.top, Tokens.heroInset)

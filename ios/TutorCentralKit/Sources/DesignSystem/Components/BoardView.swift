@@ -102,9 +102,9 @@ public struct KeyRow: View {
                 .frame(minWidth: QuestionRow.numberColumn, alignment: .leading)
                 .fixedSize()
             VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                Text(question).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text.color)
+                MathText(question, style: Tokens.subhead)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(answer).typeStyle(Tokens.rowLine).fontWeight(.semibold).foregroundStyle(Tokens.ok.color)
+                MathText(answer, style: Tokens.rowLine, color: Tokens.ok).fontWeight(.semibold)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
