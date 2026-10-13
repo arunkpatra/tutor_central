@@ -2,12 +2,17 @@ import type { Metadata } from "next";
 import { AuthFrame } from "@/components/Frame";
 import { Button, Field } from "@/components/parts";
 import { SIGN_IN } from "@/content/door";
+import { sameSite } from "@/lib/gate";
 import { signIn } from "./actions";
 
 export const metadata: Metadata = { title: "Sign in" };
 
-export default async function SignInPage({ searchParams }: { searchParams: Promise<{ failed?: string }> }) {
-  const { failed } = await searchParams;
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ failed?: string; next?: string }>;
+}) {
+  const { failed, next } = await searchParams;
   return (
     <AuthFrame>
       <div className="pageTitle">
@@ -16,6 +21,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <p className="lead">{SIGN_IN.lead}</p>
       </div>
       <form action={signIn} className="auth">
+        <input type="hidden" name="next" value={sameSite(next) ?? ""} />
         <Field
           label={SIGN_IN.email}
           name="email"
