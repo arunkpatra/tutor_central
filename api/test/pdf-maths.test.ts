@@ -18,3 +18,10 @@ test("typstOf writes words as strings, inline maths as #mi and a display formula
 test("typstOf with maths off writes the formulae as their words (the fallback for a formula Typst cannot draw)", () => {
   expect(typstOf("Solve $3x + 5 = 20$.", { maths: false })).toBe('#"Solve 3x + 5 = 20.";');
 });
+
+test("a formula's edge spaces are kept as spaces between it and the words (mitex drops them)", () => {
+  // A formula that opens on an operator keeps it an operator (\mathbin), so its spaces stay.
+  expect(typstOf("$3 \\text{ सेब} + 2$")).toBe('#mi("3");#" सेब";#" ";#mi("\\\\mathbin{+} 2");');
+  expect(typstOf("आधा $= \\frac{1}{2}$")).toBe('#"आधा ";#mi("\\\\mathrel{=} \\\\frac{1}{2}");');
+  expect(typstOf("Half is $x$ here")).toBe('#"Half is ";#mi("x");#" here";');
+});

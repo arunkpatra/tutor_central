@@ -48,3 +48,16 @@ private struct MathsCase: Decodable {
         #expect(MathSplit.runs(c.text) == expected, "\(c.name)")
     }
 }
+
+@Test func aFormulasEdgeSpacesBecomeWordSpaces() {
+    #expect(MathText.spaced(MathSplit.runs("$3 \\text{ सेब} + 2$")) == [
+        .inline("3"),
+        .text(" सेब"),
+        .text(" "),
+        // A formula that opens on an operator keeps an operator's space after it.
+        .inline("+\\> 2"),
+    ])
+    // A relation keeps its own space.
+    #expect(MathText.spaced(MathSplit.runs("आधा $= \\frac{1}{2}$")) == [.text("आधा "), .inline("= \\frac{1}{2}")])
+    #expect(MathText.spaced(MathSplit.runs("Half is $x$ here")) == [.text("Half is "), .inline("x"), .text(" here")])
+}

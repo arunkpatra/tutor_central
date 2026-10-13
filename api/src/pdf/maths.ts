@@ -76,11 +76,38 @@ function liftWords(latex: string): Run[] {
   return parts;
 }
 
+/** A formula's edge spaces as word spaces (a renderer drops spaces at a formula's edges, so "3 सेब + 2" lost its gaps):
+ *  a space is added where the words beside it have none. The phone's MathText does the same. */
+export function spaced(runs: Run[]): Run[] {
+  const out: Run[] = [];
+  runs.forEach((run, i) => {
+    if (run.kind !== "inline") {
+      out.push(run);
+      return;
+    }
+    const before = out.at(-1);
+    const after = runs[i + 1];
+    if (/^\s/.test(run.text) && before && !(before.kind === "text" && /\s$/.test(before.text))) out.push({ kind: "text", text: " " });
+    out.push({ kind: "inline", text: binary(run.text.trim()) });
+    if (/\s$/.test(run.text) && after && !(after.kind === "text" && /^\s/.test(after.text))) out.push({ kind: "text", text: " " });
+  });
+  return out;
+}
+
+/** A formula that opens or closes on an operator, beside words, kept an operator with its spaces: Typst reads a
+ *  leading `+` as a sign (and TeX's empty group does not change that), so it goes in `\mathbin` (`\mathrel` for a
+ *  relation). The phone's MathText uses the empty group, which SwiftMath honours. */
+const OPERATOR = "(\\+|-|−|=|<|>|\\\\times|\\\\pm|\\\\div|\\\\cdot)";
+const wrap = (op: string) => (/^[=<>]$/.test(op) ? `\\mathrel{${op}}` : `\\mathbin{${op}}`);
+function binary(latex: string): string {
+  return latex.replace(new RegExp(`^${OPERATOR}`), (op) => wrap(op)).replace(new RegExp(`${OPERATOR}$`), (op) => wrap(op));
+}
+
 /** The text as Typst markup: words as string literals, inline maths through mitex's `#mi`, a display formula through
  *  `#mitex`, each ended by `;`. With maths off, the formulae are written as their words (the fallback when Typst cannot
  *  draw one). */
 export function typstOf(text: string, options: { maths?: boolean } = {}): string {
-  const runs = splitMaths(text);
-  if (options.maths === false) return `#${str(runs.map((r) => r.text).join(""))};`;
+  const runs = spaced(splitMaths(text));
+  if (options.maths === false) return `#${str(splitMaths(text).map((r) => r.text).join(""))};`;
   return runs.map((r) => (r.kind === "text" ? `#${str(r.text)};` : r.kind === "inline" ? `#mi(${str(r.text)});` : `#mitex(${str(r.text)});`)).join("");
 }

@@ -29,7 +29,7 @@ public struct MathText: View {
     }
 
     public var body: some View {
-        let runs = MathSplit.runs(text)
+        let runs = Self.spaced(MathSplit.runs(text))
         Group {
             if runs.allSatisfy(Self.isWords) {
                 Text(text).foregroundStyle(color.color)
@@ -113,6 +113,59 @@ public struct MathText: View {
     enum Line {
         case flow([MathRun])
         case display(String)
+    }
+
+    /// A formula's edge spaces as word spaces (SwiftMath drops spaces at a formula's edges, so "3 सेब + 2" lost its
+    /// gaps): a space is added where the words beside it have none. The PDF's split does the same.
+    nonisolated static func spaced(_ runs: [MathRun]) -> [MathRun] {
+        var out: [MathRun] = []
+        for (index, run) in runs.enumerated() {
+            guard case let .inline(latex) = run else {
+                out.append(run)
+                continue
+            }
+            let trimmed = latex.trimmingCharacters(in: .whitespaces)
+            if latex.first?.isWhitespace == true, let before = out.last, !endsWithSpace(before) {
+                out.append(.text(" "))
+            }
+            out.append(.inline(binary(trimmed)))
+            if latex.last?.isWhitespace == true, index + 1 < runs.count, !startsWithSpace(runs[index + 1]) {
+                out.append(.text(" "))
+            }
+        }
+        return out
+    }
+
+    private nonisolated static let operators = ["+", "-", "−", "\\times", "\\pm", "\\div", "\\cdot"]
+
+    /// A formula that opens or closes on a binary operator keeps the operator's space beside it (TeX's medium space,
+    /// `\>`): SwiftMath reads a leading `+` as a sign and drops its spaces, and honours neither an empty group nor
+    /// `\mathbin`. A relation (`=`) keeps its own space.
+    private nonisolated static func binary(_ latex: String) -> String {
+        var out = latex
+        if let op = operators.first(where: { out.hasPrefix($0) }) {
+            out = op + "\\>" + out.dropFirst(op.count)
+        }
+        if let op = operators.first(where: { out.hasSuffix($0) }) {
+            out = out.dropLast(op.count) + "\\>" + op
+        }
+        return out
+    }
+
+    private nonisolated static func endsWithSpace(_ run: MathRun) -> Bool {
+        if case let .text(words) = run {
+            words.last?.isWhitespace == true
+        } else {
+            false
+        }
+    }
+
+    private nonisolated static func startsWithSpace(_ run: MathRun) -> Bool {
+        if case let .text(words) = run {
+            words.first?.isWhitespace == true
+        } else {
+            false
+        }
     }
 
     /// The runs grouped into lines: words and inline formulae flow together; a display formula is a line of its own.
