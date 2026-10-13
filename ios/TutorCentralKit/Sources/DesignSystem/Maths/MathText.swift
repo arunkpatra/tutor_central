@@ -12,6 +12,8 @@ public struct MathText: View {
     let token: TypeToken
     let color: ColorToken
     let alignment: HorizontalAlignment
+    /// A weight for the formulae other than the token's (a key's answer: 600 on `rowLine`).
+    let weight: Int?
 
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.colorScheme) private var scheme
@@ -22,12 +24,14 @@ public struct MathText: View {
         _ text: String,
         style token: TypeToken = Tokens.body,
         color: ColorToken = Tokens.text,
-        alignment: HorizontalAlignment = .leading
+        alignment: HorizontalAlignment = .leading,
+        weight: Int? = nil
     ) {
         self.text = text
         self.token = token
         self.color = color
         self.alignment = alignment
+        self.weight = weight
     }
 
     public var body: some View {
@@ -44,6 +48,9 @@ public struct MathText: View {
                         }
                     }
                 }
+                // The line's width, not the content's: measured on a frame as wide as the line, so fitting a formula
+                // never shrinks what is measured (the app review's finding 3).
+                .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .top))
                 .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
             }
         }
@@ -107,7 +114,7 @@ public struct MathText: View {
     }
 
     private func weighted(_ latex: String) -> String {
-        Self.weighted(latex, weight: token.weightNumber)
+        Self.weighted(latex, weight: weight ?? token.weightNumber)
     }
 
     private func uiColor(_ token: ColorToken) -> UIColor {
@@ -155,10 +162,11 @@ public struct MathText: View {
     /// `\mathbin`. A relation (`=`) keeps its own space.
     private nonisolated static func binary(_ latex: String) -> String {
         var out = latex
-        if let op = operators.first(where: { out.hasPrefix($0) }) {
+        // Only an operator written with a space beside it is one; `−7` opens on a sign (the app review's finding 4).
+        if let op = operators.first(where: { out.hasPrefix($0) }), out.dropFirst(op.count).first?.isWhitespace == true {
             out = op + "\\>" + out.dropFirst(op.count)
         }
-        if let op = operators.first(where: { out.hasSuffix($0) }) {
+        if let op = operators.first(where: { out.hasSuffix($0) }), out.dropLast(op.count).last?.isWhitespace == true {
             out = out.dropLast(op.count) + "\\>" + op
         }
         return out

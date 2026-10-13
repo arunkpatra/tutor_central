@@ -86,6 +86,9 @@ public struct KeyRow: View {
     let answer: String
     let isLast: Bool
 
+    /// The answer's weight on `rowLine` (P10-Sheet-Key: `ok` 600), its formulae too.
+    nonisolated static let answerWeight = 600
+
     public init(number: Int, question: String, answer: String, isLast: Bool) {
         self.number = number
         self.question = question
@@ -102,7 +105,8 @@ public struct KeyRow: View {
             VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
                 MathText(question, style: Tokens.subhead)
                     .fixedSize(horizontal: false, vertical: true)
-                MathText(answer, style: Tokens.rowLine, color: Tokens.ok).fontWeight(.semibold)
+                MathText(answer, style: Tokens.rowLine, color: Tokens.ok, weight: Self.answerWeight)
+                    .fontWeight(.semibold)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

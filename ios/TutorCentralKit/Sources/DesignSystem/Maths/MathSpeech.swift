@@ -12,14 +12,18 @@ public enum MathSpeech {
         .joined()
     }
 
+    /// Commands, matched whole (`\\left` is never `\\le` and "ft", the app review's finding 1).
+    private static let commands: [String: String] = [
+        "times": " times ", "cdot": " times ", "div": " divided by ", "pm": " plus or minus ",
+        "leq": " less than or equal to ", "le": " less than or equal to ", "geq": " greater than or equal to ",
+        "ge": " greater than or equal to ", "neq": " not equal to ", "pi": " pi ", "theta": " theta ",
+        "alpha": " alpha ", "beta": " beta ", "degree": " degrees ", "circ": " degrees ", "angle": " angle ",
+        "left": "", "right": "",
+    ]
+
     private static let symbols: [(String, String)] = [
-        ("\\times", " times "), ("\\cdot", " times "), ("\\div", " divided by "), ("\\pm", " plus or minus "),
-        ("\\leq", " less than or equal to "), ("\\le", " less than or equal to "),
-        ("\\geq", " greater than or equal to "), ("\\ge", " greater than or equal to "), ("\\neq", " not equal to "),
-        ("\\pi", " pi "), ("\\theta", " theta "), ("\\alpha", " alpha "), ("\\beta", " beta "), ("\\%", " percent "),
-        ("\\degree", " degrees "), ("^\\circ", " degrees "), ("\\left", ""), ("\\right", ""), ("\\,", " "),
-        ("−", " minus "), ("=", " equals "), ("+", " plus "), ("-", " minus "), ("<", " less than "),
-        (">", " greater than "),
+        ("\\%", " percent "), ("\\,", " "), ("−", " minus "), ("=", " equals "), ("+", " plus "), ("-", " minus "),
+        ("<", " less than "), (">", " greater than "),
     ]
 
     /// A formula in words: fractions and roots first (they nest), then powers, then the symbols.
@@ -29,6 +33,7 @@ public enum MathSpeech {
         said = replacing(command: "\\sqrt", in: said, arguments: 1) { "square root of \(spoken($0[0]))" }
         said = replacing(command: "\\text", in: said, arguments: 1) { $0[0] }
         said = powers(said)
+        said = said.replacing(/\\([a-zA-Z]+)/) { commands[String($0.output.1)] ?? String($0.output.0) }
         for (symbol, words) in symbols {
             said = said.replacingOccurrences(of: symbol, with: words)
         }
@@ -43,6 +48,12 @@ public enum MathSpeech {
         while let first = chars.first {
             chars = chars.dropFirst()
             guard first == "^" else { out.append(first); continue }
+            // A power of `\\circ`, braced or not, is degrees.
+            if chars.starts(with: "\\circ") || chars.starts(with: "{\\circ}") {
+                chars = chars.dropFirst(chars.first == "{" ? 7 : 5)
+                out += " degrees "
+                continue
+            }
             var power = ""
             if chars.first == "{" {
                 chars = chars.dropFirst()

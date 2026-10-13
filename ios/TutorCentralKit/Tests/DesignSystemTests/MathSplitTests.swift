@@ -71,3 +71,15 @@ private struct MathsCase: Decodable {
         .weighted("\\frac{3}{8} = 0.38", weight: 600) == "\\bm{\\frac{\\mathbf{3}}{\\mathbf{8}} = \\mathbf{0.38}}")
     #expect(MathText.weighted("2^5", weight: 400) == "2^5")
 }
+
+/// The app review's finding 4: a formula that opens on a sign keeps it a sign (`−7`); only an operator written with a
+/// space after it (the words' `+ 2`) is spaced as an operator.
+@Test func aLeadingSignStaysASign() {
+    #expect(MathText.spaced(MathSplit.runs("Add $-7 + 3$.")) == [.text("Add "), .inline("-7 + 3"), .text(".")])
+    #expect(MathText.spaced(MathSplit.runs("$-\\frac{1}{2}$")) == [.inline("-\\frac{1}{2}")])
+}
+
+/// The app review's finding 2: a key's answer is drawn at 600, the board's weight, digits and all.
+@Test func aKeysAnswerFormulaIsBold() {
+    #expect(MathText.weighted("x = 5", weight: KeyRow.answerWeight) == "\\bm{x = \\mathbf{5}}")
+}
