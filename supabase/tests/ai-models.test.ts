@@ -122,3 +122,22 @@ test("schedule_evals queues one eval_run for India's day, once", async () => {
   expect(cron).toEqual({ schedule: "35 20 * * *", command: "select public.schedule_evals()" });
   await sql`delete from public.jobs where idempotency_key = 'evals:2026-10-20'`;
 });
+
+test("a step taken again: the new draft's check under the same key is a new row; a draft's key with another body is still refused (0055)", async () => {
+  const call = (key: string, agent: string, hash: string) =>
+    a.rpc("start_ai_call", { p_centre: centreA, p_kind: "sheet", p_input: {}, p_model: "claude-sonnet-5-5", p_key: key, p_input_hash: hash, p_agent_step: agent });
+  const key = `retake-${stamp}`;
+  await sql`update public.centres set ai_allowance = 100 where id = ${centreA}`;
+  const first = await call(key, "draft", "body");
+  expect(first.error).toBeNull();
+  const check = await call(`${key}:check`, "check", "guards-draft-1");
+  expect(check.error).toBeNull();
+  // The function was lost: the sweep closed the draft as failed; the step makes a new draft under the same key.
+  await sql`update public.ai_generations set status = 'failed', error_reason = 'lost', finished_at = now() where id = ${(first.data as { id: string }).id}`;
+  const again = await call(key, "draft", "body");
+  expect(again.error).toBeNull();
+  const recheck = await call(`${key}:check`, "check", "guards-draft-2");
+  expect(recheck.error).toBeNull();
+  expect((recheck.data as { replay: boolean }).replay).toBe(false);
+  expect((await call(key, "draft", "another-body")).error?.message).toContain("ai_key_reused");
+});
