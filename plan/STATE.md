@@ -3,19 +3,15 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-14, session 41's close (Phase 20's build, on Opus 5.5). **Session 41:** Phase 20 built, PRs #291 to #317:
-the agent (draft, verify, check by the other tier, one repair, refuse) for nine kinds; `ai_models` with the kill switch; prompts as
-versioned files; the golden sets, `bun evals` and its gate (D101, a failed case retried once, D103); the nightly `eval_run`
-through Message Batches; mathematics in LaTeX drawn by SwiftMath on the phone and mitex in the PDFs; the figure's PDF; the
-portal's agent step. Hand runs issue #313 (nine of ten; VoiceOver by the Inspector not done); two fresh reviews on Fable 5.1,
-every finding fixed; D103 and D104 by the owner. Deployed (Deploy C, run 38400290327, 29e79fb, migrations to 0056); 1.0.0 (30)
-checked by the owner on his iPhone ("build 30 ok", 14 October). The phase's real calls about ₹700 (₹520 approved). The first
-production nightly (14 October, ₹34.04) passed 4 of 9 kinds; its findings are Phase 21's first work (D105, the owner's). The
-first scheduled plan job on Phase 20's code ran at 05:30 IST on 14 October: 12 calls, ₹4.85, no repair. The record in
-`plan/sessions/041/`.
-**Next:** resume 040 (`plan/resume/040-phase-21-boards-and-plan.md`, on Fable 5.1): the nightlies since 14 October read, Phase
-21's boards, `plan/phase-21-plan.md` with D105 as Task 1, then resume 041 for the build. The order (D81): V3's Phases 17 to 22,
-then the external testing round, then Phase 16.
+**Last updated:** 2026-10-14, session 42's close (Phase 21's boards and plan, on Fable 5.1). **Session 42:** the three production
+reads (the one nightly, 4 of 9 kinds, its nine failures the graders' and six the checker's too; the 14 October plan jobs clean;
+no alert); Phase 21's 18 boards drawn on row 29 (y 83600; 13 on the canvas, version 61; the five light twins in the mirror alone,
+the canvas being at the Design type's 512-file limit) and mirrored, awaiting the owner's approval; `plan/phase-21-plan.md` (16
+tasks, 13 pull requests, D106 to D110) written and awaiting approval; one owner question (about ₹550 for the build; the nightly's
+cadence). The record in `plan/sessions/042/`.
+**Next:** the owner's approval of the boards and the plan and his answer; then resume 041 (`plan/resume/041-phase-21-build.md`, on
+Opus 5.5): Phase 21's build, Task 1 the nightly's findings (D105). The order (D81): V3's Phases 17 to 22, then the external testing
+round, then Phase 16.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -24,7 +20,7 @@ then the external testing round, then Phase 16.
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12), row 27 (y 58000) Phase 19's sixty boards, the admin portal's fifteen pages at 1280 and 390 (approved 2026-10-13), and below them (y 77000) its twelve loading boards (D97, approved 2026-10-13), row 28 (y 82000) Phase 20's fifteen boards with mathematics (approved 2026-10-13) |
+| 0 Design | Every step approved: 0.1 to 0.9 (0.9, the website, on 2026-10-09), plus the app icon (D29) | Canvas https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D; sources `docs/design/`; plan `phase-00-plan.md`; row 6 holds the Phase 3 boards, row 7 Phase 4, row 8 Phase 5, row 9 Phase 6, row 10 Phase 7, row 11 (y 16000) Phase 8's pages, row 12 U33, row 13 the Store boards, rows 14 to 20 (y 37200 on) Phase 10's steps, row 21 (y 47000) Phase 12's two boards, row 22 (y 48400) the AI forms' class, row 23 (y 49800) Phase 13's three boards (approved 2026-10-11), row 24 (y 51200) Phase 14's seven boards (approved 2026-10-11), row 25 (y 52600) Phase 15's five boards (approved 2026-10-11), row 26 (y 56600) Phase 18's fourteen boards (approved 2026-10-12), row 27 (y 58000) Phase 19's sixty boards, the admin portal's fifteen pages at 1280 and 390 (approved 2026-10-13), and below them (y 77000) its twelve loading boards (D97, approved 2026-10-13), row 28 (y 82000) Phase 20's fifteen boards with mathematics (approved 2026-10-13), row 29 (y 83600) Phase 21's thirteen boards (the reason asked, a note set aside, the exam job's states, a paper's PDF page, the cost report; five light twins in the mirror alone: the canvas holds its 512 files), awaiting approval |
 | 1 Foundation | Done, PRs #1 to #8 | "As built" in `phase-01-foundation.md` |
 | 2 Shell and sign-in | Done, PRs #9 to #23 | "As built" in `phase-02-shell-and-sign-in.md` |
 | 3 Students and classes | Done, PRs #24 to #31 | "As built" in `phase-03-students-and-classes.md` |
@@ -45,9 +41,9 @@ then the external testing round, then Phase 16.
 | 18 V3 the server's work and push | Done (session 37, 2026-10-13), PRs #215 to #261; hand runs #260 | "As built" in `phase-18-server-work-and-push.md`; deployed (0036 to 0045); 1.0.0 (29); device tests T16, T17 |
 | 19 V3 the admin portal, reading | Done (session 39, 2026-10-13), PRs #262 to #289; hand runs #286 | "As built" in `phase-19-admin-portal-reading.md`; admin.tutorcentral.in live in `bom1` with loading states (D97); 0046 to 0051 and the API at `bf4af37` deployed |
 | 20 V3 AI quality, the material | Built (session 41, 2026-10-13), PRs #291 to #317; hand runs #313 | "As built" in `phase-20-ai-quality-material.md`; deployed (0052 to 0056, API 29e79fb); 1.0.0 (30); D103, D104 |
-| 21 V3 AI quality, parents and exams | Not started | Scope file `phase-21-ai-quality-parents-and-exams.md`; depends on 20 |
+| 21 V3 AI quality, parents and exams | Planned (session 42, 2026-10-14), awaiting the owner's approval | `phase-21-plan.md`; the boards of row 29; the build is resume 041 |
 | 22 V3 the admin portal, control and analytics | Not started | Scope file `phase-22-admin-portal-control.md`; depends on 19, 21 |
-| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17, 18 and 19 built and deployed (D83 to D98); Phase 20 planned (D99 to D102) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17, 18 and 19 built and deployed (D83 to D98); Phase 20 built and deployed (D99 to D105); Phase 21 planned (D106 to D110) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 

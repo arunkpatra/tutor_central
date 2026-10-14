@@ -1,6 +1,6 @@
 # Phase 21: V3 AI quality, parents and exams
 
-**Status:** Not started. **Depends on:** Phase 20.
+**Status:** Planned (session 42, 2026-10-14): the 18 boards of row 29 drawn (`docs/design/mockups/P21-*`; 13 on the canvas, the five light twins in the mirror) and `phase-21-plan.md` written, both awaiting the owner's approval; the build on Opus 5.5 from `resume/041-phase-21-build.md`. **Depends on:** Phase 20.
 
 ## Goal
 
