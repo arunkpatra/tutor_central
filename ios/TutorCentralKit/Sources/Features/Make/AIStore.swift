@@ -56,6 +56,9 @@ import UIKit
     public var forms: [GenerationKind: GenerateRequest] = [:]
     /// Where the last class and subject of each kind are kept on this iPhone (wiped at sign-out); nil keeps nothing.
     @ObservationIgnored public var formDefaults: UserDefaults?
+    /// The server's PDFs (Phase 21 decision 9): a paper's, homework's or worksheet's Share takes its file; none in
+    /// previews.
+    @ObservationIgnored public var serverPDF: ServerPDF?
     public internal(set) var history: [Generation] = []
     public private(set) var historyLoaded = false
     public private(set) var historyError: String?

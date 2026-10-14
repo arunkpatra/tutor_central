@@ -1,3 +1,4 @@
+import Data
 import DesignSystem
 import Domain
 import Foundation
@@ -20,6 +21,12 @@ extension RootView {
         made.historyCache = cachedRead(workspace, "ai-history")
         // The last class and subject of each kind, kept on this iPhone (wiped at sign-out); the fixtures keep none.
         made.formDefaults = deps.cachesRegister ? .standard : nil
+        made.serverPDF = deps.serverFiles(workspace.centre.id).map {
+            ServerPDF(
+                files: $0, centre: workspace.centre.id,
+                online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
+            )
+        }
         if let launch, Self.aiStates.contains(launch) {
             made.forms = Fixtures.aiForms(for: launch)
         }

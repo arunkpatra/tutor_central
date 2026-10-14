@@ -258,7 +258,11 @@ public struct MockMark: Hashable, Sendable {
     /// What Share hands over: the server's PDF when it can be had, else the phone's.
     public func sharedPDF(withKey key: Bool) async -> URL? {
         let sheet = pdfSheet(withKey: key)
-        if let id = artefact?.id, mock != nil, let file = await serverPDF?.file(id, key: key, title: sheet.title) {
+        if let id = artefact?.id, mock != nil, let file = await serverPDF?.file(
+            id,
+            key: key,
+            named: PDFMaker.fileName(sheet.title)
+        ) {
             return file
         }
         return try? PDFMaker.pdf(for: sheet)

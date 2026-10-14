@@ -1,10 +1,10 @@
-import Data
-import DesignSystem
 import Foundation
 
 /// The server's PDF of a made sheet, mock or brief (`pdfs/<centre>/<artefact>.pdf`, `-key.pdf` with the answers; plan
-/// decision 3): Share takes it when it can be had, else the phone draws its own (not made yet, offline, a tutor's own
-/// sheet).
+/// decision 3) or of a V1 result (`gen-<id>.pdf`, Phase 21 decision 9): Share takes it when it can be had, else the
+/// phone
+/// draws its own (not made yet, offline, a tutor's own sheet). The caller names the file as the phone's own PDF is
+/// named.
 public struct ServerPDF: Sendable {
     let files: ServerFiles
     let centre: UUID
@@ -23,12 +23,22 @@ public struct ServerPDF: Sendable {
         self.wait = wait
     }
 
-    /// The file, named by the title as the phone's own PDF is: the copy downloaded before at once; else, online, the
-    /// download if it answers within `wait`; nil otherwise.
-    public func file(_ artefact: UUID, key: Bool, title: String) async -> URL? {
-        let id = centre.uuidString.lowercased()
-        let path = "\(id)/\(artefact.uuidString.lowercased())\(key ? "-key" : "").pdf"
-        let name = PDFMaker.fileName(title)
+    /// An artefact's file, the questions or (`key`) the key's form.
+    public func file(_ artefact: UUID, key: Bool, named name: String) async -> URL? {
+        await file(path: "\(folder)/\(artefact.uuidString.lowercased())\(key ? "-key" : "").pdf", named: name)
+    }
+
+    /// A V1 result's file, by its generation.
+    public func file(forGeneration generation: UUID, named name: String) async -> URL? {
+        await file(path: "\(folder)/gen-\(generation.uuidString.lowercased()).pdf", named: name)
+    }
+
+    private var folder: String {
+        centre.uuidString.lowercased()
+    }
+
+    /// The copy downloaded before at once; else, online, the download if it answers within `wait`; nil otherwise.
+    private func file(path: String, named name: String) async -> URL? {
         if let kept = await files.kept(bucket: "pdfs", path: path, named: name) {
             return kept
         }

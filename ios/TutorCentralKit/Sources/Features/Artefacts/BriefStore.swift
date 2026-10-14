@@ -156,7 +156,11 @@ import Observation
     /// What Share hands over: the server's PDF when it can be had, else the phone's.
     public func sharedPDF() async -> URL? {
         guard brief != nil else { return nil }
-        if let id = artefact?.id, let file = await serverPDF?.file(id, key: false, title: pdfSheet.title) {
+        if let id = artefact?.id, let file = await serverPDF?.file(
+            id,
+            key: false,
+            named: PDFMaker.fileName(pdfSheet.title)
+        ) {
             return file
         }
         return try? PDFMaker.pdf(for: pdfSheet)

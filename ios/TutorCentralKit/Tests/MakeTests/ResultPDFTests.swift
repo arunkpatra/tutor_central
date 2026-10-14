@@ -35,4 +35,57 @@ import Testing
         #expect(without.string?.contains("Five sixths") == false)
         #expect(without.string?.contains("Answer key") == false)
     }
+
+    // Phase 21 decision 9: Share on a V1 result takes the server's file (`pdfs/<centre>/gen-<id>.pdf`) when it can be
+    // had,
+    // else the phone draws its own (D93's wait).
+
+    func paper() throws -> Generation {
+        try #require(FakeAIHistoryRepository.seed.first { $0.kind == .paper })
+    }
+
+    func server(wait: Duration = .seconds(5), download: @escaping ServerFiles.Download) -> ServerPDF {
+        let centre = FakeCentreRepository.meeraWorkspace.centre.id
+        let files = ServerFiles(
+            centre: centre, directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString),
+            download: download
+        )
+        return ServerPDF(files: files, centre: centre, wait: wait)
+    }
+
+    @Test func shareTakesTheServersFileOnceItIsOnTheIPhone() async throws {
+        let paper = try paper()
+        let shared = try #require(await ResultPDF.file(
+            for: paper,
+            title: "Quadratic equations",
+            server: server { _, path in
+                Data(path.utf8)
+            }
+        ))
+        let centre = FakeCentreRepository.meeraWorkspace.centre.id.uuidString.lowercased()
+        #expect(try String(contentsOf: shared, encoding: .utf8) ==
+            "\(centre)/gen-\(paper.id.uuidString.lowercased()).pdf")
+        #expect(shared.lastPathComponent == "Quadratic equations.pdf")
+    }
+
+    @Test func shareDrawsOnThePhoneWhileTheFileIsNotThereAndTheWaitPasses() async throws {
+        let paper = try paper()
+        let stalled = server(wait: .milliseconds(200)) { _, _ in
+            try await Task.sleep(for: .seconds(60))
+            return Data("server".utf8)
+        }
+        let clock = ContinuousClock()
+        var shared: URL?
+        let took = await clock.measure { shared = await ResultPDF.file(
+            for: paper,
+            title: "Quadratic equations",
+            server: stalled
+        ) }
+        #expect(took < .seconds(2))
+        #expect(try Data(contentsOf: #require(shared)).starts(with: Data("%PDF".utf8)))
+        // A note has no server file: the phone draws it at once.
+        let note = try #require(FakeAIHistoryRepository.seed.first { $0.kind == .progressNote })
+        let drawn = try #require(await ResultPDF.file(for: note, title: "Hemanth", server: stalled))
+        #expect(try Data(contentsOf: drawn).starts(with: Data("%PDF".utf8)))
+    }
 }

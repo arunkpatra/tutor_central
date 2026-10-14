@@ -1,4 +1,5 @@
 import Data
+import DesignSystem
 import Domain
 import Foundation
 import Observation
@@ -107,7 +108,7 @@ import Observation
     /// (`local`), as a sheet's Share does.
     public func sharedPDF(local: () -> URL?) async -> URL? {
         if let id = artefact?.id, figure != nil,
-           let file = await serverPDF?.file(id, key: false, title: "\(title) · \(eyebrow)") {
+           let file = await serverPDF?.file(id, key: false, named: PDFMaker.fileName("\(title) · \(eyebrow)")) {
             return file
         }
         return local()

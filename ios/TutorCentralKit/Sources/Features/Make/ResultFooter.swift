@@ -5,7 +5,8 @@ import UIKit
 
 /// The result's footer (components.md, Result footer): the AI line, Create again (quiet), then Copy and Share as PDF
 /// (secondary 46). While creating again: the line "A new paper is on its way. This one stays until it arrives." and the
-/// buttons disabled. The PDF is made when the screen shows the result (`PDFMaker`).
+/// buttons disabled. The PDF is had when the screen shows the result: the server's file, else the phone's
+/// (`ResultPDF`).
 struct ResultFooter: View {
     let store: AIStore
     let generation: Generation
@@ -39,7 +40,7 @@ struct ResultFooter: View {
         }
         .task(id: generation.id) {
             let title = generation.title(studentName: store.studentName)
-            pdf = try? PDFMaker.pdf(for: generation.result.pdfSheet(title: title, key: generation.printsKey))
+            pdf = await ResultPDF.file(for: generation, title: title, server: store.serverPDF)
         }
     }
 
