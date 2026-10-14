@@ -167,7 +167,7 @@ import UIKit
     /// always).
     public func sharedPDF() async -> URL? {
         if ownContent == nil, let id = artefact?.id,
-           let file = await serverPDF?.file(id, key: form == .key, title: pdfSheet.title) {
+           let file = await serverPDF?.file(id, key: form == .key, named: PDFMaker.fileName(pdfSheet.title)) {
             return file
         }
         return try? PDFMaker.pdf(for: pdfSheet)
