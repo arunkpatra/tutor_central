@@ -115,7 +115,7 @@ function source(r: PlanRead | (() => PlanRead), options: { failKeepOnce?: boolea
 }
 
 const job = (step: Record<string, unknown> = {}): Job => ({ id: "job-1", centreId: CENTRE, kind: "plan", attempts: 1, step, input: { class_id: CLASS, date: "2026-10-07" }, leaseUntil: "" });
-const ctx = (db = fakeDb(), claude = fakeClaude({ answer: { groups: [{ groupNo: 1, chapter: "Crop production", skill: "Kinds of crops" }, { groupNo: 2, chapter: "Plants", skill: "Parts of a plant" }] } })): StepContext => {
+const ctx = (db = fakeDb(), claude = fakeClaude({ answer: { groups: [{ groupNo: 1, chapter: "Exploring Forces", skill: "Tell a push from a pull" }, { groupNo: 2, chapter: "Plants", skill: "Parts of a plant" }] } })): StepContext => {
   const clock = fakeClock();
   return { db, jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" };
 };
@@ -170,8 +170,8 @@ test("name calls plan once through start_ai_call with the key <job>:name and the
   expect(steps[2]).toMatchObject({ generationId: "gen-1", costPaise: 138 + (db.rows[1]?.finish?.costPaise ?? 0) });
   expect(s.chapters).toHaveLength(2);
   const plan = s.made[0] as { groups: { chapter: string; skill: string }[]; lines: { studentID?: string; kind: string; skillID?: string; words: string }[] };
-  expect(plan.groups.map((g) => g.skill)).toEqual(["Kinds of crops", "Parts of a plant"]);
-  expect(plan.lines.find((l) => l.studentID === DEV && l.kind === "teach")).toMatchObject({ words: "Teach: Kinds of crops", skillID: `skill-of-${DEV}` });
+  expect(plan.groups.map((g) => g.skill)).toEqual(["Tell a push from a pull", "Parts of a plant"]);
+  expect(plan.lines.find((l) => l.studentID === DEV && l.kind === "teach")).toMatchObject({ words: "Teach: Tell a push from a pull", skillID: `skill-of-${DEV}` });
   expect(steps.at(-1)).toMatchObject({ kind: "done", result: { plan_id: "plan-1" } });
 });
 
@@ -194,13 +194,13 @@ test("a naming key still in progress waits thirty seconds at the same step", asy
 });
 
 test("a finished naming key replays: no second call, the named draft", async () => {
-  const output = JSON.stringify({ groups: [{ groupNo: 1, chapter: "Crop production", skill: "Kinds of crops" }] });
+  const output = JSON.stringify({ groups: [{ groupNo: 1, chapter: "Exploring Forces", skill: "Tell a push from a pull" }] });
   const claude = fakeClaude({ answer: {} });
   const db = fakeDb({ replays: { "job-1:name": { id: "gen-old", status: "ok", output } } });
   const s = source(read());
   const steps = await walk(planJob(s), ctx(db, claude), { at: "groups", record: read() });
   expect(kinds(claude).filter((k) => k === "plan")).toHaveLength(0);
-  expect((s.made[0] as { groups: { skill: string }[] }).groups[0]?.skill).toBe("Kinds of crops");
+  expect((s.made[0] as { groups: { skill: string }[] }).groups[0]?.skill).toBe("Tell a push from a pull");
   expect(steps.find((o) => o.name === "name")).toMatchObject({ generationId: "gen-old" });
 });
 
@@ -408,7 +408,7 @@ test("the material is kept in the app's shape: snake-case keys, the check's skil
   expect(check.title).toBe("Checks · Science 1.1");
   expect(s.kept[1]).toMatchObject({ title: "Science 1.1 · set 1", content: { for_homework: false, light: false } });
   expect(s.kept[2]).toMatchObject({ title: "Science 1.1 · sheet 1", content: { for_homework: true, light: false } });
-  expect(Object.keys(s.kept[3]?.content ?? {}).sort()).toEqual(["problem", "proof", "slip", "steps"]);
+  expect(Object.keys(s.kept[3]?.content ?? {}).sort()).toEqual(["problem", "proof", "slip", "slip_proof", "steps"]);
 });
 
 test("a material step retaken after its call keeps once and pays once", async () => {

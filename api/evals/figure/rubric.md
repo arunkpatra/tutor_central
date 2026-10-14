@@ -5,3 +5,4 @@
 - The figure illustrates the skill named for that class, with numbers and labels a student of that class meets.
 - The template's rule holds (a landing on the line, shaded parts within the whole, a triangle's angles summing to 180, a food chain starting with a plant).
 - The caption is one sentence that says what the figure shows, and agrees with its numbers.
+- A triangle's labels name its sides, never its angles; the app draws them on the sides.

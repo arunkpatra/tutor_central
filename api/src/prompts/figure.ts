@@ -4,7 +4,7 @@ import { type ClassLevel, FigureDraftOutput, type FigureKind } from "../schemas.
 import { VOICE, blocks, LIMITS, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 const RULES: Record<FigureKind, string> = {
   number_line: "number_line: from, to, step, start and jumps; start and the landing (start plus the jumps) lie on the line; at most 40 steps.",
@@ -28,6 +28,7 @@ export function request(kind: FigureKind, classLevel: ClassLevel, subject: strin
       "The templates and their rules:",
       ...Object.values(RULES),
       "The caption is one sentence the tutor can say while pointing at the figure.",
+      "For a number_line, the caption names how many jumps the line draws and the number they land on, exactly as drawn.",
       LIMITS.figure,
       syllabusFacts(classLevel, subject),
     ]),

@@ -30,6 +30,13 @@ export const PROOF = [
   "Where the answer is not a number, the proof is null.",
 ].join(" ");
 
+/** Asked of the kinds with a worked example's slip (the first nightly's brief, D105): the slip's wrong value is
+ *  computed as the answer's is. */
+export const SLIP_PROOF = [
+  "Give the slip's wrong working the same way, as slipProof: the expression a student who makes the slip would write and the slip's wrong value it gives; it must differ from the right answer.",
+  "Where the slip is not a number, slipProof is null.",
+].join(" ");
+
 /** Asked of the material's kinds (D102): the app and the PDFs draw a formula written this way; anything else is words. */
 export const MATHS = [
   "Write mathematics in LaTeX inside the text: $…$ around a formula in a sentence (Solve $\\frac{x}{4} - 2 = 1$.), $$…$$ around a formula on a line of its own.",
@@ -57,13 +64,21 @@ export const LIMITS = {
 const BOARDS: Record<string, string> = { cbse: "CBSE (NCERT)", karnataka: "the Karnataka state board" };
 const SUBJECTS: Record<string, string> = { maths: "Mathematics", math: "Mathematics", "social studies": "Social Science", sst: "Social Science" };
 
-/** The chapters a class reads in a subject, by board, from the syllabus data (supabase/syllabi, through bun contract), so
- *  a chapter or a level is named as the class's book names it; "" where the data has none (it covers classes 8 to 10). */
-export function syllabusFacts(classLevel: string, subject: string): string {
+/** The chapters a class reads in a subject by board, from the syllabus data (supabase/syllabi, through bun contract), and
+ *  the subject as the data names it; undefined where the data has none (it covers classes 8 to 10). */
+export function syllabusBoards(classLevel: string, subject: string): { name: string; boards: Record<string, string[]> } | undefined {
   const key = subject.trim().toLowerCase();
   const name = SUBJECTS[key] ?? Object.keys(SYLLABI[classLevel] ?? {}).find((s) => s.toLowerCase() === key);
   const boards = name ? SYLLABI[classLevel]?.[name] : undefined;
-  if (!boards) return "";
+  return name && boards ? { name, boards } : undefined;
+}
+
+/** The chapters a class reads in a subject, by board, so a chapter or a level is named as the class's book names it; ""
+ *  where the data has none. */
+export function syllabusFacts(classLevel: string, subject: string): string {
+  const found = syllabusBoards(classLevel, subject);
+  if (!found) return "";
+  const { name, boards } = found;
   const lines = Object.entries(boards).map(([board, chapters]) => `${BOARDS[board] ?? board}: ${chapters.join("; ")}.`);
   return [
     `For reference, the chapters of class ${classLevel} ${name} in the current books, by board (the centre follows one; a tutor may name a chapter by an older book's title):`,

@@ -8,6 +8,7 @@ import { request as brief } from "../src/prompts/brief.js";
 import { request as figure } from "../src/prompts/figure.js";
 import { request as plan } from "../src/prompts/plan.js";
 import { plan as planKind } from "../src/agents/kinds/plan.js";
+import { parseSchool as parseSchoolKind } from "../src/agents/kinds/parse-school.js";
 import { request as sheet } from "../src/prompts/sheet.js";
 import { request as workedExample } from "../src/prompts/worked-example.js";
 import { request as checksRequest } from "../src/prompts/check.js";
@@ -192,8 +193,8 @@ test("the plan's topics ask Sonnet for a first chapter and skill per group for t
   expect(systemText(r)).toContain("the chapter's title alone, without its number");
 });
 
-test("the plan's check accepts a chapter as a current or recent book prints it (the books changed in 2023 to 2025)", () => {
-  expect(planKind.rubric).toContain("a current or a recent book");
+test("the plan's check holds a listed chapter as printed (the first nightly's plans, D105; supersedes #312's recent books)", () => {
+  expect(planKind.rubric).toContain("Where the request lists the class's chapters, the chapter is one from that list as printed");
 });
 test("a holiday's end is part of the holiday, not an item of its own (#312's evals: \"classes resume\" split out)", () => {
   const r = parseSchoolRequest({ text: "School closed 20 to 24 Oct for Deepavali. Classes resume Monday 26th.", image: null, today: "2026-10-13", schools: [], classLevels: [] });
@@ -310,4 +311,43 @@ test("a note without the tutor's words asks nothing of them", () => {
 test("a quiet week with the tutor's words asks for the words alone", () => {
   const input = { ...parent, kind: "note", week: { monday: "2026-10-05", taught: [], practise: [], coming: [] }, tutorSays: "Please send the fee by Friday." } as unknown as WeeklyNoteInput;
   expect(weeklyNoteRequest(input).text).toContain("Write the week's note: what the tutor adds.");
+});
+
+// ---- Phase 21, Task 1: the words the first nightly's failures asked for (D105) ----
+
+test("PROOF asks for the slip's proof, in the worked example's and the brief's words", () => {
+  for (const words of [systemText(workedExample("8", "Science", "Convert Celsius to kelvin")), systemText(brief("9", "Science", "Matter in our surroundings"))]) {
+    expect(words).toContain("the slip's wrong value");
+    expect(words).toContain("it must differ from the right answer");
+  }
+});
+
+test("the figure prompt asks the caption for the jumps and the landing as drawn", () => {
+  expect(systemText(figure("number_line", "3", "Mathematics", "Add on a number line"))).toContain("the caption names how many jumps the line draws and the number they land on");
+});
+
+test("the placement prompt asks one question in one sentence", () => {
+  expect(systemText(placementRequest("7", "Science", ["Heat"]))).toContain("Each question asks one thing, in one sentence, with one question mark");
+});
+
+test("the placement's story rule is a language's; a maths chapter titled like a story is about its mathematics (the evals' placement-5-maths)", () => {
+  expect(systemText(placementRequest("5", "Mathematics", ["The Fish Tale"]))).toContain("In mathematics, science or social science a chapter is about the idea it teaches, however its title reads (The Fish Tale is about large numbers): ask that");
+});
+
+test("parse_school's rubric says a holiday's end is not an item of its own (the evals' school-holiday)", () => {
+  expect(parseSchoolKind.rubric).toContain("When school reopens or classes resume after a holiday, that is the holiday's end, not an item of its own");
+});
+
+test("the plan prompt asks a listed chapter at the month's place in the year", () => {
+  const words = systemText(plan({ centreId, classId: null, date: "2026-10-13", month: 10, groups: [{ groupNo: 1, classLevel: "8", subject: "Science" }] }));
+  expect(words).toContain("name a chapter from that list exactly as it is printed");
+  expect(words).toContain("June is the first month of ten");
+});
+
+test("the textbook prompt asks a skill to add nothing to its heading", () => {
+  expect(systemText(textbookRequest({ mediaType: "image/jpeg", base64: "AAAA", bytes: 3 }, "8", "Science"))).toContain("a skill repeats the heading's own words turned into what a student does, adding nothing");
+});
+
+test("the school prompt gives a notice and a holiday no portions", () => {
+  expect(systemText(parseSchoolRequest({ text: "PTM on Saturday.", image: null, today: "2026-10-13", schools: [], classLevels: [] }))).toContain("A notice or a holiday has no portions (null)");
 });

@@ -52,8 +52,10 @@ const IOS_INPUTS = [
   "ios/**/*.entitlements",
   "ios/Config/*.xcconfig",
   "ios/TutorCentralKit/Package.resolved",
-  // DomainTests read the shared case files (D80).
-  "ios/TutorCentralKit/Tests/DomainTests/Cases/**",
+  // The tests' samples and case files (ContractTests decode the fake's samples, DomainTests the shared cases, D80) and the
+  // sources' resources (fonts, assets, fixtures), not only their Swift.
+  "ios/TutorCentralKit/Tests/**",
+  "ios/TutorCentralKit/Sources/**",
   // The token test reads the document (D25).
   "docs/design/design-tokens.md",
   // The price sheet reads the model table (D67).

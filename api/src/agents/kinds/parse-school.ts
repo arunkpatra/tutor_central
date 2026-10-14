@@ -19,11 +19,13 @@ export const parseSchool: Kind<ParseSchoolSource, ParseSchoolOutput> = {
       for (const day of [item.date, item.endDate]) if (day && Date.parse(day) < oldest) findings.push({ item: at, problem: `${day} is more than 400 days before today` });
       if (item.classLevel && input.classLevels.length > 0 && !input.classLevels.includes(item.classLevel)) findings.push({ item: at, problem: `class ${item.classLevel} is not one of the centre's classes` });
       if (item.school && !input.schools.includes(item.school)) findings.push({ item: at, problem: `${item.school} is not one of the schools given` });
+      // Portions belong to an exam or homework; a notice's day and time are its title's and date's (D105).
+      if ((item.kind === "notice" || item.kind === "holiday") && item.portions !== null) findings.push({ item: at, problem: `a ${item.kind} has no portions` });
     });
     return findings;
   },
   rubric: [
-    "- One item per announcement in what the school sent, and nothing it did not announce.",
+    "- One item per announcement in what the school sent, and nothing it did not announce. When school reopens or classes resume after a holiday, that is the holiday's end, not an item of its own.",
     "- Titles and portions in the school's own words; a subject only when one is named.",
     "- Each date is the one the message gives, resolved from today's date; a date the message does not give is null, never guessed.",
     "- A student's name only when the message is about one student.",

@@ -41,6 +41,13 @@ test("the web step runs again when a file its tests read changes", () => {
   expect(web?.inputs).toContain("docs/design/design-tokens.md");
 });
 
+test("the ios step runs again when a sample or resource its tests read changes", () => {
+  // ContractTests decode the fake's samples (bun contract writes them); a changed sample left the step cached (Phase 21).
+  const ios = STEPS.find((s) => s.name === "ios");
+  expect(ios?.inputs).toContain("ios/TutorCentralKit/Tests/**");
+  expect(ios?.inputs).toContain("ios/TutorCentralKit/Sources/**");
+});
+
 test("the admin step runs again when the token document changes", () => {
   expect(STEPS.find((s) => s.name === "admin")?.inputs).toContain("docs/design/design-tokens.md");
 });
