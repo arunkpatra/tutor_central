@@ -48,7 +48,8 @@ test("ai_models is seeded from models.json: a draft, a check on the other tier a
   }
   expect(rows.length).toBe(Object.keys(table.work).length * 3);
   const high = rows.filter((r) => r.step === "draft" && r.effort === "high").map((r) => r.kind).sort();
-  expect(high).toEqual(["check_paper", "mock", "scan_register"]);
+  // The question sets moved to high effort in Phase 21 (0060): their keys contradicted themselves at medium.
+  expect(high).toEqual(["check_paper", "homework", "mock", "paper", "scan_register", "worksheet"]);
 });
 
 test("the current row is the newest since; a member reads nothing and writes nothing", async () => {

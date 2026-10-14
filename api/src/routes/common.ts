@@ -1,9 +1,9 @@
 import type { Context } from "hono";
 import type { ZodType } from "zod";
 import type { Vars } from "../auth.js";
-import { type AgentOutcome, fromRequest, type Kind, runAgent } from "../agents/agent.js";
-import type { ClaudeClient, ClaudeRequest } from "../claude.js";
-import { type AIKind, type Db, DbFailure } from "../db.js";
+import { type AgentOutcome, type Kind, runAgent } from "../agents/agent.js";
+import type { ClaudeClient } from "../claude.js";
+import { type Db, DbFailure } from "../db.js";
 import { type ApiError, errors } from "../errors.js";
 import { log } from "../log.js";
 import { sha256 } from "../price.js";
@@ -22,7 +22,8 @@ function keyOf(c: C): string {
   return key && key.length <= 160 ? key : `call:${crypto.randomUUID()}`;
 }
 
-export async function run<I, T>(c: C, deps: { claude: ClaudeClient; db: Db }, centre: string, spec: Kind<I, T>, input: I, recorded: unknown = input) {
+/** `made` runs after an answer is kept (a V1 result's PDF queued); a replay's was run when it was made. */
+export async function run<I, T>(c: C, deps: { claude: ClaudeClient; db: Db }, centre: string, spec: Kind<I, T>, input: I, recorded: unknown = input, made?: (id: string) => Promise<void>) {
   const token = c.get("token");
   const requestId = c.get("requestId");
   let outcome: AgentOutcome<T>;
@@ -45,25 +46,8 @@ export async function run<I, T>(c: C, deps: { claude: ClaudeClient; db: Db }, ce
     log.info({ requestId, route: c.req.path, generation: outcome.id, replay: true });
     return c.json({ id: outcome.id, result: outcome.parsed }, 200, { "Idempotent-Replayed": "true" });
   }
+  await made?.(outcome.id);
   return c.json({ id: outcome.id, result: outcome.parsed }, 200);
-}
-
-/** A call of a kind not moved onto its own agent (V1's, the readers until Task 6): the request drafted alone. */
-export type Call<T> = {
-  kind: AIKind;
-  input: unknown;
-  request: ClaudeRequest<T>;
-  keep?: (parsed: T) => T;
-  /** An answer that holds nothing to use (a page with no chapters): recorded as failed and refused in words. */
-  empty?: (parsed: T) => boolean;
-  /** The student a personal call names: the gate asks their consent (D62); the name words a refusal. */
-  student?: string;
-  studentName?: string;
-};
-
-export function runCall<T>(c: C, deps: { claude: ClaudeClient; db: Db }, centre: string, call: Call<T>) {
-  const spec = fromRequest(call.kind, call.request, { student: call.student, studentName: call.studentName, empty: call.empty, keep: call.keep });
-  return run(c, deps, centre, spec, undefined, call.input);
 }
 
 export type Parsed<T> = { value: T; centre: string };

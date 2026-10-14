@@ -6,6 +6,8 @@ import { makeApp } from "../src/make-app.js";
 import { fakeObserve } from "../src/observe-fake.js";
 import { applyModelOverrides, resetModelOverrides } from "../src/models.js";
 import { makeVerify } from "../src/verify.js";
+import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
+import { localAnswer as answerOf } from "../src/claude-fake.js";
 
 const centreId = "22222222-2222-2222-2222-222222222222";
 const auth = { authorization: "Bearer good", "content-type": "application/json" };
@@ -27,8 +29,10 @@ test("generate starts the record, calls Claude with the paper prompt, finishes t
   expect(body.id).toBe("gen-1");
   expect(body.result.title).toBe("Quadratic equations");
   expect(db.started[0]).toMatchObject({ token: "good", centre: centreId, kind: "paper", model: "claude-sonnet-5-5", input: { topic: "Quadratic equations" } });
-  expect(db.finished[0]).toMatchObject({ id: "gen-1", status: "ok", tokensIn: 812, tokensOut: 1460 });
-  expect(JSON.parse((db.finished[0] as { output: string }).output).title).toBe("Quadratic equations");
+  // The draft's row is finished last, after its check's (D99).
+  const draft = db.finished.find((f) => (f as { id: string }).id === "gen-1");
+  expect(draft).toMatchObject({ id: "gen-1", status: "ok", tokensIn: 812, tokensOut: 1460 });
+  expect(JSON.parse((draft as { output: string }).output).title).toBe("Quadratic equations");
   expect(claude.requests[0]?.model).toBe("claude-sonnet-5-5");
 });
 
@@ -106,7 +110,8 @@ test("the record keeps the class's and the student's ids, so a result read back 
     centreName: "Bright Minds Tuition",
   };
   await post(app(fakeClaude({ answer: SAMPLE.progress_note }), db), "/ai/generate", note);
-  expect(db.started[1]).toMatchObject({ input: { studentId } });
+  // The paper's draft and check, then the note's draft.
+  expect(db.started[2]).toMatchObject({ input: { studentId } });
 });
 
 const image = { imageBase64: jpeg, mediaType: "image/jpeg" };
@@ -204,10 +209,11 @@ test("the key and request id reach start, and the row is finished with cost, lat
   expect(r.headers.get("idempotent-replayed")).toBeNull();
   expect(db.started[0]).toMatchObject({ key: "k", requestId });
   expect((db.started[0] as { inputHash: string }).inputHash).toMatch(/^[0-9a-f]{64}$/);
-  expect(db.finished[0]).toMatchObject({ status: "ok", costPaise: 138, stopReason: "end_turn", errorReason: null });
-  expect((db.finished[0] as { promptHash: string }).promptHash).toMatch(/^[0-9a-f]{64}$/);
-  expect((db.finished[0] as { latencyMs: number }).latencyMs).toBeGreaterThanOrEqual(0);
-  expect((db.finished[0] as { finishedAt: string }).finishedAt).toBeString();
+  const draft = db.finished.at(-1);
+  expect(draft).toMatchObject({ status: "ok", costPaise: 138, stopReason: "end_turn", errorReason: null });
+  expect((draft as { promptHash: string }).promptHash).toMatch(/^[0-9a-f]{64}$/);
+  expect((draft as { latencyMs: number }).latencyMs).toBeGreaterThanOrEqual(0);
+  expect((draft as { finishedAt: string }).finishedAt).toBeString();
 });
 
 test("a replayed key answers the stored result with the header and no call", async () => {
@@ -242,10 +248,11 @@ test("a call without a key gets a fresh one and is never replayed; a key past 16
   const a = app(fakeClaude({ answer: SAMPLE.paper }), db);
   expect((await keyed(a, null)).status).toBe(200);
   expect((await keyed(a, "x".repeat(161))).status).toBe(200);
-  const keys = db.started.map((s) => (s as { key: string }).key);
+  // Each call's draft key, its check hung off it (`<key>:check`).
+  const keys = db.started.map((s) => (s as { key: string }).key).filter((k) => !k.endsWith(":check"));
   expect(keys.every((k) => /^call:[0-9a-f-]{36}$/.test(k))).toBe(true);
   expect(new Set(keys).size).toBe(2);
-  expect(db.finished).toHaveLength(2);
+  expect(db.finished).toHaveLength(4);
 });
 
 test("a truncated answer is 502 in the service's words and the row says truncated with its tokens", async () => {
@@ -262,4 +269,18 @@ test("a refused answer records its tokens and its reason; a failed one its reaso
   expect(db.finished[0]).toMatchObject({ status: "failed", errorReason: "refused", tokensIn: 100, tokensOut: 0 });
   await keyed(app(fakeClaude({ fail: "timeout" }), db), "k2");
   expect(db.finished[1]).toMatchObject({ status: "failed", errorReason: "timeout", tokensIn: null, costPaise: null });
+});
+
+test("a paper, homework or worksheet runs on its agent (a draft and a check) and queues its PDF as the platform; a note queues none (Phase 21 Task 9)", async () => {
+  const db = fakeDb();
+  const jobs = fakeJobsDb(fakeClock());
+  const a = makeApp({ observe: fakeObserve(), verify, claude: fakeClaude((r) => ({ answer: answerOf(r) })), db, apple: fakeApple({}), worker: { jobs, db: fakeDb(), secret: "s" } });
+  const r = await post(a, "/ai/generate", paper);
+  expect(r.status).toBe(200);
+  const { id } = (await r.json()) as { id: string };
+  expect(db.rows.map((row) => row.agentStep)).toEqual(["draft", "check"]);
+  expect(jobs.jobs.map((j) => [j.kind, j.key, j.input, j.centreId])).toEqual([["pdf", `pdf:gen:${id}`, { generation_id: id }, centreId]]);
+  const note = await post(a, "/ai/generate", { kind: "progress_note", centreId, subject: "Mathematics", classLevel: "Class 10", studentName: "Hemanth Reddy", parentName: "Lakshmi Reddy", observations: "Careful with signs.", tutorName: "Meera", centreName: "Bright Minds" });
+  expect(note.status).toBe(200);
+  expect(jobs.jobs).toHaveLength(1);
 });

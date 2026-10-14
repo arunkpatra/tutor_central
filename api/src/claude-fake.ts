@@ -1,5 +1,6 @@
 import type { BatchItem, ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
 import { monthShare } from "./agents/kinds/plan.js";
+import { sectionPlan } from "./prompts/paper.js";
 import { syllabusBoards } from "./prompts/shared.js";
 import { CheckVerdict } from "./schemas.js";
 
@@ -518,6 +519,9 @@ export function localAnswer(request: ClaudeRequest<unknown>): unknown {
   if (kind === "mock") return patterned(request.text);
   if (kind === "check_paper") return marked(request.text);
   if (kind === "gap_report") return daysLeft(Number(request.text.match(/(\d+) days? left/)?.[1] ?? 2));
+  if (kind === "paper") return planned(request.text);
+  if (kind === "homework" || kind === "worksheet") return asked(kind, Number(request.text.match(/Exactly (\d+) (?:questions|problems)/)?.[1] ?? 5));
+  if (kind === "progress_note") return noted(request.text);
   return blank ? { rows: [] } : SAMPLE[kind];
 }
 
@@ -594,6 +598,40 @@ function templateOf(text: string): FigureKind {
 }
 
 /** The sample sheet at the asked count: cut, or its questions repeated and numbered on, so a homework of five reads five. */
+/** A paper in the section plan the prompt gives ("10 questions, 20 marks in all"), the sample's questions in turn. */
+function planned(text: string): PaperOutput {
+  const [, questions, marks] = text.match(/(\d+) questions, (\d+) marks in all/) ?? [];
+  const pool = SAMPLE.paper.sections.flatMap((s) => s.questions);
+  let n = 0;
+  return {
+    ...SAMPLE.paper,
+    sections: sectionPlan(Number(questions ?? 10), Number(marks ?? 20)).map((s) => ({
+      title: s.title,
+      marksEach: s.marksEach,
+      questions: Array.from({ length: s.count }, () => {
+        const q = pool[n % pool.length] as PaperOutput["sections"][number]["questions"][number];
+        n += 1;
+        return { ...q, number: n, marks: s.marksEach };
+      }),
+    })),
+  };
+}
+
+/** Homework or a worksheet of exactly the questions asked, the sample's in turn. */
+function asked(kind: "homework" | "worksheet", count: number): QuestionSetOutput {
+  const sample = SAMPLE[kind];
+  const questions = Array.from({ length: count }, (_, i) => ({ ...(sample.questions[i % sample.questions.length] as QuestionSetOutput["questions"][number]), number: i + 1 }));
+  return { ...sample, questions };
+}
+
+/** A progress note to the parent and about the student the prompt names, four sentences, no sign-off. */
+function noted(text: string): NoteOutput {
+  const parent = text.match(/^Parent: ([^.(]+?)(?: \(|\.)/m)?.[1]?.trim();
+  const student = text.match(/^Student: ([^\s,]+)/m)?.[1] ?? "your child";
+  const hello = parent && !parent.startsWith("the parent") ? `Hello ${parent}` : "Hello";
+  return { note: `${hello}, a quick note on ${student}'s progress this month. ${student} has worked steadily and the homework has come in on time. A little careful practice at home before the next test would help. Happy to talk any time.` };
+}
+
 function counted(count: number): SheetOutput {
   const questions = Array.from({ length: count }, (_, i) => {
     const q = SAMPLE.sheet.questions[i % SAMPLE.sheet.questions.length] ?? { number: 1, text: "", answer: "", proof: null };

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { modelFor } from "../src/models.js";
 import { request as check, schemeText } from "../src/prompts/check-paper.js";
 import { request as paper, sectionPlan } from "../src/prompts/paper.js";
 import { request as textbookRequest } from "../src/prompts/parse-textbook.js";
@@ -25,12 +26,14 @@ import { ReadMarksOutput } from "../src/schemas.js";
 import { request as notOnTrackRequest } from "../src/prompts/not-on-track.js";
 import type { NotOnTrackInput, WeeklyNoteInput } from "../src/schemas.js";
 
-test("a paper asks Sonnet at medium effort for sections, marks and answers that add up", () => {
+test("a paper asks Sonnet at high effort for sections, marks and answers that add up (Phase 21, 0060)", () => {
   const input = GenerateInput.parse({ kind: "paper", subject: "Mathematics", classLevel: "Class 10 Maths", topic: "Quadratic equations" });
   if (input.kind !== "paper") throw new Error("kind");
   const r = paper(input);
   expect(r.model).toBe("claude-sonnet-5-5");
-  expect(r.effort).toBe("medium");
+  expect(r.effort).toBe("high");
+  expect(modelFor("paper", "draft").effort).toBe("high");
+  expect(modelFor("worksheet", "repair").effort).toBe("high");
   expect(r.text).toContain("Quadratic equations");
   expect(r.text).toContain("20 marks");
   expect(systemText(r)).toContain("Indian");

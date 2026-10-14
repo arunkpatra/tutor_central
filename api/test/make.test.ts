@@ -4,7 +4,7 @@ import { fakeDb } from "../src/db-fake.js";
 import { JOB_AGENT_BUDGET_MS, recordedCall } from "../src/jobs/call.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import type { StepContext } from "../src/jobs/types.js";
-import { makeAgent, makeRequest } from "../src/make.js";
+import { makeAgent } from "../src/make.js";
 import { request as briefRequest } from "../src/prompts/brief.js";
 import { request as canDoRequest } from "../src/prompts/can-do.js";
 import { request as checkRequest } from "../src/prompts/check.js";
@@ -40,7 +40,7 @@ const bodies: Record<string, Record<string, unknown>> = {
 };
 const parsed = (kind: string) => MakeInput.parse({ centreId, ...bodies[kind] });
 
-test("every made kind builds the route's call: its kind, its request, the student it names", () => {
+test("every made kind's agent asks the route's request and names the student the route named", () => {
   // biome-ignore lint/suspicious/noExplicitAny: each builder takes its own kind's body.
   const route: Record<string, (v: any) => { model: string; system: { shared: string; own: string } }> = {
     sheet: sheetRequest,
@@ -59,23 +59,23 @@ test("every made kind builds the route's call: its kind, its request, the studen
   const personal = ["test_tomorrow", "note", "can_do", "not_on_track"];
   for (const kind of Object.keys(bodies)) {
     const v = parsed(kind);
-    const made = makeRequest(v);
+    const spec = makeAgent(v);
     const expected = route[kind]!(v);
-    const got: Record<string, unknown> = { kind, made: made.kind, model: made.request.model, system: made.request.system };
-    expect(got).toEqual({ kind, made: kind, model: expected.model, system: expected.system });
-    expect({ kind, student: made.student ?? null }).toEqual({ kind, student: kind === "gap_report" || personal.includes(kind) ? studentId : null });
-    expect({ kind, name: made.studentName ?? null }).toEqual({ kind, name: personal.includes(kind) ? "Dev Kumar" : null });
+    expect({ kind, made: spec.kind as string, system: spec.draft(v).system }).toEqual({ kind, made: kind, system: expected.system });
+    const student = spec.student?.(v);
+    expect({ kind, student: student?.id ?? null }).toEqual({ kind, student: kind === "gap_report" || personal.includes(kind) ? studentId : null });
+    expect({ kind, name: student?.name ?? null }).toEqual({ kind, name: personal.includes(kind) ? "Dev Kumar" : null });
   }
 });
 
-test("a mock whose marks miss the pattern is empty; a figure of another template is empty", () => {
-  const mock = makeRequest(parsed("mock"));
-  const sections = (marks: number) => ({ sections: [{ name: "A", questions: [{ number: 1, text: "Q", answer: "A", marks, skill: "S" }] }] });
-  expect(mock.empty?.(sections(25))).toBe(false);
-  expect(mock.empty?.(sections(24))).toBe(true);
-  const figure = makeRequest(parsed("figure"));
-  expect(figure.empty?.(SAMPLE.figure)).toBe(false);
-  expect(figure.empty?.({ figure: { kind: "number_line" }, caption: "x" })).toBe(true);
+test("a mock whose marks miss the pattern is a finding; a figure of another template is a finding", () => {
+  const v = parsed("mock");
+  const mock = makeAgent(v);
+  const draft = (marks: number) => ({ title: "t", durationMinutes: 40, sections: [{ name: "A", marksEach: marks, questions: [{ number: 1, text: "Q", answer: "A", marks, skill: "S", proof: null }, { number: 2, text: "Q", answer: "A", marks: 0, skill: "T", proof: null }] }] });
+  expect(mock.verify?.(v, draft(25)).map((f) => f.item)).not.toContain("marks");
+  expect(mock.verify?.(v, draft(24)).map((f) => f.item)).toContain("marks");
+  const f = parsed("figure");
+  expect(makeAgent(f).verify?.(f, { figure: { kind: "number_line" }, caption: "x" }).map((x) => x.item)).toEqual(["figure"]);
 });
 
 // The fake's answer fitted to the request: the message rules (D110) hold a note to its own facts and script.

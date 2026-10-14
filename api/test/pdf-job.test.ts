@@ -9,7 +9,7 @@ import { snake } from "../src/plan/material.js";
 
 // The PDF job (D90): a kept sheet, mock or brief rendered in the phone's layout and written under the centre in `pdfs`.
 const CENTRE = "c0000000-0000-4000-8000-0000000000aa";
-function storage(artefact: { kind: string; title: string; content: Record<string, unknown>; foot?: string } | null) {
+function storage(artefact: { kind: string; title: string; content: Record<string, unknown>; foot?: string } | null, generation: Awaited<ReturnType<PdfSource["generation"]>> = null) {
   const uploads: { bucket: string; path: string; head: string; size: number }[] = [];
   const reads: string[] = [];
   const s: PdfSource & { uploads: typeof uploads; reads: string[] } = {
@@ -18,6 +18,10 @@ function storage(artefact: { kind: string; title: string; content: Record<string
     async artefact(centre) {
       reads.push(centre);
       return artefact;
+    },
+    async generation(centre) {
+      reads.push(centre);
+      return generation;
     },
     async upload(bucket, path, bytes) {
       uploads.push({ bucket, path, head: new TextDecoder("latin1").decode(bytes.slice(0, 5)), size: bytes.length });
@@ -78,4 +82,18 @@ test("a figure artefact's PDF is drawn from its spec and uploaded at its path, o
   const broken = storage({ kind: "figure", title: "t", content: { figure: { kind: "triangle", angles: [100, 50, 40], labels: ["a", "b", "c"] }, caption: "c" } });
   expect(await pdfJob(broken).step(job(), ctx())).toMatchObject({ kind: "done", result: { reason: "not_printable" } });
   expect(broken.uploads).toEqual([]);
+});
+
+test("a V1 result's PDF is made from its generation and uploaded at gen-<id>.pdf; a worksheet without answers has no key (Phase 21 decision 9)", async () => {
+  const id = "b0000000-0000-4000-8000-000000000009";
+  const genJob: Job = { ...job(), input: { generation_id: id } };
+  const paper = storage(null, { kind: "paper", output: SAMPLE.paper as Record<string, unknown>, input: { topic: "Quadratic equations", classLevel: "Class 10", subject: "Mathematics", marks: 20 }, foot: "Bright Minds Tuition" });
+  const out = await pdfJob(paper).step(genJob, ctx());
+  expect(paper.uploads.map((u) => [u.bucket, u.path, u.head])).toEqual([["pdfs", `${CENTRE}/gen-${id}.pdf`, "%PDF-"]]);
+  expect(out).toMatchObject({ kind: "done", result: { path: `${CENTRE}/gen-${id}.pdf`, pages: 2 } });
+  const sheet = storage(null, { kind: "worksheet", output: SAMPLE.worksheet as Record<string, unknown>, input: { topic: "Linear equations", classLevel: "Class 9", subject: "Mathematics", withAnswers: false } });
+  expect(await pdfJob(sheet).step(genJob, ctx())).toMatchObject({ kind: "done", result: { pages: 1 } });
+  const note = storage(null, { kind: "progress_note", output: { note: "x" }, input: {} });
+  expect(await pdfJob(note).step(genJob, ctx())).toMatchObject({ kind: "done", result: { reason: "not_printable" } });
+  expect(await pdfJob(storage(null, null)).step(genJob, ctx())).toMatchObject({ kind: "done", result: { reason: "gone" } });
 });

@@ -14,6 +14,7 @@ const EVALS = join(ROOT, "api/evals");
 export const KINDS = [
   "sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school",
   "note", "can_do", "test_tomorrow", "not_on_track", "mock", "gap_report", "check_paper", "read_marks",
+  "paper", "homework", "worksheet", "progress_note", "scan_register",
 ] as const;
 /** The language anchors (D110): run by name, graded by the free checks alone until the speakers' labels come. */
 export const ANCHORS = ["anchor_hi", "anchor_kn"] as const;

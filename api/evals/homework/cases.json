@@ -1,0 +1,72 @@
+[
+  {
+    "id": "hw-7-respiration",
+    "input": {
+      "kind": "homework",
+      "classLevel": "Class 7",
+      "subject": "Science",
+      "topic": "Respiration in organisms",
+      "level": "medium",
+      "questions": 5
+    },
+    "expect": {
+      "count": 5
+    }
+  },
+  {
+    "id": "hw-5-multiply",
+    "input": {
+      "kind": "homework",
+      "classLevel": "Class 5",
+      "subject": "Mathematics",
+      "topic": "Multiplying 3-digit numbers",
+      "level": "easy",
+      "questions": 8
+    },
+    "expect": {
+      "count": 8
+    }
+  },
+  {
+    "id": "hw-9-reported-speech",
+    "input": {
+      "kind": "homework",
+      "classLevel": "Class 9",
+      "subject": "English",
+      "topic": "Reported speech",
+      "level": "medium",
+      "questions": 6
+    },
+    "expect": {
+      "count": 6
+    }
+  },
+  {
+    "id": "hw-3-water",
+    "input": {
+      "kind": "homework",
+      "classLevel": "Class 3",
+      "subject": "EVS",
+      "topic": "Water around us",
+      "level": "easy",
+      "questions": 4
+    },
+    "expect": {
+      "count": 4
+    }
+  },
+  {
+    "id": "hw-10-ap",
+    "input": {
+      "kind": "homework",
+      "classLevel": "Class 10",
+      "subject": "Mathematics",
+      "topic": "Arithmetic progressions",
+      "level": "hard",
+      "questions": 10
+    },
+    "expect": {
+      "count": 10
+    }
+  }
+]

@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
 /** bun evals/draw-page.ts: draws the golden sets' pages as text on a white page with headless Chrome, so no photo of a
  *  real book, answer sheet or report card is in the repository (D74): the contents pages (parse_textbook), the answer
- *  sheets in a handwriting face (check_paper) and the report cards and marked tests (read_marks; Phase 21). Run once when
+ *  sheets in a handwriting face (check_paper), the report cards and marked tests (read_marks) and the registers
+ *  (scan_register; Phase 21). Run once when
  *  a page changes; the PNGs are committed. The names are the seed's, the rest invented. */
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -38,7 +39,7 @@ function draw(source: string, out: string, name: string) {
 
 if (import.meta.main) {
   const dir = mkdtempSync(join(tmpdir(), "tc-pages-"));
-  for (const kind of ["check_paper", "read_marks"]) {
+  for (const kind of ["check_paper", "read_marks", "scan_register"]) {
     const sheets = (await Bun.file(join(import.meta.dir, kind, "pages.json")).json()) as Sheet[];
     for (const sheet of sheets) {
       const source = join(dir, `${sheet.file}.html`);

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "ws-8-linear",
+    "input": {
+      "kind": "worksheet",
+      "classLevel": "Class 8",
+      "subject": "Mathematics",
+      "topic": "Linear equations in one variable",
+      "level": "medium",
+      "questions": 10,
+      "withAnswers": true
+    },
+    "expect": {
+      "count": 10
+    }
+  },
+  {
+    "id": "ws-6-separation",
+    "input": {
+      "kind": "worksheet",
+      "classLevel": "Class 6",
+      "subject": "Science",
+      "topic": "Separation of substances",
+      "level": "medium",
+      "questions": 8,
+      "withAnswers": false
+    },
+    "expect": {
+      "count": 8
+    }
+  },
+  {
+    "id": "ws-4-adjectives",
+    "input": {
+      "kind": "worksheet",
+      "classLevel": "Class 4",
+      "subject": "English",
+      "topic": "Adjectives",
+      "level": "easy",
+      "questions": 12,
+      "withAnswers": true
+    },
+    "expect": {
+      "count": 12
+    }
+  },
+  {
+    "id": "ws-9-polynomials",
+    "input": {
+      "kind": "worksheet",
+      "classLevel": "Class 9",
+      "subject": "Mathematics",
+      "topic": "Polynomials",
+      "level": "hard",
+      "questions": 15,
+      "withAnswers": true
+    },
+    "expect": {
+      "count": 15
+    }
+  },
+  {
+    "id": "ws-7-nomads",
+    "input": {
+      "kind": "worksheet",
+      "classLevel": "Class 7",
+      "subject": "Social Science",
+      "topic": "Tribes, nomads and settled communities",
+      "level": "medium",
+      "questions": 6,
+      "withAnswers": true
+    },
+    "expect": {
+      "count": 6
+    }
+  }
+]

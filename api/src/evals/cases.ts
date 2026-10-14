@@ -6,17 +6,18 @@ import { proofHolds } from "../agents/arith.js";
 import { kindFor } from "../agents/kinds/index.js";
 import type { AIKind } from "../db.js";
 import { decodeImage } from "../images.js";
-import { FigureOutput, MakeInput, ParseSchoolInput, PlanInput } from "../schemas.js";
+import { FigureOutput, GenerateInput, MakeInput, ParseSchoolInput, PlanInput } from "../schemas.js";
 
 /** A golden case (D74, plan decision 10): a kind's input without a centre, and what its answer must show. */
 export type Expect = { count?: number; proofs?: boolean; contains?: string[]; never?: string[]; figure?: string; refused?: boolean };
 export type Case = { kind: AIKind; id: string; input: Record<string, unknown>; expect: Expect; set?: string };
 export type Scored = { schema: boolean; verify: boolean; expect: boolean; reasons: string[] };
 
-/** The kinds with a golden set: every kind on its agent (the parents' four from Phase 21). */
+/** The kinds with a golden set: every kind on its agent (the parents', the exam's and V1's from Phase 21). */
 export const EVAL_KINDS = [
   "sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school",
   "note", "can_do", "test_tomorrow", "not_on_track", "mock", "gap_report", "check_paper", "read_marks",
+  "paper", "homework", "worksheet", "progress_note", "scan_register",
 ] as const;
 export type EvalKind = (typeof EVAL_KINDS)[number];
 /** The language anchors (D110): `api/evals/anchors/<lang>/cases.json`, the parents' messages in Hindi and Kannada, each
@@ -72,6 +73,13 @@ export function agentFor(c: Case, dir = evalsDir()): { spec: Kind<unknown, unkno
       const { studentId, studentName, subjects } = c.input as { studentId: string; studentName: string; subjects: string[] };
       return { spec, input: { pages: [pageOf(c, dir)], studentId, studentName, subjects } };
     }
+    case "scan_register":
+      return { spec, input: { image: pageOf(c, dir) } };
+    case "paper":
+    case "homework":
+    case "worksheet":
+    case "progress_note":
+      return { spec, input: GenerateInput.parse({ kind: c.kind, ...c.input }) };
     default:
       return { spec, input: MakeInput.parse({ kind: c.kind, ...withCentre }) };
   }
@@ -112,6 +120,8 @@ function countOf(kind: AIKind, parsed: Record<string, unknown>): number | undefi
   if (kind === "worked_example") return list("steps");
   if (kind === "read_marks") return list("marks");
   if (kind === "gap_report") return list("days");
+  if (kind === "scan_register") return list("rows");
+  if (kind === "paper") return Array.isArray(parsed.sections) ? (parsed.sections as { questions: unknown[] }[]).reduce((n, s) => n + s.questions.length, 0) : undefined;
   return list("questions");
 }
 

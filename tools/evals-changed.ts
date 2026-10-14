@@ -11,12 +11,14 @@ const EVERY = ["api/src/prompts/shared.ts", "api/src/agents/agent.ts", "api/src/
 /** A file name in kebab case for a kind in snake case (`worked-example.ts` for `worked_example`). */
 const fileOf = (kind: string) => kind.replaceAll("_", "-");
 
-/** What some kinds share: the parents' message rules and words, and the numbers a caption or a message is read for. */
+/** What some kinds share: the parents' message rules and words (V1's progress note reads its sign-off rule and the first
+ *  name), the numbers a caption or a message is read for, and homework's and a worksheet's one agent file. */
 const PARENTS = ["note", "can_do", "test_tomorrow", "not_on_track", ...ANCHORS];
 const SOME: Record<string, string[]> = {
-  "api/src/agents/kinds/message.ts": PARENTS,
-  "api/src/prompts/message.ts": PARENTS,
+  "api/src/agents/kinds/message.ts": [...PARENTS, "progress_note"],
+  "api/src/prompts/message.ts": [...PARENTS, "progress_note"],
   "api/src/agents/kinds/numbers.ts": [...PARENTS, "figure"],
+  "api/src/agents/kinds/question-set.ts": ["homework", "worksheet"],
 };
 
 export function kindsChanged(paths: string[]): string[] {
