@@ -66,6 +66,11 @@ extension ItemStore {
         let marks = await (marksRead ?? []).filter { $0.schoolItemID == item.id }
         let reports = await (keptRead ?? []).filter { $0.kind == .gapReport }
         let job = await jobRead ?? nil
+        // The job works out a marked student's report while it is live and the mock is kept, unless it could not
+        // make theirs.
+        let working = { (student: Student) in
+            mock != nil && job?.isLive == true && job?.notMade.contains(student.id) != true
+        }
         var content: MockContent?
         if case let .mock(made)? = mock?.content {
             content = made
@@ -77,7 +82,7 @@ extension ItemStore {
         let rows = byName.map { student in
             markedRow(
                 student, mark: marks.filter { $0.studentID == student.id }.max { $0.date < $1.date },
-                mock: content, report: reports.first { $0.studentID == student.id }, jobWorks: job?.isLive == true
+                mock: content, report: reports.first { $0.studentID == student.id }, jobWorks: working(student)
             )
         }
         let state = Self.mockState(mock: mock, job: job, today: today, mockDay: mockDay)
@@ -93,7 +98,9 @@ extension ItemStore {
             mockLine: mockLine, mockState: state, mock: mock, marked: rows,
             lastDays: lastDayRows(
                 item, split: split, students: byName, reports: reports,
-                pending: Self.pendingWords(byName, reports: reports, marks: marks, jobWorks: job?.isLive == true)
+                pending: Self.pendingWords(
+                    byName.filter(working), reports: reports, marks: marks, jobWorks: job?.isLive == true
+                )
             )
         )
     }

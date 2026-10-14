@@ -220,6 +220,26 @@ import Testing
         #expect(done.lastDays.first?.line == "The last set from the gap report")
     }
 
+    /// Hand run 5: a report the job could not make leaves the row as with no job, its report offered on the phone.
+    @Test func aReportTheJobCouldNotMakeIsNotWorking() async throws {
+        let live = ExamJobStatus(state: .waiting, at: "marks", mockFailed: false, notMade: [FakeStudentsRepository.dev])
+        let days = try #require(try await page(world(), jobs: jobs(live)).lastDays)
+        let dev = try #require(days.marked.first { $0.id == FakeStudentsRepository.dev })
+        #expect(!dev.working && dev.canReport)
+        #expect(!dev.line.contains("working out"))
+        #expect(days.lastDays.first?.line.hasPrefix("Meher's lines follow") == true)
+    }
+
+    /// Hand run 6: with no mock kept the job makes no report, so a marked student is not shown as worked on.
+    @Test func noMockNoReportWorkedOn() async throws {
+        let failed = ExamJobStatus(state: .waiting, at: "marks", mockFailed: true)
+        let marked = try await world()
+        let noMock = World(plans: FakePlansRepository(now: Self.wednesday14), record: marked.record, mock: nil)
+        let days = try #require(try await page(noMock, jobs: jobs(failed)).lastDays)
+        #expect(days.mockState == .failed)
+        #expect(days.marked.allSatisfy { !$0.working })
+    }
+
     @Test func aUsedReportMarksTheDayChanged() async throws {
         let live = ExamJobStatus(state: .waiting, at: "marks", mockFailed: false)
         let days = try #require(try await page(world(reportsUsed: true), jobs: jobs(live)).lastDays)
