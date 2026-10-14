@@ -44,6 +44,8 @@ export type Finish = {
   /** timeout, api <status>, unfit, refused, truncated or error; null for an answer kept. */
   errorReason: string | null;
   finishedAt: string;
+  /** Answered by a Message Batch at half price (D101, D108). */
+  batched?: boolean;
 };
 
 /** One paid call asked of the gate (start_ai_call, 0029): the key and the body's hash replay a call made within a day;
@@ -75,6 +77,9 @@ export type Db = {
    *  and a row left pending still counts against the limit, which is the safe side (the sweep closes it after ten
    *  minutes). */
   finish(token: string, id: string, result: Finish): Promise<void>;
+  /** Rows sent in a Message Batch, marked at once (D108): the sweep leaves them pending for a day. A failure is logged and
+   *  swallowed: the rows read swept until their batch ends, and are finished then. */
+  markBatched(ids: string[]): Promise<void>;
   /** A generation the tutor's centre made, for a scheme from a paper; null when there is none they can see. */
   generation(token: string, id: string): Promise<{ id: string; kind: AIKind; output: string | null } | null>;
 };
@@ -149,9 +154,16 @@ function dbOver(client: (token: string) => SupabaseClient<Database>, platform: S
           stop_reason: r.stopReason,
           error_reason: r.errorReason,
           finished_at: r.finishedAt,
+          // A row given up by its batch and made live is not batched (D108).
+          batched: r.batched === true,
         })
         .eq("id", id);
       if (error) log.error({ at: "db finish", generation: id, message: error.message });
+    },
+    async markBatched(ids) {
+      if (ids.length === 0) return;
+      const { error } = await platform.from("ai_generations").update({ batched: true }).in("id", ids);
+      if (error) log.error({ at: "db batched", message: error.message });
     },
     async generation(token, id) {
       const { data, error } = await client(token).from("ai_generations").select("id, kind, output").eq("id", id).maybeSingle();

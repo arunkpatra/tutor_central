@@ -139,6 +139,16 @@ test("the platform starts a call for a job with no user", async () => {
   await sql`delete from public.jobs where id = ${job}`;
 });
 
+test("a batched row is left pending for a day: a Message Batch may take hours (D108)", async () => {
+  await svc.rpc("close_pending_generations");
+  await sql`delete from public.ai_generations where centre_id = ${centreA}`;
+  await sql`insert into public.ai_generations (centre_id, kind, input, status, batched, created_at) values
+    (${centreA}, 'sheet', '{}', 'pending', true, now() - interval '3 hours'), (${centreA}, 'sheet', '{}', 'pending', true, now() - interval '26 hours')`;
+  expect((await svc.rpc("close_pending_generations")).data).toBe(1);
+  const rows = await sql`select status from public.ai_generations where centre_id = ${centreA} order by created_at desc`;
+  expect(rows.map((r: { status: string }) => r.status)).toEqual(["pending", "failed"]);
+});
+
 test("start_ai_generation still answers an id and shares the gate", async () => {
   const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: {}, p_model: "m" });
   expect(r.error).toBeNull();

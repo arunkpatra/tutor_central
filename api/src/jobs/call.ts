@@ -1,4 +1,4 @@
-import { type Kind, runAgent } from "../agents/agent.js";
+import { type AgentContext, type AgentOutcome, draftOn, type Kind, runAgent } from "../agents/agent.js";
 import { DbFailure } from "../db.js";
 import { sha256 } from "../price.js";
 import type { StepContext } from "./types.js";
@@ -23,18 +23,36 @@ export async function recordedCall<I, T>(
   ctx: StepContext,
   args: { centre: string; spec: Kind<I, T>; input: I; recorded?: unknown; job: string; step: string; key?: string },
 ): Promise<RecordedCall<T>> {
-  const recorded = args.recorded ?? args.input;
   try {
-    const outcome = await runAgent(
-      { db: ctx.db, claude: ctx.claude, token: "", requestId: ctx.requestId, centre: args.centre, key: args.key ?? `${args.job}:${args.step}`, inputHash: sha256(JSON.stringify(recorded)), job: args.job, budgetMs: JOB_AGENT_BUDGET_MS, now: ctx.clock.now },
-      args.spec,
-      args.input,
-      recorded,
-    );
-    if (outcome.kind === "ok") return { kind: "ok", id: outcome.id, parsed: outcome.parsed, costPaise: outcome.costPaise, repaired: outcome.repaired };
-    if (outcome.kind === "failed") return { kind: "failed", id: outcome.id, costPaise: outcome.costPaise, reason: outcome.reason };
-    return outcome;
+    return recordedOf(await runAgent(jobAgent(ctx, args), args.spec, args.input, args.recorded ?? args.input));
   } catch (e) {
     return { kind: "failed", reason: e instanceof DbFailure ? e.reason : "start" };
   }
+}
+
+/** A call made live on a draft row started before: a batch's whose batch did not end by its deadline (D108), so no
+ *  second draft row is started and the row is paid once. */
+export async function callOnRow<I, T>(
+  ctx: StepContext,
+  args: { centre: string; spec: Kind<I, T>; input: I; job: string; step: string; key?: string },
+  row: string,
+): Promise<RecordedCall<T>> {
+  try {
+    return recordedOf(await draftOn(jobAgent(ctx, args), args.spec, args.input, row));
+  } catch (e) {
+    return { kind: "failed", reason: e instanceof DbFailure ? e.reason : "start" };
+  }
+}
+
+/** A job's agent: the platform under the key `<job>:<step>` (or the key given), the job's budget and clock, and the
+ *  hour's cache mark (D108). */
+export function jobAgent(ctx: StepContext, args: { centre: string; input: unknown; recorded?: unknown; job: string; step: string; key?: string }): AgentContext {
+  const recorded = args.recorded ?? args.input;
+  return { db: ctx.db, claude: ctx.claude, token: "", requestId: ctx.requestId, centre: args.centre, key: args.key ?? `${args.job}:${args.step}`, inputHash: sha256(JSON.stringify(recorded)), job: args.job, budgetMs: JOB_AGENT_BUDGET_MS, now: ctx.clock.now, cacheTTL: "1h" };
+}
+
+function recordedOf<T>(outcome: AgentOutcome<T>): RecordedCall<T> {
+  if (outcome.kind === "ok") return { kind: "ok", id: outcome.id, parsed: outcome.parsed, costPaise: outcome.costPaise, repaired: outcome.repaired };
+  if (outcome.kind === "failed") return { kind: "failed", id: outcome.id, costPaise: outcome.costPaise, reason: outcome.reason };
+  return outcome;
 }

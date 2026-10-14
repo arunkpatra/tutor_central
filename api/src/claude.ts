@@ -7,8 +7,9 @@ import { log } from "./log.js";
 
 export type ImageInput = { mediaType: "image/jpeg" | "image/png" | "image/webp"; base64: string };
 /** A prompt's system words (plan decision 5): `shared` is the same for every request of a kind and class and carries
- *  the cache mark; `own` changes with the input. */
-export type SystemBlocks = { shared: string; own: string };
+ *  the cache mark; `own` changes with the input. A job's calls keep the shared block an hour (`ttl`, D108): the morning's
+ *  plans across centres fall within it; a tap's keep five minutes. */
+export type SystemBlocks = { shared: string; own: string; ttl?: "1h" };
 export type ClaudeRequest<T> = {
   model: "claude-haiku-5-5" | "claude-sonnet-5-5" | "claude-opus-5-5";
   effort: "low" | "medium" | "high";
@@ -35,6 +36,8 @@ type Answered = {
   tokensCached: number;
   /** Of `tokensIn`, written to the cache, at a quarter more than the input price. */
   tokensWritten: number;
+  /** Of `tokensWritten`, written to the hour's cache, at twice the input price (D108). */
+  tokensWrittenHour?: number;
   stopReason: string | null;
   latencyMs: number;
 };
@@ -51,6 +54,8 @@ export type ClaudeClient = {
   batch?(items: BatchItem[]): Promise<{ id: string }>;
   /** A batch still running, or each request's answer by its id, parsed by its own schema; one with no answer is failed. */
   batchResults?(id: string, items: BatchItem[]): Promise<"running" | Map<string, ClaudeAnswer<unknown>>>;
+  /** A batch given up (D108): what it has not yet run is not run, nor billed. */
+  cancelBatch?(id: string): Promise<void>;
 };
 
 /** How long one request may take, its retry included: under the app's 125 s (`APIClient.timeout`), so the API
@@ -69,10 +74,11 @@ function paramsOf(request: ClaudeRequest<unknown>): Anthropic.MessageCreateParam
   return {
     model: request.model,
     max_tokens: 16000,
-    // The shared block carries the cache mark: everything up to it is cached for five minutes and read back at a tenth
-    // of the price by the next request of the kind and class (a prefix under the model's minimum is not).
+    // The shared block carries the cache mark: everything up to it is cached for five minutes (a job's for the hour) and
+    // read back at a tenth of the price by the next request of the kind and class (a prefix under the model's minimum is
+    // not).
     system: [
-      { type: "text", text: request.system.shared, cache_control: { type: "ephemeral" } },
+      { type: "text", text: request.system.shared, cache_control: request.system.ttl ? { type: "ephemeral", ttl: request.system.ttl } : { type: "ephemeral" } },
       ...(request.system.own ? [{ type: "text" as const, text: request.system.own }] : []),
     ],
     output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
@@ -90,6 +96,7 @@ function answerOf<T>(response: Anthropic.Message, request: ClaudeRequest<T>, lat
     tokensOut: response.usage.output_tokens,
     tokensCached: response.usage.cache_read_input_tokens ?? 0,
     tokensWritten: written,
+    tokensWrittenHour: response.usage.cache_creation?.ephemeral_1h_input_tokens ?? 0,
     stopReason: response.stop_reason,
     latencyMs,
   };
@@ -135,6 +142,9 @@ export function anthropicClaude(
     async batch(items) {
       const created = await client.messages.batches.create({ requests: items.map((i) => ({ custom_id: i.customId, params: paramsOf(i.request) })) });
       return { id: created.id };
+    },
+    async cancelBatch(id) {
+      await client.messages.batches.cancel(id);
     },
     async batchResults(id, items) {
       const batch = await client.messages.batches.retrieve(id);

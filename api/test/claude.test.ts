@@ -88,6 +88,25 @@ test("the system is two blocks and the first carries cache_control; an empty own
   expect(bodies[1]?.system).toEqual([{ type: "text", text: "rules", cache_control: { type: "ephemeral" } }]);
 });
 
+test("a job's shared block carries the hour's cache mark; a tap's keeps five minutes (D108)", async () => {
+  const bodies: { system: { cache_control?: unknown }[] }[] = [];
+  const capture = (async (_url: unknown, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body)));
+    return reply('{"a":"x"}', "end_turn")("", init);
+  }) as typeof fetch;
+  const client = anthropicClaude("sk-test", { fetch: capture });
+  await client.complete({ ...request, system: { shared: "rules", own: "facts", ttl: "1h" } });
+  await client.complete({ ...request, system: { shared: "rules", own: "facts" } });
+  expect(bodies[0]?.system[0]?.cache_control).toEqual({ type: "ephemeral", ttl: "1h" });
+  expect(bodies[1]?.system[0]?.cache_control).toEqual({ type: "ephemeral" });
+});
+
+test("tokens written to the hour's cache are answered apart, for their price", async () => {
+  const usage = { input_tokens: 50, output_tokens: 45, cache_read_input_tokens: 0, cache_creation_input_tokens: 300, cache_creation: { ephemeral_1h_input_tokens: 300, ephemeral_5m_input_tokens: 0 } } as unknown as { input_tokens: number; output_tokens: number };
+  const answer = await anthropicClaude("sk-test", { fetch: reply('{"a":"x"}', "end_turn", usage) }).complete(request);
+  expect(answer).toMatchObject({ kind: "ok", tokensIn: 350, tokensWritten: 300, tokensWrittenHour: 300 });
+});
+
 test("cache_read_input_tokens is answered as tokensCached; tokens written to the cache count in tokensIn", async () => {
   const usage = { input_tokens: 50, output_tokens: 45, cache_read_input_tokens: 2000, cache_creation_input_tokens: 300 } as unknown as { input_tokens: number; output_tokens: number };
   const answer = await anthropicClaude("sk-test", { fetch: reply('{"a":"x"}', "end_turn", usage) }).complete(request);

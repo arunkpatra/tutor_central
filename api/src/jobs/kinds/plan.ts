@@ -21,7 +21,8 @@ import {
   type Student,
 } from "../../plan/types.js";
 import type { NotificationRow } from "../../push/db.js";
-import { recordedCall } from "../call.js";
+import { callOnRow, recordedCall } from "../call.js";
+import { type Batched, type Keeping, keepOne, type Next, submit, wait } from "./plan-batch.js";
 import type { Job, JobHandler, StepContext, StepOutcome } from "../types.js";
 
 /** What the job reads of a batch for a day (as PlanMaker.read did): the batch with its days and times, its active
@@ -71,14 +72,21 @@ export type PlanRecordSource = {
 /** A naming call or a mock still running: the next try, half a minute on. */
 const KEY_WAIT_MS = 30_000;
 
-type Made = { made: number; notMade: number };
+export type Made = { made: number; notMade: number };
+/** The material phase's state: the plan written and the budget's requests, with the counts so far. */
+export type Material = { record: PlanRead; draft: PlanDraft; plan: string; requests: MaterialRequest[] } & Made;
 type Step =
   | { at?: undefined }
   | { at: "groups"; record: PlanRead }
   | { at: "name"; record: PlanRead; draft: PlanDraft; revisions: Record<string, Revision> }
   | { at: "write"; record: PlanRead; draft: PlanDraft; revisions: Record<string, Revision> }
   | { at: "budget"; record: PlanRead; draft: PlanDraft; revisions: Record<string, Revision>; plan: string }
-  | ({ at: "make"; n: number; record: PlanRead; draft: PlanDraft; plan: string; requests: MaterialRequest[] } & Made)
+  /** A job queued before D108 and taken up after the deploy: its requests from `n` made live. */
+  | ({ at: "make"; n: number } & Material)
+  | ({ at: "make:submit" } & Material)
+  | ({ at: "make:wait" } & Batched)
+  | ({ at: "make:keep" } & Keeping)
+  | ({ at: "make:live"; queue: number[]; rows: Record<string, string> } & Material)
   | ({ at: "notify"; record: PlanRead; draft: PlanDraft; plan: string } & Made);
 
 type Choices = { groups?: number; subjects?: Record<string, string> };
@@ -113,7 +121,15 @@ export function planJob(source: PlanRecordSource): JobHandler {
         case "budget":
           return material(source, centre, ctx, step);
         case "make":
-          return make(job, ctx, source, centre, step);
+          return live(job, ctx, source, centre, { ...step, at: "make:live", queue: step.requests.map((_, i) => i).slice(step.n), rows: {} });
+        case "make:submit":
+          return submit(job, ctx, centre, step);
+        case "make:wait":
+          return wait(job, ctx, centre, step);
+        case "make:keep":
+          return keepOne(job, ctx, source, centre, step, afterBatch);
+        case "make:live":
+          return live(job, ctx, source, centre, step);
         case "notify":
           return notify(source, centre, input, job.id, step, ctx);
       }
@@ -279,20 +295,43 @@ async function material(source: PlanRecordSource, centre: string, ctx: StepConte
   };
   const requests = budget(draft, input);
   if (requests.length === 0) return { kind: "continue", name: "budget", step: { at: "notify", record, draft, plan, made: 0, notMade: 0 } };
-  return { kind: "continue", name: "budget", step: { at: "make", n: 0, record, draft, plan, requests, made: 0, notMade: 0 } };
+  return { kind: "continue", name: "budget", step: { at: "make:submit", record, draft, plan, requests, made: 0, notMade: 0 } };
+}
+
+/** After the batch's drafts: the requests made live, or Plan ready. */
+function afterBatch(m: Material, next: Next): Record<string, unknown> {
+  return next.live.length > 0 ? { ...m, at: "make:live", queue: next.live, rows: next.rows } : { at: "notify", record: m.record, draft: m.draft, plan: m.plan, made: m.made, notMade: m.notMade };
+}
+
+/** The first live request made; the next, or Plan ready. */
+async function live(job: Job, ctx: StepContext, source: PlanRecordSource, centre: string, step: Extract<Step, { at: "make:live" }>): Promise<StepOutcome> {
+  const [n, ...rest] = step.queue;
+  if (n === undefined) return { kind: "continue", name: "make:live", step: afterBatch(step, { live: [], rows: {} }) };
+  const next = (counts: Made): Record<string, unknown> => (rest.length > 0 ? { ...step, ...counts, queue: rest } : afterBatch({ ...step, ...counts }, { live: [], rows: {} }));
+  return make(job, ctx, source, centre, step, n, step.rows[n], next, step);
 }
 
 /** One request made and kept, or marked not made; the job goes on. A retaken step replays its call by its key and keeps
  *  once by the same key (review focus 5). A mock is keyed by its exam, so two batches' plans share one call and one
  *  artefact (review focus 3). */
-async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre: string, step: Extract<Step, { at: "make" }>): Promise<StepOutcome> {
-  const { n, requests, draft, plan, record } = step;
+async function make(
+  job: Job,
+  ctx: StepContext,
+  source: PlanRecordSource,
+  centre: string,
+  m: Material,
+  n: number,
+  row: string | undefined,
+  next: (counts: Made) => Record<string, unknown>,
+  self: Record<string, unknown>,
+): Promise<StepOutcome> {
+  const { requests, draft, plan, record } = m;
   const req = requests[n] as MaterialRequest;
   const name = `make:${n}`;
+  const step = self;
   const after = (made: boolean, extra: { generationId?: string; costPaise?: number; error?: { reason: string } } = {}): StepOutcome => {
-    const counts = { made: step.made + (made ? 1 : 0), notMade: step.notMade + (made ? 0 : 1) };
-    const next: Step = n + 1 < requests.length ? { ...step, ...counts, n: n + 1 } : { at: "notify", record, draft, plan, ...counts };
-    return { kind: "continue", name, step: next, ...extra };
+    const counts = { made: m.made + (made ? 1 : 0), notMade: m.notMade + (made ? 0 : 1) };
+    return { kind: "continue", name, step: next(counts), ...extra };
   };
   const wait = (): StepOutcome => ({ kind: "wait", name, step, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) });
   const place = placeOf(req, draft);
@@ -329,7 +368,9 @@ async function make(job: Job, ctx: StepContext, source: PlanRecordSource, centre
     const body = materialInput(req, centre);
     if (!body) return after(false);
     const key = req.kind === "mock" ? `mock:${req.item}` : undefined;
-    const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key, ...madeCall(body) });
+    // A batch's draft past its deadline is made on the batch's row (D108); any other is started here.
+    const asked = { centre, input: body, job: job.id, step: name, key, ...madeCall(body) };
+    const call = row ? await callOnRow(ctx, asked, row) : await recordedCall(ctx, asked);
     if (call.kind === "pending") return wait();
     // A kind switched off (D100): not made, nothing paid, the reason on the step.
     if (call.kind === "paused") return after(false, { error: { reason: "paused" } });

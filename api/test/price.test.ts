@@ -27,3 +27,9 @@ test("a cached token is priced at a tenth, a token written to the cache at a qua
   // A million written to it is ₹212.50, a quarter over ₹170.
   expect(costPaise("claude-sonnet-5-5", 1_000_000, 0, 0, 1_000_000)).toBe(21_250);
 });
+
+test("a token written to the hour's cache is priced at twice the input (D108)", () => {
+  // A million written for the hour on Sonnet 5.5 is ₹340, twice ₹170; at the batch's half, ₹170.
+  expect(costPaise("claude-sonnet-5-5", 1_000_000, 0, 0, 1_000_000, 1, 1_000_000)).toBe(34_000);
+  expect(costPaise("claude-sonnet-5-5", 1_000_000, 0, 0, 1_000_000, 0.5, 1_000_000)).toBe(17_000);
+});
