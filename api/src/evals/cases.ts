@@ -10,12 +10,22 @@ import { FigureOutput, MakeInput, ParseSchoolInput, PlanInput } from "../schemas
 
 /** A golden case (D74, plan decision 10): a kind's input without a centre, and what its answer must show. */
 export type Expect = { count?: number; proofs?: boolean; contains?: string[]; never?: string[]; figure?: string; refused?: boolean };
-export type Case = { kind: AIKind; id: string; input: Record<string, unknown>; expect: Expect };
+export type Case = { kind: AIKind; id: string; input: Record<string, unknown>; expect: Expect; set?: string };
 export type Scored = { schema: boolean; verify: boolean; expect: boolean; reasons: string[] };
 
-/** The kinds with a golden set: the nine on their agents. */
-export const EVAL_KINDS = ["sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school"] as const;
+/** The kinds with a golden set: every kind on its agent (the parents' four from Phase 21). */
+export const EVAL_KINDS = [
+  "sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school",
+  "note", "can_do", "test_tomorrow", "not_on_track",
+] as const;
 export type EvalKind = (typeof EVAL_KINDS)[number];
+/** The language anchors (D110): `api/evals/anchors/<lang>/cases.json`, the parents' messages in Hindi and Kannada, each
+ *  case naming its kind; run by name (`bun evals --kinds anchor_hi,anchor_kn`) under the free checks until the native
+ *  speakers' labels come (docs/testing/anchor-labelling.md). */
+export const ANCHOR_SETS = ["anchor_hi", "anchor_kn"] as const;
+
+/** A set's folder under api/evals: a kind's own, or an anchor set's `anchors/<lang>`. */
+export const setFolder = (set: string) => (set.startsWith("anchor_") ? join("anchors", set.slice("anchor_".length)) : set);
 /** A centre's id for the inputs' schemas: the evals touch no database. */
 export const PROBE_CENTRE = "22222222-2222-2222-2222-222222222222";
 
@@ -27,9 +37,11 @@ export function evalsDir(): string {
   return found;
 }
 
-/** Every case of the kinds asked (all nine by default), in the files' order. */
-export function loadCases(kinds: readonly string[] = EVAL_KINDS, dir = evalsDir()): Case[] {
-  return kinds.flatMap((kind) => (JSON.parse(readFileSync(join(dir, kind, "cases.json"), "utf8")) as Omit<Case, "kind">[]).map((c) => ({ ...c, kind: kind as AIKind })));
+/** Every case of the sets asked (every kind's by default), in the files' order; an anchor's case names its own kind. */
+export function loadCases(sets: readonly string[] = EVAL_KINDS, dir = evalsDir()): Case[] {
+  return sets.flatMap((set) =>
+    (JSON.parse(readFileSync(join(dir, setFolder(set), "cases.json"), "utf8")) as (Omit<Case, "kind"> & { kind?: AIKind })[]).map((c) => ({ ...c, kind: c.kind ?? (set as AIKind), set })),
+  );
 }
 
 /** The kinds that have a golden set on disk. */

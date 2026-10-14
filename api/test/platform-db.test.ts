@@ -15,7 +15,7 @@ import { makeExportSource } from "../src/export/record.js";
 import { makeSweep } from "../src/jobs/kinds/sweep.js";
 import { makeSweepSource } from "../src/jobs/sweep-db.js";
 import { makePlatformDb } from "../src/db.js";
-import { kindOf, SAMPLE } from "../src/claude-fake.js";
+import { kindOf, localAnswer, SAMPLE } from "../src/claude-fake.js";
 import { fakePusher } from "../src/push/apns-fake.js";
 import { reminderSweep } from "../src/jobs/kinds/reminder-sweep.js";
 import { fakeJobsDb } from "../src/jobs/db-fake.js";
@@ -152,7 +152,7 @@ test.skipIf(!up)("a plan job on the seed's Evening batch writes the plan, keeps 
     await db.from("device_tokens").insert({ user_id: user, device_id: device, token: "tok-plan", environment: "sandbox" });
     const handler = planJob(makeRecordSource(url as string, service as string, outbox));
     const clock = { now: () => Date.now(), sleep: async () => {} };
-    const ctx = { db: makePlatformDb(url as string, service as string), jobs: fakeJobsDb(clock as never), claude: fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] })), clock, requestId: crypto.randomUUID(), worker: "w" };
+    const ctx = { db: makePlatformDb(url as string, service as string), jobs: fakeJobsDb(clock as never), claude: fakeClaude((r) => ({ answer: localAnswer(r) })), clock, requestId: crypto.randomUUID(), worker: "w" };
     let current = { id: job, centreId: CENTRE, kind: "plan" as const, attempts: 1, step: {} as Record<string, unknown>, input: { class_id: batch, date }, leaseUntil: "" };
     const names: string[] = [];
     for (let i = 0; i < 60; i++) {

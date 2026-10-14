@@ -396,7 +396,8 @@ test("a body the schema refuses is a 400 marked invalid, so the app never shows 
 
 // ---- Phase 15: the note from Make with the tutor's own words ----
 test("a note with tutorSays reaches the model and is recorded with it", async () => {
-  const claude = fakeClaude({ answer: SAMPLE.note });
+  // The fake's answer carries the tutor's words, which the note's rules hold (D110).
+  const claude = fakeClaude((r) => ({ answer: localScript(r).answer }));
   const db = fakeDb();
   const r = await post(app(claude, db), "/ai/make", { kind: "note", centreId, ...student, language: "hi", week, tutorSays: "Ask him to read aloud." });
   expect(r.status).toBe(200);

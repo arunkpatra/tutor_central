@@ -351,3 +351,10 @@ test("the textbook prompt asks a skill to add nothing to its heading", () => {
 test("the school prompt gives a notice and a holiday no portions", () => {
   expect(systemText(parseSchoolRequest({ text: "PTM on Saturday.", image: null, today: "2026-10-13", schools: [], classLevels: [] }))).toContain("A notice or a holiday has no portions (null)");
 });
+
+test("Make it again's reason reaches the brief's and the mock's own words (D107), as the sheet's does", () => {
+  expect(brief("8", "Science", "Chemical reactions", "Simpler words").system.own).toContain("The tutor asked for a change: Simpler words. Do that, keeping to what was asked.");
+  expect(brief("8", "Science", "Chemical reactions").system.own).not.toContain("asked for a change");
+  const mock = mockRequest({ kind: "mock", centreId, classLevel: "8", subject: "Science", title: "Science unit test", portions: ["Chemical reactions"], pattern: { marks: 25, durationMinutes: 40 }, reason: "Closer to the school's papers" });
+  expect(mock.system.own).toContain("The tutor asked for a change: Closer to the school's papers. Do that, keeping to what was asked.");
+});

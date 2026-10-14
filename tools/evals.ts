@@ -11,18 +11,27 @@ import { failedCases, gate, type Results, withRetries } from "./evals-gate";
 
 const ROOT = join(import.meta.dir, "..");
 const EVALS = join(ROOT, "api/evals");
-export const KINDS = ["sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school"] as const;
+export const KINDS = [
+  "sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school",
+  "note", "can_do", "test_tomorrow", "not_on_track",
+] as const;
+/** The language anchors (D110): run by name, graded by the free checks alone until the speakers' labels come. */
+export const ANCHORS = ["anchor_hi", "anchor_kn"] as const;
+const folderOf = (set: string) => (set.startsWith("anchor_") ? join("anchors", set.slice("anchor_".length)) : set);
 export const GRADER = "anthropic:messages:claude-opus-5-5";
+/** The grader's room: Opus thinks before it grades, and a Kannada note's reasoning spent promptfoo's default 2,048 tokens
+ *  with no grade written ("No output", Phase 21). */
+const GRADER_PROVIDER = { id: GRADER, config: { max_tokens: 16000 } };
 
 type Case = { id: string; expect: { refused?: boolean } };
-type Assertion = { type: "javascript" | "llm-rubric"; value: string; provider?: string };
+type Assertion = { type: "javascript" | "llm-rubric"; value: string; provider?: typeof GRADER_PROVIDER };
 export type TestCase = { description: string; vars: { kind: string; id: string }; assert: Assertion[] };
 
 export function kindsAsked(argv: string[]): string[] {
   const at = argv.indexOf("--kinds");
   if (at === -1) return [...KINDS];
   const kinds = (argv[at + 1] ?? "").split(",").filter(Boolean);
-  for (const kind of kinds) if (!(KINDS as readonly string[]).includes(kind)) throw new Error(`${kind} has no golden set`);
+  for (const kind of kinds) if (![...KINDS, ...ANCHORS].includes(kind as never)) throw new Error(`${kind} has no golden set`);
   return kinds;
 }
 
@@ -30,11 +39,12 @@ export function kindsAsked(argv: string[]): string[] {
 export async function testsFor(kinds: string[], options: { fake: boolean; cases?: string[] }): Promise<TestCase[]> {
   const tests: TestCase[] = [];
   for (const kind of kinds) {
-    const cases = (await Bun.file(join(EVALS, kind, "cases.json")).json()) as Case[];
+    const cases = (await Bun.file(join(EVALS, folderOf(kind), "cases.json")).json()) as Case[];
+    const anchor = (ANCHORS as readonly string[]).includes(kind);
     for (const c of cases) {
       if (options.cases && !options.cases.includes(c.id)) continue;
       const assert: Assertion[] = [{ type: "javascript", value: "file://assert.ts" }];
-      if (!options.fake && !c.expect.refused) assert.push({ type: "llm-rubric", value: `file://${kind}/rubric.md`, provider: GRADER });
+      if (!options.fake && !anchor && !c.expect.refused) assert.push({ type: "llm-rubric", value: `file://${kind}/rubric.md`, provider: GRADER_PROVIDER });
       tests.push({ description: c.id, vars: { kind, id: c.id }, assert });
     }
   }

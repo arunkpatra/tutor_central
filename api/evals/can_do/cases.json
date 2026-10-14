@@ -1,0 +1,138 @@
+[
+  {
+    "id": "cando-kn-reading",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000006",
+      "studentName": "Sahil Verma",
+      "parentName": "Deepak Verma",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "1",
+      "ladder": {
+        "movedUp": [
+          {
+            "area": "reading",
+            "step": "Words"
+          }
+        ],
+        "canDo": [
+          "Read three-letter words"
+        ],
+        "atHome": "Read one word card a day",
+        "next": [
+          "Read short sentences"
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "cando-hinglish-numbers",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000007",
+      "studentName": "Riya Sharma",
+      "parentName": "Neha Sharma",
+      "centreName": "Bright Minds Tuition",
+      "language": "hinglish",
+      "classLevel": "1",
+      "ladder": {
+        "movedUp": [
+          {
+            "area": "numbers",
+            "step": "Count to 50"
+          }
+        ],
+        "canDo": [
+          "Count objects up to 50"
+        ],
+        "atHome": "Count the steps on the stairs together",
+        "next": [
+          "Count to 100"
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "cando-hi-writing",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000008",
+      "studentName": "Ananya Iyer",
+      "parentName": "Suresh Iyer",
+      "centreName": "Bright Minds Tuition",
+      "language": "hi",
+      "classLevel": "ukg",
+      "ladder": {
+        "movedUp": [
+          {
+            "area": "writing",
+            "step": "Letters"
+          }
+        ],
+        "canDo": [
+          "Write the letters a to j"
+        ],
+        "atHome": "Trace two letters each evening",
+        "next": [
+          "Write the letters k to t"
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "cando-en-two-steps",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000009",
+      "studentName": "Akshita Rao",
+      "parentName": "Priya Rao",
+      "centreName": "Bright Minds Tuition",
+      "language": "en",
+      "classLevel": "2",
+      "ladder": {
+        "movedUp": [
+          {
+            "area": "reading",
+            "step": "Sentences"
+          },
+          {
+            "area": "numbers",
+            "step": "Add within 20"
+          }
+        ],
+        "canDo": [
+          "Read a short sentence aloud",
+          "Add two numbers within 20"
+        ],
+        "atHome": "Read one sentence from a storybook together",
+        "next": [
+          "Read a short paragraph"
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "cando-en-no-move",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000010",
+      "studentName": "Lakshmi Menon",
+      "parentName": "Anil Menon",
+      "centreName": "Bright Minds Tuition",
+      "language": "en",
+      "classLevel": "1",
+      "ladder": {
+        "movedUp": [],
+        "canDo": [
+          "Read two-letter words",
+          "Count to 20"
+        ],
+        "atHome": "Point to words on a cereal box together",
+        "next": [
+          "Read three-letter words"
+        ]
+      }
+    },
+    "expect": {}
+  }
+]

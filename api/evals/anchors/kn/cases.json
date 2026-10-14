@@ -1,0 +1,193 @@
+[
+  {
+    "id": "anchor-kn-week-equations",
+    "kind": "note",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000029",
+      "studentName": "Dev Kumar",
+      "parentName": "Ramesh Kumar",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "8",
+      "week": {
+        "monday": "2026-10-05",
+        "taught": [
+          "Balancing equations"
+        ],
+        "practise": [
+          "The numbers in front of a formula"
+        ],
+        "coming": [
+          "Acids and bases"
+        ],
+        "right": "8 of 12 checks"
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-week-fractions",
+    "kind": "note",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000030",
+      "studentName": "Riya Sharma",
+      "parentName": "Neha Sharma",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "5",
+      "week": {
+        "monday": "2026-10-05",
+        "taught": [
+          "Adding fractions"
+        ],
+        "practise": [],
+        "coming": [
+          "Subtracting fractions"
+        ],
+        "right": "5 of 6 checks"
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-week-nothing-new",
+    "kind": "note",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000031",
+      "studentName": "Nikhil Das",
+      "parentName": "Arup Das",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "8",
+      "week": {
+        "monday": "2026-10-12",
+        "taught": [],
+        "practise": [],
+        "coming": [],
+        "attendance": "3 of 5 days"
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-week-tutor-words",
+    "kind": "note",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000032",
+      "studentName": "Meher Shah",
+      "parentName": "Kavita Shah",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "8",
+      "week": {
+        "monday": "2026-10-12",
+        "taught": [
+          "Force and pressure",
+          "Friction"
+        ],
+        "practise": [
+          "Pressure in liquids"
+        ],
+        "coming": [],
+        "right": "10 of 12 checks"
+      },
+      "tutorSays": "The centre is closed on Friday for Deepavali"
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-cando-reading",
+    "kind": "can_do",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000033",
+      "studentName": "Sahil Verma",
+      "parentName": "Deepak Verma",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "1",
+      "ladder": {
+        "movedUp": [
+          {
+            "area": "reading",
+            "step": "Words"
+          }
+        ],
+        "canDo": [
+          "Read three-letter words"
+        ],
+        "atHome": "Read one word card a day",
+        "next": [
+          "Read short sentences"
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-cando-numbers",
+    "kind": "can_do",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000034",
+      "studentName": "Ananya Iyer",
+      "parentName": "Suresh Iyer",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "ukg",
+      "ladder": {
+        "movedUp": [
+          {
+            "area": "numbers",
+            "step": "Count to 20"
+          }
+        ],
+        "canDo": [
+          "Count objects up to 20"
+        ],
+        "atHome": "Count the spoons at dinner together",
+        "next": [
+          "Count to 50"
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-test-tomorrow",
+    "kind": "test_tomorrow",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000035",
+      "studentName": "Hemanth Reddy",
+      "parentName": "Lakshmi Reddy",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "10",
+      "subject": "Mathematics",
+      "title": "Maths unit test 2",
+      "date": "2026-10-15",
+      "portions": "Quadratic equations",
+      "revise": "The discriminant"
+    },
+    "expect": {}
+  },
+  {
+    "id": "anchor-kn-not-on-track",
+    "kind": "not_on_track",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000036",
+      "studentName": "Bir Bikram Singh",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "7",
+      "hard": [
+        "Integers"
+      ],
+      "reasons": [
+        "Half the checks wrong in two weeks"
+      ],
+      "doing": "One step at a time with a worked example",
+      "parentName": "Harjeet Singh",
+      "atHome": "Five minutes of practice each evening"
+    },
+    "expect": {}
+  }
+]

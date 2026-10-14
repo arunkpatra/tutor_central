@@ -1,0 +1,99 @@
+[
+  {
+    "id": "not-hi-fractions",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000016",
+      "studentName": "Ishaan Bose",
+      "centreName": "Bright Minds Tuition",
+      "language": "hi",
+      "classLevel": "6",
+      "hard": [
+        "Fractions"
+      ],
+      "reasons": [
+        "Half the checks wrong in two weeks"
+      ],
+      "doing": "One step at a time with a worked example",
+      "atHome": "Five minutes of fractions each evening"
+    },
+    "expect": {}
+  },
+  {
+    "id": "not-kn-two-hard",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000017",
+      "studentName": "Bir Bikram Singh",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "7",
+      "hard": [
+        "Integers",
+        "Simple equations"
+      ],
+      "reasons": [
+        "Absent twice this month",
+        "Below his usual in the unit test"
+      ],
+      "doing": "Smaller sets with the steps written out",
+      "parentName": "Harjeet Singh"
+    },
+    "expect": {}
+  },
+  {
+    "id": "not-hinglish-home",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000018",
+      "studentName": "Meher Shah",
+      "centreName": "Bright Minds Tuition",
+      "language": "hinglish",
+      "classLevel": "8",
+      "hard": [
+        "Pressure in liquids"
+      ],
+      "reasons": [
+        "Four of the last six checks wrong"
+      ],
+      "doing": "A short demonstration with a bottle of water",
+      "parentName": "Kavita Shah",
+      "atHome": "Ask her to explain one example aloud"
+    },
+    "expect": {}
+  },
+  {
+    "id": "not-hi-plain",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000019",
+      "studentName": "Nikhil Das",
+      "centreName": "Bright Minds Tuition",
+      "language": "hi",
+      "classLevel": "8",
+      "hard": [
+        "Linear equations"
+      ],
+      "reasons": [],
+      "doing": "Two worked examples before each set",
+      "parentName": "Arup Das"
+    },
+    "expect": {}
+  },
+  {
+    "id": "not-kn-home",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000020",
+      "studentName": "Akshita Rao",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "10",
+      "hard": [
+        "Trigonometry"
+      ],
+      "reasons": [
+        "Below her usual in the unit test"
+      ],
+      "doing": "A table of the ratios to keep on her desk",
+      "parentName": "Priya Rao",
+      "atHome": "Ten minutes with the table each evening"
+    },
+    "expect": {}
+  }
+]

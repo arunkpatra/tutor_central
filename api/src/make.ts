@@ -43,7 +43,7 @@ export function makeRequest(v: MakeInput): Made {
       // The template asked for is the template answered; another is an unfit answer.
       return made("figure", figureRequest(v.figure, v.classLevel, v.subject, v.skill), { empty: (answer) => answer.figure.kind !== v.figure });
     case "brief":
-      return made("brief", briefRequest(v.classLevel, v.subject, v.chapter));
+      return made("brief", briefRequest(v.classLevel, v.subject, v.chapter, v.reason));
     case "check":
       return made("check", checkRequest(v.classLevel, v.subject, v.skills));
     case "placement":

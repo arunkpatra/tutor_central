@@ -4,14 +4,14 @@ import type { Kind } from "../agent.js";
 import { rubric } from "./rubric.js";
 import { workedExampleFindings } from "./worked-example.js";
 
-export type BriefInput = { classLevel: ClassLevel; subject: string; chapter: string };
+export type BriefInput = { classLevel: ClassLevel; subject: string; chapter: string; reason?: string };
 
 /** The tutor's brief for a chapter (P10-Brief): three mistakes and three lines (the schema's), the worked example's rules. */
 export const brief: Kind<BriefInput, BriefOutput> = {
   kind: "brief",
   classLevel: (input) => input.classLevel,
   maths: true,
-  draft: (input) => request(input.classLevel, input.subject, input.chapter),
+  draft: (input) => request(input.classLevel, input.subject, input.chapter, input.reason),
   verify: (_input, draft) => workedExampleFindings(draft.workedExample, "worked example's "),
   rubric: rubric([
     "It is about the chapter named, as that class meets it.",

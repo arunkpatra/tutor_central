@@ -1,7 +1,7 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { type MockInput, MockOutput } from "../schemas.js";
-import { VOICE, blocks, LIMITS, MATHS, PROOF } from "./shared.js";
+import { VOICE, againWords, blocks, LIMITS, MATHS, PROOF } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
 export const VERSION = "4";
@@ -25,7 +25,7 @@ export function request(input: MockInput): ClaudeRequest<MockOutput> {
       PROOF,
       MATHS,
       LIMITS.mock,
-    ]),
+    ], [againWords(input.reason)]),
     text: [
       `${input.title}, class ${input.classLevel} ${input.subject}.`,
       `Portions: ${input.portions.map((p) => `"${p}"`).join(", ")}.`,

@@ -1,0 +1,129 @@
+[
+  {
+    "id": "note-hi-week",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000001",
+      "studentName": "Dev Kumar",
+      "parentName": "Ramesh Kumar",
+      "centreName": "Bright Minds Tuition",
+      "language": "hi",
+      "classLevel": "8",
+      "week": {
+        "monday": "2026-10-05",
+        "taught": [
+          "Balancing equations",
+          "Types of reactions"
+        ],
+        "practise": [
+          "The numbers in front of a formula"
+        ],
+        "coming": [
+          "Acids and bases"
+        ],
+        "right": "8 of 12 checks"
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "note-kn-tutor-words",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000002",
+      "studentName": "Riya Sharma",
+      "parentName": "Neha Sharma",
+      "centreName": "Bright Minds Tuition",
+      "language": "kn",
+      "classLevel": "5",
+      "week": {
+        "monday": "2026-10-05",
+        "taught": [
+          "Adding fractions with the same denominator"
+        ],
+        "practise": [
+          "Fractions with different denominators"
+        ],
+        "coming": [],
+        "right": "5 of 6 checks"
+      },
+      "tutorSays": "Please send the maths notebook on Monday"
+    },
+    "expect": {}
+  },
+  {
+    "id": "note-en-nothing-new",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000003",
+      "studentName": "Hemanth Reddy",
+      "parentName": "Lakshmi Reddy",
+      "centreName": "Bright Minds Tuition",
+      "language": "en",
+      "classLevel": "10",
+      "week": {
+        "monday": "2026-10-05",
+        "taught": [],
+        "practise": [],
+        "coming": []
+      }
+    },
+    "expect": {
+      "never": [
+        "test",
+        "mark"
+      ]
+    }
+  },
+  {
+    "id": "note-hinglish-reason",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000004",
+      "studentName": "Meher Shah",
+      "parentName": "Kavita Shah",
+      "centreName": "Bright Minds Tuition",
+      "language": "hinglish",
+      "classLevel": "8",
+      "week": {
+        "monday": "2026-10-12",
+        "taught": [
+          "Force and pressure"
+        ],
+        "practise": [
+          "Pressure in liquids"
+        ],
+        "coming": [
+          "Friction"
+        ],
+        "right": "9 of 12 checks"
+      },
+      "reason": "Less about marks"
+    },
+    "expect": {
+      "never": [
+        "Less about marks"
+      ]
+    }
+  },
+  {
+    "id": "note-hi-attendance",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000005",
+      "studentName": "Nikhil Das",
+      "parentName": "Arup Das",
+      "centreName": "Bright Minds Tuition",
+      "language": "hi",
+      "classLevel": "8",
+      "week": {
+        "monday": "2026-10-12",
+        "taught": [
+          "Linear equations in one variable"
+        ],
+        "practise": [
+          "Moving a term across the equals sign"
+        ],
+        "coming": [],
+        "right": "6 of 9 checks",
+        "attendance": "4 of 5 days"
+      }
+    },
+    "expect": {}
+  }
+]

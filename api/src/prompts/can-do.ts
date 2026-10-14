@@ -5,7 +5,7 @@ import { MESSAGE, whoLines } from "./message.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 /** Can-now-do for a young student on the ladder (P10-CanNowDo): what moved up, what the student can now do, one thing
  *  to do at home (the app's fixed line per step, no AI) and what is next, in the parent's language. */

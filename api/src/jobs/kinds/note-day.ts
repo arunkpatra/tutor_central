@@ -29,7 +29,8 @@ export function weekEnding(noteDay: string): Week {
 }
 
 const WAIT_MS = 30_000;
-type Counts = { made: number; held: string[]; kept: number; failed: number };
+/** `setAside`: the students whose note the check refused after its repair (D110), named in the result for the app. */
+type Counts = { made: number; held: string[]; kept: number; failed: number; setAside?: string[] };
 type Step = { at?: undefined } | ({ at: "note"; i: number; read: NoteRead } & Counts) | ({ at: "notify"; read: NoteRead } & Counts);
 
 const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
@@ -93,7 +94,7 @@ async function note(job: Job, ctx: StepContext, source: NoteSource, centre: stri
   const name = `note:${i + 1}`;
   const go = (counts: Partial<Counts>, extra: { generationId?: string; costPaise?: number } = {}): StepOutcome => {
     const next = { ...step, ...counts };
-    const following: Step = i + 1 < read.students.length ? { ...next, i: i + 1 } : { at: "notify", read, made: next.made, held: next.held, kept: next.kept, failed: next.failed };
+    const following: Step = i + 1 < read.students.length ? { ...next, i: i + 1 } : { at: "notify", read, made: next.made, held: next.held, kept: next.kept, failed: next.failed, setAside: next.setAside };
     return { kind: "continue", name, step: following, ...extra };
   };
   if (entry.kept) return go({ kept: step.kept + 1 });
@@ -140,6 +141,8 @@ async function note(job: Job, ctx: StepContext, source: NoteSource, centre: stri
   if (call.kind === "failed") {
     // No consent (never given, or withdrawn while the job ran): held, nothing paid (review focus 4).
     if (call.reason === "student_consent") return go({ held: [...step.held, student.id] });
+    // Refused by the check after its repair (a fact not in the record): set aside for the tutor to write (P21-Note-SetAside).
+    if (call.reason.startsWith("check:")) return go({ setAside: [...(step.setAside ?? []), student.id] }, { generationId: call.id, costPaise: call.costPaise });
     return go({ failed: step.failed + 1 }, { generationId: call.id, costPaise: call.costPaise });
   }
   const content = noteContent({ message: call.parsed.message, english: call.parsed.english, language: student.language, monday: week.from, facts, generationId: call.id });
@@ -153,7 +156,7 @@ async function note(job: Job, ctx: StepContext, source: NoteSource, centre: stri
 }
 
 async function notify(source: NoteSource, centre: string, batch: { classId: string; date: string } | null, step: Extract<Step, { at: "notify" }>, ctx: StepContext): Promise<StepOutcome> {
-  const result = { made: step.made, held: step.held.length, kept: step.kept, failed: step.failed };
+  const result = { made: step.made, held: step.held.length, kept: step.kept, failed: step.failed, set_aside: step.setAside ?? [] };
   const ready = step.made + step.kept;
   if (batch && ready > 0) {
     const row: NotificationRow = {

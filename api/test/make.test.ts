@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, localAnswer, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { JOB_AGENT_BUDGET_MS, recordedCall } from "../src/jobs/call.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
@@ -78,7 +78,8 @@ test("a mock whose marks miss the pattern is empty; a figure of another template
   expect(figure.empty?.({ figure: { kind: "number_line" }, caption: "x" })).toBe(true);
 });
 
-const ctx = (db = fakeDb(), claude = fakeClaude({ answer: SAMPLE.note })): StepContext => {
+// The fake's answer fitted to the request: the message rules (D110) hold a note to its own facts and script.
+const ctx = (db = fakeDb(), claude = fakeClaude((r) => ({ answer: localAnswer(r) }))): StepContext => {
   const clock = fakeClock();
   return { db, jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" };
 };
@@ -89,12 +90,13 @@ test("recordedCall passes the student to the gate and keys by the step unless a 
   expect(out.kind).toBe("ok");
   expect(db.started[0]).toMatchObject({ kind: "note", student: studentId, key: "job-1:note:x", job: "job-1" });
   await recordedCall(ctx(db), { centre: centreId, input: parsed("note"), job: "job-1", step: "note:y", key: "note:s:2026-10-05", spec: makeAgent(parsed("note")) });
-  expect(db.started[1]).toMatchObject({ key: "note:s:2026-10-05" });
+  // On its agent (D110) a note is a draft and its check: the second call's draft is keyed as given.
+  expect(db.rows.filter((r) => r.agentStep === "draft").map((r) => r.key)).toEqual(["job-1:note:x", "note:s:2026-10-05"]);
 });
 
 test("a personal kind without the parent's consent comes back failed student_consent and costs nothing", async () => {
   const claude = fakeClaude({ answer: SAMPLE.note });
-  const out = await recordedCall(ctx(fakeDb({ studentConsent: false }), claude), { centre: centreId, input: {}, job: "job-1", step: "note", spec: makeAgent(parsed("note")) });
+  const out = await recordedCall(ctx(fakeDb({ studentConsent: false }), claude), { centre: centreId, input: parsed("note"), job: "job-1", step: "note", spec: makeAgent(parsed("note")) });
   expect(out).toEqual({ kind: "failed", reason: "student_consent" });
   expect(claude.requests).toHaveLength(0);
 });

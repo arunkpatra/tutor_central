@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { fakeClaude, kindOf, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, kindOf, localAnswer, localScript, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import { type NoteRead, type NoteSource, noteDay, weekEnding } from "../src/jobs/kinds/note-day.js";
@@ -58,7 +58,8 @@ function source(students: NoteRead["students"], users = [{ user: "u1", planReady
   return s;
 }
 const job = (input: Record<string, unknown> = { class_id: CLASS, date: SUNDAY }): Job => ({ id: "job-1", centreId: CENTRE, kind: "note_day", attempts: 1, step: {}, input, leaseUntil: "" });
-const ctx = (db = fakeDb(), claude = fakeClaude((r) => ({ answer: SAMPLE[kindOf(r)] }))): StepContext & { claude: ReturnType<typeof fakeClaude> } => {
+// The fake's answer in the language asked (the message rules hold a note to its parent's script, D110).
+const ctx = (db = fakeDb(), claude = fakeClaude((r) => ({ answer: localAnswer(r) }))): StepContext & { claude: ReturnType<typeof fakeClaude> } => {
   const clock = fakeClock(Date.parse("2026-10-11T10:30:00Z"));
   return { db, jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" };
 };
@@ -120,15 +121,16 @@ test("a student withdrawn mid-job is held, not paid", async () => {
   const c = ctx(db);
   const out = await drainAll(noteDay(source([entry(DEV, "Dev"), entry(RIYA, "Riya")])), job(), c);
   expect(out.find((o) => o.name === "note:2")).toMatchObject({ kind: "continue", step: expect.objectContaining({ held: [RIYA] }) });
-  expect(c.claude.requests).toHaveLength(1);
-  expect(db.finished).toHaveLength(1);
+  // One note on its agent (D110): its draft and its check.
+  expect(c.claude.requests).toHaveLength(2);
+  expect(db.finished).toHaveLength(2);
   expect(out.at(-1)).toMatchObject({ result: { made: 1, held: 1 } });
 });
 
 test("a note already kept for the week is not made again", async () => {
   const c = ctx();
   const out = await drainAll(noteDay(source([entry(DEV, "Dev", { kept: true }), entry(RIYA, "Riya")])), job(), c);
-  expect(c.claude.requests).toHaveLength(1);
+  expect(c.claude.requests).toHaveLength(2);
   expect(out.at(-1)).toMatchObject({ result: { made: 1, kept: 1 } });
 });
 
@@ -157,4 +159,12 @@ test("no note made: no notification", async () => {
   const s = source([entry(DEV, "Dev")]);
   await drainAll(noteDay(s), job(), ctx(fakeDb({ studentConsent: false })));
   expect(s.notified).toEqual([]);
+});
+
+test("a note the check refuses is set aside: named in the job's result, nothing kept", async () => {
+  const s = source([entry(DEV, "Dev Kumar"), entry(RIYA, "Riya Shah")]);
+  const c = ctx(fakeDb(), fakeClaude((r) => ({ ...localScript(r, kindOf(r) === "note" && r.text.includes("Student: Dev.") ? "invented-fact" : undefined), delayMs: 0 })));
+  const out = await drainAll(noteDay(s), job(), c);
+  expect(out.at(-1)).toMatchObject({ kind: "done", result: { made: 1, held: 0, kept: 0, failed: 0, set_aside: [DEV] } });
+  expect(s.kept.map((k) => k.student)).toEqual([RIYA]);
 });
