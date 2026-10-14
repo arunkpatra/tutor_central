@@ -147,3 +147,58 @@ test("an exam gone, or past, ends the job at its first step", async () => {
   const past = harness(ist("2026-10-17"), () => read());
   expect(await past.handler.step(job(), past.ctx)).toMatchObject({ kind: "done", result: { reason: "past" } });
 });
+
+// A changed exam (its date, portions or window; the trigger wakes the job) is split again: the plan reads the same days
+// as the page. The split's basis rides in the job's step.
+const basis = { date: "2026-10-16", portions: "Chemical reactions", windowDays: null };
+
+test("every step after the split carries the exam's basis", async () => {
+  const { ctx, handler } = harness(ist("2026-10-07"), () => read());
+  const one = await handler.step(job(), ctx);
+  expect(one).toMatchObject({ kind: "continue", step: { at: "wait", basis } });
+  const two = await handler.step(job((one as Extract<StepOutcome, { kind: "continue" }>).step), ctx);
+  expect(two).toMatchObject({ kind: "wait", step: { at: "mock", basis } });
+});
+
+test("an exam moved later is split again and the wait moves to its new mock day", async () => {
+  const moved = read({ item: { ...read().item, date: "2026-10-23" } });
+  const { ctx, s, handler } = harness(ist("2026-10-08"), () => moved);
+  const out = await handler.step(job({ at: "mock", mockDay: "2026-10-14", basis }), ctx);
+  expect(s.preparation).toHaveLength(1);
+  expect((s.preparation[0] as { day: string; kind: string }[]).at(-1)).toMatchObject({ day: "2026-10-23", kind: "exam" });
+  expect(out).toMatchObject({ kind: "continue", name: "split", step: { at: "wait", mockDay: "2026-10-21", basis: { ...basis, date: "2026-10-23" } } });
+});
+
+test("an exam changed after its mock is made is split again and goes on reading the marks", async () => {
+  const changed = read({ item: { ...read().item, portions: "Chemical reactions · Force and pressure" }, mock: { id: "m1", content: mockContent } });
+  const { ctx, db, s, handler } = harness(ist("2026-10-14", "20:00"), () => changed);
+  const out = await handler.step(job({ at: "marks", basis }), ctx);
+  expect(s.preparation).toHaveLength(1);
+  expect(out).toMatchObject({ kind: "wait", name: "marks", step: { at: "marks", basis: { ...basis, portions: "Chemical reactions · Force and pressure" } } });
+  expect(db.rows).toHaveLength(0);
+});
+
+test("an exam unchanged since its split is not split again", async () => {
+  const { ctx, s, handler } = harness(ist("2026-10-14", "20:00"), () => read({ mock: { id: "m1", content: mockContent } }));
+  await handler.step(job({ at: "marks", basis }), ctx);
+  expect(s.preparation).toHaveLength(0);
+});
+
+// The gap report's skills go to its agent weakest first, the order its days take them (hand run 5: a report refused
+// for the order). A report not made is tried again when the tutor saves marks again (the wake).
+test("the gap report takes the skills weakest first", async () => {
+  const r = read({ mock: { id: "m1", content: mockContent }, marks: [{ student: DEV, questions: [{ number: 1, marks: 1 }, { number: 2, marks: 1 }, { number: 3, marks: 0 }, { number: 4, marks: 1 }] }] });
+  const { ctx, s, handler } = harness(ist("2026-10-14", "20:00"), () => r);
+  await handler.step(job({ at: "marks" }), ctx);
+  expect((s.kept[0]?.content.by_skill as { skill: string }[]).map((t) => t.skill)).toEqual(["Types of reactions", "Balance a chemical equation"]);
+});
+
+test("a report not made is not tried each quarter hour, but is when the tutor saves marks again", async () => {
+  const r = read({ mock: { id: "m1", content: mockContent }, marks: [{ student: DEV, questions: [{ number: 1, marks: 1 }] }] });
+  const { ctx, s, handler } = harness(ist("2026-10-14", "20:00"), () => r);
+  const tick = await handler.step(job({ at: "marks", failed: [DEV] }), ctx);
+  expect(s.kept).toHaveLength(0);
+  expect(tick).toMatchObject({ kind: "wait", step: { failed: [DEV] } });
+  await handler.step(job({ at: "marks", failed: [DEV], woken: true }), ctx);
+  expect(s.kept.map((k) => [k.kind, k.student])).toEqual([["gap_report", DEV]]);
+});
