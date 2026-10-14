@@ -86,10 +86,11 @@ test("the reason of a Write again is in the request and never in the message's r
   expect(notOnTrack.rubric).not.toContain("promise");
 });
 
-test("the English beside a message is its translation; Hindi and Kannada write the topics in their own script (the evals)", () => {
+test("the English beside a message is its translation; Hindi and Kannada write the topics and the names in their own script (the evals)", () => {
   const words = systemTextOf(noteRequest(noteInput({ language: "hi" })));
   expect(words).toContain("The English is the message translated sentence for sentence: it adds nothing and leaves nothing out.");
-  expect(words).toContain("In Hindi or Kannada, write the topics in that script too");
+  expect(words).toContain("In Hindi or Kannada, write everything in that script");
+  expect(words).toContain("every person's name, the student's and the parent's alike");
 });
 
 test("test tomorrow asks for one thing to go over only when the facts give one (Phase 14's rule; the evals' tt-kn-no-portions)", () => {
