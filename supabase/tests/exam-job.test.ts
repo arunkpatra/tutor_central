@@ -75,6 +75,15 @@ test("an exam out of its window, a past one or another kind of item queues nothi
   expect(await live(far)).toHaveLength(1);
 });
 
+test("the helper checks its own arguments: called directly, it queues nothing for another centre's item or a non-exam", async () => {
+  const theirs = (await b.from("school_items").insert({ ...exam(4, "B's test"), centre_id: centreB }).select("id").single()).data!.id as string;
+  const notice = (await a.from("school_items").insert({ centre_id: centreA, kind: "notice", title: "Fee circular", date: istDay(2), confirmed_at: new Date().toISOString() }).select("id").single()).data!.id as string;
+  for (const item of [theirs, notice]) {
+    expect((await a.rpc("exam_prep_enqueue", { p_centre: centreA, p_item: item })).error?.message).toContain("not_found");
+    expect((await sql`select id from public.jobs where centre_id = ${centreA} and idempotency_key like ${`exam:${item}%`}`).length).toBe(0);
+  }
+});
+
 test("an exam not yet confirmed waits for its confirmation", async () => {
   const draft = (await a.from("school_items").insert({ ...exam(5, "Maths unit test"), confirmed_at: null }).select("id").single()).data!.id as string;
   expect(await live(draft)).toHaveLength(0);

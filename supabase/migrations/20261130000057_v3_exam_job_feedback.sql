@@ -23,15 +23,20 @@ returns boolean language sql stable set search_path = '' as $$
 $$;
 
 -- The one writer of exam_prep jobs: the live job of the item woken (run_at now) and answered; else one queued, keyed
--- `exam:<item>`, or `exam:<item>:<ms>` after an earlier job of the plain key ended. Runs as the caller: a member sees
--- only their centre's items (RLS), so another centre's item queues nothing; the trigger and the schedule pass the
--- membership the request checks.
-create function public.exam_prep_enqueue(p_centre uuid, p_item uuid)
+-- `exam:<item>`, or `exam:<item>:<ms>` after an earlier job of the plain key ended. It checks its own arguments (it is
+-- reachable by a member's call): a confirmed exam of the centre in its window, else not_found. Runs as the caller, so a
+-- member sees only their centre's items (RLS); the platform, the trigger and the schedule see the item they name.
+create function public.exam_prep_enqueue(p_centre uuid, p_item uuid, p_now timestamptz default now())
 returns uuid language plpgsql security invoker set search_path = '' as $$
 declare
   v_id uuid;
   v_key text := 'exam:' || p_item;
 begin
+  if not exists (select 1 from public.school_items i
+                  where i.centre_id = p_centre and i.id = p_item and i.kind = 'exam' and i.confirmed_at is not null
+                    and public.exam_in_window(i.date, i.window_days, p_now)) then
+    raise exception 'not_found' using errcode = 'P0001';
+  end if;
   perform set_config('tc.jobs', 'on', true);
   update public.jobs j set run_at = now()
    where j.centre_id = p_centre and j.kind = 'exam_prep' and j.idempotency_key like v_key || '%'
@@ -55,16 +60,11 @@ begin
   return v_id;
 end $$;
 
--- A member asks: an exam of their centre in its window, else not_found.
+-- A member asks: an exam of their centre in its window (the writer checks the item), else not_found.
 create function public.request_exam_prep(p_centre uuid, p_item uuid)
 returns uuid language plpgsql security invoker set search_path = '' as $$
 begin
   if not public.is_member(p_centre) then raise exception 'not a member' using errcode = '42501'; end if;
-  if not exists (select 1 from public.school_items i
-                  where i.centre_id = p_centre and i.id = p_item and i.kind = 'exam' and i.confirmed_at is not null
-                    and public.exam_in_window(i.date, i.window_days)) then
-    raise exception 'not_found' using errcode = 'P0001';
-  end if;
   return public.exam_prep_enqueue(p_centre, p_item);
 end $$;
 
@@ -93,7 +93,7 @@ begin
        and not exists (select 1 from public.jobs j where j.centre_id = i.centre_id and j.kind = 'exam_prep'
                          and j.idempotency_key like 'exam:' || i.id || '%' and j.state in ('queued', 'running', 'waiting'))
   loop
-    perform public.exam_prep_enqueue(v_item.centre_id, v_item.id);
+    perform public.exam_prep_enqueue(v_item.centre_id, v_item.id, p_now);
     v_count := v_count + 1;
   end loop;
   return v_count;
@@ -177,14 +177,14 @@ returns text language sql stable security invoker set search_path = '' as $$
 $$;
 
 revoke all on function public.exam_in_window(date, integer, timestamptz) from public, anon;
-revoke all on function public.exam_prep_enqueue(uuid, uuid) from public, anon;
+revoke all on function public.exam_prep_enqueue(uuid, uuid, timestamptz) from public, anon;
 revoke all on function public.request_exam_prep(uuid, uuid) from public, anon;
 revoke all on function public.school_items_exam_prep() from public, anon;
 revoke all on function public.schedule_exam_preps(timestamptz) from public, anon, authenticated;
 revoke all on function public.generation_feedback_through_function() from public, anon;
 revoke all on function public.record_feedback(uuid, uuid, text, text, jsonb) from public, anon;
 grant execute on function public.exam_in_window(date, integer, timestamptz) to authenticated, service_role;
-grant execute on function public.exam_prep_enqueue(uuid, uuid) to authenticated, service_role;
+grant execute on function public.exam_prep_enqueue(uuid, uuid, timestamptz) to authenticated, service_role;
 grant execute on function public.request_exam_prep(uuid, uuid) to authenticated, service_role;
 grant execute on function public.school_items_exam_prep() to authenticated, service_role;
 grant execute on function public.schedule_exam_preps(timestamptz) to service_role;
