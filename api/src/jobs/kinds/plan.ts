@@ -22,7 +22,7 @@ import {
 } from "../../plan/types.js";
 import type { NotificationRow } from "../../push/db.js";
 import { callOnRow, recordedCall } from "../call.js";
-import { type Batched, type Keeping, keepOne, type Next, submit, wait } from "./plan-batch.js";
+import { type Batched, type Keeping, keepOne, materialKey, type Next, submit, wait } from "./plan-batch.js";
 import type { Job, JobHandler, StepContext, StepOutcome } from "../types.js";
 
 /** What the job reads of a batch for a day (as PlanMaker.read did): the batch with its days and times, its active
@@ -343,7 +343,7 @@ async function make(
       let cost = 0;
       for (const [i, group] of groups.entries()) {
         const body = { kind: "placement" as const, centreId: centre, classLevel: req.classLevel, subject: group.title, chapters: group.items.map((item) => item.name) };
-        const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key: `${job.id}:${name}:${i}`, ...madeCall(body) });
+        const call = await recordedCall(ctx, { centre, input: body, job: job.id, step: name, key: `${materialKey(m, n, body)}:${i}`, ...madeCall(body) });
         if (call.kind === "pending") return wait();
         if (call.kind === "paused") return after(false, { costPaise: cost, error: { reason: "paused" } });
         if (call.kind === "failed") return after(false, { costPaise: cost + (call.costPaise ?? 0) });
@@ -367,7 +367,7 @@ async function make(
     }
     const body = materialInput(req, centre);
     if (!body) return after(false);
-    const key = req.kind === "mock" ? `mock:${req.item}` : undefined;
+    const key = req.kind === "mock" ? `mock:${req.item}` : materialKey(m, n, body);
     // A batch's draft past its deadline is made on the batch's row (D108); any other is started here.
     const asked = { centre, input: body, job: job.id, step: name, key, ...madeCall(body) };
     const call = row ? await callOnRow(ctx, asked, row) : await recordedCall(ctx, asked);
@@ -377,7 +377,7 @@ async function make(
     // Another plan's mock for the same exam asked at another class level: its mock is linked at the next try.
     if (call.kind === "failed" && call.reason === "key_reused") return wait();
     if (call.kind === "failed") return after(false, { generationId: call.id, costPaise: call.costPaise });
-    await keep(artefactOf(req, call.parsed, call.id), key ?? `${job.id}:${name}`);
+    await keep(artefactOf(req, call.parsed, call.id), req.kind === "mock" ? key : `${job.id}:${name}`);
     return after(true, { generationId: call.id, costPaise: call.costPaise });
   } catch (e) {
     // A keep or a link that did not reach the database: the step is taken again, its call replayed by its key.
