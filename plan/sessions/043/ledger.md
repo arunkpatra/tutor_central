@@ -158,3 +158,4 @@ Task 15, Step 1 (cont.): tomorrow's two plans by batch (`:run3`, 14:42 to 15:09 
 Task 15, Step 2: `admin_cost_by_step` for October (what the Cost page reads) against the rows' own sums by kind, step and batched: all 49 rows agree to the paisa; run 10 showed the page drawing the function. The report replaces the session's cost run from here.
 Spend at the close: about ₹1,770 of the ₹3,000 cap (the ₹1,740 above, the cost run's ₹17.82 and ₹6.34, and about ₹6 of batches lost with the cleared plans).
 Deploy F: run 38589363375 at 69d8389 (#344 to #349 and 0065), started after main's check 38587579574 passed.
+Owner (2026-10-14): "build 31 fine" (his steps on 1.0.0 (31): Write again with a reason, a paper's PDF, the exam page).

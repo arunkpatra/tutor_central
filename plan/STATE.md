@@ -10,7 +10,7 @@ hour's cache, the standing cost report); D111 (repairs batched) and D112 (no aut
 from the owner; twelve hand runs (issue #343) and their six findings fixed (#337 to #342); the review on Fable 5.1, its eight
 findings fixed (#344 to #349, 0065) and four ruled; the last cost run (two plans ₹6.34 against ₹11.24; the Cost page agrees to
 the paisa, so it is the figure from here); deployed to 0065 (API 69d8389); 1.0.0 (31). The record in `plan/sessions/043/`.
-**Next:** the owner installs build 31 and tries it (the three steps in the session's close); then Phase 22's plan (the admin
+**Next:** Phase 22's plan (build 31 tried by the owner: "build 31 fine") (the admin
 portal, control and analytics; R-api-4's two-batch exam split is on its list). The order (D81): V3's Phases 17 to 22, then the
 external testing round, then Phase 16.
 
@@ -102,7 +102,7 @@ delete.
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (31) by run 38583690172 (`main` at `9a8f7ea9`: Phase 21's screens and every app fix; the owner's try to come); 1.0.0 (30) by run 38400789743 (`main` at `29e79fb`: Phase 20's maths on the phone, the switched-off alert; the owner's check to come); 1.0.0 (29) by run 38314213195 (`main` at `a778350`: build 28 and the run's push check, which printed the
+  run number. 1.0.0 (31) by run 38583690172 (`main` at `9a8f7ea9`: Phase 21's screens and every app fix; the owner: "build 31 fine"); 1.0.0 (30) by run 38400789743 (`main` at `29e79fb`: Phase 20's maths on the phone, the switched-off alert; the owner's check to come); 1.0.0 (29) by run 38314213195 (`main` at `a778350`: build 28 and the run's push check, which printed the
   archive's `aps-environment`; the App Store export re-signs it for production), the one to test; 1.0.0 (28) by run
   38312753433 (Phase 18: push, Today on the server's plan, the note from the job, withdrawal, the export, the copies first;
   `main` at `e3bbe97`), the first build with push; 1.0.0 (27) by run 38258868771 (Phase 17: the keys, request ids and activity log; nothing new on screen;

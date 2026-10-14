@@ -14,3 +14,4 @@
 12. "Once you are done with these changes related to the wasteful CI, make a bullet point list of wahat all you did - bullet points and very breief - loose the verbose prose"
 13. "go ahead with these: `Next: the remaining hand runs in the simulator, build 31, the last cost run, and the review on Fable 5.1.`"
 14. "Do not stop till done."
+15. "build 31 fine"
