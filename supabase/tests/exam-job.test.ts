@@ -56,8 +56,10 @@ test("request_exam_prep wakes a waiting job at once and refuses an item of anoth
   await sql`update public.jobs set state = 'waiting', run_at = now() + interval '15 minutes' where id = ${job.id}`;
   const asked = await a.rpc("request_exam_prep", { p_centre: centreA, p_item: itemA });
   expect(asked.data).toBe(job.id);
-  const [woken] = await sql`select run_at <= now() as due from public.jobs where id = ${job.id}`;
+  const [woken] = await sql`select run_at <= now() as due, step from public.jobs where id = ${job.id}`;
   expect(woken.due).toBe(true);
+  // 0058: the wake marks the step, so the job tells the tutor's Try again from its own tick.
+  expect(woken.step).toMatchObject({ woken: true });
   expect((await b.rpc("request_exam_prep", { p_centre: centreA, p_item: itemA })).error?.message).toContain("not a member");
   expect((await b.rpc("request_exam_prep", { p_centre: centreB, p_item: itemA })).error?.message).toContain("not_found");
 });

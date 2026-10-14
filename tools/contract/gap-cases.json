@@ -1,0 +1,388 @@
+{
+  "cases": [
+    {
+      "name": "each skill's marks summed in the mock's order",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 1,
+          "skill": "Balance"
+        },
+        {
+          "number": 2,
+          "marks": 2,
+          "skill": "Types"
+        },
+        {
+          "number": 3,
+          "marks": 3,
+          "skill": "Balance"
+        },
+        {
+          "number": 4,
+          "marks": 2,
+          "skill": "Words"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 1,
+          "note": "Correct"
+        },
+        {
+          "number": 2,
+          "marks": 0,
+          "note": "Wrong type"
+        },
+        {
+          "number": 3,
+          "marks": 1,
+          "note": "Changed a subscript"
+        },
+        {
+          "number": 4,
+          "marks": 2,
+          "note": "Correct"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "Balance",
+          "right": 2,
+          "of": 4,
+          "note": "Changed a subscript"
+        },
+        {
+          "skill": "Types",
+          "right": 0,
+          "of": 2,
+          "note": "Wrong type"
+        },
+        {
+          "skill": "Words",
+          "right": 2,
+          "of": 2,
+          "note": null
+        }
+      ],
+      "weakest": [
+        "Types",
+        "Balance"
+      ]
+    },
+    {
+      "name": "a question the marking missed counts nothing",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 2,
+          "skill": "A"
+        },
+        {
+          "number": 2,
+          "marks": 2,
+          "skill": "B"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 2,
+          "note": "Correct"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 2,
+          "of": 2,
+          "note": null
+        },
+        {
+          "skill": "B",
+          "right": 0,
+          "of": 2,
+          "note": null
+        }
+      ],
+      "weakest": [
+        "B"
+      ]
+    },
+    {
+      "name": "a mark above its question's marks is held to them",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 2,
+          "skill": "A"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 5,
+          "note": "Generous"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 2,
+          "of": 2,
+          "note": null
+        }
+      ],
+      "weakest": []
+    },
+    {
+      "name": "the note is the first on a question that lost marks",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 2,
+          "skill": "A"
+        },
+        {
+          "number": 2,
+          "marks": 2,
+          "skill": "A"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 1,
+          "note": "First slip"
+        },
+        {
+          "number": 2,
+          "marks": 0,
+          "note": "Second slip"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 1,
+          "of": 4,
+          "note": "First slip"
+        }
+      ],
+      "weakest": [
+        "A"
+      ]
+    },
+    {
+      "name": "an empty note is no note",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 2,
+          "skill": "A"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 0,
+          "note": ""
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 0,
+          "of": 2,
+          "note": null
+        }
+      ],
+      "weakest": [
+        "A"
+      ]
+    },
+    {
+      "name": "ties keep the mock's order",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 2,
+          "skill": "A"
+        },
+        {
+          "number": 2,
+          "marks": 2,
+          "skill": "B"
+        },
+        {
+          "number": 3,
+          "marks": 2,
+          "skill": "C"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 1,
+          "note": "x"
+        },
+        {
+          "number": 2,
+          "marks": 1,
+          "note": "y"
+        },
+        {
+          "number": 3,
+          "marks": 2,
+          "note": "z"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 1,
+          "of": 2,
+          "note": "x"
+        },
+        {
+          "skill": "B",
+          "right": 1,
+          "of": 2,
+          "note": "y"
+        },
+        {
+          "skill": "C",
+          "right": 2,
+          "of": 2,
+          "note": null
+        }
+      ],
+      "weakest": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "name": "all right: nothing is weak",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 1,
+          "skill": "A"
+        },
+        {
+          "number": 2,
+          "marks": 1,
+          "skill": "B"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 1,
+          "note": "Correct"
+        },
+        {
+          "number": 2,
+          "marks": 1,
+          "note": "Correct"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 1,
+          "of": 1,
+          "note": null
+        },
+        {
+          "skill": "B",
+          "right": 1,
+          "of": 1,
+          "note": null
+        }
+      ],
+      "weakest": []
+    },
+    {
+      "name": "the weakest share first, at most the count asked",
+      "mock": [
+        {
+          "number": 1,
+          "marks": 4,
+          "skill": "A"
+        },
+        {
+          "number": 2,
+          "marks": 4,
+          "skill": "B"
+        },
+        {
+          "number": 3,
+          "marks": 4,
+          "skill": "C"
+        },
+        {
+          "number": 4,
+          "marks": 4,
+          "skill": "D"
+        }
+      ],
+      "marks": [
+        {
+          "number": 1,
+          "marks": 3,
+          "note": "a"
+        },
+        {
+          "number": 2,
+          "marks": 0,
+          "note": "b"
+        },
+        {
+          "number": 3,
+          "marks": 1,
+          "note": "c"
+        },
+        {
+          "number": 4,
+          "marks": 2,
+          "note": "d"
+        }
+      ],
+      "tallies": [
+        {
+          "skill": "A",
+          "right": 3,
+          "of": 4,
+          "note": "a"
+        },
+        {
+          "skill": "B",
+          "right": 0,
+          "of": 4,
+          "note": "b"
+        },
+        {
+          "skill": "C",
+          "right": 1,
+          "of": 4,
+          "note": "c"
+        },
+        {
+          "skill": "D",
+          "right": 2,
+          "of": 4,
+          "note": "d"
+        }
+      ],
+      "weakest": [
+        "B",
+        "C",
+        "D"
+      ],
+      "count": 3
+    }
+  ]
+}

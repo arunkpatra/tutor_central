@@ -19,7 +19,7 @@ const SWIFT = "ios/TutorCentralKit/Sources/Domain/Generated/APIContract.swift";
 const SAMPLES = "ios/TutorCentralKit/Tests/DataTests/Contract";
 /** The shared case files (written from Domain's rules, read by DomainTests and the API's ports), copied into the test
  *  target, which cannot reach a file outside its directory. */
-const CASES = ["plan", "budget", "note"] as const;
+const CASES = ["plan", "budget", "note", "gap"] as const;
 const CASES_COPY = "ios/TutorCentralKit/Tests/DomainTests/Cases";
 /** The syllabi's chapter names for the prompts' shared block (Phase 20 plan decision 5): the function bundles only api/. */
 const SYLLABI = "api/src/generated/syllabi.ts";

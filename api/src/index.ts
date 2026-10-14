@@ -13,6 +13,7 @@ import { makeJobsDb } from "./jobs/db.js";
 import { makeSweepSource } from "./jobs/sweep-db.js";
 import { makeHandlers } from "./jobs/kinds/index.js";
 import { makeRecordSource } from "./jobs/record.js";
+import { makeExamSource } from "./jobs/exam-source.js";
 import { makeApp } from "./make-app.js";
 import { applyModelOverrides, installModelTable } from "./models.js";
 import { makeModelSource } from "./models-db.js";
@@ -104,7 +105,7 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail }, evals: { smokeCentre } }),
+    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail }, evals: { smokeCentre }, exams: makeExamSource(supabaseUrl, serviceKey) }),
     push: { outbox, pusher },
   },
   models: modelTable,

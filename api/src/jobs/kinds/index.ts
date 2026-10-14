@@ -3,6 +3,7 @@ import type { Sender } from "../../alerts/resend.js";
 import type { JobHandler, JobKind } from "../types.js";
 import { alertsJob } from "./alerts.js";
 import { evalRun } from "./eval-run.js";
+import { type ExamSource, examPrep } from "./exam-prep.js";
 import { type ExportSource, exportJob } from "./export.js";
 import { type NoteSource, noteDay } from "./note-day.js";
 import { type PdfSource, pdfJob } from "./pdf.js";
@@ -19,21 +20,17 @@ export type Sources = {
   exports?: ExportSource;
   storage?: SweepSource;
   alerts?: { source: AlertsSource; sender: Sender; email: string };
+  /** Exam preparation (D106). */
+  exams?: ExamSource;
   /** The nightly evals (D101): their calls are the Smoke centre's. */
   evals?: { smokeCentre: string };
 };
 
-/** An exam's job (0057, D106) before its handler ships (Phase 21's Task 6): it waits an hour with its step untouched, so
- *  the handler that ships takes it from its first step and no job fails meanwhile (a failed job alerts the owner). */
-const examPrepPending: JobHandler = {
-  step: async (job, ctx) => ({ kind: "wait", name: "pending", step: job.step, runAt: new Date(ctx.clock.now() + 3_600_000) }),
-};
 
 /** The kinds the worker runs. A job of a kind not here fails at once, without a retry. */
 export function makeHandlers(sources: Sources = {}): Partial<Record<JobKind, JobHandler>> {
   return {
     sweep: makeSweep(sources.storage),
-    exam_prep: examPrepPending,
     ...(sources.record ? { plan: planJob(sources.record) } : {}),
     ...(sources.reminders ? { reminder_sweep: reminderSweep(sources.reminders) } : {}),
     ...(sources.notes ? { note_day: noteDay(sources.notes) } : {}),
@@ -41,5 +38,6 @@ export function makeHandlers(sources: Sources = {}): Partial<Record<JobKind, Job
     ...(sources.exports ? { export: exportJob(sources.exports) } : {}),
     ...(sources.alerts ? { alerts: alertsJob(sources.alerts.source, sources.alerts.sender, sources.alerts.email) } : {}),
     ...(sources.evals ? { eval_run: evalRun(sources.evals) } : {}),
+    ...(sources.exams ? { exam_prep: examPrep(sources.exams) } : {}),
   };
 }
