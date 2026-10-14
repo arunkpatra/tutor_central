@@ -14,6 +14,6 @@ export const note: Kind<WeeklyNoteInput, MessageOutput> = {
   },
   rubric: messageRubric([
     "It tells the week: what was taught, what went right, what to practise, what is coming, as the facts give them; a week with nothing new says so.",
-    "A change the tutor asked for with Write again is an instruction to the writer, never a sentence of the message.",
+    "A change the tutor asked for with Write again is made, and is an instruction to the writer, never a sentence of the message: a change asking for less of a fact leaves that fact out.",
   ]),
 };
