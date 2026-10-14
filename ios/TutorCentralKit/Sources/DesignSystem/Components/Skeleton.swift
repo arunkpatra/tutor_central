@@ -83,3 +83,18 @@ public struct RingSpinner: View {
         .accessibilityHidden(true)
     }
 }
+
+/// A row's work in its trailing place (P21-Exam-GapWorking): a 12 pt spinner and "Working" in `footnote` `text3`, where
+/// the row's quiet action will appear.
+public struct WorkingTrail: View {
+    public init() {}
+
+    public var body: some View {
+        HStack(spacing: Tokens.fieldGap) {
+            ProgressView().controlSize(.mini).tint(Tokens.text3.color)
+                .frame(width: Tokens.iconInline, height: Tokens.iconInline)
+            Text("Working").typeStyle(Tokens.footnoteStrong).foregroundStyle(Tokens.text3.color)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}

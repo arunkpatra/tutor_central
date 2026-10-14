@@ -164,6 +164,10 @@ public struct ItemView: View {
                     testTomorrowLine: store.testTomorrowLine,
                     testTomorrow: store.testTomorrowAsk.flatMap { ask in actions.map { actions in
                         { actions.testTomorrow(ask) }
+                    } },
+                    tryAgain: { Task { await store.tryAgain() } },
+                    change: store.changeOpensToday.flatMap { batch in actions.map { actions in
+                        { actions.openToday(batch) }
                     } }
                 )
                 .confirmationDialog("Whose paper?", isPresented: $choosingPaper, titleVisibility: .visible) {

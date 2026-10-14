@@ -7,19 +7,44 @@ import School
 extension Fixtures {
     static let schoolStates: Set<LaunchState> = [
         .schoolEmpty, .school, .schoolCalendar, .schoolAddMenu, .schoolReading, .schoolConfirm, .schoolConfirmEdit,
-        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport,
-        .schoolItemHomework, .schoolItemHoliday, .schoolAsk, .schoolAskFailed,
+        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport, .examMockMaking, .examMockFailed,
+        .examGapWorking, .examChanged, .gapReportUsed, .schoolItemHomework, .schoolItemHoliday, .schoolAsk,
+        .schoolAskFailed,
         .schoolTestTomorrow, .schoolPaste, .schoolStudent, .schoolItemWindow,
     ]
 
     /// The exam's page (P10-School-Item, -Edit, -Delete): the Evening batch's five with the plan's statuses, so
     /// Preparation reads the Evening batch's days.
-    static let examPageStates: Set<LaunchState> = [
-        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .gapReport, .schoolItemWindow,
-    ]
+    static let examPageStates = Set<LaunchState>([
+        .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolItemWindow,
+    ]).union(lastDaysStates)
 
     /// The last days' states: Wednesday 14 October after the class, the mock marked for Dev and Meher.
-    static let lastDaysStates: Set<LaunchState> = [.schoolLastDays, .gapReport]
+    static let lastDaysStates: Set<LaunchState> = [
+        .schoolLastDays, .gapReport, .examMockMaking, .examMockFailed, .examGapWorking, .examChanged, .gapReportUsed,
+    ]
+
+    /// The exam's job each state reads (D106): the mock being made, not made, the marks being worked out.
+    static func examJobs(for state: LaunchState) -> [UUID: ExamJobStatus] {
+        let status: ExamJobStatus? = switch state {
+        case .examMockMaking: ExamJobStatus(state: .running, at: "mock", mockFailed: false)
+        case .examMockFailed: ExamJobStatus(state: .waiting, at: "marks", mockFailed: true)
+        case .examGapWorking, .examChanged: ExamJobStatus(state: .waiting, at: "marks", mockFailed: false)
+        default: nil
+        }
+        return status.map { [FakeSchoolItemsRepository.scienceTest3: $0] } ?? [:]
+    }
+
+    /// The exam's artefacts each last-days state keeps (P21-Exam-*, P21-GapReport-Used).
+    static func examArtefacts(for state: LaunchState) -> [Artefact] {
+        switch state {
+        case .examMockMaking, .examMockFailed: FakePlansRepository.examArtefacts(mock: false)
+        case .examGapWorking: FakePlansRepository.examArtefacts(devReport: false, meherReport: true)
+        case .examChanged: FakePlansRepository.examArtefacts(used: true, meherReport: true)
+        case .gapReportUsed: FakePlansRepository.examArtefacts(used: true)
+        default: FakePlansRepository.lastDaysArtefacts
+        }
+    }
 
     /// Dev's parent writes in Hindi and agreed (P10-TestTomorrow, P10-Today-AfterClose's "Dev's father · Hindi").
     static func withSchoolLanguages(_ students: [Student], for state: LaunchState) -> [Student] {
@@ -30,6 +55,10 @@ extension Fixtures {
                       let phone = student.parentPhone else { return student }
                 var changed = student
                 changed.consent = ConsentRecord(at: india(day: 1, hour: 17, minute: 0), phone: phone, how: .inPerson)
+                // P21-Exam-GapWorking: "Dev's lines follow once his marks are read".
+                if student.id == FakeStudentsRepository.dev {
+                    changed.gender = .male
+                }
                 return changed
             }
         }
@@ -84,9 +113,10 @@ extension RootView {
         case .schoolReading, .schoolConfirm, .schoolConfirmEdit:
             [.schoolRead(.pasted(FakeSchoolItemsRepository.boardMessage))]
         case .schoolPaste: [.schoolRead(.pasteWaiting)]
-        case .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .schoolItemWindow:
+        case .schoolItem, .schoolItemEdit, .schoolItemDelete, .schoolLastDays, .schoolItemWindow, .examMockMaking,
+             .examMockFailed, .examGapWorking, .examChanged:
             [.schoolItem(FakeSchoolItemsRepository.scienceTest3)]
-        case .gapReport:
+        case .gapReport, .gapReportUsed:
             [
                 .schoolItem(FakeSchoolItemsRepository.scienceTest3),
                 .schoolGapReport(FakeSchoolItemsRepository.scienceTest3, FakeStudentsRepository.dev),

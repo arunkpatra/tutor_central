@@ -40,7 +40,8 @@ public struct SchoolRow: View {
 /// the line with what is made, and on the right a tick in `ok` (done), the Today chip (`due`, `clock`), the Mock chip
 /// (neutral), or nothing.
 public struct PreparationRow: View {
-    public enum Mark: Hashable, Sendable { case done, today, mock, none }
+    /// `changed`: the `ok` chip with the tick, "Changed" (P21-Exam-LastDaysChanged).
+    public enum Mark: Hashable, Sendable { case done, today, mock, changed, none }
 
     let day: String
     let date: String
@@ -70,6 +71,7 @@ public struct PreparationRow: View {
                     .accessibilityLabel("Done")
             case .today: Chip(.status(.due, "Today", symbol: "clock"), compact: true)
             case .mock: Chip(.neutral("Mock"), compact: true)
+            case .changed: Chip(.status(.ok, "Changed", symbol: "checkmark"), compact: true)
             case .none: EmptyView()
             }
         }

@@ -110,6 +110,38 @@ import Testing
             .hasSuffix("Science unit test · mock · \(result.total) of \(result.outOf) · \(result.summary)") == true)
     }
 
+    /// D106: an exam's marks saved wake its job for the student's gap report; a paper's marks wake none.
+    @Test func savingMarksWakesTheExamJob() async {
+        let jobs = FakeJobsRepository()
+        let store = await Self.make()
+        store.jobs = jobs
+        store.addPages([Self.page])
+        await store.check()
+        #expect(await store.save())
+        #expect(jobs.examPrepRequests == [Self.exam])
+
+        let paper = await Self.make(preset: nil)
+        paper.jobs = jobs
+        paper.studentID = FakeStudentsRepository.dev
+        paper.addPages([Self.page])
+        paper.scheme = .typed("Q1 (1) b")
+        await paper.check()
+        #expect(await paper.save())
+        #expect(jobs.examPrepRequests == [Self.exam])
+    }
+
+    @Test func aFailedWakeStillSavesTheMarks() async {
+        let jobs = FakeJobsRepository()
+        jobs.failure = URLError(.notConnectedToInternet)
+        let record = FakeRecordRepository(marks: [])
+        let store = await Self.make(record: record)
+        store.jobs = jobs
+        store.addPages([Self.page])
+        await store.check()
+        #expect(await store.save())
+        #expect(record.marks.count == 1 && store.saved)
+    }
+
     @Test func undoRemovesTheMarkAndTheNotesLine() async throws {
         let record = FakeRecordRepository(marks: [])
         let students = FakeStudentsRepository(students: Self.students())

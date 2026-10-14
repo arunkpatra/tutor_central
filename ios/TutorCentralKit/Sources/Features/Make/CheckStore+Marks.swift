@@ -53,6 +53,7 @@ public extension CheckStore {
             previousNotes = current
             saved = true
             toast = StudentNoteLine.toast(studentFirstName: student.firstName, title: title, result: result)
+            await wakeExamJob()
             onStudentChanged?()
             return true
         } catch {
@@ -60,6 +61,13 @@ public extension CheckStore {
             message = "Couldn't save to \(student.firstName)'s notes. Check your connection and try again."
             return false
         }
+    }
+
+    /// An exam's marks wake its job (D106) for the student's gap report; without the wake the job finds them at its
+    /// next look, within 15 minutes.
+    private func wakeExamJob() async {
+        guard savedMarkID != nil, let item = markTarget?.schoolItemID, let jobs else { return }
+        _ = try? await jobs.requestExamPrep(centre: workspace.centre.id, item: item)
     }
 
     /// The mark of a mock's check (the preset's target) or of a paper made here (its subject and title); a typed

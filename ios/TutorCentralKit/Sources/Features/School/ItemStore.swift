@@ -54,6 +54,8 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
     let record: (any RecordRepository)?
     /// From the mock day to the test, the page leads with them (P10-School-Exam-LastDays).
     public internal(set) var lastDays: LastDaysModel?
+    /// The server's jobs (D106): the exam's job read for the page's rows, Try again asked of it; none in previews.
+    @ObservationIgnored public var jobs: (any JobsRepository)?
     private let now: @Sendable () -> Date
     let calendar: Calendar
     private let online: @Sendable () async -> Bool

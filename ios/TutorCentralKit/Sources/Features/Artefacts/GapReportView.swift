@@ -47,13 +47,14 @@ public struct GapReportView: View {
                 FooterButton {
                     VStack(spacing: Tokens.rowPaddingDense) {
                         if store.used {
-                            Button {} label: { Label("Plan in use", systemImage: "checkmark") }
-                                .buttonStyle(.secondary(.card)).disabled(true)
+                            // In the plan (P21-GapReport-Used): the exam's job used it when the marks were saved.
+                            InThePlanRow()
                         } else {
                             Button("Use this plan") { Task { _ = await store.use() } }
                                 .buttonStyle(.primary(.card))
                         }
-                        Text(Self.footnote).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
+                        Text(store.used ? store.usedFootnote : Self.footnote).typeStyle(Tokens.footnote)
+                            .foregroundStyle(Tokens.text3.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
@@ -113,5 +114,26 @@ public struct GapReportView: View {
                 }
             }
         }
+    }
+}
+
+/// The done row in the primary button's place (P21-GapReport-Used): `surface1` with the `line` border, the tick and "In
+/// the plan" in `ok`.
+private struct InThePlanRow: View {
+    var body: some View {
+        Label("In the plan", systemImage: "checkmark")
+            .typeStyle(Tokens.buttonStrong)
+            .foregroundStyle(Tokens.ok.color)
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: ButtonSize.card.rawValue)
+            .background(
+                RoundedRectangle(cornerRadius: Tokens.radiusControl, style: .continuous).fill(Tokens.surface1.color)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: Tokens.radiusControl, style: .continuous)
+                    .strokeBorder(Tokens.line.color, lineWidth: Tokens.hairline)
+            )
+            .environment(\.buttonIconSize, Tokens.iconSmall)
+            .accessibilityElement(children: .combine)
     }
 }

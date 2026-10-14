@@ -138,6 +138,21 @@ import Testing
         #expect(content.usedAt == Self.wednesday14)
     }
 
+    /// P21-GapReport-Used: a report the exam's job used reads as in the plan, with the footnote naming whose marks.
+    @Test func aUsedGapReportShowsTheDoneRow() async throws {
+        let world = try await world()
+        let store = await store(world)
+        await store.load()
+        #expect(!store.used)
+        #expect(await store.use())
+        let again = await self.store(world)
+        await again.load()
+        #expect(again.used)
+        #expect(again.usedFootnote
+            == "The last two days were changed from this report when Dev's marks were saved. "
+            + "Change them on the exam's page.")
+    }
+
     @Test func withoutConsentNothingIsMade() async throws {
         let ai = FakeAIRepository()
         let store = try await store(world(), ai: ai, devConsents: false)

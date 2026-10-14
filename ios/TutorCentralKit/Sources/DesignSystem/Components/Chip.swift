@@ -40,6 +40,8 @@ public struct Chip: View {
     public enum Kind: Sendable {
         case status(StatusTone, String, symbol: String? = nil)
         case neutral(String, symbol: String? = nil)
+        /// The neutral chip with a 12 pt spinner before its word ("Being made", P21-Exam-MockMaking).
+        case working(String)
     }
 
     let kind: Kind
@@ -63,6 +65,10 @@ public struct Chip: View {
 
     public var body: some View {
         HStack(spacing: Tokens.fieldGap) {
+            if case .working = kind {
+                ProgressView().controlSize(.mini).tint(Tokens.text2.color)
+                    .frame(width: Self.symbolSize, height: Self.symbolSize).accessibilityHidden(true)
+            }
             if let symbol {
                 Image(systemName: symbol).accessibilityHidden(true).font(.system(size: Self.symbolSize, weight: .bold))
             }
@@ -77,34 +83,35 @@ public struct Chip: View {
 
     private var title: String {
         switch kind {
-        case let .status(_, text, _), let .neutral(text, _): text
+        case let .status(_, text, _), let .neutral(text, _), let .working(text): text
         }
     }
 
     private var symbol: String? {
         switch kind {
         case let .status(_, _, symbol), let .neutral(_, symbol): symbol
+        case .working: nil
         }
     }
 
     private var type: TypeToken {
         switch kind {
         case .status: compact ? Tokens.chipCompactLabel : Tokens.chipLabel
-        case .neutral: Tokens.chipNeutralLabel
+        case .neutral, .working: Tokens.chipNeutralLabel
         }
     }
 
     private var ink: ColorToken {
         switch kind {
         case let .status(tone, _, _): tone.color
-        case .neutral: Tokens.neutral
+        case .neutral, .working: Tokens.neutral
         }
     }
 
     private var fill: ColorToken {
         switch kind {
         case let .status(tone, _, _): tone.tint
-        case .neutral: Tokens.surface2
+        case .neutral, .working: Tokens.surface2
         }
     }
 }

@@ -99,7 +99,7 @@ import Testing
         return register
     }
 
-    func page(_ world: World) async -> ItemStore {
+    func page(_ world: World, jobs: FakeJobsRepository? = nil) async -> ItemStore {
         let store = await ItemStore(
             itemID: Self.exam, workspace: FakeCentreRepository.meeraWorkspace,
             items: FakeSchoolItemsRepository(items: SchoolFixtures.boardItems), register: register(),
@@ -107,6 +107,7 @@ import Testing
             calendar: DayHeading.india, online: { true }, textbooks: FakeTextbooksRepository.evening(),
             plans: world.plans, record: world.record
         )
+        store.jobs = jobs
         await store.load()
         return store
     }
@@ -156,5 +157,75 @@ import Testing
         #expect(days.mockState == .notMade && days.mockID == nil)
         #expect(days.mockLine == "The mock is made with Wednesday's plan")
         #expect(days.marked.allSatisfy { $0.line == "Not marked yet" })
+        #expect(days.lastDays.first?.line == "The last set from each gap report, once the mocks are marked")
+    }
+
+    // MARK: The exam's job (D106, P21-Exam-*)
+
+    func jobs(_ status: ExamJobStatus?) -> FakeJobsRepository {
+        let jobs = FakeJobsRepository()
+        jobs.examJobs[Self.exam] = status
+        return jobs
+    }
+
+    @Test func theMockRowFollowsTheJob() async throws {
+        let live = ExamJobStatus(state: .waiting, at: "mock", mockFailed: false)
+        let making = try #require(try await page(world(mockMade: false), jobs: jobs(live)).lastDays)
+        #expect(making.mockState == .making)
+        #expect(making.mockLine == "In the school's pattern · 40 marks · usually ready in a minute")
+        let failed = ExamJobStatus(state: .waiting, at: "marks", mockFailed: true)
+        let notMade = try #require(try await page(world(mockMade: false), jobs: jobs(failed)).lastDays)
+        #expect(notMade.mockState == .failed && notMade.mockLine == LastDaysModel.mockFailedLine)
+        let made = try #require(try await page(world(), jobs: jobs(failed)).lastDays)
+        #expect(made.mockState == .ready)
+        // Before the mock day the job's wait is not the mock being made.
+        let before = try ItemStore.mockState(
+            mock: nil, job: live, today: #require(Day(year: 2026, month: 10, day: 13)),
+            mockDay: #require(Day(year: 2026, month: 10, day: 14))
+        )
+        #expect(before == .notMade)
+    }
+
+    @Test func aFailedMockOffersTryAgainWhichAsksTheJob() async throws {
+        let jobs = jobs(ExamJobStatus(state: .waiting, at: "marks", mockFailed: true))
+        let page = try await page(world(mockMade: false), jobs: jobs)
+        #expect(page.lastDays?.mockState == .failed)
+        jobs.examJobs[Self.exam] = ExamJobStatus(state: .running, at: "mock", mockFailed: false)
+        await page.tryAgain()
+        #expect(jobs.examPrepRequests == [Self.exam])
+        #expect(page.lastDays?.mockState == .making)
+    }
+
+    @Test func aFailedTryAgainSaysSoAndKeepsTheRow() async throws {
+        let jobs = jobs(ExamJobStatus(state: .waiting, at: "marks", mockFailed: true))
+        let page = try await page(world(mockMade: false), jobs: jobs)
+        jobs.failure = URLError(.notConnectedToInternet)
+        await page.tryAgain()
+        #expect(page.message == "That didn't go through. Check your connection and try again.")
+        #expect(page.lastDays?.mockState == .failed)
+    }
+
+    @Test func aMarkedStudentWithoutAReportIsWorking() async throws {
+        let live = ExamJobStatus(state: .waiting, at: "marks", mockFailed: false)
+        let days = try #require(try await page(world(), jobs: jobs(live)).lastDays)
+        let dev = try #require(days.marked.first { $0.id == FakeStudentsRepository.dev })
+        #expect(dev.working && !dev.canReport)
+        #expect(dev.line.hasSuffix(" of 40 · working out the last two days"))
+        let nikhil = try #require(days.marked.first { $0.id == FakeStudentsRepository.nikhil })
+        #expect(!nikhil.working && nikhil.line == "Not marked yet")
+        #expect(days.lastDays.first?.line == "Dev and Meher's lines follow once their marks are read")
+        // With no live job nothing is being worked out.
+        let done = try #require(try await page(world(), jobs: jobs(nil)).lastDays)
+        #expect(done.marked.allSatisfy { !$0.working })
+        #expect(done.lastDays.first?.line == "The last set from the gap report")
+    }
+
+    @Test func aUsedReportMarksTheDayChanged() async throws {
+        let live = ExamJobStatus(state: .waiting, at: "marks", mockFailed: false)
+        let days = try #require(try await page(world(reportsUsed: true), jobs: jobs(live)).lastDays)
+        #expect(days.changed && days.lastDays.first?.changed == true)
+        let dev = try #require(days.marked.first { $0.id == FakeStudentsRepository.dev })
+        #expect(!dev.working && dev.line.hasSuffix(" · the last two days changed"))
+        #expect(days.lastDays.last?.changed == false)
     }
 }
