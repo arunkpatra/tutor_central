@@ -22,9 +22,12 @@ public struct ToolRow: View {
     public var body: some View {
         ListRow(action: action) {
             IconTile(symbol: symbol)
-            RowTitles(title: title, subtitle: line)
-            if ready {
-                Chip(.status(.ok, "Ready", symbol: "checkmark"), compact: true)
+            // At the accessibility sizes the chip goes under the words (Dynamic Type).
+            AdaptiveRow {
+                RowTitles(title: title, subtitle: line)
+                if ready {
+                    Chip(.status(.ok, "Ready", symbol: "checkmark"), compact: true)
+                }
             }
             if action != nil {
                 Chevron()

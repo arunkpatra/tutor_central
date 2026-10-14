@@ -76,16 +76,19 @@ struct LastDaysSections: View {
                     ForEach(model.marked) { row in
                         HStack(spacing: Tokens.rowPaddingDense) {
                             Avatar(initials: row.initials, size: WhoSection.avatar)
-                            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                                Text(row.name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                                Text([row.line, row.consentLine].compactMap(\.self).joined(separator: " · "))
-                                    .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            if row.working {
-                                WorkingTrail()
-                            } else if row.canReport {
-                                Button("Gap report") { openGapReport(row.id) }.buttonStyle(.quiet(emphasised: true))
+                            AdaptiveRow {
+                                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                                    Text(row.name).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                                    Text([row.line, row.consentLine].compactMap(\.self).joined(separator: " · "))
+                                        .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                if row.working {
+                                    WorkingTrail()
+                                } else if row.canReport {
+                                    Button("Gap report") { openGapReport(row.id) }
+                                        .buttonStyle(.quiet(emphasised: true))
+                                }
                             }
                         }
                         .padding(.vertical, Tokens.rowPaddingDense)
@@ -102,18 +105,20 @@ struct LastDaysSections: View {
     private var mockWaitRow: some View {
         HStack(spacing: Tokens.rowPaddingDense) {
             IconTile(symbol: "doc.text")
-            VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                Text(model.mockTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                Text(model.mockLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            if model.mockState == .making {
-                Chip(.working("Being made"))
-            }
-            // Try again trails the words (P21-Exam-MockFailed), as Gap report does on a Marked row.
-            if model.mockState == .failed, let tryAgain {
-                Button("Try again", action: tryAgain).buttonStyle(.quiet(emphasised: true))
+            AdaptiveRow {
+                VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                    Text(model.mockTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                    Text(model.mockLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                if model.mockState == .making {
+                    Chip(.working("Being made"))
+                }
+                // Try again trails the words (P21-Exam-MockFailed), as Gap report does on a Marked row.
+                if model.mockState == .failed, let tryAgain {
+                    Button("Try again", action: tryAgain).buttonStyle(.quiet(emphasised: true))
+                }
             }
         }
         .padding(.vertical, Tokens.rowPaddingDense)

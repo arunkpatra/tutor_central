@@ -31,7 +31,7 @@ struct ResultFooter: View {
                         .buttonStyle(.quiet(emphasised: true))
                         .disabled(generation.request == nil)
                 }
-                HStack(spacing: Tokens.tileGap) {
+                AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
                     CopyButton(copied: copied, text: { PaperText.plain(generation.result, key: generation.printsKey) })
                     share
                 }

@@ -125,7 +125,7 @@ struct BriefView: View {
                     Button("Make it again") { reasons = true }
                         .buttonStyle(.quiet(emphasised: true))
                 }
-                HStack(spacing: Tokens.tileGap) {
+                AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
                     CopyButton { store.copyText }
                     if let pdf {
                         ShareLink(item: pdf) { Label("Share as PDF", systemImage: "square.and.arrow.up") }
