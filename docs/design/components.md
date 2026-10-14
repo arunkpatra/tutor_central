@@ -1103,3 +1103,42 @@ The texts:
 |---|---|
 | A kind switched off | "Sheets can't be made right now" · "Making sheets is switched off for a short while so we can fix something. Everything else works as usual. Try again later." · OK |
 | The Kit's footnote | "The maths face: XITS Math on the iPhone (SwiftMath), STIX Two Math in the PDF (Typst with mitex), the same family. Letters italic, numbers upright, fractions stacked, roots with their bar. Dynamic Type scales a formula with the words around it." |
+
+## Phase 21 parts (session 42, 2026-10-14): the reasons menus, a note set aside, the exam job's rows, the cost report's chip
+
+**Reasons menu, by kind:** the Phase 3 menu on the glass (`GlassMenu`), 260 wide, the eyebrow "Make it again" (the brief, the
+mock) or "Write again" (the note), five rows 44 high: the brief's Shorter, Simpler words, A different example, More on the
+mistakes; the mock's Easier, Harder, Different questions, Closer to the school's papers; the note's Shorter, Warmer, Plainer words,
+Less about marks; then Say what to change… (the sheet's 200-character sheet, P10-Sheet-Regenerate).
+
+**Set-aside card:** the list card in the note well's place: a 40 pt icon tile (the message symbol), the title "Nothing to send yet"
+`rowTitle`, the line in `subhead` `text2`, a rule, then the quiet Write it myself (accent 15/600) in its own row. Copy and Send on
+WhatsApp at 0.45 while nothing can be sent.
+
+**Being-made chip:** the neutral chip (`surface2`, `text2`, 600) with a 12 pt spinner before its word ("Being made"); a row that
+waits on it sits at 0.45 with a line that says what it waits for.
+
+**Working trail:** in a row's trailing place, a 12 pt spinner and "Working" in `footnote` `text3` 600, where the quiet action
+(Gap report) will appear.
+
+**Changed chip:** the `ok` chip with the tick, "Changed", after a Preparation row's line.
+
+**Done row (the gap report):** a 50 pt row in the primary button's place, `surface1` with the `line` border, the tick and "In the
+plan" in `ok` 700; the footnote under it in `text3`.
+
+**Batch chip (the portal):** `accentTint` ground, `accentText` 11/14 700, 20 high, "batch · ½", after a step's word in the kind table.
+
+The texts:
+
+| Text | Words |
+|---|---|
+| A brief made again | "A shorter brief is on its way. This one stays until it arrives." (Shorter; "A simpler brief", "A brief with a different example", "A brief with more on the mistakes", "A new brief") |
+| A mock made again | "An easier mock is on its way. This one stays until it arrives." (and harder, with different questions, closer to the school's papers, a new mock) |
+| A note written again | "A shorter note is on its way." (and warmer, plainer, with less about marks, a fresh note) |
+| A note set aside | "Nothing to send yet" · "The draft said something that is not in Dev's record, so it was set aside. Tap Write again for a fresh one, or write it yourself." · Write it myself · "Every note is checked against Dev's record before it reaches you. This one did not pass." · the note day's line "Hindi · set aside: not in the record · Read to write it again" |
+| The mock being made | "In the school's pattern · 25 marks · usually ready in a minute" · Being made · Mark from a photo "Once the mock is ready" |
+| The mock not made | "Couldn't make the mock. Try again, or set a paper of your own." · Try again |
+| The gap report at work | "14 of 25 · working out the last two days" · Working · "Meher: a short revision set · Dev's lines follow once his marks are read" |
+| The last days changed | "14 of 25 · Balancing equations 3 of 10 · the last two days changed" · Changed · Change |
+| The gap report in the plan | In the plan · "The last two days were changed from this report when Dev's marks were saved. Change them on the exam's page." |
+| The cost report | "What the AI service cost, priced from models.json at each call’s finish (D67), by kind, model and step and by month, against each centre’s allowance and the ₹499 a month of D64. Batched work is priced at half and marked." · "By centre, and by kind, model and step" · "The standing cost report (D74): a check, repair or grade is a row of its kind; the morning’s plans and the nightly evals are batched at half price. A centre over its allowance is refused at the gate, not here." · "By month" · "Each month’s calls and cost, how much of it was batched at half price, and the average active centre against ₹499." · the heads Kind, Step, Model, Calls, Cost, Share; Month, Calls, Cost, Batched, Per active centre, Of ₹499 |

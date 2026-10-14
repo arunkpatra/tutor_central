@@ -3404,6 +3404,99 @@
    "x": 6622,
    "y": 82000,
    "title": "Phase 20 · A sheet's PDF page as Typst renders it with mitex: words in Noto Sans, formulae in STIX Two Math"
+  },
+  "P21-Brief-Again.dc.html": {
+   "x": 0,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · The brief, Make it again: the reason asked and kept as feedback (D74) · dark"
+  },
+  "P21-Mock-Again.dc.html": {
+   "x": 473,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · The mock, Make it again: the reason asked and kept as feedback (D74) · dark"
+  },
+  "P21-Note-Again.dc.html": {
+   "x": 946,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · The note, Write again: the reason asked and kept as feedback (D74) · dark"
+  },
+  "P21-Note-SetAside.dc.html": {
+   "x": 1419,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · A note the check set aside (a fact not in the record): the words, Write again, write it yourself · dark"
+  },
+  "P21-NoteDay-SetAside.dc.html": {
+   "x": 1892,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · The note day: a note the check set aside, Read writes it again · dark"
+  },
+  "P21-Exam-MockMaking.dc.html": {
+   "x": 2365,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · Exam preparation as one job: the mock being made on its morning (P10-School-Exam-LastDays' page) · dark"
+  },
+  "P21-Exam-MockFailed.dc.html": {
+   "x": 2838,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · Exam preparation as one job: the mock could not be made, Try again in place (U33) · dark"
+  },
+  "P21-Exam-GapWorking.dc.html": {
+   "x": 3311,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · Exam preparation as one job: Dev's marks saved, his gap report being worked out, the last days to change · dark"
+  },
+  "P21-Exam-LastDaysChanged.dc.html": {
+   "x": 3784,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · Exam preparation as one job: the gap reports changed the last two days, Change on the page · dark"
+  },
+  "P21-GapReport-Used.dc.html": {
+   "x": 4257,
+   "y": 83600,
+   "w": 393,
+   "h": 852,
+   "title": "Phase 21 · The gap report already in the plan: the last two days changed when the marks were saved · dark"
+  },
+  "P21-PDF-Paper.dc.html": {
+   "x": 4730,
+   "y": 83600,
+   "w": 595,
+   "h": 842,
+   "title": "Phase 21 · A V1 question paper's PDF page as Typst renders it on the server (D90): the sections with their marks, formulae in STIX Two Math, the key on page 2"
+  },
+  "P21-Cost.dc.html": {
+   "x": 5405,
+   "y": 83600,
+   "w": 1280,
+   "h": 2353,
+   "title": "Phase 21 · admin.tutorcentral.in/cost · the standing cost report: per kind, model and step, by month, batched work at half price, against ₹499 (D74) · dark · desktop 1280",
+   "expand": "fill"
+  },
+  "P21-Cost-Phone.dc.html": {
+   "x": 6765,
+   "y": 83600,
+   "w": 390,
+   "h": 5683,
+   "title": "Phase 21 · admin.tutorcentral.in/cost · the standing cost report: per kind, model and step, by month, batched work at half price, against ₹499 (D74) · dark · phone 390",
+   "expand": "fill"
   }
  },
  "createdOnFiles": {
@@ -3654,6 +3747,14 @@
    "x": 0,
    "y": 81700,
    "text": "Phase 20 · AI quality, the material (D73 to D75): mathematics on the sheet (the younger band and the older band), the board view, the worked example and the mock, dark and light; the Kit's mathematics rows; a sheet's PDF page as Typst renders it; the words a kind switched off says to the tutor"
+  },
+  "p21_1": {
+   "kind": "title1",
+   "x": 0,
+   "y": 83300,
+   "w": 240,
+   "maxW": 7155,
+   "text": "Phase 21 · AI quality, parents and exams (D73, D74): the reason asked when something is made again (the brief, the mock, the note); a note the check set aside; exam preparation as one job (the mock being made, not made, the gap report at work, the last days changed, the report in the plan); a V1 paper's PDF page on the server; the portal's standing cost report at 1280 and 390 (the light twins are in the repository's mirror: the canvas holds its 512 files)"
   }
  },
  "order": [
@@ -4128,7 +4229,20 @@
   "P20-Kit-Maths-Light.dc.html",
   "P20-Switched-Off.dc.html",
   "P20-Switched-Off-Light.dc.html",
-  "P20-PDF-Sheet.dc.html"
+  "P20-PDF-Sheet.dc.html",
+  "P21-Brief-Again.dc.html",
+  "P21-Mock-Again.dc.html",
+  "P21-Note-Again.dc.html",
+  "P21-Note-SetAside.dc.html",
+  "P21-NoteDay-SetAside.dc.html",
+  "P21-Exam-MockMaking.dc.html",
+  "P21-Exam-MockFailed.dc.html",
+  "P21-Exam-GapWorking.dc.html",
+  "P21-Exam-LastDaysChanged.dc.html",
+  "P21-GapReport-Used.dc.html",
+  "P21-PDF-Paper.dc.html",
+  "P21-Cost.dc.html",
+  "P21-Cost-Phone.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design",

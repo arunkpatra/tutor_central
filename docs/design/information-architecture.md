@@ -1556,3 +1556,78 @@ What the boards settle:
   figures, briefs, mock tests, notes, …). In the plan, material of a kind switched off reads as not made, with Phase 10's
   mark; nothing is paid.
 - **VoiceOver** reads a formula in words ("x over 4 minus 2 equals 1").
+
+## Phase 21 boards (session 42, 2026-10-14): the reason asked, a note set aside, exam preparation as one job, a paper's PDF page, the standing cost report
+
+Row 29 of the canvas (y 83600; the title note at 83300): thirteen boards; sources `mockups/P21-*.dc.html`, eighteen with the five
+light twins (`-Light`), which are in this mirror alone: the canvas holds its 512 files (the owner's call which earlier row to
+retire). Drawn by session 42 from the approved
+sources (P10-Brief, P10-Mock, P10-Note, P10-Today-NoteDay, P10-School-Exam-LastDays, P10-GapReport, P19-Cost, P20-PDF-Sheet) by
+substitution, so each keeps its parent's grammar. Content is illustrative (Dev's week in Hindi; the Science unit test 3 on Friday
+16 October; the cost page's October). Awaiting the owner's approval.
+
+| Board | Source |
+|---|---|
+| The brief, Make it again: the reasons menu (Shorter, Simpler words, A different example, More on the mistakes, Say what to change…) | `P21-Brief-Again` |
+| The mock, Make it again: the reasons menu (Easier, Harder, Different questions, Closer to the school's papers, Say what to change…) | `P21-Mock-Again` |
+| The note, Write again: the reasons menu (Shorter, Warmer, Plainer words, Less about marks, Say what to change…), dark and light | `P21-Note-Again`, `-Light` |
+| A note the check set aside (it said something not in the record): the card in the well's place, Write again, Write it myself; Copy and Send wait; dark and light | `P21-Note-SetAside`, `-Light` |
+| The note day with a row the check set aside: the line says so, Read writes it again | `P21-NoteDay-SetAside` |
+| The exam's last days while the mock is being made on its morning: the row's Being made chip with a spinner, Mark from a photo waiting | `P21-Exam-MockMaking` |
+| The mock could not be made: the row's words and Try again in place (U33) | `P21-Exam-MockFailed` |
+| Dev's marks saved: his Marked row "working out the last two days" with a spinner; the Thursday line says his lines follow | `P21-Exam-GapWorking` |
+| The gap reports have changed the last two days: the Changed chip on Thursday's row, Change on the section, Dev's row says so; dark and light | `P21-Exam-LastDaysChanged`, `-Light` |
+| The gap report once it is in the plan: the done row "In the plan" where Use this plan was, the footnote pointing at the exam's page | `P21-GapReport-Used` |
+| A V1 question paper's PDF page as Typst renders it on the server: the sections with their marks each, formulae in STIX Two Math, the foot, the key on page 2 | `P21-PDF-Paper` |
+| admin.tutorcentral.in/cost, the standing cost report: by kind, model and step with batched work marked at half price, by month; at 1280 and 390, dark and light | `P21-Cost`, `-Light`, `-Phone`, `-Phone-Light` |
+
+The launch states Phase 21 builds (the light twins from `--appearance light`; the portal's pages are proven by `bun admin-shots`):
+
+| State | Shows |
+|---|---|
+| `brief-again` | The brief with the reasons menu |
+| `mock-again` | The mock with the reasons menu |
+| `note-again` | The note with Write again's reasons menu |
+| `note-set-aside` | A note the check set aside |
+| `today-note-day-set-aside` | The note day with a set-aside row |
+| `school-last-days-mock-making` | The last days while the mock is made |
+| `school-last-days-mock-failed` | The mock not made, Try again |
+| `school-last-days-gap-working` | Marks saved, the gap report at work |
+| `school-last-days-changed` | The last two days changed from the gap reports |
+| `gap-report-used` | The gap report already in the plan |
+
+What the boards settle:
+
+- **Making something again asks why, everywhere it is offered** (D74's feedback): the sheet's menu (P10-Sheet-Regenerate) is the
+  grammar; the brief, the mock and the note get a menu of their own reasons and "Say what to change…" (the 200-character sheet).
+  The reason goes with the request (the prompt reads it, as the sheet's does) and is kept as feedback beside the generation it
+  replaces (`generation_feedback`: a regeneration with its reason). The old artefact stays at 0.55 with the reason by the section
+  title while the new one comes (P10-Sheet-Regenerating's words, for each kind: "A shorter brief is on its way. This one stays
+  until it arrives."). An edit the tutor makes to a note before sending, and a sheet replaced by their own (P10-Sheet-Own), are
+  kept as feedback too, with no new screen.
+- **A note the check set aside** (a fact not in the record, D73): the note screen shows a card in the well's place: "Nothing to send
+  yet" and "The draft said something that is not in Dev's record, so it was set aside. Tap Write again for a fresh one, or write it
+  yourself.", with Write it myself (the empty well, the tutor's own words, sent as any note and kept as feedback: a replacement);
+  the English block is absent; What it says keeps the record's facts; the AI line reads "Every note is checked against Dev's record
+  before it reaches you. This one did not pass."; Write again is live, Copy and Send wait. On the note day the row's line says
+  "Hindi · set aside: not in the record · Read to write it again"; Read opens the note. Never the words "check", "model" or
+  "refused" (D41).
+- **Exam preparation runs as one job** (D73's orchestrator): the split and the day's sets, the mock on its morning, the marking
+  from the tutor's photo at a tap, the gap report made when the marks are saved and the last days changed by it. On the page: the
+  mock's row says Being made (a spinner chip, "usually ready in a minute") while the job makes it and Mark from a photo waits
+  dimmed ("Once the mock is ready"); when the job could not make it, the row says "Couldn't make the mock. Try again, or set a
+  paper of your own." with Try again in place (U33's row for a list that could not load); when a student's marks are saved the
+  Marked row reads "14 of 25 · working out the last two days" with a spinner until the gap report is kept, then "14 of 25 ·
+  Balancing equations 3 of 10 · the last two days changed" with Gap report; Thursday's row carries the Changed chip in `ok` and the
+  section its quiet Change. The gap report's footer, once the job has used it, is the done row "In the plan" and "The last two days
+  were changed from this report when Dev's marks were saved. Change them on the exam's page." Use this plan stays for a report the
+  tutor opens before the job has used it (never the case once the job runs; the state is kept for a report made before Phase 21).
+- **A V1 question paper's PDF is the server's** (D90's last half): the paper, homework and worksheet pages are made by the `pdf`
+  job as a sheet's is (P20-PDF-Sheet's grammar): the title, the subtitle with the class, marks and minutes, each section's rule
+  with its marks each, numbered questions with their marks on the right and answer space by the marks, formulae in STIX Two Math,
+  the foot with the centre and the page count; the key on its own last page. Share takes the server's file as D93 says.
+- **The standing cost report** (D74): the Cost page's lead names its new parts; the split section is "By centre, and by kind,
+  model and step" with the kind table full width (Kind, Step, Model, Calls, Cost, Share), a check, repair or grade a row of its
+  kind, a `batch · ½` chip in `accentTint` on a step priced at the Batches API's half; a By month section (Month, Calls, Cost,
+  Batched with its share, Per active centre, Of ₹499 with the meter) for the last months. The tiles and the day chart are
+  Phase 19's. At phone width the rows become labelled pairs as every portal table does.
