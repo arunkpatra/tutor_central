@@ -16,7 +16,7 @@ export type Scored = { schema: boolean; verify: boolean; expect: boolean; reason
 /** The kinds with a golden set: every kind on its agent (the parents' four from Phase 21). */
 export const EVAL_KINDS = [
   "sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school",
-  "note", "can_do", "test_tomorrow", "not_on_track",
+  "note", "can_do", "test_tomorrow", "not_on_track", "mock", "gap_report", "check_paper", "read_marks",
 ] as const;
 export type EvalKind = (typeof EVAL_KINDS)[number];
 /** The language anchors (D110): `api/evals/anchors/<lang>/cases.json`, the parents' messages in Hindi and Kannada, each
@@ -62,18 +62,31 @@ export function agentFor(c: Case, dir = evalsDir()): { spec: Kind<unknown, unkno
       return { spec, input: { text: v.text ?? null, image: null, today: v.today, schools: v.schools ?? [], classLevels: v.classLevels ?? [] } };
     }
     case "parse_textbook": {
-      const bytes = readFileSync(join(dir, c.kind, String(c.input.image)));
-      const image = decodeImage({ imageBase64: bytes.toString("base64"), mediaType: "image/png" });
-      if (typeof image === "string") throw new Error(`${c.id}: ${image}`);
-      return { spec, input: { image, classLevel: c.input.classLevel, subject: c.input.subject } };
+      return { spec, input: { image: pageOf(c, dir), classLevel: c.input.classLevel, subject: c.input.subject } };
+    }
+    case "check_paper": {
+      const { scheme, schemeQuestions, studentName } = c.input as { scheme: string; schemeQuestions: { number: number; marks: number }[]; studentName: string };
+      return { spec, input: { pages: [pageOf(c, dir)], scheme, schemeQuestions, studentName } };
+    }
+    case "read_marks": {
+      const { studentId, studentName, subjects } = c.input as { studentId: string; studentName: string; subjects: string[] };
+      return { spec, input: { pages: [pageOf(c, dir)], studentId, studentName, subjects } };
     }
     default:
       return { spec, input: MakeInput.parse({ kind: c.kind, ...withCentre }) };
   }
 }
 
+/** A case's drawn page (`<kind>/pages/*.png`), decoded as the route decodes a photo. */
+function pageOf(c: Case, dir: string) {
+  const bytes = readFileSync(join(dir, c.kind, String(c.input.image)));
+  const image = decodeImage({ imageBase64: bytes.toString("base64"), mediaType: "image/png" });
+  if (typeof image === "string") throw new Error(`${c.id}: ${image}`);
+  return image;
+}
+
 type PageRow = { number: string; name: string; sections?: string[]; page: number };
-type Page = { file: string; title: string; heading: string; rows: PageRow[] };
+type Page = { file: string; title: string; heading?: string; rows?: PageRow[]; lines?: string[] };
 
 /** What a case's page prints, in words (`<kind>/pages.json`, the text the page was drawn from), for the graders: they
  *  read text alone, and without it judged a photo's chapters against the whole book they remember. "" for a case with
@@ -84,7 +97,8 @@ export function pageWords(c: Case, dir = evalsDir()): string {
   const pages = JSON.parse(readFileSync(join(dir, c.kind, "pages.json"), "utf8")) as Page[];
   const page = pages.find((p) => p.file === file);
   if (!page) return "";
-  const rows = page.rows.map((r) => `${r.number} ${r.name}${r.sections?.length ? ` (${r.sections.join("; ")})` : ""}, page ${r.page}`);
+  if (page.lines) return [page.title, ...page.lines].join("\n");
+  const rows = (page.rows ?? []).map((r) => `${r.number} ${r.name}${r.sections?.length ? ` (${r.sections.join("; ")})` : ""}, page ${r.page}`);
   return [page.title, page.heading, ...rows].join("\n");
 }
 
@@ -96,6 +110,8 @@ function countOf(kind: AIKind, parsed: Record<string, unknown>): number | undefi
   if (kind === "parse_school") return list("items");
   if (kind === "plan") return list("groups");
   if (kind === "worked_example") return list("steps");
+  if (kind === "read_marks") return list("marks");
+  if (kind === "gap_report") return list("days");
   return list("questions");
 }
 

@@ -6,7 +6,7 @@ import { CheckOutput, MockOutput, PaperOutput, QuestionSetOutput } from "../sche
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 /** A photographed answer sheet marked against the scheme: a suggested mark and a note for every question. */
 export function request(pages: DecodedImage[], scheme: string, studentName: string): ClaudeRequest<CheckOutput> {
@@ -54,4 +54,18 @@ export function schemeText(output: unknown, kind: AIKind): string | null {
     return [set.data.title, ...set.data.questions.map((q) => `Q${q.number} ${q.text} → ${q.answer}`)].join("\n");
   }
   return null;
+}
+
+/** The scheme's questions and their marks from a stored paper or mock, for marking's free check (Phase 21): every one
+ *  marked once, never above its marks; none for homework, a worksheet or a typed scheme (no marks per question). */
+export function schemeQuestions(output: unknown, kind: AIKind): { number: number; marks: number }[] {
+  if (kind === "paper") {
+    const paper = PaperOutput.safeParse(output);
+    return paper.success ? paper.data.sections.flatMap((s) => s.questions.map((q) => ({ number: q.number, marks: q.marks }))) : [];
+  }
+  if (kind === "mock") {
+    const mock = MockOutput.safeParse(output);
+    return mock.success ? mock.data.sections.flatMap((s) => s.questions.map((q) => ({ number: q.number, marks: q.marks }))) : [];
+  }
+  return [];
 }

@@ -3,12 +3,11 @@ import type { Vars } from "../auth.js";
 import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
-import { parseTextbook, plan } from "../agents/kinds/index.js";
-import { request as readMarksRequest } from "../prompts/read-marks.js";
+import { parseTextbook, plan, readMarks } from "../agents/kinds/index.js";
 import { type DecodedImage, decodeImage } from "../images.js";
 import { makeAgent } from "../make.js";
 import { MakeInput, ParseTextbookInput, PlanInput, ReadMarksInput } from "../schemas.js";
-import { answer, isParsed, parse, run, runCall } from "./common.js";
+import { answer, isParsed, parse, run } from "./common.js";
 
 /** The V2 routes (docs/spec-v2.md section 9): the textbook's contents page, `/plan` (a first topic for a group whose
  *  record names none), `/make` for the group material (sheet, worked example, figure, brief, check), the placement, the
@@ -47,8 +46,7 @@ export function v2Routes(deps: { claude: ClaudeClient; db: Db }) {
     }
     const { studentId, studentName, subjects } = body.value;
     const input = { kind: "read_marks", pages: pages.length, bytes: pages.reduce((n, p) => n + p.bytes, 0), studentName };
-    const request = readMarksRequest(pages, studentName, subjects ?? []);
-    return runCall(c, deps, body.centre, { kind: "read_marks", input, request, student: studentId, studentName, empty: (read) => read.marks.length === 0 });
+    return run(c, deps, body.centre, readMarks, { pages, studentName, studentId, subjects: subjects ?? [] }, input);
   });
   return routes;
 }

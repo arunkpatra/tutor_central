@@ -1,15 +1,15 @@
 import type { ClaudeRequest } from "../claude.js";
 import type { DecodedImage } from "../images.js";
 import { modelFor } from "../models.js";
-import { ReadMarksOutput } from "../schemas.js";
+import { ReadMarksDraftOutput } from "../schemas.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 /** Marks read from a photo of a printed report card or a marked test (P14-Marks-Reading): one row per subject's test,
  *  which the tutor checks before anything is kept. A work type of its own, apart from marking a paper (D67). */
-export function request(pages: DecodedImage[], studentName: string, subjects: string[]): ClaudeRequest<ReadMarksOutput> {
+export function request(pages: DecodedImage[], studentName: string, subjects: string[]): ClaudeRequest<ReadMarksDraftOutput> {
   return {
     model: modelFor("read_marks", "draft").model,
     effort: "medium",
@@ -28,6 +28,6 @@ export function request(pages: DecodedImage[], studentName: string, subjects: st
       .filter(Boolean)
       .join("\n"),
     images: pages.map((p) => ({ mediaType: p.mediaType, base64: p.base64 })),
-    schema: ReadMarksOutput,
+    schema: ReadMarksDraftOutput,
   };
 }

@@ -1,0 +1,75 @@
+[
+  {
+    "id": "marks-report-card",
+    "input": {
+      "image": "pages/hemanth-report-card.png",
+      "studentId": "a0000000-0000-4000-8000-000000000011",
+      "studentName": "Hemanth Reddy",
+      "subjects": [
+        "Mathematics",
+        "Science",
+        "English"
+      ]
+    },
+    "expect": {
+      "contains": [
+        "2026-10-05"
+      ]
+    }
+  },
+  {
+    "id": "marks-marked-test",
+    "input": {
+      "image": "pages/dev-marked-test.png",
+      "studentId": "a0000000-0000-4000-8000-000000000012",
+      "studentName": "Dev Kumar",
+      "subjects": [
+        "Science"
+      ]
+    },
+    "expect": {
+      "contains": [
+        "2026-10-09"
+      ]
+    }
+  },
+  {
+    "id": "marks-no-dates",
+    "input": {
+      "image": "pages/meher-no-dates.png",
+      "studentId": "a0000000-0000-4000-8000-000000000013",
+      "studentName": "Meher Shah",
+      "subjects": [
+        "Mathematics",
+        "Science"
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "marks-no-marks",
+    "input": {
+      "image": "pages/notice-no-marks.png",
+      "studentId": "a0000000-0000-4000-8000-000000000014",
+      "studentName": "Nikhil Das",
+      "subjects": []
+    },
+    "expect": {
+      "refused": true
+    }
+  },
+  {
+    "id": "marks-five-subjects",
+    "input": {
+      "image": "pages/akshita-five-subjects.png",
+      "studentId": "a0000000-0000-4000-8000-000000000015",
+      "studentName": "Akshita Rao",
+      "subjects": [
+        "English",
+        "Mathematics",
+        "Science"
+      ]
+    },
+    "expect": {}
+  }
+]

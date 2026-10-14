@@ -1,0 +1,56 @@
+[
+  {
+    "file": "hemanth-report-card",
+    "hand": false,
+    "title": "Vidya Niketan · Progress report · Class 10 · Hemanth Reddy",
+    "lines": [
+      "Subject | Test | Date | Marks",
+      "Mathematics | Unit test 2 | 05-10-2026 | 14 / 25",
+      "Science | Unit test 2 | 06-10-2026 | 19 / 25",
+      "English | Unit test 2 | 07-10-2026 | 21 / 25"
+    ]
+  },
+  {
+    "file": "dev-marked-test",
+    "hand": false,
+    "title": "Science unit test 2 · Dev Kumar · Class 8 · 9 October 2026",
+    "lines": [
+      "Total: 18 / 25",
+      "Q1 ✓  Q2 ✓  Q3 ✗  Q4 ✓  Q5 ✓"
+    ]
+  },
+  {
+    "file": "meher-no-dates",
+    "hand": false,
+    "title": "Term report · Class 8 · Meher Shah",
+    "lines": [
+      "Subject | Marks obtained | Maximum",
+      "Mathematics | 62 | 80",
+      "Science | 70 | 80",
+      "Social Science | 55 | 80",
+      "Hindi | 48 | 80"
+    ]
+  },
+  {
+    "file": "notice-no-marks",
+    "hand": false,
+    "title": "Vidya Niketan · Circular",
+    "lines": [
+      "Parent-teacher meeting on Saturday 17 October, 9 am to 12 noon.",
+      "Please bring the report book."
+    ]
+  },
+  {
+    "file": "akshita-five-subjects",
+    "hand": false,
+    "title": "Half-yearly examination · Class 10 · Akshita Rao · September 2026",
+    "lines": [
+      "Subject | Marks | Out of",
+      "English | 72 | 80",
+      "Hindi | 65 | 80",
+      "Mathematics | 58 | 80",
+      "Science | 61 | 80",
+      "Social Science | 69 | 80"
+    ]
+  }
+]

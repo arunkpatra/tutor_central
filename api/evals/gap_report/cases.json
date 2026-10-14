@@ -1,0 +1,140 @@
+[
+  {
+    "id": "gap-8-two-days",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000001",
+      "classLevel": "8",
+      "subject": "Science",
+      "daysLeft": 2,
+      "bySkill": [
+        {
+          "skill": "Balance a chemical equation",
+          "right": 3,
+          "of": 10,
+          "note": "Changes the small numbers inside a formula"
+        },
+        {
+          "skill": "Types of reactions",
+          "right": 4,
+          "of": 8
+        },
+        {
+          "skill": "Word equations",
+          "right": 6,
+          "of": 7
+        }
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "gap-10-one-day",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000002",
+      "classLevel": "10",
+      "subject": "Mathematics",
+      "daysLeft": 1,
+      "bySkill": [
+        {
+          "skill": "Nature of the roots",
+          "right": 1,
+          "of": 4,
+          "note": "Mixes up equal and distinct roots"
+        },
+        {
+          "skill": "Solve by factorisation",
+          "right": 6,
+          "of": 6
+        },
+        {
+          "skill": "Word problems",
+          "right": 4,
+          "of": 10
+        }
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "gap-6-three-days",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000003",
+      "classLevel": "6",
+      "subject": "Mathematics",
+      "daysLeft": 3,
+      "bySkill": [
+        {
+          "skill": "Add fractions with unlike denominators",
+          "right": 2,
+          "of": 8
+        },
+        {
+          "skill": "Compare fractions",
+          "right": 5,
+          "of": 6
+        },
+        {
+          "skill": "Equivalent fractions",
+          "right": 3,
+          "of": 6
+        },
+        {
+          "skill": "Fractions on a number line",
+          "right": 4,
+          "of": 5
+        }
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "gap-9-nearly-secure",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000004",
+      "classLevel": "9",
+      "subject": "Science",
+      "daysLeft": 2,
+      "bySkill": [
+        {
+          "skill": "States of matter",
+          "right": 9,
+          "of": 10
+        },
+        {
+          "skill": "Evaporation",
+          "right": 7,
+          "of": 8
+        },
+        {
+          "skill": "Latent heat",
+          "right": 4,
+          "of": 7
+        }
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "gap-4-evs-one-day",
+    "input": {
+      "studentId": "a0000000-0000-4000-8000-000000000005",
+      "classLevel": "4",
+      "subject": "EVS",
+      "daysLeft": 1,
+      "bySkill": [
+        {
+          "skill": "Name the sense organs",
+          "right": 4,
+          "of": 5
+        },
+        {
+          "skill": "How animals use their senses",
+          "right": 1,
+          "of": 5,
+          "note": "Not attempted"
+        }
+      ]
+    },
+    "expect": {}
+  }
+]

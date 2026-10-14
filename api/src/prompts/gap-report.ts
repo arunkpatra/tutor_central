@@ -4,7 +4,7 @@ import { type GapReportInput, GapReportOutput } from "../schemas.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "3";
 
 /** The gap report after a marked mock (P10-GapReport): one sentence on what it showed and one line per day left. The
  *  tallies by skill are the app's arithmetic; the student is named only for the consent gate, never in the prompt. */

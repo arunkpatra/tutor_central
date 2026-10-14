@@ -510,7 +510,9 @@ export function localAnswer(request: ClaudeRequest<unknown>): unknown {
   if (kind === "plan") return topics(request.text);
   if (kind === "parse_school") return request.images?.length ? PHOTO_ITEMS : SAMPLE.parse_school;
   if (kind === "note" || kind === "can_do" || kind === "test_tomorrow" || kind === "not_on_track") return parentMessage(request.text);
-  if (kind === "mock") return patterned(Number(request.text.match(/Pattern: (\d+) marks/)?.[1] ?? 25));
+  if (kind === "mock") return patterned(request.text);
+  if (kind === "check_paper") return marked(request.text);
+  if (kind === "gap_report") return daysLeft(Number(request.text.match(/(\d+) days? left/)?.[1] ?? 2));
   return blank ? { rows: [] } : SAMPLE[kind];
 }
 
@@ -535,6 +537,26 @@ function parentMessage(text: string): MessageOutput {
   const own = (GREETING[language] ?? GREETING.English)?.(parent, student) ?? english;
   const latin = language === "English" || language === "Hinglish";
   return { message: language === "English" ? english : [own, latin ? words : undefined].filter(Boolean).join(" "), english };
+}
+
+/** The sample gap report with one line per day left (its two, cut or repeated). */
+function daysLeft(count: number): GapReportOutput {
+  const days = Array.from({ length: count }, (_, i) => SAMPLE.gap_report.days[i % SAMPLE.gap_report.days.length] ?? { title: "Day", line: "Revise" });
+  return { ...SAMPLE.gap_report, days };
+}
+
+/** The board's marking fitted to the scheme the prompt carries ("Q3 (2 marks) …"): one row per scheme question, the
+ *  sample's note where it has one, never above the question's marks; the sample as it is for a typed scheme. */
+function marked(text: string): CheckOutput {
+  const scheme = [...text.matchAll(/^Q(\d+) \((\d+) marks?\)/gm)].map((m) => ({ number: Number(m[1]), of: Number(m[2]) }));
+  if (scheme.length === 0) return SAMPLE.check_paper;
+  return {
+    questions: scheme.map(({ number, of }) => {
+      const sample = SAMPLE.check_paper.questions.find((q) => q.number === number);
+      return { number, text: sample?.text ?? `Question ${number}`, note: sample?.note ?? "Correct", marks: Math.min(sample?.marks ?? of, of), of };
+    }),
+    summary: SAMPLE.check_paper.summary,
+  };
 }
 
 /** The names a check or placement prompt quotes, in order. */
@@ -589,13 +611,34 @@ function topics(text: string): PlanOutput {
 
 /** The sample mock's questions scaled so the marks sum to the pattern's: each question's marks in proportion, at least
  *  one, the last taking the remainder (at least one too, so a small pattern drops questions from the end). */
-function patterned(marks: number): MockOutput {
+function patterned(text: string): MockOutput {
+  const marks = Number(text.match(/Pattern: (\d+) marks/)?.[1] ?? 25);
+  const pool = SAMPLE.mock.sections.flatMap((s) => s.questions);
+  // A pattern's sections (the school's), each its count at its marks, the sample's questions in turn.
+  const asked = [...text.matchAll(/^(.+): (\d+) questions? of (\d+) marks?\.$/gm)].map((m) => ({ name: m[1] ?? "", count: Number(m[2]), each: Number(m[3]) }));
+  if (asked.length > 0) {
+    let n = 0;
+    const sections = asked.map((s) => ({
+      name: s.name,
+      marksEach: s.each,
+      questions: Array.from({ length: s.count }, () => {
+        const q = pool[n % pool.length] ?? pool[0];
+        n += 1;
+        return { ...(q as MockOutput["sections"][number]["questions"][number]), number: n, marks: s.each };
+      }),
+    }));
+    return { ...SAMPLE.mock, sections };
+  }
   const all = SAMPLE.mock.sections.flatMap((s) => s.questions.map((q) => ({ section: s.name, q })));
   const total = all.reduce((n, { q }) => n + q.marks, 0);
   const scaled = all.map(({ section, q }) => ({ section, q: { ...q, marks: Math.max(1, Math.floor((q.marks * marks) / total)) } }));
   while (scaled.length > 1 && scaled.slice(0, -1).reduce((n, { q }) => n + q.marks, 0) >= marks) scaled.splice(scaled.length - 2, 1);
   const last = scaled[scaled.length - 1];
   if (last) last.q.marks = marks - scaled.slice(0, -1).reduce((n, { q }) => n + q.marks, 0);
+  // Numbered 1 to n through the paper, as the mock's rule asks.
+  scaled.forEach((x, i) => {
+    x.q.number = i + 1;
+  });
   const sections = SAMPLE.mock.sections
     .map((s) => {
       const questions = scaled.filter((x) => x.section === s.name).map((x) => x.q);

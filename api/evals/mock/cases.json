@@ -1,0 +1,146 @@
+[
+  {
+    "id": "mock-8-science",
+    "input": {
+      "classLevel": "8",
+      "subject": "Science",
+      "title": "Science unit test 3",
+      "portions": [
+        "Chemical reactions",
+        "Force and pressure"
+      ],
+      "pattern": {
+        "marks": 25,
+        "durationMinutes": 40,
+        "sections": [
+          {
+            "name": "Section A",
+            "questions": 5,
+            "marksEach": 1
+          },
+          {
+            "name": "Section B",
+            "questions": 4,
+            "marksEach": 3
+          },
+          {
+            "name": "Section C",
+            "questions": 2,
+            "marksEach": 4
+          }
+        ]
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "mock-10-maths",
+    "input": {
+      "classLevel": "10",
+      "subject": "Mathematics",
+      "title": "Maths unit test 2",
+      "portions": [
+        "Quadratic Equations",
+        "Arithmetic Progressions"
+      ],
+      "pattern": {
+        "marks": 40,
+        "durationMinutes": 60,
+        "sections": [
+          {
+            "name": "Section A",
+            "questions": 6,
+            "marksEach": 1
+          },
+          {
+            "name": "Section B",
+            "questions": 6,
+            "marksEach": 2
+          },
+          {
+            "name": "Section C",
+            "questions": 3,
+            "marksEach": 4
+          },
+          {
+            "name": "Section D",
+            "questions": 2,
+            "marksEach": 5
+          }
+        ]
+      }
+    },
+    "expect": {
+      "proofs": true
+    }
+  },
+  {
+    "id": "mock-5-evs",
+    "input": {
+      "classLevel": "5",
+      "subject": "EVS",
+      "title": "EVS class test",
+      "portions": [
+        "Super Senses",
+        "A Snake Charmer's Story"
+      ],
+      "pattern": {
+        "marks": 20,
+        "durationMinutes": 30
+      }
+    },
+    "expect": {}
+  },
+  {
+    "id": "mock-4-fractions",
+    "input": {
+      "classLevel": "4",
+      "subject": "Mathematics",
+      "title": "Maths class test",
+      "portions": [
+        "Halves and Quarters"
+      ],
+      "pattern": {
+        "marks": 20,
+        "durationMinutes": 30
+      }
+    },
+    "expect": {
+      "proofs": true
+    }
+  },
+  {
+    "id": "mock-9-science",
+    "input": {
+      "classLevel": "9",
+      "subject": "Science",
+      "title": "Science periodic test 1",
+      "portions": [
+        "Matter in Our Surroundings",
+        "Is Matter Around Us Pure"
+      ],
+      "pattern": {
+        "marks": 30,
+        "durationMinutes": 45,
+        "sections": [
+          {
+            "name": "Section A",
+            "questions": 10,
+            "marksEach": 1
+          },
+          {
+            "name": "Section B",
+            "questions": 5,
+            "marksEach": 2
+          },
+          {
+            "name": "Section C",
+            "questions": 2,
+            "marksEach": 5
+          }
+        ]
+      }
+    },
+    "expect": {}
+  }
+]

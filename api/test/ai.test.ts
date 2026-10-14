@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { fakeApple } from "../src/apple-fake.js";
-import { fakeClaude, SAMPLE } from "../src/claude-fake.js";
+import { fakeClaude, localAnswer, SAMPLE } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
 import { makeApp } from "../src/make-app.js";
 import { fakeObserve } from "../src/observe-fake.js";
@@ -115,7 +115,8 @@ test("check-paper marks against a mock's key read from its generation, names the
   const generations = { "11111111-1111-1111-1111-111111111111": { kind: "mock" as const, output: JSON.stringify(SAMPLE.mock) } };
   const db = fakeDb({ generations });
   const body = { centreId, pages: [image], scheme: { kind: "mock", generationId: "11111111-1111-1111-1111-111111111111" }, studentName: "Dev Kumar", studentId: centreId };
-  const claude = fakeClaude({ answer: SAMPLE.check_paper });
+  // The fake's marking fitted to the mock's scheme: on its agent (Phase 21) every scheme question is marked once.
+  const claude = fakeClaude((r) => ({ answer: localAnswer(r) }));
   const r = await post(app(claude, db), "/ai/check-paper", body);
   expect(r.status).toBe(200);
   expect(claude.requests[0]?.text).toContain("Section A");
