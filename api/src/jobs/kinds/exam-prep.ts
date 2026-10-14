@@ -160,9 +160,10 @@ async function mock(job: Job, ctx: StepContext, source: ExamSource, centre: stri
   const body = parsed.data;
   const key = `mock:${item}`;
   const call = await recordedCall(ctx, { centre, spec: makeAgent(body) as Kind<unknown, MockOutput>, input: body, job: job.id, step: "mock", key });
-  if (call.kind === "pending" || (call.kind === "failed" && call.reason === "key_reused")) {
-    return { kind: "wait", name: "mock", step: { at: "mock" }, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) };
-  }
+  if (call.kind === "pending") return { kind: "wait", name: "mock", step: { at: "mock" }, runAt: new Date(ctx.clock.now() + KEY_WAIT_MS) };
+  // The key held by another body (a plan's mock at another level, R-api-6): that plan keeps and links it; read again in a
+  // quarter hour, not every half minute for the key's day.
+  if (call.kind === "failed" && call.reason === "key_reused") return { kind: "wait", name: "mock", step: { at: "mock" }, runAt: new Date(ctx.clock.now() + TICK_MS) };
   if (call.kind === "paused") return marksNext({}, true);
   if (call.kind === "failed") return marksNext({ generationId: call.id, costPaise: call.costPaise }, true);
   try {

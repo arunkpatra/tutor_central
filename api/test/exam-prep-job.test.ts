@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { fakeClaude, localAnswer } from "../src/claude-fake.js";
+import { DbFailure } from "../src/db.js";
 import { fakeDb } from "../src/db-fake.js";
 import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import { type ExamRead, type ExamSource, examPrep } from "../src/jobs/kinds/exam-prep.js";
@@ -201,4 +202,19 @@ test("a report not made is not tried each quarter hour, but is when the tutor sa
   expect(tick).toMatchObject({ kind: "wait", step: { failed: [DEV] } });
   await handler.step(job({ at: "marks", failed: [DEV], woken: true }), ctx);
   expect(s.kept.map((k) => [k.kind, k.student])).toEqual([["gap_report", DEV]]);
+});
+
+// The review of Phase 21 (R-api-6): the mock's key held by another body (a plan's mock at another level) is not asked
+// again every half minute for a day: the job waits a quarter hour, by which time the plan has kept and linked it.
+test("a mock key another body holds waits a quarter hour, not half a minute", async () => {
+  const { ctx, handler } = harness(ist("2026-10-14", "05:01"), () => read());
+  const db = ctx.db as ReturnType<typeof fakeDb>;
+  const started = db.startCall.bind(db);
+  db.startCall = async (token, args) => {
+    if (args.key === `mock:${ITEM}`) throw new DbFailure("key_reused");
+    return started(token, args);
+  };
+  const out = await handler.step(job({ at: "mock", mockDay: "2026-10-14" }), ctx);
+  expect(out).toMatchObject({ kind: "wait", name: "mock", step: { at: "mock" } });
+  expect((out as Extract<StepOutcome, { kind: "wait" }>).runAt.getTime()).toBe(ist("2026-10-14", "05:01") + 15 * 60_000);
 });
