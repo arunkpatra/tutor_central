@@ -122,6 +122,17 @@ import Testing
             every: .milliseconds(10)
         ) == nil)
     }
+
+    /// The review of Phase 21 (R-app-4): after Create again, Share never hands out the last result's file; while the
+    /// new
+    /// one's PDF is had, Share waits, and only a PDF that could not be had for this result says so.
+    @Test func shareOffersOnlyThisResultsFile() {
+        let old = UUID(), new = UUID(), file = URL(filePath: "/tmp/old.pdf")
+        #expect(ResultPDF.share(file: (old, file), tried: old, for: old) == .ready(file))
+        #expect(ResultPDF.share(file: (old, file), tried: old, for: new) == .preparing)
+        #expect(ResultPDF.share(file: nil, tried: new, for: new) == .failed)
+        #expect(ResultPDF.share(file: nil, tried: nil, for: new) == .preparing)
+    }
 }
 
 /// Whether the server's PDF has been made yet.

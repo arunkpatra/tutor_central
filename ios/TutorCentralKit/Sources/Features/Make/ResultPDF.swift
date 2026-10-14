@@ -38,4 +38,20 @@ import Foundation
         }
         return nil
     }
+
+    /// What Share offers (R-app-4): this result's file; Share waiting while it is had; the failure only once the try
+    /// for
+    /// this result ended with none. A file had for another result (before Create again) is never offered.
+    enum Share: Equatable {
+        case ready(URL)
+        case preparing
+        case failed
+    }
+
+    nonisolated static func share(file: (generation: UUID, url: URL)?, tried: UUID?, for generation: UUID) -> Share {
+        if let file, file.generation == generation {
+            return .ready(file.url)
+        }
+        return tried == generation ? .failed : .preparing
+    }
 }

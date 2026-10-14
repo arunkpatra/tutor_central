@@ -14,7 +14,9 @@ struct ResultFooter: View {
     /// The board's done state of Copy (U33-Result-Copied).
     let copied: Bool
     let onMessage: (String) -> Void
-    @State private var pdf: URL?
+    /// The PDF had, by the result it was had for; and the result whose try has ended.
+    @State private var pdf: (generation: UUID, url: URL)?
+    @State private var tried: UUID?
 
     var body: some View {
         FooterButton {
@@ -40,23 +42,33 @@ struct ResultFooter: View {
         }
         .task(id: generation.id) {
             let title = generation.title(studentName: store.studentName)
+            let id = generation.id
             let first = await ResultPDF.chosen(for: generation, title: title, server: store.serverPDF)
-            pdf = first.file
+            pdf = first.file.map { (id, $0) }
+            tried = id
             // The phone's drawing stands in until the server's file is made (a result shown before its job ran).
             if !first.fromServer,
                let later = await ResultPDF.serverLater(for: generation, title: title, server: store.serverPDF) {
-                pdf = later
+                pdf = (id, later)
             }
         }
     }
 
     @ViewBuilder private var share: some View {
-        if let pdf {
-            ShareLink(item: pdf) {
+        switch ResultPDF.share(file: pdf, tried: tried, for: generation.id) {
+        case let .ready(url):
+            ShareLink(item: url) {
                 Label("Share as PDF", systemImage: "square.and.arrow.up")
             }
             .buttonStyle(.secondary(.form))
-        } else {
+        case .preparing:
+            // This result's PDF is being had (a moment; the server's file waits up to five seconds).
+            Button {} label: {
+                Label("Share as PDF", systemImage: "square.and.arrow.up")
+            }
+            .buttonStyle(.secondary(.form))
+            .disabled(true)
+        case .failed:
             Button {
                 onMessage("Couldn't make the PDF. Copy the text instead.")
             } label: {
