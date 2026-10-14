@@ -337,6 +337,37 @@ extension NoteStoreTests {
         #expect(recorder.recorded == [Feedback.replace(draft, with: .text("नमस्ते रमेश जी, इस हफ़्ते देव ने समीकरण सीखे।"))])
     }
 
+    /// The review of Phase 21 (R-app-2): Send again on the same note keeps its feedback once.
+    @Test func anEditedNoteSentTwiceKeepsOneEdit() async {
+        let recorder = FakeFeedbackRecorder()
+        let store = await Self.make(Self.dev, World())
+        store.feedback = recorder
+        await store.load()
+        store.message += " रमेश जी"
+        #expect(await store.send())
+        #expect(await store.send())
+        #expect(recorder.recorded.map(\.kind) == [.edit])
+    }
+
+    /// The review of Phase 21 (R-app-3): after Write it myself, a note the server writes (Try Again) is not the tutor's
+    /// own: sending it keeps no replacement.
+    @Test func aServerNoteShownAfterWriteItMyselfIsNotTheTutorsOwn() async {
+        let world = World(), recorder = FakeFeedbackRecorder()
+        world.plans.setAside = [Self.dev: UUID()]
+        let store = await Self.make(Self.dev, world)
+        store.feedback = recorder
+        await store.load()
+        store.writeMyself()
+        // The server writes a passing note meanwhile (the note day's job, or request_note).
+        world.plans.setAside = [:]
+        let server = await Self.make(Self.dev, world)
+        await server.load()
+        await store.make()
+        #expect(store.stage == .ready && !store.writingOwn && !store.message.isEmpty)
+        #expect(await store.send())
+        #expect(recorder.recorded.isEmpty)
+    }
+
     @Test func aNoteKeptThisWeekIsNotSetAside() async {
         let world = World()
         let first = await Self.make(Self.dev, world)
