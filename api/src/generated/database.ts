@@ -66,14 +66,14 @@ isOneToOne: false
                   ]
                 },"ai_generations": {
                   Row: {
-                    "agent_step": string,"centre_id": string,"cost_paise": number | null,"created_at": string,"error_reason": string | null,"fallback_model": string | null,"finished_at": string | null,"id": string,"idempotency_key": string | null,"input": NonNullable<Json>,"input_hash": string | null,"job_id": string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms": number | null,"model": string | null,"output": string | null,"prompt_hash": string | null,"prompt_version": string | null,"request_id": string | null,"status": Database["public"]['Enums']["ai_status"],"stop_reason": string | null,"student_id": string | null,"tokens_cached": number | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string,"user_id": string | null
+                    "agent_step": string,"batched": boolean,"centre_id": string,"cost_paise": number | null,"created_at": string,"error_reason": string | null,"fallback_model": string | null,"finished_at": string | null,"id": string,"idempotency_key": string | null,"input": NonNullable<Json>,"input_hash": string | null,"job_id": string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms": number | null,"model": string | null,"output": string | null,"prompt_hash": string | null,"prompt_version": string | null,"request_id": string | null,"status": Database["public"]['Enums']["ai_status"],"stop_reason": string | null,"student_id": string | null,"tokens_cached": number | null,"tokens_in": number | null,"tokens_out": number | null,"updated_at": string,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "agent_step"?: string,"centre_id": string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input": NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_cached"?: number | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
+                    "agent_step"?: string,"batched"?: boolean,"centre_id": string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input": NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind": Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_cached"?: number | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Update: {
-                    "agent_step"?: string,"centre_id"?: string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input"?: NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind"?: Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_cached"?: number | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
+                    "agent_step"?: string,"batched"?: boolean,"centre_id"?: string,"cost_paise"?: number | null,"created_at"?: string,"error_reason"?: string | null,"fallback_model"?: string | null,"finished_at"?: string | null,"id"?: string,"idempotency_key"?: string | null,"input"?: NonNullable<Json>,"input_hash"?: string | null,"job_id"?: string | null,"kind"?: Database["public"]['Enums']["ai_kind"],"latency_ms"?: number | null,"model"?: string | null,"output"?: string | null,"prompt_hash"?: string | null,"prompt_version"?: string | null,"request_id"?: string | null,"status"?: Database["public"]['Enums']["ai_status"],"stop_reason"?: string | null,"student_id"?: string | null,"tokens_cached"?: number | null,"tokens_in"?: number | null,"tokens_out"?: number | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -500,6 +500,38 @@ isOneToOne: false
       referencedColumns: ["centre_id","id"]
     }
                   ]
+                },"generation_feedback": {
+                  Row: {
+                    "centre_id": string,"created_at": string,"generation_id": string,"id": string,"kind": string,"reason": string | null,"revised": Json | null,"student_id": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "centre_id": string,"created_at"?: string,"generation_id": string,"id"?: string,"kind": string,"reason"?: string | null,"revised"?: Json | null,"student_id"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "centre_id"?: string,"created_at"?: string,"generation_id"?: string,"id"?: string,"kind"?: string,"reason"?: string | null,"revised"?: Json | null,"student_id"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "generation_feedback_centre_id_fkey"
+      columns: ["centre_id"]
+isOneToOne: false
+      referencedRelation: "centres"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "generation_feedback_centre_id_generation_id_fkey"
+      columns: ["centre_id","generation_id"]
+isOneToOne: false
+      referencedRelation: "ai_generations"
+      referencedColumns: ["centre_id","id"]
+    },{
+      foreignKeyName: "generation_feedback_centre_id_student_id_fkey"
+      columns: ["centre_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["centre_id","id"]
+    }
+                  ]
                 },"homework": {
                   Row: {
                     "artefact_id": string | null,"centre_id": string,"created_at": string,"given_at": string,"id": string,"session_id": string,"status": Database["public"]['Enums']["homework_status"],"student_id": string,"updated_at": string
@@ -786,14 +818,14 @@ isOneToOne: false
                   ]
                 },"school_items": {
                   Row: {
-                    "centre_id": string,"class_level": string | null,"confirmed_at": string | null,"created_at": string,"date": string,"end_date": string | null,"id": string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path": string | null,"portions": string | null,"received_at": string,"school_id": string | null,"source": string,"source_text": string | null,"student_id": string | null,"subject": string | null,"title": string,"updated_at": string,"window_days": number | null
+                    "centre_id": string,"class_level": string | null,"confirmed_at": string | null,"created_at": string,"date": string,"end_date": string | null,"id": string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path": string | null,"portions": string | null,"preparation": Json | null,"received_at": string,"school_id": string | null,"source": string,"source_text": string | null,"student_id": string | null,"subject": string | null,"title": string,"updated_at": string,"window_days": number | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date": string,"end_date"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
+                    "centre_id": string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date": string,"end_date"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"preparation"?: Json | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
                   }
                   Update: {
-                    "centre_id"?: string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date"?: string,"end_date"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
+                    "centre_id"?: string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date"?: string,"end_date"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"preparation"?: Json | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
                   }
                   Relationships: [
                     {
@@ -1175,6 +1207,12 @@ isOneToOne: false
 "enqueue_job":
 { Args: { "p_centre": string,"p_input"?: Json,"p_key": string,"p_kind": Database["public"]['Enums']["job_kind"],"p_max_attempts"?: number,"p_run_at"?: string }; Returns: string
                            },
+"exam_in_window":
+{ Args: { "p_date": string,"p_now"?: string,"p_window": number }; Returns: boolean
+                           },
+"exam_prep_enqueue":
+{ Args: { "p_centre": string,"p_item": string }; Returns: string
+                           },
 "extend_lease":
 { Args: { "p_job": string,"p_lease_seconds"?: number,"p_worker": string }; Returns: boolean
                            },
@@ -1250,6 +1288,9 @@ isOneToOne: false
 "raise_alert":
 { Args: { "p_centre": string,"p_key": string,"p_kind": string,"p_message": string,"p_threshold": number,"p_value": number }; Returns: boolean
                            },
+"record_feedback":
+{ Args: { "p_centre": string,"p_generation": string,"p_kind": string,"p_reason": string,"p_revised": Json }; Returns: string
+                           },
 "record_placement":
 { Args: { "p_centre": string,"p_checks": Json,"p_states": Json,"p_student": string,"p_track": Json }; Returns: undefined
                            },
@@ -1258,6 +1299,9 @@ isOneToOne: false
                            },
 "replace_notifications":
 { Args: { "p_centre": string,"p_from": string,"p_kinds": (string)[],"p_rows": Json,"p_user": string }; Returns: number
+                           },
+"request_exam_prep":
+{ Args: { "p_centre": string,"p_item": string }; Returns: string
                            },
 "request_export":
 { Args: { "p_centre": string,"p_student": string }; Returns: string
@@ -1278,6 +1322,9 @@ isOneToOne: false
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string
                            },
 "schedule_evals":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
+"schedule_exam_preps":
 { Args: { "p_now"?: string }; Returns: number
                            },
 "schedule_note_days":
@@ -1326,7 +1373,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper"|"plan"|"sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report"|"parse_school"|"parse_textbook"|"not_on_track"|"read_marks","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","job_kind": "plan"|"artefact"|"note_day"|"reminder_sweep"|"export"|"pdf"|"eval_run"|"sweep"|"alerts","job_state": "queued"|"running"|"waiting"|"done"|"failed"|"cancelled","message_channel": "whatsapp_link"|"copied","message_kind": "reminder"|"receipt"|"absence"|"progress"|"note"|"can_do"|"test_tomorrow"|"homework"|"consent"|"forward_ask"|"not_on_track","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up"|"worked_example"|"figure","school_item_kind": "exam"|"homework"|"notice"|"holiday","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
+            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper"|"plan"|"sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report"|"parse_school"|"parse_textbook"|"not_on_track"|"read_marks","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","job_kind": "plan"|"artefact"|"note_day"|"reminder_sweep"|"export"|"pdf"|"eval_run"|"sweep"|"alerts"|"exam_prep","job_state": "queued"|"running"|"waiting"|"done"|"failed"|"cancelled","message_channel": "whatsapp_link"|"copied","message_kind": "reminder"|"receipt"|"absence"|"progress"|"note"|"can_do"|"test_tomorrow"|"homework"|"consent"|"forward_ask"|"not_on_track","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up"|"worked_example"|"figure","school_item_kind": "exam"|"homework"|"notice"|"holiday","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1446,7 +1493,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper", "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report", "parse_school", "parse_textbook", "not_on_track", "read_marks"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"job_kind": ["plan", "artefact", "note_day", "reminder_sweep", "export", "pdf", "eval_run", "sweep", "alerts"],"job_state": ["queued", "running", "waiting", "done", "failed", "cancelled"],"message_channel": ["whatsapp_link", "copied"],"message_kind": ["reminder", "receipt", "absence", "progress", "note", "can_do", "test_tomorrow", "homework", "consent", "forward_ask", "not_on_track"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up", "worked_example", "figure"],"school_item_kind": ["exam", "homework", "notice", "holiday"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
+            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper", "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report", "parse_school", "parse_textbook", "not_on_track", "read_marks"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"job_kind": ["plan", "artefact", "note_day", "reminder_sweep", "export", "pdf", "eval_run", "sweep", "alerts", "exam_prep"],"job_state": ["queued", "running", "waiting", "done", "failed", "cancelled"],"message_channel": ["whatsapp_link", "copied"],"message_kind": ["reminder", "receipt", "absence", "progress", "note", "can_do", "test_tomorrow", "homework", "consent", "forward_ask", "not_on_track"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up", "worked_example", "figure"],"school_item_kind": ["exam", "homework", "notice", "holiday"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
           }
         }
 } as const

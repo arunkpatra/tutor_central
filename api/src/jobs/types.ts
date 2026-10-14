@@ -1,8 +1,8 @@
 import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 
-/** The kinds of `job_kind` (0028; `alerts` from 0046, Phase 19's alerts job). */
-export type JobKind = "plan" | "artefact" | "note_day" | "reminder_sweep" | "export" | "pdf" | "eval_run" | "sweep" | "alerts";
+/** The kinds of `job_kind` (0028; `alerts` from 0046, Phase 19's alerts job; `exam_prep` from 0057, D106). */
+export type JobKind = "plan" | "artefact" | "note_day" | "reminder_sweep" | "export" | "pdf" | "eval_run" | "sweep" | "alerts" | "exam_prep";
 
 /** A job as the worker holds it: the step reached and the input, the centre from its own row (D83). */
 export type Job = {
