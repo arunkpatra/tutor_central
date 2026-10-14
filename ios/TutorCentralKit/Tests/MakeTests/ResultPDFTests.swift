@@ -88,4 +88,46 @@ import Testing
         let drawn = try #require(await ResultPDF.file(for: note, title: "Hemanth", server: stalled))
         #expect(try Data(contentsOf: drawn).starts(with: Data("%PDF".utf8)))
     }
+
+    /// Hand run 9: a result shown before its PDF job has run takes the server's file once the job has made it, while
+    /// the
+    /// screen is up.
+    @Test func aFreshResultTakesTheServersFileOnceItIsMade() async throws {
+        let paper = try paper()
+        let made = Made()
+        let later = server(wait: .milliseconds(100)) { _, path in
+            guard await made.yes else { throw URLError(.fileDoesNotExist) }
+            return Data(path.utf8)
+        }
+        #expect(await ResultPDF.serverLater(
+            for: paper,
+            title: "Quadratic equations",
+            server: later,
+            tries: 1,
+            every: .milliseconds(10)
+        ) == nil)
+        await made.make()
+        let shared = try #require(await ResultPDF.serverLater(
+            for: paper, title: "Quadratic equations", server: later, tries: 3, every: .milliseconds(10)
+        ))
+        #expect(try String(contentsOf: shared, encoding: .utf8)
+            .hasSuffix("gen-\(paper.id.uuidString.lowercased()).pdf"))
+        // A note has no server file: nothing is asked again.
+        let note = try #require(FakeAIHistoryRepository.seed.first { $0.kind == .progressNote })
+        #expect(await ResultPDF.serverLater(
+            for: note,
+            title: "Hemanth",
+            server: later,
+            tries: 3,
+            every: .milliseconds(10)
+        ) == nil)
+    }
+}
+
+/// Whether the server's PDF has been made yet.
+private actor Made {
+    var yes = false
+    func make() {
+        yes = true
+    }
 }
