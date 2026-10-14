@@ -289,3 +289,12 @@ test("a draft refused after its check counts as refused in the tiles and the fil
   const refused = (await svc.rpc("admin_calls", { p_day: day, p_centre: centreA, p_kind: null, p_status: "refused", p_limit: 100 })).data as { rows: { id: string }[] };
   expect(refused.rows.map((r) => r.id)).toContain(id);
 });
+
+test("admin_call carries the feedback rows, oldest first (D107)", async () => {
+  await sql`insert into public.generation_feedback (centre_id, generation_id, kind, reason) values (${centreA}, ${sheetCall}, 'again', 'Less about marks')`;
+  await sql`insert into public.generation_feedback (centre_id, generation_id, kind, revised) values (${centreA}, ${sheetCall}, 'edit', '{"text": "x"}'::jsonb)`;
+  const call = (await svc.rpc("admin_call", { p_id: sheetCall })).data as { feedback: { kind: string; reason: string | null; created_at: string }[] };
+  expect(call.feedback.map((f) => [f.kind, f.reason])).toEqual([["again", "Less about marks"], ["edit", null]]);
+  const none = (await svc.rpc("admin_call", { p_id: noteWithConsent })).data as { feedback: unknown[] };
+  expect(none.feedback).toEqual([]);
+});
