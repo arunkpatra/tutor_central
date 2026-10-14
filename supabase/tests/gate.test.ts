@@ -162,6 +162,14 @@ test("the nightly's eval_run job starts a parent's-message kind with no student;
   await sql`delete from public.jobs where id in (${evals}, ${plan})`;
 });
 
+test("the nightly's eval_run job starts a progress note's case with no student; any other progress note needs one (the review of Phase 21, R-api-3)", async () => {
+  const evals = (await svc.rpc("enqueue_job", { p_centre: null, p_kind: "eval_run", p_key: `gate-evals-pn-${stamp}` })).data as string;
+  const asked = (job: string | null) => svc.rpc("start_ai_call", { p_centre: centreA, p_kind: "progress_note", p_input: {}, p_model: "claude-haiku-5-5", p_key: `gate-pn-${job ?? "none"}-${stamp}`, p_job: job });
+  expect((await asked(evals)).error).toBeNull();
+  expect((await asked(null)).error?.message).toContain("ai_consent_missing");
+  await sql`delete from public.jobs where id = ${evals}`;
+});
+
 test("start_ai_generation still answers an id and shares the gate", async () => {
   const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: {}, p_model: "m" });
   expect(r.error).toBeNull();
