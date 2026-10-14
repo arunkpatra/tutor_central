@@ -21,7 +21,8 @@
     "contract": "bun tools/contract.ts",
     "prompts": "bun tools/prompts.ts",
     "evals": "bun tools/evals.ts",
-    "feedback-cases": "bun tools/feedback-cases.ts"
+    "feedback-cases": "bun tools/feedback-cases.ts",
+    "evals-changed": "bun tools/evals-changed.ts"
   },
   "devDependencies": {
     "@types/bun": "1.3.11",

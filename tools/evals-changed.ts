@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
-/** bun tools/evals-changed.ts <base>..<head>: the kinds whose evals a change must run (D101), from `git diff
- *  --name-only`: a kind's prompt, agent or golden set names that kind; what every kind shares (the shared prompt words,
+/** bun evals-changed [<base>..<head>]: the kinds whose evals a change must run before its pull request (D101; by hand,
+ *  D112: docs/working/pre-pr-proof.md). With no range, everything this branch changes from main, committed or not. From
+ *  `git diff --name-only`: a kind's prompt, agent or golden set names that kind; what every kind shares (the shared prompt words,
  *  the agent, its check, the rubric's common lines, the schemas, the evals' provider and assertion) names every kind;
  *  the parents' shared rules name the four message kinds and the language anchors (D110); an anchor's folder names its
  *  set; anything else names none. Prints them comma-separated, or `none`. */
@@ -35,8 +36,9 @@ export function kindsChanged(paths: string[]): string[] {
 }
 
 if (import.meta.main) {
-  const range = process.argv[2];
-  if (!range) throw new Error("usage: bun tools/evals-changed.ts <base>..<head>");
+  const base = Bun.spawnSync(["git", "merge-base", "main", "HEAD"], { stdout: "pipe" }).stdout.toString().trim();
+  // The branch's changes from main, the working tree's included; or the range given.
+  const range = process.argv[2] ?? base;
   const diff = Bun.spawnSync(["git", "diff", "--name-only", range], { stdout: "pipe", stderr: "pipe" });
   if (diff.exitCode !== 0) throw new Error(`git diff ${range}: ${diff.stderr.toString()}`);
   const kinds = kindsChanged(diff.stdout.toString().split("\n").filter(Boolean));
