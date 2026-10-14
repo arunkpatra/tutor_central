@@ -114,7 +114,9 @@ export async function submit(job: Job, ctx: StepContext, centre: string, m: Mate
   }
   if (items.length === 0) return { kind: "continue", name: "make:submit", step: { ...m, at: "make:live", queue: live, rows: {} } };
   await ctx.db.markBatched(Object.values(rows));
-  const batch = await sendBatch(ctx, items);
+  const batch = await sent(ctx, job, items);
+  // Not sent (the API refused it): every request made live, the drafts on their rows.
+  if (batch === null) return { kind: "continue", name: "make:submit", step: { ...m, at: "make:live", queue: m.requests.map((_, i) => i), rows } };
   // Read at once: a batch that ended meanwhile goes on; one running waits a minute.
   return { kind: "continue", name: "make:submit", step: { ...m, at: "make:wait", phase: "drafts", batch, rows, live, deadline } satisfies Batched & { at: string } };
 }
@@ -171,11 +173,11 @@ export async function wait(job: Job, ctx: StepContext, centre: string, step: Bat
     }
   }
   const pending: Record<string, string> = {};
-  const sent: BatchItem[] = [];
+  const sending: BatchItem[] = [];
   for (const { n, item, suffix } of next) {
     try {
       pending[n] = (await ctx.db.startCall("", stepCall(agent(n), spec(n).spec.kind, item.request.model, step.rows[n] as string, suffix))).id;
-      sent.push(item);
+      sending.push(item);
     } catch (e) {
       // Its step is made live when the draft is settled.
       log.error({ requestId: ctx.requestId, job: job.id, request: n, step: suffix, message: "a batch row was not started", reason: e instanceof DbFailure ? e.reason : String(e) });
@@ -183,10 +185,22 @@ export async function wait(job: Job, ctx: StepContext, centre: string, step: Bat
   }
   const phase = ({ drafts: "checks", checks: "repairs", repairs: "rechecks", rechecks: null } as const)[step.phase];
   const moved = { ...step, ...known };
-  if (sent.length === 0 || phase === null) return { kind: "continue", name: "make:wait", step: keeping(moved) };
+  if (sending.length === 0 || phase === null) return { kind: "continue", name: "make:wait", step: keeping(moved) };
   await ctx.db.markBatched(Object.values(pending));
-  const batch = await sendBatch(ctx, sent);
+  const batch = await sent(ctx, job, sending);
+  // Not sent: the drafts settled with this phase made live on its rows.
+  if (batch === null) return { kind: "continue", name: "make:wait", step: keeping(moved) };
   return { kind: "continue", name: "make:wait", step: { ...moved, at: "make:wait", phase, batch, pending } };
+}
+
+/** A batch sent, or null when the API refused it (logged): the caller makes its requests live. */
+async function sent(ctx: StepContext, job: Job, items: BatchItem[]): Promise<string | null> {
+  try {
+    return await sendBatch(ctx, items);
+  } catch (e) {
+    log.error({ requestId: ctx.requestId, job: job.id, message: "a batch was not sent: made live", error: e instanceof Error ? e : String(e) });
+    return null;
+  }
 }
 
 /** The phase's requests rebuilt from the step (the batch's answers are read by them). */

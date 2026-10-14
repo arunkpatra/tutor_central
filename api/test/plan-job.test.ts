@@ -682,3 +682,31 @@ test("a repair batch not ended by the deadline is given up and the repair made l
   const kept = s.kept.find((k) => k.kind === "sheet") as unknown as { content: { questions: { proof: { expression: string } }[] } };
   expect(kept.content.questions[0]?.proof.expression).toBe("2*2+1");
 });
+
+test("a batch that cannot be sent is made live on its rows; the job never fails for it (D111)", async () => {
+  for (const refused of [1, 2, 3]) {
+    let sheets = 0;
+    let sent = 0;
+    const base = fakeClaude((r) => {
+      if (isCheckRequest(r) || kindOf(r) !== "sheet") return { answer: localAnswer(r) };
+      sheets += 1;
+      const answer = localAnswer(r) as { questions: { proof: unknown }[] };
+      const proof = { expression: sheets === 1 ? "2*2" : "2*2+1", equals: 5 };
+      return { answer: { ...answer, questions: answer.questions.map((q, i) => (i === 0 ? { ...q, proof } : q)) } };
+    });
+    const realBatch = (base.batch as NonNullable<typeof base.batch>).bind(base);
+    const claude = Object.assign(base, {
+      async batch(items: Parameters<NonNullable<typeof base.batch>>[0]) {
+        sent += 1;
+        if (sent === refused) throw new Error("503 overloaded");
+        return realBatch(items);
+      },
+    });
+    const db = fakeDb();
+    const s = source(taught());
+    const out = await drainAll(planJob(s), planJobFor(), ctx(db, claude));
+    expect(out.at(-1)).toMatchObject({ kind: "done", result: { made: 4, not_made: 0 } });
+    expect(out.some((o) => o.kind === "fail")).toBe(false);
+    expect(db.rows.filter((r) => /^job-1:make:\d$/.test(r.key ?? ""))).toHaveLength(4);
+  }
+});
