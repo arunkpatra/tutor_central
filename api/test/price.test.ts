@@ -33,3 +33,9 @@ test("a token written to the hour's cache is priced at twice the input (D108)", 
   expect(costPaise("claude-sonnet-5-5", 1_000_000, 0, 0, 1_000_000, 1, 1_000_000)).toBe(34_000);
   expect(costPaise("claude-sonnet-5-5", 1_000_000, 0, 0, 1_000_000, 0.5, 1_000_000)).toBe(17_000);
 });
+
+test("a cached token is priced by the model's own cached price (D109): Opus 5.5 at $0.20 a million", () => {
+  // A million read from the cache on Opus 5.5: $0.20 → ₹17; on Haiku 5.5 $0.01 → ₹0.85.
+  expect(costPaise("claude-opus-5-5", 0, 0, 1_000_000)).toBe(1_700);
+  expect(costPaise("claude-haiku-5-5", 0, 0, 1_000_000)).toBe(85);
+});

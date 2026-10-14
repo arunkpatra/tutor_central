@@ -1,9 +1,9 @@
 {
   "rupeesPerDollar": 85,
   "models": {
-    "claude-haiku-5-5": { "inputUsdPerMillion": 0.1, "outputUsdPerMillion": 0.5 },
-    "claude-sonnet-5-5": { "inputUsdPerMillion": 2, "outputUsdPerMillion": 10 },
-    "claude-opus-5-5": { "inputUsdPerMillion": 4, "outputUsdPerMillion": 20 }
+    "claude-haiku-5-5": { "inputUsdPerMillion": 0.1, "outputUsdPerMillion": 0.5, "cachedUsdPerMillion": 0.01 },
+    "claude-sonnet-5-5": { "inputUsdPerMillion": 2, "outputUsdPerMillion": 10, "cachedUsdPerMillion": 0.2 },
+    "claude-opus-5-5": { "inputUsdPerMillion": 4, "outputUsdPerMillion": 20, "cachedUsdPerMillion": 0.2 }
   },
   "work": {
     "paper": "claude-sonnet-5-5",

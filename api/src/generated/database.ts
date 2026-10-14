@@ -1057,6 +1057,12 @@ isOneToOne: false
 "admin_cost_by_kind":
 { Args: { "p_centre"?: string,"p_month": string }; Returns: Json
                            },
+"admin_cost_by_month":
+{ Args: { "p_centre"?: string }; Returns: Json
+                           },
+"admin_cost_by_step":
+{ Args: { "p_centre"?: string,"p_month": string }; Returns: Json
+                           },
 "admin_cost_tiles":
 { Args: { "p_month": string }; Returns: Json
                            },
