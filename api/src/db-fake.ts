@@ -1,7 +1,7 @@
 import { type AIKind, type Db, DbFailure, type Finish, type Started } from "./db.js";
 
 /** A row as the fake gate made it, with its finish once the API finished it. */
-export type FakeRow = { id: string; kind: AIKind; agentStep: string; key?: string; model: string; job?: string; finish?: Finish };
+export type FakeRow = { id: string; kind: AIKind; agentStep: string; key?: string; model: string; job?: string; finish?: Finish; batched?: boolean };
 
 const CONSENT_KINDS: AIKind[] = ["scan_register", "check_paper", "progress_note"];
 
@@ -48,6 +48,9 @@ export function fakeDb(
       finished.push({ token, id, ...result });
       const row = rows.find((r) => r.id === id);
       if (row) row.finish = result;
+    },
+    async markBatched(ids) {
+      for (const row of rows) if (ids.includes(row.id)) row.batched = true;
     },
     async generation(_token, id) {
       const row = options.generations?.[id];

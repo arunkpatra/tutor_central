@@ -1,9 +1,7 @@
-import { type AgentOutcome, type DraftRequest, finished, type Kind } from "../agents/agent.js";
+import { type AgentOutcome, type DraftRequest, type Kind } from "../agents/agent.js";
 import { checkRequest } from "../agents/check.js";
 import type { BatchItem, ClaudeAnswer, ClaudeRequest } from "../claude.js";
-import type { Finish } from "../db.js";
 import { type Chosen, modelFor } from "../models.js";
-import { costPaise } from "../price.js";
 import { CheckVerdict, type ClassLevel } from "../schemas.js";
 import { agentFor, type Case, evaluate } from "./cases.js";
 import { RUBRIC_GATE } from "./gate.js";
@@ -45,13 +43,6 @@ export function checkItems(r: Ready, parsed: unknown): { check: BatchItem; grade
     check: { customId: batchId(r.c.id, "check"), request: { ...checkRequest(rubric, r.asked, parsed), model: checker.model, effort: checker.effort } as ClaudeRequest<unknown> },
     grade: { customId: batchId(r.c.id, "grade"), request: { ...gradeRequest(rubric, r.asked, parsed), model: GRADER, effort: "medium" } as ClaudeRequest<unknown> },
   };
-}
-
-/** A batch answer's finish (D76), priced at the Batches API's half (D101). */
-export function batchFinish(answer: ClaudeAnswer<unknown>, request: ClaudeRequest<unknown>, version: string, kept: unknown): Finish {
-  const finish = finished(answer, request, version, null, kept);
-  if (answer.kind === "failed") return finish;
-  return { ...finish, costPaise: costPaise(answer.model, answer.tokensIn, answer.tokensOut, answer.tokensCached, answer.tokensWritten, 0.5) };
 }
 
 /** A draft answer as the agent's outcome, for `evaluate`. */

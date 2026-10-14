@@ -35,13 +35,18 @@ export type FakeScript = { answer?: unknown; refuse?: boolean; truncate?: boolea
 export function fakeClaude(
   script: FakeScript | ((request: ClaudeRequest<unknown>) => FakeScript),
   options: { batchPolls?: number } = {},
-): ClaudeClient & { requests: ClaudeRequest<unknown>[]; batches: BatchItem[][] } {
+): ClaudeClient & { requests: ClaudeRequest<unknown>[]; batches: BatchItem[][]; cancelled: string[] } {
   const requests: ClaudeRequest<unknown>[] = [];
   const batches: BatchItem[][] = [];
+  const cancelled: string[] = [];
   const polls = new Map<string, number>();
   const client = {
     requests,
     batches,
+    cancelled,
+    async cancelBatch(id: string) {
+      cancelled.push(id);
+    },
     /** A batch is answered as each request would be, after `batchPolls` reads that find it running. A custom id the
      *  Batches API refuses (letters, digits, `_` and `-`, 1 to 64) is refused here too, as the real API answers 400. */
     async batch(items: BatchItem[]) {

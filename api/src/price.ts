@@ -8,10 +8,12 @@ type Prices = Record<string, { inputUsdPerMillion: number; outputUsdPerMillion: 
  *  the input billed at the full price or above, of which `tokensWritten` went into the cache at a quarter more; a token
  *  read from the cache costs a tenth (plan decision 5); `scale` 0.5 for a Message Batch (D101). null when the model is not in
  *  the table or no tokens came back. */
-export function costPaise(model: string, tokensIn: number | null, tokensOut: number | null, tokensCached = 0, tokensWritten = 0, scale = 1): number | null {
+export function costPaise(model: string, tokensIn: number | null, tokensOut: number | null, tokensCached = 0, tokensWritten = 0, scale = 1, tokensWrittenHour = 0): number | null {
   const price = (table.models as Prices)[model];
   if (!price || tokensIn === null || tokensOut === null) return null;
-  const input = (tokensIn - tokensWritten + tokensWritten * 1.25 + tokensCached * 0.1) * price.inputUsdPerMillion;
+  // A write to the five minutes' cache is a quarter over the input; to the hour's (a job's, D108), twice it.
+  const fiveMinutes = tokensWritten - tokensWrittenHour;
+  const input = (tokensIn - tokensWritten + fiveMinutes * 1.25 + tokensWrittenHour * 2 + tokensCached * 0.1) * price.inputUsdPerMillion;
   const dollars = (input + tokensOut * price.outputUsdPerMillion) / 1_000_000;
   return Math.round(dollars * scale * table.rupeesPerDollar * 100);
 }

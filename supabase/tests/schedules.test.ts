@@ -52,22 +52,22 @@ afterAll(async () => {
   await sql.close();
 });
 
-test("a batch meeting today in a centre in use gets one plan job at 05:30", async () => {
+test("a batch meeting today in a centre in use gets one plan job at 00:05, so its batch has the night (D108)", async () => {
   await opened("2030-11-03T08:00:00+05:30");
   await batch({ days: [1], start: "17:00" });
   expect(await one(sql`select public.schedule_plans('2030-11-04T00:15:00+05:30')`)).toBe(1);
   expect(await one(sql`select public.schedule_plans('2030-11-04T00:30:00+05:30')`)).toBe(0);
   const jobs = await sql`select idempotency_key, input, (run_at at time zone 'Asia/Kolkata')::text as at from public.jobs where kind = 'plan'`;
-  expect([...jobs]).toEqual([{ idempotency_key: `plan:${classId}:2030-11-04`, input: { class_id: classId, date: "2030-11-04" }, at: "2030-11-04 05:30:00" }]);
+  expect([...jobs]).toEqual([{ idempotency_key: `plan:${classId}:2030-11-04`, input: { class_id: classId, date: "2030-11-04" }, at: "2030-11-04 00:15:00" }]);
 });
 
-test("an early batch is planned two hours before it, never before 03:30", async () => {
+test("every batch is planned from 00:05, an early one too (D108)", async () => {
   await opened("2030-11-03T08:00:00+05:30");
   await batch({ days: [1], start: "06:30" });
   await batch({ days: [1], start: "05:00" });
-  await sql`select public.schedule_plans('2030-11-04T00:15:00+05:30')`;
+  await sql`select public.schedule_plans('2030-11-04T00:00:00+05:30')`;
   const times = await sql`select (run_at at time zone 'Asia/Kolkata')::time::text as t from public.jobs where kind = 'plan' order by run_at`;
-  expect(times.map((r: { t: string }) => r.t)).toEqual(["03:30:00", "04:30:00"]);
+  expect(times.map((r: { t: string }) => r.t)).toEqual(["00:05:00", "00:05:00"]);
 });
 
 test("a batch made later in the day is planned at once; one already begun is not", async () => {

@@ -7,6 +7,7 @@ import { fakeClock, fakeJobsDb } from "../src/jobs/db-fake.js";
 import { type PlanRead, type PlanRecordSource, planJob } from "../src/jobs/kinds/plan.js";
 import type { Job, StepContext, StepOutcome } from "../src/jobs/types.js";
 import type { Skill } from "../src/plan/types.js";
+import { costPaise } from "../src/price.js";
 
 const CENTRE = "c0000000-0000-4000-8000-0000000000aa";
 const CLASS = "c0000000-0000-4000-8000-000000000001";
@@ -116,7 +117,8 @@ function source(r: PlanRead | (() => PlanRead), options: { failKeepOnce?: boolea
 
 const job = (step: Record<string, unknown> = {}): Job => ({ id: "job-1", centreId: CENTRE, kind: "plan", attempts: 1, step, input: { class_id: CLASS, date: "2026-10-07" }, leaseUntil: "" });
 const ctx = (db = fakeDb(), claude = fakeClaude({ answer: { groups: [{ groupNo: 1, chapter: "Exploring Forces", skill: "Tell a push from a pull" }, { groupNo: 2, chapter: "Plants", skill: "Parts of a plant" }] } })): StepContext => {
-  const clock = fakeClock();
+  // 00:05 in India on 7 October, when schedule_plans queues the day's jobs (D108).
+  const clock = fakeClock(Date.parse("2026-10-06T18:35:00Z"));
   return { db, jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" };
 };
 async function walk(handler: ReturnType<typeof planJob>, c: StepContext, start: Record<string, unknown> = {}) {
@@ -380,10 +382,15 @@ function rememberingDb() {
 const kinds = (claude: { requests: { text: string }[] }) =>
   (claude as unknown as { requests: Parameters<typeof kindOf>[0][] }).requests.filter((r) => !isCheckRequest(r)).map(kindOf);
 
-test("after the write, the budget's requests are made one a step, kept and linked; the job ends by notifying", async () => {
+test("after the write, the budget's drafts go as one batch and their checks as a second, each kept by its key; the job ends by notifying (D108)", async () => {
   const s = source(taught());
-  const out = await drainAll(planJob(s), planJobFor(), ctx(fakeDb(), answers()));
-  expect(out.map((o) => o.name)).toEqual(["read", "groups", "name", "write", "budget", "make:0", "make:1", "make:2", "make:3", "notify"]);
+  const claude = answers();
+  const out = await drainAll(planJob(s), planJobFor(), ctx(fakeDb(), claude));
+  expect(out.map((o) => o.name)).toEqual(["read", "groups", "name", "write", "budget", "make:submit", "make:wait", "make:wait", "make:keep:0", "make:keep:1", "make:keep:2", "make:keep:3", "notify"]);
+  expect(claude.batches.map((b) => b.map((i) => i.customId))).toEqual([
+    ["make_0", "make_1", "make_2", "make_3"],
+    ["make_0__check", "make_1__check", "make_2__check", "make_3__check"],
+  ]);
   expect(s.kept.map((k) => [k.kind, k.key, k.itemKind])).toEqual([
     ["check", "job-1:make:0", "check"],
     ["sheet", "job-1:make:1", "practise"],
@@ -415,7 +422,7 @@ test("a material step retaken after its call keeps once and pays once", async ()
   const claude = answers();
   const s = source(taught(), { failKeepOnce: true });
   const out = await drainAll(planJob(s), planJobFor(), ctx(rememberingDb() as never, claude));
-  expect(out.find((o) => o.name === "make:0" && o.kind === "fail")).toMatchObject({ retry: true });
+  expect(out.find((o) => o.name === "make:keep:0" && o.kind === "fail")).toMatchObject({ retry: true });
   expect(kinds(claude).filter((k) => k === "check")).toHaveLength(1);
   expect(s.kept.filter((k) => k.kind === "check")).toHaveLength(1);
 });
@@ -530,9 +537,11 @@ test("a make step whose draft is repaired keeps the repaired artefact and sums t
   const db = fakeDb();
   const s = source(taught());
   const out = await drainAll(planJob(s), planJobFor(), ctx(db, claude));
-  const step = out.find((o) => o.name === "make:1") as { costPaise: number };
+  const step = out.find((o) => o.name === "make:keep:1") as { costPaise: number };
   const rows = db.rows.filter((r) => r.key?.startsWith("job-1:make:1"));
   expect(rows.map((r) => r.agentStep)).toEqual(["draft", "check", "repair", "check"]);
+  // The draft and its first check went in the batches at half; the repair and its check were made live.
+  expect(rows.map((r) => r.finish?.batched === true)).toEqual([true, true, false, false]);
   expect(step.costPaise).toBe(rows.reduce((n, r) => n + (r.finish?.costPaise ?? 0), 0));
   const kept = s.kept.find((k) => k.kind === "sheet") as unknown as { content: { questions: { proof: { expression: string } }[] } };
   expect(kept.content.questions[0]?.proof.expression).toBe("2*2+1");
@@ -556,4 +565,66 @@ test("a paused kind is not made and not paid; the plan ends done with it counted
   } finally {
     t.stop();
   }
+});
+
+test("the batch's rows are priced at half and marked batched; a job's calls ask the hour's cache (D108)", async () => {
+  const db = fakeDb();
+  const claude = answers();
+  await drainAll(planJob(source(taught())), planJobFor(), ctx(db, claude));
+  const drafts = db.rows.filter((r) => /^job-1:make:\d$/.test(r.key ?? ""));
+  expect(drafts.map((r) => r.key)).toEqual(["job-1:make:0", "job-1:make:1", "job-1:make:2", "job-1:make:3"]);
+  const made = db.rows.filter((r) => r.key?.startsWith("job-1:make"));
+  expect(made.every((r) => r.finish?.batched === true)).toBe(true);
+  const first = drafts[0]?.finish;
+  expect(first?.costPaise).toBe(costPaise(first?.model ?? "", 812, 1460, 0, 0, 0.5));
+  expect(claude.batches.flat().every((i) => i.request.system.ttl === "1h")).toBe(true);
+  // The naming call, live, asks the hour too.
+  expect(claude.requests.filter((r) => kindOf(r) === "plan").every((r) => r.system.ttl === "1h")).toBe(true);
+});
+
+test("a batch not ended by its deadline is left and the rest made live, each draft row once (D108)", async () => {
+  const db = fakeDb();
+  const claude = fakeClaude((r) => ({ answer: isCheckRequest(r) ? PASS : localAnswer(r) }), { batchPolls: 1_000 });
+  // 00:05 in India on the plan's day: the deadline is four hours on.
+  const clock = fakeClock(Date.parse("2026-10-06T18:35:00Z"));
+  const c: StepContext = { db, jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" };
+  const s = source(taught());
+  const handler = planJob(s);
+  let current = planJobFor();
+  let outcome: StepOutcome | undefined;
+  for (let i = 0; i < 20; i++) {
+    outcome = await handler.step(current, c);
+    if (outcome.kind === "wait" && outcome.name === "make:wait") break;
+    current = { ...current, step: (outcome as { step: Record<string, unknown> }).step };
+  }
+  expect(outcome).toMatchObject({ kind: "wait", name: "make:wait" });
+  current = { ...current, step: (outcome as { step: Record<string, unknown> }).step };
+  clock.advance(5 * 3_600_000);
+  const rest = await drainAll(handler, current, c);
+  expect(claude.cancelled).toEqual(["batch-1"]);
+  expect(rest.map((o) => o.name)).toEqual(["make:wait", "make:0", "make:1", "make:2", "make:3", "notify"]);
+  expect(s.kept.map((k) => k.key)).toEqual(["job-1:make:0", "job-1:make:1", "job-1:make:2", "job-1:make:3"]);
+  const drafts = db.rows.filter((r) => /^job-1:make:\d$/.test(r.key ?? ""));
+  expect(drafts).toHaveLength(4);
+  // Made live on the batch's rows: the full price, not batched.
+  expect(drafts.every((r) => r.finish?.status === "ok" && r.finish.batched !== true)).toBe(true);
+  expect(rest.at(-1)).toMatchObject({ kind: "done", result: { made: 4, not_made: 0 } });
+});
+
+test("a batch's draft that comes back failed is not made and the job goes on", async () => {
+  const claude = fakeClaude((r) => (!isCheckRequest(r) && kindOf(r) === "worked_example" ? { fail: "batch errored" } : { answer: localAnswer(r) }));
+  const s = source(taught());
+  const out = await drainAll(planJob(s), planJobFor(), ctx(fakeDb(), claude));
+  expect(claude.batches[1]?.map((i) => i.customId)).toEqual(["make_0__check", "make_1__check", "make_2__check"]);
+  expect(s.kept.map((k) => k.kind)).toEqual(["check", "sheet", "sheet"]);
+  expect(out.at(-1)).toMatchObject({ kind: "done", result: { made: 3, not_made: 1 } });
+});
+
+test("a plan asked too close to its batch's start makes its material live: no batch is sent (D108)", async () => {
+  const claude = answers();
+  // 16:00 in India, an hour before the batch: past its deadline already.
+  const clock = fakeClock(Date.parse("2026-10-07T10:30:00Z"));
+  const out = await drainAll(planJob(source(taught())), planJobFor(), { db: fakeDb(), jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" });
+  expect(claude.batches).toHaveLength(0);
+  expect(out.map((o) => o.name)).toEqual(["read", "groups", "name", "write", "budget", "make:submit", "make:0", "make:1", "make:2", "make:3", "notify"]);
 });

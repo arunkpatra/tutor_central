@@ -92,6 +92,25 @@ test.skipIf(!up)("a route's call is started as the tutor and finished as the pla
   }
 });
 
+test.skipIf(!up)("a row sent in a batch is marked batched at once; one made live after the batch was given up is not (D108)", async () => {
+  const db = makePlatformDb(url as string, service as string);
+  const key = `platform-batched-${Date.now()}`;
+  const started = await db.startCall("", { centre: CENTRE, kind: "sheet", input: {}, model: "claude-haiku-5-5", key, inputHash: "h" });
+  const live = await db.startCall("", { centre: CENTRE, kind: "sheet", input: {}, model: "claude-haiku-5-5", key: `${key}-live`, inputHash: "h" });
+  const finish = { status: "ok" as const, output: "{}", model: "claude-haiku-5-5", tokensIn: 1, tokensOut: 1, costPaise: 1, latencyMs: 5, promptHash: "p", promptVersion: "sheet@2", fallbackModel: null, tokensCached: null, stopReason: "end_turn", errorReason: null, finishedAt: new Date().toISOString() };
+  try {
+    await db.markBatched([started.id, live.id]);
+    const marked = await admin().from("ai_generations").select("batched").in("id", [started.id, live.id]);
+    expect(marked.data?.map((r) => r.batched)).toEqual([true, true]);
+    await db.finish("", started.id, { ...finish, batched: true });
+    await db.finish("", live.id, finish);
+    const rows = await admin().from("ai_generations").select("id, batched").in("id", [started.id, live.id]);
+    expect(Object.fromEntries((rows.data ?? []).map((r) => [r.id, r.batched]))).toEqual({ [started.id]: true, [live.id]: false });
+  } finally {
+    await admin().from("ai_generations").delete().in("id", [started.id, live.id]);
+  }
+});
+
 test.skipIf(!up)("a row due in the outbox is sent to the user's live token and marked sent with Apple's answer", async () => {
   const db = admin();
   const user = (await db.from("centre_members").select("user_id").eq("centre_id", CENTRE).limit(1).single()).data?.user_id as string;

@@ -45,6 +45,8 @@ export type AgentContext = {
   job?: string;
   budgetMs?: number;
   now?: () => number;
+  /** A job's calls keep the shared block for the hour (D108); a tap's, five minutes. */
+  cacheTTL?: "1h";
 };
 
 export type AgentOutcome<T> =
@@ -71,39 +73,80 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
   const level = spec.classLevel?.(input);
   const chosen = modelFor(spec.kind, "draft", level);
   if (!chosen.enabled) return { kind: "paused" };
-  const now = ctx.now ?? (() => performance.now());
-  const started = now();
-  const left = () => (ctx.budgetMs ?? CLAUDE_DEADLINE_MS) - (now() - started);
   const student = spec.student?.(input);
-  const asked = spec.draft(input);
-
   const draftRow = await ctx.db.startCall(ctx.token, base(ctx, spec.kind, recorded, chosen.model, ctx.key, ctx.inputHash, student?.id, "draft"));
   if (draftRow.replay) {
     if (draftRow.status !== "ok" || draftRow.output === null) return { kind: "pending" };
     return { kind: "ok", id: draftRow.id, parsed: JSON.parse(draftRow.output) as T, costPaise: 0, repaired: false, replay: true };
   }
+  return draftOn(ctx, spec, input, draftRow.id);
+}
 
-  let cost = 0;
+/** The draft made live on its started row, then settled: a tap's or a job's, or a batch's row whose batch did not end by
+ *  its deadline (D108), so the row is reused and never a second one started. */
+export async function draftOn<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: I, draftId: string): Promise<AgentOutcome<T>> {
+  const run = runOf(ctx, spec, input);
+  let fallbackModel: string | null = null;
+  let answer = await run.call(run.asked, run.chosen.model, run.chosen.effort);
+  if (answer.kind === "failed" && RETRYABLE.has(answer.reason) && run.chosen.fallback && run.left() > FALLBACK_ROOM_MS) {
+    log.info({ at: "agent", requestId: ctx.requestId, kind: spec.kind, fallback: run.chosen.fallback, after: answer.reason });
+    fallbackModel = run.chosen.fallback;
+    answer = await run.call(run.asked, run.chosen.fallback, run.chosen.effort);
+  }
+  return settleOn(run, draftId, answer, fallbackModel, { batched: false });
+}
+
+/** A batch's draft settled on its row (D108): the free checks with the batch's check verdict (asked live when the batch's
+ *  check never came: `undefined`), a repair made live, the draft's row finished last at the batch's half price. The cost
+ *  is the draft's half and the live calls'; the batch's check row is the caller's. */
+export async function settleBatched<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: I, draftId: string, answer: ClaudeAnswer<T>, verdict: CheckVerdict | null | undefined): Promise<AgentOutcome<T>> {
+  return settleOn(runOf(ctx, spec, input), draftId, answer, null, { batched: true, verdict });
+}
+
+/** What a run asks and how it calls: the request with the job's hour mark, the table's choice, the time left. */
+type Run<I, T> = {
+  ctx: AgentContext;
+  spec: Kind<I, T>;
+  input: I;
+  level: ClassLevel | undefined;
+  chosen: Chosen;
+  asked: DraftRequest<T>;
+  version: string;
+  student: string | undefined;
+  call: <R>(request: DraftRequest<R>, model: Chosen["model"], effort: Chosen["effort"], cap?: number) => Promise<ClaudeAnswer<R>>;
+  left: () => number;
+  cost: () => number;
+};
+
+function runOf<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: I): Run<I, T> {
+  const level = spec.classLevel?.(input);
+  const now = ctx.now ?? (() => performance.now());
+  const started = now();
+  const left = () => (ctx.budgetMs ?? CLAUDE_DEADLINE_MS) - (now() - started);
+  const drafted = spec.draft(input);
+  const asked = ctx.cacheTTL ? { ...drafted, system: { ...drafted.system, ttl: ctx.cacheTTL } } : drafted;
+  let paise = 0;
   const call = async <R>(request: DraftRequest<R>, model: Chosen["model"], effort: Chosen["effort"], cap?: number): Promise<ClaudeAnswer<R>> => {
     // Whole milliseconds: Node's AbortSignal.timeout refuses a fraction (performance.now() gives one).
     const answer = await ctx.claude.complete({ ...request, model, effort, deadlineMs: Math.max(1, Math.floor(Math.min(left(), cap ?? Number.POSITIVE_INFINITY))) });
-    cost += costOf(answer) ?? 0;
+    paise += costOf(answer) ?? 0;
     return answer;
   };
+  return { ctx, spec, input, level, chosen: modelFor(spec.kind, "draft", level), asked, version: `${spec.kind}@${drafted.version}`, student: spec.student?.(input)?.id, call, left, cost: () => paise };
+}
 
-  let fallbackModel: string | null = null;
-  let answer = await call(asked, chosen.model, chosen.effort);
-  if (answer.kind === "failed" && RETRYABLE.has(answer.reason) && chosen.fallback && left() > FALLBACK_ROOM_MS) {
-    log.info({ at: "agent", requestId: ctx.requestId, kind: spec.kind, fallback: chosen.fallback, after: answer.reason });
-    fallbackModel = chosen.fallback;
-    answer = await call(asked, chosen.fallback, chosen.effort);
-  }
-  const finishDraft = async (finish: Finish) => ctx.db.finish(ctx.token, draftRow.id, finish);
-  const version = `${spec.kind}@${asked.version}`;
+/** A draft's answer to its end: refused when it failed or holds nothing; kept when the kind has no rubric or its checks
+ *  find nothing; else one repair and the checks again. */
+async function settleOn<I, T>(run: Run<I, T>, draftId: string, answer: ClaudeAnswer<T>, fallbackModel: string | null, how: { batched: boolean; verdict?: CheckVerdict | null }): Promise<AgentOutcome<T>> {
+  const { ctx, spec, input, asked, chosen, version, level, call, student } = run;
+  const finishDraft = async (finish: Finish) => ctx.db.finish(ctx.token, draftId, how.batched ? halved(finish, answer) : finish);
+  // A batch's draft was paid in the batch, at half (D101).
+  const drafted = how.batched ? (halved(finished(answer, { ...asked, model: chosen.model }, version, null, null), answer).costPaise ?? 0) : 0;
+  const cost = () => drafted + run.cost();
   if (answer.kind !== "ok" || spec.empty?.(answer.parsed)) {
     const finish = finished(answer, { ...asked, model: fallbackModel ?? chosen.model }, version, fallbackModel, null, answer.kind === "ok" ? "refused" : undefined);
     await finishDraft(finish);
-    return { kind: "failed", id: draftRow.id, costPaise: cost, reason: finish.errorReason ?? "error", words: answer.kind === "failed" || answer.kind === "truncated" ? "service" : "refused" };
+    return { kind: "failed", id: draftId, costPaise: cost(), reason: finish.errorReason ?? "error", words: answer.kind === "failed" || answer.kind === "truncated" ? "service" : "refused" };
   }
   const draft = answer;
   const keep = (parsed: T) => (spec.keep ? spec.keep(parsed) : parsed);
@@ -111,35 +154,35 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
   if (rubric === undefined) {
     const kept = keep(draft.parsed);
     await finishDraft(finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, kept));
-    return { kind: "ok", id: draftRow.id, parsed: kept, costPaise: cost, repaired: false, replay: false };
+    return { kind: "ok", id: draftId, parsed: kept, costPaise: cost(), repaired: false, replay: false };
   }
 
-  /** The free findings and the model's verdict on one answer, under the check's key. */
+  /** The free findings and the model's verdict on one answer, under the check's key (a batch's first verdict given). */
   const findingsOf = async (parsed: T, suffix: ":check" | ":repair:check"): Promise<Finding[]> => {
-    const own = [...(spec.verify?.(input, parsed) ?? []), ...(spec.maths ? mathsFindings(parsed) : [])];
-    const verdict = await check(ctx, spec, level, rubric, asked, parsed, draftRow.id, suffix, version, call, student?.id);
+    const own = ownFindings(spec, input, parsed);
+    const verdict = suffix === ":check" && how.verdict !== undefined ? how.verdict : await check(ctx, spec, level, rubric, asked, parsed, draftId, suffix, version, call, student);
     return [...own, ...(verdict && !verdict.pass ? verdict.findings : [])];
   };
   const refuse = async (findings: Finding[]) => {
     const reason = `check:${findings[0]?.item ?? "draft"}`.slice(0, 120);
     log.info({ at: "agent", requestId: ctx.requestId, kind: spec.kind, refused: reason, findings });
     await finishDraft({ ...finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, null), status: "failed", output: null, errorReason: reason });
-    return { kind: "failed" as const, id: draftRow.id, costPaise: cost, reason, words: "refused" as const };
+    return { kind: "failed" as const, id: draftId, costPaise: cost(), reason, words: "refused" as const };
   };
 
   const first = await findingsOf(draft.parsed, ":check");
   if (first.length === 0) {
     const kept = keep(draft.parsed);
     await finishDraft(finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, kept));
-    return { kind: "ok", id: draftRow.id, parsed: kept, costPaise: cost, repaired: false, replay: false };
+    return { kind: "ok", id: draftId, parsed: kept, costPaise: cost(), repaired: false, replay: false };
   }
-  if (left() < REPAIR_ROOM_MS) return refuse(first);
+  if (run.left() < REPAIR_ROOM_MS) return refuse(first);
 
   const repairChoice = modelFor(spec.kind, "repair", level);
   const repairAsked = repairRequest(asked, first);
   let repairRow: { id: string };
   try {
-    repairRow = await ctx.db.startCall(ctx.token, stepCall(ctx, spec.kind, repairChoice.model, draftRow.id, ":repair", student?.id));
+    repairRow = await ctx.db.startCall(ctx.token, stepCall(ctx, spec.kind, repairChoice.model, draftId, ":repair", student));
   } catch (e) {
     log.error({ at: "agent", requestId: ctx.requestId, kind: spec.kind, step: "repair", error: e instanceof Error ? e : String(e) });
     return refuse(first);
@@ -150,13 +193,24 @@ export async function runAgent<I, T>(ctx: AgentContext, spec: Kind<I, T>, input:
   if (spec.empty?.(repaired.parsed)) {
     // A repair that leaves nothing (every item dropped) is refused in the kind's words, as an empty first draft is.
     await finishDraft({ ...finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, null), status: "failed", output: null, errorReason: "refused" });
-    return { kind: "failed", id: draftRow.id, costPaise: cost, reason: "refused", words: "refused" };
+    return { kind: "failed", id: draftId, costPaise: cost(), reason: "refused", words: "refused" };
   }
   const second = await findingsOf(repaired.parsed, ":repair:check");
   if (second.length > 0) return refuse(second);
   const kept = keep(repaired.parsed);
   await finishDraft(finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, kept));
-  return { kind: "ok", id: draftRow.id, parsed: kept, costPaise: cost, repaired: true, replay: false };
+  return { kind: "ok", id: draftId, parsed: kept, costPaise: cost(), repaired: true, replay: false };
+}
+
+/** The free findings on a parsed answer: the kind's `verify`, and the maths for a kind that writes it (D102). */
+export function ownFindings<I, T>(spec: Kind<I, T>, input: I, parsed: T): Finding[] {
+  return [...(spec.verify?.(input, parsed) ?? []), ...(spec.maths ? mathsFindings(parsed) : [])];
+}
+
+/** A finish as a Message Batch's (D101, D108): priced at half and marked `batched`. */
+export function halved(finish: Finish, answer: ClaudeAnswer<unknown>): Finish {
+  if (answer.kind === "failed") return { ...finish, batched: true };
+  return { ...finish, costPaise: costPaise(answer.model, answer.tokensIn, answer.tokensOut, answer.tokensCached, answer.tokensWritten, 0.5, answer.tokensWrittenHour ?? 0), batched: true };
 }
 
 /** The model check (D99): the other tier against the rubric, under `<draft key><suffix>`. A check that fails or cannot
@@ -197,7 +251,7 @@ function base(ctx: AgentContext, kind: AIKind, input: unknown, model: string, ke
 }
 
 /** A check's or repair's row: recorded under the draft's kind, keyed by the draft's key and the step (0052's grammar). */
-function stepCall(ctx: AgentContext, kind: AIKind, model: string, draftId: string, suffix: ":check" | ":repair" | ":repair:check", student?: string): StartCall {
+export function stepCall(ctx: AgentContext, kind: AIKind, model: string, draftId: string, suffix: ":check" | ":repair" | ":repair:check", student?: string): StartCall {
   const recorded = { step: suffix.slice(1), draft: draftId };
   const agentStep = suffix === ":repair" ? "repair" : "check";
   return base(ctx, kind, recorded, model, `${ctx.key}${suffix}`, sha256(JSON.stringify(recorded)), student, agentStep);
@@ -205,7 +259,7 @@ function stepCall(ctx: AgentContext, kind: AIKind, model: string, draftId: strin
 
 function costOf<R>(answer: ClaudeAnswer<R>): number | null {
   if (answer.kind === "failed") return null;
-  return costPaise(answer.model, answer.tokensIn, answer.tokensOut, answer.tokensCached, answer.tokensWritten);
+  return costPaise(answer.model, answer.tokensIn, answer.tokensOut, answer.tokensCached, answer.tokensWritten, 1, answer.tokensWrittenHour ?? 0);
 }
 
 /** How an answer finishes its row (D76): the output kept (`kept`, null for none), or failed with its reason; the billed
