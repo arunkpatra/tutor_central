@@ -3,17 +3,19 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-13, session 41 (Phase 20's build, on Opus 5.5). **Session 41:** Phase 20 built, PRs #291 to #317:
+**Last updated:** 2026-10-14, session 41's close (Phase 20's build, on Opus 5.5). **Session 41:** Phase 20 built, PRs #291 to #317:
 the agent (draft, verify, check by the other tier, one repair, refuse) for nine kinds; `ai_models` with the kill switch; prompts as
 versioned files; the golden sets, `bun evals` and its gate (D101, a failed case retried once, D103); the nightly `eval_run`
 through Message Batches; mathematics in LaTeX drawn by SwiftMath on the phone and mitex in the PDFs; the figure's PDF; the
 portal's agent step. Hand runs issue #313 (nine of ten; VoiceOver by the Inspector not done); two fresh reviews on Fable 5.1,
-every finding fixed; D103 and D104 (placements on a story ask what its title promises) by the owner. Deployed (Deploy C, run
-38400290327, 29e79fb, migrations to 0056); 1.0.0 (30) on TestFlight. The phase's real calls about ₹700 (the owner approved
-₹520), almost all eval runs. The record in `plan/sessions/041/`.
-**Next:** the owner installs 1.0.0 (30) and checks a sheet's maths and its PDF (his step in the record); the first production
-nightly (02:05 IST, 14 October) and the first plan job with material (Tuesday 20 October) read the morning after; then Phase 21
-(the resume when the owner asks). The order (D81): V3's Phases 17 to 22, then the external testing round, then Phase 16.
+every finding fixed; D103 and D104 by the owner. Deployed (Deploy C, run 38400290327, 29e79fb, migrations to 0056); 1.0.0 (30)
+checked by the owner on his iPhone ("build 30 ok", 14 October). The phase's real calls about ₹700 (₹520 approved). The first
+production nightly (14 October, ₹34.04) passed 4 of 9 kinds; its findings are Phase 21's first work (D105, the owner's). The
+first scheduled plan job on Phase 20's code ran at 05:30 IST on 14 October: 12 calls, ₹4.85, no repair. The record in
+`plan/sessions/041/`.
+**Next:** resume 040 (`plan/resume/040-phase-21-boards-and-plan.md`, on Fable 5.1): the nightlies since 14 October read, Phase
+21's boards, `plan/phase-21-plan.md` with D105 as Task 1, then resume 041 for the build. The order (D81): V3's Phases 17 to 22,
+then the external testing round, then Phase 16.
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.

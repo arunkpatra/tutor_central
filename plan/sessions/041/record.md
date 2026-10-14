@@ -52,9 +52,7 @@ half price. Details in the phase file.
 
 ## Left open
 
-- The owner's step: install 1.0.0 (30); Make → Sheet (class 8, Mathematics, Linear equations): formulae drawn; Share as PDF:
-  the same; his word.
-- The first production nightly (02:05 IST, 14 October) and the first plan job with material (Tuesday 20 October): read the
-  morning after.
+- Closed on 14 October: the owner's build 30 check ("build 30 ok"); the first nightly read (4 of 9 kinds; its findings are
+  D105, Phase 21's first work); the first scheduled plan job on Phase 20's code read (05:30 IST, 12 calls, ₹4.85, no repair).
 - U50 to U52 on the polish list; device test for VoiceOver's reading of a formula.
-- The resume for Phase 21 when the owner asks.
+- Resume 040 (Phase 21's boards and plan) written at the owner's word.

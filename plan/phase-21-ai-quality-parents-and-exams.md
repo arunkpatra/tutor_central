@@ -21,8 +21,14 @@ job, and the cost of AI work is a standing report.
    one-hour cache; a live call for the kinds made at a tap.
 6. **The standing cost report** (D74): cost per kind, model, step and centre, by day and month, in the portal's data; Phases 12
    to 15's session cost runs retired as a practice.
+7. **The nightly's findings first** (D105): each failed case of the nightlies since 14 October is fixed (a free `verify` rule
+   where the fault can be computed, else the prompt with a version bump) or ruled a strict grade (the rubric or the case
+   changed, the reason in the ledger), before the other kinds move.
 
 ## Acceptance
+
+- The first nightly after D105's fix is deployed: no failure the fix computes (a brief's slip, a plan's chapter names), and no
+  kind below 4 of 5.
 
 - A note day made by a job, checked, read on the phone in Kannada with English beside; a note that names a fact not in the
   record is refused by the check (a planted test).

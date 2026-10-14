@@ -23,3 +23,5 @@
 21. "PR run failed. Why so many and so frequent PR run failures?"
 22. "before creating PRs are you not running the checks (that CI runs) locally?"
 23. "ok, go ahead with the deploy and build 30"
+24. "did any prod jobs run? check"
+25. "build 30 ok. Write the resume prompt for next phase - phase 21, and scope-in the fix" — D105, resume 040.
