@@ -246,9 +246,9 @@ public protocol AIRepository: Sendable {
     func makeFigure(
         _ kind: FigureSpec.Kind, classLevel: ClassLevel, subject: String, skill: String, centre: UUID
     ) async throws(APIFailure) -> MadeFigure
-    /// POST /ai/make, kind `brief`.
+    /// POST /ai/make, kind `brief`; `reason` is Make it again's (D107).
     func makeBrief(
-        classLevel: ClassLevel, subject: String, chapter: String, centre: UUID
+        classLevel: ClassLevel, subject: String, chapter: String, reason: String?, centre: UUID
     ) async throws(APIFailure) -> MadeBrief
     /// POST /ai/parse-school: what the school sent read into items (nothing about a student goes in).
     func parseSchool(
@@ -268,4 +268,13 @@ public protocol AIRepository: Sendable {
     func makeNotOnTrack(_ request: NotOnTrackRequest, centre: UUID) async throws(APIFailure) -> MadeMessage
     /// POST /ai/read-marks: the rows of a report card or a marked test.
     func readMarks(_ request: ReadMarksRequest, centre: UUID) async throws(APIFailure) -> ReadMarksAnswer
+}
+
+public extension AIRepository {
+    /// A brief made the first time: no reason.
+    func makeBrief(
+        classLevel: ClassLevel, subject: String, chapter: String, centre: UUID
+    ) async throws(APIFailure) -> MadeBrief {
+        try await makeBrief(classLevel: classLevel, subject: subject, chapter: chapter, reason: nil, centre: centre)
+    }
 }

@@ -14,6 +14,10 @@ import Observation
     public private(set) var plan: PlanRecord?
     public private(set) var loadFailed: String?
     public private(set) var making = false
+    /// Make it again's reason while the new brief is made (P21-Brief-Again); nil otherwise.
+    public private(set) var againReason: BriefReason?
+    /// Where a reason or a replacement is kept as feedback (D107); none in previews.
+    @ObservationIgnored public var feedback: (any FeedbackRecorder)?
     /// The system alert's words for a refused or failed write (U33).
     public var message: String?
     @ObservationIgnored public var online: () async -> Bool = { true }
@@ -167,9 +171,9 @@ import Observation
 
     /// A new brief for the chapter, in this one's place in the plan; offline it is refused in words; a failure keeps
     /// this one and says so.
-    public func makeAgain() async {
+    public func makeAgain(_ reason: BriefReason? = nil) async {
         if let artefact, artefact.isMade {
-            await makeAgainMade(artefact)
+            await makeAgainMade(artefact, reason: reason)
             return
         }
         guard !making, let artefact, let group, let item else { return }
@@ -178,7 +182,12 @@ import Observation
             return
         }
         making = true
-        defer { making = false }
+        againReason = reason
+        defer {
+            making = false
+            againReason = nil
+        }
+        await ArtefactFeedback.again(artefact, reason: reason?.words, recorder: feedback, centre: centre)
         let level = group.memberIDs.compactMap { register.student($0)?.classLevel }.max() ?? .eight
         do {
             let made = try await IdempotencyKey.another {
@@ -186,6 +195,7 @@ import Observation
                     classLevel: level,
                     subject: group.subject,
                     chapter: group.chapter,
+                    reason: reason?.words,
                     centre: centre
                 )
             }
@@ -204,7 +214,7 @@ import Observation
     }
 
     /// A Make brief made again for its class, subject and chapter, kept as Make's (`made_from`, the target).
-    private func makeAgainMade(_ artefact: Artefact) async {
+    private func makeAgainMade(_ artefact: Artefact, reason: BriefReason?) async {
         guard !making, let made = artefact.madeFor, let level = made.level, let chapter = made.skills?.first else {
             return
         }
@@ -213,10 +223,18 @@ import Observation
             return
         }
         making = true
-        defer { making = false }
+        againReason = reason
+        defer {
+            making = false
+            againReason = nil
+        }
+        await ArtefactFeedback.again(artefact, reason: reason?.words, recorder: feedback, centre: centre)
         do {
             let answer = try await IdempotencyKey.another {
-                try await ai.makeBrief(classLevel: level, subject: made.subject ?? "", chapter: chapter, centre: centre)
+                try await ai.makeBrief(
+                    classLevel: level, subject: made.subject ?? "", chapter: chapter, reason: reason?.words,
+                    centre: centre
+                )
             }
             guard !Task.isCancelled else { return }
             let new = NewArtefact(
@@ -230,5 +248,10 @@ import Observation
         } catch {
             message = Self.againFailed
         }
+    }
+
+    /// "A shorter brief is on its way. This one stays until it arrives." (P21-Brief-Again's reasons).
+    public var regeneratingLine: String {
+        (againReason ?? .own("")).line
     }
 }

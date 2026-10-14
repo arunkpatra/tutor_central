@@ -59,6 +59,7 @@ public enum Fixtures {
             reminderSettings: reminderSettings(for: state),
             deviceTokens: FakeDeviceTokenRepository(),
             jobs: jobs(for: state, server: server),
+            feedback: FakeFeedbackRecorder(),
             consentHistory: consentHistory(for: state),
             connectivity: FakeConnectivity(online: !offlineStates.contains(state)),
             cachesLists: false,

@@ -22,14 +22,17 @@ public struct ArtefactsContext {
     let record: (any RecordRepository)?
     /// The server's PDFs (Phase 18): Share takes the made file when it can be had.
     let serverPDF: ServerPDF?
+    /// Where a reason or a replacement is kept as feedback (D107).
+    let feedback: (any FeedbackRecorder)?
 
     public init(
         workspace: Workspace, register: any Register, plans: any PlansRepository, ai: any AIRepository,
         photos: any PhotoStore, now: @escaping @Sendable () -> Date, calendar: Calendar,
         online: @escaping () async -> Bool, planCache: PlanCache? = nil,
         schoolItems: (any SchoolItemsRepository)? = nil, schools: (any SchoolsRepository)? = nil,
-        record: (any RecordRepository)? = nil, serverPDF: ServerPDF? = nil
+        record: (any RecordRepository)? = nil, serverPDF: ServerPDF? = nil, feedback: (any FeedbackRecorder)? = nil
     ) {
+        self.feedback = feedback
         self.record = record
         self.serverPDF = serverPDF
         self.schoolItems = schoolItems
@@ -73,11 +76,11 @@ public struct ArtefactScreen: View {
             case .workedExample?:
                 WorkedExampleView(store: exampleStore(), showsTwo: boardState == .secondStep)
             case .brief?:
-                BriefView(store: briefStore())
+                BriefView(store: briefStore(), opensReasons: boardState == .reasons)
             case .figure?:
                 FigureScreen(store: figureStore())
             case .mock?:
-                MockView(store: mockStore(), showsKey: boardState == .key)
+                MockView(store: mockStore(), showsKey: boardState == .key, opensReasons: boardState == .reasons)
             case .gapReport?:
                 if let item = found?.schoolItemID, let student = found?.studentID {
                     GapReportView(store: gapStore(item: item, student: student), actions: actions.gapReport)
@@ -128,6 +131,7 @@ public struct ArtefactScreen: View {
         store.online = context.online
         store.planCache = context.planCache
         store.serverPDF = context.serverPDF
+        store.feedback = context.feedback
         return store
     }
 
@@ -140,6 +144,7 @@ public struct ArtefactScreen: View {
         store.online = context.online
         store.planCache = context.planCache
         store.serverPDF = context.serverPDF
+        store.feedback = context.feedback
         store.onMark = actions.markPaper
         return store
     }
@@ -163,6 +168,7 @@ public struct ArtefactScreen: View {
         store.online = context.online
         store.planCache = context.planCache
         store.serverPDF = context.serverPDF
+        store.feedback = context.feedback
         return store
     }
 }

@@ -42,6 +42,7 @@ extension RootView {
             effects: NoteStore.Effects(copy: { UIPasteboard.general.string = $0 }, open: { url in systemOpenURL(url) })
         )
         store.tutorSays = shell.takeNoteWords(for: student)
+        store.feedback = deps.feedback
         return store
     }
 
@@ -64,6 +65,7 @@ extension RootView {
         switch state {
         case .noteSend: .send
         case .noteWriting: .writing
+        case .noteAgain: .reasons
         default: nil
         }
     }
@@ -72,7 +74,7 @@ extension RootView {
     static func noteRoutes(for state: LaunchState) -> [Route]? {
         let sunday = Day(year: 2026, month: 10, day: 11) ?? Day(Fixtures.now, calendar: DayHeading.india)
         return switch state {
-        case .note, .noteSend, .noteWriting: [.note(FakeStudentsRepository.dev, sunday)]
+        case .note, .noteSend, .noteWriting, .noteAgain, .noteSetAside: [.note(FakeStudentsRepository.dev, sunday)]
         case .noteCanDo, .noteCanDoNoChange: [.note(FakeStudentsRepository.sahil, sunday)]
         case .studentMessages: [.student(FakeStudentsRepository.dev), .studentMessages(FakeStudentsRepository.dev)]
         case .studentNotOnTrack, .studentNextStep, .studentTellParent: [.student(FakeStudentsRepository.dev)]

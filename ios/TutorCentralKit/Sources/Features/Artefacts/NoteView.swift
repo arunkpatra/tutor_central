@@ -3,10 +3,12 @@ import Domain
 import SwiftUI
 import UIKit
 
-/// What a launch state opens on the note: the two-language sheet up (P10-Note-Send), or the note being written.
+/// What a launch state opens on the note: the two-language sheet up (P10-Note-Send), the note being written, or Write
+/// again's menu (P21-Note-Again).
 public enum NoteBoardState: Hashable, Sendable {
     case send
     case writing
+    case reasons
 }
 
 /// The weekly note and can-now-do (P10-Note, -Light, -Send; P10-CanNowDo): the student, "Moved up" for the ladder, the
@@ -18,6 +20,8 @@ public struct NoteView: View {
     @State private var store: NoteStore
     @State private var sending = false
     @State private var topInset: CGFloat = 0
+    @State private var reasons = false
+    @State private var askingReason = false
     let boardState: NoteBoardState?
     static let writingLine = "Usually under a minute. From this week's record."
 
@@ -57,6 +61,27 @@ public struct NoteView: View {
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) { footer }
         .sheet(isPresented: $sending) { sendSheet }
+        .overlay {
+            if reasons {
+                GlassMenu(
+                    eyebrow: "Write again",
+                    rows: AgainMenu.rows(
+                        NoteReason.self,
+                        pick: { reason in Task { await store.writeAgain(reason) } },
+                        ask: {
+                            askingReason = true
+                        }
+                    ),
+                    alignment: .bottom
+                ) { reasons = false }
+            }
+        }
+        .sheet(isPresented: $askingReason) {
+            ReasonSheet(title: "Write again", action: "Write", onMake: { words in
+                askingReason = false
+                Task { await store.writeAgain(.own(words)) }
+            }, onClose: { askingReason = false })
+        }
         .onChange(of: store.alert) { _, alert in
             guard let alert else { return }
             notices?.show(alert)
@@ -72,6 +97,8 @@ public struct NoteView: View {
             await store.load()
             if boardState == .send {
                 sending = true
+            } else if boardState == .reasons {
+                reasons = true
             }
         }
     }
@@ -95,9 +122,18 @@ public struct NoteView: View {
     @ViewBuilder private var note: some View {
         switch store.stage {
         case .ready:
-            NoteWell(title: store.wellTitle, text: $store.message, limit: NoteStore.limit, helper: NoteStore.helper)
-            if let english = store.english {
-                EnglishBlock(english)
+            Group {
+                NoteWell(title: store.wellTitle, text: $store.message, limit: NoteStore.limit, helper: NoteStore.helper)
+                if let english = store.english {
+                    EnglishBlock(english)
+                }
+            }
+            .opacity(store.rewriting != nil ? Tokens.opacityStale : 1)
+            .disabled(store.rewriting != nil)
+        case .setAside:
+            VStack(alignment: .leading, spacing: Tokens.sectionHeaderGap) {
+                SectionHeader(store.wellTitle)
+                SetAsideCard(line: store.setAsideLine) { store.writeMyself() }
             }
         case let .failed(words):
             Card { EmptyRow(symbol: "text.bubble", title: "No note yet", line: words) }
@@ -111,9 +147,17 @@ public struct NoteView: View {
             VStack(spacing: Tokens.rowPaddingDense) {
                 Text(store.aiLine).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Button("Write again") { Task { await store.writeAgain() } }
-                    .buttonStyle(.quiet(emphasised: true))
-                    .disabled(store.stage != .ready)
+                if store.rewriting != nil {
+                    HStack(spacing: Tokens.inline) {
+                        RefreshSpinner()
+                        Text(store.regeneratingLine)
+                            .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                    }
+                } else {
+                    Button("Write again") { reasons = true }
+                        .buttonStyle(.quiet(emphasised: true))
+                        .disabled(store.stage != .ready && store.stage != .setAside)
+                }
                 HStack(spacing: Tokens.tileGap) {
                     CopyButton(copy: { Task { await store.copy() } })
                         .disabled(!store.canSend)
@@ -142,5 +186,36 @@ public struct NoteView: View {
             },
             close: { sending = false }
         )
+    }
+}
+
+/// A note the check set aside (P21-Note-SetAside): the card in the well's place, the message tile, the words, a rule,
+/// then the quiet Write it myself in its own row.
+private struct SetAsideCard: View {
+    let line: String
+    let writeMyself: () -> Void
+
+    var body: some View {
+        Card {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top, spacing: Tokens.cardPaddingCompact) {
+                    IconTile(symbol: "text.bubble")
+                    VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
+                        Text(NoteStore.setAsideTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                        Text(line).typeStyle(Tokens.subhead).foregroundStyle(Tokens.text2.color)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(Tokens.cardPaddingCompact)
+                .accessibilityElement(children: .combine)
+                .rowDivider()
+                Button("Write it myself", action: writeMyself)
+                    .buttonStyle(.quiet(emphasised: true))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, Tokens.cardPaddingCompact)
+                    .padding(.vertical, Tokens.rowPaddingDense)
+            }
+        }
     }
 }

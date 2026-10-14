@@ -113,6 +113,11 @@ public extension SheetStore {
                 generationID: nil, regeneratedFrom: made
             )
             let kept = try await plans.keep(ArtefactWords.carrying(own, from: artefact), to: link, centre: centre)
+            // The made sheet replaced by the tutor's own (D107): kept beside its generation, a photo never sent.
+            if !isOwn, let generation = artefact.generationID {
+                let revised: FeedbackRevision = content.text.map(FeedbackRevision.text) ?? .photo
+                await ArtefactFeedback.keep(.replace(generation, with: revised), recorder: feedback, centre: centre)
+            }
             await reload(kept)
         } catch {
             message = Self.ownFailed

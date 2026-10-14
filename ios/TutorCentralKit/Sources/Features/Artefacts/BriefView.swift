@@ -14,9 +14,13 @@ struct BriefView: View {
     @State private var topInset: CGFloat = 0
     @State private var pdf: URL?
     @State private var showingExample = false
+    @State private var reasons: Bool
+    @State private var askingReason = false
 
-    init(store: BriefStore) {
+    /// `opensReasons`: the brief-again launch state opens Make it again's menu (P21-Brief-Again).
+    init(store: BriefStore, opensReasons: Bool = false) {
         _store = State(initialValue: store)
+        _reasons = State(initialValue: opensReasons)
     }
 
     var body: some View {
@@ -38,6 +42,27 @@ struct BriefView: View {
             if store.brief != nil {
                 footer
             }
+        }
+        .overlay {
+            if reasons, store.brief != nil {
+                GlassMenu(
+                    eyebrow: "Make it again",
+                    rows: AgainMenu.rows(
+                        BriefReason.self,
+                        pick: { reason in Task { await store.makeAgain(reason) } },
+                        ask: {
+                            askingReason = true
+                        }
+                    ),
+                    alignment: .bottom
+                ) { reasons = false }
+            }
+        }
+        .sheet(isPresented: $askingReason) {
+            ReasonSheet(onMake: { words in
+                askingReason = false
+                Task { await store.makeAgain(.own(words)) }
+            }, onClose: { askingReason = false })
         }
         .sheet(isPresented: $showingExample) {
             if let example = store.brief?.workedExample {
@@ -93,11 +118,11 @@ struct BriefView: View {
                 if store.making {
                     HStack(spacing: Tokens.inline) {
                         RefreshSpinner()
-                        Text("A new brief is on its way. This one stays until it arrives.")
+                        Text(store.regeneratingLine)
                             .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                     }
                 } else {
-                    Button("Make it again") { Task { await store.makeAgain() } }
+                    Button("Make it again") { reasons = true }
                         .buttonStyle(.quiet(emphasised: true))
                 }
                 HStack(spacing: Tokens.tileGap) {

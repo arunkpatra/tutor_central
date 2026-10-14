@@ -26,9 +26,12 @@ struct MakeNoteBody: Encodable {
     let week: Week
     /// Left out of the body when nil (Make's note only).
     let tutorSays: String?
+    /// Write again's reason (D107); left out of the body when nil.
+    let reason: String?
 
     init(_ request: NoteRequest, centre: UUID) {
         tutorSays = request.tutorSays
+        reason = request.reason
         centreId = centre.uuidString.lowercased()
         studentId = request.studentID.uuidString.lowercased()
         studentName = String(request.studentName.prefix(80))

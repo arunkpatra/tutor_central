@@ -23,7 +23,8 @@ extension RootView {
                             files: $0, centre: workspace.centre.id,
                             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }
                         )
-                    }
+                    },
+                    feedback: deps.feedback
                 ),
                 actions: ArtefactsActions(
                     openArtefact: { shell.tabs.push(.artefact($0)) },
@@ -49,8 +50,8 @@ extension RootView {
         switch state {
         case .sheetOwn: [.artefact(Fixtures.ownSheet)]
         case .workedExample: [.artefact(Fixtures.groupOneExample)]
-        case .brief: [.artefact(Fixtures.brief)]
-        case .mock, .mockKey: [.artefact(FakePlansRepository.boardMockID)]
+        case .brief, .briefAgain: [.artefact(Fixtures.brief)]
+        case .mock, .mockKey, .mockAgain: [.artefact(FakePlansRepository.boardMockID)]
         case _ where Fixtures.figureStates[state] != nil: [.artefact(FakePlansRepository.figureID)]
         case _ where Fixtures.sheetStates.contains(state): [.artefact(Fixtures.groupOneSheet)]
         default: nil
@@ -73,7 +74,7 @@ extension RootView {
         case .sheetKey, .mockKey: .key
         case .sheetBoard: .board
         case .sheetBoardMaths: .boardWithKey
-        case .sheetRegenerate: .reasons
+        case .sheetRegenerate, .briefAgain, .mockAgain: .reasons
         case .sheetRegenerating: .regenerating
         case .sheetOwnMenu: .ownMenu
         case .workedExample, .workedExampleMaths: .secondStep

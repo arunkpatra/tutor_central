@@ -20,6 +20,7 @@ extension SheetStore {
         }
         again = .making(reason)
         defer { again = .idle }
+        await ArtefactFeedback.again(artefact, reason: reason.words, recorder: feedback, centre: centre)
         do {
             let made = artefact.madeFor
             let request = SheetRequest(

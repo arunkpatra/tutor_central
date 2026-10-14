@@ -6,8 +6,9 @@ import Observation
 /// One student's note on the note day (P10-Today-NoteDay): the language, the week's topic and its lead fact, and Read,
 /// Sent or Held with the reason.
 public struct NoteRowModel: Identifiable, Hashable, Sendable {
+    /// `setAside`: the week's note was refused by the check against the record (D110); Read writes it again.
     public enum State: Hashable, Sendable {
-        case read, sent, held(HeldReason)
+        case read, sent, held(HeldReason), setAside
     }
 
     /// The student.
@@ -62,6 +63,8 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
     @ObservationIgnored public var onOpenNote: ((UUID, Day) -> Void)?
     /// A row held for consent: the student's page, where the consent is recorded (AppShell's).
     @ObservationIgnored public var onOpenStudent: ((UUID) -> Void)?
+    /// The notes the check set aside this week (`setAsideNotes`, D110); none in previews.
+    @ObservationIgnored public var plans: (any PlansRepository)?
     /// Each listed student's parent's suggested messages this week, for the held sheet.
     private var parentWeek: [UUID: [MessageEntry]] = [:]
     /// The read in hand: an earlier read that answers late (a pull during Change day's reload) is dropped.
@@ -258,13 +261,16 @@ public struct HeldNote: Hashable, Sendable, Identifiable {
         }
     }
 
-    /// Sent first, then the ones to read, then the held; by name within each.
+    /// Sent first, then a note set aside (it needs the tutor, P21-NoteDay-SetAside), the ones to read, the held; by
+    /// name
+    /// within each.
     private func rowsOrdered(_ rows: [NoteRowModel]) -> [NoteRowModel] {
         func rank(_ state: NoteRowModel.State) -> Int {
             switch state {
             case .sent: 0
-            case .read: 1
-            case .held: 2
+            case .setAside: 1
+            case .read: 2
+            case .held: 3
             }
         }
         return rows.sorted { (rank($0.state), $0.name) < (rank($1.state), $1.name) }

@@ -26,6 +26,8 @@ import UIKit
     /// The system alert's words for a refused or failed write (U33).
     public var message: String?
     @ObservationIgnored public var online: () async -> Bool = { true }
+    /// Where a reason or a replacement is kept as feedback (D107); none in previews.
+    @ObservationIgnored public var feedback: (any FeedbackRecorder)?
     /// The plans kept on this iPhone: offline the sheet opens from them.
     @ObservationIgnored public var planCache: PlanCache?
     /// The server's PDF for Share (Phase 18); none in tests and previews (the phone draws its own).

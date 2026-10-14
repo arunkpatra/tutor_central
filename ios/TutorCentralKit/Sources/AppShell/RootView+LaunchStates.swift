@@ -43,7 +43,8 @@ extension RootView {
              .tasks,
              .tasksEmpty:
             .more
-        case .todayAI, .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .todayNotOnTrack: .today
+        case .todayAI, .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .todayNoteDaySetAside,
+             .todayNotOnTrack: .today
         case .scanSaved: .students
         default: Fixtures.offlineTab(state)
             ?? (aiStates.contains(state) || scanStates.contains(state) || checkStates.contains(state) ? .more : nil)

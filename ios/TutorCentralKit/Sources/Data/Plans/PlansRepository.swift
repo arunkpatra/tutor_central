@@ -29,6 +29,10 @@ public protocol PlansRepository: Sendable {
     func setContent(_ content: ArtefactContent, artefact: UUID, centre: UUID) async throws
     /// The students' weekly notes and can-now-dos kept since a moment, newest first (Phase 14).
     func notes(centre: UUID, students: [UUID], since: Date) async throws -> [Artefact]
+    /// The students whose note the check set aside this week (D110): the week's newest note or can-now-do draft refused
+    /// after its check, with no note kept for them since `since`; by student, the refused draft (the feedback's
+    /// generation when the tutor writes it themselves).
+    func setAsideNotes(centre: UUID, students: [UUID], since: Date) async throws -> [UUID: UUID]
     /// What Make something made (`made_from = 'make'`), newest first, at most 50, a regenerated one in its
     /// predecessor's place (Phase 15).
     func made(centre: UUID) async throws -> [Artefact]

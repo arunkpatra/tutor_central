@@ -13,10 +13,14 @@ struct MockView: View {
     @State private var topInset: CGFloat = 0
     @State private var pdf: URL?
     @State private var choosing = false
+    @State private var reasons: Bool
+    @State private var askingReason = false
 
-    init(store: MockStore, showsKey: Bool) {
+    /// `opensReasons`: the mock-again launch state opens Make it again's menu (P21-Mock-Again).
+    init(store: MockStore, showsKey: Bool, opensReasons: Bool = false) {
         _store = State(initialValue: store)
         self.showsKey = showsKey
+        _reasons = State(initialValue: opensReasons)
     }
 
     static let footnote = "AI can make mistakes. Check every question before you give it. Marking from a photo uses "
@@ -43,7 +47,19 @@ struct MockView: View {
             }
         }
         .overlay {
-            if choosing {
+            if reasons, store.mock != nil {
+                GlassMenu(
+                    eyebrow: "Make it again",
+                    rows: AgainMenu.rows(
+                        MockReason.self,
+                        pick: { reason in Task { _ = await store.again(reason) } },
+                        ask: {
+                            askingReason = true
+                        }
+                    ),
+                    alignment: .bottom
+                ) { reasons = false }
+            } else if choosing {
                 GlassMenu(
                     eyebrow: "Whose paper?",
                     rows: store.students.map { student in
@@ -52,6 +68,12 @@ struct MockView: View {
                     alignment: .bottom
                 ) { choosing = false }
             }
+        }
+        .sheet(isPresented: $askingReason) {
+            ReasonSheet(onMake: { words in
+                askingReason = false
+                Task { _ = await store.again(.own(words)) }
+            }, onClose: { askingReason = false })
         }
         .onChange(of: store.message) { _, message in
             guard let message else { return }
@@ -86,8 +108,16 @@ struct MockView: View {
             VStack(spacing: Tokens.rowPaddingDense) {
                 Text(Self.footnote).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Button("Make it again") { Task { _ = await store.again() } }
-                    .buttonStyle(.quiet(emphasised: true))
+                if store.making {
+                    HStack(spacing: Tokens.inline) {
+                        RefreshSpinner()
+                        Text(store.regeneratingLine)
+                            .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                    }
+                } else {
+                    Button("Make it again") { reasons = true }
+                        .buttonStyle(.quiet(emphasised: true))
+                }
                 HStack(spacing: Tokens.tileGap) {
                     if let pdf {
                         ShareLink(item: pdf) { Label("Share as PDF", systemImage: "square.and.arrow.up") }

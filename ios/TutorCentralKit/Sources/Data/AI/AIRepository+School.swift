@@ -72,11 +72,14 @@ public struct MockRequest: Hashable, Sendable {
     public let pattern: MockPattern
     /// Kept in the mock's content (the exam it serves); not sent.
     public let schoolItemID: UUID?
+    /// Make it again's reason (D107).
+    public var reason: String?
 
     public init(
         classLevel: ClassLevel, subject: String, title: String, portions: [String], pattern: MockPattern,
-        schoolItemID: UUID? = nil
+        schoolItemID: UUID? = nil, reason: String? = nil
     ) {
+        self.reason = reason
         self.classLevel = classLevel
         self.subject = subject
         self.title = title

@@ -9,6 +9,7 @@ import Foundation
 extension Fixtures {
     static let noteDayStates: Set<LaunchState> = [
         .todayNoteDay, .todayNoteHeld, .todayNoteDayChange, .note, .noteSend, .noteCanDo, .noteWriting,
+        .noteAgain, .noteSetAside, .todayNoteDaySetAside,
         .noteCanDoNoChange,
         .studentMessages,
     ]
@@ -146,6 +147,24 @@ extension Fixtures {
                 studentID: FakeStudentsRepository.dev, planID: nil, regeneratedFrom: nil, madeAt: made
             )
         }
+    }
+}
+
+extension Fixtures {
+    /// The drafts the check set aside (P21-Note-SetAside, P21-NoteDay-SetAside): Dev's for his note, Nikhil's on the
+    /// note day.
+    static let setAsideDraft = UUID(uuidString: "abababab-0000-0000-0021-000000000001")!
+
+    @MainActor static func setAsidePlans(for state: LaunchState) -> FakePlansRepository? {
+        let student = switch state {
+        case .noteSetAside: FakeStudentsRepository.dev
+        case .todayNoteDaySetAside: FakeStudentsRepository.nikhil
+        default: UUID?.none
+        }
+        guard let student else { return nil }
+        let plans = FakePlansRepository(now: noteDayClock)
+        plans.setAside = [student: setAsideDraft]
+        return plans
     }
 }
 

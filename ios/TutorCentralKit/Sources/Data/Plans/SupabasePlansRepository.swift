@@ -76,6 +76,33 @@ public final class SupabasePlansRepository: PlansRepository {
         return try Self.decoder.decode([ArtefactRow].self, from: response.data).compactMap(\.artefact)
     }
 
+    public func setAsideNotes(centre: UUID, students: [UUID], since: Date) async throws -> [UUID: UUID] {
+        guard !students.isEmpty else { return [:] }
+        let from = ISO8601DateFormatter().string(from: since)
+        async let drafts = client.from("ai_generations").select("id, student_id").eq("centre_id", value: centre)
+            .in("kind", values: [ArtefactKind.note.rawValue, ArtefactKind.canDo.rawValue]).eq(
+                "agent_step",
+                value: "draft"
+            )
+            .eq("status", value: "failed").like("error_reason", pattern: "check:%")
+            .in("student_id", values: students.map(\.uuidString)).gte("created_at", value: from)
+            .order("created_at", ascending: false).execute()
+        async let kept = notes(centre: centre, students: students, since: since)
+        let refused = try await Self.decoder.decode([RefusedDraft].self, from: drafts.data)
+        let haveNotes = try await Set(kept.compactMap(\.studentID))
+        var setAside: [UUID: UUID] = [:]
+        for draft in refused where !haveNotes.contains(draft.studentId) && setAside[draft.studentId] == nil {
+            setAside[draft.studentId] = draft.id
+        }
+        return setAside
+    }
+
+    /// A note's draft the check refused: its row and the student.
+    struct RefusedDraft: Decodable {
+        let id: UUID
+        let studentId: UUID
+    }
+
     public func made(centre: UUID) async throws -> [Artefact] {
         let response = try await client.from("artefacts").select(ArtefactRow.columns).eq("centre_id", value: centre)
             .eq("made_from", value: "make").order("created_at", ascending: false).limit(50).execute()

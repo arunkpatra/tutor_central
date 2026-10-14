@@ -239,6 +239,8 @@ struct MakeBriefBody: Encodable {
     let classLevel: String
     let subject: String
     let chapter: String
+    /// Make it again's reason (D107); left out of the body when nil.
+    var reason: String?
 }
 
 /// `{ id, result }` for a kind whose result decodes as `Result`.
