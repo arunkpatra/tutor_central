@@ -196,6 +196,21 @@ import Testing
         #expect(page.lastDays?.mockState == .making)
     }
 
+    /// The review of Phase 21 (R-app-1): Try again marks the job's step woken (0058); the page shows Being made at once
+    /// and
+    /// reads itself again while it is made, so the row moves on without the tutor leaving the page.
+    @Test func tryAgainShowsBeingMadeAndReadsAgainWhileItIsMade() async throws {
+        let jobs = jobs(ExamJobStatus(state: .waiting, at: "marks", mockFailed: true))
+        let page = try await page(world(mockMade: false), jobs: jobs)
+        page.followEvery = .milliseconds(20)
+        await page.tryAgain()
+        #expect(page.lastDays?.mockState == .making)
+        // The job ran and could not make it again: the page reads that by itself.
+        jobs.examJobs[Self.exam] = ExamJobStatus(state: .waiting, at: "marks", mockFailed: true)
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(page.lastDays?.mockState == .failed)
+    }
+
     @Test func aFailedTryAgainSaysSoAndKeepsTheRow() async throws {
         let jobs = jobs(ExamJobStatus(state: .waiting, at: "marks", mockFailed: true))
         let page = try await page(world(mockMade: false), jobs: jobs)

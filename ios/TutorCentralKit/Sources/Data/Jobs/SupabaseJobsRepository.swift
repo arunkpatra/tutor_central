@@ -104,7 +104,8 @@ public struct SupabaseJobsRepository: JobsRepository {
 
         var status: ExamJobStatus {
             ExamJobStatus(
-                state: state, at: step?.at, mockFailed: step?.mockFailed ?? false, notMade: Set(step?.failed ?? [])
+                state: state, at: step?.at, mockFailed: step?.mockFailed ?? false, notMade: Set(step?.failed ?? []),
+                woken: step?.woken ?? false
             )
         }
     }
@@ -114,6 +115,7 @@ public struct SupabaseJobsRepository: JobsRepository {
         let at: String?
         let mockFailed: Bool?
         let failed: [UUID]?
+        let woken: Bool?
     }
 
     /// The choices as the plan job reads them: `{ groups, subjects: { "1": "Mathematics" } }`.

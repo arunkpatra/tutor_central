@@ -56,6 +56,9 @@ public struct WhoRow: Identifiable, Hashable, Sendable {
     public internal(set) var lastDays: LastDaysModel?
     /// The server's jobs (D106): the exam's job read for the page's rows, Try again asked of it; none in previews.
     @ObservationIgnored public var jobs: (any JobsRepository)?
+    /// How often the page reads itself again while the mock is being made after Try again.
+    @ObservationIgnored public var followEvery: Duration = .seconds(20)
+    @ObservationIgnored var following: Task<Void, Never>?
     private let now: @Sendable () -> Date
     let calendar: Calendar
     private let online: @Sendable () async -> Bool

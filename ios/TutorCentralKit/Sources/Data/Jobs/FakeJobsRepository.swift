@@ -102,6 +102,12 @@ import Foundation
             throw failure
         }
         examPrepRequests.append(item)
+        // As `request_exam_prep` does (0058): a live job is woken, its step marked.
+        if let job = examJobs[item], job.isLive {
+            examJobs[item] = ExamJobStatus(
+                state: job.state, at: job.at, mockFailed: job.mockFailed, notMade: job.notMade, woken: true
+            )
+        }
         return UUID()
     }
 

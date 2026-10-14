@@ -117,10 +117,11 @@ extension ItemStore {
         if mock != nil {
             return .ready
         }
-        if let job, job.mockFailed {
+        // A mock not made, asked again by the tutor and not yet taken up, is being made (R-app-1).
+        if let job, job.mockFailed, !(job.woken && job.isLive) {
             return .failed
         }
-        if let job, job.isLive, today >= mockDay {
+        if let job, job.isLive, job.woken || today >= mockDay {
             return .making
         }
         return .notMade
@@ -222,6 +223,21 @@ extension ItemStore {
             return
         }
         await load()
+        follow()
+    }
+
+    /// While the mock is being made the page reads itself again, a few times (R-app-1): the row moves on to Ready, or
+    /// back to Try again, without the tutor leaving the page.
+    func follow() {
+        following?.cancel()
+        let every = followEvery
+        following = Task { [weak self] in
+            for _ in 0 ..< 6 {
+                try? await Task.sleep(for: every)
+                guard let self, !Task.isCancelled, lastDays?.mockState == .making else { return }
+                await load()
+            }
+        }
     }
 
     /// "his", "her" or "their", by the one student's gender; "their" for several or none known.

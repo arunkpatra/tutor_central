@@ -71,19 +71,23 @@ public protocol JobsRepository: Sendable {
 }
 
 /// An exam's job as the page reads it (D106): live or not, the step it is at, whether its mock was not made (the
-/// page's Try again), and the students whose gap report it could not make (tried again at the next Save).
+/// page's Try again), the students whose gap report it could not make (tried again at the next Save), and whether the
+/// tutor asked it again.
 public struct ExamJobStatus: Hashable, Sendable {
     public let state: JobStatus.State
     /// "split", "wait", "mock", "marks"; nil before its first step.
     public let at: String?
     public let mockFailed: Bool
     public let notMade: Set<UUID>
+    /// Asked again by the tutor (Try again, a Save of marks: `request_exam_prep` marks the step), not yet taken up.
+    public let woken: Bool
 
-    public init(state: JobStatus.State, at: String?, mockFailed: Bool, notMade: Set<UUID> = []) {
+    public init(state: JobStatus.State, at: String?, mockFailed: Bool, notMade: Set<UUID> = [], woken: Bool = false) {
         self.state = state
         self.at = at
         self.mockFailed = mockFailed
         self.notMade = notMade
+        self.woken = woken
     }
 
     public var isLive: Bool {
