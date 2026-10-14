@@ -1,10 +1,10 @@
 [
   {
-    "id": "check-8-full",
+    "id": "check-8-mock-part-marks",
     "input": {
-      "image": "pages/dev-science-8.png",
-      "studentName": "Dev Kumar",
-      "scheme": "Science quiz\nQ1 (1 mark) Which is a chemical change: melting ice or rusting iron? → Rusting of iron\nQ2 (1 mark) Gas given off when zinc reacts with dilute hydrochloric acid? → Hydrogen\nQ3 (1 mark) Word equation for burning magnesium → magnesium + oxygen → magnesium oxide\nQ4 (2 marks) Balance H2 + O2 → H2O → 2H2 + O2 → 2H2O\nQ5 (2 marks) One combination reaction with its equation → CaO + H2O → Ca(OH)2\nQ6 (1 mark) What is a force? → A push or a pull\nQ7 (1 mark) Pressure in terms of force and area → Pressure = force ÷ area\nQ8 (1 mark) The force that opposes motion between surfaces → Friction",
+      "image": "pages/diya-science-8-mock.png",
+      "studentName": "Diya Pillai",
+      "scheme": "Class 8 Science unit test 3: Chemical reactions, Force and pressure\nSection A: Multiple choice (1 mark each)\nQ1 (1 mark) Rusting of an iron gate is an example of (a) a physical change only (b) a chemical change (c) a change that can be reversed by drying (d) no change at all. → (b) a chemical change, because a new substance, iron oxide, is formed.\nQ2 (1 mark) When a magnesium ribbon burns in air with a dazzling white flame, the white powder formed is (a) magnesium chloride (b) magnesium oxide (c) magnesium hydroxide (d) magnesium carbonate. → (b) magnesium oxide.\nQ3 (1 mark) Which of the following is a combination reaction? (a) $2H_2O \\to 2H_2 + O_2$ (b) $2H_2 + O_2 \\to 2H_2O$ (c) $Zn + CuSO_4 \\to ZnSO_4 + Cu$ (d) $CaCO_3 \\to CaO + CO_2$ → (b), because two substances combine to form a single product.\nQ4 (1 mark) The SI unit of pressure is (a) newton (b) pascal (c) joule (d) kilogram. → (b) pascal, which is one newton per square metre.\nQ5 (1 mark) Which of these forces can act on an object without touching it? (a) muscular force (b) force of friction (c) magnetic force (d) applied push. → (c) magnetic force.\nQ6 (1 mark) A force of 20 N acts on an area of 0.5 square metre. The pressure is (a) 10 Pa (b) 40 Pa (c) 20.5 Pa (d) 0.025 Pa. → (b) 40 Pa, since $P = \\frac{20}{0.5} = 40$.\nQ7 (1 mark) Zinc granules are dropped into dilute hydrochloric acid. The gas that bubbles out is (a) oxygen (b) carbon dioxide (c) hydrogen (d) nitrogen. → (c) hydrogen.\nQ8 (1 mark) As we climb to a higher altitude, the atmospheric pressure (a) increases (b) decreases (c) stays the same (d) becomes double. → (b) decreases, because the air above becomes thinner.\nSection B: Short answer (2 marks each)\nQ9 (2 marks) What is a chemical reaction? Give one example from daily life. → A chemical reaction is a process in which one or more substances change into new substances with different properties. Example: milk turning sour, or burning of cooking gas.\nQ10 (2 marks) Write the balanced chemical equation for the burning of magnesium in oxygen. → $2Mg + O_2 \\to 2MgO$\nQ11 (2 marks) Why does a sharp knife cut vegetables more easily than a blunt knife, when the same force is applied? → A sharp edge has a very small area of contact, so the same force gives a larger pressure. A blunt edge has a larger area, so the pressure is less.\nQ12 (2 marks) Name any two effects that a force can have on an object, with one example each. → A force can change the speed of an object (a kicked football starts moving) and can change its shape (pressing dough flattens it). It can also change direction of motion or the state of rest.\nQ13 (2 marks) A teaspoon of baking soda is added to vinegar in a glass. State two observations and say why this is a chemical change. → Bubbles of gas (carbon dioxide) are produced and the mixture fizzes. It is a chemical change because a new substance, a gas, is formed and the change cannot easily be reversed.\nQ14 (2 marks) A force of 150 N acts on a surface of area 0.03 square metre. Using $P = \\frac{F}{A}$, find the pressure. → $P = \\frac{150}{0.03} = 5000$ Pa.\nSection C: Short explanations (3 marks each)\nQ15 (3 marks) Distinguish between a decomposition reaction and a displacement reaction. Give one example of each. → In decomposition, one compound breaks into two or more simpler substances, e.g. $CaCO_3 \\to CaO + CO_2$. In displacement, a more reactive element takes the place of a less reactive element in a compound, e.g. $Zn + CuSO_4 \\to ZnSO_4 + Cu$.\nQ16 (3 marks) An iron nail is kept in blue copper sulphate solution for about thirty minutes. Describe what you will see and explain the reason. → The blue colour of the solution fades to pale green and a reddish-brown layer of copper deposits on the nail. Iron is more reactive than copper, so it displaces copper from copper sulphate and forms iron sulphate.\nQ17 (3 marks) Differentiate between contact forces and non-contact forces. Give two examples of each. → Contact forces act only when objects touch, e.g. muscular force and friction. Non-contact forces act from a distance, e.g. magnetic force and gravitational force.\nQ18 (3 marks) A boy weighing 400 N stands on both feet. The area of contact of each foot with the floor is 0.01 square metre. Find the pressure he exerts on the floor. What happens to the pressure when he lifts one foot? → Total area is 0.02 square metre, so $P = \\frac{400}{0.02} = 20000$ Pa. When he lifts one foot, the area halves and the pressure doubles to 40000 Pa.\nSection D: Long answer (4 marks each)\nQ19 (4 marks) Zinc reacts with dilute hydrochloric acid to give zinc chloride and hydrogen. Write the balanced equation, name the type of reaction and state two observations you would make during the reaction. → $Zn + 2HCl \\to ZnCl_2 + H_2$. It is a displacement reaction, as zinc displaces hydrogen from the acid. Observations: bubbles of hydrogen gas are released, the zinc granules slowly dissolve, and the test tube becomes slightly warm.\nQ20 (4 marks) (a) Why is the wall of a dam built thicker at the bottom than at the top? (b) A water tank has a rectangular base 2 m by 1.5 m and the water exerts a force of 6000 N on the base. Find the pressure on the base. → (a) Pressure of water increases with depth, so the lower part must be thicker to withstand greater pressure. (b) Area is 3 square metre, so $P = \\frac{6000}{3} = 2000$ Pa.",
       "schemeQuestions": [
         {
           "number": 1,
@@ -20,11 +20,11 @@
         },
         {
           "number": 4,
-          "marks": 2
+          "marks": 1
         },
         {
           "number": 5,
-          "marks": 2
+          "marks": 1
         },
         {
           "number": 6,
@@ -37,6 +37,54 @@
         {
           "number": 8,
           "marks": 1
+        },
+        {
+          "number": 9,
+          "marks": 2
+        },
+        {
+          "number": 10,
+          "marks": 2
+        },
+        {
+          "number": 11,
+          "marks": 2
+        },
+        {
+          "number": 12,
+          "marks": 2
+        },
+        {
+          "number": 13,
+          "marks": 2
+        },
+        {
+          "number": 14,
+          "marks": 2
+        },
+        {
+          "number": 15,
+          "marks": 3
+        },
+        {
+          "number": 16,
+          "marks": 3
+        },
+        {
+          "number": 17,
+          "marks": 3
+        },
+        {
+          "number": 18,
+          "marks": 3
+        },
+        {
+          "number": 19,
+          "marks": 4
+        },
+        {
+          "number": 20,
+          "marks": 4
         }
       ]
     },

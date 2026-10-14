@@ -31,6 +31,6 @@ export const scanRegister: Kind<ScanRegisterAgentInput, ScanOutput> = {
   keep: (parsed) => ({ rows: parsed.rows.map((row) => ({ ...row, phone: normalisePhone(row.phone) })) }),
   rubric: rubric([
     "Every row of the register that is a person, in the order on the page, none twice; no heading, total, date or blank row.",
-    "Each name as written, capitalised word by word; a phone read from the page and kept as +91 and its ten digits, or none when there is none or it cannot be read; a fee in whole rupees, or none.",
+    "Each name as written, capitalised word by word; a phone's digits as read from the page, spaces as written (the app keeps it as +91 and the ten digits), or none when there is none or it cannot be read; a fee in whole rupees, or none.",
   ]),
 };

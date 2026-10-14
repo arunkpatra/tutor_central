@@ -5,7 +5,7 @@ import { ScanOutput } from "../schemas.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "4";
+export const VERSION = "5";
 
 /** One photographed page of a paper register read into rows. Phones and fees as written; the API normalises. */
 export function request(image: DecodedImage): ClaudeRequest<ScanOutput> {

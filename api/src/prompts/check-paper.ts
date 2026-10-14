@@ -6,7 +6,7 @@ import { CheckOutput, MockOutput, PaperOutput, QuestionSetOutput } from "../sche
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 /** A photographed answer sheet marked against the scheme: a suggested mark and a note for every question. */
 export function request(pages: DecodedImage[], scheme: string, studentName: string): ClaudeRequest<CheckOutput> {
