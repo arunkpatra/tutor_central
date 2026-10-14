@@ -101,15 +101,16 @@ test("a personal kind without the parent's consent comes back failed student_con
   expect(claude.requests).toHaveLength(0);
 });
 
-test("an empty answer is failed refused with its tokens recorded", async () => {
+test("a mock whose marks do not sum is repaired once, then refused with its tokens recorded (on its agent, Phase 21)", async () => {
   const db = fakeDb();
-  // The sample mock's marks do not sum to 99: an unfit mock, refused.
+  // The sample mock's marks do not sum to 99, repair or not.
   const claude = fakeClaude({ answer: SAMPLE.mock });
   const odd = MakeInput.parse({ centreId, ...bodies.mock, pattern: { marks: 99, durationMinutes: 40 } });
-  const out = await recordedCall(ctx(db, claude), { centre: centreId, input: {}, job: "job-1", step: "make:4", spec: makeAgent(odd) });
-  expect(out).toMatchObject({ kind: "failed", reason: "refused" });
-  expect(db.finished[0]).toMatchObject({ status: "failed", errorReason: "refused" });
-  expect((db.finished[0] as { tokensIn: number }).tokensIn).toBeGreaterThan(0);
+  const out = await recordedCall(ctx(db, claude), { centre: centreId, input: odd, job: "job-1", step: "make:4", spec: makeAgent(odd) });
+  expect(out).toMatchObject({ kind: "failed", reason: "check:marks" });
+  const draft = db.rows.find((r) => r.agentStep === "draft");
+  expect(draft?.finish).toMatchObject({ status: "failed", errorReason: "check:marks" });
+  expect(draft?.finish?.tokensIn ?? 0).toBeGreaterThan(0);
 });
 
 test("a job's agent has 170 s on the job's clock, so a slow draft still gets its repair (the review's finding 1)", async () => {

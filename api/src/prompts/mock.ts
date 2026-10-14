@@ -4,7 +4,7 @@ import { type MockInput, MockOutput } from "../schemas.js";
 import { VOICE, againWords, blocks, LIMITS, MATHS, PROOF } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "4";
+export const VERSION = "5";
 
 /** A mock two days before a school test (P10-Mock): the school's pattern (the board's blueprint, or the app's default by
  *  class), two to six skills across the paper with each question naming one (the gap report tallies by skill, U45), a

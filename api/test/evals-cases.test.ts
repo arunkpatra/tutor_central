@@ -13,7 +13,7 @@ const BANNED = [/\+91\s?\d/, /\b\d{10}\b/, /[\w.+-]+@[\w-]+\.\w+/];
 test("every kind on its agent has a golden set of five cases, and no other set exists", () => {
   expect(kindsOnDisk()).toEqual([...EVAL_KINDS].sort());
   for (const kind of EVAL_KINDS) expect({ kind, cases: loadCases([kind]).length }).toEqual({ kind, cases: 5 });
-  expect(new Set(loadCases().map((c) => c.id)).size).toBe(65);
+  expect(new Set(loadCases().map((c) => c.id)).size).toBe(EVAL_KINDS.length * 5);
 });
 
 // The seed's students and parents (supabase/seed.sql): no real name in a set (D55, D74).

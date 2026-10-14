@@ -234,7 +234,8 @@ test("make mock answers the paper on Sonnet with no student, and refuses one who
   const unfit = await post(app(fakeClaude({ answer: short }), db), "/ai/make", mock);
   expect(unfit.status).toBe(422);
   expect(await unfit.json()).toEqual({ error: "Couldn't set a mock for these portions. The plan goes on without it." });
-  expect(db.finished[1]).toMatchObject({ status: "failed" });
+  // On its agent (Phase 21) the short mock is repaired once, then refused: its draft finished failed by the check.
+  expect(db.rows.filter((r) => r.agentStep === "draft").at(-1)?.finish).toMatchObject({ status: "failed", errorReason: "check:marks" });
 });
 
 test("make gap_report and test_tomorrow are personal: the student's consent is asked and recorded, and a refusal is 403", async () => {
@@ -249,7 +250,8 @@ test("make gap_report and test_tomorrow are personal: the student's consent is a
   const sent = await post(app(fakeClaude({ answer: SAMPLE.test_tomorrow }), db), "/ai/make", message);
   expect(sent.status).toBe(200);
   expect(((await sent.json()) as { result: { english: string } }).result.english).toContain("Dev");
-  expect(db.started[1]).toMatchObject({ kind: "test_tomorrow", student: centreId, model: "claude-haiku-5-5" });
+  // Each on its agent: a draft and its check; the second draft is the message's.
+  expect((db.started as { agentStep?: string }[]).filter((r) => r.agentStep === "draft")[1]).toMatchObject({ kind: "test_tomorrow", student: centreId, model: "claude-haiku-5-5" });
 });
 
 test("AI_MODEL_TEST_TOMORROW reaches the next call and its record (D67)", async () => {

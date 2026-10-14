@@ -4,10 +4,10 @@ import type { ClaudeClient, ClaudeRequest } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
 import { type DecodedImage, decodeImage } from "../images.js";
-import { request as checkRequest, schemeText } from "../prompts/check-paper.js";
+import { schemeQuestions, schemeText } from "../prompts/check-paper.js";
 import { request as homeworkRequest } from "../prompts/homework.js";
 import { request as paperRequest } from "../prompts/paper.js";
-import { parseSchool } from "../agents/kinds/index.js";
+import { checkPaper, parseSchool } from "../agents/kinds/index.js";
 import { request as noteRequest } from "../prompts/progress-note.js";
 import { normalisePhone, request as scanRequest } from "../prompts/scan-register.js";
 import { request as worksheetRequest } from "../prompts/worksheet.js";
@@ -54,16 +54,20 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     }
     const { scheme, studentName, studentId } = body.value;
     let text: string | null = scheme.kind === "typed" ? scheme.text : null;
+    // A stored paper's or mock's questions and marks hold the marking's free check (Phase 21); a typed scheme has none.
+    let questions: { number: number; marks: number }[] = [];
     if (scheme.kind === "paper") {
       const stored = await deps.db.generation(c.get("token"), scheme.generationId);
       text = stored?.output ? schemeText(safeJSON(stored.output), stored.kind) : null;
       if (!text) return answer(c, errors.badImage("That paper is no longer here. Type the scheme instead."));
+      questions = stored?.output ? schemeQuestions(safeJSON(stored.output), stored.kind) : [];
     }
     if (scheme.kind === "mock") {
       // A mock's key is its generation's output, the one table the API reads (plan/phase-13-plan.md decision 13).
       const stored = await deps.db.generation(c.get("token"), scheme.generationId);
       text = stored?.kind === "mock" && stored.output ? schemeText(safeJSON(stored.output), "mock") : null;
       if (!text) return answer(c, errors.badImage("That mock is no longer here. Type the scheme instead."));
+      questions = stored?.output ? schemeQuestions(safeJSON(stored.output), "mock") : [];
     }
     const input = {
       kind: "check_paper",
@@ -73,8 +77,7 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
       studentName,
     };
     // A paper marked for a named student (a mock) needs that student's consent (D62, migration 0021).
-    const request = checkRequest(pages, text ?? "", studentName);
-    return runCall(c, deps, body.centre, { kind: "check_paper", input, request, student: studentId, studentName });
+    return run(c, deps, body.centre, checkPaper, { pages, scheme: text ?? "", schemeQuestions: questions, studentName, studentId }, input);
   });
 
   routes.post("/parse-school", async (c) => {

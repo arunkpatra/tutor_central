@@ -1,0 +1,156 @@
+[
+  {
+    "id": "check-8-full",
+    "input": {
+      "image": "pages/dev-science-8.png",
+      "studentName": "Dev Kumar",
+      "scheme": "Science quiz\nQ1 (1 mark) Which is a chemical change: melting ice or rusting iron? → Rusting of iron\nQ2 (1 mark) Gas given off when zinc reacts with dilute hydrochloric acid? → Hydrogen\nQ3 (1 mark) Word equation for burning magnesium → magnesium + oxygen → magnesium oxide\nQ4 (2 marks) Balance H2 + O2 → H2O → 2H2 + O2 → 2H2O\nQ5 (2 marks) One combination reaction with its equation → CaO + H2O → Ca(OH)2\nQ6 (1 mark) What is a force? → A push or a pull\nQ7 (1 mark) Pressure in terms of force and area → Pressure = force ÷ area\nQ8 (1 mark) The force that opposes motion between surfaces → Friction",
+      "schemeQuestions": [
+        {
+          "number": 1,
+          "marks": 1
+        },
+        {
+          "number": 2,
+          "marks": 1
+        },
+        {
+          "number": 3,
+          "marks": 1
+        },
+        {
+          "number": 4,
+          "marks": 2
+        },
+        {
+          "number": 5,
+          "marks": 2
+        },
+        {
+          "number": 6,
+          "marks": 1
+        },
+        {
+          "number": 7,
+          "marks": 1
+        },
+        {
+          "number": 8,
+          "marks": 1
+        }
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "check-5-two-unattempted",
+    "input": {
+      "image": "pages/riya-maths-5.png",
+      "studentName": "Riya Sharma",
+      "scheme": "Maths test\nQ1 (1 mark) Write three quarters as a fraction → 3/4\nQ2 (1 mark) 4 × 3 → 12\nQ3 (2 marks) Half of 18 → 9\nQ4 (2 marks) 25 + 37 → 62\nQ5 (2 marks) A quarter of 1 kg in grams → 250 g\nQ6 (2 marks) 100 − 45 → 55",
+      "schemeQuestions": [
+        {
+          "number": 1,
+          "marks": 1
+        },
+        {
+          "number": 2,
+          "marks": 1
+        },
+        {
+          "number": 3,
+          "marks": 2
+        },
+        {
+          "number": 4,
+          "marks": 2
+        },
+        {
+          "number": 5,
+          "marks": 2
+        },
+        {
+          "number": 6,
+          "marks": 2
+        }
+      ]
+    },
+    "expect": {
+      "contains": [
+        "Not attempted"
+      ]
+    }
+  },
+  {
+    "id": "check-10-working",
+    "input": {
+      "image": "pages/hemanth-maths-10.png",
+      "studentName": "Hemanth Reddy",
+      "scheme": "Maths unit test 2\nQ1 (2 marks) Nature of the roots of x² − 3x + 2 = 0 → Two distinct real roots (b² − 4ac = 1)\nQ2 (2 marks) Solve x² − 5x + 6 = 0 → x = 2 or 3\nQ3 (2 marks) The 10th term of 3, 7, 11, … → 39\nQ4 (3 marks) Sum of the first 10 terms of 3, 7, 11, … → 210\nQ5 (3 marks) Solve 2x + 3 = 15 → x = 6",
+      "schemeQuestions": [
+        {
+          "number": 1,
+          "marks": 2
+        },
+        {
+          "number": 2,
+          "marks": 2
+        },
+        {
+          "number": 3,
+          "marks": 2
+        },
+        {
+          "number": 4,
+          "marks": 3
+        },
+        {
+          "number": 5,
+          "marks": 3
+        }
+      ]
+    },
+    "expect": {}
+  },
+  {
+    "id": "check-8-typed",
+    "input": {
+      "image": "pages/meher-english-8.png",
+      "studentName": "Meher Shah",
+      "scheme": "1. Who sold wisdom in the story? (2) — the boy, for money\n2. Change to reported speech: She said, \"I am tired.\" (2) — She said that she was tired.\n3. Use the past perfect: They went home; it rained. (2) — They had gone home before it rained.\n4. Two words with a negative prefix (2) — e.g. unhappy, impossible",
+      "schemeQuestions": []
+    },
+    "expect": {}
+  },
+  {
+    "id": "check-8-mostly-wrong",
+    "input": {
+      "image": "pages/nikhil-science-8.png",
+      "studentName": "Nikhil Das",
+      "scheme": "Science quiz\nQ1 (1 mark) Which is a chemical change: melting ice or rusting iron? → Rusting of iron\nQ2 (1 mark) Gas given off when zinc reacts with dilute hydrochloric acid? → Hydrogen\nQ3 (1 mark) Word equation for iron rusting → iron + oxygen + water → iron oxide\nQ4 (2 marks) Balance Fe + O2 → Fe2O3 → 4Fe + 3O2 → 2Fe2O3\nQ5 (1 mark) The force we use to lift a bag → Muscular force",
+      "schemeQuestions": [
+        {
+          "number": 1,
+          "marks": 1
+        },
+        {
+          "number": 2,
+          "marks": 1
+        },
+        {
+          "number": 3,
+          "marks": 1
+        },
+        {
+          "number": 4,
+          "marks": 2
+        },
+        {
+          "number": 5,
+          "marks": 1
+        }
+      ]
+    },
+    "expect": {}
+  }
+]

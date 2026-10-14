@@ -452,6 +452,14 @@ export const ReadMarksOutput = z.object({
     .max(12),
 });
 export type ReadMarksOutput = z.infer<typeof ReadMarksOutput>;
+/** What read-marks' draft may say (Phase 21): a date as written, which its agent holds to ISO as a finding and repairs
+ *  once, rather than refusing the answer unfit; what is kept is `ReadMarksOutput`. */
+export const ReadMarksDraftOutput = z.object({
+  marks: z
+    .array(z.object({ subject: Subject, test: z.string().min(1).max(120), date: z.string().max(40).nullable(), score: z.number().min(0), max: z.number().min(1) }))
+    .max(12),
+});
+export type ReadMarksDraftOutput = z.infer<typeof ReadMarksDraftOutput>;
 
 
 /** POST /ai/parse-textbook: a contents page, with the class and subject it is for. */

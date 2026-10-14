@@ -1,0 +1,2 @@
+- Each row is one subject's test as the page prints it: the subject, the test's name, the score and the maximum as printed; nothing is invented.
+- A date only when the page prints one, as YYYY-MM-DD; a row the page does not let you read is left out.

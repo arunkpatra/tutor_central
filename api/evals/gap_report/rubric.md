@@ -1,0 +1,3 @@
+- The summary is one sentence on what the marked mock showed, from the tallies given; nothing the tallies do not say.
+- One line per day left, the weakest skills first, each something a tutor does in one class (a worked example, a short set, the key read together).
+- Sentence case, no exclamation marks; a day's title is short.

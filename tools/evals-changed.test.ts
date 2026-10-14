@@ -21,7 +21,8 @@ test("evals-changed names no kind for a web change", () => {
 test("a rubric or a case names its kind; a prompt of a kind not on its agent names none", () => {
   expect(kindsChanged(["api/evals/check/rubric.md"])).toEqual(["check"]);
   expect(kindsChanged(["api/evals/parse_textbook/pages/maths-5.png"])).toEqual(["parse_textbook"]);
-  expect(kindsChanged(["api/src/prompts/mock.ts"])).toEqual([]);
+  expect(kindsChanged(["api/src/prompts/paper.ts"])).toEqual([]);
+  expect(kindsChanged(["api/src/prompts/mock.ts"])).toEqual(["mock"]);
 });
 
 test("the maths free check and the nightly's runner name every kind (the review's finding 5)", () => {
