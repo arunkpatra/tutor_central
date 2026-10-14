@@ -111,6 +111,8 @@ public struct NoteContext {
     var setAsideDraft: UUID?
     /// The tutor writes this week's note themselves in place of a set-aside one (Write it myself).
     public internal(set) var writingOwn = false
+    /// The generations (or the set-aside draft) whose sent text is kept as feedback already: once each (R-app-2).
+    @ObservationIgnored var feedbackKept: Set<UUID> = []
     /// Where an edit, a reason or the tutor's own note is kept as feedback (D107); none in previews.
     @ObservationIgnored public var feedback: (any FeedbackRecorder)?
     let studentID: UUID

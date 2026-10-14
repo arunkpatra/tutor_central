@@ -153,12 +153,14 @@ extension NoteStore {
         let sent = message.trimmingCharacters(in: .whitespacesAndNewlines)
         let centre = context.workspace.centre.id
         if writingOwn, let draft = setAsideDraft {
+            // Once a note (R-app-2): a second Send of the same note keeps nothing more.
+            guard feedbackKept.insert(draft).inserted else { return }
             await ArtefactFeedback.keep(.replace(draft, with: .text(sent)), recorder: feedback, centre: centre)
             return
         }
         guard let generation = content?.generationID ?? kept?.generationID,
               let draft = content?.message.trimmingCharacters(in: .whitespacesAndNewlines),
-              draft != sent else { return }
+              draft != sent, feedbackKept.insert(generation).inserted else { return }
         await ArtefactFeedback.keep(.edit(generation, sent: sent), recorder: feedback, centre: centre)
     }
 
@@ -186,6 +188,9 @@ extension NoteStore {
 
     private func show(_ artefact: Artefact) {
         guard case let .note(content) = artefact.content else { return }
+        // A note shown is the writer's, not the tutor's own (R-app-3).
+        writingOwn = false
+        setAsideDraft = nil
         kept = artefact
         self.content = content
         isLadder = artefact.kind == .canDo
