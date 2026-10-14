@@ -132,3 +132,10 @@ test("a weekday's set runs the nightly kinds; every kind is in one set or the ot
   expect([...kinds].sort()).toEqual([...NIGHTLY_KINDS].sort());
   expect(loadCases(TAP_KINDS).some((x) => asked.has(x.id))).toBe(false);
 });
+
+test("every row names the nightly's job, so the gate knows a parent's-message kind's case is the platform's (hand run 11)", async () => {
+  const c = ctx();
+  await drain(evalRun({ smokeCentre: SMOKE }), c, { day: "2026-10-20", kinds: ["can_do"] });
+  expect(c.db.started.length).toBeGreaterThan(0);
+  expect(c.db.started.every((s) => (s as { job?: string }).job === "eval-1")).toBe(true);
+});
