@@ -152,10 +152,13 @@ test("a long job still making progress is not stuck; one with no step for over t
 });
 
 test("the hour's requests are the API's answers, not the worker's ticks (R-db-2)", async () => {
-  const before = (await svc.rpc("alert_facts", { p_now: new Date().toISOString() })).data as { requests_hour: { total: number; errors: number } };
+  // A second ahead: the rows' times carry microseconds and the runner's clock milliseconds, so an hour ending at the
+  // runner's "now" could end before the row just written (CI run 38535228062).
+  const at = () => new Date(Date.now() + 1_000).toISOString();
+  const before = (await svc.rpc("alert_facts", { p_now: at() })).data as { requests_hour: { total: number; errors: number } };
   const tick = () => ({ request_id: crypto.randomUUID(), route: "/jobs/tick", method: "GET", status: 200, latency_ms: 1 });
   await svc.from("api_requests").insert([tick(), tick(), tick(), { request_id: crypto.randomUUID(), route: "/ai/make", method: "POST", status: 502, latency_ms: 1, reason: "timeout" }]);
-  const after = (await svc.rpc("alert_facts", { p_now: new Date().toISOString() })).data as { requests_hour: { total: number; errors: number } };
+  const after = (await svc.rpc("alert_facts", { p_now: at() })).data as { requests_hour: { total: number; errors: number } };
   expect(after.requests_hour.total - before.requests_hour.total).toBe(1);
   expect(after.requests_hour.errors - before.requests_hour.errors).toBe(1);
 });
