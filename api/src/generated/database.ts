@@ -1211,7 +1211,7 @@ isOneToOne: false
 { Args: { "p_date": string,"p_now"?: string,"p_window": number }; Returns: boolean
                            },
 "exam_prep_enqueue":
-{ Args: { "p_centre": string,"p_item": string }; Returns: string
+{ Args: { "p_centre": string,"p_item": string,"p_now"?: string }; Returns: string
                            },
 "extend_lease":
 { Args: { "p_job": string,"p_lease_seconds"?: number,"p_worker": string }; Returns: boolean
