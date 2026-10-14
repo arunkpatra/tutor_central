@@ -68,7 +68,12 @@ to D110 in the README, eight review-focus lines with their tests, the file struc
 One, with its recommendation: about ₹550 of real calls for the build, and the nightly as the plan's decision 8 (the job
 kinds nightly, the tap kinds on Sundays, about ₹1,700 a month) rather than every kind every night (about ₹2,700).
 
+## The owner's answer
+
+"Boards approved, plan approved, ₹550 and decision 8 approved" (2026-10-14): the boards, the plan, the build's budget and the
+nightly's cadence, all at once.
+
 ## What is next
 
-The owner's approval of the boards and the plan, and his answer; then session 43: Phase 21's build on Opus 5.5 from
+Session 43: Phase 21's build on Opus 5.5 from
 `plan/resume/041-phase-21-build.md`.

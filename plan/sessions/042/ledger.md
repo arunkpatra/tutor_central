@@ -18,3 +18,4 @@ Ruling: V1's PDFs move to the server under D90's last half with no new number; t
 Ruling: the check step's price (a Haiku draft's Sonnet check three to ten times the draft) is left to Phase 22's control page; the report shows it by step — cost if wrong: about ₹0.30 a check until then.
 Ruling: no new secret, no new dependency, no new plan this phase — cost if wrong: none.
 The owner's question (once, with the recommendation): about ₹550 of real calls for the build and the nightly as decision 8 (the job kinds nightly, the tap kinds on Sundays, about ₹1,700 a month) over every kind nightly (about ₹2,700). Awaited at the close.
+Owner (2026-10-14): "Boards approved, plan approved, ₹550 and decision 8 approved" — the 18 boards, phase-21-plan.md, the build's real-call budget of about ₹550 and the nightly's cadence (decision 8) approved; the mirror marked approved; the build is resume 041's on Opus 5.5.

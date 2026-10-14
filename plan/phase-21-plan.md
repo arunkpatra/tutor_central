@@ -6,7 +6,8 @@
 Written 2026-10-14 (session 42, Fable 5.1) from `phase-21-ai-quality-parents-and-exams.md`, `docs/spec-v3.md` section 4 (the
 agents, the orchestrator, the cost levers, feedback, the anchor sets), Phase 20's "As built" and ledger (`plan/sessions/041/`),
 the 18 boards of row 29 (`docs/design/mockups/P21-*`, "Phase 21 boards" in `docs/design/information-architecture.md`), the
-first production nightly (job `a01907fc…`, D105) and the code as it is. Awaiting the owner's approval with the boards. The
+first production nightly (job `a01907fc…`, D105) and the code as it is. Approved by the owner 2026-10-14 ("Boards approved, plan approved, ₹550 and decision 8 approved") with
+the boards, the build's budget of about ₹550 and the nightly's cadence of decision 8. The
 build runs on Opus 5.5 from `resume/041-phase-21-build.md`, inline, task by task, with one ledger
 (`plan/sessions/043/ledger.md`) as sessions 22 to 41 kept.
 
@@ -60,7 +61,7 @@ D73, D74, D76, D79, D81, D83, D84, D86, D87, D90, D93, D99 to D105; the boards o
 
 ## Decisions this plan takes
 
-The boards were shown to the owner with this plan (session 42). Everything below was mine to decide and is stated so it can
+The boards were shown to the owner with this plan (session 42) and approved with it; the budget and decision 8 too. Everything below was mine to decide and is stated so it can
 be pushed back on. D106 to D110 go into `plan/README.md` with the plan's approval, as D99 to D102 did.
 
 1. **The nightly's nine failures, each (D105).** A fault fixed by a free `verify` rule where it can be computed, else in the

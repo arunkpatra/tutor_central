@@ -37,8 +37,8 @@ anything:
 - `bun evals` costs about ₹10 a kind; a pull request that touches a shared file (`schemas.ts`, `shared.ts`, `agent.ts`,
   `check.ts`, `provider.ts`) runs every kind with a golden set in CI; the plan batches shared-file changes into PR 1 and
   says where a second is allowed. The nightly is a measure, not a gate (D103).
-- The owner's budget answer (about ₹550 for the build, and the nightly's cadence: decision 8 or every kind nightly) is in
-  `plan/sessions/042/owner-messages.md` if he gave it; if not, ask it first, once, with the plan's recommendation.
+- The owner approved the boards, the plan, about ₹550 of real calls for the build and the nightly's cadence as the plan's
+  decision 8 on 2026-10-14 (`plan/sessions/042/owner-messages.md`): nothing to ask before Task 1.
 - The Supabase, Vercel and GitHub CLIs are signed in on the owner's Mac: production's setup is yours (D87). Real Claude calls
   are allowed within the budget; the ledger sums the spend from the runs' tables after every paid run.
 - The native speakers for the Hindi and Kannada anchors are the owner's to arrange (Task 3's guide); the build does not wait
@@ -47,7 +47,7 @@ anything:
 **Your work:**
 
 1. **Reality.** `git fetch`, `git status`, `gh pr list`; `bun check` green; open `plan/sessions/043/ledger.md` with the
-   setup line. Ask the owner the budget question if it is not answered.
+   setup line.
 2. **The tasks, in the plan's order,** each test first, RED shown, then GREEN with the full `bun check` before every push;
    one pull request per task as the table says, merged on local green (D86); every PR that changes what is seen carries
    its pictures by `bun pr-shots` (D7) beside its board; a ruling in the ledger with its cost if wrong whenever the plan is

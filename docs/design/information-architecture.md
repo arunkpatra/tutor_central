@@ -1564,7 +1564,7 @@ light twins (`-Light`), which are in this mirror alone: the canvas holds its 512
 retire). Drawn by session 42 from the approved
 sources (P10-Brief, P10-Mock, P10-Note, P10-Today-NoteDay, P10-School-Exam-LastDays, P10-GapReport, P19-Cost, P20-PDF-Sheet) by
 substitution, so each keeps its parent's grammar. Content is illustrative (Dev's week in Hindi; the Science unit test 3 on Friday
-16 October; the cost page's October). Awaiting the owner's approval.
+16 October; the cost page's October). Approved by the owner 2026-10-14 ("Boards approved, plan approved, ₹550 and decision 8 approved").
 
 | Board | Source |
 |---|---|
