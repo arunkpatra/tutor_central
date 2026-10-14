@@ -96,11 +96,23 @@ export async function draftOn<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: 
   return settleOn(run, draftId, answer, fallbackModel, { batched: false });
 }
 
-/** A batch's draft settled on its row (D108): the free checks with the batch's check verdict (asked live when the batch's
- *  check never came: `undefined`), a repair made live, the draft's row finished last at the batch's half price. The cost
- *  is the draft's half and the live calls'; the batch's check row is the caller's. */
-export async function settleBatched<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: I, draftId: string, answer: ClaudeAnswer<T>, verdict: CheckVerdict | null | undefined): Promise<AgentOutcome<T>> {
-  return settleOn(runOf(ctx, spec, input), draftId, answer, null, { batched: true, verdict });
+/** What a batch answered for a repair (D111): the repaired draft and its check's verdict (none: asked live). Its rows are
+ *  the caller's, finished at half. */
+export type BatchedRepair<T> = { answer: ClaudeAnswer<T>; verdict: CheckVerdict | null | undefined };
+
+/** A batch's draft settled on its row (D108, D111): the free checks with the batch's check verdict (asked live when the
+ *  batch's check never came: `undefined`), the batch's repair and its verdict (made live when none came), the draft's row
+ *  finished last at the batch's half price. The cost is the draft's half and the live calls'; the batch's check and
+ *  repair rows are the caller's. */
+export async function settleBatched<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: I, draftId: string, answer: ClaudeAnswer<T>, verdict: CheckVerdict | null | undefined, repair?: BatchedRepair<T>): Promise<AgentOutcome<T>> {
+  return settleOn(runOf(ctx, spec, input), draftId, answer, null, { batched: true, verdict, repair });
+}
+
+/** The findings the first check leaves on a batch's draft (D111): its free checks and the verdict's; none for a draft
+ *  that failed or holds nothing. The plan's batch sends a repair for each draft with some. */
+export function batchFindings<I, T>(spec: Kind<I, T>, input: I, answer: ClaudeAnswer<T>, verdict: CheckVerdict | null | undefined): Finding[] {
+  if (answer.kind !== "ok" || spec.empty?.(answer.parsed) || spec.rubric === undefined) return [];
+  return [...ownFindings(spec, input, answer.parsed), ...(verdict && !verdict.pass ? verdict.findings : [])];
 }
 
 /** What a run asks and how it calls: the request with the job's hour mark, the table's choice, the time left. */
@@ -137,7 +149,7 @@ function runOf<I, T>(ctx: AgentContext, spec: Kind<I, T>, input: I): Run<I, T> {
 
 /** A draft's answer to its end: refused when it failed or holds nothing; kept when the kind has no rubric or its checks
  *  find nothing; else one repair and the checks again. */
-async function settleOn<I, T>(run: Run<I, T>, draftId: string, answer: ClaudeAnswer<T>, fallbackModel: string | null, how: { batched: boolean; verdict?: CheckVerdict | null }): Promise<AgentOutcome<T>> {
+async function settleOn<I, T>(run: Run<I, T>, draftId: string, answer: ClaudeAnswer<T>, fallbackModel: string | null, how: { batched: boolean; verdict?: CheckVerdict | null; repair?: BatchedRepair<T> }): Promise<AgentOutcome<T>> {
   const { ctx, spec, input, asked, chosen, version, level, call, student } = run;
   const finishDraft = async (finish: Finish) => ctx.db.finish(ctx.token, draftId, how.batched ? halved(finish, answer) : finish);
   // A batch's draft was paid in the batch, at half (D101).
@@ -160,7 +172,8 @@ async function settleOn<I, T>(run: Run<I, T>, draftId: string, answer: ClaudeAns
   /** The free findings and the model's verdict on one answer, under the check's key (a batch's first verdict given). */
   const findingsOf = async (parsed: T, suffix: ":check" | ":repair:check"): Promise<Finding[]> => {
     const own = ownFindings(spec, input, parsed);
-    const verdict = suffix === ":check" && how.verdict !== undefined ? how.verdict : await check(ctx, spec, level, rubric, asked, parsed, draftId, suffix, version, call, student);
+    const given = suffix === ":check" ? how.verdict : how.repair?.verdict;
+    const verdict = given !== undefined ? given : await check(ctx, spec, level, rubric, asked, parsed, draftId, suffix, version, call, student);
     return [...own, ...(verdict && !verdict.pass ? verdict.findings : [])];
   };
   const refuse = async (findings: Finding[]) => {
@@ -176,19 +189,8 @@ async function settleOn<I, T>(run: Run<I, T>, draftId: string, answer: ClaudeAns
     await finishDraft(finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, kept));
     return { kind: "ok", id: draftId, parsed: kept, costPaise: cost(), repaired: false, replay: false };
   }
-  if (run.left() < REPAIR_ROOM_MS) return refuse(first);
-
-  const repairChoice = modelFor(spec.kind, "repair", level);
-  const repairAsked = repairRequest(asked, first);
-  let repairRow: { id: string };
-  try {
-    repairRow = await ctx.db.startCall(ctx.token, stepCall(ctx, spec.kind, repairChoice.model, draftId, ":repair", student));
-  } catch (e) {
-    log.error({ at: "agent", requestId: ctx.requestId, kind: spec.kind, step: "repair", error: e instanceof Error ? e : String(e) });
-    return refuse(first);
-  }
-  const repaired = await call(repairAsked, repairChoice.model, repairChoice.effort);
-  await ctx.db.finish(ctx.token, repairRow.id, finished(repaired, { ...repairAsked, model: repairChoice.model }, version, null, repaired.kind === "ok" ? repaired.parsed : null));
+  const repaired = how.repair ? how.repair.answer : await repairLive(run, draftId, first);
+  if (repaired === null) return refuse(first);
   if (repaired.kind !== "ok") return refuse(first);
   if (spec.empty?.(repaired.parsed)) {
     // A repair that leaves nothing (every item dropped) is refused in the kind's words, as an empty first draft is.
@@ -200,6 +202,25 @@ async function settleOn<I, T>(run: Run<I, T>, draftId: string, answer: ClaudeAns
   const kept = keep(repaired.parsed);
   await finishDraft(finished(draft, { ...asked, model: chosen.model }, version, fallbackModel, kept));
   return { kind: "ok", id: draftId, parsed: kept, costPaise: cost(), repaired: true, replay: false };
+}
+
+/** One repair made live under `<draft key>:repair`, its row finished; null when there is no room for it or its row could
+ *  not start. */
+async function repairLive<I, T>(run: Run<I, T>, draftId: string, findings: Finding[]): Promise<ClaudeAnswer<T> | null> {
+  const { ctx, spec, asked, version, level, call, student } = run;
+  if (run.left() < REPAIR_ROOM_MS) return null;
+  const repairChoice = modelFor(spec.kind, "repair", level);
+  const repairAsked = repairRequest(asked, findings);
+  let repairRow: { id: string };
+  try {
+    repairRow = await ctx.db.startCall(ctx.token, stepCall(ctx, spec.kind, repairChoice.model, draftId, ":repair", student));
+  } catch (e) {
+    log.error({ at: "agent", requestId: ctx.requestId, kind: spec.kind, step: "repair", error: e instanceof Error ? e : String(e) });
+    return null;
+  }
+  const repaired = await call(repairAsked, repairChoice.model, repairChoice.effort);
+  await ctx.db.finish(ctx.token, repairRow.id, finished(repaired, { ...repairAsked, model: repairChoice.model }, version, null, repaired.kind === "ok" ? repaired.parsed : null));
+  return repaired;
 }
 
 /** The free findings on a parsed answer: the kind's `verify`, and the maths for a kind that writes it (D102). */
