@@ -34,6 +34,7 @@ const CENTRE_TABLES = [
   "events",
   "consent_events",
   "reminder_settings",
+  "generation_feedback",
 ] as const;
 
 /** The platform's tables (D71, D77): written by the service role alone; a member reads their centre's rows, or none. */
@@ -217,7 +218,10 @@ test("rows of one centre are invisible to another user and to anonymous, in ever
     events: { kind: "tab_opened", screen: "today", at: new Date().toISOString() },
     consent_events: null,
     reminder_settings: {},
+    generation_feedback: null,
   };
+  // Feedback comes through its function alone (0057).
+  expect((await a.rpc("record_feedback", { p_centre: centreA, p_generation: generation.data, p_kind: "again", p_reason: "shorter", p_revised: null })).error).toBeNull();
   for (const [table, row] of Object.entries(inserts)) {
     if (row) expect((await a.from(table).insert({ centre_id: centreA, ...row })).error).toBeNull();
   }
