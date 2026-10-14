@@ -80,11 +80,19 @@ function repairItem(n: number, s: Spec, findings: Finding[]): BatchItem {
 
 const ordered = (rows: Record<string, unknown>) => Object.keys(rows).map(Number).sort((a, b) => a - b);
 
+/** A material draft's key: the batch, the day, its place and the request itself, so a plan asked again that day with the
+ *  same request (Make the plan again, the exam job after a gap report) replays its draft instead of paying again; the
+ *  keep's key stays the job's, so the new plan links what it replays (the review of Phase 21, R-api-1). */
+export function materialKey(m: Pick<Material, "draft">, n: number, body: unknown): string {
+  return `plan:${m.draft.classID}:${m.draft.date}:make:${n}:${sha256(JSON.stringify(body)).slice(0, 16)}`;
+}
+
 /** Every draft the batch can carry started and sent; the rest made live after it. */
 export async function submit(job: Job, ctx: StepContext, centre: string, m: Material): Promise<StepOutcome> {
   const deadline = batchDeadline(ctx.clock.now(), m.draft.date, m.record.classroom.start).toISOString();
-  // Asked close to the batch's start (Make the plan again before class): every request live, no batch.
-  if (Date.parse(deadline) - ctx.clock.now() < BATCH_ROOM_MS) {
+  // Asked close to the batch's start, or a replace (a tap: Make the plan again, or the exam job after a gap report):
+  // every request live, no batch (D108's taps stay live).
+  if (job.input.replace === true || Date.parse(deadline) - ctx.clock.now() < BATCH_ROOM_MS) {
     return { kind: "continue", name: "make:submit", step: { ...m, at: "make:live", queue: m.requests.map((_, i) => i), rows: {} } };
   }
   const rows: Record<string, string> = {};
@@ -98,7 +106,7 @@ export async function submit(job: Job, ctx: StepContext, centre: string, m: Mate
       continue;
     }
     try {
-      const started = await ctx.db.startCall("", { centre, kind: s.spec.kind, input: s.body, model: chosen.model, key: `${job.id}:make:${n}`, inputHash: sha256(JSON.stringify(s.body)), requestId: ctx.requestId, job: job.id, agentStep: "draft" });
+      const started = await ctx.db.startCall("", { centre, kind: s.spec.kind, input: s.body, model: chosen.model, key: materialKey(m, n, s.body), inputHash: sha256(JSON.stringify(s.body)), requestId: ctx.requestId, job: job.id, agentStep: "draft" });
       // Made before (the step taken again): the live path replays it by its key.
       if (started.replay && started.status === "ok") {
         live.push(n);
@@ -137,7 +145,7 @@ export async function wait(job: Job, ctx: StepContext, centre: string, step: Bat
   }
   const answer = (id: string) => answers.get(id) ?? { kind: "failed" as const, reason: "batch missing", latencyMs: 0 };
   const known: Answers = { drafts: { ...step.drafts }, verdicts: { ...step.verdicts }, repairs: { ...step.repairs }, rechecks: { ...step.rechecks }, paise: { ...step.paise } };
-  const agent = (n: number) => jobAgent(ctx, { centre, input: spec(n).body, job: job.id, step: `make:${n}` });
+  const agent = (n: number) => jobAgent(ctx, { centre, input: spec(n).body, job: job.id, step: `make:${n}`, key: materialKey(step, n, spec(n).body) });
   const version = (n: number, item: BatchItem) => `${spec(n).spec.kind}@${item.request.version}`;
   // Each answer of the phase: a check's verdict or a repair kept on its row, finished at half.
   for (const item of step.phase === "drafts" ? [] : items) {
@@ -225,7 +233,7 @@ export async function keepOne(job: Job, ctx: StepContext, source: PlanRecordSour
   const name = `make:keep:${n}`;
   const repaired = step.repairs?.[n];
   const outcome = await settleBatched(
-    jobAgent(ctx, { centre, input: s.body, job: job.id, step: `make:${n}` }),
+    jobAgent(ctx, { centre, input: s.body, job: job.id, step: `make:${n}`, key: materialKey(step, n, s.body) }),
     s.spec,
     s.body,
     row,
