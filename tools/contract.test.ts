@@ -64,7 +64,7 @@ test("stale names the files that differ, are missing, or are left over", async (
 	}
 });
 
-test("each shared case file is copied into DomainTests' Cases (Phase 18: the exam split and the note week; the reminders are the server's alone)", () => {
+test("each shared case file is copied into DomainTests' Cases (Phase 18: the exam split and the note week; Phase 21: the gap tallies; the reminders are the server's alone)", () => {
 	expect(caseCopies()).toEqual([
 		[
 			"tools/contract/plan-cases.json",
@@ -77,6 +77,10 @@ test("each shared case file is copied into DomainTests' Cases (Phase 18: the exa
 		[
 			"tools/contract/note-cases.json",
 			"ios/TutorCentralKit/Tests/DomainTests/Cases/note-cases.json",
+		],
+		[
+			"tools/contract/gap-cases.json",
+			"ios/TutorCentralKit/Tests/DomainTests/Cases/gap-cases.json",
 		],
 		[
 			"tools/contract/maths-cases.json",

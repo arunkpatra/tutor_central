@@ -5,6 +5,7 @@ import { fakeSender } from "../src/alerts/resend.js";
 import { alertsJob } from "../src/jobs/kinds/alerts.js";
 import { makeDb } from "../src/db.js";
 import { makeRecordSource } from "../src/jobs/record.js";
+import { makeExamSource } from "../src/jobs/exam-source.js";
 import { fakeClock } from "../src/jobs/db-fake.js";
 import { makeObserve } from "../src/observe.js";
 import { planJob } from "../src/jobs/kinds/plan.js";
@@ -335,5 +336,26 @@ test.skipIf(!up)("the PDF source reads an artefact's foot: the centre's name and
   } finally {
     await db.from("artefacts").delete().eq("centre_id", CENTRE).eq("title", "Foot");
     await db.from("plans").delete().eq("id", plan.id);
+  }
+});
+
+test.skipIf(!up)("the exam job's source reads the seed's exam by its centre, writes its split, and finds nothing in another centre (D106)", async () => {
+  const db = admin();
+  const exam = "66666666-6666-6666-6666-666666666661";
+  const source = makeExamSource(url as string, service as string);
+  const today = new Date(Date.now() + 5.5 * 3_600_000).toISOString().slice(0, 10);
+  const read = await source.read(CENTRE, exam, today);
+  expect(read?.item).toMatchObject({ id: exam, kind: "exam", title: "Science unit test 3" });
+  // The item reaches Vidya Niketan's class 8: every student it names is one.
+  expect(read?.students.length).toBeGreaterThan(0);
+  expect(read?.students.every((s) => s.classLevel === "8" && s.schoolID === "44444444-4444-4444-4444-444444444441")).toBe(true);
+  expect(read?.batches.length).toBeGreaterThan(0);
+  expect(await source.read("33333333-3333-3333-3333-333333333333", exam, today)).toBeNull();
+  const before = (await db.from("school_items").select("preparation").eq("id", exam).single()).data?.preparation;
+  try {
+    await source.writePreparation(CENTRE, exam, [{ day: today, kind: "revise", index: 1, title: "Chemical reactions", skills: [], skill_ids: [] }]);
+    expect((await db.from("school_items").select("preparation").eq("id", exam).single()).data?.preparation).toHaveLength(1);
+  } finally {
+    await db.from("school_items").update({ preparation: before ?? null }).eq("id", exam);
   }
 });
