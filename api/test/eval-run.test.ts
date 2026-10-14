@@ -7,6 +7,7 @@ import type { Job, StepContext, StepOutcome } from "../src/jobs/types.js";
 import { fakeModelSource } from "../src/models-db.js";
 import { installModelTable } from "../src/models.js";
 import { costPaise } from "../src/price.js";
+import { EVAL_KINDS, loadCases, NIGHTLY_KINDS, TAP_KINDS } from "../src/evals/cases.js";
 
 // The nightly evals (D101, plan decision 12): every case of every kind on, as Message Batches at half price, its calls
 // recorded under the Smoke centre with their steps; the result on the job.
@@ -119,4 +120,15 @@ test("a sheet band switched off skips its own cases; a kind switched off mid-run
   await off.refresh();
   const last = await handler.step(current, c2);
   expect(last.kind).toBe("done");
+});
+
+test("a weekday's set runs the nightly kinds; every kind is in one set or the other (Phase 21 decision 8)", async () => {
+  expect([...NIGHTLY_KINDS, ...TAP_KINDS].sort()).toEqual([...EVAL_KINDS].sort());
+  expect(NIGHTLY_KINDS.filter((k) => (TAP_KINDS as readonly string[]).includes(k))).toEqual([]);
+  const c = ctx();
+  await evalRun({ smokeCentre: SMOKE }).step(job({ day: "2026-10-20", set: "nightly" }), c);
+  const asked = new Set((c.claude.batches[0] ?? []).map((i) => i.customId.split("__")[0]));
+  const kinds = new Set(loadCases(NIGHTLY_KINDS).filter((x) => asked.has(x.id)).map((x) => x.kind));
+  expect([...kinds].sort()).toEqual([...NIGHTLY_KINDS].sort());
+  expect(loadCases(TAP_KINDS).some((x) => asked.has(x.id))).toBe(false);
 });

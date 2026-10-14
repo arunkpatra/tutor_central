@@ -1,7 +1,7 @@
 import type { BatchItem, ClaudeAnswer, ClaudeRequest } from "../../claude.js";
 import { DbFailure } from "../../db.js";
 import { batchId, type CaseScore, caseOfBatchId, checkItems, draftItem, outcomeOf, type Ready, ready, scoreCase, scoreKinds } from "../../evals/runner.js";
-import { EVAL_KINDS, loadCases } from "../../evals/cases.js";
+import { EVAL_KINDS, loadCases, NIGHTLY_KINDS } from "../../evals/cases.js";
 import { log } from "../../log.js";
 import { modelFor } from "../../models.js";
 import { sha256 } from "../../price.js";
@@ -33,6 +33,8 @@ export function evalRun(source: { smokeCentre: string }): JobHandler {
 }
 
 type Input = { day: string; kinds?: string[] };
+/** The job's input: its day; the kinds a hand run asks, else the weekday's set (`set: "nightly"`, decision 8), else every
+ *  kind (Sunday). */
 type Drafts = Record<string, { row: string; parsed: unknown; outcome: ReturnType<typeof outcomeOf>; paise: number }>;
 type Step =
   | { at: "submit" }
@@ -40,8 +42,12 @@ type Step =
   | { at: "checks"; batch: string; drafts: Drafts; rows: Record<string, string>; paused: string[]; notStarted?: number };
 
 const inputOf = (job: Job): Input => {
-  const raw = job.input as { day?: unknown; kinds?: unknown };
-  const kinds = Array.isArray(raw.kinds) ? raw.kinds.filter((k): k is string => (EVAL_KINDS as readonly string[]).includes(String(k))) : undefined;
+  const raw = job.input as { day?: unknown; kinds?: unknown; set?: unknown };
+  const kinds = Array.isArray(raw.kinds)
+    ? raw.kinds.filter((k): k is string => (EVAL_KINDS as readonly string[]).includes(String(k)))
+    : raw.set === "nightly"
+      ? [...NIGHTLY_KINDS]
+      : undefined;
   return { day: typeof raw.day === "string" ? raw.day : new Date().toISOString().slice(0, 10), kinds };
 };
 
