@@ -14,6 +14,10 @@ import Foundation
     public var planJobs: [UUID: JobStatus]
     /// The export job a read answers, by student.
     public var exportJobs: [UUID: JobStatus] = [:]
+    /// By exam item: its job (D106).
+    public var examJobs: [UUID: ExamJobStatus] = [:]
+    /// The items whose exam job was asked or woken, in order.
+    public private(set) var examPrepRequests: [UUID] = []
     /// What a request leaves for its batch: a live job, unless a test says otherwise.
     public var afterRequest: JobStatus.State = .queued
     /// The server's work for a plan request, for `bun shots`: the plan written and the job's state after it.
@@ -84,6 +88,21 @@ import Foundation
         let job = JobStatus(id: UUID(), state: afterRequest, createdAt: now())
         exportJobs[student] = job
         return job.id
+    }
+
+    public func examJob(centre _: UUID, item: UUID) async throws -> ExamJobStatus? {
+        if let failure {
+            throw failure
+        }
+        return examJobs[item]
+    }
+
+    public func requestExamPrep(centre _: UUID, item: UUID) async throws -> UUID {
+        if let failure {
+            throw failure
+        }
+        examPrepRequests.append(item)
+        return UUID()
     }
 
     public func cancel(centre _: UUID, job: UUID) async throws {

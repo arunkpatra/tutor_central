@@ -67,7 +67,9 @@ extension Fixtures {
             return FakeRecordRepository(marks: FakeRecordRepository.hemanthsMarks)
         }
         if lastDaysStates.contains(state) {
-            return FakeRecordRepository(marks: FakeRecordRepository.lastDaysMarks)
+            // No mock, no marks (P21-Exam-MockMaking, -MockFailed).
+            let marked = ![.examMockMaking, .examMockFailed].contains(state)
+            return FakeRecordRepository(marks: marked ? FakeRecordRepository.lastDaysMarks : [])
         }
         if noteDayStates.contains(state) {
             return FakeRecordRepository(checks: noteDayChecks, homework: [], marks: [])

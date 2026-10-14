@@ -124,6 +124,7 @@ extension RootView {
             schoolItems: deps.schoolItems
         )
         made.online = { [connectivity = deps.connectivity] in await connectivity.isOnline }
+        made.jobs = deps.jobs
         made.onWorkspaceChanged = { changed in applyWorkspace { $0.takingAIConsent(from: changed) } }
         made.onStudentChanged = { [shell] in
             shell.recordChanged += 1

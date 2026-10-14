@@ -36,6 +36,15 @@ public extension FakePlansRepository {
     }
 
     nonisolated static var lastDaysArtefacts: [Artefact] {
+        examArtefacts()
+    }
+
+    /// The exam's artefacts for the job's states (P21-Exam-*): the mock unless not made, Dev's report (used when the
+    /// exam's job used it), and Meher's used report.
+    nonisolated static func examArtefacts(
+        mock made: Bool = true, devReport: Bool = true, used: Bool = false, meherReport: Bool = false
+    ) -> [Artefact] {
+        guard made else { return [] }
         let at = { (hour: Int, minute: Int) in
             DayHeading.india.date(from: DateComponents(year: 2026, month: 10, day: 14, hour: hour, minute: minute))
                 ?? Date()
@@ -47,21 +56,35 @@ public extension FakePlansRepository {
             madeAt: at(16, 30), generationID: UUID(uuidString: "abababab-0000-0000-0013-000000000005"),
             schoolItemID: item
         )
-        let devMark = FakeRecordRepository.lastDaysMarks[0]
-        let report = GapReportContent(
-            summary: AISamples.gapSummary,
-            bySkill: GapTallies.bySkill(
-                CheckResult(questions: devMark.questions ?? [], summary: ""), mock: examMockContent
-            ),
-            days: AISamples.gapDays, usedAt: nil, score: devMark.score, max: devMark.max, schoolItemID: item
-        )
-        let gap = Artefact(
-            id: devGapReportID, kind: .gapReport, source: .made, title: "After the mock",
-            content: .gapReport(report), photoPath: nil, studentID: FakeStudentsRepository.dev, planID: nil,
-            regeneratedFrom: nil, madeAt: at(18, 50), generationID: nil, schoolItemID: item
-        )
-        return [mock, gap]
+        func report(_ id: UUID, _ index: Int, days: [GapReportContent.DayPlan], usedAt: Date?) -> Artefact {
+            let mark = FakeRecordRepository.lastDaysMarks[index]
+            let content = GapReportContent(
+                summary: AISamples.gapSummary,
+                bySkill: GapTallies.bySkill(
+                    CheckResult(questions: mark.questions ?? [], summary: ""), mock: examMockContent
+                ),
+                days: days, usedAt: usedAt, score: mark.score, max: mark.max, schoolItemID: item
+            )
+            return Artefact(
+                id: id, kind: .gapReport, source: .made, title: "After the mock", content: .gapReport(content),
+                photoPath: nil, studentID: mark.studentID, planID: nil, regeneratedFrom: nil, madeAt: at(18, 50),
+                generationID: nil, schoolItemID: item
+            )
+        }
+        var kept = [mock]
+        if devReport {
+            kept.append(report(devGapReportID, 0, days: AISamples.gapDays, usedAt: used ? at(18, 50) : nil))
+        }
+        if meherReport {
+            kept.append(report(meherGapReportID, 1, days: [
+                GapReportContent.DayPlan(title: "Thursday", line: "A short revision set"),
+                GapReportContent.DayPlan(title: "Friday morning", line: "The key to read together"),
+            ], usedAt: at(18, 55)))
+        }
+        return kept
     }
+
+    nonisolated static let meherGapReportID = UUID(uuidString: "abababab-0000-0000-0013-000000000008")!
 }
 
 public extension FakeRecordRepository {

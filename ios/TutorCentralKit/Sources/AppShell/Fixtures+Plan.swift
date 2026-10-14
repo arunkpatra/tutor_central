@@ -87,7 +87,7 @@ extension Fixtures {
         case _ where figureStates[state] != nil:
             return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
         case _ where lastDaysStates.contains(state):
-            return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts)
+            return FakePlansRepository(artefacts: examArtefacts(for: state))
         case .mock, .mockKey, .mockAgain, .make, .aiHistory:
             return FakePlansRepository(
                 artefacts: [.mock, .mockKey, .mockAgain]

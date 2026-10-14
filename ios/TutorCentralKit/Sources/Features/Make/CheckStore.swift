@@ -67,6 +67,8 @@ import Observation
     public let preset: CheckPreset?
     /// Whether the network is there (AppShell's connectivity); a test sets it.
     @ObservationIgnored public var online: () async -> Bool = { true }
+    /// The server's jobs (D106): a mock's marks saved wake its exam's job, which writes the gap report.
+    @ObservationIgnored public var jobs: (any JobsRepository)?
     /// The mark Save wrote, for Undo.
     @ObservationIgnored var savedMarkID: UUID?
     private let history: any AIHistoryRepository

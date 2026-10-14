@@ -139,6 +139,7 @@ extension RootView {
             online: { [connectivity = deps.connectivity] in await connectivity.isOnline }, textbooks: deps.textbooks,
             plans: deps.plans, record: deps.record
         )
+        store.jobs = deps.jobs
         store.onChanged = { students in
             shell.schoolItemsChanged?(students)
             Task { await shell.school?.refresh() }

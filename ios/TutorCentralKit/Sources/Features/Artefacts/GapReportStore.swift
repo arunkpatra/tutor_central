@@ -81,6 +81,13 @@ public struct GapDayRow: Identifiable, Hashable, Sendable {
         report?.usedAt != nil
     }
 
+    /// "The last two days were changed from this report when Dev's marks were saved. Change them on the exam's page."
+    public var usedFootnote: String {
+        let name = student?.firstName ?? "the student"
+        return "The last two days were changed from this report when \(name)'s marks were saved. "
+            + "Change them on the exam's page."
+    }
+
     /// The kept report, else a new one: the student's consent first, then the mark and the mock; offline a new one is
     /// refused.
     public func load() async {

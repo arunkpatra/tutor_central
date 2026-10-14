@@ -22,6 +22,11 @@ public struct PreparationRowModel: Identifiable, Hashable, Sendable {
     public let line: String
     public let mark: PreparationRow.Mark
     public let opens: PreparationOpen?
+
+    /// A gap report changed the day (P21-Exam-LastDaysChanged).
+    public var changed: Bool {
+        mark == .changed
+    }
 }
 
 extension ItemStore {

@@ -64,6 +64,29 @@ public protocol JobsRepository: Sendable {
     func exportJob(centre: UUID, student: UUID) async throws -> JobStatus?
     /// A student's export (`request_export`): everything kept about them in one PDF.
     func requestExport(centre: UUID, student: UUID) async throws -> UUID
+    /// The newest exam job for the item (`exam:<item>`, D106); none when the server has none.
+    func examJob(centre: UUID, item: UUID) async throws -> ExamJobStatus?
+    /// The exam's job asked or woken (`request_exam_prep`): after marks are saved, or Try again on a mock not made.
+    func requestExamPrep(centre: UUID, item: UUID) async throws -> UUID
+}
+
+/// An exam's job as the page reads it (D106): live or not, the step it is at, and whether its mock was not made (the
+/// page's Try again).
+public struct ExamJobStatus: Hashable, Sendable {
+    public let state: JobStatus.State
+    /// "split", "wait", "mock", "marks"; nil before its first step.
+    public let at: String?
+    public let mockFailed: Bool
+
+    public init(state: JobStatus.State, at: String?, mockFailed: Bool) {
+        self.state = state
+        self.at = at
+        self.mockFailed = mockFailed
+    }
+
+    public var isLive: Bool {
+        [.queued, .running, .waiting].contains(state)
+    }
 }
 
 /// Today's choices from the Change sheet, as the plan job reads them: the group count and each group's subject; nil

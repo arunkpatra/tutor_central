@@ -83,6 +83,36 @@ public struct SupabaseJobsRepository: JobsRepository {
         return try PostgRESTDecoder.make().decode(UUID.self, from: response.data)
     }
 
+    public func examJob(centre: UUID, item: UUID) async throws -> ExamJobStatus? {
+        let response = try await client.from("jobs").select("state, step").eq("centre_id", value: centre.uuidString)
+            .eq("kind", value: "exam_prep").like("idempotency_key", pattern: "exam:\(item.uuidString.lowercased())%")
+            .order("created_at", ascending: false).limit(1).execute()
+        return try PostgRESTDecoder.make().decode([ExamRow].self, from: response.data).first?.status
+    }
+
+    public func requestExamPrep(centre: UUID, item: UUID) async throws -> UUID {
+        let response = try await client.rpc("request_exam_prep", params: [
+            "p_centre": AnyJSON.string(centre.uuidString), "p_item": .string(item.uuidString),
+        ]).execute()
+        return try PostgRESTDecoder.make().decode(UUID.self, from: response.data)
+    }
+
+    /// An exam job's row: its state and the part of its step the page reads.
+    struct ExamRow: Decodable {
+        let state: JobStatus.State
+        let step: ExamStep?
+
+        var status: ExamJobStatus {
+            ExamJobStatus(state: state, at: step?.at, mockFailed: step?.mockFailed ?? false)
+        }
+    }
+
+    /// The part of an exam job's step the page reads.
+    struct ExamStep: Decodable {
+        let at: String?
+        let mockFailed: Bool?
+    }
+
     /// The choices as the plan job reads them: `{ groups, subjects: { "1": "Mathematics" } }`.
     static func planParams(centre: UUID, classID: UUID, date: Day, choices: PlanChoices?) -> [String: AnyJSON] {
         var params: [String: AnyJSON] = [

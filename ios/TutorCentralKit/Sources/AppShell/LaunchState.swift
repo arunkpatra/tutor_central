@@ -22,17 +22,17 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case schoolCalendar = "school-calendar"
     case schoolAddMenu = "school-add-menu"
     case schoolReading = "school-reading"
-    case schoolConfirm = "school-confirm"
-    case schoolConfirmEdit = "school-confirm-edit"
+    case schoolConfirm = "school-confirm", schoolConfirmEdit = "school-confirm-edit"
     /// The exam's page nine days out with Who and Preparation (P10-School-Item), its edit sheet and delete dialog.
     case schoolItem = "school-item"
     case schoolItemEdit = "school-item-edit"
-    case schoolItemDelete = "school-item-delete"
-    case schoolItemHomework = "school-item-homework"
+    case schoolItemDelete = "school-item-delete", schoolItemHomework = "school-item-homework"
     /// The exam's page on the mock day, leading with the last days (P10-School-Exam-LastDays), and Dev's gap report
     /// (P10-GapReport).
-    case schoolLastDays = "school-last-days"
-    case gapReport = "gap-report"
+    /// With the exam's job (P21-Exam-MockMaking, -MockFailed, -GapWorking, -LastDaysChanged; P21-GapReport-Used).
+    case schoolLastDays = "school-last-days", gapReport = "gap-report", gapReportUsed = "gap-report-used"
+    case examMockMaking = "school-last-days-mock-making", examMockFailed = "school-last-days-mock-failed"
+    case examGapWorking = "school-last-days-gap-working", examChanged = "school-last-days-changed"
     case schoolItemHoliday = "school-item-holiday"
     /// Ask parents to forward with two sent (P10-School-Ask).
     case schoolAsk = "school-ask"
