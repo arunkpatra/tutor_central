@@ -314,22 +314,3 @@ export function finished<R>(
   const errorReason = answer.kind === "truncated" ? "truncated" : answer.kind === "refused" ? answer.reason : (refusedAs ?? "refused");
   return { status: "failed", output: null, ...billed, errorReason };
 }
-
-
-/** A kind not moved onto the agent (Phase 21 moves the mock, the parents' kinds, the gap report, read-marks and V1's):
- *  its prompt's request drafted alone, with no check and no repair; the table still chooses its model and can pause it. */
-export function fromRequest<T>(
-  kind: AIKind,
-  request: ClaudeRequest<T>,
-  rest: { student?: string; studentName?: string; empty?: (draft: T) => boolean; keep?: (draft: T) => T; classLevel?: ClassLevel } = {},
-): Kind<unknown, T> {
-  const { model: _model, effort: _effort, deadlineMs: _deadline, ...asked } = request;
-  return {
-    kind,
-    draft: () => asked,
-    empty: rest.empty,
-    keep: rest.keep,
-    classLevel: rest.classLevel ? () => rest.classLevel : undefined,
-    student: rest.student ? () => ({ id: rest.student as string, name: rest.studentName }) : undefined,
-  };
-}

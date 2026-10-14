@@ -1,0 +1,125 @@
+[
+  {
+    "id": "pn-hemanth-warm",
+    "input": {
+      "kind": "progress_note",
+      "classLevel": "Class 10",
+      "subject": "Mathematics",
+      "studentId": "a0000000-0000-4000-8000-000000000011",
+      "studentName": "Hemanth Reddy",
+      "parentName": "Lakshmi Reddy",
+      "observations": "Algebra much better; sign errors in word problems; homework on time.",
+      "attendanceLine": "11 of 12 classes",
+      "tone": "warm",
+      "tutorName": "Meera Nair",
+      "centreName": "Bright Minds Tuition"
+    },
+    "expect": {
+      "contains": [
+        "Lakshmi",
+        "Hemanth"
+      ],
+      "never": [
+        "Regards",
+        "Meera"
+      ]
+    }
+  },
+  {
+    "id": "pn-dev-plain",
+    "input": {
+      "kind": "progress_note",
+      "classLevel": "Class 8",
+      "subject": "Science",
+      "studentId": "a0000000-0000-4000-8000-000000000012",
+      "studentName": "Dev Kumar",
+      "parentName": "Ramesh Kumar",
+      "observations": "Balancing equations still weak; diagrams neat; asks good questions.",
+      "tone": "plain",
+      "tutorName": "Meera Nair",
+      "centreName": "Bright Minds Tuition"
+    },
+    "expect": {
+      "contains": [
+        "Ramesh",
+        "Dev"
+      ],
+      "never": [
+        "Regards"
+      ]
+    }
+  },
+  {
+    "id": "pn-meher-no-parent",
+    "input": {
+      "kind": "progress_note",
+      "classLevel": "Class 8",
+      "subject": "Mathematics",
+      "studentId": "a0000000-0000-4000-8000-000000000013",
+      "studentName": "Meher Shah",
+      "observations": "Quick with mental sums; careless in long division; finished every worksheet.",
+      "tone": "warm",
+      "tutorName": "Meera Nair",
+      "centreName": "Bright Minds Tuition"
+    },
+    "expect": {
+      "contains": [
+        "Hello",
+        "Meher"
+      ],
+      "never": [
+        "Regards"
+      ]
+    }
+  },
+  {
+    "id": "pn-nikhil-missed",
+    "input": {
+      "kind": "progress_note",
+      "classLevel": "Class 8",
+      "subject": "English",
+      "studentId": "a0000000-0000-4000-8000-000000000014",
+      "studentName": "Nikhil Das",
+      "parentName": "Arup Das",
+      "observations": "Missed four classes; reading aloud has slipped; grammar exercises half done.",
+      "attendanceLine": "8 of 12 classes",
+      "tone": "plain",
+      "tutorName": "Meera Nair",
+      "centreName": "Bright Minds Tuition"
+    },
+    "expect": {
+      "contains": [
+        "Arup",
+        "Nikhil",
+        "8 of 12"
+      ],
+      "never": [
+        "Regards"
+      ]
+    }
+  },
+  {
+    "id": "pn-riya-warm",
+    "input": {
+      "kind": "progress_note",
+      "classLevel": "Class 5",
+      "subject": "Mathematics",
+      "studentId": "a0000000-0000-4000-8000-000000000015",
+      "studentName": "Riya Sharma",
+      "parentName": "Neha Sharma",
+      "observations": "Fractions finally clicking; still slow with tables of 7 and 8.",
+      "tone": "warm",
+      "tutorName": "Meera Nair",
+      "centreName": "Bright Minds Tuition"
+    },
+    "expect": {
+      "contains": [
+        "Neha",
+        "Riya"
+      ],
+      "never": [
+        "Regards"
+      ]
+    }
+  }
+]

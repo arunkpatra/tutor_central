@@ -5,7 +5,7 @@ import { first } from "./message.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "4";
 
 /** A progress note to the parent, in the tutor's voice, from what the tutor has seen. The app adds the signature. */
 export function request(input: NoteInput): ClaudeRequest<NoteOutput> {
@@ -19,7 +19,7 @@ export function request(input: NoteInput): ClaudeRequest<NoteOutput> {
       "You write short progress notes from a tutor to a parent, sent on WhatsApp.",
       "Address the parent by first name and call the child by first name.",
       "One paragraph of four to six sentences. Use only what the tutor has seen and the attendance line when given.",
-      "End with the last sentence of the note: no signature, no name, no sign-off (the app adds the signature).",
+      "End with the last sentence of the note: no signature, no name, no sign-off such as Regards (the app adds the signature). A closing line to the parent (happy to talk, thank you) is a sentence of the note, not a sign-off.",
     ], [`The tutor is ${input.tutorName} at ${input.centreName}.`, `Tone: ${tone}.`]),
     text: [
       `Parent: ${input.parentName ? first(input.parentName) : "the parent (no name given: start with Hello)"}.`,

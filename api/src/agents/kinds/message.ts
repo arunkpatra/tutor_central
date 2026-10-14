@@ -38,6 +38,9 @@ function digitNumbers(text: string): number[] {
  *  after a dash. "Thank you." is a courtesy, not a sign-off. */
 const SIGN_OFF = /^(?:(?:with\s+)?(?:warm|kind|best|warmest)?\s*(?:regards|wishes|sincerely|yours|cheers|love)\b|सादर|आपका|आपकी|भवदीय|ಇಂತಿ|ವಂದನೆಗಳೊಂದಿಗೆ|[-–—]\s*\p{L}+)/iu;
 
+/** Whether a sentence is a sign-off (the app adds the signature). */
+export const signsOff = (sentence: string) => SIGN_OFF.test(sentence.trim());
+
 const plain = (text: string) => text.toLowerCase().replace(/\s+/g, " ").replace(/[.!?।]+$/u, "").trim();
 
 /** The rules every parent's message shares (D110), free: the message in the parent's script and the English beside it in

@@ -18,10 +18,11 @@ test("evals-changed names no kind for a web change", () => {
   expect(kindsChanged(["web/app/page.tsx", "docs/spec.md", "api/src/routes/v2.ts"])).toEqual([]);
 });
 
-test("a rubric or a case names its kind; a prompt of a kind not on its agent names none", () => {
+test("a rubric, a case or a prompt names its kind: every kind is on its agent (Phase 21)", () => {
   expect(kindsChanged(["api/evals/check/rubric.md"])).toEqual(["check"]);
   expect(kindsChanged(["api/evals/parse_textbook/pages/maths-5.png"])).toEqual(["parse_textbook"]);
-  expect(kindsChanged(["api/src/prompts/paper.ts"])).toEqual([]);
+  expect(kindsChanged(["api/src/prompts/paper.ts"])).toEqual(["paper"]);
+  expect(kindsChanged(["api/src/prompts/scan-register.ts"])).toEqual(["scan_register"]);
   expect(kindsChanged(["api/src/prompts/mock.ts"])).toEqual(["mock"]);
 });
 
@@ -30,10 +31,11 @@ test("the maths free check and the nightly's runner name every kind (the review'
   expect(kindsChanged(["api/src/evals/runner.ts"])).toHaveLength(KINDS.length);
 });
 
-test("the parents' shared rules name the four message kinds and the anchors; an anchor's case names its set (D110)", () => {
-  const parents = ["anchor_hi", "anchor_kn", "can_do", "not_on_track", "note", "test_tomorrow"];
+test("the parents' shared rules name the four message kinds, V1's progress note and the anchors; an anchor's case names its set (D110)", () => {
+  const parents = ["anchor_hi", "anchor_kn", "can_do", "not_on_track", "note", "progress_note", "test_tomorrow"];
   expect(kindsChanged(["api/src/agents/kinds/message.ts"])).toEqual(parents);
   expect(kindsChanged(["api/src/prompts/message.ts"])).toEqual(parents);
+  expect(kindsChanged(["api/src/agents/kinds/question-set.ts"])).toEqual(["homework", "worksheet"]);
   expect(kindsChanged(["api/src/agents/kinds/numbers.ts"])).toEqual(["anchor_hi", "anchor_kn", "can_do", "figure", "not_on_track", "note", "test_tomorrow"]);
   expect(kindsChanged(["api/evals/anchors/kn/cases.json"])).toEqual(["anchor_kn"]);
   expect(kindsChanged(["api/src/prompts/can-do.ts"])).toEqual(["can_do"]);

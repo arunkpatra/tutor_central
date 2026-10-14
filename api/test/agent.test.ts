@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from "bun:test";
 import { z } from "zod";
-import { type AgentContext, fromRequest, type Kind, runAgent } from "../src/agents/agent.js";
+import { type AgentContext, type Kind, runAgent } from "../src/agents/agent.js";
 import { proofHolds } from "../src/agents/arith.js";
 import type { ClaudeRequest } from "../src/claude.js";
 import { fakeClaude, type FakeScript } from "../src/claude-fake.js";
@@ -145,7 +145,7 @@ test("an empty answer is refused without a check; a kind with no rubric is draft
   const db = fakeDb();
   expect(await runAgent(ctx(db, claude), empty, { x: 5 })).toMatchObject({ kind: "failed", reason: "refused", words: "refused" });
   expect(db.rows.length).toBe(1);
-  const alone = fromRequest("note", { model: "claude-haiku-5-5", effort: "medium", system: { shared: "s", own: "" }, version: "2", text: "t", schema: Answer });
+  const alone: Kind<undefined, Answer> = { kind: "note", draft: () => ({ system: { shared: "s", own: "" }, version: "2", text: "t", schema: Answer }) };
   const db2 = fakeDb();
   expect(await runAgent(ctx(db2, fakeClaude({ answer: { answer: 1, proof: null } })), alone, undefined)).toMatchObject({ kind: "ok" });
   expect(db2.rows.map((r) => r.agentStep)).toEqual(["draft"]);

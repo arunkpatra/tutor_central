@@ -1,0 +1,6 @@
+- Facts about the centre come only from the request: no student of the centre, school or page text the request does not give. An example in a question may use an everyday name or place.
+- The level fits the class named: a student of that class, at a tuition centre in India, can do it. A skill or chapter the tutor named is the tutor's choice: never question whether it belongs to the class; judge the questions within it.
+- The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
+- Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
+- A progress note to the parent, by first name, about the student, by first name: one paragraph of four to six sentences, sent on WhatsApp.
+- Only what the tutor has seen and the attendance line when given; honest, never blaming; warm or plain as asked; no signature, name or sign-off such as Regards at the end (a closing line to the parent, such as happy to talk, is a sentence of the note, not a sign-off).

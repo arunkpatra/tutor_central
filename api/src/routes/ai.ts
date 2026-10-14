@@ -1,34 +1,33 @@
 import { Hono } from "hono";
 import type { Vars } from "../auth.js";
-import type { ClaudeClient, ClaudeRequest } from "../claude.js";
+import type { ClaudeClient } from "../claude.js";
 import type { Db } from "../db.js";
 import { errors } from "../errors.js";
 import { type DecodedImage, decodeImage } from "../images.js";
 import { schemeQuestions, schemeText } from "../prompts/check-paper.js";
-import { request as homeworkRequest } from "../prompts/homework.js";
-import { request as paperRequest } from "../prompts/paper.js";
-import { checkPaper, parseSchool } from "../agents/kinds/index.js";
-import { request as noteRequest } from "../prompts/progress-note.js";
-import { normalisePhone, request as scanRequest } from "../prompts/scan-register.js";
-import { request as worksheetRequest } from "../prompts/worksheet.js";
-import { CheckPaperInput, GenerateInput, ParseSchoolInput, type ScanOutput, ScanRegisterInput } from "../schemas.js";
-import { answer, isParsed, parse, run, runCall, safeJSON } from "./common.js";
+import type { Kind } from "../agents/agent.js";
+import { checkPaper, homework, paper, parseSchool, progressNote, scanRegister, worksheet } from "../agents/kinds/index.js";
+import type { JobsDb } from "../jobs/types.js";
+import { log } from "../log.js";
+import { CheckPaperInput, GenerateInput, ParseSchoolInput, ScanRegisterInput } from "../schemas.js";
+import { answer, isParsed, parse, run, safeJSON } from "./common.js";
 import { v2Routes } from "./v2.js";
 
 /** The three V1 AI routes, `/parse-school` and the other live V2 routes (routes/v2.ts). Each: validate the body, check any photo, start the record (consent, the day's limit), call
  *  Claude, finish the record, answer `{ id, result }` or an error in words (src/errors.ts). Photos are never stored:
  *  the record's input holds the page count and the bytes (docs/spec.md section 6). */
-export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
+export function aiRoutes(deps: { claude: ClaudeClient; db: Db; worker?: { jobs: Pick<JobsDb, "enqueue"> } }) {
   const routes = new Hono<Vars>();
 
   routes.post("/generate", async (c) => {
     const body = await parse(c, GenerateInput);
     if (!isParsed(body)) return body;
-    const request = generateRequest(body.value);
-    // A progress note is about one student: the gate asks their parent's consent (D62, migration 0027).
-    const student = body.value.kind === "progress_note" ? body.value.studentId : undefined;
-    const studentName = body.value.kind === "progress_note" ? body.value.studentName : undefined;
-    return runCall(c, deps, body.centre, { kind: body.value.kind, input: body.value, request, student, studentName });
+    const v = body.value;
+    // A progress note is about one student: its agent names them, so the gate asks their parent's consent (D62, 0027).
+    if (v.kind === "progress_note") return run(c, deps, body.centre, progressNote, v);
+    // A paper, homework or worksheet kept: its PDF is made on the server (Phase 21 decision 9), queued as the platform.
+    const spec = ({ paper, homework, worksheet } as Record<string, Kind<unknown, unknown>>)[v.kind] as Kind<unknown, unknown>;
+    return run(c, deps, body.centre, spec, v, v, (id) => queuePdf(deps.worker?.jobs, body.centre, id, c.get("requestId")));
   });
 
   routes.post("/scan-register", async (c) => {
@@ -36,11 +35,8 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
     if (!isParsed(body)) return body;
     const image = decodeImage(body.value);
     if (typeof image === "string") return answer(c, errors.badImage(image));
-    const keep = (parsed: ScanOutput): ScanOutput => ({
-      rows: parsed.rows.map((row) => ({ ...row, phone: normalisePhone(row.phone) })),
-    });
-    const input = { kind: "scan_register", pages: 1, bytes: image.bytes };
-    return runCall(c, deps, body.centre, { kind: "scan_register", input, request: scanRequest(image), keep });
+    // The photo is read and dropped: the record holds its size.
+    return run(c, deps, body.centre, scanRegister, { image }, { kind: "scan_register", pages: 1, bytes: image.bytes });
   });
 
   routes.post("/check-paper", async (c) => {
@@ -102,15 +98,13 @@ export function aiRoutes(deps: { claude: ClaudeClient; db: Db }) {
   return routes;
 }
 
-function generateRequest(input: GenerateInput): ClaudeRequest<unknown> {
-  switch (input.kind) {
-    case "paper":
-      return paperRequest(input) as ClaudeRequest<unknown>;
-    case "homework":
-      return homeworkRequest(input) as ClaudeRequest<unknown>;
-    case "worksheet":
-      return worksheetRequest(input) as ClaudeRequest<unknown>;
-    case "progress_note":
-      return noteRequest(input) as ClaudeRequest<unknown>;
+/** A V1 result's PDF queued once by its generation (`pdf:gen:<id>`); a queue that fails is logged, and Share draws on the
+ *  phone meanwhile (D93). */
+async function queuePdf(jobs: Pick<JobsDb, "enqueue"> | undefined, centre: string, generation: string, requestId: string): Promise<void> {
+  if (!jobs) return;
+  try {
+    await jobs.enqueue(centre, "pdf", `pdf:gen:${generation}`, { generation_id: generation });
+  } catch (e) {
+    log.error({ requestId, generation, message: "a result's PDF was not queued", error: e instanceof Error ? e : String(e) });
   }
 }

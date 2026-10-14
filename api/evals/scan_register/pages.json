@@ -1,0 +1,70 @@
+[
+  {
+    "file": "printed-ten",
+    "hand": false,
+    "title": "Bright Minds Tuition · Register · Class 8 Evening batch",
+    "lines": [
+      "No. | Name | Phone | Fee",
+      "1 | Aarav Mehta | 90000 00001 | 1200",
+      "2 | Diya Pillai | 90000 00002 | 1200",
+      "3 | Ishaan Bose | 90000 00003 | 1000",
+      "4 | Kavya Nair | 90000 00004 | 1200",
+      "5 | Rohan Gupta | 90000 00005 | 1500",
+      "6 | Sneha Joshi | 98450 3?? 21 (smudged) | 1200",
+      "7 | Ananya Iyer | 90000 00007 | 1200",
+      "8 | Dhruv Patel | 90000 00008 | 1000",
+      "9 | Myra Singh | 90000 00009 | 1200",
+      "10 | Sahil Verma | 90000 00010 | 1200"
+    ]
+  },
+  {
+    "file": "handwritten-six",
+    "hand": true,
+    "title": "New students, October",
+    "lines": [
+      "dev kumar  9000000021  fee 1000",
+      "meher shah  90000 00022  1200",
+      "nikhil das  -  1200",
+      "hemanth reddy  9000000024  1500",
+      "riya sharma  90000 00025  1000",
+      "akshita rao  9000000026  1200"
+    ]
+  },
+  {
+    "file": "with-totals",
+    "hand": false,
+    "title": "Fees register · September 2026",
+    "lines": [
+      "Name | Phone | Fee",
+      "Anvi Shetty | 90000 00031 | 1200",
+      "Farah Khan | 90000 00032 | 1200",
+      " |  | ",
+      "Gurpreet Singh | 90000 00033 | 1500",
+      "Priya Rao | 90000 00034 | 1000",
+      "Rohit Mehta | 90000 00035 | 1200",
+      "Total | Fees collected | 6100"
+    ]
+  },
+  {
+    "file": "notice",
+    "hand": false,
+    "title": "Bright Minds Tuition · Notice",
+    "lines": [
+      "The centre is closed on Monday 2 November for Diwali.",
+      "Classes resume on Tuesday 3 November at the usual times.",
+      "Bring the corrected homework books on Tuesday."
+    ]
+  },
+  {
+    "file": "phone-forms",
+    "hand": false,
+    "title": "Register · Class 5 Saturday batch",
+    "lines": [
+      "Name | Phone | Fee",
+      "Neha Sharma | +91 90000 00011 | 1000",
+      "Suma Nair | 09000000012 | 1000",
+      "Kavita Shah | 91 9000000013 | 1000",
+      "Deepa Shetty | (no phone) | 1000"
+    ]
+  }
+]

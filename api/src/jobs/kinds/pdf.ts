@@ -3,16 +3,23 @@ import { type MockContent, mockPdf } from "../../pdf/mock.js";
 import { renderPdf } from "../../pdf/render.js";
 import { type SheetContent, sheetPdf } from "../../pdf/sheet.js";
 import { figurePdf } from "../../pdf/figure.js";
+import { paperMeta, paperPdf, type V1Result } from "../../pdf/paper.js";
 import { camel } from "../../plan/material.js";
 import { FigureOutput } from "../../schemas.js";
-import type { JobHandler } from "../types.js";
+import type { JobHandler, StepOutcome } from "../types.js";
 
 /** What the PDF job reads and writes as the platform (D83): the artefact, and the private bucket `pdfs`. */
 export type PdfSource = {
   /** The artefact, with the foot its pages carry: the centre's name, and its batch's when it came from a plan. */
   artefact(centre: string, id: string): Promise<{ kind: string; title: string; content: Record<string, unknown>; foot?: string } | null>;
+  /** A V1 result (Phase 21 decision 9): its kind, its output and the request it was made from (the recorded input),
+   *  with the centre's name for the foot; null when there is none of the centre's. */
+  generation(centre: string, id: string): Promise<{ kind: string; output: Record<string, unknown> | null; input: Record<string, unknown>; foot?: string } | null>;
   upload(bucket: "pdfs" | "exports", path: string, bytes: Uint8Array): Promise<void>;
 };
+
+/** A V1 result's PDF: one file, its key on the last page unless a worksheet left it out (Phase 21 decision 9). */
+export const generationPdfPath = (centre: string, generation: string) => `${centre}/gen-${generation}.pdf`;
 
 /** The paths of an artefact's PDFs: the questions, and the same with the key on its own page (Share's two forms). */
 export const pdfPaths = (centre: string, artefact: string) => ({ path: `${centre}/${artefact}.pdf`, keyPath: `${centre}/${artefact}-key.pdf` });
@@ -24,6 +31,8 @@ export const pdfPaths = (centre: string, artefact: string) => ({ path: `${centre
 export function pdfJob(source: PdfSource, deps: { render: typeof renderPdf } = { render: renderPdf }): JobHandler {
   return {
     async step(job) {
+      const generation = (job.input as { generation_id?: unknown }).generation_id;
+      if (job.centreId && typeof generation === "string") return generationPdf(source, deps.render, job.centreId, generation);
       const id = (job.input as { artefact_id?: unknown }).artefact_id;
       if (!job.centreId || typeof id !== "string") return { kind: "fail", name: "make", error: { reason: "input" }, retry: false };
       try {
@@ -61,4 +70,24 @@ export function pdfJob(source: PdfSource, deps: { render: typeof renderPdf } = {
       }
     },
   };
+}
+
+const PRINTED = new Set(["paper", "homework", "worksheet"]);
+
+/** A V1 result's PDF made from its generation and written to `pdfs/<centre>/gen-<id>.pdf`; a note or a register is not
+ *  printed, a result gone is done with nothing written. */
+async function generationPdf(source: PdfSource, render: typeof renderPdf, centre: string, id: string): Promise<StepOutcome> {
+  try {
+    const row = await source.generation(centre, id);
+    if (!row?.output) return { kind: "done", name: "make", result: { reason: "gone" } };
+    if (!PRINTED.has(row.kind)) return { kind: "done", name: "make", result: { reason: "not_printable" } };
+    const result = { kind: row.kind, output: row.output } as unknown as V1Result;
+    const meta = paperMeta(result.kind, row.input, result.output);
+    const path = generationPdfPath(centre, id);
+    const pdf = await render(paperPdf(result, { ...meta, foot: row.foot }, meta.withKey));
+    await source.upload("pdfs", path, pdf.bytes);
+    return { kind: "done", name: "make", result: { path, pages: pdf.pages, bytes: pdf.bytes.length } };
+  } catch (e) {
+    return { kind: "fail", name: "make", error: { reason: "pdf_failed", message: e instanceof Error ? e.message : String(e) }, retry: true };
+  }
 }

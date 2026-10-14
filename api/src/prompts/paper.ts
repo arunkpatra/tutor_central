@@ -4,7 +4,7 @@ import { type PaperInput, PaperOutput } from "../schemas.js";
 import { LEVEL_WORDS, VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "2";
+export const VERSION = "7";
 
 export type PlannedSection = { title: string; count: number; marksEach: number };
 
@@ -58,7 +58,7 @@ export function request(input: PaperInput): ClaudeRequest<PaperOutput> {
   const word = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
   return {
     model: modelFor("paper", "draft").model,
-    effort: "medium",
+    effort: "high",
     version: VERSION,
     system: blocks([
       VOICE,
@@ -66,6 +66,11 @@ export function request(input: PaperInput): ClaudeRequest<PaperOutput> {
       "Harder questions go in the sections with more marks.",
       "Give every question an answer the tutor can mark against: the final answer, with the key step where there is one.",
       "Number the questions from 1 across the whole paper. The title is the topic.",
+      "Write every question afresh: never a textbook exercise in its words or with its numbers.",
+      "Pitch every question at the class named: what a student of that class meets in its own year's book, never a higher class's chapter.",
+      "Use numbers of your own in every question, never the numbers of an exercise you remember from a textbook; sentence case throughout, a method's or a rule's name in lower case (the quadratic formula, factorisation).",
+      "A question worth several marks is one longer task, or parts (a), (b), (c) that each ask something different, their marks adding up to the question's; the answer gives each part's answer. Words a question asks about are quoted after its sentence (the word 'she'), never in capitals or underlined.",
+      "Every question tests the subject named: in a language, social science or science set, never an arithmetic sum dressed in the topic.",
     ]),
     text: [
       `Write a question paper for ${input.classLevel}, ${input.subject}.`,

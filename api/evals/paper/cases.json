@@ -1,0 +1,77 @@
+[
+  {
+    "id": "paper-10-quadratics",
+    "input": {
+      "kind": "paper",
+      "classLevel": "Class 10",
+      "subject": "Mathematics",
+      "topic": "Quadratic equations",
+      "level": "medium",
+      "questions": 10,
+      "marks": 20
+    },
+    "expect": {
+      "count": 10
+    }
+  },
+  {
+    "id": "paper-6-english",
+    "input": {
+      "kind": "paper",
+      "classLevel": "Class 6",
+      "subject": "English",
+      "topic": "Nouns and pronouns",
+      "level": "easy",
+      "questions": 5,
+      "marks": 10
+    },
+    "expect": {
+      "count": 5
+    }
+  },
+  {
+    "id": "paper-8-science",
+    "input": {
+      "kind": "paper",
+      "classLevel": "Class 8",
+      "subject": "Science",
+      "topic": "Chemical reactions",
+      "level": "medium",
+      "questions": 15,
+      "marks": 50
+    },
+    "expect": {
+      "count": 15
+    }
+  },
+  {
+    "id": "paper-4-fractions",
+    "input": {
+      "kind": "paper",
+      "classLevel": "Class 4",
+      "subject": "Mathematics",
+      "topic": "Fractions",
+      "level": "easy",
+      "questions": 8,
+      "marks": 20
+    },
+    "expect": {
+      "count": 8
+    }
+  },
+  {
+    "id": "paper-9-social",
+    "input": {
+      "kind": "paper",
+      "classLevel": "Class 9",
+      "subject": "Social Science",
+      "topic": "The French Revolution",
+      "level": "hard",
+      "questions": 12,
+      "marks": 25
+    },
+    "expect": {
+      "count": 12
+    }
+  }
+]

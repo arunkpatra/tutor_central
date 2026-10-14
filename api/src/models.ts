@@ -22,8 +22,8 @@ let rows = new Map<string, ModelRow>();
 
 /** A sheet moves from Haiku to Sonnet from class 6 (spec-v2 section 9). */
 const EARLY: readonly ClassLevel[] = ["lkg", "ukg", "1", "2", "3", "4", "5"];
-/** The kinds whose prompts ask for high effort; 0052's seed says the same. */
-const HIGH: readonly WorkType[] = ["scan_register", "check_paper", "mock"];
+/** The kinds whose prompts ask for high effort; the table says the same (0052, and 0060 for the question sets). */
+const HIGH: readonly WorkType[] = ["scan_register", "check_paper", "mock", "paper", "homework", "worksheet"];
 /** The checker is the other tier (D99): Haiku checks Sonnet, Sonnet checks Haiku and Opus. */
 const OTHER_TIER: Record<Model, Model> = {
   "claude-haiku-5-5": "claude-sonnet-5-5",

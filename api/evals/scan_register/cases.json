@@ -1,0 +1,69 @@
+[
+  {
+    "id": "scan-printed-ten",
+    "input": {
+      "image": "pages/printed-ten.png"
+    },
+    "expect": {
+      "count": 10,
+      "contains": [
+        "Aarav Mehta",
+        "Diya Pillai",
+        "Rohan Gupta"
+      ],
+      "never": [
+        "98450 3"
+      ]
+    }
+  },
+  {
+    "id": "scan-handwritten",
+    "input": {
+      "image": "pages/handwritten-six.png"
+    },
+    "expect": {
+      "count": 6,
+      "contains": [
+        "Dev Kumar",
+        "Meher Shah",
+        "Nikhil Das"
+      ]
+    }
+  },
+  {
+    "id": "scan-totals",
+    "input": {
+      "image": "pages/with-totals.png"
+    },
+    "expect": {
+      "count": 5,
+      "never": [
+        "Total",
+        "Fees collected"
+      ]
+    }
+  },
+  {
+    "id": "scan-no-names",
+    "input": {
+      "image": "pages/notice.png"
+    },
+    "expect": {
+      "count": 0
+    }
+  },
+  {
+    "id": "scan-phone-forms",
+    "input": {
+      "image": "pages/phone-forms.png"
+    },
+    "expect": {
+      "count": 4,
+      "contains": [
+        "+91",
+        "Neha Sharma",
+        "Deepa Shetty"
+      ]
+    }
+  }
+]

@@ -18,6 +18,14 @@ export function makePdfSource(url: string, serviceKey: string): PdfSource {
       const foot = [name, batch].filter(Boolean).join(" · ") || undefined;
       return { kind: r.data.kind, title: r.data.title, content: r.data.content as Record<string, unknown>, foot };
     },
+    async generation(centre, id) {
+      const r = await client.from("ai_generations").select("kind, output, input, status").eq("centre_id", centre).eq("id", id).maybeSingle();
+      if (r.error) throw new Error(`ai_generations: ${r.error.message}`);
+      if (!r.data || r.data.status !== "ok") return null;
+      const name = (await client.from("centres").select("name").eq("id", centre).maybeSingle()).data?.name;
+      const output = r.data.output ? (JSON.parse(r.data.output) as Record<string, unknown>) : null;
+      return { kind: r.data.kind, output, input: (r.data.input ?? {}) as Record<string, unknown>, foot: name ?? undefined };
+    },
     async upload(bucket, path, bytes) {
       const { error } = await client.storage.from(bucket).upload(path, bytes, { contentType: "application/pdf", upsert: true });
       if (error) throw new Error(`${bucket}: ${error.message}`);
