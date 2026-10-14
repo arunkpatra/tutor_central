@@ -25,11 +25,16 @@ AI teaching tools. India first. Supabase behind it, a thin Hono API on Vercel fo
 7. Bun only on the TypeScript side (D16). Never npm, npx, yarn or pnpm.
 8. Dependencies pinned exactly (D14). A new dependency needs a decision.
 9. `bun check` before every commit. Code reaches `main` only through a pull request with a green check.
-   Documents only go to `main` directly (D12), never mixed with code.
+   Documents only go to `main` directly (D12), never mixed with code. **Before opening any pull request with code, run
+   the pre-PR proof (`docs/working/pre-pr-proof.md`)** and put its Proof section in the description; the testing layers
+   and who runs each are `docs/working/testing.md`.
 10. Nothing from the reference app is silently dropped: `docs/reference/functional-inventory.md` is the
     contract; a change there needs a numbered decision.
 11. The reference screenshots and the rooftop app are references for *capability* and *discipline*. Never copy
     their layouts, colours or copy.
+12. **No automation spends on AI calls (D112).** No pull request, push, schedule, pg_cron job or deploy step makes a
+    Claude call for testing or measurement. The golden sets run by hand only (`bun evals`, or `gh workflow run evals -f
+    kinds=…`), proven locally before the pull request (`docs/working/pre-pr-proof.md`). The deploy's smoke is free.
 
 ## Start here
 `plan/STATE.md` says where the work stands and what is next. `plan/SESSIONS.md` says how a session starts,
@@ -87,6 +92,7 @@ change per pull request, described by what it does and how it was checked.
 | `bun admin-shots [--pages /centres,/jobs?open=preview-failed] [--widths 1280,390] [--appearance dark\|light\|both]` | The admin portal built and started in preview mode (fixtures, no session, D96) and photographed by headless Chrome, full page at 2×, into `.shots/admin/`; with no pages, the fifteen boards' pages |
 | `bun store-shots` | The App Store screenshots: the approved `Store-*` boards rendered with fresh simulator screens (dark, 9:41) at 1206 × 2622 JPEG into `docs/store/screenshots/` (D51); needs the `bun check` build. The listing's words are `docs/store/listing.md` |
 | `bun cost [--since 30m\|2h\|7d] [--kinds note,can_do]` | What the local AI calls cost, by kind and model, priced by `api/models.json` (D67) |
+| `bun evals-changed` | The kinds whose golden sets this branch's changes must run before its pull request (free; `docs/working/pre-pr-proof.md`) |
 | `bun evals [--kinds a,b] [--cases id] [--fake]` | The golden sets through each kind's agent by promptfoo, graded by Opus 5.5; the gate: every free check and the rubric at 85% per kind, a failed case retried once (D101, D103). The real run costs about ₹10 a kind (`api/.env.local`'s key); `--fake` is free |
 | `bun prompts [--write\|--check]` | Pin each prompt's version to the hash of its words and rubric (`api/src/prompts/versions.json`, D74); `--check` is in `bun check` |
 | `bun pr-shots <folder> <file>...` | Keep a PR's screenshots on the branch `pr-shots` (never touches your working tree), print the link table |
@@ -100,5 +106,6 @@ change per pull request, described by what it does and how it was checked.
 | `gh workflow run testflight` | Archive `main`'s head with cloud signing and upload it to TestFlight (D24); stops while migrations are pending |
 
 CI (`.github/workflows/check.yml`) runs the same check on every pull request and on `main`, except a commit of
-documents only (D31): iOS on the `xcode-27` image, api, web, admin and db on Ubuntu (D22). On `main` a newer push cancels a
+documents only (D31): iOS on the `xcode-27` image, api, web, admin and db on Ubuntu (D22). It makes no AI call: the
+golden sets run only by hand (`bun evals` locally, or `gh workflow run evals -f kinds=…`, D112). On `main` a newer push cancels a
 pending check: a deploy waits for the check of the commit it takes, so no merge goes in while a deploy waits.

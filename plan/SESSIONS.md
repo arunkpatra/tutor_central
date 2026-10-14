@@ -51,8 +51,12 @@ session may depend on what a previous one remembers. Everything a session needs 
 - A phase starts with its plan file, shown to the owner before work starts.
 - A screen is built only to an approved board. A state without a board is designed first (a board on the
   canvas, approved), then built.
-- `bun check` before every commit. Push, open a pull request with `gh`, merge when the check is green and the
-  screenshots (D7) are in the description and show on GitHub.
+- `bun check` before every commit. Before opening a pull request with code, run the pre-PR proof
+  (`docs/working/pre-pr-proof.md`): the tests first, `bun check`, `bun evals-changed` and the evals it names (by hand,
+  D112), the pictures; its Proof section goes in the description. Push, open a pull request with `gh`, merge when the
+  check is green and the screenshots (D7) are in the description and show on GitHub.
+- No automation spends on AI calls (D112): no pull request, push, schedule or deploy step makes a Claude call for
+  testing or measurement. A paid run is started by hand and noted in the session's ledger.
 - A new decision gets a number in `plan/README.md` in the same pull request that acts on it (or the same
   documents commit).
 - Show the owner each finished part: what was built, what was decided, what needs approval.

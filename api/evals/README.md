@@ -13,9 +13,9 @@ or real page.
 Run: `bun evals --fake` (free: the schema, verify and expectations on the fake's answers), `bun evals --kinds sheet,check`
 (the real models, graded by Opus 5.5; about ₹5 a kind). The gate: every case's free checks, and the rubric at 85% or
 more per kind; a case that fails gets one fresh run and counts as failed only if it fails again (D103: one judgement a
-case made a nine-kind run red almost every time). CI runs the kinds a pull request touches (`.github/workflows/evals.yml`).
+case made a nine-kind run red almost every time).
 
-In CI: `.github/workflows/evals.yml` runs on a pull request that touches the prompts, the agents, the schemas or the
-evals; `tools/evals-changed.ts` names the kinds from the diff (a kind's prompt, agent or folder names it; what every kind
-shares names all nine; this file names none) and `bun evals --kinds` runs them with the repository secret
-`ANTHROPIC_API_KEY`. A red run is not merged.
+By hand only (D112): before a pull request, `bun evals-changed` names the kinds the branch touches (a kind's prompt,
+agent or folder names it; what every kind shares names all of them) and `bun evals --kinds` runs them; a red run is not
+merged (`docs/working/pre-pr-proof.md`). `.github/workflows/evals.yml` runs the same by `workflow_dispatch`, the kinds
+typed by the person who starts it, with the repository secret `ANTHROPIC_API_KEY`. Nothing runs them on its own.

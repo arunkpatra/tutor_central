@@ -120,9 +120,11 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
   file with a `VERSION`, its shared block cached; `bun prompts --write` pins `versions.json` (the hash of the words and the
   rubric) and `bun check` refuses words changed under the same version. The golden sets are `api/evals/<kind>/` (five cases,
   a rubric read by the check and the graders alike); `bun evals [--kinds a,b] [--fake]` runs promptfoo over the agent, graded
-  by Opus 5.5, gated at every free check and the rubric at 85% per kind, a failed case retried once (D103); `evals.yml` runs
-  the kinds a pull request touches (a shared file names all nine; each nine-kind run is about ₹95). The nightly `eval_run`
-  job (02:05 IST) batches drafts, checks and grades at half price under the Smoke centre (`SMOKE_CENTRE_ID`); a batch's
+  by Opus 5.5, gated at every free check and the rubric at 85% per kind, a failed case retried once (D103); the golden sets
+  run by hand only (D112): `bun evals-changed` names the kinds a branch touches, `bun evals --kinds` runs them locally, and
+  `evals.yml` is `workflow_dispatch` with the kinds typed. The `eval_run` job (queued by hand: `schedule_evals()` or a job with
+  `input.kinds`; no cron since 0064) batches drafts, checks and grades at half price under the Smoke centre
+  (`SMOKE_CENTRE_ID`), recording a parent's-message kind's case with no student (0063); a batch's
   custom ids take only letters, digits, `_` and `-` (`<case>__check`). Mathematics is LaTeX in the text (`$…$`, `$$…$$`; the
   `MATHS` words): the PDFs draw it with mitex 0.2.7 (vendored in `api/typst/mitex`, carried to the function by the literal
   `new URL("../../typst", import.meta.url)`, since `includeFiles` is ignored by this builder) in STIX Two Math; a formula

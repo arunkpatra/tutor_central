@@ -85,5 +85,5 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
 - Phase 20 (D100): `ai_models` (0052) is append-only, read through `ai_models_current()` by the platform alone; its newest row
   per kind and step is current (0056 moved the placement to Sonnet). A call's `agent_step` (draft, check, repair, grade) and
   `tokens_cached`; only a draft counts against the allowance; a check, repair or grade hangs off a live draft of the centre by
-  its key's grammar, and one guarding another draft (a step taken again) is a new row (0055). `schedule_evals` queues the
-  nightly `eval_run` at 02:05 IST; `admin_calls` counts a draft refused after its check (`check:…`) as refused (0054).
+  its key's grammar, and one guarding another draft (a step taken again) is a new row (0055). `schedule_evals` queues an
+  `eval_run` when called by hand (no cron since 0064, D112); `admin_calls` counts a draft refused after its check (`check:…`) as refused (0054).
