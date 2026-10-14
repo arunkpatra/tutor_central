@@ -10,7 +10,7 @@ hour's cache, the standing cost report); D111 (repairs batched) and D112 (no aut
 from the owner; twelve hand runs (issue #343) and their six findings fixed (#337 to #342); the review on Fable 5.1, its eight
 findings fixed (#344 to #349, 0065) and four ruled; the last cost run (two plans ₹6.34 against ₹11.24; the Cost page agrees to
 the paisa, so it is the figure from here); deployed to 0065 (API 69d8389); 1.0.0 (31). The record in `plan/sessions/043/`.
-**Next:** Phase 22's plan (build 31 tried by the owner: "build 31 fine") (the admin
+**Next:** resume 042 (`plan/resume/042-phase-22-boards-and-plan.md`, on Fable 5.1): Phase 22's reads, boards and plan (build 31 tried by the owner: "build 31 fine") (the admin
 portal, control and analytics; R-api-4's two-batch exam split is on its list). The order (D81): V3's Phases 17 to 22, then the
 external testing round, then Phase 16.
 
