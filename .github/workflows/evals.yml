@@ -1,17 +1,16 @@
 name: evals
 
-# The golden sets of the kinds a pull request touches (D74, D101): their prompts, their agents, the schemas or the
-# evals themselves. `bun evals --kinds <those>` on the real models, graded by Opus 5.5; a red run is not merged (D86's
-# local green includes it). The repository secret ANTHROPIC_API_KEY is set by the session from api/.env.local (D87).
-# Every action is pinned to a commit (D14); the tag it was is in the comment.
+# The golden sets of the kinds asked (D74, D101), on the real models, graded by Opus 5.5: run by hand alone (D112: no
+# automation spends on AI calls). The person running it names the kinds; `bun evals --kinds a,b` locally does the same.
+# The repository secret ANTHROPIC_API_KEY is set by the session from api/.env.local (D87). Every action is pinned to a
+# commit (D14); the tag it was is in the comment.
 on:
-  pull_request:
-    paths:
-      - "api/src/prompts/**"
-      - "api/src/agents/**"
-      - "api/src/schemas.ts"
-      - "api/src/evals/**"
-      - "api/evals/**"
+  workflow_dispatch:
+    inputs:
+      kinds:
+        description: "The kinds to run, comma-separated (for example sheet,check)"
+        required: true
+        type: string
 
 concurrency:
   group: evals-${{ github.ref }}
@@ -22,13 +21,11 @@ permissions:
 
 jobs:
   evals:
-    name: the changed kinds' evals
+    name: the kinds' evals
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
@@ -37,19 +34,11 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
-      - name: The kinds this change touches
-        id: kinds
-        run: echo "kinds=$(bun tools/evals-changed.ts origin/${{ github.base_ref }}...HEAD)" >> "$GITHUB_OUTPUT"
-
       - name: Evals
-        if: steps.kinds.outputs.kinds != 'none'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          KINDS: ${{ inputs.kinds }}
         run: |
           set -o pipefail
-          bun evals --kinds "${{ steps.kinds.outputs.kinds }}" 2>&1 | tee evals.log
+          bun evals --kinds "$KINDS" 2>&1 | tee evals.log
           grep '^|' evals.log >> "$GITHUB_STEP_SUMMARY" || true
-
-      - name: Nothing to run
-        if: steps.kinds.outputs.kinds == 'none'
-        run: echo "No kind's prompt, agent or golden set changed; no evals run." >> "$GITHUB_STEP_SUMMARY"

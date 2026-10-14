@@ -65,30 +65,10 @@ test("fails in words when the site cannot be reached", async () => {
   expect(problems.join("\n")).toContain("could not reach");
 });
 
-const account = () => ({ url: site, anon: "anon-key", email: "smoke@example.com", password: "pw", centre: "c-1" });
-
-test("the smoke signs in and makes one check", async () => {
+test("a tick without 200 fails the smoke", async () => {
   commit = "abc";
   healthStatus = 200;
   aiStatus = 401;
-  questions = [{ prompt: "1/2 + 1/4" }];
-  expect(await smoke(site, "abc", { attempts: 1, waitMs: 0, account: account() })).toEqual([]);
-  expect(seen.token?.headers.get("apikey")).toBe("anon-key");
-  expect(seen.token?.body).toEqual({ email: "smoke@example.com", password: "pw" });
-  expect(seen.make?.headers.get("authorization")).toBe("Bearer the-token");
-  expect(seen.make?.headers.get("idempotency-key")).toBe("smoke-abc");
-  expect(seen.make?.headers.get("x-request-id")).toMatch(/^[0-9a-f-]{36}$/);
-  expect(seen.make?.body).toMatchObject({ kind: "check", centreId: "c-1" });
-});
-
-test("an empty answer fails the smoke", async () => {
-  questions = [];
-  const problems = await smoke(site, "abc", { attempts: 1, waitMs: 0, account: account() });
-  expect(problems.join("\n")).toContain("no question");
-  questions = [{ prompt: "x" }];
-});
-
-test("a tick without 200 fails the smoke", async () => {
   tickStatus = 401;
   const problems = await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" });
   expect(problems.join("\n")).toContain("/jobs/tick answered 401");
@@ -97,10 +77,14 @@ test("a tick without 200 fails the smoke", async () => {
   expect(seen.tick?.get("authorization")).toBe("Bearer s");
 });
 
-test("without an account the two old checks still run", async () => {
+test("the smoke never makes a paid AI call, with or without the worker's secret (D112)", async () => {
   seen.make = undefined;
+  seen.token = undefined;
   expect(await smoke(site, "abc", { attempts: 1, waitMs: 0 })).toEqual([]);
+  expect(await smoke(site, "abc", { attempts: 1, waitMs: 0, workerSecret: "s" })).toEqual([]);
   expect(seen.make).toBeUndefined();
+  expect(seen.token).toBeUndefined();
+  expect(Object.keys(await import("./smoke"))).not.toContain("accountFromEnv");
 });
 
 test("the worker's health must render a page and reach APNs (plan decision 26)", async () => {

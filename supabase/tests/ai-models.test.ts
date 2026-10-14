@@ -111,7 +111,7 @@ test("the platform finishes a row with its cached tokens", async () => {
   expect(done.data?.tokens_cached).toBe(1000);
 });
 
-test("schedule_evals queues one eval_run for India's day, once", async () => {
+test("schedule_evals, called by hand, queues one eval_run for India's day, once; no cron calls it (D112)", async () => {
   const now = "2026-10-20T10:00:00Z";
   expect((await svc.rpc("schedule_evals", { p_now: now })).data).toBe(1);
   expect((await svc.rpc("schedule_evals", { p_now: now })).data).toBe(0);
@@ -119,8 +119,8 @@ test("schedule_evals queues one eval_run for India's day, once", async () => {
   expect(job).toMatchObject({ kind: "eval_run", day: "2026-10-20", centre_id: null });
   expect(new Date(job.run_at).toISOString()).toBe("2026-10-19T20:30:00.000Z");
   expect((await a.rpc("schedule_evals", { p_now: now })).error?.code).toBe("42501");
-  const [cron] = await sql`select schedule, command from cron.job where jobname = 'schedule_evals'`;
-  expect(cron).toEqual({ schedule: "35 20 * * *", command: "select public.schedule_evals()" });
+  // No schedule queues it (D112): a nightly is queued by hand alone.
+  expect(await sql`select jobname from cron.job where jobname = 'schedule_evals'`).toHaveLength(0);
   await sql`delete from public.jobs where idempotency_key = 'evals:2026-10-20'`;
 });
 
