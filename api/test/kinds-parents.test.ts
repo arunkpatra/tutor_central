@@ -77,8 +77,8 @@ test("the four kinds keep the fake's known-good answer without a repair, and nam
 
 test("the reason of a Write again is in the request and never in the message's rubric as a fact", () => {
   const r = noteRequest(noteInput({ reason: "Less about marks" }));
-  expect(r.system.own).toContain("The tutor asked for a change: Less about marks. Do that and keep the facts.");
-  expect(note.rubric).toContain("A change the tutor asked for with Write again is an instruction to the writer, never a sentence of the message");
+  expect(r.system.own).toContain("The tutor asked for a change: Less about marks. Make it:");
+  expect(note.rubric).toContain("A change the tutor asked for with Write again is made, and is an instruction to the writer, never a sentence of the message");
   expect(note.rubric).toContain("Every number in the message is one the request gives");
   // The not-on-track message's facts ("Why: …") are not Write again's reason (the evals' not-kn-home): the line is the note's alone.
   expect(notOnTrack.rubric).not.toContain("Write again");
@@ -97,4 +97,12 @@ test("test tomorrow asks for one thing to go over only when the facts give one (
   const base = { centreId, kind: "test_tomorrow", studentId, studentName: "Riya Sharma", centreName: "Bright Minds Tuition", language: "kn", classLevel: "5", subject: "Mathematics", title: "Maths class test", date: "2026-10-21" } as const;
   expect(systemTextOf(testTomorrowRequest(MakeInput.parse(base) as never))).not.toContain("one thing to go over");
   expect(systemTextOf(testTomorrowRequest(MakeInput.parse({ ...base, revise: "Fractions" }) as never))).toContain("one thing to go over this evening");
+});
+
+test("a note made again with a reason makes the change: a fact it asks for less of is left out, the rest kept (hand run 1)", () => {
+  const words = systemTextOf(noteRequest({ ...noteInput({ language: "hi" }), reason: "Less about marks" }));
+  expect(words).toContain("The tutor asked for a change: Less about marks.");
+  expect(words).toContain("a fact the change asks for less of is left out");
+  expect(words).not.toContain("Do that and keep the facts");
+  expect(note.rubric).toContain("a change asking for less of a fact leaves that fact out");
 });

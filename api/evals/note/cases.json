@@ -98,7 +98,8 @@
     },
     "expect": {
       "never": [
-        "Less about marks"
+        "Less about marks",
+        "9 of 12"
       ]
     }
   },

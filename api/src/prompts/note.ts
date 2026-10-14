@@ -5,7 +5,7 @@ import { MESSAGE, spokenDate, whoLines } from "./message.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "4";
+export const VERSION = "5";
 
 /** The weekly note to a parent (P10-Note): the week's facts from the student's record, worked out on the phone, in the
  *  parent's language with the English beside it. A fact that is empty is left out of the text, and the model is told to
@@ -18,7 +18,7 @@ export function request(input: WeeklyNoteInput): ClaudeRequest<MessageOutput> {
     version: VERSION,
     system: blocks([VOICE, MESSAGE, "This is the weekly note."], [
       input.tutorSays ? TUTOR_ADDS : "",
-      input.reason ? `The tutor asked for a change: ${input.reason}. Do that and keep the facts. The change is an instruction to you, never a sentence of the message.` : "",
+      input.reason ? `The tutor asked for a change: ${input.reason}. Make it: a fact the change asks for less of is left out, every other fact is kept, and none is added. The change is an instruction to you, never a sentence of the message.` : "",
     ]),
     text: [
       ...whoLines(input),
