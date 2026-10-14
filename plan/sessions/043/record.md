@@ -67,8 +67,9 @@ The runbook now says so (section 15).
 ## For the owner (build 31)
 
 1. On the iPhone, open TestFlight and install Tutor Central 1.0.0 (31).
-2. On a student's page whose parent agreed: Write a note → Write again → pick a reason (for example "Less about marks"). The
-   new note arrives, and the old one stays on screen until it does.
+2. More → Make something → Note to a parent → choose a student whose parent agreed → Write the note → Write again → pick a
+   reason (for example "Less about marks"). The new note arrives, and the old one stays on screen until it does. (Corrected:
+   the first wording named a "Write a note" button on the student's page, which does not exist.)
 3. More → Make something → Question paper → fill it in and make it. Wait a few seconds, then Share as PDF: the shared file
    has the questions and an answer key on its last page.
 4. If an exam is within its window, open its page in School. It shows the days of preparation, and on the mock's day,
