@@ -1,20 +1,5 @@
 [
   {
-    "file": "dev-science-8",
-    "hand": true,
-    "title": "Dev Kumar · Class 8 · Science quiz",
-    "lines": [
-      "1. Rusting of iron",
-      "2. Hydrogen",
-      "3. Magnesium + oxygen → magnesium oxide",
-      "4. 2H2 + O2 → 2H2O",
-      "5. Combination: CaO + H2O → Ca(OH)2",
-      "6. A push or a pull",
-      "7. Pressure = force × area",
-      "8. Friction"
-    ]
-  },
-  {
     "file": "riya-maths-5",
     "hand": true,
     "title": "Riya Sharma · Class 5 · Maths test",
@@ -60,6 +45,29 @@
       "3. Iron + oxygen → iron oxide",
       "4. Fe + O2 → Fe2O3",
       "5. Muscular force"
+    ]
+  },
+  {
+    "file": "diya-science-8-mock",
+    "hand": true,
+    "title": "Diya Pillai · Class 8 · Science unit test 3 (mock)",
+    "lines": [
+      "1. (b) chemical change &nbsp;&nbsp;&nbsp; 2. (b) magnesium oxide",
+      "3. (a) &nbsp;&nbsp;&nbsp; 4. (b) pascal",
+      "5. (c) magnetic force &nbsp;&nbsp;&nbsp; 6. (a) 10 Pa",
+      "7. (c) hydrogen &nbsp;&nbsp;&nbsp; 8. (b) decreases",
+      "9. A change where new substances form. Example: curd from milk.",
+      "10. Mg + O2 → MgO",
+      "11. Sharp knife has less area so more pressure.",
+      "12. It can change speed and change shape.",
+      "13. Bubbles come. It is a chemical change.",
+      "14. P = 150 × 0.03 = 4.5 Pa",
+      "15. Decomposition: one thing breaks into many, CaCO3 → CaO + CO2. Displacement: Fe + CuSO4 → FeSO4 + Cu",
+      "16. Blue colour becomes green, brown coat on nail.",
+      "17. Contact: friction, muscular. Non-contact: magnetic, gravity.",
+      "18. P = 400 / 0.02 = 20000 Pa",
+      "19. Zn + 2HCl → ZnCl2 + H2. Displacement.",
+      "20. (a) water pressure is more at the bottom."
     ]
   }
 ]

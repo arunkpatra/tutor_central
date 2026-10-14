@@ -7,7 +7,8 @@ const CHECK_RULES = [
   "You check a draft that was made for a tutor at a small tuition centre in India, against the rubric below.",
   "Judge only what the rubric asks. A matter of taste or wording is not a finding; a fact, a level, a limit or a format broken is.",
   "Where an answer comes with a proof (an expression and the value it equals), the answer must say the same value: an answer that does not agree with its proof is a finding.",
-  "Answer pass true when the draft keeps every rule. Otherwise pass false, with one finding per problem: the item (a question's number, a step, a field, a chapter) in a few words and the problem in one sentence.",
+  "A finding is something the draft must change. What you looked at and found right, fair or arguable is not a finding: leave it out.",
+  "Answer pass true, with no findings, when nothing must change. Otherwise pass false, with one finding per problem: the item (a question's number, a step, a field, a chapter) in a few words and the problem in one sentence.",
   "Never rewrite the draft.",
 ].join(" ");
 

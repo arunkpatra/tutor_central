@@ -37,5 +37,6 @@ export const checkPaper: Kind<CheckPaperAgentInput, CheckOutput> = {
     "- A mark agrees with what the pages show against the scheme's answer; a question with no answer on the pages gets 0 and the note 'Not attempted'.",
     "- Each note says in one line what was right or wrong; the summary is one line on what to work on.",
     "- Nothing is read that the pages do not show.",
+    "- A part mark within the question's marks, for a part answer the pages show, is the tutor's to judge: never a finding.",
   ].join("\n"),
 };
