@@ -75,6 +75,15 @@ public struct MockMark: Hashable, Sendable {
     }
 
     static let againFailed = "Couldn't make the mock again. The one you have is still here."
+    /// Make it again's reason while the new mock is made (P21-Mock-Again); nil otherwise.
+    public private(set) var againReason: MockReason?
+    /// Where a reason is kept as feedback (D107); none in previews.
+    @ObservationIgnored public var feedback: (any FeedbackRecorder)?
+
+    /// "An easier mock is on its way. This one stays until it arrives."
+    public var regeneratingLine: String {
+        (againReason ?? .own("")).line
+    }
 
     var centre: UUID {
         workspace.centre.id
@@ -194,19 +203,24 @@ public struct MockMark: Hashable, Sendable {
 
     /// A new mock in the same pattern, kept with the exam (`regeneratedFrom`) and linked to the plan's lines this one
     /// served; offline it is refused in words; a failure keeps this one.
-    public func again() async -> Bool {
+    public func again(_ reason: MockReason? = nil) async -> Bool {
         guard !making, let artefact, let mock else { return false }
         guard await online() else {
             message = OfflineRefusal.words(for: .regenerate)
             return false
         }
         making = true
-        defer { making = false }
+        againReason = reason
+        defer {
+            making = false
+            againReason = nil
+        }
+        await ArtefactFeedback.again(artefact, reason: reason?.words, recorder: feedback, centre: centre)
         let level = artefact.madeFor?.level ?? students.compactMap(\.classLevel).max() ?? .eight
         let request = MockRequest(
             classLevel: level, subject: exam?.subject ?? artefact.madeFor?.subject ?? "", title: mock.title,
             portions: mock.portions,
-            pattern: mock.pattern, schoolItemID: artefact.schoolItemID ?? mock.schoolItemID
+            pattern: mock.pattern, schoolItemID: artefact.schoolItemID ?? mock.schoolItemID, reason: reason?.words
         )
         do {
             let made = try await IdempotencyKey.another { try await ai.makeMock(request, centre: centre) }

@@ -43,6 +43,8 @@ import Foundation
     /// The school's calls (Phase 13).
     public private(set) var parseCalls: [SchoolSource] = []
     public private(set) var mockCalls: [MockRequest] = []
+    /// Each brief's reason (Make it again, D107), nil for a first.
+    public private(set) var briefReasons: [String?] = []
     public private(set) var gapCalls: [GapRequest] = []
     public private(set) var messageCalls: [TestTomorrowRequest] = []
     /// The parents' calls (Phase 14).
@@ -145,9 +147,10 @@ import Foundation
     }
 
     public func makeBrief(
-        classLevel _: ClassLevel, subject _: String, chapter: String, centre _: UUID
+        classLevel _: ClassLevel, subject _: String, chapter: String, reason: String?, centre _: UUID
     ) async throws(APIFailure) -> MadeBrief {
         briefs.append(chapter)
+        briefReasons.append(reason)
         try await answer(.brief)
         return MadeBrief(generationID: UUID(), brief: AISamples.brief)
     }

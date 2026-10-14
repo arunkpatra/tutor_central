@@ -83,7 +83,7 @@ struct NoteDaySection: View {
 
     private func state(_ state: NoteRowModel.State) -> NoteRow.State {
         switch state {
-        case .read: .read
+        case .read, .setAside: .read
         case .sent: .sent
         case .held: .held
         }

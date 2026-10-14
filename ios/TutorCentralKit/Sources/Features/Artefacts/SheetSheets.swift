@@ -2,8 +2,11 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// "Say what to change…" (P10-Sheet-Regenerate): the tutor's own reason, up to 200 characters.
+/// "Say what to change…" (P10-Sheet-Regenerate; the note's Write again, P21-Note-Again): the tutor's own reason, up to
+/// 200 characters.
 struct ReasonSheet: View {
+    var title = "Make it again"
+    var action = "Make"
     let onMake: (String) -> Void
     let onClose: () -> Void
     @State private var text = ""
@@ -11,8 +14,8 @@ struct ReasonSheet: View {
     var body: some View {
         FittedSheet(spacing: Tokens.sectionGap, bottom: Tokens.groupGap) {
             SheetHeader(
-                title: "Make it again", cancel: ("Cancel", onClose),
-                save: .init("Make", enabled: !text.trimmingCharacters(in: .whitespaces).isEmpty) { onMake(text) }
+                title: title, cancel: ("Cancel", onClose),
+                save: .init(action, enabled: !text.trimmingCharacters(in: .whitespaces).isEmpty) { onMake(text) }
             )
         } content: {
             NotesWell(

@@ -220,17 +220,20 @@ import Testing
         #expect(store.stage == .failed("Riya's note waits for Neha's consent. Record it on Riya's page first."))
     }
 
-    /// Write again is the phone's call: its failure keeps the facts and offers Try Again.
-    @Test func aFailedCallKeepsTheFactsAndOffersTryAgain() async {
+    /// Write again is the phone's call: the note shown stays until the new one arrives (Phase 21, as the sheet's), so
+    /// its failure keeps that note and its facts and says so.
+    @Test func aFailedWriteAgainKeepsTheNoteShownAndSaysSo() async {
         let world = World()
         let store = await Self.make(Self.dev, world)
         await store.load()
+        let shown = store.message
         world.ai.scriptByKind[.note] = .failure(.service)
-        await store.writeAgain()
-        #expect(store.stage == .failed("The AI service didn't answer. Try again.") && store.facts.count == 4)
+        await store.writeAgain(.warmer)
+        #expect(store.stage == .ready && store.message == shown && store.facts.count == 4)
+        #expect(store.alert == "Couldn't write it again. The note you have is still here.")
         world.ai.scriptByKind[.note] = nil
-        await store.make()
-        #expect(store.stage == .ready)
+        await store.writeAgain(.warmer)
+        #expect(store.stage == .ready && world.plans.kept.count == 2)
     }
 
     @Test func offlineAKeptNoteOpensFromItsCopyAndAnUnmadeOneIsRefused() async {
@@ -274,5 +277,73 @@ import Testing
         #expect(store.stage == .ready && store.message == made.message)
         opening.cancel()
         #expect(world.ai.noteCalls.isEmpty)
+    }
+}
+
+/// D107 and D110 on the note: an edit kept at Send (never an unchanged draft), Write again's reason sent and kept, a
+/// note
+/// the check set aside shown as such, and the tutor's own note in its place kept as a replacement.
+extension NoteStoreTests {
+    @Test func anUnchangedSendWritesNoFeedbackAnEditWritesOne() async {
+        let recorder = FakeFeedbackRecorder()
+        let store = await Self.make(Self.dev, World())
+        store.feedback = recorder
+        await store.load()
+        #expect(await store.send())
+        #expect(recorder.recorded.isEmpty)
+        store.message += " रमेश जी"
+        #expect(await store.send())
+        #expect(recorder.recorded.map(\.kind) == [.edit])
+        #expect(recorder.recorded.first?.revised?.text == store.message.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+
+    @Test func writeAgainCarriesItsReasonKeepsItAndTheOldNoteStaysUntilTheNewOne() async throws {
+        let world = World(), recorder = FakeFeedbackRecorder()
+        let store = await Self.make(Self.dev, world)
+        store.feedback = recorder
+        await store.load()
+        let old = store.message
+        world.ai.delay = .seconds(1)
+        let task = Task { await store.writeAgain(.lessAboutMarks) }
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(store.stage == .ready && store.message == old)
+        #expect(store
+            .regeneratingLine == "A note with less about marks is on its way. This one stays until it arrives.")
+        await task.value
+        #expect(world.ai.noteCalls.last?.reason == "Less about marks")
+        #expect(recorder.recorded.map(\.kind) == [.again] && recorder.recorded.first?.reason == "Less about marks")
+        #expect(store.rewriting == nil && world.plans.kept.count == 2)
+    }
+
+    @Test func aSetAsideNoteShowsTheCardAndWriteItMyselfKeepsAReplacement() async {
+        let world = World(), recorder = FakeFeedbackRecorder()
+        let draft = UUID()
+        world.plans.setAside = [Self.dev: draft]
+        let store = await Self.make(Self.dev, world)
+        store.feedback = recorder
+        await store.load()
+        #expect(store.stage == .setAside && world.ai.noteCalls.isEmpty)
+        #expect(!store.canSend && store.facts.map(\.label) == ["Taught", "Got right", "To practise", "Coming"])
+        #expect(
+            store.setAsideLine == "The draft said something that is not in Dev's record, so it was set aside. "
+                + "Tap Write again for a fresh one, or write it yourself."
+        )
+        #expect(store
+            .aiLine == "Every note is checked against Dev's record before it reaches you. This one did not pass.")
+        store.writeMyself()
+        #expect(store.stage == .ready && store.message.isEmpty && store.english == nil)
+        store.message = "नमस्ते रमेश जी, इस हफ़्ते देव ने समीकरण सीखे।"
+        #expect(await store.send())
+        #expect(recorder.recorded == [Feedback.replace(draft, with: .text("नमस्ते रमेश जी, इस हफ़्ते देव ने समीकरण सीखे।"))])
+    }
+
+    @Test func aNoteKeptThisWeekIsNotSetAside() async {
+        let world = World()
+        let first = await Self.make(Self.dev, world)
+        await first.load()
+        world.plans.setAside = [Self.dev: UUID()]
+        let again = await Self.make(Self.dev, World(ai: FakeAIRepository(), plans: world.plans))
+        await again.load()
+        #expect(again.stage == .ready)
     }
 }

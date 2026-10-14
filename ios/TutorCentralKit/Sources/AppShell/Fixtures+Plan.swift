@@ -10,7 +10,7 @@ extension Fixtures {
     static let planStates: Set<LaunchState> = .init([
         .today, .todayScrolled, .todayPlanning, .todayPlanMaking, .todayPlanFailed, .todayLineMenu, .todayPlanChanged,
         .todayPlanChange,
-        .todayAfterClose, .workedExample, .brief, .todayRevision,
+        .todayAfterClose, .workedExample, .brief, .briefAgain, .todayRevision,
     ]).union(sheetStates).union(figureStates.keys).union(mathsStates)
 
     /// Phase 20's material states over the boards' plan with its maths groups (P20-*); the mock's is apart.
@@ -75,7 +75,8 @@ extension Fixtures {
     }
 
     @MainActor static func plans(for state: LaunchState) -> FakePlansRepository {
-        if let make = makePlans(for: state) ?? jobPlans(for: state) ?? mathsPlans(for: state) {
+        if let make = makePlans(for: state) ?? jobPlans(for: state) ?? mathsPlans(for: state) ??
+            setAsidePlans(for: state) {
             return make
         }
         switch state {
@@ -87,9 +88,10 @@ extension Fixtures {
             return FakePlansRepository.figure(figureStates[state] ?? .numberLine)
         case _ where lastDaysStates.contains(state):
             return FakePlansRepository(artefacts: FakePlansRepository.lastDaysArtefacts)
-        case .mock, .mockKey, .make, .aiHistory:
+        case .mock, .mockKey, .mockAgain, .make, .aiHistory:
             return FakePlansRepository(
-                artefacts: [.mock, .mockKey].contains(state) ? [FakePlansRepository.boardMock] : FakePlansRepository
+                artefacts: [.mock, .mockKey, .mockAgain]
+                    .contains(state) ? [FakePlansRepository.boardMock] : FakePlansRepository
                     .madeRecent
             )
         case .closeCards, .todayRevision:

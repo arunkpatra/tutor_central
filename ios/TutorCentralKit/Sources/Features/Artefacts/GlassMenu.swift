@@ -1,4 +1,5 @@
 import DesignSystem
+import Domain
 import SwiftUI
 
 /// A row of the Phase 3 menu: its words, an optional symbol, what it does.
@@ -60,5 +61,16 @@ struct GlassMenu: View {
             .padding(Tokens.pageSide)
             .padding(.top, top)
         }
+    }
+}
+
+/// Make it again's or Write again's menu rows (P21-Brief-Again, P21-Mock-Again, P21-Note-Again): the kind's reasons,
+/// then "Say what to change…".
+enum AgainMenu {
+    static func rows<Reason: AgainReason>(
+        _: Reason.Type, pick: @escaping (Reason) -> Void, ask: @escaping () -> Void
+    ) -> [GlassMenuRow] {
+        Reason.menu.map { reason in GlassMenuRow(label: reason.label, symbol: nil) { pick(reason) } }
+            + [GlassMenuRow(label: "Say what to change…", symbol: nil, action: ask)]
     }
 }

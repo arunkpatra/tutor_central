@@ -44,11 +44,11 @@ public extension APIClient {
     }
 
     func makeBrief(
-        classLevel: ClassLevel, subject: String, chapter: String, centre: UUID
+        classLevel: ClassLevel, subject: String, chapter: String, reason: String?, centre: UUID
     ) async throws(APIFailure) -> MadeBrief {
         let body = MakeBriefBody(
             centreId: centre.uuidString.lowercased(), classLevel: classLevel.rawValue, subject: subject,
-            chapter: chapter
+            chapter: chapter, reason: reason
         )
         let answer = try await made(Brief.self, body: body)
         return MadeBrief(generationID: answer.id, brief: answer.result)

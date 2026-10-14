@@ -60,9 +60,11 @@ public extension FakePlansRepository {
             for student: UUID? = nil
         )
             -> Artefact {
+            // A made thing has its generation (D107's feedback is kept beside it).
             Artefact(
                 id: artefactID(number), kind: kind, source: .made, title: title, content: content, photoPath: nil,
-                studentID: student, planID: planID, regeneratedFrom: nil, madeAt: madeAt
+                studentID: student, planID: planID, regeneratedFrom: nil, madeAt: madeAt,
+                generationID: UUID(uuidString: String(format: "abababab-0000-0000-0099-%012d", number))
             )
         }
         let sheet = { (homework: Bool, light: Bool) in

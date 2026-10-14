@@ -22,12 +22,14 @@ public struct NoteWriter: Sendable {
     /// The note made from the week's record and kept; `words` are the tutor's own (a weekly note only), `previous` the
     /// note it replaces. The keep runs in a task of its own: the call is paid for, so leaving the screen keeps it.
     public func write(
-        _ student: Student, record: NoteRecord, week: ClosedRange<Day>, saying words: String?, replacing previous: UUID?
+        _ student: Student, record: NoteRecord, week: ClosedRange<Day>, saying words: String?,
+        asking reason: String? = nil,
+        replacing previous: UUID?
     ) async throws -> Artefact {
         let ladder = CanDoWeek.isLadderNote(record.student, chapters: record.chapters)
         let language = student.messageLanguage
         let said = ladder ? nil : words
-        let made = try await call(record, student: student, ladder: ladder, week: week, saying: said)
+        let made = try await call(record, student: student, ladder: ladder, week: week, words: (said, reason))
         let facts = ladder
             ? CanDoWeek.facts(chapters: record.chapters, skills: record.skills, week: week, calendar: calendar).rows
             : NoteWeek.facts(record, week: week, calendar: calendar).rows
@@ -44,8 +46,10 @@ public struct NoteWriter: Sendable {
         return try await Task { try await plans.keepNote(new, centre: centre) }.value
     }
 
+    /// `words`: the tutor's own (`saying`) and Write again's reason (`asking`).
     private func call(
-        _ record: NoteRecord, student: Student, ladder: Bool, week: ClosedRange<Day>, saying words: String?
+        _ record: NoteRecord, student: Student, ladder: Bool, week: ClosedRange<Day>,
+        words: (saying: String?, asking: String?)
     ) async throws(APIFailure) -> MadeMessage {
         let tutor = workspace.profile.displayName ?? workspace.centre.name
         let level = student.classLevel ?? .messageFallback
@@ -71,6 +75,8 @@ public struct NoteWriter: Sendable {
             centreName: workspace.centre.name, classLevel: level, language: language, weekMonday: week.lowerBound,
             week: NoteRequest.Week(facts)
         )
-        return try await ai.makeNote(words.map(request.saying) ?? request, centre: workspace.centre.id)
+        // Write again's reason is the weekly note's (D107); can-now-do is written again without one.
+        let said = words.saying.map(request.saying) ?? request
+        return try await ai.makeNote(said.asking(words.asking), centre: workspace.centre.id)
     }
 }

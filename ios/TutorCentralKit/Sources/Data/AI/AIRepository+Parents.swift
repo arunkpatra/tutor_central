@@ -41,6 +41,8 @@ public struct NoteRequest: Hashable, Sendable {
     public let week: Week
     /// The tutor's own words from Make's note (Phase 15), at most 300 scalars; nil when none.
     public let tutorSays: String?
+    /// Write again's reason (D107): an instruction to the writer, never a sentence of the note.
+    public var reason: String?
 
     public init(
         studentID: UUID, studentName: String, parentName: String?, tutorName: String, centreName: String,
@@ -63,11 +65,20 @@ public struct NoteRequest: Hashable, Sendable {
         let trimmed = words.trimmingCharacters(in: .whitespacesAndNewlines)
         let kept = trimmed
             .isEmpty ? nil : String(String.UnicodeScalarView(trimmed.unicodeScalars.prefix(APIContract.tutorSaysMax)))
-        return NoteRequest(
+        var said = NoteRequest(
             studentID: studentID, studentName: studentName, parentName: parentName, tutorName: tutorName,
             centreName: centreName, classLevel: classLevel, language: language, weekMonday: weekMonday, week: week,
             tutorSays: kept
         )
+        said.reason = reason
+        return said
+    }
+
+    /// The same request with Write again's reason (D107).
+    public func asking(_ reason: String?) -> NoteRequest {
+        var asked = self
+        asked.reason = reason
+        return asked
     }
 }
 

@@ -155,7 +155,11 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case noteSend = "note-send"
     /// `noteCanDoNoChange`: Sahil's can-now-do in a week no step moved (P14-CanNowDo-NoChange, U46).
     case noteCanDo = "note-can-do", noteCanDoNoChange = "note-can-do-no-change"
-    case noteWriting = "note-writing"
+    /// The note being written; the note day with Nikhil's note set aside by the check (P21-NoteDay-SetAside).
+    case noteWriting = "note-writing", todayNoteDaySetAside = "today-note-day-set-aside"
+    /// Phase 21 (D107, D110): Write again's reasons over Dev's note (P21-Note-Again, -Light); Dev's note set aside
+    /// (P21-Note-SetAside, -Light); Make it again's reasons on the brief and the mock (P21-Brief-Again, -Mock-Again).
+    case noteAgain = "note-again", noteSetAside = "note-set-aside", briefAgain = "brief-again", mockAgain = "mock-again"
     /// Dev's sent log with Held (P10-Student-Messages).
     case studentMessages = "student-messages"
     /// Friday 9 October: Dev not on track (P10-Student-NotOnTrack), the next step (P10-NextStep), the message to the

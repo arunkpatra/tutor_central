@@ -18,6 +18,8 @@ import Foundation
     public var keepDelay: Duration?
     /// Tests: `notes` answers this long after it is asked (a connection that hangs).
     public var notesDelay: Duration?
+    /// The notes the check set aside, by student: the refused draft (`setAsideNotes`), unless a note is kept since.
+    public var setAside: [UUID: UUID] = [:]
     /// The time a make or keep is stamped with.
     public var now: Date
 
@@ -111,6 +113,13 @@ import Foundation
             [.note, .canDo].contains(artefact.kind) && artefact.madeAt >= since
                 && artefact.studentID.map(students.contains) == true
         }.reversed()
+    }
+
+    public func setAsideNotes(centre _: UUID, students: [UUID], since: Date) async throws -> [UUID: UUID] {
+        try await begin()
+        let haveNotes = Set(artefacts.filter { [.note, .canDo].contains($0.kind) && $0.madeAt >= since }
+            .compactMap(\.studentID))
+        return setAside.filter { students.contains($0.key) && !haveNotes.contains($0.key) }
     }
 
     public func made(centre _: UUID) async throws -> [Artefact] {

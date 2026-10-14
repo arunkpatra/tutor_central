@@ -49,8 +49,10 @@ public struct NoteContext {
 /// decisions 1 to 3, 18, 21): the kept note of the week, which the note day's job wrote on the server (Phase 18), else
 /// asked of the server and waited for; edited, written again, copied, sent on WhatsApp with the signature and logged.
 @MainActor @Observable public final class NoteStore {
+    /// `setAside`: the week's note was refused by the check against the record (D110, P21-Note-SetAside); Write again
+    /// or Write it myself.
     public enum Stage: Hashable, Sendable {
-        case loading, writing, ready, failed(String)
+        case loading, writing, ready, failed(String), setAside
     }
 
     /// The pasteboard and the link (the view's; tests record them).
@@ -84,6 +86,8 @@ public struct NoteContext {
 
     public static let limit = 600
     public static let helper = "Edit anything before it goes. Tap Write again for a fresh draft."
+    /// The set-aside card's words (P21-Note-SetAside).
+    public static let setAsideTitle = "Nothing to send yet"
 
     public internal(set) var stage: Stage = .loading
     public internal(set) var isLadder = false
@@ -101,6 +105,14 @@ public struct NoteContext {
     /// The tutor's own words from Make's note (Phase 15): in the request and kept in the note; with a note already kept
     /// this week, a new one is written with them.
     public var tutorSays: String?
+    /// Write again's reason while the new note is written over the one shown (P21-Note-Again); nil otherwise.
+    public internal(set) var rewriting: NoteReason?
+    /// The draft the check set aside this week (its generation): the feedback's, when the tutor writes the note.
+    var setAsideDraft: UUID?
+    /// The tutor writes this week's note themselves in place of a set-aside one (Write it myself).
+    public internal(set) var writingOwn = false
+    /// Where an edit, a reason or the tutor's own note is kept as feedback (D107); none in previews.
+    @ObservationIgnored public var feedback: (any FeedbackRecorder)?
     let studentID: UUID
     let noteDay: Day
     let context: NoteContext
@@ -151,8 +163,24 @@ public struct NoteContext {
 
     public var aiLine: String {
         let first = student?.firstName ?? ""
+        if stage == .setAside {
+            return "Every note is checked against \(first)'s record before it reaches you. This one did not pass."
+        }
         return "AI can make mistakes. Read the note as the parent will; the facts are from \(first)'s "
             + (isLadder ? "ladder." : "record.")
+    }
+
+    /// "The draft said something that is not in Dev's record, so it was set aside. Tap Write again for a fresh one, or
+    /// write it yourself."
+    public var setAsideLine: String {
+        "The draft said something that is not in \(student?.firstName ?? "the student")'s "
+            + (isLadder ? "ladder" : "record")
+            + ", so it was set aside. Tap Write again for a fresh one, or write it yourself."
+    }
+
+    /// "A note with less about marks is on its way. This one stays until it arrives."
+    public var regeneratingLine: String {
+        rewriting?.line ?? ""
     }
 
     /// The title on the back row.

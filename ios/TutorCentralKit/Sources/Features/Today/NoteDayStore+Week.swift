@@ -25,6 +25,8 @@ extension NoteDayStore {
             textbooks: textbooks, record: record, attendance: attendance, schoolItems: schoolItems
         ).read(students, centre: centre, from: first, to: today, calendar: calendar)
         let entries = try await entriesRead
+        // A set-aside note is read beside the rest; a failed read leaves the rows as they are.
+        let setAside = await (try? plans?.setAsideNotes(centre: centre, students: ids, since: since)) ?? [:]
         var rows: [NoteRowModel] = []
         var parents: [UUID: [MessageEntry]] = [:]
         for id in ids {
@@ -32,7 +34,8 @@ extension NoteDayStore {
             let theirs = entries.filter { register.sameParent($0.studentID, student) }.map(\.entry)
             // The held sheet lists what the cadence counts: this week's suggested sends, never a copy.
             parents[id] = MessageCadence.suggested(theirs, now: moment, calendar: calendar)
-            let state = state(student, entries: entries, parent: theirs, week: week, at: moment)
+            let decided = state(student, entries: entries, parent: theirs, week: week, at: moment)
+            let state: NoteRowModel.State = decided == .read && setAside[id] != nil ? .setAside : decided
             guard let record = records[id] else { continue }
             rows.append(NoteRowModel(
                 id: id, name: student.name, initials: student.initials,
@@ -69,6 +72,9 @@ extension NoteDayStore {
         if case let .held(reason) = state {
             return "\(language) · \(MessageCadence.heldWords(reason))"
         }
+        if state == .setAside {
+            return Self.setAsideLine(language)
+        }
         if CanDoWeek.isLadderNote(record.student, chapters: record.chapters) {
             let facts = CanDoWeek.facts(
                 chapters: record.chapters,
@@ -86,5 +92,10 @@ extension NoteDayStore {
         let topic = NoteWeek.topic(facts, chapters: record.chapters, skills: record.skills)
         let lead = facts.lead(status: record.student.trackStatus, absentDays: absent)
         return [language, topic, lead.isEmpty ? nil : lead].compactMap(\.self).joined(separator: " · ")
+    }
+
+    /// "Hindi · set aside: not in the record · Read to write it again" (P21-NoteDay-SetAside).
+    nonisolated static func setAsideLine(_ language: String) -> String {
+        "\(language) · set aside: not in the record · Read to write it again"
     }
 }

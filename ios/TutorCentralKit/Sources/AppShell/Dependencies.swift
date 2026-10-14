@@ -41,6 +41,8 @@ public struct Dependencies: Sendable {
     public let deviceTokens: any DeviceTokenRepository
     /// The server's jobs for the centre and the requests a member may make (Phase 18): the day's plan job.
     public let jobs: any JobsRepository
+    /// A tutor's feedback on what was made (D107: an edit, a reason, a replacement); none in tests that do not ask.
+    public let feedback: (any FeedbackRecorder)?
     /// A student's consent history (Phase 18): the agreements and withdrawals.
     public let consentHistory: any ConsentHistoryRepository
     /// The files the server made for a centre (a sheet's PDF, a student's export), downloaded once; none in the
@@ -87,6 +89,7 @@ public struct Dependencies: Sendable {
         reminderSettings: any ReminderSettingsRepository,
         deviceTokens: any DeviceTokenRepository,
         jobs: any JobsRepository,
+        feedback: (any FeedbackRecorder)? = nil,
         consentHistory: any ConsentHistoryRepository,
         serverFiles: @escaping @Sendable (UUID) -> ServerFiles? = { _ in nil },
         connectivity: any ConnectivityMonitor,
@@ -122,6 +125,7 @@ public struct Dependencies: Sendable {
         self.reminderSettings = reminderSettings
         self.deviceTokens = deviceTokens
         self.jobs = jobs
+        self.feedback = feedback
         self.consentHistory = consentHistory
         self.serverFiles = serverFiles
         self.connectivity = connectivity
@@ -171,6 +175,7 @@ public struct Dependencies: Sendable {
             reminderSettings: SupabaseReminderSettingsRepository(client: client),
             deviceTokens: SupabaseDeviceTokenRepository(client: client),
             jobs: SupabaseJobsRepository(client: client),
+            feedback: SupabaseFeedbackRepository(client: client),
             consentHistory: SupabaseConsentHistoryRepository(client: client),
             serverFiles: { ServerFiles.live(client: client, centre: $0) },
             connectivity: PathMonitor(),

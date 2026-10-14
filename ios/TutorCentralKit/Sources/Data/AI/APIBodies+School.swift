@@ -35,8 +35,11 @@ struct MakeMockBody: Encodable {
     let title: String
     let portions: [String]
     let pattern: MockPattern
+    /// Make it again's reason (D107); left out of the body when nil.
+    let reason: String?
 
     init(_ request: MockRequest, centre: UUID) {
+        reason = request.reason
         centreId = centre.uuidString.lowercased()
         classLevel = request.classLevel.rawValue
         subject = request.subject

@@ -328,3 +328,23 @@ extension NoteDayStoreTests {
         #expect(row(store, Self.dev)?.state == .sent)
     }
 }
+
+/// D110: a note the check set aside says so on its row; Read opens the note to write it again (P21-NoteDay-SetAside).
+extension NoteDayStoreTests {
+    @Test func theNoteDayRowSaysSetAsideAndReadOpensTheNote() async throws {
+        let store = await Self.make(World())
+        let plans = FakePlansRepository(now: PlanTest.at(11, 18, 30))
+        plans.setAside = [Self.nikhil: UUID()]
+        store.plans = plans
+        var opened: UUID?
+        store.onOpenNote = { student, _ in opened = student }
+        await store.load()
+        let row = try #require(store.rows.first { $0.id == Self.nikhil })
+        #expect(row.state == .setAside)
+        #expect(store.rows.firstIndex { $0.state != .sent } == store.rows.firstIndex { $0.id == Self.nikhil })
+        #expect(row.line == "Kannada · set aside: not in the record · Read to write it again")
+        store.open(row)
+        #expect(opened == Self.nikhil)
+        #expect(store.rows.first { $0.id == Self.dev }?.state != .setAside)
+    }
+}
