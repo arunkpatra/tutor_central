@@ -54,13 +54,14 @@ export function realData(): Data {
       rpc<Record | null>("admin_open_record", { p_admin: admin, p_centre: centre, p_reason: reason, p_ip: ip }),
     record: (audit, admin) => rpc<Record | null>("admin_record_opened", { p_audit: audit, p_admin: admin }),
     cost: async (month, centre) => {
-      const [tiles, byDay, byCentre, byKind] = await Promise.all([
+      const [tiles, byDay, byCentre, byStep, byMonth] = await Promise.all([
         rpc<Cost["tiles"]>("admin_cost_tiles", { p_month: month }),
         rpc<Cost["byDay"]>("admin_cost_by_day", { p_month: month, p_centre: centre }),
         rpc<Cost["byCentre"]>("admin_cost_by_centre", { p_month: month }),
-        rpc<Cost["byKind"]>("admin_cost_by_kind", { p_month: month, p_centre: centre }),
+        rpc<Cost["byStep"]>("admin_cost_by_step", { p_month: month, p_centre: centre }),
+        rpc<Cost["byMonth"]>("admin_cost_by_month", { p_centre: centre }),
       ]);
-      return { tiles, byDay, byCentre, byKind };
+      return { tiles, byDay, byCentre, byStep, byMonth };
     },
     calls: (f) =>
       rpc<Calls>("admin_calls", { p_day: f.day, p_centre: f.centre, p_kind: f.kind, p_status: f.status, p_limit: 200 }),

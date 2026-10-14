@@ -110,7 +110,15 @@ export type Cost = {
   tiles: { month_paise: number; per_active_centre_paise: number; today_paise: number; active_centres: number };
   byDay: { day: string; paise: number }[];
   byCentre: { id: string; name: string; calls: number; paise: number; per_student_paise: number | null }[];
-  byKind: { kind: string; model: string; calls: number; paise: number }[];
+  byStep: { kind: string; step: string; model: string; batched: boolean; calls: number; paise: number }[];
+  byMonth: {
+    month: string;
+    calls: number;
+    paise: number;
+    batched_paise: number;
+    active_centres: number;
+    per_active_centre_paise: number;
+  }[];
 };
 
 export type CallRow = {
