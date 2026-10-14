@@ -149,6 +149,19 @@ test("a batched row is left pending for a day: a Message Batch may take hours (D
   expect(rows.map((r: { status: string }) => r.status)).toEqual(["pending", "failed"]);
 });
 
+test("the nightly's eval_run job starts a parent's-message kind with no student; any other call of that kind needs one (Phase 21 hand run 11)", async () => {
+  const evals = (await svc.rpc("enqueue_job", { p_centre: null, p_kind: "eval_run", p_key: `gate-evals-${stamp}` })).data as string;
+  const plan = (await svc.rpc("enqueue_job", { p_centre: centreA, p_kind: "plan", p_key: `gate-plan-${stamp}` })).data as string;
+  const asked = (job: string | null) => svc.rpc("start_ai_call", { p_centre: centreA, p_kind: "can_do", p_input: {}, p_model: "claude-haiku-5-5", p_key: `gate-cando-${job ?? "none"}-${stamp}`, p_job: job });
+  expect((await asked(evals)).error).toBeNull();
+  expect((await asked(plan)).error?.message).toContain("ai_consent_missing");
+  expect((await asked(null)).error?.message).toContain("ai_consent_missing");
+  // A member naming the nightly's job is still asked for the student.
+  const member = await a.rpc("start_ai_call", { p_centre: centreA, p_kind: "can_do", p_input: {}, p_model: "claude-haiku-5-5", p_key: `gate-cando-member-${stamp}`, p_job: evals });
+  expect(member.error?.message).toContain("ai_consent_missing");
+  await sql`delete from public.jobs where id in (${evals}, ${plan})`;
+});
+
 test("start_ai_generation still answers an id and shares the gate", async () => {
   const r = await a.rpc("start_ai_generation", { p_centre: centreA, p_kind: "homework", p_input: {}, p_model: "m" });
   expect(r.error).toBeNull();

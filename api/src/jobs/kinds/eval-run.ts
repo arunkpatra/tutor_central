@@ -72,7 +72,7 @@ async function submit(job: Job, ctx: StepContext, centre: string): Promise<StepO
   for (const r of cases) {
     const recorded = { evals: input.day, case: r.c.id };
     try {
-      const started = await ctx.db.startCall("", { centre, kind: r.c.kind, input: recorded, model: r.chosen.model, key: keyOf(input.day, r.c.id), inputHash: sha256(JSON.stringify(recorded)), requestId: ctx.requestId, agentStep: "draft" });
+      const started = await ctx.db.startCall("", { centre, kind: r.c.kind, input: recorded, model: r.chosen.model, key: keyOf(input.day, r.c.id), inputHash: sha256(JSON.stringify(recorded)), requestId: ctx.requestId, job: job.id, agentStep: "draft" });
       rows[r.c.id] = started.id;
       items.push(draftItem(r));
     } catch (e) {
@@ -108,7 +108,7 @@ async function drafts(job: Job, ctx: StepContext, centre: string): Promise<StepO
     for (const [suffix, item] of Object.entries(checkItems(r, outcome.parsed)) as [("check" | "grade"), BatchItem][]) {
       const recorded = { evals: input.day, case: r.c.id, step: suffix };
       try {
-        const started = await ctx.db.startCall("", { centre, kind: r.c.kind, input: recorded, model: item.request.model, key: `${keyOf(input.day, r.c.id)}:${suffix}`, inputHash: sha256(JSON.stringify(recorded)), requestId: ctx.requestId, agentStep: suffix });
+        const started = await ctx.db.startCall("", { centre, kind: r.c.kind, input: recorded, model: item.request.model, key: `${keyOf(input.day, r.c.id)}:${suffix}`, inputHash: sha256(JSON.stringify(recorded)), requestId: ctx.requestId, job: job.id, agentStep: suffix });
         rows[item.customId] = started.id;
         next.push(item);
       } catch (e) {
