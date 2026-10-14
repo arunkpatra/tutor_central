@@ -5,7 +5,7 @@ import { runAgent } from "../src/agents/agent.js";
 import { kindFor, rubrics } from "../src/agents/kinds/index.js";
 import { fakeClaude, localAnswer } from "../src/claude-fake.js";
 import { fakeDb } from "../src/db-fake.js";
-import { agentFor, EVAL_KINDS, evaluate, evalsDir, kindsOnDisk, loadCases, pageWords } from "../src/evals/cases.js";
+import { agentFor, ANCHOR_SETS, EVAL_KINDS, evaluate, evalsDir, kindsOnDisk, loadCases, pageWords } from "../src/evals/cases.js";
 
 // The golden sets (D74, plan decision 10): five cases a kind, the seed's names, no real page, each input the route's.
 const BANNED = [/\+91\s?\d/, /\b\d{10}\b/, /[\w.+-]+@[\w-]+\.\w+/];
@@ -13,7 +13,31 @@ const BANNED = [/\+91\s?\d/, /\b\d{10}\b/, /[\w.+-]+@[\w-]+\.\w+/];
 test("every kind on its agent has a golden set of five cases, and no other set exists", () => {
   expect(kindsOnDisk()).toEqual([...EVAL_KINDS].sort());
   for (const kind of EVAL_KINDS) expect({ kind, cases: loadCases([kind]).length }).toEqual({ kind, cases: 5 });
-  expect(new Set(loadCases().map((c) => c.id)).size).toBe(45);
+  expect(new Set(loadCases().map((c) => c.id)).size).toBe(65);
+});
+
+// The seed's students and parents (supabase/seed.sql): no real name in a set (D55, D74).
+const SEED_NAMES = new Set([
+  "Akshita Rao", "Priya Rao", "Ananya Iyer", "Suresh Iyer", "Bir Bikram Singh", "Harjeet Singh", "Dev Kumar", "Ramesh Kumar", "Hemanth Reddy",
+  "Lakshmi Reddy", "Lakshmi Menon", "Anil Menon", "Meher Shah", "Kavita Shah", "Nikhil Das", "Arup Das", "Riya Sharma", "Neha Sharma", "Sahil Verma",
+  "Deepak Verma", "Ishaan Bose",
+]);
+
+test("the anchors hold eight parents' messages in Hindi and eight in Kannada, each naming its kind, each input the route's (D110)", () => {
+  const anchors = loadCases(ANCHOR_SETS);
+  expect(anchors).toHaveLength(16);
+  for (const set of ANCHOR_SETS) {
+    const cases = anchors.filter((c) => c.set === set);
+    expect(cases.map((c) => c.kind).sort()).toEqual(["can_do", "can_do", "not_on_track", "note", "note", "note", "note", "test_tomorrow"]);
+    expect(new Set(cases.map((c) => c.input.language))).toEqual(new Set([set === "anchor_hi" ? "hi" : "kn"]));
+  }
+  for (const c of anchors) expect(() => agentFor(c)).not.toThrow();
+});
+
+test("every parent's case names the seed's students and parents alone", () => {
+  for (const c of loadCases(["note", "can_do", "test_tomorrow", "not_on_track", ...ANCHOR_SETS])) {
+    for (const name of [c.input.studentName, c.input.parentName].filter(Boolean)) expect({ id: c.id, name, seed: SEED_NAMES.has(String(name)) }).toEqual({ id: c.id, name, seed: true });
+  }
 });
 
 test("every case's input is the route's: it satisfies the kind's input schema", () => {

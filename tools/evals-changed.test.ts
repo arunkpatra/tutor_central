@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { KINDS } from "./evals";
 import { kindsChanged } from "./evals-changed";
 
 // evals.yml runs the kinds a pull request touches (D101).
@@ -9,7 +10,7 @@ test("a prompt file names its kind", () => {
 
 test("shared.ts, the agent, the check, the schemas or the provider name every kind", () => {
   for (const path of ["api/src/prompts/shared.ts", "api/src/agents/agent.ts", "api/src/agents/check.ts", "api/src/schemas.ts", "api/evals/provider.ts", "api/src/agents/kinds/rubric.ts"]) {
-    expect({ path, kinds: kindsChanged([path]).length }).toEqual({ path, kinds: 9 });
+    expect({ path, kinds: kindsChanged([path]).length }).toEqual({ path, kinds: KINDS.length });
   }
 });
 
@@ -24,6 +25,15 @@ test("a rubric or a case names its kind; a prompt of a kind not on its agent nam
 });
 
 test("the maths free check and the nightly's runner name every kind (the review's finding 5)", () => {
-  expect(kindsChanged(["api/src/agents/maths.ts"])).toHaveLength(9);
-  expect(kindsChanged(["api/src/evals/runner.ts"])).toHaveLength(9);
+  expect(kindsChanged(["api/src/agents/maths.ts"])).toHaveLength(KINDS.length);
+  expect(kindsChanged(["api/src/evals/runner.ts"])).toHaveLength(KINDS.length);
+});
+
+test("the parents' shared rules name the four message kinds and the anchors; an anchor's case names its set (D110)", () => {
+  const parents = ["anchor_hi", "anchor_kn", "can_do", "not_on_track", "note", "test_tomorrow"];
+  expect(kindsChanged(["api/src/agents/kinds/message.ts"])).toEqual(parents);
+  expect(kindsChanged(["api/src/prompts/message.ts"])).toEqual(parents);
+  expect(kindsChanged(["api/src/agents/kinds/numbers.ts"])).toEqual(["anchor_hi", "anchor_kn", "can_do", "figure", "not_on_track", "note", "test_tomorrow"]);
+  expect(kindsChanged(["api/evals/anchors/kn/cases.json"])).toEqual(["anchor_kn"]);
+  expect(kindsChanged(["api/src/prompts/can-do.ts"])).toEqual(["can_do"]);
 });

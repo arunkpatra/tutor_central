@@ -23,6 +23,9 @@ export function blocks(shared: (string | false | null | undefined)[], own: (stri
   return { shared: words(shared), own: words(own) };
 }
 
+/** Make it again's reason (D107), in the request's own words: an instruction, as the sheet's reason is. */
+export const againWords = (reason: string | undefined) => (reason ? `The tutor asked for a change: ${reason}. Do that, keeping to what was asked.` : "");
+
 /** Asked of the kinds whose answers can be numbers (D99): the server evaluates the proof (src/agents/arith.ts). */
 export const PROOF = [
   "Where an answer is a number, give a proof: an arithmetic expression over numbers only (digits, + - * / ^, parentheses and sqrt) and the value it equals, so the answer can be checked by computation.",

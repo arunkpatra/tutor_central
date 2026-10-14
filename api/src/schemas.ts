@@ -204,7 +204,8 @@ export const MakeInput = z.discriminatedUnion("kind", [
   // The plan's group material is strict: a body that names a student is a 400 (D62; nothing personal is made here).
   z.object({ ...V2, kind: z.literal("worked_example"), classLevel: ClassLevel, subject: Subject, skill: Name }).strict(),
   z.object({ ...V2, kind: z.literal("figure"), figure: FigureKind, classLevel: ClassLevel, subject: Subject, skill: Name }).strict(),
-  z.object({ ...V2, kind: z.literal("brief"), classLevel: ClassLevel, subject: Subject, chapter: Name }).strict(),
+  // Make it again's reason (D107), as the sheet's.
+  z.object({ ...V2, kind: z.literal("brief"), classLevel: ClassLevel, subject: Subject, chapter: Name, reason: z.string().trim().min(1).max(200).optional() }).strict(),
   z.object({ ...V2, kind: z.literal("check"), classLevel: ClassLevel, subject: Subject, skills: Skills.min(1).max(3) }),
   z.object({ ...V2, kind: z.literal("placement"), classLevel: ClassLevel, subject: Subject, chapters: z.array(Name).min(1).max(30) }),
   z.object({
@@ -215,6 +216,7 @@ export const MakeInput = z.discriminatedUnion("kind", [
     title: z.string().min(1).max(120),
     portions: z.array(Name).min(1).max(30),
     pattern: MockPattern,
+    reason: z.string().trim().min(1).max(200).optional(),
   }).strict(),
   // The parents' messages (Phase 14): the student is named, so each needs their consent (start_ai_generation). The
   // facts are the app's, worked out from the record on the phone (Domain's NoteWeek, CanDoWeek); the model words them.
@@ -231,6 +233,8 @@ export const MakeInput = z.discriminatedUnion("kind", [
       coming: z.array(z.string().max(200)).max(3),
       attendance: z.string().max(80).optional(),
     }),
+    /** Write again's reason (Phase 21, D107): one of the menu's words or the tutor's own, an instruction in the prompt. */
+    reason: z.string().trim().min(1).max(200).optional(),
     /** The tutor's own words from Make's note (Phase 15), in the note as they ask: trimmed, at most 300 characters
      *  counted as the app counts them (an emoji is one, not two). */
     tutorSays: z

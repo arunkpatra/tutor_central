@@ -374,12 +374,12 @@ const testTomorrow: TestTomorrowOutput = {
     "Hello Ramesh, Dev's science unit test is tomorrow (Thursday 8 October), from chapters 1 and 2. This evening, let him go over balancing equations once. Thank you.",
 };
 
-/** Dev's weekly note in Hindi with the English beside it (P10-Note). */
+/** Dev's weekly note in Hindi with the English beside it (P10-Note); every number one its facts give (D110). */
 const weeklyNote: MessageOutput = {
   message:
-    "नमस्ते रमेश जी, इस हफ़्ते देव ने रासायनिक समीकरण संतुलित करना सीखा। 12 में से 8 सवाल सही किए। समीकरण के आगे की संख्या बदलना अभी अभ्यास में है। घर पर रोज़ 5 समीकरण करवाएँ। अगले हफ़्ते अम्ल और क्षार शुरू होंगे। धन्यवाद।",
+    "नमस्ते रमेश जी, इस हफ़्ते देव ने रासायनिक समीकरण संतुलित करना सीखा। 12 में से 8 सवाल सही किए। समीकरण के आगे की संख्या बदलना अभी अभ्यास में है। घर पर रोज़ कुछ समीकरण करवाएँ। अगले हफ़्ते अम्ल और क्षार शुरू होंगे। धन्यवाद।",
   english:
-    "Hello Ramesh, this week Dev learnt to balance chemical equations. He got 8 of 12 questions right. Changing the numbers in front is still being practised. At home, have him do 5 equations a day. Next week we start acids and bases. Thank you.",
+    "Hello Ramesh, this week Dev learnt to balance chemical equations. He got 8 of 12 questions right. Changing the numbers in front is still being practised. At home, have him do a few equations a day. Next week we start acids and bases. Thank you.",
 };
 
 /** Sahil's can-now-do in Kannada with the English beside it (P10-CanNowDo). */
@@ -474,11 +474,21 @@ export function kindOf(request: ClaudeRequest<unknown>): keyof typeof SAMPLE {
 /** What `bun run dev` with AI_FAKE=1 answers: the boards' sample for the kind, after a short wait so the creating
  *  states show; a register photo under 1 KB (tools/samples/blank.png) reads as no rows, for the "No names found"
  *  hand run. `TC_FAKE_SCRIPT=wrong-proof` plants a key that does not add up in every sheet draft and repair, for the
- *  hand run of a refusal after its repair. */
+ *  hand run of a refusal after its repair; `TC_FAKE_SCRIPT=invented-fact` names a test the record does not hold in every
+ *  note and can-now-do, draft and repair, for the hand run of a note set aside. */
 export function localScript(request: ClaudeRequest<unknown>, script = process.env.TC_FAKE_SCRIPT): FakeScript {
   const answer = localAnswer(request);
-  const planted = script === "wrong-proof" && !isCheckRequest(request) && kindOf(request) === "sheet" ? wrongProof(answer as SheetOutput) : answer;
+  const kind = isCheckRequest(request) ? null : kindOf(request);
+  const planted =
+    script === "wrong-proof" && kind === "sheet"
+      ? wrongProof(answer as SheetOutput)
+      : script === "invented-fact" && (kind === "note" || kind === "can_do") ? inventedFact(answer as MessageOutput) : answer;
   return { answer: planted, delayMs: isCheckRequest(request) ? 500 : 1500 };
+}
+
+/** A test the record does not hold, named in the message and the English (the planted test of the parents' kinds). */
+function inventedFact(message: MessageOutput): MessageOutput {
+  return { message: `${message.message} Unit test 4 is next week.`, english: `${message.english} Unit test 4 is next week.` };
 }
 
 /** The first question's proof made not to equal its value. */
@@ -499,16 +509,32 @@ export function localAnswer(request: ClaudeRequest<unknown>): unknown {
   if (kind === "sheet") return counted(Number(request.text.match(/Exactly (\d+) questions/)?.[1] ?? 8));
   if (kind === "plan") return topics(request.text);
   if (kind === "parse_school") return request.images?.length ? PHOTO_ITEMS : SAMPLE.parse_school;
-  if (kind === "note") return withTutorsWords(request.text);
+  if (kind === "note" || kind === "can_do" || kind === "test_tomorrow" || kind === "not_on_track") return parentMessage(request.text);
   if (kind === "mock") return patterned(Number(request.text.match(/Pattern: (\d+) marks/)?.[1] ?? 25));
   return blank ? { rows: [] } : SAMPLE[kind];
 }
 
-/** The weekly note, ending with the tutor's own words when the prompt carries them (Make's note, Phase 15). */
-function withTutorsWords(text: string): MessageOutput {
+/** The greeting the local fake writes in each language a parent reads, with no number and no fact (the message rules,
+ *  D110, pass it for any request). */
+const GREETING: Record<string, (parent: string, student: string) => string> = {
+  English: (parent, student) => `Hello ${parent}, a short note from the centre about ${student} this week.`,
+  Hinglish: (parent, student) => `Namaste ${parent} ji, ${student} ke baare mein centre se ek chhota sa note.`,
+  Hindi: () => "नमस्ते जी, इस हफ़्ते की पढ़ाई के बारे में केंद्र से एक छोटा सा संदेश।",
+  Kannada: () => "ನಮಸ್ಕಾರ, ಈ ವಾರದ ಪಾಠದ ಬಗ್ಗೆ ಕೇಂದ್ರದಿಂದ ಒಂದು ಚಿಕ್ಕ ಸಂದೇಶ.",
+};
+
+/** A parent's message as the local fake answers it: the greeting in the language asked and the English beside it,
+ *  ending with the tutor's own words when the prompt carries them (Make's note, Phase 15), in the English and, for a
+ *  Latin-script language, the message too. */
+function parentMessage(text: string): MessageOutput {
+  const language = text.match(/^Language: (\w+)\./m)?.[1] ?? "English";
+  const student = text.match(/^Student: (.+)\.$/m)?.[1] ?? "your child";
+  const parent = text.match(/^Parent: (.+)\.$/m)?.[1] ?? "there";
   const words = text.match(/^The tutor adds: "(.+)"$/m)?.[1];
-  if (!words) return SAMPLE.note;
-  return { message: `${SAMPLE.note.message} ${words}`, english: `${SAMPLE.note.english} ${words}` };
+  const english = [GREETING.English?.(parent, student), words].filter(Boolean).join(" ");
+  const own = (GREETING[language] ?? GREETING.English)?.(parent, student) ?? english;
+  const latin = language === "English" || language === "Hinglish";
+  return { message: language === "English" ? english : [own, latin ? words : undefined].filter(Boolean).join(" "), english };
 }
 
 /** The names a check or placement prompt quotes, in order. */
