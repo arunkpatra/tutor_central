@@ -36,11 +36,14 @@ export type ExamSource = {
   replacePlan(centre: string, classId: string, date: string): Promise<void>;
 };
 
-type Step =
+/** What the split was made from: a change to any of them (the trigger wakes the job) splits again. */
+type Basis = { date: string; portions: string | null; windowDays: number | null };
+type Step = (
   | { at?: undefined }
   | { at: "wait"; mockDay: string }
   | { at: "mock"; mockDay?: string; woken?: boolean }
-  | { at: "marks"; mockFailed?: boolean; woken?: boolean; failed?: string[] };
+  | { at: "marks"; mockFailed?: boolean; woken?: boolean; failed?: string[] }
+) & { basis?: Basis };
 
 /** A quarter hour between reads of the marks; half a minute while a call with the same key runs. */
 const TICK_MS = 15 * 60_000;
@@ -51,6 +54,11 @@ const highest = (levels: (string | undefined)[]): ClassLevel | undefined =>
 /** 05:00 in India on a day, as an instant. */
 const morning = (day: string) => new Date(Date.parse(`${day}T05:00:00+05:30`));
 const daysBetween = (from: string, to: string) => Math.round((Date.parse(to) - Date.parse(from)) / 86_400_000);
+const basisOf = (item: PrepItem): Basis => ({ date: item.date, portions: item.portions ?? null, windowDays: item.windowDays ?? null });
+const sameBasis = (a: Basis, b: Basis) => a.date === b.date && a.portions === b.portions && a.windowDays === b.windowDays;
+/** The basis carried into the job's next step. */
+const carrying = (outcome: StepOutcome, basis: Basis): StepOutcome =>
+  outcome.kind === "continue" || outcome.kind === "wait" ? { ...outcome, step: { ...outcome.step, basis } } : outcome;
 
 /** Exam preparation as one job per exam item (D106, `exam:<item>`): `split` writes the days from the rules on the item,
  *  `wait` sleeps to the mock day's 05:00 in India, `mock` makes the mock once by its key `mock:<item>` (the plan's own
@@ -73,20 +81,32 @@ export function examPrep(source: ExamSource): JobHandler {
         if (step.at === undefined) return { kind: "done", name: "split", result: { item_id: item, reason: "past" } };
         return { kind: "done", name: step.at, result: { item_id: item, mock: read.mock !== null, reports: read.reports.length } };
       }
-      switch (step.at) {
-        case undefined:
-          return split(source, centre, item, read, today);
-        case "wait":
-          return ctx.clock.now() >= morning(step.mockDay).getTime()
-            ? mock(job, ctx, source, centre, item, read)
-            : { kind: "wait", name: "wait", step: { at: "mock", mockDay: step.mockDay }, runAt: morning(step.mockDay) };
-        case "mock":
-          return mock(job, ctx, source, centre, item, read);
-        case "marks":
-          return marks(job, ctx, source, centre, item, read, today, step);
+      const basis = basisOf(read.item);
+      if (step.at !== undefined && step.basis && !sameBasis(step.basis, basis)) {
+        // The exam changed since its split: the days again, so the plan reads what the page shows. A mock made stays and
+        // the marks go on; before it, the job waits for the new mock day.
+        const again = await split(source, centre, item, read, today);
+        if (!read.mock || again.kind === "fail") return carrying(again, basis);
       }
+      return carrying(await next(job, ctx, source, centre, item, read, today, step), basis);
     },
   };
+}
+
+/** The step's own work, the exam unchanged since its split. */
+async function next(job: Job, ctx: StepContext, source: ExamSource, centre: string, item: string, read: ExamRead, today: string, step: Step): Promise<StepOutcome> {
+  switch (step.at) {
+    case undefined:
+      return split(source, centre, item, read, today);
+    case "wait":
+      return ctx.clock.now() >= morning(step.mockDay).getTime()
+        ? mock(job, ctx, source, centre, item, read)
+        : { kind: "wait", name: "wait", step: { at: "mock", mockDay: step.mockDay }, runAt: morning(step.mockDay) };
+    case "mock":
+      return mock(job, ctx, source, centre, item, read);
+    case "marks":
+      return marks(job, ctx, source, centre, item, read, today, step);
+  }
 }
 
 /** The days for the first reached student with a batch, written on the item; then the wait for the mock's morning. */
@@ -169,7 +189,8 @@ async function mock(job: Job, ctx: StepContext, source: ExamSource, centre: stri
 /** One student's gap report a step: the tallies the app's arithmetic gives, the report kept used, today's open plan of
  *  their batch asked again. A report the service could not make is not tried again (it would pay each quarter hour). */
 async function marks(job: Job, ctx: StepContext, source: ExamSource, centre: string, item: string, read: ExamRead, today: string, step: Extract<Step, { at: "marks" }>): Promise<StepOutcome> {
-  const failed = step.failed ?? [];
+  // A tutor's Save (the wake) tries again a report the service could not make.
+  const failed = step.woken ? [] : (step.failed ?? []);
   const later = (extra: { generationId?: string; costPaise?: number } = {}, notMade: string[] = failed): StepOutcome => ({
     kind: "wait",
     name: "marks",
@@ -182,7 +203,10 @@ async function marks(job: Job, ctx: StepContext, source: ExamSource, centre: str
   const mark = pending[0];
   if (!mark) return later();
   const student = read.students.find((s) => s.id === mark.student);
-  const bySkill = tallies(mark.questions, read.mock.content).slice(0, 12);
+  // Weakest first, the order the report's days take them in.
+  const bySkill = tallies(mark.questions, read.mock.content)
+    .sort((a, b) => a.right / Math.max(1, a.of) - b.right / Math.max(1, b.of))
+    .slice(0, 12);
   const parsed = MakeInput.safeParse({
     centreId: centre,
     kind: "gap_report",
