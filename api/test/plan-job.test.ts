@@ -540,8 +540,14 @@ test("a make step whose draft is repaired keeps the repaired artefact and sums t
   const step = out.find((o) => o.name === "make:keep:1") as { costPaise: number };
   const rows = db.rows.filter((r) => r.key?.startsWith("job-1:make:1"));
   expect(rows.map((r) => r.agentStep)).toEqual(["draft", "check", "repair", "check"]);
-  // The draft and its first check went in the batches at half; the repair and its check were made live.
-  expect(rows.map((r) => r.finish?.batched === true)).toEqual([true, true, false, false]);
+  // The draft, its check, the repair and its check each went in a batch at half (D111).
+  expect(rows.map((r) => r.finish?.batched === true)).toEqual([true, true, true, true]);
+  expect(claude.batches.map((b) => b.map((i) => i.customId))).toEqual([
+    ["make_0", "make_1", "make_2", "make_3"],
+    ["make_0__check", "make_1__check", "make_2__check", "make_3__check"],
+    ["make_1__repair"],
+    ["make_1__recheck"],
+  ]);
   expect(step.costPaise).toBe(rows.reduce((n, r) => n + (r.finish?.costPaise ?? 0), 0));
   const kept = s.kept.find((k) => k.kind === "sheet") as unknown as { content: { questions: { proof: { expression: string } }[] } };
   expect(kept.content.questions[0]?.proof.expression).toBe("2*2+1");
@@ -627,4 +633,80 @@ test("a plan asked too close to its batch's start makes its material live: no ba
   const out = await drainAll(planJob(source(taught())), planJobFor(), { db: fakeDb(), jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" });
   expect(claude.batches).toHaveLength(0);
   expect(out.map((o) => o.name)).toEqual(["read", "groups", "name", "write", "budget", "make:submit", "make:0", "make:1", "make:2", "make:3", "notify"]);
+});
+
+test("a repair batch not ended by the deadline is given up and the repair made live on its row (D111)", async () => {
+  let sheets = 0;
+  let batches = 0;
+  const base = fakeClaude((r) => {
+    if (isCheckRequest(r) || kindOf(r) !== "sheet") return { answer: localAnswer(r) };
+    sheets += 1;
+    const answer = localAnswer(r) as { questions: { proof: unknown }[] };
+    const proof = { expression: sheets === 1 ? "2*2" : "2*2+1", equals: 5 };
+    return { answer: { ...answer, questions: answer.questions.map((q, i) => (i === 0 ? { ...q, proof } : q)) } };
+  });
+  // The third batch (the repairs) never ends.
+  const claude = Object.assign(base, {
+    async batch(items: Parameters<NonNullable<typeof base.batch>>[0]) {
+      batches += 1;
+      base.batches.push(items);
+      return { id: `batch-${batches}` };
+    },
+    async batchResults(id: string, items: Parameters<NonNullable<typeof base.batchResults>>[1]) {
+      if (id === "batch-3") return "running" as const;
+      const answers = new Map();
+      for (const item of items) answers.set(item.customId, await base.complete(item.request));
+      return answers;
+    },
+  });
+  const db = fakeDb();
+  const clock = fakeClock(Date.parse("2026-10-06T18:35:00Z"));
+  const c: StepContext = { db, jobs: fakeJobsDb(clock), claude, clock, requestId: "r1", worker: "w1" };
+  const s = source(taught());
+  const handler = planJob(s);
+  let current = planJobFor();
+  let outcome: StepOutcome | undefined;
+  for (let i = 0; i < 20; i++) {
+    outcome = await handler.step(current, c);
+    current = { ...current, step: (outcome as { step: Record<string, unknown> }).step };
+    if (outcome.kind === "wait") break;
+  }
+  expect(outcome).toMatchObject({ kind: "wait", name: "make:wait", step: { phase: "repairs" } });
+  clock.advance(5 * 3_600_000);
+  const rest = await drainAll(handler, current, c);
+  expect(claude.cancelled).toEqual(["batch-3"]);
+  expect(rest.at(-1)).toMatchObject({ kind: "done", result: { made: 4, not_made: 0 } });
+  const repairs = db.rows.filter((r) => r.key === "job-1:make:1:repair");
+  // The batch's repair row, then the live repair's: the real gate replays the pending row by its key.
+  expect(repairs.at(-1)?.finish?.batched).not.toBe(true);
+  const kept = s.kept.find((k) => k.kind === "sheet") as unknown as { content: { questions: { proof: { expression: string } }[] } };
+  expect(kept.content.questions[0]?.proof.expression).toBe("2*2+1");
+});
+
+test("a batch that cannot be sent is made live on its rows; the job never fails for it (D111)", async () => {
+  for (const refused of [1, 2, 3]) {
+    let sheets = 0;
+    let sent = 0;
+    const base = fakeClaude((r) => {
+      if (isCheckRequest(r) || kindOf(r) !== "sheet") return { answer: localAnswer(r) };
+      sheets += 1;
+      const answer = localAnswer(r) as { questions: { proof: unknown }[] };
+      const proof = { expression: sheets === 1 ? "2*2" : "2*2+1", equals: 5 };
+      return { answer: { ...answer, questions: answer.questions.map((q, i) => (i === 0 ? { ...q, proof } : q)) } };
+    });
+    const realBatch = (base.batch as NonNullable<typeof base.batch>).bind(base);
+    const claude = Object.assign(base, {
+      async batch(items: Parameters<NonNullable<typeof base.batch>>[0]) {
+        sent += 1;
+        if (sent === refused) throw new Error("503 overloaded");
+        return realBatch(items);
+      },
+    });
+    const db = fakeDb();
+    const s = source(taught());
+    const out = await drainAll(planJob(s), planJobFor(), ctx(db, claude));
+    expect(out.at(-1)).toMatchObject({ kind: "done", result: { made: 4, not_made: 0 } });
+    expect(out.some((o) => o.kind === "fail")).toBe(false);
+    expect(db.rows.filter((r) => /^job-1:make:\d$/.test(r.key ?? ""))).toHaveLength(4);
+  }
 });
