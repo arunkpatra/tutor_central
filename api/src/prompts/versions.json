@@ -24,16 +24,16 @@
     "hash": "3a7c5b82baab21853870f0650bee8ddb07d98f70690d9c3a8dfb67e344d694a2"
   },
   "plan": {
-    "version": "4",
-    "hash": "8cb524b2c114b511a160762720fc252e7d1ed275ec3a2b6b357ec61c911ca1dd"
+    "version": "5",
+    "hash": "7f884b211ad9c1dd236cd941b995ea904d8481b1bd50eb256b7d1cae159bd0b4"
   },
   "sheet": {
     "version": "4",
     "hash": "266c9dc2b741a602f7fcec85729045a88b6d646bb7a6c5bd711700cad0f91636"
   },
   "worked_example": {
-    "version": "5",
-    "hash": "0285e381c4fe0c3b9051ac7df2f5dfa112730cc4b298c004304967ea1ffa4d01"
+    "version": "6",
+    "hash": "4c7455350dace0158a9db7a94897058dd6033b32ffdbb0b64091e1efc0abf00c"
   },
   "figure": {
     "version": "3",
@@ -60,20 +60,20 @@
     "hash": "d9cb28fbde71da6056e521083f7fee31575bd3207a3c1201c7cc9a1ae56ce222"
   },
   "test_tomorrow": {
-    "version": "3",
-    "hash": "09f2cd479e4a7600c6509e558575cb31cb029fef6d176a7ddf9aa224f3815b1a"
+    "version": "4",
+    "hash": "00d1dde447b259dd60c73a4a0415be10b53f95dd6b1b8824da3c60a61e3ec17c"
   },
   "note": {
-    "version": "3",
-    "hash": "a92c55b20aa7f1787b0844753f266b011c0e2a18ab60b67b6bb82cecfc3612f6"
+    "version": "4",
+    "hash": "6519b29ffc6b817fc37ef9616c8d49d3804588d36082b8ecf85eaba89848aef8"
   },
   "can_do": {
-    "version": "3",
-    "hash": "4eb6896fbaaf1305ef4e17449b0d3332971ef36aa426fbade650008b2b23b2db"
+    "version": "4",
+    "hash": "e8897d9e99b4308737311ee63b48d41e712175341dd585ce16ad075a5a3b070b"
   },
   "not_on_track": {
-    "version": "3",
-    "hash": "e010146e809d610aad5712253c94aac8d3432cfe7fbbbef5cea4c05907145579"
+    "version": "4",
+    "hash": "cfb92d19fc780926cfd7856dfa553fe8095866a01413d4bbc749d8e0e7ee2281"
   },
   "parse_school": {
     "version": "4",

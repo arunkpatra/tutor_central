@@ -5,7 +5,7 @@ import { MESSAGE, spokenDay, whoLines } from "./message.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 
 /** Test tomorrow in the parent's language (P10-TestTomorrow), with the English beside it for the tutor. The student

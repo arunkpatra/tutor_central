@@ -5,7 +5,7 @@ import { MESSAGE, spokenDate, whoLines } from "./message.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 /** The weekly note to a parent (P10-Note): the week's facts from the student's record, worked out on the phone, in the
  *  parent's language with the English beside it. A fact that is empty is left out of the text, and the model is told to

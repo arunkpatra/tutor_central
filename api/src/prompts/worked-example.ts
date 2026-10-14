@@ -4,7 +4,7 @@ import { type ClassLevel, WorkedExampleOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, PROOF, SLIP_PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "5";
+export const VERSION = "6";
 
 /** The worked example for a skill (P10-WorkedExample): one problem a student of that class meets, solved one step at a
  *  time as the tutor says it aloud, and the common slip. */
@@ -18,7 +18,7 @@ export function request(classLevel: ClassLevel, subject: string, skill: string):
       "You write one worked example a tutor shows a class one step at a time, saying each step aloud before the next.",
       "Make up your own problem and numbers; never a textbook's worked example or exercise.",
       "Each step has a short title and the working in one or two lines; two to six steps.",
-      "The slip is the one mistake students of that class make most on this skill, in one sentence that starts 'A common slip here:'.",
+      "The slip is the one mistake students of that class make most on this skill, in one sentence that starts 'A common slip here:': one mistake only, saying what the student writes and the wrong answer it gives, which is slipProof's value.",
       PROOF,
       SLIP_PROOF,
       MATHS,
