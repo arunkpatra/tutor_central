@@ -1622,10 +1622,15 @@ What the boards settle:
   section its quiet Change. The gap report's footer, once the job has used it, is the done row "In the plan" and "The last two days
   were changed from this report when Dev's marks were saved. Change them on the exam's page." Use this plan stays for a report the
   tutor opens before the job has used it (never the case once the job runs; the state is kept for a report made before Phase 21).
+  Settled in the build: Try again turns the row to Being made at once and the page reads itself again while the mock is made;
+  a marked student reads "working out the last two days" only while the job can make their report (the mock kept, their report
+  not given up), else the marked row with Gap report as before the job.
 - **A V1 question paper's PDF is the server's** (D90's last half): the paper, homework and worksheet pages are made by the `pdf`
   job as a sheet's is (P20-PDF-Sheet's grammar): the title, the subtitle with the class, marks and minutes, each section's rule
   with its marks each, numbered questions with their marks on the right and answer space by the marks, formulae in STIX Two Math,
-  the foot with the centre and the page count; the key on its own last page. Share takes the server's file as D93 says.
+  the foot with the centre and the page count; the key on its own last page. Share takes the server's file as D93 says;
+  settled in the build: a result shown before its PDF is made shares the phone's drawing and takes the server's once made,
+  and Share waits, disabled, while a new result's file is had (never the last result's).
 - **The standing cost report** (D74): the Cost page's lead names its new parts; the split section is "By centre, and by kind,
   model and step" with the kind table full width (Kind, Step, Model, Calls, Cost, Share), a check, repair or grade a row of its
   kind, a `batch · ½` chip in `accentTint` on a step priced at the Batches API's half; a By month section (Month, Calls, Cost,

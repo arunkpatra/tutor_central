@@ -38,6 +38,7 @@ screen, several as a polish slice, or not at all.
 | U50 | 2026-10-13 | The board view at the largest text size | "Previous" wraps onto two lines ("Previou / s") beside Next | Session 41's hand run 7 |
 | U51 | 2026-10-13 | A sheet at the largest text size | The footer band (the AI line, Make it again, Share as PDF and Print) takes half the screen, so two question rows show at a time | Session 41's hand run 7 |
 | U52 | 2026-10-13 | The photo dialogs (School "From a photo", the page chooser, an item's menu) | Since the alert tint (Phase 20), their choices are drawn in the accent; before they were the system blue; the boards draw them in the text colour | Session 41's app review |
+| U53 | 2026-10-14 | The weekly note, set aside → Write it myself | The empty well opens without the keyboard; the tutor taps the well before typing | Session 043's hand run 3 |
 
 ## Done
 

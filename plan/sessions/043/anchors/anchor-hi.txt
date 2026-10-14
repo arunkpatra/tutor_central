@@ -1,0 +1,171 @@
+Tutor Central: eight messages to parents in Hindi
+
+Read each message as the parent of that class would. For each, answer the five lines under it (the guide: what each means). Names and weeks are made up.
+
+============================================================
+anchor-hi-cando-numbers
+What the message was written from:
+  Language: Hindi.
+  Student: Ananya.
+  Parent: Suresh.
+  Class: UKG.
+  Moved up this week: numbers to Count to 20.
+  Can now do: Count objects up to 20.
+  At home: Count the spoons at dinner together.
+  Next: Count to 50.
+
+The message:
+नमस्ते सुरेश जी। इस हफ्ते अनन्या की गिनती 20 तक की संख्याओं में आगे बढ़ी है। अब वह 20 तक की वस्तुएँ गिनकर बता सकती है। घर पर एक छोटा काम: रात के खाने के समय साथ मिलकर चम्मच गिनें। अगला पड़ाव 50 तक गिनना है।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-cando-reading
+What the message was written from:
+  Language: Hindi.
+  Student: Sahil.
+  Parent: Deepak.
+  Class: 1.
+  Moved up this week: reading to Words.
+  Can now do: Read three-letter words.
+  At home: Read one word card a day.
+  Next: Read short sentences.
+
+The message:
+नमस्ते दीपक जी। Sahil इस हफ्ते कक्षा 1 में पढ़ने के स्तर "Words" पर आ गए हैं। अब वे तीन अक्षरों वाले शब्द पढ़ सकते हैं। घर पर रोज़ एक वर्ड कार्ड पढ़ने का अभ्यास कराइए। अगला कदम छोटे वाक्य पढ़ना है।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-not-on-track
+What the message was written from:
+  Language: Hindi.
+  Student: Bir.
+  Parent: Harjeet.
+  Class: 7.
+  Finding hard: Integers.
+  Why: Half the checks wrong in two weeks.
+  What we are doing: One step at a time with a worked example.
+  At home: Five minutes of practice each evening.
+
+The message:
+नमस्ते Harjeet जी। Bir को कक्षा 7 में पूर्णांक (integers) का विषय थोड़ा कठिन लग रहा है। पिछले दो हफ्तों में उसकी आधी जाँचें गलत निकली हैं। कक्षा में हम एक-एक कदम करके, एक हल किए हुए उदाहरण के साथ इसे समझा रहे हैं। घर पर हर शाम पाँच मिनट का अभ्यास करवाएँ तो उसे बहुत मदद मिलेगी। क्या इस हफ्ते आप मेरे साथ पाँच मिनट बात कर सकते हैं?
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-test-tomorrow
+What the message was written from:
+  Language: Hindi.
+  Student: Hemanth.
+  Parent: Lakshmi.
+  Test: Maths unit test 2 (Mathematics), Thursday 15 October.
+  Portions: Quadratic equations.
+  To go over this evening: The discriminant.
+
+The message:
+नमस्ते लक्ष्मी जी, कल गुरुवार, 15 अक्टूबर को हेमंत का गणित का यूनिट टेस्ट 2 है। इसका पाठ्यक्रम द्विघात समीकरण है। आज शाम इसमें से एक चीज़ ज़रूर दोहरा लें: विविक्तकर।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-week-equations
+What the message was written from:
+  Language: Hindi.
+  Student: Dev.
+  Parent: Ramesh.
+  Class: 8.
+  Week of 5 October.
+  Taught: Balancing equations.
+  Got right: 8 of 12 checks.
+  To practise: The numbers in front of a formula.
+  Coming: Acids and bases.
+
+The message:
+नमस्ते रमेश जी, कक्षा 8 में देव की 5 अक्टूबर के सप्ताह की साप्ताहिक टिप्पणी। इस सप्ताह संतुलित समीकरण पढ़ाए गए। 12 जाँच में से देव ने 8 सही कीं। घर पर सूत्र के सामने की संख्याओं का अभ्यास कराइए। आगे अम्ल और क्षारक पढ़ाए जाएँगे।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-week-fractions
+What the message was written from:
+  Language: Hindi.
+  Student: Riya.
+  Parent: Neha.
+  Class: 5.
+  Week of 5 October.
+  Taught: Adding fractions.
+  Got right: 5 of 6 checks.
+  Coming: Subtracting fractions.
+
+The message:
+नेहा जी, नमस्ते। 5 अक्टूबर वाले हफ्ते में कक्षा 5 की रिया को भिन्नों का जोड़ सिखाया गया। रिया ने 6 में से 5 जाँच सही कीं। आगे भिन्नों का घटाना सिखाया जाएगा।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-week-nothing-new
+What the message was written from:
+  Language: Hindi.
+  Student: Nikhil.
+  Parent: Arup.
+  Class: 8.
+  Week of 12 October.
+  Taught: nothing new this week.
+  Attendance: 3 of 5 days.
+
+The message:
+नमस्ते अरुप जी। 12 अक्टूबर के सप्ताह में निखिल की कक्षा 8 में कोई नया विषय नहीं पढ़ाया गया, इसलिए इस सप्ताह की रिपोर्ट में बताने के लिए कुछ नया नहीं है। इस सप्ताह निखिल 5 में से 3 दिन कक्षा में आए।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-hi-week-tutor-words
+What the message was written from:
+  Language: Hindi.
+  Student: Meher.
+  Parent: Kavita.
+  Class: 8.
+  Week of 12 October.
+  Taught: Force and pressure, Friction.
+  Got right: 10 of 12 checks.
+  To practise: Pressure in liquids.
+
+The message:
+नमस्ते कविता जी, मेहर का 12 अक्टूबर के सप्ताह का नोट यह है। इस सप्ताह कक्षा 8 में बल और दबाव तथा घर्षण पढ़ाया गया। मेहर ने 12 में से 10 जाँच सही कीं। घर पर द्रवों में दबाव का अभ्यास करवाएँ। केंद्र शुक्रवार को दीपावली के कारण बंद रहेगा।
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------

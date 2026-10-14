@@ -1,0 +1,171 @@
+Tutor Central: eight messages to parents in Kannada
+
+Read each message as the parent of that class would. For each, answer the five lines under it (the guide: what each means). Names and weeks are made up.
+
+============================================================
+anchor-kn-cando-numbers
+What the message was written from:
+  Language: Kannada.
+  Student: Ananya.
+  Parent: Suresh.
+  Class: UKG.
+  Moved up this week: numbers to Count to 20.
+  Can now do: Count objects up to 20.
+  At home: Count the spoons at dinner together.
+  Next: Count to 50.
+
+The message:
+ಸುರೇಶ್ ಅವರಿಗೆ ನಮಸ್ಕಾರ. ಅನನ್ಯಾ ಈ ವಾರ 20 ರವರೆಗಿನ ಸಂಖ್ಯೆಗಳಿಗೆ ಮುಂದುವರಿದಿದ್ದಾಳೆ. ಈಗ ಅವಳು ವಸ್ತುಗಳನ್ನು 20 ರವರೆಗೆ ಎಣಿಸಬಲ್ಲಳು. ಮನೆಯಲ್ಲಿ ಊಟದ ಸಮಯದಲ್ಲಿ ಚಮಚಗಳನ್ನು ಅವಳ ಜೊತೆ ಸೇರಿ ಎಣಿಸಿ. ಮುಂದಿನ ಹಂತವಾಗಿ ಅವಳು 50 ರವರೆಗೆ ಎಣಿಸಲು ಕಲಿಯಲಿದ್ದಾಳೆ.
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-cando-reading
+What the message was written from:
+  Language: Kannada.
+  Student: Sahil.
+  Parent: Deepak.
+  Class: 1.
+  Moved up this week: reading to Words.
+  Can now do: Read three-letter words.
+  At home: Read one word card a day.
+  Next: Read short sentences.
+
+The message:
+ನಮಸ್ಕಾರ ದೀಪಕ್ ಅವರೇ. ಒಂದನೇ ತರಗತಿಯ ಸಾಹಿಲ್ ಈ ವಾರ ರೀಡಿಂಗ್ ನಿಂದ ವರ್ಡ್ಸ್ ಹಂತಕ್ಕೆ ಮುಂದೆ ಹೋಗಿದ್ದಾನೆ. ಈಗ ಸಾಹಿಲ್ ಮೂರು ಅಕ್ಷರದ ಪದಗಳನ್ನು ಓದಬಲ್ಲ. ಮನೆಯಲ್ಲಿ ದಿನಕ್ಕೆ ಒಂದು ವರ್ಡ್ ಕಾರ್ಡ್ ಓದಿಸಿ. ಮುಂದಿನ ಹಂತದಲ್ಲಿ ಸಣ್ಣ ವಾಕ್ಯಗಳನ್ನು ಓದುವುದನ್ನು ಕಲಿಯಲಿದ್ದಾನೆ.
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-not-on-track
+What the message was written from:
+  Language: Kannada.
+  Student: Bir.
+  Parent: Harjeet.
+  Class: 7.
+  Finding hard: Integers.
+  Why: Half the checks wrong in two weeks.
+  What we are doing: One step at a time with a worked example.
+  At home: Five minutes of practice each evening.
+
+The message:
+ನಮಸ್ಕಾರ ಹರ್ಜೀತ್ ಅವರೇ. ಬಿರ್ ಏಳನೇ ತರಗತಿಯಲ್ಲಿ ಪೂರ್ಣಾಂಕಗಳು (integers) ವಿಷಯ ಸ್ವಲ್ಪ ಕಷ್ಟವೆನಿಸುತ್ತಿದೆ. ಕಳೆದ ಎರಡು ವಾರಗಳಲ್ಲಿ ನಡೆಸಿದ ಚೆಕ್ಗಳಲ್ಲಿ ಅರ್ಧದಷ್ಟು ಉತ್ತರಗಳು ತಪ್ಪಾಗಿದ್ದವು. ತರಗತಿಯಲ್ಲಿ ನಾವು ಒಂದೊಂದೇ ಹಂತವಾಗಿ, ಒಂದು ಉದಾಹರಣೆಯೊಂದಿಗೆ ಕಲಿಸುತ್ತಿದ್ದೇವೆ. ಮನೆಯಲ್ಲಿ ಪ್ರತಿ ಸಂಜೆ ಐದು ನಿಮಿಷ ಅಭ್ಯಾಸ ಮಾಡಿಸಿದರೆ ಸಹಾಯವಾಗುತ್ತದೆ. ಈ ವಾರ ಐದು ನಿಮಿಷ ಮಾತನಾಡಲು ಸಮಯ ಸಿಗುತ್ತದೆಯೇ?
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-test-tomorrow
+What the message was written from:
+  Language: Kannada.
+  Student: Hemanth.
+  Parent: Lakshmi.
+  Test: Maths unit test 2 (Mathematics), Thursday 15 October.
+  Portions: Quadratic equations.
+  To go over this evening: The discriminant.
+
+The message:
+ನಮಸ್ಕಾರ ಲಕ್ಷ್ಮಿ ಅವರೇ. ನಾಳೆ ಗುರುವಾರ, 15 ಅಕ್ಟೋಬರ್ ರಂದು ಹೇಮಂತ್ ಅವರ ಗಣಿತ ಘಟಕ ಪರೀಕ್ಷೆ 2 ಇದೆ. ಪರೀಕ್ಷೆಯ ಪಾಠಭಾಗ ವರ್ಗ ಸಮೀಕರಣಗಳು. ಇಂದು ಸಂಜೆ ಒಂದು ವಿಷಯವನ್ನು ಪುನರಾವರ್ತಿಸಲು ತಿಳಿಸಿ: ವಿವೇಚಕ (discriminant).
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-week-equations
+What the message was written from:
+  Language: Kannada.
+  Student: Dev.
+  Parent: Ramesh.
+  Class: 8.
+  Week of 5 October.
+  Taught: Balancing equations.
+  Got right: 8 of 12 checks.
+  To practise: The numbers in front of a formula.
+  Coming: Acids and bases.
+
+The message:
+ಆತ್ಮೀಯ ರಮೇಶ್ ಅವರೇ, 5 ಅಕ್ಟೋಬರ್ ವಾರದ ಟಿಪ್ಪಣಿ ಇಲ್ಲಿದೆ. ಈ ವಾರ Dev ನ 8ನೇ ತರಗತಿಯಲ್ಲಿ ಸಮೀಕರಣಗಳನ್ನು ಸಮತೋಲನ ಮಾಡುವುದನ್ನು ಕಲಿಸಲಾಯಿತು. 12 ಪರಿಶೀಲನೆಗಳಲ್ಲಿ 8ರಲ್ಲಿ ಸರಿಯಾದ ಉತ್ತರ ಬಂದಿದೆ. ಮನೆಯಲ್ಲಿ ಅಭ್ಯಾಸ ಮಾಡಲು: ಸೂತ್ರದ ಮುಂದಿರುವ ಸಂಖ್ಯೆಗಳು (coefficients). ಮುಂದೆ ಆಮ್ಲಗಳು ಮತ್ತು ಕ್ಷಾರಗಳ (acids and bases) ಪಾಠ ಬರಲಿದೆ.
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-week-fractions
+What the message was written from:
+  Language: Kannada.
+  Student: Riya.
+  Parent: Neha.
+  Class: 5.
+  Week of 5 October.
+  Taught: Adding fractions.
+  Got right: 5 of 6 checks.
+  Coming: Subtracting fractions.
+
+The message:
+ನಮಸ್ಕಾರ ನೇಹಾ ಅವರೇ. 5 ಅಕ್ಟೋಬರ್ ವಾರದಲ್ಲಿ ರಿಯಾಳಿಗೆ 5ನೇ ತರಗತಿಯ ಗಣಿತದಲ್ಲಿ ಭಿನ್ನರಾಶಿಗಳ ಕೂಡಿಕೆ ಕಲಿಸಲಾಯಿತು. ಆರರಲ್ಲಿ 5 ಪರಿಶೀಲನೆಗಳನ್ನು ಸರಿಯಾಗಿ ಮಾಡಿದ್ದಾಳೆ. ಮುಂದೆ ಭಿನ್ನರಾಶಿಗಳ ವ್ಯವಕಲನ ಬರಲಿದೆ.
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-week-nothing-new
+What the message was written from:
+  Language: Kannada.
+  Student: Nikhil.
+  Parent: Arup.
+  Class: 8.
+  Week of 12 October.
+  Taught: nothing new this week.
+  Attendance: 3 of 5 days.
+
+The message:
+ಆತ್ಮೀಯ Arup ಅವರೇ, Nikhil ಅವರ 8ನೇ ತರಗತಿಯ ವಾರದ ಟಿಪ್ಪಣಿ ಇದು. 12 ಅಕ್ಟೋಬರ್ ವಾರದಲ್ಲಿ ಯಾವುದೇ ಹೊಸ ವಿಷಯ ಬೋಧಿಸಲಾಗಿಲ್ಲ. ಈ ವಾರ Nikhil 5 ದಿನಗಳಲ್ಲಿ 3 ದಿನ ತರಗತಿಗೆ ಹಾಜರಾಗಿದ್ದಾರೆ.
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------
+anchor-kn-week-tutor-words
+What the message was written from:
+  Language: Kannada.
+  Student: Meher.
+  Parent: Kavita.
+  Class: 8.
+  Week of 12 October.
+  Taught: Force and pressure, Friction.
+  Got right: 10 of 12 checks.
+  To practise: Pressure in liquids.
+
+The message:
+ಕವಿತಾ ಅವರಿಗೆ ನಮಸ್ಕಾರ. Meher ಅವರ 8ನೇ ತರಗತಿಯ ಈ ವಾರದ ಟಿಪ್ಪಣಿ (ಅಕ್ಟೋಬರ್ 12ರ ವಾರ). ಈ ವಾರ ಬಲ ಮತ್ತು ಒತ್ತಡ, ಘರ್ಷಣೆ ಪಾಠ ಮಾಡಲಾಯಿತು. Meher 12 ಪರಿಶೀಲನೆಗಳಲ್ಲಿ 10ರಲ್ಲಿ ಸರಿ ಉತ್ತರ ನೀಡಿದ್ದಾರೆ. ಮನೆಯಲ್ಲಿ ದ್ರವಗಳಲ್ಲಿ ಒತ್ತಡದ ಬಗ್ಗೆ ಅಭ್ಯಾಸ ಮಾಡಿಸಿ. ದೀಪಾವಳಿ ಹಿನ್ನೆಲೆಯಲ್ಲಿ ಶುಕ್ರವಾರ ಕೇಂದ್ರ ಮುಚ್ಚಿರುತ್ತದೆ.
+
+script (0-2):
+code_mixing (0-2):
+meaning_kept (yes/no):
+natural (1-5):
+corrected:
+
+------------------------------------------------------------

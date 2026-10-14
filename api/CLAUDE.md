@@ -130,3 +130,18 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
   `new URL("../../typst", import.meta.url)`, since `includeFiles` is ignored by this builder) in STIX Two Math; a formula
   mitex cannot draw falls back to words. The figure has its PDF (`src/pdf/figure.ts`). Never run the API's tests during a
   hand run: the database tests clear the local jobs table.
+
+- Phase 21 (D106 to D112): every kind runs on its agent (`src/agents/kinds/index.ts` lists them; V1's paper, homework,
+  worksheet, progress note and register too; `makeRequest` and `runCall` are gone). A check's rule (`agents/check.ts`): a
+  finding is something the draft must change; what is right, fair or arguable is left out (#339). The parents' kinds keep
+  the message rules (facts only from the request; a planted fact refused: `TC_FAKE_SCRIPT=invented-fact`). The exam is one
+  job (`jobs/kinds/exam-prep.ts`, `exam:<item>`): the split on the item, its basis in the step (a changed date, portions or
+  window splits again), the mock on its morning by the key `mock:<item>` (the plan's own key), each quarter hour a gap
+  report per newly marked student (`gap:<item>:<student>`, the tallies weakest first), today's open plan asked again; a
+  report not made is tried again only at the tutor's Save (the wake). The morning's plans go by Message Batches
+  (`jobs/batch.ts`, `kinds/plan-batch.ts`, D111): drafts, checks, repairs and rechecks each a batch at half price, the
+  hour's cache mark on a job's shared block (`cacheTTL: "1h"`, priced at 2× written), no batch sent within 30 min of the
+  deadline (4 h, or 90 min before the batch's start), a batch cancelled on give-up and the plan made live; a replace (Make
+  the plan again, the exam job after a report) is live. A material draft is keyed `plan:<batch>:<day>:make:<n>:<hash>`
+  (its check and repair hang off it), so the same request that day replays; the keep's key stays `<job>:make:<n>`. A V1 result's
+  PDF is the `pdf` job's `gen-<id>.pdf` (`pdf/paper.ts`), queued by the route after the answer is kept.

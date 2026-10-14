@@ -300,3 +300,23 @@ Not used:
   tests leave on the local stack.
 - **Never run the API's tests, or `bun check` with the api or db step, during a hand run:** the database tests clear the local
   jobs table (session 41 lost a PDF job and two nightly tries that way).
+
+## 15. The exam, a set-aside note and the morning's batch locally (Phase 21)
+
+- **An exam on its mock day:** the seed's Science unit test 3 (Vidya Niketan, Class 8) is nine days out; move it with
+  `update school_items set date = <IST day + 2>, received_at = now() - interval '7 days' where id = '66666666-…661'`
+  (the trigger wakes its job and the job splits again by its basis). The reached students are the school's (Aarav, Diya,
+  Ishaan, Kavya); Dev has no school in the seed. Record a parent's consent locally with `update students set consent_at =
+  now(), consent_how = 'in_person' where id = …` (a session with no request passes the trigger). A tick loop for the
+  worker: `while true; do curl -s -H "Authorization: Bearer local" http://127.0.0.1:3000/jobs/tick; sleep 20; done`.
+- **An answer sheet to mark:** draw it as the golden sets do (`api/evals/draw-page.ts`'s sheet face, headless Chrome) and
+  `xcrun simctl addmedia booted <file.png>`; Check a paper takes it from Photos.
+- **The mock not made:** insert a newer `ai_models` row for `mock`/`draft` with `enabled` false (append-only), and one with
+  `enabled` true after; the model table is read each minute.
+- **A note set aside:** start the API with `AI_FAKE=1 TC_FAKE_SCRIPT=invented-fact`, set the batch's `note_weekday` to
+  today's ISO day, queue `note_day:<batch>:<day>` by the section 12 enqueue, and relaunch the app.
+- **The morning's plans by batch:** queue tomorrow's plans (today's starts have passed, so today's go live); a Message Batch
+  takes from minutes to an hour per phase (drafts, checks, repairs, rechecks). A cost run's figures are the rows' own
+  sums by job (`ai_generations.job_id`). Keep every database test (the api and db steps of `bun check`, `bun test` in
+  `api/` or `supabase/`) away until the jobs end: they clear the jobs and the calls (session 43 lost a cost run's two
+  plans that way).

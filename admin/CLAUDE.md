@@ -35,6 +35,9 @@ writes its own audit row.
 - Pictures for a pull request: `bun admin-shots` (builds and starts the portal in preview, photographs each page at 1280
   and 390, dark and light), then `bun pr-shots` (D7).
 - Deploy only by `gh workflow run deploy-admin` (git deploys off in `vercel.json`).
+- Phase 21: the Cost page reads `admin_cost_by_step` (kind, step, model; batched rows marked) and `admin_cost_by_month`
+  (the batched share) from 0061; `admin_call` returns a call's feedback rows (kind, reason, time; never the revised text),
+  which no board draws yet, so the call page shows none (rule 1).
 
 Commands: `bun run dev` (local on :3100, needs `admin/.env.local`); `bun run check`; `bun check --only=admin`;
 `bun admin-shots`.

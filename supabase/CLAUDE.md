@@ -22,7 +22,7 @@
   through `deploy.yml`'s `migrate` job, before the API (D26); never `supabase db push` by hand. A migration is
   additive while any installed build uses what it would remove (expand now, contract later): the database leads
   the app, and the TestFlight lane refuses a build while migrations are pending. Run it with
-  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0056 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
+  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0064 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
 - App Review's demo centre (D51): `gh workflow run seed-review -f email=… -f parent_phone=…` fills an existing account's
@@ -87,3 +87,10 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
   `tokens_cached`; only a draft counts against the allowance; a check, repair or grade hangs off a live draft of the centre by
   its key's grammar, and one guarding another draft (a step taken again) is a new row (0055). `schedule_evals` queues an
   `eval_run` when called by hand (no cron since 0064, D112); `admin_calls` counts a draft refused after its check (`check:…`) as refused (0054).
+- Phase 21 (D106 to D112): 0057 adds the job kind `exam_prep` (one per exam item, `exam:<item>`), `school_items.preparation`
+  (the split), `request_exam_prep` (a member's ask wakes a waiting job; 0058 marks the step `woken`), the trigger on a
+  confirmed exam in its window, `schedule_exam_preps` (00:10 IST), `generation_feedback` (`edit`, `again`, `replace`) with
+  `record_feedback`, and `ai_generations.batched`; 0059 plan_time 00:05 IST and the sweep leaving batched rows for 25 h; 0060
+  question sets at high effort; 0061 the Cost page's functions and `admin_call`'s feedback; 0062 `schedule_evals`' weekday
+  set; 0063 `start_ai_call` lets the platform's own `eval_run` through the consent gate (built on 0055's body); 0064 removes
+  the `schedule_evals` cron (D112).

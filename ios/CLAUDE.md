@@ -217,5 +217,15 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   as the system alert in the API's words; the alert's action (a lone OK, Try Again, Open Settings) is the default action,
   tinted by `AlertTint` at launch (SwiftUI's tint does not reach the alert).
 
+- Phase 21: a tutor's feedback is kept by `ArtefactFeedback` (`generation_feedback`): `edit` with the sent text when it
+  differs from the draft, `again` with the menu's reason (Make it again, Write again), `replace` when the tutor writes a
+  set-aside note themselves. A note the check set aside shows the card with Write it myself (P21-Note-SetAside). The exam's
+  page reads its job (`JobsRepository.examJob`): Being made from the mock's morning, Not made with Try again
+  (`request_exam_prep`), Working for a marked student only while the job is live, the mock kept and their report not given
+  up (`ExamJobStatus.notMade`), Changed once a report is used; Save of marks wakes the job. Share on a V1 result takes the
+  server's `gen-<id>.pdf` (`ServerPDF.file(forGeneration:)`), asked again while the screen is up when the phone drew it
+  first (`ResultPDF.serverLater`). At the accessibility sizes a footer's Copy pair and a row's trailing chip or button are
+  `AdaptiveRow`s (`FooterPairUseTests`, `ExamRowsTypeSizeTests`).
+
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

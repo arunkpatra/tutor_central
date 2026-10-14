@@ -131,6 +131,13 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T17 | On a day with a batch: wait for "Today's plan is ready" to arrive (do not open the app). Then turn on airplane mode and open the app. | Today shows the day's plan with its groups and lines, from the iPhone; a line's sheet opens; Share as PDF works. Nothing says "Couldn't load". |
 | T18 | Settings (iOS) → Accessibility → VoiceOver on. Open a sheet with maths (Make → Sheet, class 8, Mathematics, Linear equations) → Board, and swipe to the question. | VoiceOver reads the formula in words ("Solve x over 4 minus 2 equals 1"), never dollar signs, backslashes or "frac". |
 
+### Phase 21: Parents' notes and the exam (build 31 or later)
+
+| Id | Do | Expect |
+|---|---|---|
+| T19 | On the note day, Today → Read on a student whose parent writes in Kannada → read the note and the English beside it → Send on WhatsApp → Open WhatsApp. | The note is in Kannada script, names in Kannada too, every fact one the week's record holds (no score or test not in it); the English says the same. WhatsApp opens the parent's chat with it, signed by the tutor. |
+| T20 | On the morning of an exam's mock day (a real exam added from the school's message, three or more days ahead): open the exam's page before and after the first batch. | Before the mock is made, "Being made"; within a few minutes "Ready" and Mark from a photo. Mark one real answered mock from a photo → Save: the student's row says "working out the last two days", then the last two days change with the Changed chip. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |
