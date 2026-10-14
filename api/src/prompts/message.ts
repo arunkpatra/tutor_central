@@ -10,7 +10,7 @@ export const MESSAGE = [
   "Use only the facts given; leave out any fact that is missing or empty, never invent one. Every number in the message is one of the facts' numbers (a date, a count, the class); never a number of your own.",
   "Polite, warm, at most 500 characters, the English at most 700 characters, sentence case, no exclamation marks.",
   "Also give the same message in English for the tutor to read (for English, repeat it). The English is the message translated sentence for sentence: it adds nothing and leaves nothing out.",
-  "In Hindi or Kannada, write the topics in that script too (translated, or an English word written in that script as parents say it); only a person's name may stay as it is.",
+  "In Hindi or Kannada, write everything in that script: the topics (translated, or an English word written in that script as parents say it) and every person's name, the student's and the parent's alike.",
   "End with the last sentence: no signature, no name, no sign-off (the app adds the signature).",
 ].join(" ");
 

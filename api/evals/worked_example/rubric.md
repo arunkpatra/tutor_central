@@ -4,4 +4,4 @@
 - Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
 - One problem on the skill named, solved in two to six steps a tutor says aloud, each step following from the one before.
 - Every step's working is right and the final answer is right; where the answer comes with a proof, they agree.
-- The slip is the mistake students of that class make most on this skill.
+- The slip is the mistake students of that class make most on this skill: one mistake, stated once, with the wrong answer it gives.

@@ -5,7 +5,7 @@ import { MESSAGE, whoLines } from "./message.js";
 import { VOICE, blocks } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "3";
+export const VERSION = "4";
 
 /** The message to the parent of a student not on track (P10-NotOnTrack-Message), in Hindi, Hinglish or Kannada (the
  *  English one is a template on the phone): what is hard, what we are doing, what helps at home, a five-minute talk. */

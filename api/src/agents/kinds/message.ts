@@ -66,7 +66,7 @@ export function messageFindings(
 export function messageRubric(own: string[]): string {
   return [
     "- Every fact comes from the request: no test, mark, date, chapter or event the request does not give. Every number in the message is one the request gives. Warm words that state no fact are not facts.",
-    "- The message is in the language asked, in its script (Hindi in Devanagari, Kannada in Kannada script, Hinglish in Latin letters, English); the English beside it says the same thing.",
+    "- The message is in the language asked, in its script (Hindi in Devanagari, Kannada in Kannada script, Hinglish in Latin letters, English), the names too; the English beside it says the same thing.",
     "- Warm and polite to a parent, in plain words a parent reads easily; it never blames the student.",
     "- At most 500 characters, sentence case, no exclamation marks; no signature, name or sign-off at the end (the app adds the tutor's).",
     "- The tutor's own words, when the request gives them, are carried whole.",
