@@ -103,7 +103,9 @@ public struct SupabaseJobsRepository: JobsRepository {
         let step: ExamStep?
 
         var status: ExamJobStatus {
-            ExamJobStatus(state: state, at: step?.at, mockFailed: step?.mockFailed ?? false)
+            ExamJobStatus(
+                state: state, at: step?.at, mockFailed: step?.mockFailed ?? false, notMade: Set(step?.failed ?? [])
+            )
         }
     }
 
@@ -111,6 +113,7 @@ public struct SupabaseJobsRepository: JobsRepository {
     struct ExamStep: Decodable {
         let at: String?
         let mockFailed: Bool?
+        let failed: [UUID]?
     }
 
     /// The choices as the plan job reads them: `{ groups, subjects: { "1": "Mathematics" } }`.
