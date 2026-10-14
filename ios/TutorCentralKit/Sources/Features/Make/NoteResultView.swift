@@ -112,7 +112,7 @@ struct NoteResultView: View {
                 Text(AIWords.noteLine)
                     .typeStyle(Tokens.footnote).foregroundStyle(Tokens.text3.color)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                HStack(spacing: Tokens.tileGap) {
+                AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
                     CopyButton { text }
                     Button {
                         writeAgain()

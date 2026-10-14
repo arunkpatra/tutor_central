@@ -28,9 +28,12 @@ public struct SchoolRow: View {
 
     public var body: some View {
         ListRow(action: action) {
-            DayColumn(top: day, bottom: date)
-            RowLines(title: title, line: line, lineTone: nil)
-            KindChip(kind)
+            // At the accessibility sizes the day goes above the words and the chip under them (Dynamic Type).
+            AdaptiveRow {
+                DayColumn(top: day, bottom: date)
+                RowLines(title: title, line: line, lineTone: nil)
+                KindChip(kind)
+            }
             Chevron()
         }
     }
@@ -61,19 +64,26 @@ public struct PreparationRow: View {
 
     public var body: some View {
         ListRow(action: action) {
-            DayColumn(top: day, bottom: date)
-            RowLines(title: title, line: line, lineTone: nil)
-            switch mark {
-            case .done:
-                Image(systemName: "checkmark")
-                    .font(.system(size: Tokens.iconButton, weight: .semibold))
-                    .foregroundStyle(Tokens.ok.color)
-                    .accessibilityLabel("Done")
-            case .today: Chip(.status(.due, "Today", symbol: "clock"), compact: true)
-            case .mock: Chip(.neutral("Mock"), compact: true)
-            case .changed: Chip(.status(.ok, "Changed", symbol: "checkmark"), compact: true)
-            case .none: EmptyView()
+            // At the accessibility sizes the day goes above the words and the mark under them (Dynamic Type).
+            AdaptiveRow {
+                DayColumn(top: day, bottom: date)
+                RowLines(title: title, line: line, lineTone: nil)
+                markView
             }
+        }
+    }
+
+    @ViewBuilder private var markView: some View {
+        switch mark {
+        case .done:
+            Image(systemName: "checkmark")
+                .font(.system(size: Tokens.iconButton, weight: .semibold))
+                .foregroundStyle(Tokens.ok.color)
+                .accessibilityLabel("Done")
+        case .today: Chip(.status(.due, "Today", symbol: "clock"), compact: true)
+        case .mock: Chip(.neutral("Mock"), compact: true)
+        case .changed: Chip(.status(.ok, "Changed", symbol: "checkmark"), compact: true)
+        case .none: EmptyView()
         }
     }
 }

@@ -158,7 +158,7 @@ public struct NoteView: View {
                         .buttonStyle(.quiet(emphasised: true))
                         .disabled(store.stage != .ready && store.stage != .setAside)
                 }
-                HStack(spacing: Tokens.tileGap) {
+                AdaptiveRow(spacing: Tokens.tileGap, stackedSpacing: Tokens.tileGap) {
                     CopyButton(copy: { Task { await store.copy() } })
                         .disabled(!store.canSend)
                     Button { sending = true } label: {
