@@ -1,4 +1,4 @@
-- One item per announcement in what the school sent, and nothing it did not announce.
+- One item per announcement in what the school sent, and nothing it did not announce. When school reopens or classes resume after a holiday, that is the holiday's end, not an item of its own.
 - Titles and portions in the school's own words; a subject only when one is named.
 - Each date is the one the message gives, resolved from today's date; a date the message does not give is null, never guessed.
 - A student's name only when the message is about one student.

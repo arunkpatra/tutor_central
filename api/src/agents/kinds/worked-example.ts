@@ -6,11 +6,15 @@ import { rubric } from "./rubric.js";
 
 export type WorkedExampleInput = { classLevel: ClassLevel; subject: string; skill: string };
 
-/** The worked example's rules, shared with the brief's (its worked example). */
+/** The worked example's rules, shared with the brief's (its worked example): the answer's proof and the slip's proof hold,
+ *  and the slip's wrong value is not the right one (the first nightly's brief, D105). */
 export function workedExampleFindings(example: WorkedExampleOutput, at = ""): Finding[] {
   const findings: Finding[] = [];
   if (example.proof && !proofHolds(example.proof)) findings.push({ item: `${at}answer`, problem: `the proof ${example.proof.expression} does not equal ${example.proof.equals}` });
   if (!example.slip.startsWith("A common slip here:")) findings.push({ item: `${at}slip`, problem: "it must start 'A common slip here:'" });
+  const slip = example.slipProof;
+  if (slip && !proofHolds(slip)) findings.push({ item: `${at}slip`, problem: `the slip's proof ${slip.expression} does not equal ${slip.equals}` });
+  else if (slip && example.proof && slip.equals === example.proof.equals) findings.push({ item: `${at}slip`, problem: "the slip's value equals the right answer" });
   return findings;
 }
 

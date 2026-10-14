@@ -23,6 +23,7 @@
     "problem": "Balance: Fe + O₂ → Fe₂O₃",
     "proof": null,
     "slip": "A common slip here: changing the small numbers inside a formula. Only the numbers in front change.",
+    "slipProof": null,
     "steps": [
       {
         "title": "Count each element on both sides",

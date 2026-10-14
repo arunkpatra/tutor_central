@@ -1,5 +1,9 @@
 import type { BatchItem, ClaudeAnswer, ClaudeClient, ClaudeRequest } from "./claude.js";
+import { monthShare } from "./agents/kinds/plan.js";
+import { syllabusBoards } from "./prompts/shared.js";
 import { CheckVerdict } from "./schemas.js";
+
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 import type {
   BriefOutput,
   CheckOutput,
@@ -248,6 +252,7 @@ const workedExample: WorkedExampleOutput = {
   ],
   slip: "A common slip here: changing the small numbers inside a formula. Only the numbers in front change.",
   proof: null,
+  slipProof: null,
 };
 
 /** One spec per template, the figure boards' (P10-Figure-*). */
@@ -283,7 +288,7 @@ const brief: BriefOutput = {
 };
 
 /** A first topic for a group with no record (Group 1, class 8 Science, in October). */
-const plan: PlanOutput = { groups: [{ groupNo: 1, chapter: "Chemical reactions", skill: "Balance a chemical equation" }] };
+const plan: PlanOutput = { groups: [{ groupNo: 1, chapter: "Exploring Forces", skill: "Tell a push from a pull" }] };
 
 
 /** The board's message read (P10-School-Confirm): the exam, the homework and the holiday. */
@@ -544,13 +549,15 @@ function counted(count: number): SheetOutput {
   return { ...SAMPLE.sheet, questions };
 }
 
-/** A first topic per group the prompt lists ("Group 2: class 5 Mathematics."). */
+/** A first topic per group the prompt lists ("Group 2: class 5 Mathematics."): where the syllabus lists the class's
+ *  chapters, the one at the month's place in the year (the plan's rule, D105); else a plain topic. */
 function topics(text: string): PlanOutput {
-  const groups = [...text.matchAll(/Group (\d): class (\w+) ([^.]+)\./g)].map((m) => ({
-    groupNo: Number(m[1]),
-    chapter: `${m[3]} for class ${m[2]}`,
-    skill: `The first idea of ${m[3]}`,
-  }));
+  const month = MONTH_NAMES.indexOf(text.split("\n")[0]?.replace(/\.$/, "") ?? "") + 1;
+  const groups = [...text.matchAll(/Group (\d): class (\w+) ([^.]+)\./g)].map((m) => {
+    const list = Object.values(syllabusBoards(m[2] ?? "", m[3] ?? "")?.boards ?? {})[0];
+    const listed = list?.[Math.min(list.length - 1, Math.floor(monthShare(month || 10) * list.length))];
+    return { groupNo: Number(m[1]), chapter: listed ?? `${m[3]} for class ${m[2]}`, skill: `The first idea of ${listed ?? m[3]}` };
+  });
   return groups.length > 0 ? { groups } : SAMPLE.plan;
 }
 

@@ -3,5 +3,5 @@
 - The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
 - Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
 - One question per chapter named, on the chapter's most basic idea, answered aloud in a few words; for a story or a poem, the plainest thing its title promises (who or what it is about), never an event of its plot, since only the title is given.
-- Each expected answer is right.
+- Each expected answer is right. An answer is right by what the class's textbook teaches, not by everyday practice.
 - A chapter's title is quoted as printed, its punctuation included (a book's exclamation mark is not the writer's).

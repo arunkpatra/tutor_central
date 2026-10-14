@@ -323,6 +323,8 @@ export const WorkedExampleOutput = z.object({
   slip: z.string().min(1).max(300),
   /** The problem's final answer, when it is a number. */
   proof: Proof.nullish(),
+  /** The slip's wrong working and the wrong value it gives, when the slip is a number (Phase 21, D105). */
+  slipProof: Proof.nullish(),
 });
 export type WorkedExampleOutput = z.infer<typeof WorkedExampleOutput>;
 

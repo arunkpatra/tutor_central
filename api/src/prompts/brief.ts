@@ -1,10 +1,10 @@
 import type { ClaudeRequest } from "../claude.js";
 import { modelFor } from "../models.js";
 import { BriefOutput, type ClassLevel } from "../schemas.js";
-import { VOICE, blocks, LIMITS, MATHS, PROOF, syllabusFacts } from "./shared.js";
+import { VOICE, blocks, LIMITS, MATHS, PROOF, SLIP_PROOF, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "5";
+export const VERSION = "6";
 
 /** The tutor's brief for a chapter (P10-Brief): five minutes of reading before the class, as a colleague's note. */
 export function request(classLevel: ClassLevel, subject: string, chapter: string): ClaudeRequest<BriefOutput> {
@@ -18,6 +18,7 @@ export function request(classLevel: ClassLevel, subject: string, chapter: string
       "Plain, direct, no headings inside the fields, nothing copied from a textbook.",
       "The worked example's slip is one sentence that starts 'A common slip here:'.",
       PROOF,
+      SLIP_PROOF,
       MATHS,
       LIMITS.brief,
       syllabusFacts(classLevel, subject),

@@ -24,32 +24,32 @@
     "hash": "de2a1b41cbd14ae93ce493627923ccbc573275246aea0611343ec705ed2bae8e"
   },
   "plan": {
-    "version": "3",
-    "hash": "b861dfd7de19e0d1cdf51564b14c8aaa153955339251c838d8ab52dc33945016"
+    "version": "4",
+    "hash": "8cb524b2c114b511a160762720fc252e7d1ed275ec3a2b6b357ec61c911ca1dd"
   },
   "sheet": {
     "version": "4",
     "hash": "266c9dc2b741a602f7fcec85729045a88b6d646bb7a6c5bd711700cad0f91636"
   },
   "worked_example": {
-    "version": "4",
-    "hash": "80ebf8bb178bd6c4546cd9cde45f3e8fae1b61ea4f90884a3b02e23a9c39bc2a"
+    "version": "5",
+    "hash": "0285e381c4fe0c3b9051ac7df2f5dfa112730cc4b298c004304967ea1ffa4d01"
   },
   "figure": {
-    "version": "2",
-    "hash": "dc06238b793945a1ba59568b45a3adce4e3fe0b6b91a066dabfcec9c88646221"
+    "version": "3",
+    "hash": "97eb4c52684c85359781dd6b49ce653e76ca32259410ddfdb90d47f770775582"
   },
   "brief": {
-    "version": "5",
-    "hash": "70b09993e316325ef075621d150829aa3c25a301025989701169ce06b5c23753"
+    "version": "6",
+    "hash": "6adb963f79365d246b8cdec1cf2e70fe8995548649acf5d02d4fdf7558b97740"
   },
   "check": {
     "version": "4",
     "hash": "1985c60c3a14a14bf57baa0088325720dc88eec4fc2fbf9ce3679578bde5997a"
   },
   "placement": {
-    "version": "4",
-    "hash": "2a99c95e415b2ca5e8c28a10ec50c103c8278ed67a5cc21e1cdda4fe475151b2"
+    "version": "5",
+    "hash": "96653b5448cc40e703198024290d44da5ecdfc2011aa2b5610c6aada5a7acda4"
   },
   "mock": {
     "version": "4",
@@ -76,12 +76,12 @@
     "hash": "455e9e9a92a21ad739541c57e8f88fdaca0c6df088ade16d36257ac31783c9f0"
   },
   "parse_school": {
-    "version": "3",
-    "hash": "5a81752dc90fe16e7a78b1f53585b2084f4ff292b41a8dc093230cf6820f8e9c"
+    "version": "4",
+    "hash": "58b6bb2ea2ecd21d4bda1edc9585c3369806a97a6c1c23686f2e69709e2c60a2"
   },
   "parse_textbook": {
-    "version": "3",
-    "hash": "9b712259a1537f6e4e1f88b97e49bcb4faaecebe39f048e48d530bde99100f7d"
+    "version": "4",
+    "hash": "6e0d5223dd77c7fc765ae0b702fac07e3c85652b19f16c7a2b31e788a1b1980b"
   },
   "read_marks": {
     "version": "2",

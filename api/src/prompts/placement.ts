@@ -4,7 +4,7 @@ import { type ClassLevel, PlacementOutput } from "../schemas.js";
 import { VOICE, blocks, LIMITS, MATHS, syllabusFacts } from "./shared.js";
 
 /** The prompt's version (D74): raised with any change to its words; `bun prompts --check` holds it. */
-export const VERSION = "4";
+export const VERSION = "5";
 
 /** The placement (P10-Placement): one question per chapter, or per step of the ladder, that tells whether a student has
  *  its most basic idea. Chapters and a class only; no student is named. */
@@ -17,9 +17,11 @@ export function request(classLevel: ClassLevel, subject: string, chapters: strin
       VOICE,
       "You write one question per chapter that tells whether a student has the chapter's most basic idea, in the chapters' order.",
       "A student who knows the chapter answers it aloud in a few words; give the expected answer in at most twelve words.",
-      "No multiple choice, no trick questions.",
+      "No multiple choice, no trick questions. Each question asks one thing, in one sentence, with one question mark.",
+      "An answer is right by what the class's textbook teaches, not by everyday practice.",
       "Ask about what the chapter teaches, never a question its title answers; quote a chapter's title as printed, its punctuation included.",
       "For a story or a poem you have only its title: ask the plainest thing the title promises at that class (who or what it is about), never an event of its plot.",
+      "In mathematics, science or social science a chapter is about the idea it teaches, however its title reads (The Fish Tale is about large numbers): ask that, never about the title's story.",
       MATHS,
       LIMITS.placement,
       syllabusFacts(classLevel, subject),

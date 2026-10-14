@@ -2,5 +2,5 @@
 - The level fits the class named: a student of that class, at a tuition centre in India, can do it. A skill or chapter the tutor named is the tutor's choice: never question whether it belongs to the class; judge the questions within it.
 - The words are Indian English in the idiom of CBSE and state-board classrooms; sentence case; no exclamation marks.
 - Nothing is copied from a textbook: no question or passage is a book's word for word (a standard form, such as ax² + bx + c = 0, is not copying).
-- One chapter and one skill for each group, a chapter a class of that level is usually at in the month given (the school year runs June to March).
-- Chapter names as a current or a recent book for the class prints them (the books changed in 2023 to 2025; a centre may use either) where the request lists the chapters; where it does not, a chapter or a plain topic name a class of that level studies, never a chapter of another class's book; a skill a tutor can teach in one class and check with one question.
+- One chapter and one skill for each group, a chapter a class of that level is usually at in the month given (the school year runs June to March, June the first month of ten).
+- Where the request lists the class's chapters, the chapter is one from that list as printed; where it does not, a chapter or a plain topic name a class of that level studies, never a chapter of another class's book; a skill a tutor can teach in one class and check with one question.
