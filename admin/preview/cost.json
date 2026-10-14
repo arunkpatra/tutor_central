@@ -175,84 +175,184 @@
       "per_student_paise": null
     }
   ],
-  "byKind": [
+  "byStep": [
     {
       "kind": "sheet",
+      "step": "draft",
       "model": "claude-sonnet-5-5",
-      "calls": 120,
-      "paise": 24000
+      "batched": false,
+      "calls": 150,
+      "paise": 19400
     },
     {
       "kind": "sheet",
+      "step": "draft",
       "model": "claude-haiku-5-5",
-      "calls": 78,
-      "paise": 6100
+      "batched": false,
+      "calls": 48,
+      "paise": 3700
+    },
+    {
+      "kind": "sheet",
+      "step": "check",
+      "model": "claude-haiku-5-5",
+      "batched": false,
+      "calls": 150,
+      "paise": 3300
+    },
+    {
+      "kind": "sheet",
+      "step": "check",
+      "model": "claude-sonnet-5-5",
+      "batched": false,
+      "calls": 48,
+      "paise": 800
+    },
+    {
+      "kind": "sheet",
+      "step": "repair",
+      "model": "claude-sonnet-5-5",
+      "batched": false,
+      "calls": 14,
+      "paise": 1200
     },
     {
       "kind": "check_paper",
+      "step": "draft",
       "model": "claude-opus-5-5",
+      "batched": false,
       "calls": 22,
       "paise": 18000
     },
     {
       "kind": "worked_example",
+      "step": "draft",
       "model": "claude-sonnet-5-5",
+      "batched": false,
       "calls": 96,
-      "paise": 14100
+      "paise": 12800
     },
     {
       "kind": "brief",
+      "step": "draft",
       "model": "claude-sonnet-5-5",
+      "batched": false,
       "calls": 61,
-      "paise": 11800
+      "paise": 10200
     },
     {
       "kind": "mock",
+      "step": "draft",
       "model": "claude-sonnet-5-5",
+      "batched": false,
       "calls": 9,
       "paise": 8400
     },
     {
+      "kind": "evals",
+      "step": "grade",
+      "model": "claude-opus-5-5",
+      "batched": true,
+      "calls": 630,
+      "paise": 7100
+    },
+    {
       "kind": "gap_report",
+      "step": "draft",
       "model": "claude-sonnet-5-5",
+      "batched": false,
       "calls": 11,
-      "paise": 7200
+      "paise": 5200
     },
     {
       "kind": "note",
+      "step": "draft",
       "model": "claude-haiku-5-5",
-      "calls": 100,
-      "paise": 3500
+      "batched": true,
+      "calls": 140,
+      "paise": 3300
     },
     {
-      "kind": "can_do",
-      "model": "claude-haiku-5-5",
+      "kind": "parse_school",
+      "step": "draft",
+      "model": "claude-sonnet-5-5",
+      "batched": false,
       "calls": 40,
-      "paise": 1400
-    },
-    {
-      "kind": "check",
-      "model": "claude-haiku-5-5",
-      "calls": 90,
-      "paise": 2400
-    },
-    {
-      "kind": "placement",
-      "model": "claude-haiku-5-5",
-      "calls": 28,
-      "paise": 700
+      "paise": 1900
     },
     {
       "kind": "plan",
+      "step": "draft",
       "model": "claude-sonnet-5-5",
-      "calls": 20,
-      "paise": 1100
+      "batched": false,
+      "calls": 60,
+      "paise": 1600
     },
     {
-      "kind": "read_marks",
-      "model": "claude-opus-5-5",
-      "calls": 7,
-      "paise": 400
+      "kind": "check",
+      "step": "draft",
+      "model": "claude-haiku-5-5",
+      "batched": false,
+      "calls": 70,
+      "paise": 1200
+    },
+    {
+      "kind": "placement",
+      "step": "draft",
+      "model": "claude-sonnet-5-5",
+      "batched": false,
+      "calls": 12,
+      "paise": 1000
+    }
+  ],
+  "byMonth": [
+    {
+      "month": "2026-05-01",
+      "calls": 0,
+      "paise": 0,
+      "batched_paise": 0,
+      "active_centres": 0,
+      "per_active_centre_paise": 0
+    },
+    {
+      "month": "2026-06-01",
+      "calls": 0,
+      "paise": 0,
+      "batched_paise": 0,
+      "active_centres": 0,
+      "per_active_centre_paise": 0
+    },
+    {
+      "month": "2026-07-01",
+      "calls": 640,
+      "paise": 40200,
+      "batched_paise": 0,
+      "active_centres": 2,
+      "per_active_centre_paise": 20100
+    },
+    {
+      "month": "2026-08-01",
+      "calls": 2105,
+      "paise": 112200,
+      "batched_paise": 0,
+      "active_centres": 4,
+      "per_active_centre_paise": 28100
+    },
+    {
+      "month": "2026-09-01",
+      "calls": 3912,
+      "paise": 186000,
+      "batched_paise": 0,
+      "active_centres": 5,
+      "per_active_centre_paise": 37200
+    },
+    {
+      "month": "2026-10-01",
+      "calls": 1840,
+      "paise": 99100,
+      "batched_paise": 21200,
+      "active_centres": 5,
+      "per_active_centre_paise": 19800
     }
   ]
 }

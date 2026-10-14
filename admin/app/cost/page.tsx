@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/Frame";
 import { PageLink } from "@/components/PageLink";
-import { Cell, Meter, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import { Cell, Chip, Meter, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
 import { PLAN_PAISE } from "@/content/centres";
-import { COST, DAY_LINE_PAISE, kindRows } from "@/content/cost";
+import { COST, DAY_LINE_PAISE, monthLabel, stepRows } from "@/content/cost";
 import { ENVIRONMENT, NONE } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
@@ -15,7 +15,8 @@ import { idOf } from "@/lib/ids";
 export const metadata: Metadata = { title: "Cost" };
 
 const CENTRE_COLS = "2fr 1fr 1fr 1fr 1.4fr";
-const KIND_COLS = "1.4fr 1.2fr .8fr .8fr .9fr";
+const KIND_COLS = "1.3fr 1.1fr 1.7fr .7fr .7fr .6fr";
+const MONTH_COLS = "1.6fr .8fr .8fr 1.2fr 1.1fr 1.4fr";
 type Query = { month?: string; centre?: string };
 
 function href(q: Query, change: Partial<Query>): string {
@@ -46,7 +47,9 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
   const today = istDay(at);
   const days = cost.byDay.filter((d) => d.day <= today);
   const highest = Math.max(0, ...days.map((d) => d.paise));
-  const kinds = kindRows(cost.byKind, 8);
+  const kinds = stepRows(cost.byStep, 10);
+  // The months with calls, newest first; this one always.
+  const byMonth = [...cost.byMonth].reverse().filter((m) => m.calls > 0 || m.month.slice(0, 7) === today.slice(0, 7));
   const kindTotal = kinds.reduce((s, k) => s + k.paise, 0);
   return (
     <Frame current="Cost">
@@ -103,7 +106,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
         </div>
       </Section>
       <Section title={COST.split} lead={COST.splitLead}>
-        <div className="cols2">
+        <div className="stack">
           <Table
             cols={CENTRE_COLS}
             head={[
@@ -141,6 +144,7 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
             cols={KIND_COLS}
             head={[
               { label: COST.kindHead.kind },
+              { label: COST.kindHead.step },
               { label: COST.kindHead.model },
               { label: COST.kindHead.calls, right: true },
               { label: COST.kindHead.cost, right: true },
@@ -148,9 +152,18 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
             ]}
           >
             {kinds.map((k) => (
-              <Row key={k.kind} cols={KIND_COLS}>
+              <Row key={`${k.kind}|${k.step}|${k.batched}`} cols={KIND_COLS}>
                 <Cell label={COST.kindHead.kind} kind="main">
                   {k.kind}
+                </Cell>
+                <Cell label={COST.kindHead.step} kind="dim">
+                  {k.step}
+                  {k.batched ? (
+                    <>
+                      {" "}
+                      <Chip tone="accent">{COST.batched}</Chip>
+                    </>
+                  ) : null}
                 </Cell>
                 <Cell label={COST.kindHead.model} kind="dim">
                   {k.models}
@@ -168,6 +181,45 @@ export default async function CostPage({ searchParams }: { searchParams: Promise
             ))}
           </Table>
         </div>
+      </Section>
+      <Section title={COST.byMonth} lead={COST.byMonthLead}>
+        <Table
+          cols={MONTH_COLS}
+          head={[
+            { label: COST.monthHead.month },
+            { label: COST.monthHead.calls, right: true },
+            { label: COST.monthHead.cost, right: true },
+            { label: COST.monthHead.batched, right: true },
+            { label: COST.monthHead.perCentre, right: true },
+            { label: COST.monthHead.share },
+          ]}
+        >
+          {byMonth.map((m) => (
+            <Row key={m.month} cols={MONTH_COLS}>
+              <Cell label={COST.monthHead.month} kind="main">
+                {monthLabel(m.month, today)}
+              </Cell>
+              <Cell label={COST.monthHead.calls} kind="r">
+                {count(m.calls)}
+              </Cell>
+              <Cell label={COST.monthHead.cost} kind="r">
+                {rupees(m.paise)}
+              </Cell>
+              <Cell label={COST.monthHead.batched} kind="r">
+                {m.batched_paise > 0
+                  ? `${rupees(m.batched_paise)} · ${Math.round((m.batched_paise / m.paise) * 100)}%`
+                  : rupees(0)}
+              </Cell>
+              <Cell label={COST.monthHead.perCentre} kind="r">
+                {rupees(m.per_active_centre_paise)}
+              </Cell>
+              <Cell label={COST.monthHead.share}>
+                {Math.round((m.per_active_centre_paise / PLAN_PAISE) * 100)}%
+                <Meter share={m.per_active_centre_paise / PLAN_PAISE} />
+              </Cell>
+            </Row>
+          ))}
+        </Table>
       </Section>
     </Frame>
   );
