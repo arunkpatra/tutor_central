@@ -124,6 +124,15 @@ test("schedule_evals queues one eval_run for India's day, once", async () => {
   await sql`delete from public.jobs where idempotency_key = 'evals:2026-10-20'`;
 });
 
+test("the nightly runs the job kinds on a weekday and every kind on Sunday (Phase 21 decision 8)", async () => {
+  // Tuesday 20 October and Sunday 25 October in India.
+  await svc.rpc("schedule_evals", { p_now: "2026-10-20T10:00:00Z" });
+  await svc.rpc("schedule_evals", { p_now: "2026-10-25T10:00:00Z" });
+  const rows = await sql`select idempotency_key as key, input from public.jobs where idempotency_key in ('evals:2026-10-20', 'evals:2026-10-25') order by idempotency_key`;
+  expect(rows.map((r: { key: string; input: Record<string, unknown> }) => [r.key, r.input.set ?? null])).toEqual([["evals:2026-10-20", "nightly"], ["evals:2026-10-25", null]]);
+  await sql`delete from public.jobs where idempotency_key in ('evals:2026-10-20', 'evals:2026-10-25')`;
+});
+
 test("a step taken again: the new draft's check under the same key is a new row; a draft's key with another body is still refused (0055)", async () => {
   const call = (key: string, agent: string, hash: string) =>
     a.rpc("start_ai_call", { p_centre: centreA, p_kind: "sheet", p_input: {}, p_model: "claude-sonnet-5-5", p_key: key, p_input_hash: hash, p_agent_step: agent });

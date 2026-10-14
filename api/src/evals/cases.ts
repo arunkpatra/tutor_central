@@ -20,6 +20,16 @@ export const EVAL_KINDS = [
   "paper", "homework", "worksheet", "progress_note", "scan_register",
 ] as const;
 export type EvalKind = (typeof EVAL_KINDS)[number];
+/** The nightly's weekday set (Phase 21 decision 8): Phase 20's nine and the kinds the jobs make (the note day's, the exam
+ *  job's); every kind runs on Sunday, the tap kinds with them. */
+export const NIGHTLY_KINDS = [
+  "sheet", "worked_example", "figure", "brief", "check", "placement", "plan", "parse_textbook", "parse_school",
+  "note", "can_do", "mock", "gap_report",
+] as const satisfies readonly EvalKind[];
+/** The kinds a tutor's tap makes, run on Sundays. */
+export const TAP_KINDS = [
+  "test_tomorrow", "not_on_track", "check_paper", "read_marks", "paper", "homework", "worksheet", "progress_note", "scan_register",
+] as const satisfies readonly EvalKind[];
 /** The language anchors (D110): `api/evals/anchors/<lang>/cases.json`, the parents' messages in Hindi and Kannada, each
  *  case naming its kind; run by name (`bun evals --kinds anchor_hi,anchor_kn`) under the free checks until the native
  *  speakers' labels come (docs/testing/anchor-labelling.md). */
