@@ -41,7 +41,7 @@ test("alerts: open first with Acknowledge, the acknowledged ones, the lines", as
   expect(html).not.toContain("The lines change in Phase 22.");
   expect(html.match(/>Acknowledge</g)?.length).toBe(2);
   const bad = renderToStaticMarkup(await AlertsPage({ searchParams: Promise.resolve({ bad: "lines" }) }));
-  expect(bad).toContain("Whole numbers, 0 or more; the rate may have a decimal");
+  expect(bad).toContain("Whole numbers, 0 or more (stuck minutes 1 or more); the rate may have a decimal, up to 100");
 });
 
 test("Save the lines: rupees to paise, numbers 0 or more, back to the alerts", async () => {
@@ -129,4 +129,23 @@ test("the audit names a lines change by its values and a model change by its kin
       target: { kind: "brief", step: "draft", enabled: false },
     }),
   ).toBe("brief · draft · off");
+});
+
+test("the lines refuse a number too large to keep, a rate over 100 and a stuck line of 0 (review R-portal-3)", async () => {
+  const seen: unknown[] = [];
+  const fake = { ...previewData, setLines: async (_a: string, l: unknown) => void seen.push(l) };
+  const go = async (over: Record<string, string>) => {
+    const f = new FormData();
+    for (const [k, v] of Object.entries({ cost_day: "60", error_rate: "5", error_min: "20", stuck: "10", ...over }))
+      f.set(k, v);
+    return (
+      ((await withData(fake, () => saveLines(f)).catch((e: { digest?: string }) => e)) as { digest?: string }).digest ??
+      ""
+    );
+  };
+  expect(await go({ error_min: "99999999999" })).toContain("/alerts?bad=lines");
+  expect(await go({ error_rate: "101" })).toContain("/alerts?bad=lines");
+  expect(await go({ stuck: "0" })).toContain("/alerts?bad=lines");
+  expect(await go({ cost_day: "99999999" })).toContain("/alerts?bad=lines");
+  expect(seen).toHaveLength(0);
 });

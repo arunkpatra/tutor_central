@@ -32,7 +32,7 @@ export const LINES_FORM = {
   failed: "job_failed",
   failedNote:
     "has no line: any job failed after its last try is raised. Each alert is raised once, emailed to you and pushed to your iPhone.",
-  bad: "Whole numbers, 0 or more; the rate may have a decimal",
+  bad: "Whole numbers, 0 or more (stuck minutes 1 or more); the rate may have a decimal, up to 100",
   you: "you",
 } as const;
 

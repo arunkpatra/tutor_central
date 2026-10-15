@@ -258,7 +258,9 @@ export default async function CentrePage({
                 defaultValue={String(Math.round((c.allowance_paise ?? 0) / 100))}
               />
             </div>
-            {query.bad ? <p className="fieldError">{ALLOWANCE.bad}</p> : null}
+            {query.bad ? (
+              <p className="fieldError">{query.bad === "calls" ? ALLOWANCE.badCalls : ALLOWANCE.bad}</p>
+            ) : null}
             <Field label={ALLOWANCE.reason} name="reason" placeholder={ALLOWANCE.reasonHint} required maxLength={200} />
             {query.empty ? <p className="fieldError">{ALLOWANCE.empty}</p> : null}
             <div className="dialogActions">

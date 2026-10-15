@@ -17,8 +17,9 @@ export const SYLLABI = {
   head: { board: "Board", class: "Class", subject: "Subject", edition: "Edition", chapters: "Chapters", act: "" },
   open: "Open",
   close: "Close",
-  line: (edition: string, chapters: number, skills: number, blueprint: string) =>
-    `${edition} · ${chapters} chapters · ${skills} skills · ${blueprint} · read by the plan’s chapter check, the mock and the gap report`,
+  line: (edition: string, chapters: number, skills: number, blueprint: string, changed: string) =>
+    `${edition} · ${chapters} chapters · ${skills} skills · ${blueprint} · read by the plan’s chapter check, the mock and the gap report · last changed ${changed}`,
+  openLabel: (board: string, level: string, subject: string) => `Open ${board} ${level} ${subject}`,
   blueprint: (marks: number | null, sections: number) =>
     `a blueprint (${marks ?? "—"} marks in ${sections} ${sections === 1 ? "section" : "sections"})`,
   noBlueprint: "no blueprint",

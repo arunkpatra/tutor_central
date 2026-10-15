@@ -9,7 +9,7 @@ import { requireAdmin } from "@/lib/admin";
 import { data } from "@/lib/data";
 import type { Syllabus } from "@/lib/data/types";
 import { environment, preview } from "@/lib/env";
-import { count } from "@/lib/format";
+import { count, dayMonth } from "@/lib/format";
 import { idOf } from "@/lib/ids";
 
 export const metadata: Metadata = { title: "Syllabus data" };
@@ -29,12 +29,12 @@ function href(q: Query, change: Partial<Query>): string {
 const boardName = (b: string) => SYLLABI.boards[b] ?? b;
 
 /** One syllabus open in place: its line, then every chapter with its skills and its blueprint's marks. */
-function Opened({ s, skills }: { s: Syllabus; skills: number }) {
+function Opened({ s, skills, changed }: { s: Syllabus; skills: number; changed: string }) {
   const blueprint = s.blueprint ? SYLLABI.blueprint(s.blueprint.marks, s.blueprint.sections) : SYLLABI.noBlueprint;
   return (
     <div className="open">
       <div className="openHead">
-        <span>{SYLLABI.line(s.edition, s.chapters.length, skills, blueprint)}</span>
+        <span>{SYLLABI.line(s.edition, s.chapters.length, skills, blueprint, changed)}</span>
       </div>
       <Table
         cols={CHAPTER_COLS}
@@ -142,12 +142,16 @@ export default async function SyllabiPage({ searchParams }: { searchParams: Prom
                     {count(r.chapters)}
                   </Cell>
                   <Cell label={SYLLABI.head.act} kind="acts">
-                    <PageLink className="plain accentLink" href={href(q, { open: isOpen ? undefined : r.id })}>
+                    <PageLink
+                      className="plain accentLink"
+                      href={href(q, { open: isOpen ? undefined : r.id })}
+                      aria-label={isOpen ? undefined : SYLLABI.openLabel(boardName(r.board), r.class_level, r.subject)}
+                    >
                       {isOpen ? SYLLABI.close : SYLLABI.open}
                     </PageLink>
                   </Cell>
                 </Row>
-                {isOpen && open ? <Opened s={open} skills={r.skills} /> : null}
+                {isOpen && open ? <Opened s={open} skills={r.skills} changed={dayMonth(r.updated_at)} /> : null}
               </Fragment>
             );
           })}

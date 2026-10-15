@@ -92,7 +92,8 @@ export const CALL = {
 /** The call's Feedback row (P22-Call-Feedback, D107): the kind, the reason and the time; never the revised text. */
 export const FEEDBACK = {
   label: "Feedback",
-  again: (reason: string | null, at: string) => `made again · ${reason ?? "no reason"} · ${at}`,
+  again: (reason: string | null, at: string) =>
+    `made again · ${reason === "typed" ? "typed by the tutor" : (reason ?? "no reason")} · ${at}`,
   replace: (at: string) => `replaced · ${at}`,
   edit: (at: string) => `edited at Send · ${at} · the text is never shown here`,
 } as const;

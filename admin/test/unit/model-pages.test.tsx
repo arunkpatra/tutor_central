@@ -148,3 +148,33 @@ test("Switch off needs a reason and writes the draft disabled with the current v
   await withData(fake, () => digest(switchOn(f)));
   expect(seen[1]).toMatchObject({ step: "draft", enabled: true, note: "switched on" });
 });
+
+test("a step of a kind the table never held is not found, whatever the step (review R-portal-4)", async () => {
+  let asked = 0;
+  const fake = { ...previewData, setModel: async () => (asked++, "id") };
+  const f = new FormData();
+  for (const [k, v] of Object.entries({
+    kind: "nonsense",
+    step: "check",
+    model: "claude-sonnet-5-5",
+    effort: "medium",
+    fallback: "",
+    note: "",
+  }))
+    f.set(k, v);
+  expect(await withData(fake, () => digest(saveStep(f)))).toContain("NEXT_HTTP_ERROR_FALLBACK;404");
+  expect(asked).toBe(0);
+});
+
+test("a current model the portal does not know is shown as it is, never replaced by the first choice (review R-portal-5)", async () => {
+  const model = (await previewData.model("preview"))!;
+  const odd = {
+    ...previewData,
+    model: async () => ({
+      ...model,
+      current: model.current.map((s) => (s.step === "draft" ? { ...s, model: "claude-sonnet-6-0" } : s)),
+    }),
+  };
+  const html = await withData(odd, () => kindPage());
+  expect(html).toContain('<option value="claude-sonnet-6-0" selected="">claude-sonnet-6-0 (not known here)</option>');
+});

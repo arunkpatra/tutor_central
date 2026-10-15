@@ -122,3 +122,19 @@ test("the allowance line counts one call as one (hand run 3, F1)", async () => {
   expect(CENTRE.allowance(1, null)).toBe("allowance 1 call · ₹0 cap (none)");
   expect(CENTRE.allowance(600, "₹500")).toBe("allowance 600 calls · ₹500 cap");
 });
+
+test("an allowance of 0 calls is refused: it would stop every draft (review R-portal-1)", async () => {
+  const { setAllowance } = await import("../../app/centres/[id]/actions");
+  const { withData } = await import("../../lib/data");
+  const { previewData } = await import("../../lib/data/preview");
+  let asked = 0;
+  const fake = { ...previewData, setAllowance: async () => (asked++, true) };
+  const f = new FormData();
+  for (const [k, v] of Object.entries({ centre: "preview", calls: "0", cap: "0", reason: "no cap" })) f.set(k, v);
+  const to =
+    ((await withData(fake, () => setAllowance(f)).catch((e: { digest?: string }) => e)) as { digest?: string })
+      .digest ?? "";
+  expect(to).toContain("/centres/preview?allowance=1&bad=calls");
+  expect(asked).toBe(0);
+  expect(await centre({ allowance: "1", bad: "calls" })).toContain("Calls a month: 1 or more");
+});

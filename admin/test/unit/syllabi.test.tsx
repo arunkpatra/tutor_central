@@ -36,3 +36,9 @@ test("the filters: a board and a class", async () => {
   expect(html).not.toContain(`<span class="k">Board</span>CBSE`);
   expect(await page({ class: "10" })).not.toContain(`<span class="k">Class</span>8<`);
 });
+
+test("each row's Open names its syllabus; the opened one says when it last changed (review R-portal-7, -8)", async () => {
+  const html = await page({ open: "preview" });
+  expect(html).toContain('aria-label="Open CBSE 8 Science"');
+  expect(html).toContain("last changed 9 Oct");
+});

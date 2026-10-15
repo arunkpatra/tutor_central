@@ -47,8 +47,10 @@ function feedback(call: Call, at: Date): ReactNode {
   return (
     <>
       {first}
-      {subs.map((s) => (
-        <span key={s} className="sub">
+      {subs.map((s, i) => (
+        // Two edits in one minute read alike: the place keeps them apart.
+        // biome-ignore lint/suspicious/noArrayIndexKey: the lines are fixed for the page's life
+        <span key={`${i}-${s}`} className="sub">
           {s}
         </span>
       ))}
