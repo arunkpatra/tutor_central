@@ -39,6 +39,8 @@ export const PENDING = {
   switchOn: "Switching on…",
   saveLines: "Saving the lines…",
   saveAllowance: "Saving the allowance…",
+  send: "Sending…",
+  run: "Queuing the run…",
 } as const;
 
 /** What a screen reader hears while a page loads (D97; P19-Loading-Centres). */

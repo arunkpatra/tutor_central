@@ -1,0 +1,62 @@
+{
+  "id": "preview",
+  "board": "cbse",
+  "class_level": "8",
+  "subject": "Mathematics",
+  "edition": "2026-27",
+  "blueprint": null,
+  "chapters": [
+    {
+      "no": 1,
+      "name": "Rational Numbers",
+      "skills": [
+        "Properties of rational numbers",
+        "Representation on a number line",
+        "Rational numbers between two",
+        "Word problems with rational numbers"
+      ],
+      "marks": null
+    },
+    {
+      "no": 2,
+      "name": "Linear Equations in One Variable",
+      "skills": [
+        "Solving equations with variables on both sides",
+        "Reducing equations to a simpler form",
+        "Word problems",
+        "Equations with fractions",
+        "Checking a solution"
+      ],
+      "marks": null
+    },
+    {
+      "no": 3,
+      "name": "Understanding Quadrilaterals",
+      "skills": [
+        "Angle sum property",
+        "Kinds of quadrilaterals",
+        "Properties of parallelograms",
+        "Exterior angles of a polygon"
+      ],
+      "marks": null
+    },
+    {
+      "no": 4,
+      "name": "Data Handling",
+      "skills": ["Grouped data", "Histograms", "Pie charts", "Probability"],
+      "marks": null
+    },
+    {
+      "no": 5,
+      "name": "Squares and Square Roots",
+      "skills": ["Properties of square numbers", "Finding square roots", "Square roots of decimals"],
+      "marks": null
+    },
+    {
+      "no": 6,
+      "name": "Cubes and Cube Roots",
+      "skills": ["Cubes", "Cube roots by prime factorisation"],
+      "marks": null
+    }
+  ]
+}

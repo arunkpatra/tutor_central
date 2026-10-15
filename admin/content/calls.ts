@@ -85,6 +85,15 @@ export const CALL = {
   output: "Output",
   held: "Held: the student’s consent is not current",
   noOutput: "No output: the call ended without an answer.",
+  openCentre: "Open the centre",
+} as const;
+
+/** The call's Feedback row (P22-Call-Feedback, D107): the kind, the reason and the time; never the revised text. */
+export const FEEDBACK = {
+  label: "Feedback",
+  again: (reason: string | null, at: string) => `made again · ${reason ?? "no reason"} · ${at}`,
+  replace: (at: string) => `replaced · ${at}`,
+  edit: (at: string) => `edited at Send · ${at} · the text is never shown here`,
 } as const;
 
 /** The deadline of both tries (api's CLAUDE_DEADLINE_MS): a call at it timed out. */

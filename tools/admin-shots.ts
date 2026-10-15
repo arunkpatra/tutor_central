@@ -31,6 +31,10 @@ export const DEFAULT_PAGES = [
   "/models/preview",
   "/models/preview?off=1",
   "/centres/preview?allowance=1",
+  "/figures",
+  "/evals",
+  "/syllabi?open=preview",
+  "/calls/preview-feedback",
 ];
 /** A page drawn to answer 404: the not-found page in the frame. */
 const NOT_FOUND = "/nothing-here";

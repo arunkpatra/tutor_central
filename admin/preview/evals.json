@@ -1,0 +1,215 @@
+{
+  "tiles": {
+    "kinds": 13,
+    "passed": 8,
+    "below": 5,
+    "last_run_at": "2026-10-13T20:30:00Z",
+    "last_run_paise": 3400
+  },
+  "rows": [
+    {
+      "kind": "brief",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 4,
+      "grade_pass": 4,
+      "grade_rate": 0.8,
+      "gate": false,
+      "cost_paise": 694
+    },
+    {
+      "kind": "can_do",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 5,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 62
+    },
+    {
+      "kind": "check",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 5,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 128
+    },
+    {
+      "kind": "figure",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 3,
+      "grade_pass": 3,
+      "grade_rate": 0.6,
+      "gate": false,
+      "cost_paise": 352
+    },
+    {
+      "kind": "gap_report",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 4,
+      "grade_pass": 4,
+      "grade_rate": 0.8,
+      "gate": true,
+      "cost_paise": 301
+    },
+    {
+      "kind": "mock",
+      "run_at": "2026-10-12T08:50:00Z",
+      "job_id": "preview-done",
+      "by_admin": true,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 5,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 840
+    },
+    {
+      "kind": "note",
+      "run_at": "2026-10-12T08:50:00Z",
+      "job_id": "preview-done",
+      "by_admin": true,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 5,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 91
+    },
+    {
+      "kind": "parse_school",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 3,
+      "grade_pass": 4,
+      "grade_rate": 0.75,
+      "gate": false,
+      "cost_paise": 265
+    },
+    {
+      "kind": "parse_textbook",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 5,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 184
+    },
+    {
+      "kind": "placement",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 4,
+      "grade_pass": 3,
+      "grade_rate": 0.6,
+      "gate": false,
+      "cost_paise": 328
+    },
+    {
+      "kind": "plan",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 5,
+      "grade_pass": 3,
+      "grade_rate": 0.6,
+      "gate": false,
+      "cost_paise": 404
+    },
+    {
+      "kind": "sheet",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 4,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 513
+    },
+    {
+      "kind": "worked_example",
+      "run_at": "2026-10-13T20:30:00Z",
+      "job_id": "preview-done",
+      "by_admin": false,
+      "cases": 5,
+      "schema": 5,
+      "verify": 5,
+      "check_pass": 4,
+      "grade_pass": 5,
+      "grade_rate": 1,
+      "gate": true,
+      "cost_paise": 396
+    }
+  ],
+  "failures": [
+    {
+      "id": "figure-3-number-line",
+      "reasons": ["grade: the caption says the student takes 5 jumps; the figure draws one jump of 5"]
+    },
+    {
+      "id": "brief-9-matter",
+      "reasons": ["grade: 27 − 273 is −246, so the slip’s wrong answer of 246 K is itself miscalculated"]
+    },
+    {
+      "id": "plan-oct-8-science",
+      "reasons": [
+        "grade: Light: Mirrors and Lenses is the tenth of thirteen chapters, reached around December, not October"
+      ]
+    },
+    {
+      "id": "placement-7-science",
+      "reasons": ["grade: one question asks two things, the instrument and the unit"]
+    }
+  ],
+  "failures_job": "preview-done",
+  "queued": null
+}
