@@ -12,10 +12,11 @@ function files(over: { deletions?: { bucket: string; path: string; prefix: boole
   // As 0044 keeps them: a taken row stays until done, and is not handed out again (the fake has no ten minutes).
   const deletions = (over.deletions ?? []).map((d, i) => ({ ...d, id: `d${i}`, taken: false }));
   const removed: { bucket: string; paths: string[] }[] = [];
-  const s: SweepSource & { removed: typeof removed; objects: Record<string, string[]>; trimmedAt: string[]; left: () => string[] } = {
+  const s: SweepSource & { removed: typeof removed; objects: Record<string, string[]>; trimmedAt: string[]; reducedBefore: { before: string; limit: number }[]; left: () => string[] } = {
     removed,
     objects,
     trimmedAt: [],
+    reducedBefore: [],
     left: () => deletions.map((d) => d.path),
     async takeDeletions(limit) {
       const taken = deletions.filter((d) => !d.taken).slice(0, limit);
@@ -39,6 +40,10 @@ function files(over: { deletions?: { bucket: string; path: string; prefix: boole
     async trim(now) {
       s.trimmedAt.push(now);
       return { notifications: 2, jobs: 3 };
+    },
+    async reduceInputs(before, limit) {
+      s.reducedBefore.push({ before, limit });
+      return 4;
     },
   };
   return s;
@@ -102,4 +107,11 @@ test("exports past seven days are removed; the trim asks for its time", async ()
 test("without Storage the sweep closes pending calls alone, as before", async () => {
   const out = await run(makeSweep(), ctx());
   expect(out).toEqual([{ kind: "done", name: "pending", result: { closed: 0 } }]);
+});
+
+test("the retention step reduces old inputs (D117): 90 days back, 500 a run, the count in the result", async () => {
+  const s = files();
+  const seen = await run(makeSweep(s), ctx());
+  expect(s.reducedBefore).toEqual([{ before: "2026-07-14T12:00:00.000Z", limit: 500 }]);
+  expect(seen.at(-1)).toMatchObject({ kind: "done", name: "retention", result: { reduced: 4 } });
 });

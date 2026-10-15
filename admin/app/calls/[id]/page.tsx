@@ -139,10 +139,10 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
             ))}
           </Table>
           <div className="stack">
-            {call.input_held ? (
+            {call.input_reduced || call.input_held ? (
               <div>
                 <div className="h3 codeTitle">{CALL.input}</div>
-                <p className="banner">{CALL.held}</p>
+                <p className="banner">{call.input_reduced ? CALL.reduced : CALL.held}</p>
               </div>
             ) : (
               <Code title={CALL.input}>{pretty(call.input)}</Code>

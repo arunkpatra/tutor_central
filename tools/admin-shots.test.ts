@@ -3,7 +3,7 @@ import { DEFAULT_PAGES, parseAdminShotsArgs, shotName, wrongStatus, LOADING_SHOW
 
 test("the defaults are the boards' pages (Phase 19's fifteen, Phase 22's) at both widths and appearances", () => {
   expect(parseAdminShotsArgs([])).toEqual({ pages: DEFAULT_PAGES, widths: [1280, 390], appearances: ["dark", "light"], out: ".shots/admin" });
-  expect(DEFAULT_PAGES.length).toBe(23);
+  expect(DEFAULT_PAGES.length).toBe(24);
 });
 
 test("the flags narrow the pages, widths and appearance, and refuse what they cannot use", () => {

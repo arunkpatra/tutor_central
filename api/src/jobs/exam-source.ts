@@ -73,8 +73,12 @@ export function makeExamSource(url: string, serviceKey: string): ExamSource {
       };
       return read;
     },
-    async writePreparation(centre, item, days) {
-      const r = await client.from("school_items").update({ preparation: days as unknown as Json }).eq("centre_id", centre).eq("id", item);
+    async writePreparation(centre, item, days, byBatch) {
+      const r = await client
+        .from("school_items")
+        .update({ preparation: days as unknown as Json, preparations: byBatch as unknown as Json })
+        .eq("centre_id", centre)
+        .eq("id", item);
       if (r.error) throw new Error(`school_items: ${r.error.message}`);
     },
     async keep(centre, artefact, place, key) {

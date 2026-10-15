@@ -110,3 +110,11 @@ test("a call's Feedback row: made again with its reason, edited at Send, never t
   expect(none).toMatch(/Feedback<\/div><div class="cell"><span class="k">Feedback<\/span>—/);
   expect(none).toContain("Open the job");
 });
+
+test("a call whose input was reduced after 90 days says so in the Held line's place, with no input (D79, D117)", async () => {
+  const html = renderToStaticMarkup(await CallPage({ params: Promise.resolve({ id: "preview-reduced" }) }));
+  expect(html).toContain("Reduced after 90 days: only what came back is kept (D79)");
+  expect(html).not.toContain("Held: the student’s consent is not current");
+  expect(html).not.toContain('"week"');
+  expect(html).toContain("Output");
+});

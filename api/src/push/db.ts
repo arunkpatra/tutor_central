@@ -12,6 +12,8 @@ export type OutboxDb = {
   tokens(user: string): Promise<LiveToken[]>;
   mark(id: string, state: "sent" | "failed", apns: unknown): Promise<void>;
   retire(tokenId: string): Promise<void>;
+  /** retry_notification (0068): the row due again at a time; false past its third try. */
+  retry(id: string, dueAt: string): Promise<boolean>;
   /** A user's plan of some kinds from a time on (`replace_notifications`): the count written. */
   replace(centre: string, user: string, kinds: string[], from: string, rows: NotificationRow[]): Promise<number>;
 };
@@ -40,6 +42,11 @@ export function makeOutboxDb(url: string, serviceKey: string): OutboxDb {
       const { error } = await db.rpc("retire_token", { p_id: tokenId });
       check("retire a token", error);
     },
+    async retry(id, dueAt) {
+      const { data, error } = await db.rpc("retry_notification", { p_id: id, p_due_at: dueAt });
+      check("set a row due again", error);
+      return data === true;
+    },
     async replace(centre, user, kinds, from, rows) {
       const { data, error } = await db.rpc("replace_notifications", { p_centre: centre, p_user: user, p_kinds: kinds, p_from: from, p_rows: rows as never });
       check("be written", error);
@@ -51,14 +58,23 @@ export function makeOutboxDb(url: string, serviceKey: string): OutboxDb {
 /** An outbox in memory for tests: the rows due, each user's tokens; records marks, retirements and replacements. */
 export function fakeOutbox(rows: OutboxRow[], tokens: Record<string, LiveToken[]>) {
   const marks: { id: string; state: string; apns: unknown }[] = [];
+  // As 0068 keeps them: a row set due again comes back at its time, three times at most.
+  const retries: { id: string; dueAt: string }[] = [];
+  const waiting: { row: OutboxRow; dueAt: string }[] = [];
+  const taken = new Map<string, OutboxRow>();
   const retired: string[] = [];
   const replaced: { centre: string; user: string; kinds: string[]; from: string; rows: NotificationRow[] }[] = [];
-  const outbox: OutboxDb & { marks: typeof marks; retired: string[]; replaced: typeof replaced } = {
+  const outbox: OutboxDb & { marks: typeof marks; retired: string[]; replaced: typeof replaced; retries: typeof retries } = {
     marks,
     retired,
     replaced,
-    async due() {
-      return rows.splice(0, rows.length);
+    retries,
+    async due(now) {
+      const back = waiting.filter((w) => w.dueAt <= now);
+      for (const w of back) waiting.splice(waiting.indexOf(w), 1);
+      const out = [...rows.splice(0, rows.length), ...back.map((w) => w.row)];
+      for (const row of out) taken.set(row.id, row);
+      return out;
     },
     async tokens(user) {
       return (tokens[user] ?? []).filter((t) => !retired.includes(t.id));
@@ -68,6 +84,13 @@ export function fakeOutbox(rows: OutboxRow[], tokens: Record<string, LiveToken[]
     },
     async retire(tokenId) {
       retired.push(tokenId);
+    },
+    async retry(id, dueAt) {
+      if (retries.filter((r) => r.id === id).length >= 3) return false;
+      retries.push({ id, dueAt });
+      const row = taken.get(id);
+      if (row) waiting.push({ row, dueAt });
+      return true;
     },
     async replace(centre, user, kinds, from, written) {
       replaced.push({ centre, user, kinds, from, rows: written });

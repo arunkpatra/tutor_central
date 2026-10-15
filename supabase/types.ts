@@ -701,14 +701,14 @@ isOneToOne: false
                   ]
                 },"notifications": {
                   Row: {
-                    "apns": Json | null,"background": boolean,"body": string | null,"centre_id": string,"created_at": string,"due_at": string,"id": string,"key": string,"kind": string,"link": string | null,"sent_at": string | null,"state": string,"subject": string | null,"title": string | null,"updated_at": string,"user_id": string
+                    "apns": Json | null,"attempts": number,"background": boolean,"body": string | null,"centre_id": string,"created_at": string,"due_at": string,"id": string,"key": string,"kind": string,"link": string | null,"sent_at": string | null,"state": string,"subject": string | null,"title": string | null,"updated_at": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id": string,"created_at"?: string,"due_at": string,"id"?: string,"key": string,"kind": string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"subject"?: string | null,"title"?: string | null,"updated_at"?: string,"user_id": string
+                    "apns"?: Json | null,"attempts"?: number,"background"?: boolean,"body"?: string | null,"centre_id": string,"created_at"?: string,"due_at": string,"id"?: string,"key": string,"kind": string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"subject"?: string | null,"title"?: string | null,"updated_at"?: string,"user_id": string
                   }
                   Update: {
-                    "apns"?: Json | null,"background"?: boolean,"body"?: string | null,"centre_id"?: string,"created_at"?: string,"due_at"?: string,"id"?: string,"key"?: string,"kind"?: string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"subject"?: string | null,"title"?: string | null,"updated_at"?: string,"user_id"?: string
+                    "apns"?: Json | null,"attempts"?: number,"background"?: boolean,"body"?: string | null,"centre_id"?: string,"created_at"?: string,"due_at"?: string,"id"?: string,"key"?: string,"kind"?: string,"link"?: string | null,"sent_at"?: string | null,"state"?: string,"subject"?: string | null,"title"?: string | null,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
                     {
@@ -831,14 +831,14 @@ isOneToOne: false
                   ]
                 },"school_items": {
                   Row: {
-                    "centre_id": string,"class_level": string | null,"confirmed_at": string | null,"created_at": string,"date": string,"end_date": string | null,"id": string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path": string | null,"portions": string | null,"preparation": Json | null,"received_at": string,"school_id": string | null,"source": string,"source_text": string | null,"student_id": string | null,"subject": string | null,"title": string,"updated_at": string,"window_days": number | null
+                    "centre_id": string,"class_level": string | null,"confirmed_at": string | null,"created_at": string,"date": string,"end_date": string | null,"id": string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path": string | null,"portions": string | null,"preparation": Json | null,"preparations": Json | null,"received_at": string,"school_id": string | null,"source": string,"source_text": string | null,"student_id": string | null,"subject": string | null,"title": string,"updated_at": string,"window_days": number | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "centre_id": string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date": string,"end_date"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"preparation"?: Json | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
+                    "centre_id": string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date": string,"end_date"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"preparation"?: Json | null,"preparations"?: Json | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
                   }
                   Update: {
-                    "centre_id"?: string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date"?: string,"end_date"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"preparation"?: Json | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
+                    "centre_id"?: string,"class_level"?: string | null,"confirmed_at"?: string | null,"created_at"?: string,"date"?: string,"end_date"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["school_item_kind"],"photo_path"?: string | null,"portions"?: string | null,"preparation"?: Json | null,"preparations"?: Json | null,"received_at"?: string,"school_id"?: string | null,"source"?: string,"source_text"?: string | null,"student_id"?: string | null,"subject"?: string | null,"title"?: string,"updated_at"?: string,"window_days"?: number | null
                   }
                   Relationships: [
                     {
@@ -1260,6 +1260,7 @@ isOneToOne: false
 "due_notifications":
 { Args: { "p_limit"?: number,"p_now": string }; Returns: {
               "apns": Json | null,
+"attempts": number,
 "background": boolean,
 "body": string | null,
 "centre_id": string,
@@ -1375,6 +1376,9 @@ isOneToOne: false
 "record_step":
 { Args: { "p_cost_paise"?: number,"p_error"?: Json,"p_generation"?: string,"p_job": string,"p_state": Database["public"]['Enums']["job_state"],"p_step": string,"p_step_data"?: Json,"p_worker": string }; Returns: string
                            },
+"reduce_old_inputs":
+{ Args: { "p_before": string,"p_limit": number }; Returns: number
+                           },
 "replace_notifications":
 { Args: { "p_centre": string,"p_from": string,"p_kinds": (string)[],"p_rows": Json,"p_user": string }; Returns: number
                            },
@@ -1395,6 +1399,9 @@ isOneToOne: false
                            },
 "retire_token":
 { Args: { "p_id": string }; Returns: undefined
+                           },
+"retry_notification":
+{ Args: { "p_due_at": string,"p_id": string }; Returns: boolean
                            },
 "save_attendance":
 { Args: { "p_centre": string,"p_class": string,"p_date": string,"p_marks": Json }; Returns: string

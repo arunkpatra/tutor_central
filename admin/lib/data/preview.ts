@@ -2,6 +2,7 @@ import alerts from "../../preview/alerts.json";
 import audit from "../../preview/audit.json";
 import call from "../../preview/call.json";
 import callFeedback from "../../preview/call-feedback.json";
+import callReduced from "../../preview/call-reduced.json";
 import calls from "../../preview/calls.json";
 import centre from "../../preview/centre.json";
 import centres from "../../preview/centres.json";
@@ -55,7 +56,13 @@ export const previewData: Data = {
   cost: async () => cost as Cost,
   calls: async () => calls as Calls,
   call: async (id) =>
-    id === PREVIEW_ID ? (call as Call) : id === callFeedback.id ? (callFeedback as unknown as Call) : null,
+    id === PREVIEW_ID
+      ? (call as Call)
+      : id === callFeedback.id
+        ? (callFeedback as unknown as Call)
+        : id === callReduced.id
+          ? (callReduced as unknown as Call)
+          : null,
   jobs: async () => jobs as Jobs,
   job: async (id) => (id === job.id ? (job as Job) : null),
   errors: async () => errors as Errors,

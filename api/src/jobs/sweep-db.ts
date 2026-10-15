@@ -51,5 +51,10 @@ export function makeSweepSource(url: string, serviceKey: string): SweepSource {
       fail("trim_platform", error);
       return data as { notifications: number; jobs: number };
     },
+    async reduceInputs(before, limit) {
+      const { data, error } = await client.rpc("reduce_old_inputs", { p_before: before, p_limit: limit });
+      fail("reduce_old_inputs", error);
+      return Number(data ?? 0);
+    },
   };
 }
