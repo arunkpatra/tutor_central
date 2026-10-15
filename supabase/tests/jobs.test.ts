@@ -145,7 +145,8 @@ test("waiting continues at the step reached and is not another attempt; done kee
   await clear();
   const id = (await svc.rpc("enqueue_job", { p_centre: centreA, p_kind: "plan", p_key: "wait", p_max_attempts: 1 })).data as string;
   await claim("w1");
-  expect((await svc.rpc("wait_job", { p_job: id, p_worker: "w1", p_step: { at: "name" }, p_run_at: new Date().toISOString() })).error).toBeNull();
+  // A minute ago: the Mac's clock can run ahead of Postgres's, and a job due in the future is not claimed.
+  expect((await svc.rpc("wait_job", { p_job: id, p_worker: "w1", p_step: { at: "name" }, p_run_at: new Date(Date.now() - 60_000).toISOString() })).error).toBeNull();
   const again = await claim("w2");
   expect(again.data![0]).toMatchObject({ id, step: { at: "name" }, attempts: 1 });
   expect((await svc.rpc("finish_job", { p_job: id, p_worker: "w2", p_result: { plan_id: "p" } })).error).toBeNull();
