@@ -38,7 +38,7 @@ const CENTRE_TABLES = [
 ] as const;
 
 /** The platform's tables (D71, D77): written by the service role alone; a member reads their centre's rows, or none. */
-const PLATFORM_TABLES = ["jobs", "job_steps", "api_requests", "alerts", "admin_audit", "notifications", "storage_deletions", "admin_users", "ai_models"] as const;
+const PLATFORM_TABLES = ["jobs", "job_steps", "api_requests", "alerts", "admin_audit", "notifications", "storage_deletions", "admin_users", "ai_models", "alert_lines"] as const;
 
 beforeAll(async () => {
   l = await local();
@@ -81,6 +81,7 @@ test("the platform's tables are read by their centre's members alone and written
   const other = (await b.auth.getUser()).data.user!.id;
   const admin = { user_id: other, email: `rls-b-${stamp}@example.com` };
   const model = { kind: "probe", step: "draft", model: "m", effort: "medium", set_by: `rls-${stamp}` };
+  const lines = { cost_day_paise: 1, error_rate_pct: 1, error_rate_min_requests: 1, stuck_minutes: 1, set_by: `rls-${stamp}` };
   // memberReads: the centre's member reads the row (jobs, steps, requests) or no one but the platform does (alerts, audit).
   // pk: the row's key column, `id` but for admin_users (keyed by the user).
   type Probe = { id: string; insert: Record<string, unknown>; field: string; change: string | number; memberReads: boolean; pk?: string };
@@ -94,6 +95,7 @@ test("the platform's tables are read by their centre's members alone and written
     notifications: { id: await made("notifications", notification), insert: { ...notification, key: `fees:rls-mine-${stamp}` }, field: "state", change: "sent", memberReads: true },
     admin_users: { id: await made("admin_users", admin, "user_id"), insert: { user_id: me, email: "me@example.com" }, field: "email", change: "changed@example.com", memberReads: false, pk: "user_id" },
     ai_models: { id: await made("ai_models", model), insert: model, field: "model", change: "changed", memberReads: false },
+    alert_lines: { id: await made("alert_lines", lines), insert: lines, field: "stuck_minutes", change: 99, memberReads: false },
   };
   for (const table of PLATFORM_TABLES) {
     const { id, insert, field, change, memberReads, pk = "id" } = rows[table];
@@ -109,9 +111,10 @@ test("the platform's tables are read by their centre's members alone and written
   await svc.from("jobs").delete().eq("id", job.data!.id);
   for (const table of ["api_requests", "alerts", "admin_audit", "notifications", "storage_deletions"] as const) await svc.from(table).delete().eq("id", rows[table].id);
   await svc.from("admin_users").delete().eq("user_id", rows.admin_users.id);
-  // ai_models is append-only even for the platform (0052): the probe goes by the database's owner.
+  // ai_models and alert_lines are append-only even for the platform (0052, 0066): the probes go by the database's owner.
   const db = new SQL(l.db);
   await db`delete from public.ai_models where id = ${rows.ai_models.id}`;
+  await db`delete from public.alert_lines where id = ${rows.alert_lines.id}`;
   await db.close();
 });
 

@@ -57,6 +57,13 @@ test("by month: six months, the batched share apart, per active centre; a month 
   expect(months.find((m) => m.month === lastMonth)).toMatchObject({ calls: 0, paise: 0, batched_paise: 0, active_centres: 0, per_active_centre_paise: 0 });
 });
 
+test("an internal centre's calls keep their cost in the month but make no active centre (0066)", async () => {
+  await svc.from("centres").update({ internal: true }).eq("id", centreA);
+  const months = (await svc.rpc("admin_cost_by_month", { p_centre: centreA })).data as { month: string; paise: number; active_centres: number; per_active_centre_paise: number }[];
+  await svc.from("centres").update({ internal: false }).eq("id", centreA);
+  expect(months.at(-1)).toMatchObject({ month, paise: 114, active_centres: 0, per_active_centre_paise: 0 });
+});
+
 test("a member reads neither function", async () => {
   expect((await a.rpc("admin_cost_by_step", { p_month: month })).error?.code).toBe("42501");
   expect((await a.rpc("admin_cost_by_month", {})).error?.code).toBe("42501");
