@@ -1,0 +1,397 @@
+{
+ "attachments": {},
+ "boards": {
+  "P22-Models.dc.html": {
+   "expand": "fill",
+   "h": 1878,
+   "w": 1280,
+   "x": 0,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models \u00b7 the model, effort, fallback and switch per kind and step, with the last change \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Models-Phone.dc.html": {
+   "expand": "fill",
+   "h": 5145,
+   "w": 390,
+   "x": 2720,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models \u00b7 the model, effort, fallback and switch per kind and step, with the last change \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Models-Light.dc.html": {
+   "expand": "fill",
+   "h": 1878,
+   "w": 1280,
+   "x": 1360,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models \u00b7 the model, effort, fallback and switch per kind and step, with the last change \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Models-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 5145,
+   "w": 390,
+   "x": 3190,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models \u00b7 the model, effort, fallback and switch per kind and step, with the last change \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Model.dc.html": {
+   "expand": "fill",
+   "h": 1469,
+   "w": 1280,
+   "x": 3660,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 one kind: its three steps, a change form, its history, Switch off \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Model-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3193,
+   "w": 390,
+   "x": 6380,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 one kind: its three steps, a change form, its history, Switch off \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Model-Light.dc.html": {
+   "expand": "fill",
+   "h": 1469,
+   "w": 1280,
+   "x": 5020,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 one kind: its three steps, a change form, its history, Switch off \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Model-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3193,
+   "w": 390,
+   "x": 6850,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 one kind: its three steps, a change form, its history, Switch off \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Model-SwitchOff.dc.html": {
+   "expand": "fill",
+   "h": 1469,
+   "w": 1280,
+   "x": 7320,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 switching a kind off: the tutor's words shown, the reason asked \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Model-SwitchOff-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3193,
+   "w": 390,
+   "x": 10040,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 switching a kind off: the tutor's words shown, the reason asked \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Model-SwitchOff-Light.dc.html": {
+   "expand": "fill",
+   "h": 1469,
+   "w": 1280,
+   "x": 8680,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 switching a kind off: the tutor's words shown, the reason asked \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Model-SwitchOff-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3193,
+   "w": 390,
+   "x": 10510,
+   "y": 0,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/models/<kind> \u00b7 switching a kind off: the tutor's words shown, the reason asked \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Centre-Allowance.dc.html": {
+   "expand": "fill",
+   "h": 1667,
+   "w": 1280,
+   "x": 0,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/centres/<id> \u00b7 changing a centre's allowance: calls a month and the cost cap, the reason asked \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Centre-Allowance-Phone.dc.html": {
+   "expand": "fill",
+   "h": 3657,
+   "w": 390,
+   "x": 2720,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/centres/<id> \u00b7 changing a centre's allowance: calls a month and the cost cap, the reason asked \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Centre-Allowance-Light.dc.html": {
+   "expand": "fill",
+   "h": 1667,
+   "w": 1280,
+   "x": 1360,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/centres/<id> \u00b7 changing a centre's allowance: calls a month and the cost cap, the reason asked \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Centre-Allowance-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 3657,
+   "w": 390,
+   "x": 3190,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/centres/<id> \u00b7 changing a centre's allowance: calls a month and the cost cap, the reason asked \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Alerts-Lines.dc.html": {
+   "expand": "fill",
+   "h": 1263,
+   "w": 1280,
+   "x": 3660,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/alerts \u00b7 the alert lines as a form on the alerts page: four numbers, Save, the last change \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Alerts-Lines-Phone.dc.html": {
+   "expand": "fill",
+   "h": 2660,
+   "w": 390,
+   "x": 6380,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/alerts \u00b7 the alert lines as a form on the alerts page: four numbers, Save, the last change \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Alerts-Lines-Light.dc.html": {
+   "expand": "fill",
+   "h": 1263,
+   "w": 1280,
+   "x": 5020,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/alerts \u00b7 the alert lines as a form on the alerts page: four numbers, Save, the last change \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Alerts-Lines-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 2660,
+   "w": 390,
+   "x": 6850,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/alerts \u00b7 the alert lines as a form on the alerts page: four numbers, Save, the last change \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Syllabi.dc.html": {
+   "expand": "fill",
+   "h": 1946,
+   "w": 1280,
+   "x": 7320,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/syllabi \u00b7 the syllabus data read-only: board, class, subject, edition, a syllabus open with its chapters \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Syllabi-Phone.dc.html": {
+   "expand": "fill",
+   "h": 4846,
+   "w": 390,
+   "x": 10040,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/syllabi \u00b7 the syllabus data read-only: board, class, subject, edition, a syllabus open with its chapters \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Syllabi-Light.dc.html": {
+   "expand": "fill",
+   "h": 1946,
+   "w": 1280,
+   "x": 8680,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/syllabi \u00b7 the syllabus data read-only: board, class, subject, edition, a syllabus open with its chapters \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Syllabi-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 4846,
+   "w": 390,
+   "x": 10510,
+   "y": 5545,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/syllabi \u00b7 the syllabus data read-only: board, class, subject, edition, a syllabus open with its chapters \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Figures.dc.html": {
+   "expand": "fill",
+   "h": 1517,
+   "w": 1280,
+   "x": 0,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/figures \u00b7 the product figures by week: tutors active, closes, plans made and followed, notes sent, artefacts made and made again with reasons, Make, consent, cost per active tutor; the weekly report \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Figures-Phone.dc.html": {
+   "expand": "fill",
+   "h": 4237,
+   "w": 390,
+   "x": 2720,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/figures \u00b7 the product figures by week: tutors active, closes, plans made and followed, notes sent, artefacts made and made again with reasons, Make, consent, cost per active tutor; the weekly report \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Figures-Light.dc.html": {
+   "expand": "fill",
+   "h": 1517,
+   "w": 1280,
+   "x": 1360,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/figures \u00b7 the product figures by week: tutors active, closes, plans made and followed, notes sent, artefacts made and made again with reasons, Make, consent, cost per active tutor; the weekly report \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Figures-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 4237,
+   "w": 390,
+   "x": 3190,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/figures \u00b7 the product figures by week: tutors active, closes, plans made and followed, notes sent, artefacts made and made again with reasons, Make, consent, cost per active tutor; the weekly report \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Evals.dc.html": {
+   "expand": "fill",
+   "h": 2054,
+   "w": 1280,
+   "x": 3660,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/evals \u00b7 the golden sets: the last run per kind, what failed and why, and a run started by a person \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Evals-Phone.dc.html": {
+   "expand": "fill",
+   "h": 5780,
+   "w": 390,
+   "x": 6380,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/evals \u00b7 the golden sets: the last run per kind, what failed and why, and a run started by a person \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Evals-Light.dc.html": {
+   "expand": "fill",
+   "h": 2054,
+   "w": 1280,
+   "x": 5020,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/evals \u00b7 the golden sets: the last run per kind, what failed and why, and a run started by a person \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Evals-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 5780,
+   "w": 390,
+   "x": 6850,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/evals \u00b7 the golden sets: the last run per kind, what failed and why, and a run started by a person \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Call-Feedback.dc.html": {
+   "expand": "fill",
+   "h": 1038,
+   "w": 1280,
+   "x": 7320,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/calls/<id> \u00b7 one AI call with the tutor's feedback on it: made again with its reason, edited at Send; never the revised text \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Call-Feedback-Phone.dc.html": {
+   "expand": "fill",
+   "h": 1964,
+   "w": 390,
+   "x": 10040,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/calls/<id> \u00b7 one AI call with the tutor's feedback on it: made again with its reason, edited at Send; never the revised text \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Call-Feedback-Light.dc.html": {
+   "expand": "fill",
+   "h": 1038,
+   "w": 1280,
+   "x": 8680,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/calls/<id> \u00b7 one AI call with the tutor's feedback on it: made again with its reason, edited at Send; never the revised text \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Call-Feedback-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 1964,
+   "w": 390,
+   "x": 10510,
+   "y": 10791,
+   "title": "Phase 22 \u00b7 admin.tutorcentral.in/calls/<id> \u00b7 one AI call with the tutor's feedback on it: made again with its reason, edited at Send; never the revised text \u00b7 light \u00b7 phone 390"
+  },
+  "P22-Weekly-Email.dc.html": {
+   "expand": "fill",
+   "h": 621,
+   "w": 680,
+   "x": 0,
+   "y": 16971,
+   "title": "Phase 22 \u00b7 the weekly report as an email (D82): the week's figures and the week before, sent Monday 08:00 IST by the platform's job, no AI call \u00b7 light \u00b7 680"
+  },
+  "P22-Web-Trust.dc.html": {
+   "expand": "fill",
+   "h": 2749,
+   "w": 1280,
+   "x": 3660,
+   "y": 16971,
+   "title": "Phase 22 \u00b7 tutorcentral.in/trust \u00b7 the retention words (D79): what was sent about a student is kept beside what came back for 90 days, then only what came back; the staff sentence \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P22-Web-Trust-Light.dc.html": {
+   "expand": "fill",
+   "h": 2749,
+   "w": 1280,
+   "x": 5020,
+   "y": 16971,
+   "title": "Phase 22 \u00b7 tutorcentral.in/trust \u00b7 the retention words (D79): what was sent about a student is kept beside what came back for 90 days, then only what came back; the staff sentence \u00b7 light \u00b7 desktop 1280"
+  },
+  "P22-Web-Trust-Phone.dc.html": {
+   "expand": "fill",
+   "h": 5022,
+   "w": 390,
+   "x": 6380,
+   "y": 16971,
+   "title": "Phase 22 \u00b7 tutorcentral.in/trust \u00b7 the retention words (D79): what was sent about a student is kept beside what came back for 90 days, then only what came back; the staff sentence \u00b7 dark \u00b7 phone 390"
+  },
+  "P22-Web-Trust-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 5022,
+   "w": 390,
+   "x": 6850,
+   "y": 16971,
+   "title": "Phase 22 \u00b7 tutorcentral.in/trust \u00b7 the retention words (D79): what was sent about a student is kept beside what came back for 90 days, then only what came back; the staff sentence \u00b7 light \u00b7 phone 390"
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-10-15T06:00:00Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "view": "canvas"
+ },
+ "notes": {
+  "p22": {
+   "kind": "title1",
+   "x": 0,
+   "y": -300,
+   "w": 240,
+   "maxW": 10900,
+   "text": "Phase 22 \u00b7 The admin portal, control and analytics (D73, D76, D78, D79, D82): AI models per kind and step with history and the switch, a centre's allowance, the alert lines, the syllabus data; the product figures and the weekly report as an email; the golden sets' last run with a run a person starts; the call page's Feedback row; the trust page's retention words. Row 30, canvas 2 (canvas 1 holds its 512 files)"
+  }
+ },
+ "order": [
+  "P22-Models.dc.html",
+  "P22-Models-Phone.dc.html",
+  "P22-Models-Light.dc.html",
+  "P22-Models-Phone-Light.dc.html",
+  "P22-Model.dc.html",
+  "P22-Model-Phone.dc.html",
+  "P22-Model-Light.dc.html",
+  "P22-Model-Phone-Light.dc.html",
+  "P22-Model-SwitchOff.dc.html",
+  "P22-Model-SwitchOff-Phone.dc.html",
+  "P22-Model-SwitchOff-Light.dc.html",
+  "P22-Model-SwitchOff-Phone-Light.dc.html",
+  "P22-Centre-Allowance.dc.html",
+  "P22-Centre-Allowance-Phone.dc.html",
+  "P22-Centre-Allowance-Light.dc.html",
+  "P22-Centre-Allowance-Phone-Light.dc.html",
+  "P22-Alerts-Lines.dc.html",
+  "P22-Alerts-Lines-Phone.dc.html",
+  "P22-Alerts-Lines-Light.dc.html",
+  "P22-Alerts-Lines-Phone-Light.dc.html",
+  "P22-Syllabi.dc.html",
+  "P22-Syllabi-Phone.dc.html",
+  "P22-Syllabi-Light.dc.html",
+  "P22-Syllabi-Phone-Light.dc.html",
+  "P22-Figures.dc.html",
+  "P22-Figures-Phone.dc.html",
+  "P22-Figures-Light.dc.html",
+  "P22-Figures-Phone-Light.dc.html",
+  "P22-Evals.dc.html",
+  "P22-Evals-Phone.dc.html",
+  "P22-Evals-Light.dc.html",
+  "P22-Evals-Phone-Light.dc.html",
+  "P22-Call-Feedback.dc.html",
+  "P22-Call-Feedback-Phone.dc.html",
+  "P22-Call-Feedback-Light.dc.html",
+  "P22-Call-Feedback-Phone-Light.dc.html",
+  "P22-Weekly-Email.dc.html",
+  "P22-Web-Trust.dc.html",
+  "P22-Web-Trust-Light.dc.html",
+  "P22-Web-Trust-Phone.dc.html",
+  "P22-Web-Trust-Phone-Light.dc.html"
+ ],
+ "pages": [],
+ "title": "Tutor Central Design, canvas 2",
+ "v": 3
+}

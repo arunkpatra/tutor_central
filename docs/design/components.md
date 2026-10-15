@@ -1142,3 +1142,29 @@ The texts:
 | The last days changed | "14 of 25 · Balancing equations 3 of 10 · the last two days changed" · Changed · Change |
 | The gap report in the plan | In the plan · "The last two days were changed from this report when Dev's marks were saved. Change them on the exam's page." |
 | The cost report | "What the AI service cost, priced from models.json at each call’s finish (D67), by kind, model and step and by month, against each centre’s allowance and the ₹499 a month of D64. Batched work is priced at half and marked." · "By centre, and by kind, model and step" · "The standing cost report (D74): a check, repair or grade is a row of its kind; the morning’s plans and the nightly evals are batched at half price. A centre over its allowance is refused at the gate, not here." · "By month" · "Each month’s calls and cost, how much of it was batched at half price, and the average active centre against ₹499." · the heads Kind, Step, Model, Calls, Cost, Share; Month, Calls, Cost, Batched, Per active centre, Of ₹499 |
+
+## Phase 22 parts (session 44, 2026-10-15): the portal's controls
+
+**Admin nav, eleven pages:** 14/600 `text2`, 8 × 10 padding, radius 10, a 2 px gap, the current page `accentText` on
+`accentTint`; Sign out stays on the header line at 1280. Phone width as Phase 19.
+
+**Form row:** a card (padding 20, gap 16) holding fields four across (`repeat(4, minmax(0, 1fr))`, 16 apart; two across under
+760 px, one under 480), then a full-width field where one is needed, then the primary small button with a 13/18 `text3` line
+beside it (when the change takes effect; that it is audited).
+
+**History table:** the data table with When as its main column, the step, the values, the On chip, By and Note; nothing in it
+is edited or deleted.
+
+**On chip:** the status chip: `on` in `ok`, `off` in `overdue`.
+
+**Gate chip (golden sets):** `passed` in `ok`, `below the gate` in `overdue`, `no run yet` neutral.
+
+**Kind chips (the run card):** filter chips (32 high) for every kind with a golden set, on in `accentTint`, and "every kind".
+
+**Change link:** a 600 `accentText` link ("Change") at the end of a card's figure line (the centre's allowance).
+
+**Email board:** a 680-wide light frame: a header grid (From, To, Subject, When; labels 14/20 `text2`, values 700) over a rule,
+the body 16/26 in `text`, `white-space: pre-wrap`.
+
+The texts are on the boards' sources; the build carries them into `admin/content/{models,figures,evals,syllabi}.ts`,
+`admin/content/{alerts,centres,calls}.ts` and `web/content/trust.ts`.

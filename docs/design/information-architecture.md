@@ -1341,6 +1341,8 @@ Where each claim on `/trust` comes from:
 | Until then no note and no marking for that student; the page says consent is waiting | Phase 14's held reason; P10-Student-Consent-Waiting |
 | A parent can see, change, remove, withdraw consent, have the student deleted | The student's page, edit, delete (V1); consent removed on the page (Phase 11) |
 | Kept in India; one tutor never reads another's; shared only with the services that run the app and, after consent, the AI service | D50; RLS (rule 6) |
+| What was sent about a student is kept beside what came back for 90 days, then only what came back with a mark that something was sent (Phase 22) | D79; `reduce_old_inputs` run by the `sweep` job (migration 0068); `admin_call`'s `input_reduced` |
+| Tutor Central's own staff open a centre's records only to help, with the reason and time written down; never a parent's number, a photo, or what was sent about a student whose parent has not agreed | D78; `admin_open_record` and the audit (0046, 0047); `admin_call`'s `input_held` |
 
 **As built in Phase 15** (session 32): the consent sheet from a note says "A note about a student carries their name and what you have seen of their work. It is sent to our AI service (Claude, by Anthropic) only to be put into words. The service normally deletes it within 30 days and never uses it for training. Make sure the parents are fine with their details being kept in Tutor Central." (the board's "not stored there or on our servers" left out: D41, and the retention is the AI service's). The trust page's words follow the code where the board's did not, each sentence checked twice (the build, then the review): the messages send first names; a school's message or photo is read without consent and its photo kept with the item; deleting a student deletes everything about them, the messages and AI records included (migration 0027). Make's launch states as built: `make`, `make-empty`, `make-sheet`, `make-for`, `make-for-student`, `make-worked-example`, `make-figure`, `make-brief`, `make-mock`, `make-note`, `make-making`, `make-made`, `make-sheet-no-class` (the helper's way out; no board draws a Class tile there); Check a paper's `check-intro`, `check-intro-mock`, `check-scheme-chooser`, `check-pages-empty`, `check-consent-waiting`; Reports' `reports-progress`, `-term`, `-sort`, `-export`, `reports-progress-empty` (Reports' empty card in Progress's words); the Kit's `kit-phase10`, `kit-phase10-figures`. `ai-assistant` and `ai-assistant-empty` are retired (Make's home and `make-empty` replace them).
 
@@ -1636,3 +1638,59 @@ What the boards settle:
   kind, a `batch · ½` chip in `accentTint` on a step priced at the Batches API's half; a By month section (Month, Calls, Cost,
   Batched with its share, Per active centre, Of ₹499 with the meter) for the last months. The tiles and the day chart are
   Phase 19's. At phone width the rows become labelled pairs as every portal table does.
+
+## Phase 22 boards (session 44, 2026-10-15): the admin portal's controls, the product figures, the golden sets, the trust page's retention words
+
+Row 30, on **canvas 2** (https://claude.ai/artifact/JV9q2AGk1fmMDVjsGgpAqw, y 0; the title note at −300; canvas 1 holds its 512
+files, the owner's choice 2026-10-15: "1"); the mirror is `mockups/P22-*.dc.html` with `directions/canvas-2.json` as its index.
+The portal's pages are drawn as Phase 19's (fluid pages, one source per page and appearance, rendered at 1280 and 390
+`-Phone`, dark and light `-Light`); the trust page from P15's sources with the live words; the weekly email one board at 680.
+Forty-one boards. Approved by the owner 2026-10-15 ("1, all three groups approved, keep the card").
+
+| Board | Source |
+|---|---|
+| AI models: every kind by its three steps (model · effort, the fallback under), the On chip (`off` in `overdue`), the last change with its note, Change; the "How a change takes effect" card | `P22-Models` and the three |
+| One kind: Current (the three steps), Change a step (Step, Model, Effort, Fallback, a note for the history, "Save: a new row from now"), History (every row, newest first), the On chip and Switch off in the title line | `P22-Model` and the three |
+| Switching a kind off: the dialog quoting the tutor's words, the reason asked, Cancel and Switch off | `P22-Model-SwitchOff` and the three |
+| A centre's allowance: Change beside the allowance line in Tutors and cost; the dialog with Calls a month, Cap in ₹ a month (0 is no cap), Reason, Save the allowance | `P22-Centre-Allowance` and the three |
+| The alert lines as a form on the alerts page: four numbers (cost a day, error rate, its minimum requests, stuck minutes), Save the lines, the last change; job_failed has no line | `P22-Alerts-Lines` and the three |
+| Syllabus data: tiles, every syllabus (board, class, subject, edition, chapters), one open in place with its chapters, skills and blueprint; read only | `P22-Syllabi` and the three |
+| Product figures: tiles for the week, By week (tutors active, closes, plans made · followed, notes sent, made · again, Make, consent given, cost per active tutor), Made again by reason, the weekly report card with Send now | `P22-Figures` and the three |
+| Golden sets: tiles, the last run per kind (cases, schema · verify, check pass, rubric, the gate chip, cost), what failed and why, "Run golden sets now" with the kinds as chips and the button naming the count and the cost | `P22-Evals` and the three |
+| One AI call with the Feedback row: made again with its reason, edited at Send; never the revised text; "Open the centre" for a tap's call | `P22-Call-Feedback` and the three |
+| The weekly report as an email: the week's figures with the week before in brackets, the reasons line, the link to the figures, the closing line (no AI service wrote it) | `P22-Weekly-Email` |
+| tutorcentral.in/trust with the retention words (D79): what was sent about a student is kept beside what came back for 90 days, then only what came back with a mark that something was sent; the staff sentence names what they never see | `P22-Web-Trust`, `-Light`, `-Phone`, `-Phone-Light` |
+
+Not drawn again (an approved board holds the state): the audited open and the record (P19-Centre-OpenAsk, P19-Centre-Record);
+every new page's loading state and every new form's working button (D97: P19-Loading-Centres and P19-Pending-Dialog's
+grammar); a kind switched off on the phone (P20-Switched-Off); the allowance reached on the phone (the system alert, U33, with
+the app's own words "You've made this month's N. More next month.", shipped since build 27).
+
+What the boards settle:
+
+- **The nav** grows to eleven pages: Centres, Figures, Cost, Calls, Jobs, Errors, Alerts, Models, Evals, Syllabi, Audit. At
+  1280 the links are 14/600 with 8 × 10 padding and a 2 px gap (Phase 19's 15/600, 8 × 12, 4 px) so Sign out keeps its place;
+  at phone width unchanged (the nav scrolls sideways under the brand).
+- **A control writes a row, never edits one.** A model change is a new `ai_models` row (the history is the table); the alert
+  lines a new `alert_lines` row; the allowance an update of the centre's two columns with its audit row. Each form's button is
+  `SubmitButton` with its own working words ("Saving…", "Switching off…", "Queuing the run…", "Sending…").
+- **Switch off asks why**, in the record's dialog grammar (P19-Centre-OpenAsk), quoting the words the tutor will read; the
+  reason goes to the row's note and the audit.
+- **The form row:** fields four across in a card (two across under 760 px, one under 480), the primary button and a `text3`
+  line beside it saying when the change takes effect and that it is audited.
+- **The figures' table** is the data table with every column but the week right-aligned and tabular; the week's first cell
+  carries "so far, to Wednesday" as its sub-line for the current week.
+- **The run card** (golden sets): filter chips for the kinds (on in `accentTint`) and "every kind", the primary button naming
+  the count and the cost ("Run 4 kinds now · about ₹40"); the result lands on the page when the batches end.
+- **The call page's Feedback row** sits after Started by: "made again · <reason> · <time>" with "edited at Send · <time> · the
+  text is never shown here" as its sub-line; a call with no feedback shows the row with a dash.
+- **The weekly email** is plain text from `hello@tutorcentral.in` to the alert address, the subject "Tutor Central, the week of
+  6 to 12 October"; a line per figure with the week before in brackets; no name, no id.
+- **The trust page** adds one paragraph after the AI service's and rewrites the staff sentence; "Last changed" is the day the
+  page goes live.
+
+What the build settles (states no board draws, in the boards' grammar): a call whose input was reduced after 90 days shows
+"Reduced after 90 days: only what came back is kept (D79)" where the Held line sits on P19-Call; a model name the portal does
+not know is refused under the field ("Not a model this API knows"); the weekly report's Send now answers in the card ("Sent
+to the alert address") as a job's Retry answers in its row; an eval run already queued today answers "A run is already
+queued: see the Jobs page".
