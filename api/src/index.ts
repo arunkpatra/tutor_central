@@ -11,6 +11,7 @@ import { makeDb, makePlatformDb } from "./db.js";
 import { env } from "./env.js";
 import { makeJobsDb } from "./jobs/db.js";
 import { makeSweepSource } from "./jobs/sweep-db.js";
+import { makeReportSource } from "./report/db.js";
 import { makeHandlers } from "./jobs/kinds/index.js";
 import { makeRecordSource } from "./jobs/record.js";
 import { makeExamSource } from "./jobs/exam-source.js";
@@ -105,7 +106,7 @@ const app: Hono<Vars> = makeApp({
     jobs: makeJobsDb(supabaseUrl, serviceKey),
     db: makePlatformDb(supabaseUrl, serviceKey),
     secret: workerSecret,
-    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail }, evals: { smokeCentre }, exams: makeExamSource(supabaseUrl, serviceKey) }),
+    handlers: makeHandlers({ record, reminders: makeReminderSource(supabaseUrl, serviceKey, outbox), notes: makeNoteSource(supabaseUrl, serviceKey, record), files: makePdfSource(supabaseUrl, serviceKey), exports: makeExportSource(supabaseUrl, serviceKey), storage: makeSweepSource(supabaseUrl, serviceKey), alerts: { source: makeAlertsDb(supabaseUrl, serviceKey, outbox), sender: alertSender, email: alertEmail }, evals: { smokeCentre }, exams: makeExamSource(supabaseUrl, serviceKey), report: { source: makeReportSource(supabaseUrl, serviceKey), sender: alertSender, email: alertEmail } }),
     push: { outbox, pusher },
   },
   models: modelTable,
