@@ -11,7 +11,7 @@ export const PRIVACY_UPDATED = "12 October 2026";
 export const TERMS_UPDATED = "9 October 2026";
 /** When the trust page last changed (Phase 15 put it live; Phase 18 added the export, withdrawal and notifications; Phase
  *  19 the staff's audited access). */
-export const TRUST_UPDATED = "13 October 2026";
+export const TRUST_UPDATED = "15 October 2026";
 export const PROMISE = "Made in India for tutors who run their own centre.";
 /** Who makes the app, as the site names them (Owner step 0). */
 export const MAKER = "GoodGround LLP";

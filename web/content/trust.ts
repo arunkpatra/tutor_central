@@ -101,6 +101,13 @@ export const TRUST = {
         {
           kind: "p",
           text:
+            "What was sent about a student for a message, a reading of marks or the plan for the last days is kept beside " +
+            "what came back for 90 days, so the tutor can see what a note was written from. After 90 days only what came " +
+            "back is kept, with a mark that something was sent and when.",
+        },
+        {
+          kind: "p",
+          text:
             "One more photo is read before any student is added: a page of a paper register, so the names on it can be " +
             "listed for the tutor to check. The tutor agrees to this once for the centre, and no copy is kept.",
         },
@@ -154,8 +161,8 @@ export const TRUST = {
           text:
             "Records are kept in India, by the companies that host the app. The tutor, signed in, sees the centre’s records; " +
             "one tutor can never read another’s. Tutor Central’s own staff can open a centre’s records only to help with a " +
-            "problem, with the reason and the time written down. They never see a parent’s number or a photo. Nothing is " +
-            "sold and nothing is shared, except with the services " +
+            "problem, with the reason and the time written down. They never see a parent’s number, a photo, or what was " +
+            "sent about a student whose parent has not agreed. Nothing is sold and nothing is shared, except with the services " +
             "that run the app and the AI service as described above. The ",
           link: {
             label: "privacy page",

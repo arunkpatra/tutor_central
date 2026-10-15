@@ -45,16 +45,26 @@ test("privacy says what it must, in order, and marks itself current", () => {
 test("the terms keep their own date; privacy and trust say when they changed (the review's minor 7)", () => {
   expect(renderToStaticMarkup(createElement(Terms))).toContain("Last changed 9 October 2026.");
   expect(renderToStaticMarkup(createElement(Privacy))).toContain("Last changed 12 October 2026.");
-  expect(renderToStaticMarkup(createElement(Trust))).toContain("Last changed 13 October 2026.");
+  expect(renderToStaticMarkup(createElement(Trust))).toContain("Last changed 15 October 2026.");
 });
 
 test("trust says who else can open the records: staff, for a problem, with the reason written down (Phase 19)", () => {
   const html = renderToStaticMarkup(createElement(Trust));
   expect(html).toContain(
-    "Tutor Central’s own staff can open a centre’s records only to help with a problem, with the reason and the time written down. They never see a parent’s number or a photo.",
+    "Tutor Central’s own staff can open a centre’s records only to help with a problem, with the reason and the time written down. They never see a parent’s number, a photo, or what was sent about a student whose parent has not agreed.",
   );
   // "Only the tutor" would no longer be true.
   expect(html).not.toContain("Only the tutor, signed in, can see");
+});
+
+test("trust says what was sent about a student is kept 90 days beside what came back, then only what came back (D79, P22-Web-Trust)", () => {
+  const html = renderToStaticMarkup(createElement(Trust));
+  const retention =
+    "What was sent about a student for a message, a reading of marks or the plan for the last days is kept beside what came back for 90 days, so the tutor can see what a note was written from. After 90 days only what came back is kept, with a mark that something was sent and when.";
+  expect(html).toContain(retention);
+  // After the AI service's paragraph, before consent.
+  expect(html.indexOf("The AI service is Claude, by Anthropic.")).toBeLessThan(html.indexOf(retention));
+  expect(html.indexOf(retention)).toBeLessThan(html.indexOf("How consent is asked and recorded"));
 });
 
 test("terms name the maker, the cost today, the limits, the notice and Indian law", () => {
