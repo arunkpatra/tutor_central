@@ -116,3 +116,9 @@ test("Save the allowance: whole numbers of calls and rupees, a reason; the cap g
   expect(await go(form("900", "450", "exam month"))).toContain("/centres/preview");
   expect(seen[0]?.slice(1, 5)).toEqual(["preview", 900, 45_000, "exam month"]);
 });
+
+test("the allowance line counts one call as one (hand run 3, F1)", async () => {
+  const { CENTRE } = await import("../../content/centres");
+  expect(CENTRE.allowance(1, null)).toBe("allowance 1 call · ₹0 cap (none)");
+  expect(CENTRE.allowance(600, "₹500")).toBe("allowance 600 calls · ₹500 cap");
+});

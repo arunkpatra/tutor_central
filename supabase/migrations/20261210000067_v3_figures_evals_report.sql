@@ -133,14 +133,15 @@ returns jsonb language sql stable security invoker set search_path = '' as $$
       'passed', (select count(*) from per_kind p where (p.v ->> 'gate')::boolean),
       'below', (select count(*) from per_kind p where not (p.v ->> 'gate')::boolean),
       'last_run_at', (select n.finished_at from newest n),
-      'last_run_paise', (select coalesce((n.result ->> 'cost_paise')::bigint, 0) from newest n)),
+      'last_run_paise', coalesce((select (n.result ->> 'cost_paise')::bigint from newest n), 0)),
     'rows', (select coalesce(jsonb_agg(jsonb_build_object(
         'kind', p.kind, 'run_at', p.run_at, 'job_id', p.job_id, 'by_admin', p.by_admin,
         'cases', (p.v ->> 'cases')::int, 'schema', (p.v ->> 'schema')::int, 'verify', (p.v ->> 'verify')::int,
         'check_pass', (p.v ->> 'check_pass')::int, 'grade_pass', (p.v ->> 'grade_pass')::int,
         'grade_rate', (p.v ->> 'grade_rate')::numeric, 'gate', (p.v ->> 'gate')::boolean,
         'cost_paise', coalesce((p.v ->> 'cost_paise')::bigint, 0)) order by p.kind), '[]'::jsonb) from per_kind p),
-    'failures', (select coalesce(n.result -> 'failures', '[]'::jsonb) from newest n),
+    -- With no run yet the subquery answers no row: the lists stay lists (hand run 6).
+    'failures', coalesce((select n.result -> 'failures' from newest n), '[]'::jsonb),
     'failures_job', (select n.id from newest n),
     'queued', (select j.id from public.jobs j where j.kind = 'eval_run' and j.state in ('queued', 'running', 'waiting')
                 order by j.created_at desc limit 1));

@@ -50,7 +50,7 @@ export const CENTRE = {
   noDevice: "no device",
   monthSoFar: (month: string) => `${month} so far`,
   allowance: (calls: number | null, cap: string | null) =>
-    `allowance ${calls ?? "no"} calls · ${cap ? `${cap} cap` : "₹0 cap (none)"}`,
+    `allowance ${calls ?? "no"} ${calls === 1 ? "call" : "calls"} · ${cap ? `${cap} cap` : "₹0 cap (none)"}`,
   ofPlan: (pct: number) => `of ₹499 · ${pct}%`,
   calls: (n: number) => `${n} ${n === 1 ? "call" : "calls"}`,
   byKind: (plan: string, notes: string, exams: string) => `plan ${plan} · notes ${notes} · exams ${exams}`,
