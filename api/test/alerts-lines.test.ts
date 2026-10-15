@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { alertsFor, type Facts, LINES } from "../src/alerts/lines.js";
+import { alertsFor, DEFAULT_LINES, type Facts } from "../src/alerts/lines.js";
 
 const now = new Date("2026-10-13T05:12:00Z"); // 10:42 in India
 const none: Facts = { failedJobs: [], costToday: [], requestsHour: { total: 0, errors: 0 }, stuckJobs: [] };
@@ -13,7 +13,7 @@ test("a failed job is one alert keyed by the job, its kind in words", () => {
 });
 
 test("a centre at ₹60.00 is not over the line, ₹60.01 is, keyed by the centre and India's day", () => {
-  expect(alertsFor({ ...none, costToday: [{ centreId: "c1", paise: LINES.costDayPaise }] }, now)).toEqual([]);
+  expect(alertsFor({ ...none, costToday: [{ centreId: "c1", paise: DEFAULT_LINES.costDayPaise }] }, now)).toEqual([]);
   const [alert] = alertsFor({ ...none, costToday: [{ centreId: "c1", paise: 7200 }] }, now);
   expect(alert).toEqual({ key: "cost_day:c1:2026-10-13", kind: "cost_day", centreId: "c1", threshold: 6000, value: 7200, message: "a centre’s cost today over the line: ₹72, over ₹60" });
   // 23:30 in India on the 13th is 18:00 UTC: still the 13th's line.
@@ -38,4 +38,13 @@ test("a job with no progress for 9 minutes is not stuck, 11 is", () => {
   expect(alertsFor({ ...none, stuckJobs: [{ id: "j2", kind: "plan", centreId: "c1", since: at(9) }] }, now)).toEqual([]);
   const [alert] = alertsFor({ ...none, stuckJobs: [{ id: "j2", kind: "plan", centreId: "c1", since: at(11) }] }, now);
   expect(alert).toEqual({ key: "job_stuck:j2", kind: "job_stuck", centreId: "c1", threshold: 10, value: 11, message: "a job running over 10 minutes: plan, 11 min" });
+});
+
+test("each line is the one given: ₹90 a day, 3% of 10 requests, 20 minutes stuck", () => {
+  const lines = { costDayPaise: 9000, errorRatePct: 3, errorRateMinRequests: 10, stuckMinutes: 20 };
+  const at = (minutes: number) => new Date(now.getTime() - minutes * 60_000).toISOString();
+  expect(alertsFor({ ...none, costToday: [{ centreId: "c1", paise: 7200 }] }, now, lines)).toEqual([]);
+  expect(alertsFor({ ...none, requestsHour: { total: 10, errors: 1 } }, now, lines)[0]?.message).toBe("errors over 3% of requests in an hour: 10%");
+  expect(alertsFor({ ...none, stuckJobs: [{ id: "j", kind: "plan", centreId: "c1", since: at(15) }] }, now, lines)).toEqual([]);
+  expect(alertsFor({ ...none, stuckJobs: [{ id: "j", kind: "plan", centreId: "c1", since: at(21) }] }, now, lines)[0]).toMatchObject({ threshold: 20, value: 21, message: "a job running over 20 minutes: plan, 21 min" });
 });

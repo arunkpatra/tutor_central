@@ -1,10 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 import type { NotificationRow, OutboxDb } from "../push/db.js";
-import type { Alert, Facts } from "./lines.js";
+import { type Alert, DEFAULT_LINES, type Facts, type Lines } from "./lines.js";
 
 /** What the alerts job reads and writes, through 0046's named functions as the platform (D83). */
 export type AlertsSource = {
   facts(now: Date): Promise<Facts>;
+  /** alert_lines_current (0066): the lines the portal set, or the seed's when the table answers no row. */
+  lines(): Promise<Lines>;
   /** raise_alert: true for a new key, false for one raised before. */
   raise(alert: Alert): Promise<boolean>;
   /** admin_push_targets: the tutor accounts (and centres) whose iPhones get the alert pushes. */
@@ -12,6 +14,8 @@ export type AlertsSource = {
   /** The push rows, through the outbox's replace_notifications (cancelling nothing). */
   notify(centre: string, user: string, rows: NotificationRow[], now: Date): Promise<void>;
 };
+
+type RawLines = { cost_day_paise: number; error_rate_pct: number | string; error_rate_min_requests: number; stuck_minutes: number };
 
 type RawFacts = {
   failed_jobs: { id: string; kind: string; centre_id: string | null; finished_at: string }[];
@@ -37,6 +41,18 @@ export function makeAlertsDb(url: string, serviceKey: string, outbox: OutboxDb):
         stuckJobs: raw.stuck_jobs.map((j) => ({ id: j.id, kind: j.kind, centreId: j.centre_id, since: j.since })),
       };
     },
+    async lines() {
+      const { data, error } = await db.rpc("alert_lines_current");
+      check("read their lines", error);
+      const row = ((data ?? []) as RawLines[])[0];
+      if (!row) return DEFAULT_LINES;
+      return {
+        costDayPaise: Number(row.cost_day_paise),
+        errorRatePct: Number(row.error_rate_pct),
+        errorRateMinRequests: Number(row.error_rate_min_requests),
+        stuckMinutes: Number(row.stuck_minutes),
+      };
+    },
     async raise(alert) {
       const { data, error } = await db.rpc("raise_alert", {
         p_key: alert.key,
@@ -60,8 +76,8 @@ export function makeAlertsDb(url: string, serviceKey: string, outbox: OutboxDb):
   };
 }
 
-/** A source in memory for tests: the facts and targets given; raise answers false for a key raised before. */
-export function fakeAlertsSource(facts: Facts, targets: { user: string; centre: string }[]) {
+/** A source in memory for tests: the facts, targets and lines given; raise answers false for a key raised before. */
+export function fakeAlertsSource(facts: Facts, targets: { user: string; centre: string }[], lines: Lines = DEFAULT_LINES) {
   const raised: Alert[] = [];
   const notified: { centre: string; user: string; rows: NotificationRow[] }[] = [];
   const source: AlertsSource & { raised: Alert[]; notified: typeof notified } = {
@@ -69,6 +85,9 @@ export function fakeAlertsSource(facts: Facts, targets: { user: string; centre: 
     notified,
     async facts() {
       return facts;
+    },
+    async lines() {
+      return lines;
     },
     async raise(alert) {
       if (raised.some((a) => a.key === alert.key)) return false;

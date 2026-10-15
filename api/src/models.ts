@@ -61,8 +61,9 @@ export function modelFor(kind: AIKind, step: Step, classLevel?: ClassLevel): Cho
   };
 }
 
-/** Installs the database's table. `refresh` reads it, drops a row whose model is not in the price table, and keeps the
- *  last good table on a failure (answering false); `fresh` refreshes when the table is a minute old, waiting at most
+/** Installs the database's table. `refresh` reads it, keeps the last good row of a kind and step whose new row names a
+ *  model not in the price table (or the file's, when there was none), and keeps the last good table on a failure
+ *  (answering false); `fresh` refreshes when the table is a minute old, waiting at most
  *  `waitMs` for the database (a slow read goes on in the background), so a request or a job's run reads a table no
  *  older than a minute without a timer that a frozen function would not run. `stop` clears it (tests). */
 export function installModelTable(source: ModelSource, clock: Clock = realClock, waitMs = 1_500) {
@@ -72,11 +73,16 @@ export function installModelTable(source: ModelSource, clock: Clock = realClock,
     try {
       const next = new Map<string, ModelRow>();
       for (const row of await source.current()) {
+        const key = `${row.kind}:${row.step}`;
         if (!known(row.model)) {
-          log.error({ at: "models", reason: "unknown model", kind: row.kind, step: row.step, model: row.model });
+          // A row the portal's check missed (written by SQL, say) must not stop the calls or make an unpriced one: the
+          // kind and step keep the row they had (D113).
+          log.error({ at: "models", message: "a model row is not priced", kind: row.kind, step: row.step, model: row.model });
+          const before = rows.get(key);
+          if (before) next.set(key, before);
           continue;
         }
-        next.set(`${row.kind}:${row.step}`, row);
+        next.set(key, row);
       }
       rows = next;
       readAt = clock.now();
