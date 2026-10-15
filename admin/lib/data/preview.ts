@@ -9,6 +9,8 @@ import errors from "../../preview/errors.json";
 import frame from "../../preview/frame.json";
 import job from "../../preview/job.json";
 import jobs from "../../preview/jobs.json";
+import model from "../../preview/model.json";
+import models from "../../preview/models.json";
 import record from "../../preview/record.json";
 import type {
   Activity,
@@ -24,6 +26,8 @@ import type {
   Job,
   JobRow,
   Jobs,
+  Model,
+  Models,
   Record,
 } from "./types";
 
@@ -51,4 +55,10 @@ export const previewData: Data = {
   cancel: async () => true,
   auditWrite: async () => {},
   adminEmail: async () => frame.email,
+  models: async () => models as Models,
+  // The preview's one kind is `preview` (the board's brief), and the brief by its own name.
+  model: async (kind) => (kind === PREVIEW_ID || kind === model.kind ? (model as Model) : null),
+  setModel: async () => "preview",
+  setAllowance: async (_admin, centre) => centre === PREVIEW_ID,
+  setLines: async () => {},
 };

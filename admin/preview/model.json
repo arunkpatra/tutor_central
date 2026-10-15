@@ -1,0 +1,81 @@
+{
+  "kind": "brief",
+  "current": [
+    {
+      "step": "draft",
+      "model": "claude-sonnet-5-5",
+      "effort": "high",
+      "fallback_model": "claude-haiku-5-5",
+      "enabled": true,
+      "since": "2026-10-12T12:32:00Z",
+      "set_by": "you@tutorcentral.in",
+      "note": "high effort: the slips were shallow"
+    },
+    {
+      "step": "check",
+      "model": "claude-haiku-5-5",
+      "effort": "medium",
+      "fallback_model": "claude-sonnet-5-5",
+      "enabled": true,
+      "since": "2026-10-11T04:42:00Z",
+      "set_by": "seed",
+      "note": "0052"
+    },
+    {
+      "step": "repair",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "fallback_model": "claude-haiku-5-5",
+      "enabled": true,
+      "since": "2026-10-11T04:42:00Z",
+      "set_by": "seed",
+      "note": "0052"
+    }
+  ],
+  "history": [
+    {
+      "id": "preview-brief-draft-1",
+      "since": "2026-10-12T12:32:00Z",
+      "step": "draft",
+      "model": "claude-sonnet-5-5",
+      "effort": "high",
+      "fallback_model": "claude-haiku-5-5",
+      "enabled": true,
+      "set_by": "you@tutorcentral.in",
+      "note": "high effort: the slips were shallow"
+    },
+    {
+      "id": "preview-brief-draft-0052",
+      "since": "2026-10-11T04:42:00Z",
+      "step": "draft",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "fallback_model": "claude-haiku-5-5",
+      "enabled": true,
+      "set_by": "seed",
+      "note": "0052"
+    },
+    {
+      "id": "preview-brief-check-0052",
+      "since": "2026-10-11T04:42:00Z",
+      "step": "check",
+      "model": "claude-haiku-5-5",
+      "effort": "medium",
+      "fallback_model": "claude-sonnet-5-5",
+      "enabled": true,
+      "set_by": "seed",
+      "note": "0052"
+    },
+    {
+      "id": "preview-brief-repair-0052",
+      "since": "2026-10-11T04:42:00Z",
+      "step": "repair",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "fallback_model": "claude-haiku-5-5",
+      "enabled": true,
+      "set_by": "seed",
+      "note": "0052"
+    }
+  ]
+}

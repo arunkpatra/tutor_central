@@ -45,6 +45,13 @@ const KIND_WORDS: Record<AIKind, { plural: string; done: "made" | "read" | "chec
 };
 const DOING = { made: "Making", read: "Reading", checked: "Checking" } as const;
 
+/** A switched-off kind's words, as the tutor reads them (the portal's Switch off quotes them, by `bun contract`). */
+export function pausedWords(kind: AIKind): string {
+  const { plural, done } = KIND_WORDS[kind];
+  const title = `${plural[0]?.toUpperCase()}${plural.slice(1)} can't be ${done} right now.`;
+  return `${title} ${DOING[done]} ${plural} is switched off for a short while so we can fix something. Everything else works as usual. Try again later.`;
+}
+
 const V1_KINDS: readonly AIKind[] = ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper"] satisfies V1Kind[];
 
 export const errors = {
@@ -70,12 +77,7 @@ export const errors = {
   }),
   /** A kind switched off in ai_models (D100), before any call or row: the board's words (P20-Switched-Off); the app shows
    *  the first sentence as the alert's title and the rest as its message. */
-  paused: (kind: AIKind): ApiError => {
-    const { plural, done } = KIND_WORDS[kind];
-    const title = `${plural[0]?.toUpperCase()}${plural.slice(1)} can't be ${done} right now.`;
-    const message = `${DOING[done]} ${plural} is switched off for a short while so we can fix something. Everything else works as usual. Try again later.`;
-    return { status: 503, body: { error: `${title} ${message}`, reason: "paused" } };
-  },
+  paused: (kind: AIKind): ApiError => ({ status: 503, body: { error: pausedWords(kind), reason: "paused" } }),
   service: (): ApiError => ({ status: 502, body: { error: "The AI service didn't answer. Try again." } }),
   badImage: (why: string): ApiError => ({ status: 400, body: { error: why } }),
   /** The same key's call is still running (D84): the app's timed-out words; it may finish and replay. */

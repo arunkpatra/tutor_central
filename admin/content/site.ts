@@ -2,7 +2,7 @@
 export const HOST = "admin.tutorcentral.in";
 export const SITE = "tutorcentral.in";
 
-/** The seven pages of the nav (P19 boards), in order. */
+/** The pages of the nav, in the boards' order (P19 boards; P22's grow it to eleven, each with its page). */
 export const PAGES = [
   { label: "Centres", href: "/centres" },
   { label: "Cost", href: "/cost" },
@@ -10,6 +10,7 @@ export const PAGES = [
   { label: "Jobs", href: "/jobs" },
   { label: "Errors", href: "/errors" },
   { label: "Alerts", href: "/alerts" },
+  { label: "Models", href: "/models" },
   { label: "Audit", href: "/audit" },
 ] as const;
 export type PageLabel = (typeof PAGES)[number]["label"];

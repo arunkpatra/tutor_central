@@ -14,6 +14,8 @@ import type {
   Job,
   JobRow,
   Jobs,
+  Model,
+  Models,
   Record,
   Tutor,
 } from "./types";
@@ -90,6 +92,39 @@ export function realData(): Data {
         p_centre: centre,
         p_target: target,
         p_reason: reason,
+        p_ip: ip,
+      });
+    },
+    models: () => rpc<Models>("admin_models"),
+    model: (kind) => rpc<Model | null>("admin_model", { p_kind: kind }),
+    setModel: (admin, c, ip) =>
+      rpc<string>("admin_set_model", {
+        p_admin: admin,
+        p_kind: c.kind,
+        p_step: c.step,
+        p_model: c.model,
+        p_effort: c.effort,
+        p_fallback: c.fallback,
+        p_enabled: c.enabled,
+        p_note: c.note,
+        p_ip: ip,
+      }),
+    setAllowance: (admin, centre, calls, paise, reason, ip) =>
+      rpc<boolean>("admin_set_allowance", {
+        p_admin: admin,
+        p_centre: centre,
+        p_calls: calls,
+        p_paise: paise,
+        p_reason: reason,
+        p_ip: ip,
+      }),
+    setLines: async (admin, l, ip) => {
+      await rpc("admin_set_alert_lines", {
+        p_admin: admin,
+        p_cost_day_paise: l.cost_day_paise,
+        p_error_rate_pct: l.error_rate_pct,
+        p_error_rate_min_requests: l.error_rate_min_requests,
+        p_stuck_minutes: l.stuck_minutes,
         p_ip: ip,
       });
     },

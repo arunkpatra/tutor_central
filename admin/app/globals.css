@@ -158,7 +158,7 @@ form {
 }
 .nav {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   flex-wrap: wrap;
 }
 .hdr .nav {
@@ -166,11 +166,11 @@ form {
 }
 .nav a {
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   font-weight: 600;
   color: var(--text2);
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-radius: 10px;
   white-space: nowrap;
 }
@@ -684,6 +684,38 @@ a.plain {
   line-height: 20px;
   color: var(--overdue);
 }
+.input.select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* A form in a card (P22): fields four across, the button with its line beside it. */
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+.formRow.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+.accentLink {
+  color: var(--accentText);
+  font-weight: 600;
+}
+.formFoot {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.formNote {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text3);
+}
 
 /* The sign-in pages. */
 .centered {
@@ -853,6 +885,9 @@ a.plain {
 }
 
 @container (max-width: 760px) {
+  .formRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .hdr {
     padding: 14px 0 10px;
   }
@@ -1078,4 +1113,10 @@ form:has([aria-busy="true"]) .field {
   color: var(--text);
   background: transparent;
   font-weight: 400;
+}
+
+@container (max-width: 480px) {
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

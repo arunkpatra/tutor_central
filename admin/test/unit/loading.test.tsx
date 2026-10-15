@@ -30,7 +30,7 @@ const signedIn = files(APP, (f) => f === "page.tsx")
   .filter((d) => d !== "" && !DOOR.some((o) => d === o || d.startsWith(`${o}/`)));
 
 test("every signed-in page has a loading state of its own (D97)", () => {
-  expect(signedIn.length).toBe(10);
+  expect(signedIn.length).toBe(12);
   for (const d of signedIn)
     expect({
       page: d,
@@ -75,6 +75,11 @@ test("a working button shows its own words, the spinner, and takes no second pre
     retry: "Retrying…",
     cancel: "Cancelling…",
     acknowledge: "Acknowledging…",
+    save: "Saving…",
+    switchOff: "Switching off…",
+    switchOn: "Switching on…",
+    saveLines: "Saving the lines…",
+    saveAllowance: "Saving the allowance…",
   });
 });
 

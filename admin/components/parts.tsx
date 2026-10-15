@@ -204,6 +204,9 @@ export function Field({
   required,
   defaultValue,
   maxLength,
+  numeric,
+  hint,
+  error,
 }: {
   label: string;
   name: string;
@@ -214,6 +217,11 @@ export function Field({
   required?: boolean;
   defaultValue?: string;
   maxLength?: number;
+  /** A number typed on a phone's number pad (the allowance, the lines). */
+  numeric?: boolean;
+  /** A line under the field in the note's grey ("0 is no cap"). */
+  hint?: string;
+  error?: string;
 }) {
   return (
     <label className="field">
@@ -227,9 +235,11 @@ export function Field({
         required={required}
         defaultValue={defaultValue}
         maxLength={maxLength}
-        inputMode={code ? "numeric" : undefined}
+        inputMode={code || numeric ? (numeric ? "decimal" : "numeric") : undefined}
         pattern={code ? "[0-9]{6}" : undefined}
       />
+      {hint ? <span className="formNote">{hint}</span> : null}
+      {error ? <span className="fieldError">{error}</span> : null}
     </label>
   );
 }
@@ -256,4 +266,38 @@ export function Dialog({ title, lead, children }: { title: string; lead: string;
       </div>
     </div>
   );
+}
+
+/** A labelled choice in the field's grammar (P22-Model's Change a step). */
+export function Select({
+  label,
+  name,
+  options,
+  defaultValue,
+  error,
+}: {
+  label: string;
+  name: string;
+  options: { value: string; label: string }[];
+  defaultValue?: string;
+  error?: string;
+}) {
+  return (
+    <label className="field">
+      <span className="fieldLabel">{label}</span>
+      <select className="input select" name={name} defaultValue={defaultValue}>
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+      {error ? <span className="fieldError">{error}</span> : null}
+    </label>
+  );
+}
+
+/** Fields four across in a card; two under 760 px, one under 480 (P22's form row). */
+export function FormRow({ children }: { children: ReactNode }) {
+  return <div className="formRow">{children}</div>;
 }

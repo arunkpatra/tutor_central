@@ -27,3 +27,24 @@ export async function openRecord(form: FormData): Promise<void> {
   });
   redirect(`/centres/${id}/record`);
 }
+
+/** A whole number of 0 or more as typed, else null. */
+function whole(form: FormData, name: string): number | null {
+  const raw = String(form.get(name) ?? "").trim();
+  return /^\d{1,7}$/.test(raw) ? Number(raw) : null;
+}
+
+/** Change a centre's allowance (D113): calls a month and a cap in rupees (kept in paise; 0 is none), with a reason; the
+ *  audit row keeps the old values. */
+export async function setAllowance(form: FormData): Promise<void> {
+  const admin = await requireAdmin();
+  const id = idOf(String(form.get("centre") ?? ""), preview());
+  if (!id) notFound();
+  const reason = reasonOf(form);
+  if (!reason) redirect(`/centres/${id}?allowance=1&empty=1`);
+  const calls = whole(form, "calls");
+  const cap = whole(form, "cap");
+  if (calls === null || cap === null) redirect(`/centres/${id}?allowance=1&bad=1`);
+  if (!(await data().setAllowance(admin.userId, id, calls, cap * 100, reason, await callerIp()))) notFound();
+  redirect(`/centres/${id}`);
+}

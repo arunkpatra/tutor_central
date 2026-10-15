@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
 import { DEFAULT_PAGES, parseAdminShotsArgs, shotName, wrongStatus, LOADING_SHOWN } from "./admin-shots";
 
-test("the defaults are the fifteen boards' pages at both widths and appearances", () => {
+test("the defaults are the boards' pages (Phase 19's fifteen, Phase 22's) at both widths and appearances", () => {
   expect(parseAdminShotsArgs([])).toEqual({ pages: DEFAULT_PAGES, widths: [1280, 390], appearances: ["dark", "light"], out: ".shots/admin" });
-  expect(DEFAULT_PAGES.length).toBe(15);
+  expect(DEFAULT_PAGES.length).toBe(19);
 });
 
 test("the flags narrow the pages, widths and appearance, and refuse what they cannot use", () => {

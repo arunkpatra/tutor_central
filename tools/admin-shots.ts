@@ -26,6 +26,11 @@ export const DEFAULT_PAGES = [
   "/errors",
   "/alerts",
   "/audit",
+  // Phase 22's boards (P22-*).
+  "/models",
+  "/models/preview",
+  "/models/preview?off=1",
+  "/centres/preview?allowance=1",
 ];
 /** A page drawn to answer 404: the not-found page in the frame. */
 const NOT_FOUND = "/nothing-here";

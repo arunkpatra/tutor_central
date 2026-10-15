@@ -65,6 +65,22 @@ export const CENTRE = {
   recordLead:
     "Students by name, their consent and their batches. Opening it is written to the audit with your reason. A parent’s number and a student’s photos are never shown here.",
   openRecord: "Open the record",
+  changeAllowance: "Change",
+} as const;
+
+/** The allowance's dialog (P22-Centre-Allowance). */
+export const ALLOWANCE = {
+  title: (centre: string) => `Change the allowance of ${centre}?`,
+  lead: "Calls a month, and a cap on the month’s cost in rupees. The next call the centre makes meets the new limit; a draft alone counts. Written to the audit with your reason.",
+  calls: "Calls a month",
+  cap: "Cap, ₹ a month",
+  capHint: "0 is no cap",
+  reason: "Reason",
+  reasonHint: "Who asked, and why",
+  empty: "Say why: the reason goes into the audit.",
+  bad: "Whole numbers, 0 or more",
+  cancel: "Cancel",
+  save: "Save the allowance",
 } as const;
 
 /** The allowance line every centre is measured against (D64): ₹499 a month, in paise. */
