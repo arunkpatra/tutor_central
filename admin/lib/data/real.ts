@@ -11,13 +11,19 @@ import type {
   Cost,
   Data,
   Errors,
+  EvalRuns,
   Job,
   JobRow,
   Jobs,
   Model,
   Models,
+  Reasons,
   Record,
+  ReportLast,
+  Syllabi,
+  Syllabus,
   Tutor,
+  Week,
 } from "./types";
 
 /** One `admin_*` function, as the platform (D83, D94). A database error is thrown: the page's error, never a guess. */
@@ -128,6 +134,14 @@ export function realData(): Data {
         p_ip: ip,
       });
     },
+    figures: (weeks) => rpc<Week[]>("admin_figures", { p_weeks: weeks }),
+    reasons: (monday) => rpc<Reasons>("admin_reasons_week", { p_monday: monday }),
+    reportLast: () => rpc<ReportLast | null>("admin_report_last"),
+    sendReport: (admin, ip) => rpc<string>("admin_send_report", { p_admin: admin, p_ip: ip }),
+    evalRuns: () => rpc<EvalRuns>("admin_eval_runs"),
+    runEvals: (admin, kinds, ip) => rpc<string | null>("admin_run_evals", { p_admin: admin, p_kinds: kinds, p_ip: ip }),
+    syllabi: () => rpc<Syllabi>("admin_syllabi"),
+    syllabus: (id) => rpc<Syllabus | null>("admin_syllabus", { p_id: id }),
     adminEmail: async (admin) => {
       const { data } = await serviceClient().from("admin_users").select("email").eq("user_id", admin).maybeSingle();
       return (data?.email as string | undefined) ?? null;

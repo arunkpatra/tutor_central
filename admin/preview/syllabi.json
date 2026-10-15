@@ -1,0 +1,109 @@
+{
+  "tiles": {
+    "syllabi": 27,
+    "boards": ["cbse", "karnataka"],
+    "classes": ["10", "8", "9"],
+    "chapters": 412
+  },
+  "rows": [
+    {
+      "id": "preview",
+      "board": "cbse",
+      "class_level": "8",
+      "subject": "Mathematics",
+      "edition": "2026-27",
+      "chapters": 14,
+      "skills": 52,
+      "blueprint": false,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s1",
+      "board": "cbse",
+      "class_level": "8",
+      "subject": "Science",
+      "edition": "2026-27",
+      "chapters": 13,
+      "skills": 48,
+      "blueprint": false,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s2",
+      "board": "cbse",
+      "class_level": "8",
+      "subject": "English",
+      "edition": "2026-27",
+      "chapters": 15,
+      "skills": 96,
+      "blueprint": false,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s3",
+      "board": "cbse",
+      "class_level": "9",
+      "subject": "Mathematics",
+      "edition": "2026-27",
+      "chapters": 14,
+      "skills": 49,
+      "blueprint": false,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s4",
+      "board": "cbse",
+      "class_level": "9",
+      "subject": "Science",
+      "edition": "2026-27",
+      "chapters": 13,
+      "skills": 51,
+      "blueprint": false,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s5",
+      "board": "cbse",
+      "class_level": "10",
+      "subject": "Mathematics",
+      "edition": "2026-27",
+      "chapters": 14,
+      "skills": 46,
+      "blueprint": true,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s6",
+      "board": "cbse",
+      "class_level": "10",
+      "subject": "Science",
+      "edition": "2026-27",
+      "chapters": 13,
+      "skills": 58,
+      "blueprint": true,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s7",
+      "board": "karnataka",
+      "class_level": "8",
+      "subject": "Mathematics",
+      "edition": "2026-27",
+      "chapters": 14,
+      "skills": 55,
+      "blueprint": false,
+      "updated_at": "2026-10-09T06:00:00Z"
+    },
+    {
+      "id": "preview-s8",
+      "board": "karnataka",
+      "class_level": "10",
+      "subject": "Science",
+      "edition": "2026-27",
+      "chapters": 13,
+      "skills": 60,
+      "blueprint": true,
+      "updated_at": "2026-10-09T06:00:00Z"
+    }
+  ]
+}

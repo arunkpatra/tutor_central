@@ -541,6 +541,14 @@ a.plain {
   background: var(--surface2);
   color: var(--text2);
 }
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+a.chip {
+  text-decoration: none;
+}
 .chip.ok {
   background: var(--okTint);
   color: var(--ok);

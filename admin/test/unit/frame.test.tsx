@@ -12,12 +12,15 @@ test("the frame carries the brand with its ADMIN mark, the pages marking the cur
     expect(html).toContain(`<a href="/${p}">`);
   expect([...html.matchAll(/<a (?:aria-current="page" )?href="\/([a-z]+)">/g)].map((m) => m[1])).toEqual([
     "centres",
+    "figures",
     "cost",
     "calls",
     "jobs",
     "errors",
     "alerts",
     "models",
+    "evals",
+    "syllabi",
     "audit",
   ]);
   expect(html).toContain('<a aria-current="page" href="/jobs">');

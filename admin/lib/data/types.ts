@@ -155,6 +155,8 @@ export type Call = CallRow & {
   prompt_hash: string | null;
   finished_at: string | null;
   job: { id: string; kind: string; subject: string | null; step: string | null } | null;
+  /** The tutor's word on the call (0061, D107): its kind, reason and time; never the revised text. */
+  feedback?: { kind: "edit" | "again" | "replace"; reason: string | null; created_at: string }[];
 };
 
 export type Jobs = { tiles: { today: number; failed: number; running: number; waiting: number }; rows: JobRow[] };
@@ -263,6 +265,78 @@ export type ModelChange = {
   enabled: boolean;
   note: string | null;
 };
+/** 0067's `admin_figures`: one week, Monday to Sunday in India. */
+export type Week = {
+  week_monday: string;
+  so_far: boolean;
+  tutors_active: number;
+  closes: number;
+  plans_made: number;
+  plans_followed: number;
+  notes_sent: number;
+  made: number;
+  again: number;
+  make: number;
+  consent_given: number;
+  cost_paise: number;
+  per_active_tutor_paise: number;
+};
+/** `admin_reasons_week`: a menu's reason by its words, the tutor's own as `typed`. */
+export type Reasons = { again: { reason: string; count: number }[]; edits: number; made: number; notes: number };
+export type ReportLast = {
+  id: string;
+  state: JobState;
+  finished_at: string | null;
+  created_at: string;
+  week_monday: string;
+  so_far: boolean;
+  sent: boolean;
+};
+export type EvalRow = {
+  kind: string;
+  run_at: string;
+  job_id: string;
+  by_admin: boolean;
+  cases: number;
+  schema: number;
+  verify: number;
+  check_pass: number;
+  grade_pass: number;
+  grade_rate: number;
+  gate: boolean;
+  cost_paise: number;
+};
+export type EvalRuns = {
+  tiles: { kinds: number; passed: number; below: number; last_run_at: string | null; last_run_paise: number };
+  rows: EvalRow[];
+  failures: { id: string; reasons: string[] }[];
+  failures_job: string | null;
+  queued: string | null;
+};
+export type SyllabusRow = {
+  id: string;
+  board: string;
+  class_level: string;
+  subject: string;
+  edition: string;
+  chapters: number;
+  skills: number;
+  blueprint: boolean;
+  updated_at: string;
+};
+export type Syllabi = {
+  tiles: { syllabi: number; boards: string[]; classes: string[]; chapters: number };
+  rows: SyllabusRow[];
+};
+export type Syllabus = {
+  id: string;
+  board: string;
+  class_level: string;
+  subject: string;
+  edition: string;
+  blueprint: { marks: number | null; sections: number; minutes: number | null } | null;
+  chapters: { no: number; name: string; skills: string[]; marks: number | null }[];
+};
 export type LinesChange = {
   cost_day_paise: number;
   error_rate_pct: number;
@@ -333,4 +407,14 @@ export type Data = {
     ip: string | null,
   ): Promise<boolean>;
   setLines(admin: string, lines: LinesChange, ip: string | null): Promise<void>;
+  figures(weeks: number): Promise<Week[]>;
+  reasons(monday: string): Promise<Reasons>;
+  /** The newest weekly report's job, or null before the first. */
+  reportLast(): Promise<ReportLast | null>;
+  sendReport(admin: string, ip: string | null): Promise<string>;
+  evalRuns(): Promise<EvalRuns>;
+  /** Null while a run is queued or under way; `kinds` null is every kind. */
+  runEvals(admin: string, kinds: string[] | null, ip: string | null): Promise<string | null>;
+  syllabi(): Promise<Syllabi>;
+  syllabus(id: string): Promise<Syllabus | null>;
 };

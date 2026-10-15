@@ -4,12 +4,14 @@ import type { ReactNode } from "react";
 import { Frame } from "@/components/Frame";
 import { PageLink } from "@/components/PageLink";
 import { Cell, Chip, Code, LinkButton, Row, Section, Table, Title } from "@/components/parts";
-import { CALL, DEADLINE_MS, outcomeChip } from "@/content/calls";
+import { CALL, DEADLINE_MS, FEEDBACK, outcomeChip } from "@/content/calls";
 import { NONE } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
+import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
+import type { Call } from "@/lib/data/types";
 import { preview } from "@/lib/env";
-import { count, dayMonth, rupees, time } from "@/lib/format";
+import { count, dayMonth, rupees, time, when } from "@/lib/format";
 import { idOf } from "@/lib/ids";
 
 export const metadata: Metadata = { title: "AI call" };
@@ -28,6 +30,32 @@ function pretty(value: unknown): string {
   return JSON.stringify(value, null, 2);
 }
 
+/** The tutor's word on the call: what was made again or replaced on the line, the edits at Send under it; a dash with
+ *  none. "yesterday 19:02" as the board writes it. */
+function feedback(call: Call, at: Date): ReactNode {
+  const rows = call.feedback ?? [];
+  const at_ = (iso: string) => when(iso, at).replace(/^(Today|Yesterday)/, (w) => w.toLowerCase());
+  const lines = rows
+    .filter((f) => f.kind !== "edit")
+    .map((f) =>
+      f.kind === "again" ? FEEDBACK.again(f.reason, at_(f.created_at)) : FEEDBACK.replace(at_(f.created_at)),
+    );
+  const edits = rows.filter((f) => f.kind === "edit").map((f) => FEEDBACK.edit(at_(f.created_at)));
+  if (lines.length === 0 && edits.length === 0) return NONE;
+  const [first, ...rest] = lines.length > 0 ? lines : edits;
+  const subs = lines.length > 0 ? [...rest, ...edits] : rest;
+  return (
+    <>
+      {first}
+      {subs.map((s) => (
+        <span key={s} className="sub">
+          {s}
+        </span>
+      ))}
+    </>
+  );
+}
+
 export default async function CallPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: raw } = await params;
   await requireAdmin(`/calls/${raw}`);
@@ -36,6 +64,7 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
   const call = await data().call(id);
   if (!call) notFound();
   const chip = outcomeChip(call.status, call.error_reason);
+  const at = now();
   const jobHref = call.job ? `/jobs?day=all&open=${call.job.id}` : null;
   const facts: [string, ReactNode][] = [
     [CALL.facts.kind, CALL.kindOf(call.kind, call.student)],
@@ -67,6 +96,7 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
         ) : null}
       </>,
     ],
+    [FEEDBACK.label, feedback(call, at)],
     [CALL.facts.request, CALL.request(call.request_id, call.idempotency_key)],
     [
       CALL.facts.centre,
@@ -89,6 +119,10 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
         {jobHref ? (
           <LinkButton kind="secondary" href={jobHref}>
             {CALL.openJob}
+          </LinkButton>
+        ) : call.centre ? (
+          <LinkButton kind="secondary" href={`/centres/${call.centre_id}`}>
+            {CALL.openCentre}
           </LinkButton>
         ) : null}
       </Title>

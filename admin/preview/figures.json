@@ -1,0 +1,156 @@
+{
+  "weeks": [
+    {
+      "week_monday": "2026-10-12",
+      "so_far": true,
+      "tutors_active": 3,
+      "closes": 7,
+      "plans_made": 9,
+      "plans_followed": 7,
+      "notes_sent": 4,
+      "made": 22,
+      "again": 3,
+      "make": 4,
+      "consent_given": 1,
+      "cost_paise": 11400,
+      "per_active_tutor_paise": 3800
+    },
+    {
+      "week_monday": "2026-10-05",
+      "so_far": false,
+      "tutors_active": 3,
+      "closes": 12,
+      "plans_made": 14,
+      "plans_followed": 12,
+      "notes_sent": 9,
+      "made": 38,
+      "again": 6,
+      "make": 7,
+      "consent_given": 2,
+      "cost_paise": 21300,
+      "per_active_tutor_paise": 7100
+    },
+    {
+      "week_monday": "2026-09-28",
+      "so_far": false,
+      "tutors_active": 2,
+      "closes": 9,
+      "plans_made": 11,
+      "plans_followed": 9,
+      "notes_sent": 6,
+      "made": 31,
+      "again": 4,
+      "make": 5,
+      "consent_given": 1,
+      "cost_paise": 16800,
+      "per_active_tutor_paise": 8400
+    },
+    {
+      "week_monday": "2026-09-21",
+      "so_far": false,
+      "tutors_active": 2,
+      "closes": 8,
+      "plans_made": 10,
+      "plans_followed": 8,
+      "notes_sent": 5,
+      "made": 28,
+      "again": 2,
+      "make": 3,
+      "consent_given": 0,
+      "cost_paise": 15800,
+      "per_active_tutor_paise": 7900
+    },
+    {
+      "week_monday": "2026-09-14",
+      "so_far": false,
+      "tutors_active": 2,
+      "closes": 6,
+      "plans_made": 8,
+      "plans_followed": 6,
+      "notes_sent": 4,
+      "made": 20,
+      "again": 3,
+      "make": 2,
+      "consent_given": 2,
+      "cost_paise": 12400,
+      "per_active_tutor_paise": 6200
+    },
+    {
+      "week_monday": "2026-09-07",
+      "so_far": false,
+      "tutors_active": 1,
+      "closes": 4,
+      "plans_made": 5,
+      "plans_followed": 4,
+      "notes_sent": 2,
+      "made": 12,
+      "again": 1,
+      "make": 1,
+      "consent_given": 1,
+      "cost_paise": 5800,
+      "per_active_tutor_paise": 5800
+    },
+    {
+      "week_monday": "2026-08-31",
+      "so_far": false,
+      "tutors_active": 1,
+      "closes": 3,
+      "plans_made": 4,
+      "plans_followed": 3,
+      "notes_sent": 1,
+      "made": 9,
+      "again": 0,
+      "make": 0,
+      "consent_given": 0,
+      "cost_paise": 4100,
+      "per_active_tutor_paise": 4100
+    },
+    {
+      "week_monday": "2026-08-24",
+      "so_far": false,
+      "tutors_active": 1,
+      "closes": 1,
+      "plans_made": 2,
+      "plans_followed": 1,
+      "notes_sent": 0,
+      "made": 4,
+      "again": 0,
+      "make": 0,
+      "consent_given": 0,
+      "cost_paise": 1900,
+      "per_active_tutor_paise": 1900
+    }
+  ],
+  "reasons": {
+    "again": [
+      {
+        "reason": "harder",
+        "count": 2
+      },
+      {
+        "reason": "shorter",
+        "count": 2
+      },
+      {
+        "reason": "less about marks",
+        "count": 1
+      },
+      {
+        "reason": "typed",
+        "count": 1
+      }
+    ],
+    "edits": 3,
+    "made": 38,
+    "notes": 9
+  },
+  "report": {
+    "id": "preview-report",
+    "state": "done",
+    "finished_at": "2026-10-12T02:30:04Z",
+    "created_at": "2026-10-12T02:30:00Z",
+    "week_monday": "2026-10-05",
+    "so_far": false,
+    "sent": true
+  }
+}

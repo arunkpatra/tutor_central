@@ -94,3 +94,19 @@ test("a call's page names its step", async () => {
 test("a draft refused after its check reads refused, with the finding's item", () => {
   expect(outcomeChip("failed", "check:question 1")).toEqual({ tone: "due", text: "refused · check:question 1" });
 });
+
+test("a call's Feedback row: made again with its reason, edited at Send, never the revised text; a tap's call opens its centre", async () => {
+  const html = renderToStaticMarkup(await CallPage({ params: Promise.resolve({ id: "preview-feedback" }) }));
+  for (const words of [
+    "Feedback",
+    "made again · Less about marks",
+    "edited at Send",
+    "the text is never shown here",
+    "Open the centre",
+  ])
+    expect(html).toContain(words);
+  expect(html).not.toContain("revised");
+  const none = renderToStaticMarkup(await CallPage({ params: Promise.resolve({ id: "preview" }) }));
+  expect(none).toMatch(/Feedback<\/div><div class="cell"><span class="k">Feedback<\/span>—/);
+  expect(none).toContain("Open the job");
+});
