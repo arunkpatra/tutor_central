@@ -76,3 +76,12 @@ test("a push that cannot be written is logged; the step ends done and the next a
   const outcome = await alertsJob(source, fakeSender(), "you@example.com").step(job, context());
   expect(outcome).toMatchObject({ kind: "done", result: { raised: 2, emailed: 2, pushed: 0 } });
 });
+
+test("the lines come from the source: a centre at ₹72 is quiet under a ₹90 line, and loud under the seed's ₹60", async () => {
+  const facts = { ...none, costToday: [{ centreId: "c1", paise: 7200 }] };
+  const quiet = fakeAlertsSource(facts, targets, { costDayPaise: 9000, errorRatePct: 5, errorRateMinRequests: 20, stuckMinutes: 10 });
+  expect(await alertsJob(quiet, fakeSender(), "you@example.com").step(job, context())).toMatchObject({ result: { checked: 0, raised: 0 } });
+  const loud = fakeAlertsSource(facts, targets);
+  expect(await alertsJob(loud, fakeSender(), "you@example.com").step(job, context())).toMatchObject({ result: { checked: 1, raised: 1 } });
+  expect(loud.raised[0]?.message).toBe("a centre’s cost today over the line: ₹72, over ₹60");
+});

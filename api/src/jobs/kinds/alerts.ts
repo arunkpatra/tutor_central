@@ -9,14 +9,15 @@ export const ALERTS_PAGE = "https://admin.tutorcentral.in/alerts";
 /** The push's title: plain words on the owner's iPhone (D41's spirit). */
 export const ALERT_TITLE = "Tutor Central needs a look";
 
-/** The alerts job (D95), one step each ten minutes: the facts, the four lines, each alert raised once by its key; a new
+/** The alerts job (D95), one step each ten minutes: the facts, the four lines as the portal set them (read each run,
+ *  D113), each alert raised once by its key; a new
  *  one is emailed to ALERT_EMAIL and pushed to each admin's tutor account. An email or a push that fails is logged and the
  *  step still ends done: the alert row stands (Phase 22 retries). */
 export function alertsJob(source: AlertsSource, sender: Sender, alertEmail: string): JobHandler {
   return {
     async step(job, ctx) {
       const now = new Date(ctx.clock.now());
-      const alerts = alertsFor(await source.facts(now), now);
+      const alerts = alertsFor(await source.facts(now), now, await source.lines());
       const targets = await source.targets();
       let raised = 0;
       let emailed = 0;
