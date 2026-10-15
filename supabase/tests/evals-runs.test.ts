@@ -66,6 +66,15 @@ test("a run started by an admin is a job with its kinds and an audit row; a seco
   expect((await svc.from("jobs").select("input").eq("id", every).single()).data?.input).not.toHaveProperty("kinds");
 });
 
+test("with no run yet the read answers empty lists and zeros, never a null (hand run 6, F2)", async () => {
+  const kept = await sql`select id from public.jobs where kind = 'eval_run'`;
+  await sql`update public.jobs set state = 'cancelled' where kind = 'eval_run'`;
+  const runs = (await svc.rpc("admin_eval_runs")).data as Runs & { failures_job: string | null };
+  await sql`update public.jobs set state = 'done' where id in ${sql(kept.map((r: { id: string }) => r.id))}`;
+  expect(runs).toMatchObject({ rows: [], failures: [], failures_job: null, queued: null });
+  expect(runs.tiles).toMatchObject({ kinds: 0, passed: 0, below: 0, last_run_paise: 0 });
+});
+
 test("a member reads and starts nothing (42501)", async () => {
   expect((await a.rpc("admin_eval_runs")).error?.code).toBe("42501");
   expect((await a.rpc("admin_run_evals", { p_admin: adminId, p_kinds: null, p_ip: null })).error?.code).toBe("42501");
