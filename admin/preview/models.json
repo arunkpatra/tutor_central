@@ -1,0 +1,769 @@
+{
+  "tiles": {
+    "kinds": 23,
+    "off": 1,
+    "changes_month": 3,
+    "last_change": "2026-10-13T04:10:00Z"
+  },
+  "rows": [
+    {
+      "kind": "brief",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T12:32:00Z",
+        "set_by": "you@tutorcentral.in",
+        "note": "high effort: the slips were shallow"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-12T12:32:00Z",
+      "changed_by": "you@tutorcentral.in",
+      "note": "high effort: the slips were shallow"
+    },
+    {
+      "kind": "can_do",
+      "draft": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "check",
+      "draft": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "check_paper",
+      "draft": {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-opus-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "figure",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "gap_report",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "homework",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T09:00:00Z",
+        "set_by": "seed",
+        "note": "0060"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T09:00:00Z",
+        "set_by": "seed",
+        "note": "0060"
+      },
+      "changed_at": "2026-10-12T09:00:00Z",
+      "changed_by": "seed",
+      "note": "0060"
+    },
+    {
+      "kind": "mock",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": false,
+        "since": "2026-10-13T04:10:00Z",
+        "set_by": "you@tutorcentral.in",
+        "note": "a wrong marks total in two mocks"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-13T04:10:00Z",
+      "changed_by": "you@tutorcentral.in",
+      "note": "a wrong marks total in two mocks"
+    },
+    {
+      "kind": "not_on_track",
+      "draft": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "note",
+      "draft": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "paper",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T09:00:00Z",
+        "set_by": "seed",
+        "note": "0060"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T09:00:00Z",
+        "set_by": "seed",
+        "note": "0060"
+      },
+      "changed_at": "2026-10-12T09:00:00Z",
+      "changed_by": "seed",
+      "note": "0060"
+    },
+    {
+      "kind": "parse_school",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "parse_textbook",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "placement",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T07:30:00Z",
+        "set_by": "seed",
+        "note": "0056"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T07:30:00Z",
+        "set_by": "seed",
+        "note": "0056"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T07:30:00Z",
+        "set_by": "seed",
+        "note": "0056"
+      },
+      "changed_at": "2026-10-11T07:30:00Z",
+      "changed_by": "seed",
+      "note": "0056"
+    },
+    {
+      "kind": "plan",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "progress_note",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "read_marks",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "scan_register",
+      "draft": {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-opus-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "sheet_from_6",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "sheet_to_5",
+      "draft": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "test_tomorrow",
+      "draft": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "worked_example",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "changed_at": "2026-10-11T04:42:00Z",
+      "changed_by": "seed",
+      "note": "0052"
+    },
+    {
+      "kind": "worksheet",
+      "draft": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T09:00:00Z",
+        "set_by": "seed",
+        "note": "0060"
+      },
+      "check": {
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "fallback_model": "claude-sonnet-5-5",
+        "enabled": true,
+        "since": "2026-10-11T04:42:00Z",
+        "set_by": "seed",
+        "note": "0052"
+      },
+      "repair": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "fallback_model": "claude-haiku-5-5",
+        "enabled": true,
+        "since": "2026-10-12T09:00:00Z",
+        "set_by": "seed",
+        "note": "0060"
+      },
+      "changed_at": "2026-10-12T09:00:00Z",
+      "changed_by": "seed",
+      "note": "0060"
+    }
+  ]
+}

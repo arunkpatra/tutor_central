@@ -208,9 +208,66 @@ export type AlertRow = {
   acknowledged_at: string | null;
   acknowledged_by_email: string | null;
 };
+/** The alert lines (0066's `alert_lines_current`): the newest row is current. */
+export type AlertLines = {
+  cost_day_paise: number;
+  error_rate_pct: number;
+  error_rate_min_requests: number;
+  stuck_minutes: number;
+  since: string;
+  set_by: string;
+};
 export type Alerts = {
   tiles: { open: number; acknowledged_week: number; last_raised: string | null };
+  lines: AlertLines | null;
   rows: AlertRow[];
+};
+
+/** A kind's step as the API reads it (0052's `ai_models`, 0066's reads). */
+export type StepName = "draft" | "check" | "repair";
+export type Effort = "low" | "medium" | "high";
+export type ModelStep = {
+  model: string;
+  effort: Effort;
+  fallback_model: string | null;
+  enabled: boolean;
+  since: string;
+  set_by: string;
+  note: string | null;
+};
+export type ModelsRow = {
+  kind: string;
+  draft: ModelStep;
+  check: ModelStep;
+  repair: ModelStep;
+  changed_at: string;
+  changed_by: string;
+  note: string | null;
+};
+export type Models = {
+  tiles: { kinds: number; off: number; changes_month: number; last_change: string | null };
+  rows: ModelsRow[];
+};
+export type Model = {
+  kind: string;
+  current: (ModelStep & { step: StepName })[];
+  history: (ModelStep & { id: string; step: StepName })[];
+};
+/** A new row for a kind's step (0066's `admin_set_model`): Switch off is the draft with `enabled` false. */
+export type ModelChange = {
+  kind: string;
+  step: StepName;
+  model: string;
+  effort: Effort;
+  fallback: string | null;
+  enabled: boolean;
+  note: string | null;
+};
+export type LinesChange = {
+  cost_day_paise: number;
+  error_rate_pct: number;
+  error_rate_min_requests: number;
+  stuck_minutes: number;
 };
 
 export type AuditRow = {
@@ -262,4 +319,18 @@ export type Data = {
   ): Promise<void>;
   /** The admin's own row for the header: the email the audit shows. */
   adminEmail(admin: string): Promise<string | null>;
+  models(): Promise<Models>;
+  /** Null for a kind the table never held. */
+  model(kind: string): Promise<Model | null>;
+  setModel(admin: string, change: ModelChange, ip: string | null): Promise<string>;
+  /** False for a centre that is gone. */
+  setAllowance(
+    admin: string,
+    centre: string,
+    calls: number,
+    paise: number,
+    reason: string,
+    ip: string | null,
+  ): Promise<boolean>;
+  setLines(admin: string, lines: LinesChange, ip: string | null): Promise<void>;
 };

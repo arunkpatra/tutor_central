@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/Frame";
-import { Cell, Chip, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
+import { Cell, Chip, Field, FormRow, Pill, Row, Section, Table, Tile, Tiles, Title } from "@/components/parts";
 import { SubmitButton } from "@/components/SubmitButton";
-import { ALERTS, valueLine } from "@/content/alerts";
+import { ALERTS, LINES_FORM, valueLine } from "@/content/alerts";
 import { shortCentre } from "@/content/calls";
 import { ENVIRONMENT, NONE, PENDING } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
@@ -10,7 +10,7 @@ import { now } from "@/lib/clock";
 import { data } from "@/lib/data";
 import { environment } from "@/lib/env";
 import { count, dayMonth, short, when } from "@/lib/format";
-import { acknowledge } from "./actions";
+import { acknowledge, saveLines } from "./actions";
 
 export const metadata: Metadata = { title: "Alerts" };
 
@@ -24,12 +24,13 @@ function ackWhen(iso: string, at: Date): string {
   return w.startsWith("Yesterday") ? "yesterday" : dayMonth(iso);
 }
 
-export default async function AlertsPage({ searchParams }: { searchParams: Promise<{ show?: string }> }) {
-  await requireAdmin("/alerts");
+export default async function AlertsPage({ searchParams }: { searchParams: Promise<{ show?: string; bad?: string }> }) {
+  const admin = await requireAdmin("/alerts");
   const q = await searchParams;
   const at = now();
   const show: Show = q.show === "newest" ? "newest" : "open-first";
-  const alerts = await data().alerts(show === "open-first");
+  const [alerts, me] = await Promise.all([data().alerts(show === "open-first"), data().adminEmail(admin.userId)]);
+  const lines = alerts.lines;
   return (
     <Frame current="Alerts">
       <Title eyebrow={ENVIRONMENT[environment()]} title={ALERTS.title} lead={ALERTS.lead}>
@@ -98,17 +99,56 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
         </Table>
       </Section>
       <Section>
-        <div className="card padded tight">
-          <span className="h3">{ALERTS.lines}</span>
-          <div className="facts">
-            {ALERTS.line.map(([kind, words]) => (
-              <span key={kind}>
-                <b>{kind}</b> · {words}
+        <form action={saveLines} className="card padded stack">
+          <div className="spread">
+            <span className="h3">{ALERTS.lines}</span>
+            {lines ? (
+              <span className="formNote">
+                {LINES_FORM.changed(when(lines.since, at), lines.set_by === me ? LINES_FORM.you : lines.set_by)}
               </span>
-            ))}
+            ) : null}
           </div>
-          <p className="lead smaller">{ALERTS.linesNote}</p>
-        </div>
+          <FormRow>
+            <Field
+              label={LINES_FORM.costDay}
+              name="cost_day"
+              numeric
+              required
+              defaultValue={lines ? String(lines.cost_day_paise / 100) : ""}
+            />
+            <Field
+              label={LINES_FORM.errorRate}
+              name="error_rate"
+              numeric
+              required
+              defaultValue={lines ? String(lines.error_rate_pct) : ""}
+            />
+            <Field
+              label={LINES_FORM.errorMin}
+              name="error_min"
+              numeric
+              required
+              defaultValue={lines ? String(lines.error_rate_min_requests) : ""}
+            />
+            <Field
+              label={LINES_FORM.stuck}
+              name="stuck"
+              numeric
+              required
+              defaultValue={lines ? String(lines.stuck_minutes) : ""}
+            />
+          </FormRow>
+          {q.bad === "lines" ? <p className="fieldError">{LINES_FORM.bad}</p> : null}
+          <div className="formFoot">
+            <SubmitButton kind="primary" working={PENDING.saveLines}>
+              {LINES_FORM.save}
+            </SubmitButton>
+            <span className="formNote">{LINES_FORM.saveNote}</span>
+          </div>
+          <p className="lead smaller">
+            <b>{LINES_FORM.failed}</b> {LINES_FORM.failedNote}
+          </p>
+        </form>
       </Section>
     </Frame>
   );

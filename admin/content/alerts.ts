@@ -17,14 +17,23 @@ export const ALERTS = {
   acknowledge: "Acknowledge",
   acknowledged: (when: string) => `acknowledged · ${when}`,
   lines: "The lines, checked every ten minutes by the alerts job",
-  line: [
-    ["job_failed", "any job failed after its last try"],
-    ["cost_day", "a centre over ₹60 in a day"],
-    ["error_rate", "answers over 400 above 5% of an hour’s requests (at least 20)"],
-    ["job_stuck", "a job running over 10 minutes"],
-  ],
-  linesNote: "Each alert is raised once, emailed to you and pushed to your iPhone. The lines change in Phase 22.",
   never: "never",
+} as const;
+
+/** The lines as a form (P22-Alerts-Lines): the four numbers, Save, the last change. */
+export const LINES_FORM = {
+  changed: (when: string, by: string) => `last changed ${when} by ${by} · written to the audit`,
+  costDay: "cost_day · ₹ a centre in a day",
+  errorRate: "error_rate · % of an hour’s requests",
+  errorMin: "error_rate · at least this many requests",
+  stuck: "job_stuck · minutes with no step",
+  save: "Save the lines",
+  saveNote: "The next check reads the new lines (within ten minutes).",
+  failed: "job_failed",
+  failedNote:
+    "has no line: any job failed after its last try is raised. Each alert is raised once, emailed to you and pushed to your iPhone.",
+  bad: "Whole numbers, 0 or more; the rate may have a decimal",
+  you: "you",
 } as const;
 
 export const AUDIT = {
@@ -43,6 +52,11 @@ export const AUDIT = {
     "retry_job",
     "cancel_job",
     "acknowledge_alert",
+    "set_model",
+    "set_alert_lines",
+    "set_allowance",
+    "run_evals",
+    "send_report",
   ],
   all: "All",
   days: "Days",
@@ -74,7 +88,14 @@ export function auditDetail(row: {
   subject: string | null;
 }): string {
   if (row.reason) return row.reason;
+  const t = row.target;
+  if (row.action === "set_alert_lines" && typeof t.cost_day_paise === "number") {
+    return `cost_day ${rupees(t.cost_day_paise)} · error_rate ${t.error_rate_pct}% of ${t.error_rate_min_requests} · job_stuck ${t.stuck_minutes} min`;
+  }
   const kind = typeof row.target.kind === "string" ? row.target.kind : null;
+  if (row.action === "set_model" && kind) {
+    return [kind, t.step, t.enabled === false ? "off" : null].filter(Boolean).join(" · ");
+  }
   const step = typeof row.target.step === "string" ? row.target.step : null;
   if (row.action === "retry_job" || row.action === "cancel_job") {
     return (

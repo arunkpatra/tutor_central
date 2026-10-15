@@ -4,6 +4,14 @@
     "acknowledged_week": 3,
     "last_raised": "2026-10-13T03:45:00Z"
   },
+  "lines": {
+    "cost_day_paise": 6000,
+    "error_rate_pct": 5,
+    "error_rate_min_requests": 20,
+    "stuck_minutes": 10,
+    "since": "2026-10-11T12:32:00Z",
+    "set_by": "you@tutorcentral.in"
+  },
   "rows": [
     {
       "id": "preview-a1",

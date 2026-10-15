@@ -19,7 +19,7 @@ import {
 } from "@/components/parts";
 import { SubmitButton } from "@/components/SubmitButton";
 import { activityWords } from "@/content/activity";
-import { CENTRE, PLAN_PAISE } from "@/content/centres";
+import { ALLOWANCE, CENTRE, PLAN_PAISE } from "@/content/centres";
 import { finished, stateChip } from "@/content/jobs";
 import { family } from "@/content/models";
 import { ASK } from "@/content/record";
@@ -31,7 +31,7 @@ import type { Centre } from "@/lib/data/types";
 import { preview } from "@/lib/env";
 import { count, dayMonth, monthName, monthOf, rupees, when } from "@/lib/format";
 import { idOf } from "@/lib/ids";
-import { openRecord } from "./actions";
+import { openRecord, setAllowance } from "./actions";
 
 export const metadata: Metadata = { title: "Centre" };
 
@@ -72,7 +72,7 @@ export default async function CentrePage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ month?: string; ask?: string; empty?: string }>;
+  searchParams: Promise<{ month?: string; ask?: string; empty?: string; allowance?: string; bad?: string }>;
 }) {
   const { id: raw } = await params;
   await requireAdmin(`/centres/${raw}`);
@@ -145,7 +145,10 @@ export default async function CentrePage({
             <div className="spread">
               <span className="h3">{CENTRE.monthSoFar(monthName(month))}</span>
               <span className="small">
-                {CENTRE.allowance(c.allowance, c.allowance_paise ? rupees(c.allowance_paise) : null)}
+                {CENTRE.allowance(c.allowance, c.allowance_paise ? rupees(c.allowance_paise) : null)}{" "}
+                <PageLink className="plain accentLink" href={`/centres/${id}?allowance=1`}>
+                  {CENTRE.changeAllowance}
+                </PageLink>
               </span>
             </div>
             <div>
@@ -240,6 +243,35 @@ export default async function CentrePage({
           </div>
         </div>
       </Section>
+      {query.allowance ? (
+        <Dialog title={ALLOWANCE.title(c.name)} lead={ALLOWANCE.lead}>
+          <form action={setAllowance} className="stack">
+            <input type="hidden" name="centre" value={id} />
+            <div className="formRow two">
+              <Field label={ALLOWANCE.calls} name="calls" numeric required defaultValue={String(c.allowance ?? 0)} />
+              <Field
+                label={ALLOWANCE.cap}
+                name="cap"
+                numeric
+                required
+                hint={ALLOWANCE.capHint}
+                defaultValue={String(Math.round((c.allowance_paise ?? 0) / 100))}
+              />
+            </div>
+            {query.bad ? <p className="fieldError">{ALLOWANCE.bad}</p> : null}
+            <Field label={ALLOWANCE.reason} name="reason" placeholder={ALLOWANCE.reasonHint} required maxLength={200} />
+            {query.empty ? <p className="fieldError">{ALLOWANCE.empty}</p> : null}
+            <div className="dialogActions">
+              <LinkButton kind="quiet" href={`/centres/${id}`}>
+                {ALLOWANCE.cancel}
+              </LinkButton>
+              <SubmitButton kind="primary" working={PENDING.saveAllowance}>
+                {ALLOWANCE.save}
+              </SubmitButton>
+            </div>
+          </form>
+        </Dialog>
+      ) : null}
       {query.ask ? (
         <Dialog title={ASK.title(c.name)} lead={ASK.lead}>
           <form action={openRecord} className="stack">

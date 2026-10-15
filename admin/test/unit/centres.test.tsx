@@ -71,3 +71,48 @@ test("a centre that is gone is not found", async () => {
   );
   expect((thrown as { digest?: string }).digest).toContain("404");
 });
+
+const centre = async (q: Record<string, string> = {}) =>
+  renderToStaticMarkup(await CentrePage({ params: Promise.resolve({ id: "preview" }), searchParams: query(q) }));
+
+test("the allowance line has Change; ?allowance=1 opens its dialog (P22-Centre-Allowance)", async () => {
+  const html = await centre();
+  expect(html).toContain("allowance 600 calls · ₹0 cap (none)");
+  expect(html).toContain('href="/centres/preview?allowance=1"');
+  expect(html).not.toContain("Save the allowance");
+  const dialog = await centre({ allowance: "1" });
+  for (const words of [
+    "Change the allowance of Sunrise Tuition Centre?",
+    "Calls a month",
+    "Cap, ₹ a month",
+    "0 is no cap",
+    "Reason",
+    "Save the allowance",
+    'value="600"',
+  ])
+    expect(dialog).toContain(words);
+  expect(await centre({ allowance: "1", empty: "1" })).toContain("Say why: the reason goes into the audit.");
+  expect(await centre({ allowance: "1", bad: "1" })).toContain("Whole numbers, 0 or more");
+});
+
+test("Save the allowance: whole numbers of calls and rupees, a reason; the cap goes in paise", async () => {
+  const { setAllowance } = await import("../../app/centres/[id]/actions");
+  const { withData } = await import("../../lib/data");
+  const { previewData } = await import("../../lib/data/preview");
+  const seen: unknown[][] = [];
+  const fake = { ...previewData, setAllowance: async (...args: unknown[]) => (seen.push(args), true) };
+  const form = (calls: string, cap: string, reason: string) => {
+    const f = new FormData();
+    for (const [k, v] of Object.entries({ centre: "preview", calls, cap, reason })) f.set(k, v);
+    return f;
+  };
+  const go = async (f: FormData) =>
+    ((await withData(fake, () => setAllowance(f)).catch((e: { digest?: string }) => e)) as { digest?: string })
+      .digest ?? "";
+  expect(await go(form("900", "0", "  "))).toContain("/centres/preview?allowance=1&empty=1");
+  expect(await go(form("9.5", "0", "exam month"))).toContain("/centres/preview?allowance=1&bad=1");
+  expect(await go(form("-1", "0", "exam month"))).toContain("/centres/preview?allowance=1&bad=1");
+  expect(seen).toHaveLength(0);
+  expect(await go(form("900", "450", "exam month"))).toContain("/centres/preview");
+  expect(seen[0]?.slice(1, 5)).toEqual(["preview", 900, 45_000, "exam month"]);
+});
