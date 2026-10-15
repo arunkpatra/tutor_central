@@ -101,6 +101,16 @@ test("the platform writes the split and a member reads it", async () => {
   expect((await svc.from("school_items").update({ preparation: { day: 1 } }).eq("id", itemA)).error?.message).toContain("check");
 });
 
+test("preparations holds a split per batch beside the first batch's preparation (0068); not a list", async () => {
+  const first = [{ day: istDay(7), kind: "revise", index: 1, title: "Balancing equations", skills: [], skill_ids: [] }];
+  const second = [{ day: istDay(8), kind: "revise", index: 1, title: "Balancing equations", skills: [], skill_ids: [] }];
+  const byBatch = { "11111111-1111-1111-1111-111111111111": first, "22222222-2222-2222-2222-222222222222": second };
+  expect((await svc.from("school_items").update({ preparation: first, preparations: byBatch }).eq("id", itemA)).error).toBeNull();
+  const { data } = await a.from("school_items").select("preparation, preparations").eq("id", itemA).single();
+  expect(data).toEqual({ preparation: first, preparations: byBatch });
+  expect((await svc.from("school_items").update({ preparations: [first] }).eq("id", itemA)).error?.message).toContain("check");
+});
+
 test("the portal names an exam's job by the exam's title", async () => {
   const [row] = await sql`select public.admin_job_subject('exam_prep', ${JSON.stringify({ item_id: itemA })}::text::jsonb, ${`exam:${itemA}`}) as subject`;
   expect(row.subject).toBe("Science unit test 3");

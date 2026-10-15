@@ -35,6 +35,7 @@ export const DEFAULT_PAGES = [
   "/evals",
   "/syllabi?open=preview",
   "/calls/preview-feedback",
+  "/calls/preview-reduced",
 ];
 /** A page drawn to answer 404: the not-found page in the frame. */
 const NOT_FOUND = "/nothing-here";

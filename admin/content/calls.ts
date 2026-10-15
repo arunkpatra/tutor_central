@@ -84,6 +84,7 @@ export const CALL = {
   input: "Input",
   output: "Output",
   held: "Held: the student’s consent is not current",
+  reduced: "Reduced after 90 days: only what came back is kept (D79)",
   noOutput: "No output: the call ended without an answer.",
   openCentre: "Open the centre",
 } as const;

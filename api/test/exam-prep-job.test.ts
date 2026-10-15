@@ -44,16 +44,19 @@ function read(over: Partial<ExamRead> = {}): ExamRead {
 function source(r: () => ExamRead) {
   const kept: { kind: string; student?: string; key: string; content: Record<string, unknown> }[] = [];
   const preparation: unknown[][] = [];
+  const byBatch: Record<string, unknown[]>[] = [];
   const planReplaced: { classId: string; date: string }[] = [];
-  const s: ExamSource & { kept: typeof kept; preparation: unknown[][]; planReplaced: typeof planReplaced } = {
+  const s: ExamSource & { kept: typeof kept; preparation: unknown[][]; byBatch: typeof byBatch; planReplaced: typeof planReplaced } = {
     kept,
     preparation,
+    byBatch,
     planReplaced,
     async read() {
       return r();
     },
-    async writePreparation(_centre, _item, days) {
+    async writePreparation(_centre, _item, days, batches) {
       preparation.push(days);
+      byBatch.push(batches);
     },
     async keep(_centre, artefact, place, key) {
       if (!kept.some((k) => k.key === key)) kept.push({ kind: artefact.kind, student: place.student, key, content: artefact.content });
@@ -217,4 +220,28 @@ test("a mock key another body holds waits a quarter hour, not half a minute", as
   const out = await handler.step(job({ at: "mock", mockDay: "2026-10-14" }), ctx);
   expect(out).toMatchObject({ kind: "wait", name: "mock", step: { at: "mock" } });
   expect((out as Extract<StepOutcome, { kind: "wait" }>).runAt.getTime()).toBe(ist("2026-10-14", "05:01") + 15 * 60_000);
+});
+
+test("two batches get two splits, each on its own days; preparation stays the first batch's (D118)", async () => {
+  const B2 = "batch-2";
+  const r = read({
+    students: [
+      { id: DEV, name: "Dev Kumar", classLevel: "8", schoolID: "s1", classId: BATCH },
+      { id: MEHER, name: "Meher Shah", classLevel: "8", schoolID: "s1", classId: B2 },
+    ],
+    batches: [
+      { classId: BATCH, meetingDays: [1, 3, 5], openPlanToday: false },
+      { classId: B2, meetingDays: [2, 4], openPlanToday: false },
+    ],
+  });
+  const { ctx, s, handler } = harness(ist("2026-10-06"), () => r);
+  await handler.step({ id: "j", centreId: CENTRE, kind: "exam_prep", attempts: 1, step: {}, input: { item_id: ITEM }, leaseUntil: "" }, ctx);
+  // Each batch's class days; the exam's own day is the school's.
+  const batches = s.byBatch[0] as Record<string, { day: string; kind: string }[]>;
+  expect(Object.keys(batches).sort()).toEqual([BATCH, B2].sort());
+  expect(s.preparation[0]).toEqual(batches[BATCH]);
+  const weekday = (d: string) => new Date(`${d}T12:00:00Z`).getUTCDay();
+  expect((batches[BATCH] ?? []).filter((d) => d.kind !== "exam").every((d) => [1, 3, 5].includes(weekday(d.day)))).toBe(true);
+  expect((batches[B2] ?? []).filter((d) => d.kind !== "exam").every((d) => [2, 4].includes(weekday(d.day)))).toBe(true);
+  expect(batches[B2]?.map((d) => d.day)).not.toEqual(batches[BATCH]?.map((d) => d.day));
 });

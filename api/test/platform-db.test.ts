@@ -372,9 +372,12 @@ test.skipIf(!up)("the exam job's source reads the seed's exam by its centre, wri
   expect(await source.read("33333333-3333-3333-3333-333333333333", exam, today)).toBeNull();
   const before = (await db.from("school_items").select("preparation").eq("id", exam).single()).data?.preparation;
   try {
-    await source.writePreparation(CENTRE, exam, [{ day: today, kind: "revise", index: 1, title: "Chemical reactions", skills: [], skill_ids: [] }]);
-    expect((await db.from("school_items").select("preparation").eq("id", exam).single()).data?.preparation).toHaveLength(1);
+    const split = [{ day: today, kind: "revise", index: 1, title: "Chemical reactions", skills: [], skill_ids: [] }];
+    await source.writePreparation(CENTRE, exam, split, { [read?.batches[0]?.classId as string]: split });
+    const written = (await db.from("school_items").select("preparation, preparations").eq("id", exam).single()).data;
+    expect(written?.preparation).toHaveLength(1);
+    expect(Object.values(written?.preparations ?? {})).toEqual([split]);
   } finally {
-    await db.from("school_items").update({ preparation: before ?? null }).eq("id", exam);
+    await db.from("school_items").update({ preparation: before ?? null, preparations: null }).eq("id", exam);
   }
 });

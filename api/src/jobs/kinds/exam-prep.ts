@@ -28,8 +28,14 @@ export type ExamRead = {
 export type ExamSource = {
   /** The exam as of `today`, by the job's own centre; null when the item is gone or is not an exam. */
   read(centre: string, item: string, today: string): Promise<ExamRead | null>;
-  /** The split on the item (`school_items.preparation`), the page's and the plan's. */
-  writePreparation(centre: string, item: string, days: Record<string, unknown>[]): Promise<void>;
+  /** The split on the item: `preparation` the first batch's (build 31 reads it), `preparations` each batch's by its id
+   *  (D118: the page and the plan read their student's batch's). */
+  writePreparation(
+    centre: string,
+    item: string,
+    days: Record<string, unknown>[],
+    byBatch: Record<string, Record<string, unknown>[]>,
+  ): Promise<void>;
   /** keep_artefact with the exam (and the student for a gap report), once by its key. */
   keep(centre: string, artefact: KeptArtefact, place: { student?: string; schoolItem: string }, key: string): Promise<string>;
   /** The batch's plan for the day asked again (`request_plan` with choices: a replace), so its lines read the report. */
@@ -109,22 +115,33 @@ async function next(job: Job, ctx: StepContext, source: ExamSource, centre: stri
   }
 }
 
-/** The days for the first reached student with a batch, written on the item; then the wait for the mock's morning. */
+/** The days for each batch the exam reaches, from its first reached student and that batch's meeting days, written on
+ *  the item (D118); `preparation` stays the first batch's. Then the wait for the first batch's mock morning: the mock is
+ *  one per exam, shared across the batches. */
 async function split(source: ExamSource, centre: string, item: string, read: ExamRead, today: string): Promise<StepOutcome> {
-  const student = read.students.find((s) => s.classId && read.batches.some((b) => b.classId === s.classId));
-  const batch = read.batches.find((b) => b.classId === student?.classId);
-  if (!student || !batch) return { kind: "done", name: "split", result: { item_id: item, reason: "no_students" } };
-  const days: PrepDay[] = examDays(read.item, student, read.chapters[student.id] ?? [], read.skills[student.id] ?? [], {
-    meetingDays: batch.meetingDays,
-    start: prepStart(read.item, today),
-    holidays: read.holidays,
-  });
-  try {
-    await source.writePreparation(
-      centre,
-      item,
-      days.map((d) => ({ day: d.day, kind: d.kind, index: d.index ?? null, title: d.title, skills: d.skills, skill_ids: d.skillIDs })),
+  const reached = read.batches
+    .map((batch) => ({ batch, student: read.students.find((s) => s.classId === batch.classId) }))
+    .filter((r): r is { batch: ExamRead["batches"][number]; student: ExamRead["students"][number] } => r.student !== undefined)
+    // The first batch is the first reached student's, as before (build 31's page reads it).
+    .sort(
+      (a, b) =>
+        read.students.findIndex((s) => s.classId === a.batch.classId) -
+        read.students.findIndex((s) => s.classId === b.batch.classId),
     );
+  const first = reached[0];
+  if (!first) return { kind: "done", name: "split", result: { item_id: item, reason: "no_students" } };
+  const daysOf = ({ batch, student }: (typeof reached)[number]): PrepDay[] =>
+    examDays(read.item, student, read.chapters[student.id] ?? [], read.skills[student.id] ?? [], {
+      meetingDays: batch.meetingDays,
+      start: prepStart(read.item, today),
+      holidays: read.holidays,
+    });
+  const rows = (days: PrepDay[]) =>
+    days.map((d) => ({ day: d.day, kind: d.kind, index: d.index ?? null, title: d.title, skills: d.skills, skill_ids: d.skillIDs }));
+  const days = daysOf(first);
+  const byBatch = Object.fromEntries(reached.map((r) => [r.batch.classId, rows(r === first ? days : daysOf(r))]));
+  try {
+    await source.writePreparation(centre, item, rows(days), byBatch);
   } catch (e) {
     return { kind: "fail", name: "split", error: { reason: "write_failed", message: e instanceof Error ? e.message : String(e) }, retry: true };
   }

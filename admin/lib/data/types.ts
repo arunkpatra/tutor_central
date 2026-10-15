@@ -146,6 +146,8 @@ export type Calls = {
 };
 export type Call = CallRow & {
   input_held: boolean;
+  /** Reduced to a reference after 90 days (0068, D117): no input to show. */
+  input_reduced?: boolean;
   input: unknown;
   output: string | null;
   request_id: string | null;
