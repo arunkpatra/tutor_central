@@ -139,6 +139,15 @@ test("an internal centre is not an active centre, and a member cannot mark one",
   expect(userB).toBeTruthy();
 });
 
+test("an internal centre's cost raises no cost_day fact: the golden sets' runs are the platform's (review R-db-2)", async () => {
+  await sql`insert into public.ai_generations (centre_id, kind, input, model, status, cost_paise, finished_at) values (${centreB}, 'sheet', '{}'::jsonb, 'm', 'ok', 9500, now())`;
+  const has = async () => ((await svc.rpc("alert_facts", { p_now: new Date().toISOString() })).data as { cost_today: { centre_id: string }[] }).cost_today.some((c) => c.centre_id === centreB);
+  expect(await has()).toBe(true);
+  await svc.from("centres").update({ internal: true }).eq("id", centreB);
+  expect(await has()).toBe(false);
+  await svc.from("centres").update({ internal: false }).eq("id", centreB);
+});
+
 test("a member calls none of the writers or the reads", async () => {
   const calls: [string, Record<string, unknown>][] = [
     ["admin_set_model", { p_admin: adminId, p_kind: "brief", p_step: "draft", p_model: "x", p_effort: "low", p_fallback: null, p_enabled: true, p_note: null, p_ip: null }],

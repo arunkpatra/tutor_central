@@ -38,7 +38,13 @@ export function makeExamSource(url: string, serviceKey: string): ExamSource {
       if (!found.data || found.data.kind !== "exam") return null;
       const item = prepItem(found.data);
       const [students, holidays, artefacts, marks] = await Promise.all([
-        client.from("students").select("id, name, class_level, school_id, class_id").eq("centre_id", centre).is("archived_at", null),
+        // In the order they were added, so the exam's first batch (its `preparation`) does not change between splits.
+        client
+          .from("students")
+          .select("id, name, class_level, school_id, class_id")
+          .eq("centre_id", centre)
+          .is("archived_at", null)
+          .order("created_at"),
         client.from("school_items").select(columns).eq("centre_id", centre).eq("kind", "holiday"),
         client.from("artefacts").select("id, kind, student_id, content, created_at").eq("centre_id", centre).eq("school_item_id", itemId).in("kind", ["mock", "gap_report"]).order("created_at"),
         client.from("marks").select("student_id, questions").eq("centre_id", centre).eq("school_item_id", itemId).not("questions", "is", null),

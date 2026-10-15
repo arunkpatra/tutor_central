@@ -126,7 +126,8 @@ returns jsonb language sql stable security invoker set search_path = '' as $$
                 d.idempotency_key like '%:admin:%' as by_admin
            from done d cross join lateral jsonb_each(d.result -> 'kinds') k
           order by k.key, d.finished_at desc),
-       newest as (select d.* from done d order by d.finished_at desc limit 1)
+       -- A run that measured nothing (every kind asked switched off: `kinds` empty) is not the last run.
+       newest as (select d.* from done d where d.result -> 'kinds' <> '{}'::jsonb order by d.finished_at desc limit 1)
   select jsonb_build_object(
     'tiles', jsonb_build_object(
       'kinds', (select count(*) from per_kind),
