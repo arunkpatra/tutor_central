@@ -36,8 +36,18 @@ writes its own audit row.
   and 390, dark and light), then `bun pr-shots` (D7).
 - Deploy only by `gh workflow run deploy-admin` (git deploys off in `vercel.json`).
 - Phase 21: the Cost page reads `admin_cost_by_step` (kind, step, model; batched rows marked) and `admin_cost_by_month`
-  (the batched share) from 0061; `admin_call` returns a call's feedback rows (kind, reason, time; never the revised text),
-  which no board draws yet, so the call page shows none (rule 1).
+  (the batched share) from 0061.
+- Phase 22 (D113 to D117, D119): eleven pages (Centres, Figures, Cost, Calls, Jobs, Errors, Alerts, Models, Evals, Syllabi,
+  Audit). The controls write through `admin_set_model` (a new `ai_models` row; Switch off is the draft row disabled with the
+  reason; Save keeps the draft's switch; a model not in `KNOWN_MODELS`, held equal to `api/models.json`'s price sheet by
+  `known-models.test.ts`, is refused under the field), `admin_set_allowance` (calls 1 or more, the cap typed in rupees and
+  kept in paise, a reason) and `admin_set_alert_lines` (rupees, a rate up to 100, stuck minutes 1 or more), each writing its
+  audit row. Figures read `admin_figures`, `admin_reasons_week`, `admin_report_last`; Send now is `admin_send_report`. The
+  Golden sets page reads `admin_eval_runs`; its run card chooses kinds by the address (chips are links) and queues through
+  `admin_run_evals` only on a person's press (D112). Syllabi read `admin_syllabus(…)`, opened in place. The call page shows
+  the Feedback row (a reason the tutor typed reads "typed by the tutor"; never the revised text) and "Reduced after 90 days"
+  in the Held line's place. `lib/generated/contract.ts` (the switched-off words, `EVAL_KINDS`, the prompt versions) is
+  written by `bun contract`, never edited; Biome leaves `lib/generated` alone.
 
 Commands: `bun run dev` (local on :3100, needs `admin/.env.local`); `bun run check`; `bun check --only=admin`;
 `bun admin-shots`.

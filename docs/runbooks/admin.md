@@ -78,3 +78,27 @@ with `APNS_*`. An alert's push row is written by the alerts job and sent on the 
 - Never run the API's or the database's tests while the local worker runs (`simulator.md` section 13): they share the jobs.
 - A failed job made on purpose: a kind no handler runs (`artefact`), queued as the platform with `enqueue_job`
   (`simulator.md` section 12); the runner fails it at once (`no_handler`).
+
+## 10. The controls (Phase 22)
+
+The hand run of issue #359, in order; every write read back in the database.
+
+- **The tutor's answers without the simulator:** a token for the seed's tutor from the local Auth
+  (`POST $API_URL/auth/v1/token?grant_type=password` with the anon key and `meera@example.com` / `tutor-local-1`), then
+  `POST http://127.0.0.1:3000/ai/make` with `Idempotency-Key` and a body the schema takes (a brief: `centreId`, `kind`,
+  `classLevel`, `subject`, `chapter`). The API reads `ai_models` each minute: after Switch off or on, ask every few seconds
+  and note when the answer changes (503 `paused` with the kind's words, or 200).
+- **Switch off, Change a step:** `/models/<kind>`; read back `select step, enabled, set_by, note from ai_models where
+  kind = '<kind>' order by since desc limit 3` and the audit's `set_model`. A model planted in the select (the browser's
+  script: change an option's value, then `requestSubmit()`) must come back "Not a model this API knows" with no row.
+- **The allowance:** the centre's Change; read back `ai_allowance, ai_allowance_paise` and the audit's `before`; the tutor's
+  next draft answers 429 in the app's words. Set it back to 600.
+- **The lines:** `/alerts`; queue an alerts job as the platform (`enqueue_job(null, 'alerts', 'alerts:<a key of your own>')`
+  through PostgREST, section 12 of `simulator.md`) and tick: `alerts` gains the line's key, the fake sender logs the email,
+  `notifications` gains the `alert` row. Save the lines back to 60, 5, 20, 10.
+- **Send now, the golden sets:** tick until the `weekly_report` or `eval_run` job is done (a waiting `eval_run` can be hurried
+  with `update jobs set run_at = now()`); the run is on the fake (`AI_FAKE=1`).
+- **The reduced line:** a personal row's `created_at` set back 91 days by SQL, the sweep queued (delete the last `sweep` job
+  first), its result `reduced: 1`.
+- A `supabase db reset` removes the local admin: run `bun tools/admin-local.ts admin@example.com` again and enrol a new
+  second factor.

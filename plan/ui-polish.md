@@ -39,6 +39,8 @@ screen, several as a polish slice, or not at all.
 | U51 | 2026-10-13 | A sheet at the largest text size | The footer band (the AI line, Make it again, Share as PDF and Print) takes half the screen, so two question rows show at a time | Session 41's hand run 7 |
 | U52 | 2026-10-13 | The photo dialogs (School "From a photo", the page chooser, an item's menu) | Since the alert tint (Phase 20), their choices are drawn in the accent; before they were the system blue; the boards draw them in the text colour | Session 41's app review |
 | U53 | 2026-10-14 | The weekly note, set aside → Write it myself | The empty well opens without the keyboard; the tutor taps the well before typing | Session 043's hand run 3 |
+| U54 | 2026-10-15 | The admin portal's header, between about 760 and 1100 px wide | With the eleven pages, Sign out drops to a line of its own under the brand (P22's boards draw 1280, where it fits) | Session 45's hand run 1 |
+| U55 | 2026-10-15 | The portal's Golden sets, Last run per kind | A kind can read 100% on the rubric and "below the gate" with no column saying why: the expected-refusal check (a case the agent should refuse) has no column; a board is needed | Session 45's hand run 6 |
 
 ## Done
 

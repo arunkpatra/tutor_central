@@ -22,7 +22,7 @@
   through `deploy.yml`'s `migrate` job, before the API (D26); never `supabase db push` by hand. A migration is
   additive while any installed build uses what it would remove (expand now, contract later): the database leads
   the app, and the TestFlight lane refuses a build while migrations are pending. Run it with
-  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0064 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
+  `gh workflow run deploy`; the run's summary shows what was pending and that nothing is after. Migrations 0001 to 0068 are on the hosted project (`plan/STATE.md` names the runs). Its secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`) are in the GitHub
   environment `Production`. 0001 was the only hand push.
 
 - App Review's demo centre (D51): `gh workflow run seed-review -f email=… -f parent_phone=…` fills an existing account's
@@ -94,3 +94,14 @@ Commands: `bun check --only=db` (resets the local database, runs the tests, re-s
   question sets at high effort; 0061 the Cost page's functions and `admin_call`'s feedback; 0062 `schedule_evals`' weekday
   set; 0063 `start_ai_call` lets the platform's own `eval_run` through the consent gate (built on 0055's body); 0064 removes
   the `schedule_evals` cron (D112).
+- Phase 22 (D113 to D117, D119): 0066 `alert_lines` (append-only, seeded 6000 / 5 / 20 / 10) and `alert_lines_current()`,
+  `centres.internal` (the Smoke centre, set by the session; left out of the active counts, the figures and the day's cost
+  line), the writers `admin_set_model`, `admin_set_alert_lines`, `admin_set_allowance` (each with its audit row), the reads
+  `admin_models`, `admin_model`; `alert_facts`' stuck minutes follow the lines. 0067 the job kind `weekly_report` (no centre)
+  with `schedule_weekly_report` (pg_cron Monday 02:30 UTC) and `admin_send_report`, `admin_figures`, `admin_reasons_week`
+  (a menu's reason by `admin_reason_presets()`, any other `typed`), `admin_eval_runs` (a run with no kinds is not the last),
+  `admin_run_evals` (its `day` names the minute so its calls never replay another run's), `admin_syllabi`, `admin_syllabus`,
+  `admin_report_last`. 0068 `reduce_old_inputs` (a student's input to `{ reduced_at, kind, student_id }` after 90 days),
+  `admin_call`'s `input_reduced` and typed reasons, `school_items.preparations`, `notifications.attempts` and
+  `retry_notification`. A test that appends to `ai_models` or `alert_lines` deletes its rows as the database's owner, so
+  the other files read the seed.

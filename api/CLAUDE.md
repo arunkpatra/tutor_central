@@ -97,7 +97,8 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
 - Push (D88): `APNS_KEY`, `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_TOPIC`; production must have them, a local run without
   them sends to a pusher in memory. The tick sends the outbox (`notifications`, `sendDue`) before it drains; a token's
   `environment` picks APNs' host (Debug builds are `sandbox`); 410 or `BadDeviceToken` retires the token; a dropped
-  connection (no answer from Apple) is tried once more at once; Apple's 429 and 5xx are not retried. `GET /jobs/health`
+  connection (no answer from Apple) is tried once more at once; Apple's 429 and 5xx (and a second no-answer) set the row due
+  a minute later, three times at most (`retry_notification`, Phase 22), then failed. `GET /jobs/health`
   behind the bearer renders one page and sends to a dummy token: `{ pdf: 1, apns: true }` when Apple took the key.
 - A call's key replays its answer within a day, the fake's too: a local run on the real models after a fake run under the
   same keys gets the fake's text at no cost (clear those `ai_generations` rows locally first).
@@ -145,3 +146,13 @@ SUPABASE_SERVICE_ROLE_KEY=…` from `supabase status -o env` on the command line
   the plan again, the exam job after a report) is live. A material draft is keyed `plan:<batch>:<day>:make:<n>:<hash>`
   (its check and repair hang off it), so the same request that day replays; the keep's key stays `<job>:make:<n>`. A V1 result's
   PDF is the `pdf` job's `gen-<id>.pdf` (`pdf/paper.ts`), queued by the route after the answer is kept.
+
+- Phase 22 (D113 to D117, D119): the alerts job reads its four lines from `alert_lines_current()` each run (`Lines`,
+  `DEFAULT_LINES` the seed's); the model table's refresh keeps a kind and step's last good row when a new one names a model
+  not in the price sheet, and logs "a model row is not priced". The `weekly_report` job (`jobs/kinds/weekly-report.ts`,
+  `report/text.ts`, `report/db.ts`): one step `send`, the week asked and the one before from `admin_figures`, the board's
+  words to `ALERT_EMAIL` through the alerts' Resend sender; no AI call. The sweep's retention step calls `reduce_old_inputs`
+  (90 days, 500 a run) and names `reduced`. The exam job writes each batch's split to `preparations` and the first batch's
+  (the first student added) to `preparation`. `pausedWords(kind)` is the switched-off words, which `contract.ts`' `portal()`
+  carries to the portal with `EVAL_KINDS` and the prompt versions. `api/` has no Biome config: never run Biome with
+  `--write` here (its defaults reformat every file).

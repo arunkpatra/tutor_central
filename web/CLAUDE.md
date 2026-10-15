@@ -26,3 +26,7 @@ server code, no client JavaScript of its own.
   keeps changes this page in the same phase. The privacy page and the terms each keep their own "Last changed" constant.
 
 Commands: `bun run dev` (local on :3000); `bun run check`; `bun check --only=web`; `bun web-shots`; `gh workflow run deploy-web`.
+
+- Phase 22 (D117): `/trust` says what was sent about a student is kept 90 days beside what came back, then only what came back
+  with a mark that something was sent, and that staff never see what was sent about a student whose parent has not agreed.
+  `TRUST_UPDATED` is the day the words go live.

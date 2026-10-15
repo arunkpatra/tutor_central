@@ -138,6 +138,15 @@ the live site were (session 17). The opening fade (P7-Launch-Fade) is the owner'
 | T19 | On the note day, Today → Read on a student whose parent writes in Kannada → read the note and the English beside it → Send on WhatsApp → Open WhatsApp. | The note is in Kannada script, names in Kannada too, every fact one the week's record holds (no score or test not in it); the English says the same. WhatsApp opens the parent's chat with it, signed by the tutor. |
 | T20 | On the morning of an exam's mock day (a real exam added from the school's message, three or more days ahead): open the exam's page before and after the first batch. | Before the mock is made, "Being made"; within a few minutes "Ready" and Mark from a photo. Mark one real answered mock from a photo → Save: the student's row says "working out the last two days", then the last two days change with the Changed chip. |
 
+### Phase 22: what the round adds (build 31 or later)
+
+T16 and T17 above are the push and the plan made overnight: run them in the round on the round's build. One more needs a
+real iPhone, because the simulator has no Files or WhatsApp to share into:
+
+| Id | Do | Expect |
+|---|---|---|
+| T21 | A student whose record has a few weeks in it → their page → Export → Make the file → Share → Save to Files (or send it to yourself on WhatsApp) → open it. | The file opens and holds the student's details, the classes they came to, the checks and marks, the messages sent to the parent and what the app made for them. It names nobody else. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |

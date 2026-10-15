@@ -1694,3 +1694,10 @@ What the build settles (states no board draws, in the boards' grammar): a call w
 not know is refused under the field ("Not a model this API knows"); the weekly report's Send now answers in the card ("Sent
 to the alert address") as a job's Retry answers in its row; an eval run already queued today answers "A run is already
 queued: see the Jobs page".
+
+What the build settled (session 45): the nav gains each page with its page; the Models list shows every kind, switched off
+first, with Show (All kinds, Switched off, Changed by hand); a current model the portal does not know shows as itself,
+"(not known here)"; the allowance refuses 0 calls ("Calls a month: 1 or more"); the lines' error words name their limits;
+the run card's chips are links that toggle the kind in the address, the chosen ones marked for a screen reader; the opened
+syllabus's line ends "last changed <day>" and shows every chapter; a reason the tutor typed reads "typed by the tutor" on
+the call page and "Typed by the tutor" on the figures.

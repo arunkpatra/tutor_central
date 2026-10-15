@@ -227,5 +227,8 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
   first (`ResultPDF.serverLater`). At the accessibility sizes a footer's Copy pair and a row's trailing chip or button are
   `AdaptiveRow`s (`FooterPairUseTests`, `ExamRowsTypeSizeTests`).
 
+- Phase 22 (D119): the app keeps working out an exam's split by the shared rules; `school_items.preparations` (each batch's
+  split, written by the server's exam job) is not read by the app. No app change in Phase 22.
+
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

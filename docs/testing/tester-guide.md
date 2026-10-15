@@ -20,10 +20,12 @@ decides what we fix before it goes live.
 3. Open Tutor Central. Sign in with Apple, with Google, or with your email (a six-digit code is sent to you; check
    Spam if it is slow to arrive).
 4. Give your centre a name. Then add your students with their class and school, or photograph the paper register you
-   already keep and let the app read it. Put them in a batch: the days and times you teach them.
+   already keep and let the app read it. Put them in a batch: the days and times you teach them. When the app asks,
+   allow notifications: the plan for each day is made overnight, and the app tells you when it is ready.
 
 Use it for your real centre, the way you would use any app. Your records are yours: they are kept in India, nobody
-but you can see them, and nothing is sent to a parent unless you tap Send in WhatsApp. Nothing of a student's own work or
+but you can see them (our own staff can open them only to help with a problem, with the reason written down), and nothing
+is sent to a parent unless you tap Send in WhatsApp. Nothing of a student's own work or
 progress goes to the AI service until that student's parent has agreed, and the app gives you the message to ask them with. If you would
 rather not use real names, made-up students are fine too.
 
@@ -44,6 +46,8 @@ rather not use real names, made-up students are fine too.
 7. Make something on your own: More, then "Make something". Try a sheet for a class, and a mock test for a coming test.
 8. Open More, then Reports, then Progress, and see each student's month.
 9. Once, switch off Wi-Fi and mobile data and open the app. See what it shows, and close a class. Switch them back on.
+10. On one student's page, under Export, tap "Make the file", then Share, and send it to yourself. It is everything the
+    app keeps about that student, in one file, ready to give a parent who asks.
 
 Everything else is yours to explore. If something is slow, confusing, wrong, or missing, we want to hear it.
 
@@ -68,7 +72,8 @@ Settings, under About.
 - The sheets and questions are written by an AI service from the chapter and skill names, with nothing about a student.
   A student's own work or progress, and the notes to their parent, go to it only after that student's parent has agreed.
   The service normally deletes what it reads within 30 days and never uses it for training. We keep no copy of a
-  student's paper or your register; a photo of a school's message is kept with what it adds to School. More at
-  tutorcentral.in/trust.
+  student's paper or your register; a photo of a school's message is kept with what it adds to School. What the app sent
+  about a student for a note or a marked paper is kept for 90 days beside what came back, so you can see what a note was
+  written from; after that only what came back is kept. More at tutorcentral.in/trust.
 - When the three weeks end you can keep using the app until it is in the App Store. If you would rather remove
   everything: More, then Account, then "Delete account permanently".

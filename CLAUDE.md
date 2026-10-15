@@ -73,7 +73,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |
 | UI polish list: small visual and copy fixes, taken when the owner chooses | `plan/ui-polish.md` | Its "How it works" |
 | Scripts: check, shots, web-shots, admin-shots, store-shots, pr-shots, smoke | `tools/` | `CLAUDE.md` Commands |
-| Runbooks: driving the app in the simulator, and the admin portal in the browser, against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32), `docs/runbooks/admin.md` |
+| Runbooks: driving the app in the simulator, and the admin portal in the browser, against the local stack | `docs/runbooks/` | `docs/runbooks/simulator.md` (D32), `docs/runbooks/admin.md` (its section 10: the controls' hand run) |
 | Device tests: what a tester checks on a real iPhone (camera, WhatsApp, network, real handwriting), with a log | `docs/testing/device-tests.md` | Its "How to run" |
 
 ## Engineering standard
