@@ -109,6 +109,20 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"alert_lines": {
+                  Row: {
+                    "cost_day_paise": number,"created_at": string,"error_rate_min_requests": number,"error_rate_pct": number,"id": string,"set_by": string,"since": string,"stuck_minutes": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "cost_day_paise": number,"created_at"?: string,"error_rate_min_requests": number,"error_rate_pct": number,"id"?: string,"set_by"?: string,"since"?: string,"stuck_minutes": number,"updated_at"?: string
+                  }
+                  Update: {
+                    "cost_day_paise"?: number,"created_at"?: string,"error_rate_min_requests"?: number,"error_rate_pct"?: number,"id"?: string,"set_by"?: string,"since"?: string,"stuck_minutes"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"alerts": {
                   Row: {
                     "acknowledged_at": string | null,"acknowledged_by": string | null,"centre_id": string | null,"created_at": string,"id": string,"key": string,"kind": string,"message": string | null,"raised_at": string,"threshold": number | null,"updated_at": string,"value": number | null
@@ -305,14 +319,14 @@ isOneToOne: false
                   ]
                 },"centres": {
                   Row: {
-                    "ai_allowance": number,"ai_allowance_paise": number,"ai_consent_at": string | null,"created_at": string,"currency": string,"id": string,"name": string,"owner_id": string,"payment_link": string | null,"send_receipts": boolean,"updated_at": string,"upi_confirmed_at": string | null,"upi_id": string | null,"whatsapp_number": string | null
+                    "ai_allowance": number,"ai_allowance_paise": number,"ai_consent_at": string | null,"created_at": string,"currency": string,"id": string,"internal": boolean,"name": string,"owner_id": string,"payment_link": string | null,"send_receipts": boolean,"updated_at": string,"upi_confirmed_at": string | null,"upi_id": string | null,"whatsapp_number": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "ai_allowance"?: number,"ai_allowance_paise"?: number,"ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name": string,"owner_id": string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
+                    "ai_allowance"?: number,"ai_allowance_paise"?: number,"ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"internal"?: boolean,"name": string,"owner_id": string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
                   }
                   Update: {
-                    "ai_allowance"?: number,"ai_allowance_paise"?: number,"ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name"?: string,"owner_id"?: string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
+                    "ai_allowance"?: number,"ai_allowance_paise"?: number,"ai_consent_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"internal"?: boolean,"name"?: string,"owner_id"?: string,"payment_link"?: string | null,"send_receipts"?: boolean,"updated_at"?: string,"upi_confirmed_at"?: string | null,"upi_id"?: string | null,"whatsapp_number"?: string | null
                   }
                   Relationships: [
                     
@@ -1065,6 +1079,9 @@ isOneToOne: false
 "admin_cost_tiles":
 { Args: { "p_month": string }; Returns: Json
                            },
+"admin_email":
+{ Args: { "p_admin": string }; Returns: string
+                           },
 "admin_errors_by_route":
 { Args: { "p_hours": number }; Returns: Json
                            },
@@ -1085,6 +1102,12 @@ isOneToOne: false
                            },
 "admin_kind_group":
 { Args: { "p_kind": string }; Returns: string
+                           },
+"admin_model":
+{ Args: { "p_kind": string }; Returns: Json
+                           },
+"admin_models":
+{ Args: Record<PropertyKey, never>; Returns: Json
                            },
 "admin_month_cost":
 { Args: { "p_centre": string,"p_month": string }; Returns: {
@@ -1108,6 +1131,15 @@ isOneToOne: false
 "admin_retry_job":
 { Args: { "p_admin": string,"p_ip": string,"p_job": string }; Returns: boolean
                            },
+"admin_set_alert_lines":
+{ Args: { "p_admin": string,"p_cost_day_paise": number,"p_error_rate_min_requests": number,"p_error_rate_pct": number,"p_ip": string,"p_stuck_minutes": number }; Returns: string
+                           },
+"admin_set_allowance":
+{ Args: { "p_admin": string,"p_calls": number,"p_centre": string,"p_ip": string,"p_paise": number,"p_reason": string }; Returns: boolean
+                           },
+"admin_set_model":
+{ Args: { "p_admin": string,"p_effort": string,"p_enabled": boolean,"p_fallback": string,"p_ip": string,"p_kind": string,"p_model": string,"p_note": string,"p_step": string }; Returns: string
+                           },
 "admin_today":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
@@ -1118,6 +1150,11 @@ isOneToOne: false
                            },
 "alert_facts":
 { Args: { "p_now": string }; Returns: Json
+                           },
+"alert_lines_current":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "cost_day_paise": number,"error_rate_min_requests": number,"error_rate_pct": number,"set_by": string,"since": string,"stuck_minutes": number
+            }[]
                            },
 "archive_class":
 { Args: { "p_class": string }; Returns: undefined
