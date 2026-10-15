@@ -19,7 +19,8 @@ export async function acknowledge(form: FormData): Promise<void> {
 /** A number of 0 or more as typed: whole, or with a decimal where `decimal`. Null for anything else. */
 function amount(form: FormData, name: string, decimal = false): number | null {
   const raw = String(form.get(name) ?? "").trim();
-  if (!(decimal ? /^\d+(\.\d+)?$/ : /^\d+$/).test(raw)) return null;
+  // Seven digits at most: the columns are integers, and a larger line means nothing here.
+  if (!(decimal ? /^\d{1,7}(\.\d{1,2})?$/ : /^\d{1,7}$/).test(raw)) return null;
   const n = Number(raw);
   return Number.isFinite(n) ? n : null;
 }
@@ -31,7 +32,9 @@ export async function saveLines(form: FormData): Promise<void> {
   const rate = amount(form, "error_rate", true);
   const min = amount(form, "error_min");
   const stuck = amount(form, "stuck");
-  if (cost === null || rate === null || rate > 100 || min === null || stuck === null) redirect("/alerts?bad=lines");
+  // A stuck line of 0 would call every running job stuck.
+  if (cost === null || cost > 99_999 || rate === null || rate > 100 || min === null || stuck === null || stuck < 1)
+    redirect("/alerts?bad=lines");
   await data().setLines(
     admin.userId,
     {

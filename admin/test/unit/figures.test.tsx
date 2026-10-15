@@ -62,3 +62,13 @@ test("Send now queues the report and comes back sent", async () => {
   expect(to).toContain("/figures?sent=1");
   expect(asked).toBe(1);
 });
+
+test("a week with no active tutor shows a dash for the cost per tutor (review R-portal-6)", async () => {
+  const weeks = await previewData.figures(8);
+  const none = {
+    ...previewData,
+    figures: async () => weeks.map((w, i) => (i === 0 ? { ...w, tutors_active: 0, per_active_tutor_paise: 0 } : w)),
+  };
+  const html = await withData(none, () => page());
+  expect(html).toMatch(/<span class="k">Cost per active tutor<\/span>—/);
+});

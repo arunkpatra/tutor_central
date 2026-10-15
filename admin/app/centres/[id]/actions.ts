@@ -45,6 +45,8 @@ export async function setAllowance(form: FormData): Promise<void> {
   const calls = whole(form, "calls");
   const cap = whole(form, "cap");
   if (calls === null || cap === null) redirect(`/centres/${id}?allowance=1&bad=1`);
+  // No calls at all would refuse every draft; a centre is stopped by switching a kind off, not here.
+  if (calls < 1) redirect(`/centres/${id}?allowance=1&bad=calls`);
   if (!(await data().setAllowance(admin.userId, id, calls, cap * 100, reason, await callerIp()))) notFound();
   redirect(`/centres/${id}`);
 }

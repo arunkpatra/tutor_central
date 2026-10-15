@@ -154,11 +154,20 @@ export default async function EvalsPage({
           <input type="hidden" name="kinds" value={chosen.join(",")} />
           <div className="chips">
             {EVAL_KINDS.map((k) => (
-              <PageLink key={k} href={toggle(k)} className={chosen.includes(k) ? "chip accent" : "chip"}>
+              <PageLink
+                key={k}
+                href={toggle(k)}
+                className={chosen.includes(k) ? "chip accent" : "chip"}
+                aria-current={chosen.includes(k) ? "true" : undefined}
+              >
                 {k}
               </PageLink>
             ))}
-            <PageLink href="/evals" className={chosen.length === 0 ? "chip accent" : "chip"}>
+            <PageLink
+              href="/evals"
+              className={chosen.length === 0 ? "chip accent" : "chip"}
+              aria-current={chosen.length === 0 ? "true" : undefined}
+            >
               {EVALS.every}
             </PageLink>
           </div>

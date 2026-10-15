@@ -35,7 +35,9 @@ export async function saveStep(form: FormData): Promise<void> {
   const model = text(form, "model");
   const fallback = text(form, "fallback");
   if (!knownModel(model) || (fallback !== "" && !knownModel(fallback))) redirect(`/models/${kind}?bad=model`);
-  const enabled = step === "draft" ? (await draftOf(kind)).enabled : true;
+  // Every step of a kind the table holds (a kind it never held is not found, not an error page).
+  const draft = await draftOf(kind);
+  const enabled = step === "draft" ? draft.enabled : true;
   const note = text(form, "note").slice(0, 400);
   const change: ModelChange = { kind, step, model, effort, fallback: fallback || null, enabled, note: note || null };
   await data().setModel(admin.userId, change, await callerIp());

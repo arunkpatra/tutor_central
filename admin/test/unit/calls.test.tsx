@@ -118,3 +118,24 @@ test("a call whose input was reduced after 90 days says so in the Held line's pl
   expect(html).not.toContain('"week"');
   expect(html).toContain("Output");
 });
+
+test("a reason the tutor typed is never shown on the call page: it may name a student (review R-portal-2)", async () => {
+  const base = (await previewData.call("preview-feedback"))!;
+  const typed = {
+    ...previewData,
+    call: async () => ({
+      ...base,
+      feedback: [{ kind: "again" as const, reason: "typed", created_at: base.created_at }],
+    }),
+  };
+  const html = renderToStaticMarkup(
+    await withData(typed, () => CallPage({ params: Promise.resolve({ id: "preview-feedback" }) })),
+  );
+  expect(html).toContain("made again · typed by the tutor ·");
+  // Two edits in the same minute draw two lines, keyed apart.
+  const twice = { ...previewData, call: async () => ({ ...base, feedback: [base.feedback![1]!, base.feedback![1]!] }) };
+  const both = renderToStaticMarkup(
+    await withData(twice, () => CallPage({ params: Promise.resolve({ id: "preview-feedback" }) })),
+  );
+  expect(both.match(/edited at Send/g)?.length).toBe(2);
+});

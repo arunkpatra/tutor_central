@@ -79,6 +79,7 @@ export const ALLOWANCE = {
   reasonHint: "Who asked, and why",
   empty: "Say why: the reason goes into the audit.",
   bad: "Whole numbers, 0 or more",
+  badCalls: "Calls a month: 1 or more",
   cancel: "Cancel",
   save: "Save the allowance",
 } as const;

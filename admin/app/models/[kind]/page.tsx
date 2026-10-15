@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Frame } from "@/components/Frame";
 import { Cell, Chip, Dialog, Field, FormRow, LinkButton, Row, Section, Select, Table, Title } from "@/components/parts";
 import { SubmitButton } from "@/components/SubmitButton";
-import { EFFORTS, KNOWN_MODELS, MODEL, MODELS, modelName, STEPS } from "@/content/models";
+import { EFFORTS, KNOWN_MODELS, knownModel, MODEL, MODELS, modelName, STEPS } from "@/content/models";
 import { NONE, PENDING } from "@/content/words";
 import { requireAdmin } from "@/lib/admin";
 import { now } from "@/lib/clock";
@@ -40,6 +40,8 @@ export default async function ModelPage({
   const draft = model.current.find((s) => s.step === "draft");
   const on = draft?.enabled ?? true;
   const models = KNOWN_MODELS.map((m) => ({ value: m, label: modelName(m) }));
+  // A row written by SQL can name a model this portal does not know: shown as it is, so Save never changes it unasked.
+  const odd = draft && !knownModel(draft.model) ? [{ value: draft.model, label: MODEL.unknownModel(draft.model) }] : [];
   return (
     <Frame current="Models">
       <Title eyebrow={MODEL.eyebrow(kind)} title={kind} lead={MODEL.lead(kind)}>
@@ -100,7 +102,7 @@ export default async function ModelPage({
             <Select
               label={MODEL.head.model}
               name="model"
-              options={models}
+              options={[...odd, ...models]}
               defaultValue={draft?.model}
               error={q.bad === "model" ? MODEL.badModel : undefined}
             />

@@ -112,6 +112,7 @@ export const MODEL = {
   saveNote:
     "The API reads it within a minute. The step stays switched on; Switch off above stops the whole kind. Written to the audit.",
   badModel: "Not a model this API knows",
+  unknownModel: (model: string) => `${model} (not known here)`,
   history: "History",
   historyLead: "Every row ever written for this kind, newest first. Nothing here is edited or deleted.",
   historyHead: {

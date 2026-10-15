@@ -69,3 +69,9 @@ test("Run: the chosen kinds that have a golden set, or every kind; busy when one
   expect(seen[1]).toBeNull();
   expect(await withData(fake(null), () => digest(runEvals(form("plan"))))).toContain("/evals?queued=busy");
 });
+
+test("each kind chip says whether it is chosen (review R-portal-8)", async () => {
+  const html = await page({ kinds: "plan" });
+  expect(html).toContain('<a class="chip accent" aria-current="true" href="/evals">plan</a>');
+  expect(html).toContain('<a class="chip" href="/evals?kinds=brief%2Cplan">brief</a>');
+});
