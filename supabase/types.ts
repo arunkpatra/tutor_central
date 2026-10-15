@@ -1079,6 +1079,9 @@ isOneToOne: false
 "admin_cost_tiles":
 { Args: { "p_month": string }; Returns: Json
                            },
+"admin_counted":
+{ Args: { "p_centre": string }; Returns: boolean
+                           },
 "admin_email":
 { Args: { "p_admin": string }; Returns: string
                            },
@@ -1087,6 +1090,12 @@ isOneToOne: false
                            },
 "admin_errors_recent":
 { Args: { "p_limit": number }; Returns: Json
+                           },
+"admin_eval_runs":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_figures":
+{ Args: { "p_weeks": number }; Returns: Json
                            },
 "admin_job":
 { Args: { "p_id": string }; Returns: Json
@@ -1109,10 +1118,16 @@ isOneToOne: false
 "admin_models":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
+"admin_monday":
+{ Args: { "p_day": string }; Returns: string
+                           },
 "admin_month_cost":
 { Args: { "p_centre": string,"p_month": string }; Returns: {
               "calls": number,"paise": number
             }[]
+                           },
+"admin_note_kinds":
+{ Args: Record<PropertyKey, never>; Returns: (Database["public"]['Enums']["message_kind"])[]
                            },
 "admin_open_record":
 { Args: { "p_admin": string,"p_centre": string,"p_ip": string,"p_reason": string }; Returns: Json
@@ -1122,14 +1137,29 @@ isOneToOne: false
               "centre_id": string,"user_id": string
             }[]
                            },
+"admin_reason_presets":
+{ Args: Record<PropertyKey, never>; Returns: (string)[]
+                           },
+"admin_reasons_week":
+{ Args: { "p_monday": string }; Returns: Json
+                           },
 "admin_record":
 { Args: { "p_centre": string }; Returns: Json
                            },
 "admin_record_opened":
 { Args: { "p_admin": string,"p_audit": string }; Returns: Json
                            },
+"admin_report_last":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "admin_retry_job":
 { Args: { "p_admin": string,"p_ip": string,"p_job": string }; Returns: boolean
+                           },
+"admin_run_evals":
+{ Args: { "p_admin": string,"p_ip": string,"p_kinds": (string)[] }; Returns: string
+                           },
+"admin_send_report":
+{ Args: { "p_admin": string,"p_ip": string }; Returns: string
                            },
 "admin_set_alert_lines":
 { Args: { "p_admin": string,"p_cost_day_paise": number,"p_error_rate_min_requests": number,"p_error_rate_pct": number,"p_ip": string,"p_stuck_minutes": number }; Returns: string
@@ -1139,6 +1169,12 @@ isOneToOne: false
                            },
 "admin_set_model":
 { Args: { "p_admin": string,"p_effort": string,"p_enabled": boolean,"p_fallback": string,"p_ip": string,"p_kind": string,"p_model": string,"p_note": string,"p_step": string }; Returns: string
+                           },
+"admin_syllabi":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_syllabus":
+{ Args: { "p_id": string }; Returns: Json
                            },
 "admin_today":
 { Args: Record<PropertyKey, never>; Returns: string
@@ -1378,6 +1414,9 @@ isOneToOne: false
 "schedule_reminders":
 { Args: { "p_now"?: string }; Returns: number
                            },
+"schedule_weekly_report":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
 "start_ai_call":
 { Args: { "p_agent_step"?: string,"p_centre": string,"p_input": Json,"p_input_hash"?: string,"p_job"?: string,"p_key"?: string,"p_kind": Database["public"]['Enums']["ai_kind"],"p_model": string,"p_request_id"?: string,"p_student"?: string }; Returns: Json
                            },
@@ -1415,7 +1454,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper"|"plan"|"sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report"|"parse_school"|"parse_textbook"|"not_on_track"|"read_marks","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","job_kind": "plan"|"artefact"|"note_day"|"reminder_sweep"|"export"|"pdf"|"eval_run"|"sweep"|"alerts"|"exam_prep","job_state": "queued"|"running"|"waiting"|"done"|"failed"|"cancelled","message_channel": "whatsapp_link"|"copied","message_kind": "reminder"|"receipt"|"absence"|"progress"|"note"|"can_do"|"test_tomorrow"|"homework"|"consent"|"forward_ask"|"not_on_track","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up"|"worked_example"|"figure","school_item_kind": "exam"|"homework"|"notice"|"holiday","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
+            "ai_kind": "paper"|"homework"|"worksheet"|"progress_note"|"scan_register"|"check_paper"|"plan"|"sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report"|"parse_school"|"parse_textbook"|"not_on_track"|"read_marks","ai_status": "ok"|"failed"|"pending","artefact_kind": "sheet"|"worked_example"|"figure"|"brief"|"check"|"placement"|"mock"|"note"|"can_do"|"test_tomorrow"|"gap_report","artefact_source": "made"|"own","attendance_status": "present"|"absent","centre_role": "owner"|"teacher","fee_status": "due"|"paid"|"waived","homework_status": "given"|"done"|"partial"|"not_done","job_kind": "plan"|"artefact"|"note_day"|"reminder_sweep"|"export"|"pdf"|"eval_run"|"sweep"|"alerts"|"exam_prep"|"weekly_report","job_state": "queued"|"running"|"waiting"|"done"|"failed"|"cancelled","message_channel": "whatsapp_link"|"copied","message_kind": "reminder"|"receipt"|"absence"|"progress"|"note"|"can_do"|"test_tomorrow"|"homework"|"consent"|"forward_ask"|"not_on_track","paid_method": "upi"|"cash"|"other","plan_item_kind": "teach"|"practise"|"check"|"homework"|"brief"|"catch_up"|"worked_example"|"figure","school_item_kind": "exam"|"homework"|"notice"|"holiday","skill_state": "not_started"|"taught"|"practising"|"secure"|"revisit"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1535,7 +1574,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper", "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report", "parse_school", "parse_textbook", "not_on_track", "read_marks"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"job_kind": ["plan", "artefact", "note_day", "reminder_sweep", "export", "pdf", "eval_run", "sweep", "alerts", "exam_prep"],"job_state": ["queued", "running", "waiting", "done", "failed", "cancelled"],"message_channel": ["whatsapp_link", "copied"],"message_kind": ["reminder", "receipt", "absence", "progress", "note", "can_do", "test_tomorrow", "homework", "consent", "forward_ask", "not_on_track"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up", "worked_example", "figure"],"school_item_kind": ["exam", "homework", "notice", "holiday"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
+            "ai_kind": ["paper", "homework", "worksheet", "progress_note", "scan_register", "check_paper", "plan", "sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report", "parse_school", "parse_textbook", "not_on_track", "read_marks"],"ai_status": ["ok", "failed", "pending"],"artefact_kind": ["sheet", "worked_example", "figure", "brief", "check", "placement", "mock", "note", "can_do", "test_tomorrow", "gap_report"],"artefact_source": ["made", "own"],"attendance_status": ["present", "absent"],"centre_role": ["owner", "teacher"],"fee_status": ["due", "paid", "waived"],"homework_status": ["given", "done", "partial", "not_done"],"job_kind": ["plan", "artefact", "note_day", "reminder_sweep", "export", "pdf", "eval_run", "sweep", "alerts", "exam_prep", "weekly_report"],"job_state": ["queued", "running", "waiting", "done", "failed", "cancelled"],"message_channel": ["whatsapp_link", "copied"],"message_kind": ["reminder", "receipt", "absence", "progress", "note", "can_do", "test_tomorrow", "homework", "consent", "forward_ask", "not_on_track"],"paid_method": ["upi", "cash", "other"],"plan_item_kind": ["teach", "practise", "check", "homework", "brief", "catch_up", "worked_example", "figure"],"school_item_kind": ["exam", "homework", "notice", "holiday"],"skill_state": ["not_started", "taught", "practising", "secure", "revisit"]
           }
         }
 } as const

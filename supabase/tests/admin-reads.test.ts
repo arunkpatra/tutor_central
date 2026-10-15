@@ -298,3 +298,19 @@ test("admin_call carries the feedback rows, oldest first (D107)", async () => {
   const none = (await svc.rpc("admin_call", { p_id: noteWithConsent })).data as { feedback: unknown[] };
   expect(none.feedback).toEqual([]);
 });
+
+test("the syllabi and one syllabus with its chapters and skills (0067)", async () => {
+  type Syllabi = { tiles: { syllabi: number; boards: string[]; classes: string[]; chapters: number }; rows: { id: string; board: string; class_level: string; subject: string; chapters: number; skills: number }[] };
+  const list = (await svc.rpc("admin_syllabi")).data as Syllabi;
+  expect(list.tiles.syllabi).toBe(list.rows.length);
+  expect(list.tiles.boards).toContain("cbse");
+  const maths = list.rows.find((r) => r.board === "cbse" && r.class_level === "8" && r.subject === "Mathematics")!;
+  expect(maths.chapters).toBeGreaterThan(0);
+  const one = (await svc.rpc("admin_syllabus", { p_id: maths.id })).data as { subject: string; chapters: { no: number; name: string; skills: string[]; marks: number | null }[] };
+  expect(one.subject).toBe("Mathematics");
+  expect(one.chapters).toHaveLength(maths.chapters);
+  expect(one.chapters[0]).toMatchObject({ no: 1, marks: null });
+  expect(one.chapters.reduce((n, c) => n + c.skills.length, 0)).toBe(maths.skills);
+  expect((await svc.rpc("admin_syllabus", { p_id: crypto.randomUUID() })).data).toBeNull();
+  expect((await a.rpc("admin_syllabi")).error?.code).toBe("42501");
+});
