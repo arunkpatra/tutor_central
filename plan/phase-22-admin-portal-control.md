@@ -1,6 +1,6 @@
 # Phase 22: V3 the admin portal, control and analytics
 
-**Status:** Not started. **Depends on:** Phases 19 and 21; boards for the new pages approved first.
+**Status:** Planned (session 44, 2026-10-15): the 41 boards of row 30 (canvas 2) and `phase-22-plan.md` approved by the owner; the build from `plan/resume/043-phase-22-build.md`. **Depends on:** Phases 19 and 21.
 
 ## Goal
 

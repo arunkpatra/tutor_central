@@ -6,9 +6,9 @@ short and true. History belongs in git and in the phase files, not here.
 **Last updated:** 2026-10-15, session 44's close (Phase 22's reads, boards and plan, on Fable 5.1). **Session 44:** production read
 (the first batched morning: ₹3.26, 27 minutes, no fallback; no exam job, no feedback row, no alert since 14 October); 41 boards
 drawn and approved on a second canvas (canvas 1 holds its 512 files; the owner: "1, all three groups approved, keep the card");
-`plan/phase-22-plan.md` written (fifteen tasks, twelve pull requests, migrations 0066 to 0068, D113 to D118 proposed, no real-call
-budget); resume 043 written. The record in `plan/sessions/044/`.
-**Next:** the owner reviews `plan/phase-22-plan.md`; then resume 043 (`plan/resume/043-phase-22-build.md`, on Opus 5.5) builds
+`plan/phase-22-plan.md` written (fifteen tasks, twelve pull requests, migrations 0066 to 0068, no real-call budget) and
+approved by the owner ("plan approved": D113 to D118 in `plan/README.md`); resume 043 written. The record in `plan/sessions/044/`.
+**Next:** resume 043 (`plan/resume/043-phase-22-build.md`, on Opus 5.5) builds
 Phase 22 (its Task 1 the flaky `jobs.test.ts` clock seen once in session 44). The order (D81): Phase 22, then the external
 testing round, then Phase 16.
 
@@ -41,7 +41,7 @@ testing round, then Phase 16.
 | 19 V3 the admin portal, reading | Done (session 39, 2026-10-13), PRs #262 to #289; hand runs #286 | "As built" in `phase-19-admin-portal-reading.md`; admin.tutorcentral.in live in `bom1` with loading states (D97); 0046 to 0051 and the API at `bf4af37` deployed |
 | 20 V3 AI quality, the material | Built (session 41, 2026-10-13), PRs #291 to #317; hand runs #313 | "As built" in `phase-20-ai-quality-material.md`; deployed (0052 to 0056, API 29e79fb); 1.0.0 (30); D103, D104 |
 | 21 V3 AI quality, parents and exams | Built (session 43, 2026-10-14), PRs #318 to #349; hand runs #343 | "As built" in `phase-21-ai-quality-parents-and-exams.md`; deployed (0057 to 0065, API 69d8389); 1.0.0 (31); D111, D112; device tests T19, T20 |
-| 22 V3 the admin portal, control and analytics | Planned (session 44, 2026-10-15): boards approved, `phase-22-plan.md` awaiting the owner's review | Scope file `phase-22-admin-portal-control.md`; the build from resume 043 on Opus 5.5 |
+| 22 V3 the admin portal, control and analytics | Planned (session 44, 2026-10-15): boards approved, `phase-22-plan.md` approved 2026-10-15 (D113 to D118) | Scope file `phase-22-admin-portal-control.md`; the build from resume 043 on Opus 5.5 |
 | V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17, 18 and 19 built and deployed (D83 to D98); Phase 20 built and deployed (D99 to D105); Phase 21 built and deployed (D106 to D112) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight

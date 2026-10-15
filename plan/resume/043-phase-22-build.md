@@ -2,8 +2,8 @@
 
 Paste this into a new Claude Code session opened on `/Users/arunkpatra/codebase/tutor_central`, model Claude Opus 5.5
 (D17: plans on Fable, builds on Opus). Phase 22 is planned: the 41 boards of row 30 on canvas 2
-(`docs/design/mockups/P22-*`, https://claude.ai/artifact/JV9q2AGk1fmMDVjsGgpAqw) and `plan/phase-22-plan.md`, the boards
-approved by the owner 2026-10-15 and the plan awaiting his review (ask for it first if `plan/STATE.md` still says so).
+(`docs/design/mockups/P22-*`, https://claude.ai/artifact/JV9q2AGk1fmMDVjsGgpAqw) and `plan/phase-22-plan.md`, both
+approved by the owner 2026-10-15 ("plan approved"; D113 to D118 are in `plan/README.md`).
 Production holds migrations 0001 to 0065, the API at 69d8389 and the portal at its Phase 21 deploy, both in `bom1`;
 1.0.0 (31) is on the owner's iPhone ("build 31 fine"). This session builds the phase task by task, inline, with one ledger,
 deploys twice plus the portal and the website, ships build 32, runs the hand runs and the review, reads the round's documents
@@ -20,8 +20,8 @@ come the external testing round, then Phase 16 (D81). Read, in this order, befor
    `docs/design/README.md`, `docs/working/pre-pr-proof.md`, `docs/working/testing.md`, `docs/runbooks/admin.md`.
 2. `plan/STATE.md`, `plan/SESSIONS.md`, `plan/README.md` (D1 to D112; in particular D68 a phase fixes what it finds, D76,
    D78, D79, D82, D83, D84, D86, D87, D94 to D97, D100, D107, D109, D112).
-3. `plan/phase-22-plan.md` whole: the global constraints (Phase 21's lessons are binding), the decisions D113 to D118 (to go
-   into `plan/README.md` with the approval, in your first documents commit), the review focus, the file structure, the pull
+3. `plan/phase-22-plan.md` whole: the global constraints (Phase 21's lessons are binding), the decisions D113 to D118 (in
+   `plan/README.md`), the review focus, the file structure, the pull
    requests, the order, the fifteen tasks, the cost.
 4. `plan/phase-22-admin-portal-control.md` (the scope and acceptance), "Phase 22 boards" and "Phase 22 parts" in
    `docs/design/information-architecture.md` and `docs/design/components.md`, the boards themselves (`docs/design/mockups/P22-*`,
@@ -51,8 +51,7 @@ come the external testing round, then Phase 16 (D81). Read, in this order, befor
 
 **Your work:**
 1. Check reality against `STATE.md` (`git fetch`, `git status`, `gh pr list`). `bun check` green. Open
-   `plan/sessions/045/ledger.md`. If the plan is not yet marked approved in `STATE.md`, ask the owner for his review of
-   `plan/phase-22-plan.md` and wait; then D113 to D118 into `plan/README.md` with the date.
+   `plan/sessions/045/ledger.md`.
 2. Execute `plan/phase-22-plan.md` task by task in its order: Task 1 (the flaky test), 2 (0066), 3 (the API's lines and the
    model refresh), 4 and 5 (the portal's controls; Deploy A and the portal), 6 (0067), 7 (the weekly report job), 8 (the
    figures, evals and syllabi pages, the Feedback row), 9 (0068: retention, the split, the push retry), 10 (the app's split by

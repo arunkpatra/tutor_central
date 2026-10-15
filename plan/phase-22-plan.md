@@ -6,8 +6,8 @@
 Written 2026-10-15 (session 44, Fable 5.1) from `phase-22-admin-portal-control.md`, `docs/spec-v3.md` sections 8, 10, 11
 and 13, Phase 19's, 20's and 21's "As built" and ledgers, the 41 boards of row 30 on canvas 2 (`docs/design/mockups/P22-*`,
 "Phase 22 boards" in `docs/design/information-architecture.md`), the production reads of session 44 (`plan/sessions/044/ledger.md`)
-and the code as it is. The boards were approved by the owner 2026-10-15 ("1, all three groups approved, keep the card"); the
-plan waits for his review. The build runs on Opus 5.5 from `resume/043-phase-22-build.md`, inline, task by task, with one ledger
+and the code as it is. The boards were approved by the owner 2026-10-15 ("1, all three groups approved, keep the card") and the plan
+the same day ("plan approved"). The build runs on Opus 5.5 from `resume/043-phase-22-build.md`, inline, task by task, with one ledger
 (`plan/sessions/045/ledger.md`) as sessions 22 to 43 kept.
 
 **Goal:** the owner controls the platform from the portal (a kind's model, effort, fallback and switch with its history; a
@@ -68,8 +68,8 @@ D109, D112; the boards of row 30 (canvas 2).
 
 ## Decisions this plan takes
 
-Everything below was mine to decide and is stated so it can be pushed back on. D113 to D118 go into `plan/README.md` with the
-plan's approval, as D106 to D110 did.
+Everything below was mine to decide and is stated so it can be pushed back on. D113 to D118 are in `plan/README.md` with the
+plan's approval (2026-10-15).
 
 1. **The controls write rows (D113).** `admin_set_model(p_admin, p_kind, p_step, p_model, p_effort, p_fallback, p_enabled,
    p_note, p_ip)` appends an `ai_models` row (`set_by` the admin's email from `admin_users`, `note` the admin's note or reason)

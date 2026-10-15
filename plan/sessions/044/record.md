@@ -25,6 +25,7 @@ ruling and cost is `ledger.md`.
 
 - A second canvas rather than retiring a row ("1").
 - All three board groups approved; the golden sets' run card kept ("keep the card").
+- The plan approved as written ("plan approved"): D113 to D118 in `plan/README.md`.
 
 ## What was decided here (each in the ledger with its cost if wrong)
 
@@ -42,4 +43,4 @@ ruling and cost is `ledger.md`.
 
 ## Next
 
-The owner reviews `plan/phase-22-plan.md`; then resume 043 on Opus 5.5 builds it.
+Resume 043 on Opus 5.5 builds Phase 22.
