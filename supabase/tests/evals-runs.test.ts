@@ -66,6 +66,15 @@ test("a run started by an admin is a job with its kinds and an audit row; a seco
   expect((await svc.from("jobs").select("input").eq("id", every).single()).data?.input).not.toHaveProperty("kinds");
 });
 
+test("a run that measured nothing (no kinds) does not take over the tiles or hide the last failures (review R-db-3)", async () => {
+  const [{ id }] = await sql`insert into public.jobs (centre_id, kind, idempotency_key, state, input, result, finished_at)
+    values (null, 'eval_run', ${`evals:nothing-${stamp}`}, 'done', '{"day":"x"}', '{"day":"x","gate":false,"reason":"no_cases","kinds":{},"failures":[],"cost_paise":0}', now()) returning id`;
+  const runs = (await svc.rpc("admin_eval_runs")).data as Runs;
+  await sql`delete from public.jobs where id = ${id}`;
+  expect(runs.tiles.last_run_paise).toBe(800);
+  expect(runs.failures).toEqual([{ id: "plan-oct-8-science", reasons: ["grade: the tenth chapter, not October's"] }]);
+});
+
 test("with no run yet the read answers empty lists and zeros, never a null (hand run 6, F2)", async () => {
   const kept = await sql`select id from public.jobs where kind = 'eval_run'`;
   await sql`update public.jobs set state = 'cancelled' where kind = 'eval_run'`;

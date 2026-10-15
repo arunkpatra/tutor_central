@@ -297,6 +297,16 @@ test("admin_call carries the feedback rows, oldest first (D107)", async () => {
   expect(call.feedback.map((f) => [f.kind, f.reason])).toEqual([["again", "Less about marks"], ["edit", null]]);
   const none = (await svc.rpc("admin_call", { p_id: noteWithConsent })).data as { feedback: unknown[] };
   expect(none.feedback).toEqual([]);
+  // Never the revised text: the rows carry these three keys alone.
+  for (const f of call.feedback) expect(Object.keys(f).sort()).toEqual(["created_at", "kind", "reason"]);
+});
+
+test("a reason the tutor typed reaches the call page as typed, never in its own words (0068, review R-portal-2)", async () => {
+  await sql`insert into public.generation_feedback (centre_id, generation_id, kind, reason) values (${centreA}, ${noteWithConsent}, 'again', 'make Dev''s note warmer, Sunita worried')`;
+  await sql`insert into public.generation_feedback (centre_id, generation_id, kind, reason) values (${centreA}, ${noteWithConsent}, 'again', 'Warmer')`;
+  const call = (await svc.rpc("admin_call", { p_id: noteWithConsent })).data as { feedback: { reason: string | null }[] };
+  expect(call.feedback.map((f) => f.reason)).toEqual(["typed", "Warmer"]);
+  await sql`delete from public.generation_feedback where generation_id = ${noteWithConsent}`;
 });
 
 test("the syllabi and one syllabus with its chapters and skills (0067)", async () => {

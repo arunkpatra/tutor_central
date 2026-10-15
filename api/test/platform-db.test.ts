@@ -369,6 +369,13 @@ test.skipIf(!up)("the exam job's source reads the seed's exam by its centre, wri
   expect(read?.students.length).toBeGreaterThan(0);
   expect(read?.students.every((s) => s.classLevel === "8" && s.schoolID === "44444444-4444-4444-4444-444444444441")).toBe(true);
   expect(read?.batches.length).toBeGreaterThan(0);
+  // In the order they were added: the first batch, the exam page's `preparation`, is the same at every split (review R-db-4).
+  // An update writes the first student's row anew at the table's end, as a consent given does.
+  const first = (await db.from("students").select("id, name").eq("centre_id", CENTRE).is("archived_at", null).order("created_at").limit(1).single()).data!;
+  await db.from("students").update({ name: first.name }).eq("id", first.id);
+  const again = await source.read(CENTRE, exam, today);
+  const added = ((await db.from("students").select("id, created_at").eq("centre_id", CENTRE).is("archived_at", null).order("created_at")).data ?? []).map((s) => s.id as string);
+  expect(again?.students.map((s) => s.id)).toEqual(added.filter((id) => again?.students.some((s) => s.id === id)));
   expect(await source.read("33333333-3333-3333-3333-333333333333", exam, today)).toBeNull();
   const before = (await db.from("school_items").select("preparation").eq("id", exam).single()).data?.preparation;
   try {
