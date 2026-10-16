@@ -15,8 +15,15 @@ function site(answers: Record<string, Answer>): typeof fetch {
   }) as typeof fetch;
 }
 
+/** The brand kit's icon (its cap's path) and the link preview's tag, as the export serves them (D120, D122). */
+const ICON = '<svg><path d="M128 0L256 64L128 128L0 64Z" fill="#FFB547"/></svg>';
+const PREVIEW = '<meta property="og:image" content="https://tutorcentral.in/opengraph-image.png?abc"/>';
+
 const GOOD: Record<string, Answer> = {
-  "https://tutorcentral.in/": { status: 200, body: html("Tutor Central") },
+  "https://tutorcentral.in/": { status: 200, body: html("Tutor Central").replace("</head>", `${PREVIEW}</head>`) },
+  "https://tutorcentral.in/icon.svg": { status: 200, type: "image/svg+xml", body: ICON },
+  "https://tutorcentral.in/favicon.ico": { status: 200, type: "image/vnd.microsoft.icon", body: "ico" },
+  "https://tutorcentral.in/opengraph-image.png": { status: 200, type: "image/png", body: "png" },
   "https://tutorcentral.in/privacy": { status: 200, body: html("Privacy · Tutor Central") },
   "https://tutorcentral.in/terms": { status: 200, body: html("Terms · Tutor Central") },
   "https://tutorcentral.in/support": { status: 200, body: html("Support · Tutor Central") },
@@ -82,4 +89,19 @@ test("an unreachable site is one problem in words, and the smoke tries again bef
     "could not reach https://tutorcentral.in: connection refused",
   ]);
   expect(calls).toBe(3);
+});
+
+test("the brand: the kit's tab icon, the favicon and the link preview, never the book (D120, D122)", async () => {
+  const book = {
+    ...GOOD,
+    "https://tutorcentral.in/icon.svg": { status: 200, type: "image/svg+xml", body: '<svg><path d="M20.001 19A2"/></svg>' },
+  };
+  expect(await once("https://tutorcentral.in", "abc", site(book))).toEqual(["/icon.svg is not the brand kit's icon"]);
+  const { "https://tutorcentral.in/favicon.ico": _f, "https://tutorcentral.in/opengraph-image.png": _o, ...without } = GOOD;
+  expect(await once("https://tutorcentral.in", "abc", site(without))).toEqual([
+    "/favicon.ico answered 404",
+    "/opengraph-image.png answered 404",
+  ]);
+  const noPreview = { ...GOOD, "https://tutorcentral.in/": { status: 200, body: html("Tutor Central") } };
+  expect(await once("https://tutorcentral.in", "abc", site(noPreview))).toEqual(["/ has no link preview"]);
 });

@@ -28,3 +28,19 @@ test("no legal page ships with a placeholder", () => {
     expect(page(file)).not.toContain("[OWNER:");
   }
 });
+
+test("the export carries the brand kit's tab icons, the touch icon and the link preview (D120, D122)", () => {
+  for (const file of ["icon.svg", "favicon.ico", "apple-icon.png", "opengraph-image.png"])
+    expect(existsSync(join(OUT, file)), `${file} was not exported`).toBe(true);
+  expect(readFileSync(join(OUT, "icon.svg"), "utf8")).not.toContain("M20.001 19A2");
+  for (const file of Object.keys(PAGES)) {
+    const html = page(file);
+    expect(html, file).toMatch(/<link rel="icon" href="\/icon\.svg[^"]*"[^>]*type="image\/svg\+xml"/);
+    expect(html, file).toMatch(/<link rel="icon" href="\/favicon\.ico[^"]*"/);
+    expect(html, file).toMatch(/<link rel="apple-touch-icon" href="\/apple-icon\.png[^"]*"/);
+    expect(html, file).toMatch(
+      /<meta property="og:image" content="https:\/\/tutorcentral\.in\/opengraph-image\.png[^"]*"/,
+    );
+    expect(html, file).not.toContain("M20.001 19A2");
+  }
+});
