@@ -1,12 +1,12 @@
 import DesignSystem
 import SwiftUI
 
-/// The launch screen carried on (P7-Launch-Fade): the dark ground and the book, exactly where iOS drew them, held
-/// while the session is read and faded into the first screen over `Tokens.opening` once it is ready. No wait is added:
-/// it goes as soon as there is something to show. With Reduce Motion the first screen simply appears.
+/// The launch screen carried on (P7-Launch-Fade, P23-Launch): the dark ground and the mark, exactly where iOS drew
+/// them, held while the session is read and faded into the first screen over `Tokens.opening` once it is ready. No wait
+/// is added: it goes as soon as there is something to show. With Reduce Motion the first screen simply appears.
 struct OpeningCover: View {
-    /// The iOS launch screen's image, 88 pt in the app's asset catalogue.
-    static let image = "LaunchBook"
+    /// The iOS launch screen's image, the brand kit's mark, 88 pt in the app's asset catalogue.
+    static let image = "LaunchMark"
 
     var body: some View {
         ZStack {

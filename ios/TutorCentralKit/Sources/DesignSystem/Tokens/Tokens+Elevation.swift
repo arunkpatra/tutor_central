@@ -41,11 +41,6 @@ public extension Tokens {
         dark: "0 0 0 3px rgba(255,171,56,.18)",
         light: "0 0 0 3px rgba(224,138,0,.16)"
     )
-    static let shadowLogo = ShadowToken(
-        "shadowLogo",
-        dark: "0 10px 26px rgba(255,171,56,.3), inset 0 1px 0 rgba(255,255,255,.4)",
-        light: "0 10px 26px rgba(255,171,56,.3), inset 0 1px 0 rgba(255,255,255,.4)"
-    )
     static let shadowButtonLanding = ShadowToken(
         "shadowButtonLanding",
         dark: "inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35)",
@@ -55,7 +50,7 @@ public extension Tokens {
 
     static let shadows: [ShadowToken] = [
         shadowRaised, shadowButton, shadowPrimary, shadowPrimaryPressed, shadowWell, shadowSegment, shadowFloat,
-        shadowDialog, haloFocus, shadowLogo, shadowButtonLanding, blurChrome,
+        shadowDialog, haloFocus, shadowButtonLanding, blurChrome,
     ]
 
     /// Disabled: opacity 0.45 and no shadow. Stale: 0.55 with a spinner beside it.
