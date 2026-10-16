@@ -21,8 +21,10 @@ struct FractionBarFigure: View {
             .frame(height: FigureMeasure.barHeight)
             .overlay(Rectangle().stroke(Tokens.text2.color, lineWidth: FigureMeasure.stroke))
             .padding(.horizontal, Tokens.rowPaddingHorizontal + Tokens.inline)
-            Text("\(label) = \(FigureNumbers.decimal(Double(shaded) / Double(max(parts, 1))))")
-                .typeStyle(Tokens.caption).foregroundStyle(Tokens.text2.color)
+            MathText(
+                "\(label) = \(FigureNumbers.decimal(Double(shaded) / Double(max(parts, 1))))",
+                style: Tokens.caption, color: Tokens.text2, alignment: .center
+            )
         }
         .padding(.vertical, Tokens.inline)
         .frame(maxWidth: .infinity)

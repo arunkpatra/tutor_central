@@ -15,7 +15,7 @@ extension Fixtures {
 
     /// Phase 20's material states over the boards' plan with its maths groups (P20-*); the mock's is apart.
     static let mathsStates: Set<LaunchState> = [
-        .sheetMathsTo5, .sheetMathsFrom6, .sheetBoardMaths, .workedExampleMaths,
+        .sheetMathsTo5, .sheetMathsFrom6, .sheetBoardMaths, .workedExampleMaths, .briefMaths,
     ]
 
     /// The figure boards' states and their templates (P10-Figure-*).

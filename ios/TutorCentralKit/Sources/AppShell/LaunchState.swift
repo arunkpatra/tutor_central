@@ -190,9 +190,9 @@ public enum LaunchState: String, CaseIterable, Sendable {
     case workedExample = "worked-example", brief
     /// Phase 20's material with formulae (P20-Sheet-To5, -From6, -Sheet-Board, -WorkedExample, -Mock): Group 2's
     /// fractions sheet, Group 1's equations sheet, its board at question 2 with the key, its worked example at the
-    /// second step, Dev's maths mock.
+    /// second step, Dev's maths mock; the brief on linear equations, its worked example's formula drawn in its row.
     case sheetMathsTo5 = "sheet-maths-to5", sheetMathsFrom6 = "sheet-maths-from6", sheetBoardMaths = "sheet-board-maths"
-    case workedExampleMaths = "worked-example-maths", mockMaths = "mock-maths"
+    case workedExampleMaths = "worked-example-maths", mockMaths = "mock-maths", briefMaths = "brief-maths"
     /// The seven figures (P10-Figure-*), each on its board's skill.
     case figureNumberLine = "figure-number-line"
     case figureFractionBar = "figure-fraction-bar"

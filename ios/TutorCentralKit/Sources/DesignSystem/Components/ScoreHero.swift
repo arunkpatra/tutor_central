@@ -67,7 +67,7 @@ public struct SkillBarRow: View {
             }
             ProgressBar(fraction: of > 0 ? Double(right) / Double(of) : 0, tone: tone)
             if !line.isEmpty {
-                Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                MathText(line, style: Tokens.footnote, color: Tokens.text2)
             }
         }
         .padding(.vertical, Tokens.rowPaddingDense)

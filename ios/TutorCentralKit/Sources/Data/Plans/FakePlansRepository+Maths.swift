@@ -9,6 +9,8 @@ public extension FakePlansRepository {
     nonisolated static let mathsSheetFrom6 = artefactID(12)
     nonisolated static let mathsExample = artefactID(14)
     nonisolated static let mathsSheetTo5 = artefactID(22)
+    /// The brief, on linear equations: its worked example's problem holds a formula (the external round's step 3).
+    nonisolated static let mathsBrief = artefactID(5)
     nonisolated static let mathsMockID = UUID(uuidString: "abababab-0000-0000-0020-000000000001")!
 
     /// The boards' plan with the maths groups and material.
@@ -31,7 +33,7 @@ public extension FakePlansRepository {
             id: board.id, classID: board.classID, date: board.date, madeAt: board.madeAt, groups: groups,
             items: board.items, artefacts: [], sessionID: nil
         )
-        let replaced: Set<UUID> = [mathsSheetFrom6, mathsExample, mathsSheetTo5]
+        let replaced: Set<UUID> = [mathsSheetFrom6, mathsExample, mathsSheetTo5, mathsBrief]
         let artefacts = boardArtefacts.filter { !replaced.contains($0.id) } + mathsArtefacts
         return FakePlansRepository(plans: [plan], artefacts: artefacts, now: madeAt)
     }
@@ -140,6 +142,35 @@ public extension FakePlansRepository {
                     ("$\\frac{1}{2} + \\frac{1}{4} =$ ?", "$\\frac{3}{4}$"),
                 ]
             )),
+            made(mathsBrief, .brief, "Your brief · Linear equations", .brief(Brief(
+                about: "An equation says two sides are equal; solving it finds the number that keeps them equal. "
+                    + "Students undo each step in turn, doing the same to both sides, then put the answer back in to "
+                    + "check it.",
+                mistakes: [
+                    .init(
+                        title: "Doing a step to one side only",
+                        howToCatch: "From $x + 2 = 5$ they write $x = 5$. Ask what happened to the 2 on the left."
+                    ),
+                    .init(
+                        title: "Changing the sign the wrong way",
+                        howToCatch: "Taking 3 across from $x + 3 = 7$ gives $x = 7 - 3$, not $7 + 3$."
+                    ),
+                    .init(
+                        title: "Not checking the answer",
+                        howToCatch: "Put $x$ back into the first equation: both sides must come out the same."
+                    ),
+                ],
+                workedExample: WorkedExample(
+                    problem: "Solve $\\frac{x}{4} - 2 = 1$ and check your answer.",
+                    steps: [
+                        WorkedExample.Step(title: "Add 2 to both sides", working: "$\\frac{x}{4} = 3$."),
+                        WorkedExample.Step(title: "Multiply both sides by 4", working: "$x = 12$."),
+                        WorkedExample.Step(title: "Check", working: "$\\frac{12}{4} - 2 = 1$. It holds."),
+                    ],
+                    slip: "Adding 2 to one side only."
+                ),
+                words: ["Whatever you do to one side, do to the other.", "Check by putting the answer back in."]
+            ))),
         ]
     }
 }

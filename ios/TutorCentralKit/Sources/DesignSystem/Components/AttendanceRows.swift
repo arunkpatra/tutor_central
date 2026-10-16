@@ -184,7 +184,8 @@ struct DayColumn: View {
     }
 }
 
-/// A row's title in rowTitle and its line in footnote, text2 or a status colour.
+/// A row's title in rowTitle and its line in footnote, text2 or a status colour; either drawn with its formulae when
+/// it holds one (an exam's days, D102).
 struct RowLines: View {
     let title: String
     let line: String?
@@ -192,8 +193,14 @@ struct RowLines: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-            Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-            if let line {
+            if MathSplit.hasMaths(title) {
+                MathText(title, style: Tokens.rowTitle)
+            } else {
+                Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+            }
+            if let line, MathSplit.hasMaths(line) {
+                MathText(line, style: Tokens.footnote, color: lineTone?.color ?? Tokens.text2)
+            } else if let line {
                 Text(line).typeStyle(Tokens.footnote).monospacedDigit()
                     .foregroundStyle((lineTone?.color ?? Tokens.text2).color)
             }

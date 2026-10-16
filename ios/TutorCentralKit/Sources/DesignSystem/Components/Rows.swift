@@ -130,15 +130,23 @@ struct ListRow<Content: View>: View {
 }
 
 /// The two lines in the middle of a row: title rowTitle, subtitle footnote text2. `titleMatch` colours the letters a
-/// search matched in accentText.
+/// search matched in accentText. A title holding a formula (a brief's worked example) draws it (D102).
 struct RowTitles: View {
     let title: String
     var titleMatch: Range<String.Index>?
     let subtitle: String?
 
+    nonisolated static func drawsMaths(_ title: String, match: Range<String.Index>?) -> Bool {
+        match == nil && MathSplit.hasMaths(title)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-            Text(attributedTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+            if Self.drawsMaths(title, match: titleMatch) {
+                MathText(title, style: Tokens.rowTitle)
+            } else {
+                Text(attributedTitle).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+            }
             if let subtitle {
                 Text(subtitle).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
             }
