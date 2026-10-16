@@ -31,7 +31,7 @@ The owner controls the platform from the portal and reads its product metrics; t
 
 ## As built (session 45, 2026-10-15, Opus 5.5)
 
-PRs #350 to #362; hand runs on issue #359; migrations 0066 (Deploy A, run 38694563888), 0067 and 0068 (Deploy B, run
+PRs #350 to #363; hand runs on issue #359; migrations 0066 (Deploy A, run 38694563888), 0067 and 0068 (Deploy B, run
 38700765521); the portal by deploy-admin 38694571631 and 38700774225; the website by deploy-web 38700782694. The ledger is
 `plan/sessions/045/ledger.md`.
 
@@ -57,4 +57,9 @@ PRs #350 to #362; hand runs on issue #359; migrations 0066 (Deploy A, run 386945
   the API's answers by curl, not on the simulator (the app unchanged); the run card's kinds are links in the address.
 - **Found and fixed (D68):** the hand runs' F1 (one call's plural) and F2 (the Golden sets page with no run done), #360; the
   review on Fable 5.1, thirteen findings, every one fixed (#361, #362), none ruled away.
+- **The owner's steps in production (2026-10-16):** the Models page ("models fine"), the brief switched off and refused on
+  his iPhone in its words ("off fine"), switched on and made, both rows in the audit ("on fine"), Send now's email ("report
+  fine"). Step 3 found the brief's worked example row drawing LaTeX as written on build 31; a sweep found eight more rows
+  like it; all fixed in #363 (D68). The owner then chose no TestFlight build until the brand mark is in (D121): #363 ships in
+  build 32 at Phase 23's close, and the round starts there.
 - **Left for the owner:** U54 (the header's Sign out between 760 and 1100 px), U55 (the gate's third check has no column).

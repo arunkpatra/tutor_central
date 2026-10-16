@@ -3,14 +3,16 @@
 The single place that says where the project stands. Every session reads it first and updates it last. Keep it
 short and true. History belongs in git and in the phase files, not here.
 
-**Last updated:** 2026-10-15, session 44's close (Phase 22's reads, boards and plan, on Fable 5.1). **Session 44:** production read
-(the first batched morning: ₹3.26, 27 minutes, no fallback; no exam job, no feedback row, no alert since 14 October); 41 boards
-drawn and approved on a second canvas (canvas 1 holds its 512 files; the owner: "1, all three groups approved, keep the card");
-`plan/phase-22-plan.md` written (fifteen tasks, twelve pull requests, migrations 0066 to 0068, no real-call budget) and
-approved by the owner ("plan approved": D113 to D118 in `plan/README.md`); resume 043 written. The record in `plan/sessions/044/`.
-**Next:** resume 043 (`plan/resume/043-phase-22-build.md`, on Opus 5.5) builds
-Phase 22 (its Task 1 the flaky `jobs.test.ts` clock seen once in session 44). The order (D81): Phase 22, then the external
-testing round, then Phase 16.
+**Last updated:** 2026-10-16, session 45's close (Phase 22's build, on Opus 5.5). **Session 45:** Phase 22 built from resume
+043: PRs #350 to #363 (hand runs #359), migrations 0066 to 0068 and the API at `ff534ffd` deployed, the portal and the website
+deployed; the review on Fable 5.1 with its thirteen findings fixed (#361, #362); the owner's four steps in production passed
+("models fine", "off fine", "on fine", "report fine"). His step 3 found the brief's worked example drawn as LaTeX on build 31:
+fixed with eight like it (#363, on `main`, not yet on a build). The owner then chose no TestFlight build until the brand mark
+is in (D121), and added the approved brand kit (`../tutor_central_logo` v1.1.0, D120): `plan/phase-23-brand-mark.md`. The
+record in `plan/sessions/045/`.
+**Next:** resume 044 (`plan/resume/044-phase-23-brand-mark.md`, on Opus 5.5): Phase 23's board and plan, approved, then the
+build and build 32. Then the external testing round on build 32 (Phase 15's Tasks 20 to 23, D52 to D55, on Fable 5.1), then
+Phase 16 (D81).
 
 **App Store page (D51):** filled and saved by the owner on 2026-10-09, not submitted. With D66 the first submission is V2's
 (Phase 16); the page's words and screenshots are redone there.
@@ -41,8 +43,9 @@ testing round, then Phase 16.
 | 19 V3 the admin portal, reading | Done (session 39, 2026-10-13), PRs #262 to #289; hand runs #286 | "As built" in `phase-19-admin-portal-reading.md`; admin.tutorcentral.in live in `bom1` with loading states (D97); 0046 to 0051 and the API at `bf4af37` deployed |
 | 20 V3 AI quality, the material | Built (session 41, 2026-10-13), PRs #291 to #317; hand runs #313 | "As built" in `phase-20-ai-quality-material.md`; deployed (0052 to 0056, API 29e79fb); 1.0.0 (30); D103, D104 |
 | 21 V3 AI quality, parents and exams | Built (session 43, 2026-10-14), PRs #318 to #349; hand runs #343 | "As built" in `phase-21-ai-quality-parents-and-exams.md`; deployed (0057 to 0065, API 69d8389); 1.0.0 (31); D111, D112; device tests T19, T20 |
-| 22 V3 the admin portal, control and analytics | Planned (session 44, 2026-10-15): boards approved, `phase-22-plan.md` approved 2026-10-15 (D113 to D118) | Scope file `phase-22-admin-portal-control.md`; the build from resume 043 on Opus 5.5 |
-| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17, 18 and 19 built and deployed (D83 to D98); Phase 20 built and deployed (D99 to D105); Phase 21 built and deployed (D106 to D112) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
+| 22 V3 the admin portal, control and analytics | Built (session 45, 2026-10-15 and 16), PRs #350 to #363; hand runs #359 | "As built" in `phase-22-admin-portal-control.md`; deployed (0066 to 0068, API `ff534ffd`); D113 to D119; the owner's steps passed in production |
+| 23 The brand mark | Not started (D120, D121) | Scope file `phase-23-brand-mark.md`; the kit `../tutor_central_logo` v1.1.0; one session on Opus from resume 044; build 32 |
+| V3 Platform | Spec approved 2026-10-12 (D70 to D82); Phases 17, 18 and 19 built and deployed (D83 to D98); Phase 20 built and deployed (D99 to D105); Phase 21 built and deployed (D106 to D112); Phase 22 built and deployed (D113 to D119) | `docs/spec-v3.md`; the interview `docs/v3/interview.md`; Phases 17 to 22 above, before the round and Phase 16 (D81) |
 
 ## In flight
 
@@ -54,7 +57,7 @@ delete.
 ## Production
 
 - **Admin portal:** admin.tutorcentral.in on Vercel `tutor-central-admin` (id in `VERCEL_ADMIN_PROJECT_ID`, root `admin`, no git
-  link), deployed only by `deploy-admin.yml` (D78), at `5cc7b7b` (run 38354450043, the loading states; before it `8231731`, run 38351407848, and `f37ffc3`, run 38347870083). GoDaddy: `CNAME admin` →
+  link), deployed only by `deploy-admin.yml` (D78), at `ff534ffd` (run 38700774225, Phase 22's eleven pages; before it run 38694571631, the controls; then `5cc7b7b`, run 38354450043, the loading states; before it `8231731`, run 38351407848, and `f37ffc3`, run 38347870083). GoDaddy: `CNAME admin` →
   `508a3866c0199c9f.vercel-dns-017.com`. Production's variables: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (the publishable key),
   `SUPABASE_SERVICE_ROLE_KEY` (the default secret key), set from `supabase projects api-keys --reveal`. The owner's admin
   account (his Gmail's `+admin` alias) is on `admin_users` with TOTP, his tutor account the alerts' push target. Repo variable
@@ -64,12 +67,12 @@ delete.
   deployment that counted against Hobby's 100 a day); deploys are the workflows' alone. The account is on Pro since 2026-10-13
   (D98).
 - **Website:** tutorcentral.in on Vercel `tutor-central-web` (id in `VERCEL_WEB_PROJECT_ID`, root `web`, git deploys off),
-  deployed only by `deploy-web.yml` (D45), at `f37ffc3` (run 38347873084: `/trust`'s staff sentence); before it `54adb24` (run
+  deployed only by `deploy-web.yml` (D45), at `ff534ffd` (run 38700782694: `/trust`'s 90-day words and the staff sentence, updated 15 October); before it `f37ffc3` (run 38347873084); before it `54adb24` (run
   38181756154: the trust page `/trust` with its corrected words; first live by run 38169497847), smoke green on five pages. GoDaddy DNS:
   `A @ 216.198.79.1`, `www` CNAME → `tutorcentral.in` (Vercel redirects www with a 307); Resend's records and
   `api.tutorcentral.in` (a CNAME to Vercel, attached to `tutor-central-api`) untouched. `APP_STORE_URL` unset (Home shows the
   email call to action) until the app is in the App Store.
-- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0065: 0063 to 0065 by deploy runs 38567907089 and 38589363375 (Phase 21: the nightly by hand, D112); 0057 to 0062 by Deploys A to C (Phase 21: the exam job, feedback, batches, the cost report); 0055 and 0056 by deploy run 38400290327 (Phase 20: a retaken step's check, placements on Sonnet); 0053 and 0054 by run 38382638833 (the figure's PDF, check refusals); 0052 by run 38371143677 (`ai_models`, the agent step, the nightly's schedule); 0051 by deploy run 38356937909 (the cost of the calls made before Phase 17's deploy, #290); 0048 to 0050 by deploy run 38347866740 (the hand runs' and the review's fixes: row ids, the alerts' facts, the reads), 0046 and 0047 by run 38345041694 (Phase 19: the admin tables and reads); 0042 to 0045 by deploy run
+- **Database:** Supabase `esowihbxawvoexflekxa`, ap-south-1 (Mumbai), migrations 0001 to 0068: 0066 by Deploy A (run 38694563888) and 0067, 0068 by Deploy B (run 38700765521) (Phase 22: the controls, the figures and the weekly report, retention, the split per batch, the push retry; the Smoke centre `internal`); 0063 to 0065 by deploy runs 38567907089 and 38589363375 (Phase 21: the nightly by hand, D112); 0057 to 0062 by Deploys A to C (Phase 21: the exam job, feedback, batches, the cost report); 0055 and 0056 by deploy run 38400290327 (Phase 20: a retaken step's check, placements on Sonnet); 0053 and 0054 by run 38382638833 (the figure's PDF, check refusals); 0052 by run 38371143677 (`ai_models`, the agent step, the nightly's schedule); 0051 by deploy run 38356937909 (the cost of the calls made before Phase 17's deploy, #290); 0048 to 0050 by deploy run 38347866740 (the hand runs' and the review's fixes: row ids, the alerts' facts, the reads), 0046 and 0047 by run 38345041694 (Phase 19: the admin tables and reads); 0042 to 0045 by deploy run
   38311560782 (Phase 18's review fixes: the token handover, own-centre photos, the deletion lease, a reminder plan per change);
   0036 to 0041 by run 38282034144 (Phase 18: withdrawal, the member requests, reminder settings and the outbox, the schedules,
   the buckets `pdfs` and `exports`, retention); 0028 to 0035 by run 38256073141 (Phase 17); nothing pending. pg_cron also
@@ -84,7 +87,7 @@ delete.
   `Tutor Central <hello@tutorcentral.in>` (D30): domain verified at GoDaddy (DKIM, SPF via `send`, DMARC), 30
   emails an hour, the code templates, OTP 6 digits for 600 s.
 - **API:** Vercel `tutor-central-api`, `bom1`, at `API_ORIGIN` (`https://api.tutorcentral.in` since build 16; the generated
-  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `69d8389` (Deploy F, run 38589363375, 2026-10-14: Phase 21 whole with the review's fixes; before it `527ae78`, run 38581219560, the hand runs' fixes); before Phase 21 `29e79fb` (deploy run 38400290327, 2026-10-13: Phase 20 whole, 0055, 0056; before it `c08d6d9`, run 38382638833, and `739102d`, run 38371143677); the agents' models in `ai_models`, Vercel's `SMOKE_CENTRE_ID` for the nightly, the repository's secret `ANTHROPIC_API_KEY` for the evals in CI; before Phase 20 `bf4af37` (deploy run 38356937909: 0051); before it `8231731` (run 38351404374: Phase 19 whole, 0049's stuck rule and the failure's key); before it `4d8294e` (run 38345041694: the alerts job; `RESEND_API_KEY` and `ALERT_EMAIL` in Production); before it `6d973b9` (deploy run 38311560782, 2026-10-13:
+  `api-ten-orpin-51.vercel.app` still answers for builds 15 and earlier), commit `ff534ffd` (Deploy B, run 38700765521, 2026-10-15: Phase 22 whole with the review's fixes; before it `cea9afb0`, Deploy A, run 38694563888); before Phase 22 `69d8389` (Deploy F, run 38589363375, 2026-10-14: Phase 21 whole with the review's fixes; before it `527ae78`, run 38581219560, the hand runs' fixes); before Phase 21 `29e79fb` (deploy run 38400290327, 2026-10-13: Phase 20 whole, 0055, 0056; before it `c08d6d9`, run 38382638833, and `739102d`, run 38371143677); the agents' models in `ai_models`, Vercel's `SMOKE_CENTRE_ID` for the nightly, the repository's secret `ANTHROPIC_API_KEY` for the evals in CI; before Phase 20 `bf4af37` (deploy run 38356937909: 0051); before it `8231731` (run 38351404374: Phase 19 whole, 0049's stuck rule and the failure's key); before it `4d8294e` (run 38345041694: the alerts job; `RESEND_API_KEY` and `ALERT_EMAIL` in Production); before it `6d973b9` (deploy run 38311560782, 2026-10-13:
   Phase 18 with its review fixes; before it `ed0077f`, run 38282034144, and `a3c6012`, run 38256073141); the deploy is gated on `main`'s
   green check and smokes a real check and a tick. Vercel's Production holds `SUPABASE_SERVICE_ROLE_KEY` (the new `sb_secret`
   key, D83) and `WORKER_SECRET`; GitHub's `Production` holds `SMOKE_EMAIL`, `SMOKE_PASSWORD`, `WORKER_SECRET`. The model
@@ -100,7 +103,7 @@ delete.
   registered by the owner on 2026-10-10; the extension is embedded from build 19.
   `testflight.yml` (D24): an Admin App Store Connect API key in secrets (App Manager cannot use cloud-managed
   distribution certificates); variables `APPLE_TEAM_ID`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`. Build number = the
-  run number. 1.0.0 (31) by run 38583690172 (`main` at `9a8f7ea9`: Phase 21's screens and every app fix; the owner: "build 31 fine"); 1.0.0 (30) by run 38400789743 (`main` at `29e79fb`: Phase 20's maths on the phone, the switched-off alert; the owner's check to come); 1.0.0 (29) by run 38314213195 (`main` at `a778350`: build 28 and the run's push check, which printed the
+  run number. No build 32 yet (D121): the next build carries the brand mark and #363. 1.0.0 (31) by run 38583690172 (`main` at `9a8f7ea9`: Phase 21's screens and every app fix; the owner: "build 31 fine"); 1.0.0 (30) by run 38400789743 (`main` at `29e79fb`: Phase 20's maths on the phone, the switched-off alert; the owner's check to come); 1.0.0 (29) by run 38314213195 (`main` at `a778350`: build 28 and the run's push check, which printed the
   archive's `aps-environment`; the App Store export re-signs it for production), the one to test; 1.0.0 (28) by run
   38312753433 (Phase 18: push, Today on the server's plan, the note from the job, withdrawal, the export, the copies first;
   `main` at `e3bbe97`), the first build with push; 1.0.0 (27) by run 38258868771 (Phase 17: the keys, request ids and activity log; nothing new on screen;
@@ -117,6 +120,8 @@ delete.
 
 ## Open items
 
+- **#363 is on `main` but on no build** (D121): formulae drawn in rows (the brief's worked example and eight more), found by the owner on build 31. Build 32 at Phase 23's close carries it.
+- **The brand kit's clearance** (`../tutor_central_logo/docs/08-testing-and-clearance.md`): the designer's assignment of rights, a trademark search, a recognition test with tutors and parents: the owner's, before Phase 16's submission.
 - **A never-closed student's placement is paid each morning** (session 44's read): a `not_known` student in a batch with no close gets "Placement, his first checks" made again every morning (three Sonnet drafts, about ₹1.76 a day), because the material's key carries the day. Phase 12's open ruling on a new batch's first checks (the owner, PR 10 of Phase 13), now seen in money; not Phase 22's.
 - **Phase 19 closed with its findings fixed (D68):** the hand runs' F1 to F6 (#279 to #281), the thirteen review findings
   (#277, #283 to #285), the footer seen in production (#287). Open: hand run 7's push on a simulator not driven (the owner's iPhone proved it). The API's deploy of `main` is done (`bf4af37`); the first
@@ -157,7 +162,7 @@ delete.
 - **Vercel Preview** has no `APPLE_*` variables (Production only); nothing deploys to Preview today. One environment until the owner says (D80).
 - **Supabase Free stays until the external testing round (D85); Vercel is on Pro (D98).** The worker lives within 300 s (a 200 s run budget; the wakes hold their request 290 s); no copy of the database exists anywhere (a bad migration or a deletion is final); Vercel's logs keep an hour, Supabase's a day; Supabase Pro is bought before the external testing round, as a step of its checklist; point-in-time recovery is Phase 16's call.
 - **V3 covers** the platform-shaped minors below where they are the platform's (duplicate paid calls, the 20 s offline waits, the pending rows, `APPLE_FAKE` in production, the limits copied across layers, orphaned photos): each is closed by the V3 phase that owns it, not on its own.
-- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U13 to U15, U25, U27 to U30, U48 open; the rest done (Phase 15: U11, U17 to
+- **UI polish:** `plan/ui-polish.md`: U5, U8, U10, U13 to U15, U25, U27 to U30, U48, U54, U55 open; the rest done (Phase 15: U11, U17 to
   U23, U26, U32, U34, U40; U36 by #133).
 - **Phase 5's deferred minors** (`plan/sessions/011/record.md`) stay the owner's.
 - CI's `xcode-27` runner image is a public preview; move to the GA label when GitHub ships one. The ubuntu-latest
