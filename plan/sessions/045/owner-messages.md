@@ -12,4 +12,6 @@
    While you wait - I have added the /Users/arunkpatra/codebase/tutor_central_logo folder which has the new approved Logo for the app, website, admin etc. In next phase we will update the affected apps. Write the phase file. After this round, you will write teh resume prompt for me"
 8. "To save time, and build costs, we will TestFlight after the logo changes"
 
+9. "is the testing over for this session?"
+
 The scheduled wake-ups the session set itself ("Continue Phase 22's build (resume 043): …") are not the owner's messages.
