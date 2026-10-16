@@ -16,22 +16,33 @@ struct BriefView: View {
     @State private var showingExample = false
     @State private var reasons: Bool
     @State private var askingReason = false
+    let opensAtExample: Bool
+    private static let exampleID = "example"
 
-    /// `opensReasons`: the brief-again launch state opens Make it again's menu (P21-Brief-Again).
-    init(store: BriefStore, opensReasons: Bool = false) {
+    /// `opensReasons`: the brief-again launch state opens Make it again's menu (P21-Brief-Again); `opensAtExample`:
+    /// brief-maths opens scrolled to The worked example to use.
+    init(store: BriefStore, opensReasons: Bool = false, opensAtExample: Bool = false) {
         _store = State(initialValue: store)
         _reasons = State(initialValue: opensReasons)
+        self.opensAtExample = opensAtExample
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Tokens.sectionGap) {
-                BackRow(title: "Brief") { dismiss() }
-                content
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: Tokens.sectionGap) {
+                    BackRow(title: "Brief") { dismiss() }
+                    content
+                }
+                .padding(.horizontal, Tokens.pageSide)
+                .padding(.top, max(0, Tokens.pageTop - topInset))
+                .padding(.bottom, Tokens.contentBottom)
             }
-            .padding(.horizontal, Tokens.pageSide)
-            .padding(.top, max(0, Tokens.pageTop - topInset))
-            .padding(.bottom, Tokens.contentBottom)
+            .onChange(of: store.brief != nil, initial: true) { _, loaded in
+                if loaded, opensAtExample {
+                    proxy.scrollTo(Self.exampleID, anchor: .top)
+                }
+            }
         }
         .statusBarGlass()
         .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { topInset = $0 }
@@ -104,6 +115,7 @@ struct BriefView: View {
                     }
                 }
             }
+            .id(Self.exampleID)
             BriefSection(title: "Words to say") { BriefText(text: store.wordsLine) }
         } else {
             Card { SkeletonRow() }

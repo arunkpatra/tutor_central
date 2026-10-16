@@ -76,7 +76,9 @@ public struct ArtefactScreen: View {
             case .workedExample?:
                 WorkedExampleView(store: exampleStore(), showsTwo: boardState == .secondStep)
             case .brief?:
-                BriefView(store: briefStore(), opensReasons: boardState == .reasons)
+                BriefView(
+                    store: briefStore(), opensReasons: boardState == .reasons, opensAtExample: boardState == .atExample
+                )
             case .figure?:
                 FigureScreen(store: figureStore())
             case .mock?:

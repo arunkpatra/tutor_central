@@ -84,7 +84,7 @@ struct WorkedExampleView: View {
                 }
                 .buttonStyle(.primary(.card))
                 .disabled(!store.canShowNext)
-                Text(store.slip).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                MathText(store.slip, style: Tokens.footnote, color: Tokens.text2)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

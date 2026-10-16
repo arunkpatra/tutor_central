@@ -64,8 +64,13 @@ public struct MarkRow<Tile: View>: View {
     public var body: some View {
         HStack(spacing: Tokens.rowPaddingDense) {
             VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                Text("\(number). \(text)").typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
-                noteLine.typeStyle(Tokens.footnote).fixedSize(horizontal: false, vertical: true)
+                MathText("\(number). \(text)", style: Tokens.rowTitle)
+                if changedFrom == nil {
+                    MathText(note, style: Tokens.footnote, color: Tokens.text2)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    noteLine.typeStyle(Tokens.footnote).fixedSize(horizontal: false, vertical: true)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)

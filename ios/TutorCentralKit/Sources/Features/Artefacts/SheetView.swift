@@ -16,6 +16,8 @@ public enum ArtefactBoardState: Hashable, Sendable {
     case regenerating
     case ownMenu
     case secondStep
+    /// The brief scrolled to The worked example to use (brief-maths).
+    case atExample
 }
 
 /// A sheet (P10-Sheet, dark and light; -Key; -Board), made again (-Regenerate, -Regenerating), or the tutor's own in
@@ -211,7 +213,7 @@ struct SheetView: View {
         case .reasons: menu = .reasons
         case .regenerating: Task { await store.makeAgain(.easier) }
         case .ownMenu: menu = .own
-        case .secondStep, nil: break
+        case .secondStep, .atExample, nil: break
         }
     }
 }

@@ -17,7 +17,7 @@ public struct ResultHero: View {
             VStack(alignment: .leading, spacing: Tokens.tileGap) {
                 Eyebrow(eyebrow)
                 MathText(title, style: Tokens.title2)
-                Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+                MathText(line, style: Tokens.footnote, color: Tokens.text2)
             }
             .accessibilityElement(children: .combine)
         }
@@ -37,9 +37,9 @@ public struct SectionRow: View {
 
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Tokens.tileGap) {
-            Text(title).typeStyle(Tokens.buttonStrong).foregroundStyle(Tokens.text.color)
+            MathText(title, style: Tokens.buttonStrong)
             Spacer(minLength: Tokens.inline)
-            Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
+            MathText(line, style: Tokens.footnote, color: Tokens.text2)
         }
         .padding(.vertical, Tokens.rowPaddingDense)
         .padding(.horizontal, Tokens.rowPaddingHorizontal)

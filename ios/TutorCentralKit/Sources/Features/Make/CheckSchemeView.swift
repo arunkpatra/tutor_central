@@ -182,7 +182,7 @@ private struct PaperChoiceRow: View {
         Button(action: choose) {
             HStack(spacing: Tokens.rowPaddingDense) {
                 VStack(alignment: .leading, spacing: Tokens.rowGapInner) {
-                    Text(title).typeStyle(Tokens.rowTitle).foregroundStyle(Tokens.text.color)
+                    MathText(title, style: Tokens.rowTitle)
                     Text(line).typeStyle(Tokens.footnote).foregroundStyle(Tokens.text2.color)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
