@@ -328,6 +328,99 @@
    "x": 6850,
    "y": 16971,
    "title": "Phase 22 \u00b7 tutorcentral.in/trust \u00b7 the retention words (D79): what was sent about a student is kept beside what came back for 90 days, then only what came back; the staff sentence \u00b7 light \u00b7 phone 390"
+  },
+  "P23-Icon.dc.html": {
+   "expand": "fill",
+   "h": 2010,
+   "w": 1280,
+   "x": 0,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 the brand mark (D120, D122, kit v1.2.0): the app icon in Apple's renders (default, dark, tinted), the tile beside the name (marigold on dark, charcoal on light), the tab icon and Add to Home Screen, the link preview"
+  },
+  "P23-SignIn.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 1360,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 Sign-in: the 56 pt marigold tile with the mark at 33 pt in ink, flat \u00b7 dark (the app's sign-in is always dark)"
+  },
+  "P23-SignIn-Light.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 1833,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 Sign-in: the 56 pt charcoal tile with the mark at 33 pt in marigold, flat \u00b7 light"
+  },
+  "P23-Launch.dc.html": {
+   "h": 852,
+   "w": 393,
+   "x": 2306,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 The launch screen: the ground and the mark at 88 pt; dark whatever the iPhone's setting"
+  },
+  "P23-Web.dc.html": {
+   "expand": "fill",
+   "h": 2749,
+   "w": 1280,
+   "x": 2860,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 tutorcentral.in \u00b7 the marigold tile and ink mark in the header (16 px) and footer (14 px), small-size master, on the trust page \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P23-Web-Light.dc.html": {
+   "expand": "fill",
+   "h": 2749,
+   "w": 1280,
+   "x": 4220,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 tutorcentral.in \u00b7 the mark in the header and footer \u00b7 light \u00b7 desktop 1280"
+  },
+  "P23-Web-Phone.dc.html": {
+   "expand": "fill",
+   "h": 5022,
+   "w": 390,
+   "x": 5580,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 tutorcentral.in \u00b7 the marigold tile and ink mark in the header and footer \u00b7 dark \u00b7 phone 390"
+  },
+  "P23-Web-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 5022,
+   "w": 390,
+   "x": 6050,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 tutorcentral.in \u00b7 the mark in the header and footer \u00b7 light \u00b7 phone 390"
+  },
+  "P23-Admin-SignIn.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 6520,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 admin.tutorcentral.in/sign-in \u00b7 the marigold tile and ink mark in the header, the door \u00b7 dark \u00b7 desktop 1280"
+  },
+  "P23-Admin-SignIn-Light.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "w": 1280,
+   "x": 7880,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 admin.tutorcentral.in/sign-in \u00b7 the mark in the header \u00b7 light \u00b7 desktop 1280"
+  },
+  "P23-Admin-SignIn-Phone.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 9240,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 admin.tutorcentral.in/sign-in \u00b7 the marigold tile and ink mark in the header \u00b7 dark \u00b7 phone 390"
+  },
+  "P23-Admin-SignIn-Phone-Light.dc.html": {
+   "expand": "fill",
+   "h": 874,
+   "w": 390,
+   "x": 9710,
+   "y": 22600,
+   "title": "Phase 23 \u00b7 admin.tutorcentral.in/sign-in \u00b7 the mark in the header \u00b7 light \u00b7 phone 390"
   }
  },
  "createdOnFiles": {
@@ -346,6 +439,14 @@
    "w": 240,
    "maxW": 10900,
    "text": "Phase 22 \u00b7 The admin portal, control and analytics (D73, D76, D78, D79, D82): AI models per kind and step with history and the switch, a centre's allowance, the alert lines, the syllabus data; the product figures and the weekly report as an email; the golden sets' last run with a run a person starts; the call page's Feedback row; the trust page's retention words. Row 30, canvas 2 (canvas 1 holds its 512 files)"
+  },
+  "p23": {
+   "kind": "title1",
+   "x": 0,
+   "y": 22300,
+   "w": 240,
+   "maxW": 10100,
+   "text": "Phase 23 \u00b7 The brand mark (D120, D122, tutor_central_logo v1.2.0): the cap, T and C in place of the book. The app icon, sign-in, the launch screen, the website's header and footer, the portal's header and door; the tile beside the name marigold with an ink mark on dark grounds, charcoal with a marigold mark on light; the website's link preview. Row 31, canvas 2"
   }
  },
  "order": [
@@ -389,7 +490,19 @@
   "P22-Web-Trust.dc.html",
   "P22-Web-Trust-Light.dc.html",
   "P22-Web-Trust-Phone.dc.html",
-  "P22-Web-Trust-Phone-Light.dc.html"
+  "P22-Web-Trust-Phone-Light.dc.html",
+  "P23-Icon.dc.html",
+  "P23-SignIn.dc.html",
+  "P23-SignIn-Light.dc.html",
+  "P23-Launch.dc.html",
+  "P23-Web.dc.html",
+  "P23-Web-Light.dc.html",
+  "P23-Web-Phone.dc.html",
+  "P23-Web-Phone-Light.dc.html",
+  "P23-Admin-SignIn.dc.html",
+  "P23-Admin-SignIn-Light.dc.html",
+  "P23-Admin-SignIn-Phone.dc.html",
+  "P23-Admin-SignIn-Phone-Light.dc.html"
  ],
  "pages": [],
  "title": "Tutor Central Design, canvas 2",

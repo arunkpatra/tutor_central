@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 23 · The brand mark: the icon, the tile, the tab and the link preview</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.b{--bg:#131110;--s1:#1C1917;--s2:#272220;--line:#302A27;--t:#F6F1EA;--t2:#B9AFA5;--t3:#958B80;--acc:#FFAB38;width:1280px;box-sizing:border-box;padding:56px 64px 64px;background:var(--bg);color:var(--t);font-family:-apple-system,'SF Pro Display','SF Pro Text',system-ui,sans-serif;font-size:15px;line-height:20px;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;gap:56px}
+.eyebrow{font-size:13px;line-height:18px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+h1{margin:6px 0 0;font-size:34px;line-height:40px;font-weight:800;letter-spacing:-.02em}
+h2{margin:0;font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.01em}
+.lead{margin:8px 0 0;color:var(--t2);font-size:16px;line-height:24px;max-width:900px}
+.row{display:flex;gap:24px;align-items:stretch}
+.panel{flex:1;border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.cap{font-size:14px;line-height:20px;color:var(--t2);text-align:center}
+.cap b{color:var(--t);font-weight:600}
+.light{background:#F8F4EE;border-color:#E8E0D5}
+.light .cap{color:#625A52}.light .cap b{color:#1F1B17}
+.dark{background:#0E0C0B}
+.pick{font-size:13px;line-height:18px;font-weight:700;color:#221400;background:var(--acc);border-radius:6px;padding:2px 8px}
+.note{font-size:13px;line-height:18px;color:var(--t3)}
+</style>
+</helmet>
+<div class="b">
+  <div>
+    <div class="eyebrow">Phase 23 · tutor_central_logo v1.2.0 (D120, D122)</div>
+    <h1>The brand mark: the cap, T and C</h1>
+    <p class="lead">The open book (D29) goes from the app icon, the launch screen, sign-in, the website and the admin portal. The kit is the source; these are its own files, unchanged.</p>
+  </div>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2>The app icon, as iOS draws it</h2>
+    <p class="lead" style="margin:0">Apple's own renders of <b>TutorCentral.icon</b> (Icon Composer 27.0). Marigold glass on charcoal in light and dark mode; iOS makes the clear and tinted looks from the white cap and grey stem and C.</p>
+    <div class="row">
+      <div class="panel light"><img src="P23-assets/Default.png" width="220" height="220" alt=""><div class="cap"><b>Default</b> · light mode</div></div>
+      <div class="panel dark"><img src="P23-assets/Dark.png" width="220" height="220" alt=""><div class="cap"><b>Dark</b> · dark mode</div></div>
+      <div class="panel dark"><img src="P23-assets/TintedDark.png" width="220" height="220" alt=""><div class="cap"><b>Tinted</b> · dark</div></div>
+      <div class="panel light"><img src="P23-assets/TintedLight.png" width="220" height="220" alt=""><div class="cap"><b>Tinted</b> · light</div></div>
+    </div>
+    <div class="row" style="align-items:center;gap:20px">
+      <img src="P23-assets/Default-60pt.png" width="60" height="60" alt="">
+      <div class="note">At its Home Screen size, 60 pt (the 3× render shown at 1×). Spotlight, Settings and notifications take this icon by themselves.</div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2>The tile beside the name: 56 pt in the app, 28 and 24 px on the sites</h2>
+    <p class="lead" style="margin:0">Drawn flat, no glow. On a dark ground the tile is marigold with the mark in ink; on a light ground it is charcoal with the mark in marigold, as the icon. The app's sign-in is always dark; the website and the portal follow the device.</p>
+    <div class="row">
+      <div class="panel dark" style="gap:22px"><div style="display:flex;gap:44px;align-items:center;padding:12px 0"><div style="padding:22px;border-radius:16px;background:#131110"><div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 16px; background: #FFAB38; display: flex; align-items: center; justify-content: center; ">
+      <svg width="33" height="33" viewBox="0 0 256 256" aria-hidden="true"><path d="M107.2 117.6L0 64L128 0L256 64L148.8 117.6L148.8 182L107.2 182ZM226.79 209.39C224.19 212.55 221.43 215.59 218.51 218.51C194.51 242.51 161.95 256 128 256C94.05 256 61.49 242.51 37.49 218.51C13.49 194.51 0 161.95 0 128C0 117.74 1.23 107.61 3.61 97.81L42.28 117.14C41.83 120.72 41.6 124.35 41.6 128C41.6 150.91 50.7 172.89 66.91 189.09C83.11 205.3 105.09 214.4 128 214.4C150.46 214.4 172.01 205.66 188.12 190.06Z" fill="#1F1B17"></path></svg>
+    </div></div></div><div class="cap"><b>On dark</b> · marigold tile, ink mark</div></div>
+      <div class="panel light" style="gap:22px"><div style="display:flex;gap:44px;align-items:center;padding:12px 0"><div style="padding:22px;border-radius:16px;background:#F8F4EE"><div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 16px; background: #131110; display: flex; align-items: center; justify-content: center; ">
+      <svg width="33" height="33" viewBox="0 0 256 256" aria-hidden="true"><path d="M107.2 117.6L0 64L128 0L256 64L148.8 117.6L148.8 182L107.2 182ZM226.79 209.39C224.19 212.55 221.43 215.59 218.51 218.51C194.51 242.51 161.95 256 128 256C94.05 256 61.49 242.51 37.49 218.51C13.49 194.51 0 161.95 0 128C0 117.74 1.23 107.61 3.61 97.81L42.28 117.14C41.83 120.72 41.6 124.35 41.6 128C41.6 150.91 50.7 172.89 66.91 189.09C83.11 205.3 105.09 214.4 128 214.4C150.46 214.4 172.01 205.66 188.12 190.06Z" fill="#FFAB38"></path></svg>
+    </div></div></div><div class="cap"><b>On light</b> · charcoal tile, marigold mark</div></div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2>The website and the portal: the tab, and Add to Home Screen</h2>
+    <div class="row">
+      <div class="panel light" style="align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:10px 10px 0 0;background:#FFFFFF;border:1px solid #E8E0D5;border-bottom:0;color:#1F1B17;font-size:13px"><img src="P23-assets/icon.svg" width="16" height="16" alt="">Tutor Central</div>
+        <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:10px 10px 0 0;background:#FFFFFF;border:1px solid #E8E0D5;border-bottom:0;color:#1F1B17;font-size:13px"><img src="P23-assets/icon.svg" width="16" height="16" alt="">Centres · Tutor Central admin</div>
+        <div class="cap" style="text-align:left"><b>The tab icon</b> · <code>icon.svg</code> and <code>favicon.ico</code> on both sites</div>
+      </div>
+      <div class="panel dark" style="align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:10px 10px 0 0;background:#272220;border:1px solid #3D3632;border-bottom:0;color:#F6F1EA;font-size:13px"><img src="P23-assets/icon.svg" width="16" height="16" alt="">Tutor Central</div>
+        <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:10px 10px 0 0;background:#272220;border:1px solid #3D3632;border-bottom:0;color:#F6F1EA;font-size:13px"><img src="P23-assets/icon.svg" width="16" height="16" alt="">Centres · Tutor Central admin</div>
+        <div class="cap" style="text-align:left"><b>The same</b> in a dark browser</div>
+      </div>
+      <div class="panel dark"><img src="P23-assets/apple-icon.png" width="60" height="60" alt="" style="border-radius:14px"><div class="cap"><b>Add to Home Screen</b><br><code>apple-icon.png</code>, the website only; iOS rounds it</div></div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2>The link preview</h2>
+    <p class="lead" style="margin:0">When a link to tutorcentral.in is shared on WhatsApp, the kit's share image shows above the page's title. The image has no words; the title and the line come from the page.</p>
+    <div class="row" style="gap:32px;align-items:flex-start">
+      <div style="width:420px;border-radius:14px;overflow:hidden;background:#1C1917;border:1px solid #302A27">
+        <img src="P23-assets/opengraph-image.png" width="420" height="220" alt="" style="display:block">
+        <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:15px;line-height:20px;font-weight:600">Tutor Central</div>
+          <div style="font-size:13px;line-height:18px;color:var(--t2)">An iPhone app for a tutor who runs a tuition centre: students, parents, attendance, fees by UPI, papers.</div>
+          <div style="font-size:12px;line-height:16px;color:var(--t3)">tutorcentral.in</div>
+        </div>
+      </div>
+      <div class="note" style="max-width:520px">Today a shared link shows the title alone. With the image, the guide and the invites sent on WhatsApp for the testing round carry the mark. Not on the portal: it is not shared.</div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2010}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

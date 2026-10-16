@@ -190,7 +190,7 @@ quiet Today; built in session 26).
 | Settings minimal | row 5 | `mockups/P2-Settings.dc.html` |
 | A tab that comes later | row 5 | `mockups/P2-Later.dc.html` |
 | The Kit | row 4 | `mockups/Kit-*.dc.html` |
-| The app icon (C3 approved: Ember glow, Lucide's open book in marigold; source `mockups/AppIcon.svg`) | row 5 | `mockups/P2-AppIcon.dc.html` |
+| The app icon: since Phase 23 the brand kit's (D120, D122; `tutor_central_logo` v1.2.0, the layered `TutorCentral.icon`; `mockups/AppIcon.svg` is the kit's flat default art, `assets/app-icon/flat/AppIcon-default.svg` at v1.2.0). D29's C3 (the book on the Ember glow) is the record | row 5; row 31 (canvas 2) | `mockups/P2-AppIcon.dc.html`; `mockups/P23-Icon.dc.html` |
 
 Sign in with Apple and Google show the system's own sheets; they are not drawn.
 
@@ -609,9 +609,9 @@ What the boards settle (the parts are in `components.md`, "Phase 7 parts"):
   attendance for that day and class; "Parents' meeting in 1 hour · Sat 10 Oct, 11:00–12:00 · Class 10 parents." opens the
   event; "4 fees still due for October · ₹4,000 to collect. Tap to remind parents." opens the month on Fees. In the
   foreground the system's banner shows and the tap does the same.
-- **The launch screen** is the ground colour with the book in marigold, always dark (the app opens dark, D23;
-  `UILaunchScreen` with a colour and an image). **The icon** is D29's, drawn in place; the other icons on the board are
-  stand-ins.
+- **The launch screen** is the ground colour with the mark in marigold (the book until Phase 23, P23-Launch), always dark
+  (the app opens dark, D23; `UILaunchScreen` with a colour and an image). **The icon** is D29's, drawn in place (the kit's
+  since Phase 23); the other icons on the board are stand-ins.
 
 ## Phase 8 boards (step 0.9, approved 2026-10-09)
 
@@ -1701,3 +1701,32 @@ first, with Show (All kinds, Switched off, Changed by hand); a current model the
 the run card's chips are links that toggle the kind in the address, the chosen ones marked for a screen reader; the opened
 syllabus's line ends "last changed <day>" and shows every chapter; a reason the tutor typed reads "typed by the tutor" on
 the call page and "Typed by the tutor" on the figures.
+
+## Phase 23 boards (session 46, 2026-10-16): the brand mark
+
+Row 31, on canvas 2 (y 22600; the title note at 22300); the mirror is `mockups/P23-*.dc.html` with `mockups/P23-assets/` (the
+kit's renders and web files, unchanged) and `directions/canvas-2.json`. Drawn from the approved boards with the book swapped for
+the kit's path data (sign-in from P7-SignIn-Google, the launch screen from P7-Launch, the website from P22-Web-Trust, the portal
+from P19-SignIn), and one board for the icon, the tile, the tab and the link preview. Twelve boards. Approved by the owner
+2026-10-16 ("approved"), with the tile his choice C (D122).
+
+| Board | Source |
+|---|---|
+| The icon as iOS draws it (default, dark, tinted dark and light, 60 pt), the tile on dark and on light, the tab icon and Add to Home Screen, the link preview | `P23-Icon` |
+| Sign-in, dark and light | `P23-SignIn`, `-Light` |
+| The launch screen | `P23-Launch` |
+| tutorcentral.in's header and footer (on the trust page), 1280 and 390, dark and light | `P23-Web`, `-Light`, `-Phone`, `-Phone-Light` |
+| admin.tutorcentral.in's door and header, 1280 and 390, dark and light | `P23-Admin-SignIn`, `-Light`, `-Phone`, `-Phone-Light` |
+
+What the boards settle:
+
+- **The tile beside the name follows its ground** (the kit's L11, D122): on a dark ground a marigold tile with the mark in
+  ink, on a light ground a charcoal tile with the mark in marigold, as the icon. Flat: no glow, no rim. 56 pt with the mark
+  at 33 on sign-in; 28 px with 16 in a site header, 24 px with 14 in the website's footer (the small-size master under 32).
+- **The app's sign-in** is dark by default and after every sign-out (`Wipe` clears `appearance`), so a tutor sees the
+  marigold tile; the light board is the screen in light (D13).
+- **The launch screen** is the mark alone at 88 pt in marigold on the dark ground, no tile and no name.
+- **The website and the portal** follow the device's scheme; their tab icon is the kit's `icon.svg` and `favicon.ico` (the
+  icon's charcoal in both schemes); the website adds `apple-icon.png` and the link preview (`opengraph-image.png`, no words in
+  it); the portal has neither.
+- The App Store screenshots and the website never show a Home Screen (the kit's L7).

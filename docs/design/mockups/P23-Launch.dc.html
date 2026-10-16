@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 23 · Launch screen, the mark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#FFAB38}a:hover{color:#FFC164}
+input::placeholder,textarea::placeholder{color:#958B80;opacity:1}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div style="--bg:#131110; --s1:#1C1917; --s2:#272220; --btn2:#272220; --well:#0E0C0B; --line:#302A27; --line2:#3D3632; --t:#F6F1EA; --t2:#B9AFA5; --t3:#958B80; --acc:#FFAB38; --accText:#FFAB38; --accInk:#221400; --accTint:rgba(255,171,56,.14); --ok:#56D9A6; --okTint:rgba(86,217,166,.14); --okInk:#0B2A1D; --due:#FFB84D; --dueTint:rgba(255,184,77,.14); --over:#FF6F61; --overTint:rgba(255,111,97,.14); --overInk:#2B0906; --glass:rgba(28,25,23,.74); --glassLine:rgba(255,255,255,.08); --dim:rgba(8,6,5,.6); --halo:0 0 0 3px rgba(255,171,56,.18); --glow:inset 0 1px 0 rgba(255,255,255,.35), 0 8px 22px rgba(255,171,56,.28); --shadowWell:inset 0 1px 3px rgba(0,0,0,.6); --shadowButton:inset 0 1px 0 rgba(255,255,255,.06), 0 1px 2px rgba(0,0,0,.4); --shadowRaised:inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.28); --shadowFloat:0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); --shadowDialog:0 24px 64px rgba(0,0,0,.55); --shadowSegment:inset 0 1px 0 rgba(255,255,255,.1), 0 1px 3px rgba(0,0,0,.55); --onStatus:#FFFFFF; width: 393px; height: 852px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--t); font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center"><svg width="88" height="88" viewBox="0 0 256 256" aria-hidden="true"><path d="M107.2 117.6L0 64L128 0L256 64L148.8 117.6L148.8 182L107.2 182ZM226.79 209.39C224.19 212.55 221.43 215.59 218.51 218.51C194.51 242.51 161.95 256 128 256C94.05 256 61.49 242.51 37.49 218.51C13.49 194.51 0 161.95 0 128C0 117.74 1.23 107.61 3.61 97.81L42.28 117.14C41.83 120.72 41.6 124.35 41.6 128C41.6 150.91 50.7 172.89 66.91 189.09C83.11 205.3 105.09 214.4 128 214.4C150.46 214.4 172.01 205.66 188.12 190.06Z" fill="var(--acc)"></path></svg></div>
+<div aria-hidden="true" style="position: absolute; left: 129px; bottom: 9px; width: 135px; height: 5px; border-radius: 3px; background: var(--t); opacity: .5"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

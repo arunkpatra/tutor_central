@@ -519,7 +519,7 @@ then what and when; a failed row adds a second line in `overdue` with the reason
 **Notification (the system's, not drawn by the app):** the app icon, a title (the thing and its time) and one body line
 that ends with what a tap does. The lock-screen board draws iOS's banner for reference only.
 
-**Launch screen:** `ground` with the book from the icon (D29) at 88 pt in `accent`, centred; always dark.
+**Launch screen:** `ground` with the brand kit's mark (`LaunchMark`, D120) at 88 pt in marigold, centred; always dark (P23-Launch).
 
 The texts:
 
@@ -560,10 +560,10 @@ The texts:
 
 The site is built from the app's colour tokens and its own type scale (`information-architecture.md`, Phase 8 boards). Its parts:
 
-**Site header:** the brand (a 28 px tile in `ground` with the book in `accent`, the wordmark 17/700) and a `nav` of three links
+**Site header:** the brand (a 28 px tile in `logoTile` with the kit's mark at 16 px in `logoMark`, the small-size master; the wordmark 17/700) and a `nav` of three links
 15/600 in `text2` (the current page in `text`), a `line` hairline under; the links drop under the brand at phone width.
 
-**Site footer:** a `line` hairline above; the brand at 24 px, the one-line promise in `text2`, the copyright in `text3`; the three
+**Site footer:** a `line` hairline above; the brand at 24 px (the mark at 14), the one-line promise in `text2`, the copyright in `text3`; the three
 links and the email (in `accentText`) on the right, under the brand at phone width.
 
 **Page title:** an eyebrow 15/600 in `accentText` naming the page, the title (44/50; 34/40 at phone width), a lead 19/29 in `text2`,
@@ -1168,3 +1168,12 @@ the body 16/26 in `text`, `white-space: pre-wrap`.
 
 The texts are on the boards' sources; the build carries them into `admin/content/{models,figures,evals,syllabi}.ts`,
 `admin/content/{alerts,centres,calls}.ts` and `web/content/trust.ts`.
+
+## The brand (Phase 23, D120, D122)
+
+**Sign-in logo (`AppLogo`):** a 56 tile, radius 16 (`radiusTile`), in `logoTile`, with the kit's `AppMark` drawn as a
+template at 33 in `logoMark`; flat, no shadow. `logoTile` is marigold in dark and charcoal in light; `logoMark` ink in dark and
+marigold in light (P23-SignIn, -Light). The wordmark beside it as before.
+
+**The tile on the sites:** `--logoTile` and `--logoMark` per scheme, the same pairing; no rim. The website's `.brandMark` and
+the portal's `.brandTile` (with its ADMIN mark beside the name) take them (P23-Web, P23-Admin-SignIn).
