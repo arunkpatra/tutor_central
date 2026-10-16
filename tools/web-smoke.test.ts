@@ -102,6 +102,10 @@ test("the brand: the kit's tab icon, the favicon and the link preview, never the
     "/favicon.ico answered 404",
     "/opengraph-image.png answered 404",
   ]);
+  const page = { ...GOOD, "https://tutorcentral.in/favicon.ico": { status: 200, type: "text/html", body: html("x") } };
+  expect(await once("https://tutorcentral.in", "abc", site(page))).toEqual([
+    "/favicon.ico answered 200 as text/html, not an image",
+  ]);
   const noPreview = { ...GOOD, "https://tutorcentral.in/": { status: 200, body: html("Tutor Central") } };
   expect(await once("https://tutorcentral.in", "abc", site(noPreview))).toEqual(["/ has no link preview"]);
 });

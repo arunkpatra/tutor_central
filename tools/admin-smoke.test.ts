@@ -61,4 +61,6 @@ test("the tab icons are the brand kit's and answer without a session (D120, D122
     }),
   );
   expect(problems).toEqual(["/icon.svg is not the brand kit's icon", "/favicon.ico answered 404"]);
+  const page = await once(ORIGIN, SHA, portal({ "/favicon.ico": () => new Response("<h1>Sign in</h1>", { status: 200, headers: { "content-type": "text/html" } }) }));
+  expect(page).toEqual(["/favicon.ico answered 200 as text/html, not an image"]);
 });

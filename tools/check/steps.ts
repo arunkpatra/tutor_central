@@ -58,6 +58,9 @@ const IOS_INPUTS = [
   "ios/TutorCentralKit/Sources/**",
   // The token test reads the document (D25).
   "docs/design/design-tokens.md",
+  // BrandAssetsTests reads the app target's icon and asset catalogue (D122).
+  "ios/App/TutorCentral.icon/**",
+  "ios/App/Assets.xcassets/**",
   // The price sheet reads the model table (D67).
   "api/models.json",
 ];
@@ -113,6 +116,20 @@ export const STEPS: Step[] = [
       "supabase/syllabi/**",
       // evals.test writes the tests from the golden sets; the contract writes their rubrics.
       "api/evals/**",
+      // brand-kit.test holds the brand kit's copies to the manifest (D122).
+      "docs/design/brand-kit.json",
+      "docs/design/brand/**",
+      "docs/design/mockups/AppIcon.svg",
+      "docs/design/mockups/P23-assets/**",
+      "ios/App/TutorCentral.icon/**",
+      "ios/App/Assets.xcassets/LaunchMark.imageset/**",
+      "ios/TutorCentralKit/Sources/DesignSystem/Resources/Marks.xcassets/AppMark.imageset/**",
+      "web/app/icon.svg",
+      "web/app/favicon.ico",
+      "web/app/apple-icon.png",
+      "web/app/opengraph-image.png",
+      "admin/app/icon.svg",
+      "admin/app/favicon.ico",
     ],
     run: async () => {
       await run("bun run tsc -p tsconfig.json");
@@ -141,8 +158,9 @@ export const STEPS: Step[] = [
       "web/biome.json",
       "web/vercel.json",
       "bun.lock",
-      // The token test reads the document; the pages test reads Help's answers in the app.
+      // The token test reads the document; the pages test reads Help's answers in the app; the frame test the brand's mark.
       "docs/design/design-tokens.md",
+      "docs/design/brand/**",
       "ios/TutorCentralKit/Sources/Features/Settings/Help/HelpView.swift",
     ],
     run: () => run("bun run check", "web"),
@@ -165,6 +183,8 @@ export const STEPS: Step[] = [
       "admin/vercel.json",
       "bun.lock",
       "docs/design/design-tokens.md",
+      // The frame test holds the brand's mark to the kit's (D122).
+      "docs/design/brand/**",
     ],
     run: () => run("bun run check", "admin"),
   },

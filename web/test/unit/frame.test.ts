@@ -45,4 +45,7 @@ test("the brand is the kit's mark: 16 px in the header, 14 in the footer, never 
     expect(html).toContain(`width="${size}" height="${size}" viewBox="0 0 256 256"`);
     expect(html).not.toContain("M20.001 19A2");
   }
+  // The tile's sizes are the stylesheet's (rule 3), never inline.
+  expect(header).toContain('<span class="brandMark" aria-hidden="true">');
+  expect(footer).toContain('<span class="brandMark brandMarkSmall" aria-hidden="true">');
 });

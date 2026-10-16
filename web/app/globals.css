@@ -155,6 +155,12 @@ ul {
   justify-content: center;
   flex: none;
 }
+/* The footer's smaller tile (24 px, radius 6; the mark at 14). */
+.brandMarkSmall {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
 .ftr {
   display: flex;
   justify-content: space-between;
