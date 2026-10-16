@@ -34,11 +34,15 @@ public extension Tokens {
     static let googleFill = ColorToken("googleFill", dark: "#131314", light: "#FFFFFF")
     static let googleLine = ColorToken("googleLine", dark: "#8E918F", light: "#747775")
     static let googleInk = ColorToken("googleInk", dark: "#E3E3E3", light: "#1F1F1F")
+    /// The tile beside the name follows its ground (D122, the brand kit's L11): marigold with the mark in ink on dark,
+    /// the icon's charcoal with the mark in marigold on light.
+    static let logoTile = ColorToken("logoTile", dark: "#FFAB38", light: "#131110")
+    static let logoMark = ColorToken("logoMark", dark: "#1F1B17", light: "#FFAB38")
 
     static let colors: [ColorToken] = [
         ground, surface1, surface2, well, chrome, dim, line, lineStrong, lineGlass, text, text2, text3, textOnAccent,
         accent, accentPressed, accentText, accentTint, ok, okTint, due, dueTint, overdue, overdueTint, neutral,
         glowHero, glowHeroSoft, buttonFill, okInk, overdueInk, onStatus, googleFill, googleLine,
-        googleInk,
+        googleInk, logoTile, logoMark,
     ]
 }

@@ -1,25 +1,38 @@
 import SwiftUI
 
-/// The app's mark on sign-in (A-SignIn, P2-SignIn-Light): a 56 accent tile, radius 16, the open book at 30 in
-/// textOnAccent, shadowLogo.
+/// Where the marks' images live: DesignSystem's own resources (`Marks.xcassets`).
+enum MarkImages {
+    static let bundle = Bundle.module
+}
+
+/// The app's mark on sign-in (P23-SignIn, D122): a 56 logoTile tile, radius 16, the brand kit's mark at 33 in
+/// logoMark (marigold with ink in dark, charcoal with marigold in light). Drawn flat: the system's glass belongs to the
+/// Home Screen icon alone.
 public struct AppLogo: View {
+    /// The kit's vector mark (marigold), drawn as a template so `logoMark` colours it; the file stays as the kit
+    /// has it.
+    static let image = "AppMark"
+
     static var size: CGFloat {
         56
     }
 
+    /// 0.586 of the tile, the icon's 600 of 1024.
     static var mark: CGFloat {
-        30
+        33
     }
 
     public init() {}
 
     public var body: some View {
-        Image(systemName: "book")
-            .font(.system(size: Self.mark, weight: .medium))
-            .foregroundStyle(Tokens.textOnAccent.color)
+        Image(Self.image, bundle: MarkImages.bundle)
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(Tokens.logoMark.color)
+            .frame(width: Self.mark, height: Self.mark)
             .frame(width: Self.size, height: Self.size)
-            .background(Tokens.accent.color, in: .rect(cornerRadius: Tokens.radiusTile, style: .continuous))
-            .shadowed(Tokens.shadowLogo, radius: Tokens.radiusTile)
+            .background(Tokens.logoTile.color, in: .rect(cornerRadius: Tokens.radiusTile, style: .continuous))
             .accessibilityHidden(true)
     }
 }
@@ -58,7 +71,7 @@ public struct GoogleMark: View {
     public init() {}
 
     public var body: some View {
-        Image(Self.image, bundle: .module)
+        Image(Self.image, bundle: MarkImages.bundle)
             .resizable()
             .scaledToFit()
             .frame(width: Tokens.iconButton, height: Tokens.iconButton)

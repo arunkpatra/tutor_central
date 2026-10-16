@@ -1,0 +1,93 @@
+{
+  "kit": "arunkpatra/tutor_central_logo",
+  "version": "v1.2.0",
+  "commit": "8293c5c9426bffea506865aae21e2e2dcc4ffef9",
+  "note": "Copies of the brand kit, never edited here (D120, D122). tools/brand-kit.test.ts holds each to its hash, and to the kit at this version when ../tutor_central_logo is present. A new kit version: copy its changed files, then write each sha256 again from the kit at the new tag.",
+  "files": [
+    {
+      "path": "ios/App/TutorCentral.icon/icon.json",
+      "source": "assets/app-icon/TutorCentral.icon/icon.json",
+      "sha256": "0473447a5725e734020cd542f86d91af9ccf7ffad5cede94df70dc87440ee5f5"
+    },
+    {
+      "path": "ios/App/TutorCentral.icon/Assets/1-c.svg",
+      "source": "assets/app-icon/TutorCentral.icon/Assets/1-c.svg",
+      "sha256": "a1c4841135af38b0719fdc7b0e74f979bbb7e942f80728d496567f747db769b0"
+    },
+    {
+      "path": "ios/App/TutorCentral.icon/Assets/2-stem.svg",
+      "source": "assets/app-icon/TutorCentral.icon/Assets/2-stem.svg",
+      "sha256": "be82ec3d3948bfad2ecdc52cb2fa8d1e1a1fd1fc356dd5abcacbb1686261c806"
+    },
+    {
+      "path": "ios/App/TutorCentral.icon/Assets/3-cap.svg",
+      "source": "assets/app-icon/TutorCentral.icon/Assets/3-cap.svg",
+      "sha256": "8b27d6e268489c3c159c1c8b2d0f95c00e0019c435c9baac5e9c4435f56bf1ce"
+    },
+    {
+      "path": "ios/App/Assets.xcassets/LaunchMark.imageset/Contents.json",
+      "source": "assets/ios/LaunchMark.imageset/Contents.json",
+      "sha256": "9fe1343c3150dfb2ecd0840496fe892ffe637b88de07fba59306ba8bda140525"
+    },
+    {
+      "path": "ios/App/Assets.xcassets/LaunchMark.imageset/LaunchMark.svg",
+      "source": "assets/ios/LaunchMark.imageset/LaunchMark.svg",
+      "sha256": "11251c912112b27dac06ae78a4b23690ba7d8d261abc73d40c9f4be723282fa4"
+    },
+    {
+      "path": "ios/TutorCentralKit/Sources/DesignSystem/Resources/Marks.xcassets/AppMark.imageset/Contents.json",
+      "source": "assets/ios/AppMark.imageset/Contents.json",
+      "sha256": "fd82a59879d8d0e4154fdd447fbfb86c43a7657b305eba74dc585b10782d3daa"
+    },
+    {
+      "path": "ios/TutorCentralKit/Sources/DesignSystem/Resources/Marks.xcassets/AppMark.imageset/AppMark.svg",
+      "source": "assets/ios/AppMark.imageset/AppMark.svg",
+      "sha256": "dea9de7f4e80b5e4aa505df34233b872dabebe3ef3b994069db643d41f61094e"
+    },
+    {
+      "path": "docs/design/mockups/AppIcon.svg",
+      "source": "assets/app-icon/flat/AppIcon-default.svg",
+      "sha256": "d44f5062f3a6b02dc4e491bd68f7c1dd43cb5cd81616aa4635a1ae19d4e2aa42"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/Default.png",
+      "source": "previews/icon-composer/Default.png",
+      "sha256": "be0f6c557226ea8dbe1ef6b400d05d92113e4796c60b67e5ba4c72029dfe4d3c"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/Dark.png",
+      "source": "previews/icon-composer/Dark.png",
+      "sha256": "be0f6c557226ea8dbe1ef6b400d05d92113e4796c60b67e5ba4c72029dfe4d3c"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/TintedDark.png",
+      "source": "previews/icon-composer/TintedDark.png",
+      "sha256": "f055127e4a54cd8a9fdb4c4c7510a251dd46db986ed0f1bce1f1e1aec84400a0"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/TintedLight.png",
+      "source": "previews/icon-composer/TintedLight.png",
+      "sha256": "fd6e0670a961d0a71753c7bdf887c2439aa2aeaa8f1f9157b57192e4dcad8567"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/Default-60pt.png",
+      "source": "previews/icon-composer/Default-60pt.png",
+      "sha256": "bb65180c6e2361c53ab13bd8945a9066b65251d277ec273b4e01041a2828230c"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/icon.svg",
+      "source": "assets/web/icon.svg",
+      "sha256": "008c0aa6f34c8d82a55ecd072e3d5ca1bdab5d07338b202678c9058df74fad13"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/apple-icon.png",
+      "source": "assets/web/apple-icon.png",
+      "sha256": "9c94429a0deb368266f11a6d4f1b603ab61427c22cd30379c686a59c5decc3eb"
+    },
+    {
+      "path": "docs/design/mockups/P23-assets/opengraph-image.png",
+      "source": "assets/web/opengraph-image.png",
+      "sha256": "ced4fe8fe524ca474d899cd85e939915928cfe71461fa67935d067cfb64df57a"
+    }
+  ]
+}

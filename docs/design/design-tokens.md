@@ -76,6 +76,8 @@ colour and a tint for a chip behind it. Never red for anything that is not overd
 | `googleFill` | #131314 | #FFFFFF | Continue with Google's fill, Google's own (its sign-in branding guidelines, P7-SignIn-Google) |
 | `googleLine` | #8E918F | #747775 | Continue with Google's 1 pt outline |
 | `googleInk` | #E3E3E3 | #1F1F1F | Continue with Google's label |
+| `logoTile` | #FFAB38 | #131110 | The tile beside the name (D122, the brand kit's L11): marigold on a dark ground, charcoal (the icon's) on a light one; flat |
+| `logoMark` | #1F1B17 | #FFAB38 | The brand kit's mark on `logoTile`: ink on marigold (9.1:1), marigold on charcoal (10:1) |
 
 ## Type
 
@@ -197,7 +199,6 @@ recessed. One glow, under the primary button.
 | `shadowFloat` | 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06) | 0 10px 30px rgba(40,30,20,.14), inset 0 1px 0 rgba(255,255,255,.6) |
 | `shadowDialog` | 0 24px 64px rgba(0,0,0,.55) | 0 24px 64px rgba(40,30,20,.2) |
 | `haloFocus` | 0 0 0 3px rgba(255,171,56,.18) | 0 0 0 3px rgba(224,138,0,.16) |
-| `shadowLogo` | 0 10px 26px rgba(255,171,56,.3), inset 0 1px 0 rgba(255,255,255,.4) | 0 10px 26px rgba(255,171,56,.3), inset 0 1px 0 rgba(255,255,255,.4) |
 | `shadowButtonLanding` | inset 0 1px 0 rgba(255,255,255,.05), 0 1px 2px rgba(0,0,0,.35) | 0 1px 2px rgba(40,30,20,.08) |
 | `blurChrome` | blur 22, saturate 1.3 | blur 22, saturate 1.3 |
 
