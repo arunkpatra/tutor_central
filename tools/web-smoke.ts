@@ -3,12 +3,11 @@
  *  and a capitalised one are the not-found page with a 404, http and www redirect to the apex, a trailing slash lands (D45),
  *  the tab icons are the brand kit's and Home carries the link preview (D122). Retries while the alias
  *  moves. Exit 1 with the problems in words. */
+import { notAnImage, notTheKitsIcon } from "./lib/smoke";
+
 const PAGES = ["/", "/privacy", "/terms", "/support", "/trust"];
 const NOT_FOUND_WORDS = "There is nothing at this address.";
 const REDIRECTS = [301, 302, 307, 308];
-/** The brand kit's icon is known by its cap's path; the book it replaced by its spine (D120, D122). */
-const KIT_ICON = "M128 0L256 64L128 128L0 64Z";
-const BOOK = "M20.001 19A2";
 
 const commitOf = (body: string) => body.match(/<meta name="tc-commit" content="([^"]+)"/)?.[1];
 const redirectsTo = (r: Response, ok: (location: string) => boolean) =>
@@ -30,13 +29,10 @@ export async function once(origin: string, commit: string, fetchLike: typeof fet
       if (path === "/" && !body.includes(`<meta property="og:image" content="${origin}/opengraph-image.png`))
         problems.push("/ has no link preview");
     }
-    const icon = await get(`${origin}/icon.svg`);
-    const svg = icon.status === 200 ? await icon.text() : "";
-    if (!svg.includes(KIT_ICON) || svg.includes(BOOK)) problems.push("/icon.svg is not the brand kit's icon");
+    if (await notTheKitsIcon(await get(`${origin}/icon.svg`))) problems.push("/icon.svg is not the brand kit's icon");
     for (const path of ["/favicon.ico", "/opengraph-image.png"]) {
-      const r = await get(origin + path);
-      if (r.status !== 200 || !(r.headers.get("content-type") ?? "").startsWith("image/"))
-        problems.push(`${path} answered ${r.status}`);
+      const problem = notAnImage(path, await get(origin + path));
+      if (problem) problems.push(problem);
     }
     // A deep unknown path and a capital letter (paths are case-sensitive) are both the not-found page with a 404.
     for (const path of ["/students/abc", "/Privacy"]) {

@@ -51,3 +51,14 @@ test("the ios step runs again when a sample or resource its tests read changes",
 test("the admin step runs again when the token document changes", () => {
   expect(STEPS.find((s) => s.name === "admin")?.inputs).toContain("docs/design/design-tokens.md");
 });
+
+test("the brand kit's copies are inputs: the tools step holds them to the manifest, ios and the sites read them (D122)", async () => {
+  const step = (name: string) => STEPS.find((s) => s.name === name)?.inputs ?? [];
+  const covered = (inputs: string[], path: string) => inputs.some((g) => new Bun.Glob(g).match(path));
+  const manifest = (await Bun.file("docs/design/brand-kit.json").json()) as { files: { path: string }[] };
+  for (const { path } of manifest.files) expect(covered(step("tools"), path), path).toBe(true);
+  expect(covered(step("tools"), "docs/design/brand-kit.json")).toBe(true);
+  for (const path of ["ios/App/TutorCentral.icon/icon.json", "ios/App/Assets.xcassets/LaunchMark.imageset/LaunchMark.svg"])
+    expect(covered(step("ios"), path), path).toBe(true);
+  for (const name of ["web", "admin"]) expect(covered(step(name), "docs/design/brand/tc-mark-ink-small.svg"), name).toBe(true);
+});

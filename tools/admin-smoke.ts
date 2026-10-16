@@ -1,13 +1,12 @@
 #!/usr/bin/env bun
 /** bun tools/admin-smoke.ts <origin> --commit <sha>: the deployed portal serves that commit at /health, Sign in answers,
  *  every gated page sends a request without a session to Sign in (never a page), and http redirects to https (plan
- *  decision 19); the tab icons are the brand kit's and answer without a session (D122). It never signs in: no script holds a second factor. Retries while the alias moves. Exit 1 with the
- *  problems in words. */
+ *  decision 19); the tab icons are the brand kit's and answer without a session (D122). It never signs in: no script
+ *  holds a second factor. Retries while the alias moves. Exit 1 with the problems in words. */
+import { notAnImage, notTheKitsIcon } from "./lib/smoke";
+
 const GATED = ["/centres", "/jobs", "/alerts", "/calls/abc", "/nothing-here"];
 const REDIRECTS = [301, 302, 303, 307, 308];
-/** The brand kit's icon is known by its cap's path; the book it replaced by its spine (D120, D122). */
-const KIT_ICON = "M128 0L256 64L128 128L0 64Z";
-const BOOK = "M20.001 19A2";
 
 const redirectsTo = (r: Response, ok: (location: string) => boolean) => REDIRECTS.includes(r.status) && ok(r.headers.get("location") ?? "");
 
@@ -30,11 +29,9 @@ export async function once(origin: string, commit: string, fetchLike: typeof fet
       if (r.status === 200) problems.push(`${path} served a page without a session`);
       else if (!redirectsTo(r, (l) => new URL(l, origin).pathname === "/sign-in")) problems.push(`${path} answered ${r.status}, not a redirect to /sign-in`);
     }
-    const icon = await get(`${origin}/icon.svg`);
-    const svg = icon.status === 200 ? await icon.text() : "";
-    if (!svg.includes(KIT_ICON) || svg.includes(BOOK)) problems.push("/icon.svg is not the brand kit's icon");
-    const favicon = await get(`${origin}/favicon.ico`);
-    if (favicon.status !== 200 || !(favicon.headers.get("content-type") ?? "").startsWith("image/")) problems.push(`/favicon.ico answered ${favicon.status}`);
+    if (await notTheKitsIcon(await get(`${origin}/icon.svg`))) problems.push("/icon.svg is not the brand kit's icon");
+    const favicon = notAnImage("/favicon.ico", await get(`${origin}/favicon.ico`));
+    if (favicon) problems.push(favicon);
     const host = new URL(origin).host;
     const http = await get(`http://${host}/`);
     if (!redirectsTo(http, (l) => l.startsWith("https://"))) problems.push(`http://${host}/ does not redirect to https`);
