@@ -27,6 +27,11 @@ server code, no client JavaScript of its own.
 
 Commands: `bun run dev` (local on :3000); `bun run check`; `bun check --only=web`; `bun web-shots`; `gh workflow run deploy-web`.
 
+- Phase 23 (D120, D122): the brand is the kit's small-size master inline (`components/Mark.tsx`) on a tile coloured by
+  `--logoTile` and `--logoMark` per scheme; `app/icon.svg`, `favicon.ico`, `apple-icon.png` and `opengraph-image.png` are the
+  kit's files, never edited (held by `docs/design/brand-kit.json`); `app/icon.svg` is outside Biome for that reason.
+  `metadataBase` makes the link preview's address. The smoke checks the icons and the preview.
+
 - Phase 22 (D117): `/trust` says what was sent about a student is kept 90 days beside what came back, then only what came back
   with a mark that something was sent, and that staff never see what was sent about a student whose parent has not agreed.
   `TRUST_UPDATED` is the day the words go live.

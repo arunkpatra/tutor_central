@@ -147,8 +147,18 @@ real iPhone, because the simulator has no Files or WhatsApp to share into:
 |---|---|---|
 | T21 | A student whose record has a few weeks in it → their page → Export → Make the file → Share → Save to Files (or send it to yourself on WhatsApp) → open it. | The file opens and holds the student's details, the classes they came to, the checks and marks, the messages sent to the parent and what the app made for them. It names nobody else. |
 
+### Phase 23: the icon (build 32 or later)
+
+The brand mark (D120, D122). iOS draws the icon in six looks the simulator cannot all show. Delete any older Tutor Central
+first (iOS keeps an old icon), then install the build from TestFlight.
+
+| Id | Do | Expect |
+|---|---|---|
+| T22 | 1. Settings → Display & Brightness → Light; look at the Home Screen with a light wallpaper, then a dark one. 2. The same in Dark. 3. Long-press the Home Screen → Edit → Customize → Clear, then Tinted (try two tints), each in light and dark. 4. Swipe down on the Home Screen, type "Tutor", look at the result. 5. Settings → scroll to Apps → Tutor Central. 6. A notification from the app (the plan's, T16), on the Lock Screen. 7. Open the app: the launch screen, then sign-in (signed out). | 1 and 2: the cap, T and C in marigold on charcoal, the same in light and dark, sharp at Home Screen size, no white edge. 3: the clear and tinted looks iOS makes: the cap the lightest part, the mark readable in each. 4 to 6: the same icon, small, readable. 7: the marigold mark alone on the dark launch screen; on sign-in a marigold tile with the mark in dark ink beside "Tutor Central". No book anywhere. |
+
 ## Log
 
 | Date | Build | Test | Result | What was seen |
 |---|---|---|---|---|
 | 2026-10-09 | 0.1.0 (9) | S1 | Pass | The owner: "Installed the build on phone. Works" (Scan register with the real camera). |
+| 2026-10-16 | 1.0.0 (32) | T22 (parts 1, 2 and 7) | Pass | The owner: "icon fine" (the icon in light and dark). The rest of T22 is the tester's. |

@@ -1,7 +1,7 @@
 # Phase 23: The brand mark
 
-**Status:** Not started. One session on Opus: the board and `phase-23-plan.md` drawn, written and approved, then the build
-(D120, D121). **Depends on:**
+**Status:** Done (session 46, 2026-10-16): PRs #364 to #366, the website and the portal deployed, 1.0.0 (32) on TestFlight
+and on the owner's iPhone. The kit moved to v1.2.0 during the phase (D122): see "As built". **Depends on:**
 Phase 22. The external testing round (Phase 15's Tasks 20 to 23, D52 to D55) starts on this phase's TestFlight build.
 
 ## Goal
@@ -84,3 +84,43 @@ the places the runbook names (`Marks.swift`, `OpeningCover.swift`, `Info.plist`,
 - tutorcentral.in and admin.tutorcentral.in serve the new tab icon after their deploys, and their smokes are green.
 - Build 32 is on TestFlight, and the owner has seen the icon on his iPhone.
 - The resume for the external testing round names build 32.
+
+## As built (session 46, 2026-10-16, Opus 5.5)
+
+**What changed from the scope above.** The scope names v1.1.0 and the tokens `iconGround`/`iconMark` (the same in both
+appearances). On the board the owner chose a different tile for dark grounds: marigold with the mark in ink, charcoal with the
+mark in marigold on light grounds, flat. That became the kit's **v1.2.0** (its L11, `8293c5c`, made from this session with his
+yes), and **D122** supersedes D120's version and its tile. The tokens are therefore `logoTile` (dark `#FFAB38`, light
+`#131110`) and `logoMark` (dark `#1F1B17`, light `#FFAB38`); `shadowLogo` and the sites' `--iconGround`, `--iconMark`,
+`--iconRim` are gone. The tile keeps no glow and no rim. The website has the link preview. The review's wording fix in the kit
+is v1.2.1 (`14da7dd`, wording only; the copies are v1.2.0's files, unchanged).
+
+**The board:** twelve boards on canvas 2's row 31 (`docs/design/mockups/P23-*`), approved 2026-10-16.
+
+**The app (#364):** `ios/App/TutorCentral.icon` with `ASSETCATALOG_COMPILER_APPICON_NAME: TutorCentral`; `AppIcon.appiconset`
+and `LaunchBook` removed; `LaunchMark` in `Info.plist` and `OpeningCover`; `AppLogo` draws the kit's `AppMark` as a template in
+`logoMark` on a 56 `logoTile` tile. The app's sign-in is dark by default and after every sign-out, so a tutor sees the marigold
+tile. The marks' bundle is named once (`MarkImages.bundle`). Checks: `CFBundleIconName = TutorCentral`; `Assets.car` lists
+`TutorCentral/C`, `/Stem`, `/Cap`. The simulator's tinted Home Screen could not be driven (its Edit → Customize menu takes no
+injected taps): T22 covers it on an iPhone.
+
+**The website and the portal (#365):** the kit's small-size master inline (`web/components/Mark.tsx`, the portal's `MarkIcon`)
+at 16 in the 28 px header tile and 14 in the 24 px footer tile; the tile per scheme through `--logoTile` and `--logoMark`; the
+kit's `icon.svg` and `favicon.ico` on both, `apple-icon.png` and `opengraph-image.png` (with `metadataBase`) on the website.
+The kit's `icon.svg` is left out of Biome (its a11y rule wants a `<title>`, and a copy is never edited). The smokes check the
+kit's icon, the favicon, the link preview and, on the portal, the icons without a session.
+
+**Held copies:** `docs/design/brand-kit.json` names every copied file with its source and SHA-256 at v1.2.0;
+`tools/brand-kit.test.ts` holds them (and to the kit itself when it sits beside the repo); the sites' frame tests hold their
+inline path to `docs/design/brand/tc-mark-ink-small.svg`.
+
+**The review (#366 and the kit's v1.2.1):** one reviewer on Fable 5.1, one major and seven minor, each fixed or ruled
+(`plan/sessions/046/ledger.md`): the brand files made inputs of the check's steps (the major: an edited copy left the steps
+"unchanged"); the proxy's icons held by a test; the smokes' words; the website tile's sizes in the stylesheet; the kit's colour
+table; this section and the documents' rows. Ruled, not changed: the kit's SVGs carry their content credentials (C2PA, about
+7 KB each), which the kit tolerates and this phase does not strip.
+
+**Shipped:** deploy-web 38870830511 and deploy-admin 38870835632 at `5675c376`, smokes green; TestFlight run 38870869498, 1.0.0
+(32), carrying the mark and #363. The owner's three steps passed ("sites fine", "icon fine", "maths fine").
+
+**Acceptance:** each line above is met; the resume for the external testing round names build 32 (`plan/resume/045-*`).

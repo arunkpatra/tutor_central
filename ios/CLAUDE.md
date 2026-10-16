@@ -230,5 +230,11 @@ The app target is thin (`App/`); everything lives in the local package `TutorCen
 - Phase 22 (D119): the app keeps working out an exam's split by the shared rules; `school_items.preparations` (each batch's
   split, written by the server's exam job) is not read by the app. No app change in Phase 22.
 
+- Phase 23 (D120, D122): the icon is the brand kit's `App/TutorCentral.icon` (never opened in Icon Composer and saved here),
+  the launch screen's `LaunchMark` and sign-in's `AppMark` are the kit's files, never edited; `docs/design/brand-kit.json`
+  and `tools/brand-kit.test.ts` hold every copy. `AppLogo` draws `AppMark` as a template in `logoMark` on `logoTile` (marigold
+  with ink in dark, charcoal with marigold in light). iOS keeps an old Home Screen icon: delete the app before a picture of a
+  new one. The simulator's Home Screen Edit → Customize (tinted, clear) does not open to injected taps.
+
 Commands: `bun gen`; `bun check --only=format,lint,ios`; `cd ios && swiftformat .` (apply formatting);
 `bun shots <state>`; open `ios/TutorCentral.xcodeproj` in Xcode.

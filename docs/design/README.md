@@ -11,6 +11,7 @@ chosen and its boards approved, **no screen is built**. The website's pages (Pha
 | The design canvas (live, zoomable) | https://claude.ai/artifact/X3FTU6KXv2V6qxhachXX8D (private to the owner until shared) | Looking at the boards as designed; approving them |
 | The design canvas 2 (from row 30: Phase 22 on; canvas 1 holds its 512 files) | https://claude.ai/artifact/JV9q2AGk1fmMDVjsGgpAqw (private to the owner until shared) | The same, for Phase 22 and after; its index mirrored as `directions/canvas-2.json` |
 | Direction boards, sources | `directions/*.dc.html`, index `directions/canvas.json` | Exact values: every colour, size, radius and shadow is an inline style or a variable on the board's root |
+| The brand kit's copies (D120, D122) | `brand-kit.json` (each copied file, its source in `../tutor_central_logo` and its hash), `brand/` (the small-size master the sites' inline mark is held to) | Never edited here: a change is a new kit version; `tools/brand-kit.test.ts` holds them |
 | Tokens, components, guidelines | `design-tokens.md`, `components.md`, `guidelines.md` | Exact values, each control's anatomy and states, the rules. Approved 2026-10-07 (step 0.2) |
 | Telling the tutor what happened (U33): undo, in place, alert, inline | `feedback.md` | Choosing how any message reaches the tutor; the toast is for Undo only |
 | Information architecture | `information-architecture.md` | Entry flow, tabs and stacks, deep links, launch states, the Phase 2 board list |

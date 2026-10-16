@@ -68,6 +68,7 @@ works and ends. Update `plan/STATE.md` before you stop. A phase starts with its 
 | Admin portal, admin.tutorcentral.in (Next.js with server code on Vercel, behind TOTP) | `admin/` | `admin/CLAUDE.md` |
 | Database (Supabase) | `supabase/` | `supabase/CLAUDE.md` |
 | Design: boards, tokens, components, guidelines | `docs/design/` | `docs/design/README.md`; messages to the tutor: `docs/design/feedback.md` |
+| The brand mark: the kit `../tutor_central_logo` (D120, D122) and the copies held here | `docs/design/brand-kit.json` (each copy and its hash), `docs/design/brand/` | Copies are never edited; a change is a new kit version (`tools/brand-kit.test.ts`) |
 | Reference app and the functional contract | `docs/reference/` | |
 | Spec | `docs/spec.md` | |
 | Plan, state, sessions, decisions | `plan/` | `plan/SESSIONS.md` |

@@ -49,5 +49,9 @@ writes its own audit row.
   in the Held line's place. `lib/generated/contract.ts` (the switched-off words, `EVAL_KINDS`, the prompt versions) is
   written by `bun contract`, never edited; Biome leaves `lib/generated` alone.
 
+- Phase 23 (D120, D122): the brand tile draws the kit's small-size master (`MarkIcon`) in `--logoTile`/`--logoMark` per
+  scheme; `app/icon.svg` and `favicon.ico` are the kit's files, never edited, outside Biome, served without a session
+  (`proxy.ts`'s matcher, held by `test/unit/proxy.test.ts` and the smoke).
+
 Commands: `bun run dev` (local on :3100, needs `admin/.env.local`); `bun run check`; `bun check --only=admin`;
 `bun admin-shots`.
