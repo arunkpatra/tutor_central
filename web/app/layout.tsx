@@ -4,6 +4,8 @@ import { commit } from "@/lib/env";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // The link preview's image (app/opengraph-image.png, the brand kit's) needs the site's own address (D122).
+  metadataBase: new URL("https://tutorcentral.in"),
   title: { default: "Tutor Central", template: "%s · Tutor Central" },
   description:
     "An iPhone app for a tutor who runs a tuition centre: students, parents, attendance, fees by UPI, papers.",

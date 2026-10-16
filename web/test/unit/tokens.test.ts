@@ -24,6 +24,8 @@ const USED = [
   "accentText",
   "accentTint",
   "textOnAccent",
+  "logoTile",
+  "logoMark",
 ];
 
 function themeColor(scheme: "dark" | "light"): string {

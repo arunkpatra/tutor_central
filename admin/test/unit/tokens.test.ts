@@ -31,6 +31,8 @@ const USED = [
   "overdue",
   "overdueTint",
   "dim",
+  "logoTile",
+  "logoMark",
 ];
 
 function themeColor(scheme: "dark" | "light"): string {

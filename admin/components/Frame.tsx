@@ -2,14 +2,14 @@ import type { ReactNode } from "react";
 import { PAGES, type PageLabel, SITE } from "@/content/site";
 import { FRAME } from "@/content/words";
 import { commit, environment } from "@/lib/env";
-import { BookIcon } from "./Icon";
+import { MarkIcon } from "./Icon";
 import { PageLink } from "./PageLink";
 
 function Brand() {
   return (
     <PageLink href="/centres" className="brand">
       <span className="brandTile" aria-hidden="true">
-        <BookIcon />
+        <MarkIcon />
       </span>
       <span className="brandName">{FRAME.brand}</span>
       <span className="brandMark">{FRAME.mark}</span>

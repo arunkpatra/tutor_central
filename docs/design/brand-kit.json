@@ -88,6 +88,41 @@
       "path": "docs/design/mockups/P23-assets/opengraph-image.png",
       "source": "assets/web/opengraph-image.png",
       "sha256": "ced4fe8fe524ca474d899cd85e939915928cfe71461fa67935d067cfb64df57a"
+    },
+    {
+      "path": "docs/design/brand/tc-mark-ink-small.svg",
+      "source": "assets/mark/svg/tc-mark-ink-small.svg",
+      "sha256": "b8091304872fd44ebbf6cf0eecb04a1daaceb08688c2e58fd9cc15b537dafd72"
+    },
+    {
+      "path": "web/app/icon.svg",
+      "source": "assets/web/icon.svg",
+      "sha256": "008c0aa6f34c8d82a55ecd072e3d5ca1bdab5d07338b202678c9058df74fad13"
+    },
+    {
+      "path": "web/app/favicon.ico",
+      "source": "assets/web/favicon.ico",
+      "sha256": "a7000083f58fb423738e42465a38cd9685a6f23cb0519657e0af4a24e1ac14b0"
+    },
+    {
+      "path": "web/app/apple-icon.png",
+      "source": "assets/web/apple-icon.png",
+      "sha256": "9c94429a0deb368266f11a6d4f1b603ab61427c22cd30379c686a59c5decc3eb"
+    },
+    {
+      "path": "web/app/opengraph-image.png",
+      "source": "assets/web/opengraph-image.png",
+      "sha256": "ced4fe8fe524ca474d899cd85e939915928cfe71461fa67935d067cfb64df57a"
+    },
+    {
+      "path": "admin/app/icon.svg",
+      "source": "assets/web/icon.svg",
+      "sha256": "008c0aa6f34c8d82a55ecd072e3d5ca1bdab5d07338b202678c9058df74fad13"
+    },
+    {
+      "path": "admin/app/favicon.ico",
+      "source": "assets/web/favicon.ico",
+      "sha256": "a7000083f58fb423738e42465a38cd9685a6f23cb0519657e0af4a24e1ac14b0"
     }
   ]
 }
